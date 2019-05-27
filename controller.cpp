@@ -1,126 +1,82 @@
 #include "controller.h"
 #include "Game/level.h"
 #include "globalvariables.h"
-#include "Game/gamecontroller.h"
-#include "globalvariables.h"
+#include "Game/Level/Cursor/cursor.h"
+#include "Game/Level/camera.h"
 
-Controller::Controller(Level *level)
+Controller::Controller(Level *level, Cursor *cursor)
 	: level(level)
+	,cursor(cursor)
 {
+	m_controls = GlobalVariables::Instance().controls();
 
-}
-
-void Controller::update()
-{
-	keyEvent();
+	camera = new Camera();
+	level->setCamera(camera);
 }
 
 void Controller::keyEvent()
 {
 	const bool timeout = timerKey.check(CONTROLLER_TIME);
-	const ControlSettings controls = GlobalVariables::Instance().controls();
-	if (controls.joystickId == 0)
-		keyboardKeyEvent(spaceShip, controls, timeout);
-	else
-		joystickKeyEvent(spaceShip, controls, timeout);
+	keyboardKeyEvent(timeout);
+	joystickKeyEvent(timeout);
 }
 
-bool Controller::canMove(Controller::MOVE_DIRECTIONS direction, SpaceShip *spaceShip)
+void Controller::keyboardKeyEvent(const bool timeout)
 {
-	switch (direction)
-	{
-	case MOVE_LEFT:
-	{
-		if (spaceShip->pos().x - Level::LEVEL_BORDER < level->leftBorder())
-			return false;
-	}
-		break;
-	case MOVE_RIGHT:
-	{
-		if (spaceShip->getSize().x + spaceShip->pos().x + Level::LEVEL_BORDER > level->rightBorder())
-			return false;
-	}
-		break;
-	case MOVE_UP:
-	{
-		if (spaceShip->pos().y - Level::LEVEL_BORDER < level->topBorder())
-			return false;
-	}
-		break;
-	case MOVE_DOWN:
-	{
-		if (spaceShip->getSize().y + spaceShip->pos().y + Level::LEVEL_BORDER > level->bottomBorder())
-			return false;
-	}
-		break;
-	}
-	return true;
-}
-
-void Controller::keyboardKeyEvent(SpaceShip *player, const ControlSettings &controls, const bool timeout)
-{
-	if (Keyboard::isKeyPressed(Keyboard::RBracket))
-	{
-		player->rotate(45.f);
-		cout << 45<<endl;
-	}
-	if (Keyboard::isKeyPressed(Keyboard::LBracket))
-	{
-		player->rotate(-45.f);
-		cout << -45<<endl;
-	}
-	if (Keyboard::isKeyPressed(Keyboard::Space))
-	{
-		level->smokeEnabled = !level->smokeEnabled;
-	}
-
-	player->shoot(Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.shoot)));
-	player->shootWithDefaultWeapon(Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.shootWithDefaultWeapon)));
 	if (timeout)
 	{
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.nextWeapon)))
-			player->nextWeapon();
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.previousWeapon)))
-			player->previousWeapon();
-
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.nextAbility)))
-			player->nextCharacter();
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.previousAbility)))
-			player->previousCharacter();
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.useAbility)))
-			player->use();
-
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.start)))
+		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.action)))
+			level->action();
+		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.change)))
+			level->change();
+		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.start)))
 			pauseFunc();
+		if (Keyboard::isKeyPressed(Keyboard::Left))
+			camera->moveLeft();
+		if (Keyboard::isKeyPressed(Keyboard::Right))
+			camera->moveRight();
+		if (Keyboard::isKeyPressed(Keyboard::Up))
+			camera->moveUp();
+		if (Keyboard::isKeyPressed(Keyboard::Down))
+			camera->moveDown();
+		if (Keyboard::isKeyPressed(Keyboard::BackSpace))
+			camera->resetZoom();
+		if (Keyboard::isKeyPressed(Keyboard::Add))
+			camera->zoomIn();
+		if (Keyboard::isKeyPressed(Keyboard::Subtract))
+			camera->zoomOut();
+
+		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveLeft)))
+		{
+			if (!cursor->canMove(Cursor::MOVE_LEFT))
+				return;
+			cursor->moveLeft();
+		}
+		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveRight)))
+		{
+			if (!cursor->canMove(Cursor::MOVE_RIGHT))
+				return;
+			cursor->moveRight();
+		}
+		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveUp)))
+		{
+			if (!cursor->canMove(Cursor::MOVE_UP))
+				return;
+			cursor->moveUp();
+		}
+		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveDown)))
+		{
+			if (!cursor->canMove(Cursor::MOVE_DOWN))
+				return;
+			cursor->moveDown();
+		}
 	}
-	if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.moveLeft)))
-	{
-		if (!canMove(MOVE_LEFT, player))
-			return;
-		player->moveLeft();
-	}
-	if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.moveRight)))
-	{
-		if (!canMove(MOVE_RIGHT, player))
-			return;
-		player->moveRight();
-	}
-	if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.moveUp)))
-	{
-		if (!canMove(MOVE_UP, player))
-			return;
-		player->moveUp();
-	}
-	if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.moveDown)))
-	{
-		if (!canMove(MOVE_DOWN, player))
-			return;
-		player->moveDown();
-	}
+
 }
 
-void Controller::joystickKeyEvent(SpaceShip *player, const ControlSettings &controls, const bool timeout)
+void Controller::joystickKeyEvent(const bool timeout)
 {
+	/*
 	player->shoot(Joystick::isButtonPressed(controls.joystickId, controls.shoot));
 	player->shootWithDefaultWeapon(Joystick::isButtonPressed(controls.joystickId, controls.shootWithDefaultWeapon));
 
@@ -167,7 +123,7 @@ void Controller::joystickKeyEvent(SpaceShip *player, const ControlSettings &cont
 		if (!canMove(MOVE_UP, player))
 			return;
 		player->moveUp();
-	}
+	}*/
 }
 
 void Controller::setPauseFunc(const function<void ()> &value)
@@ -180,18 +136,9 @@ void Controller::pausedEvents()
 	const bool timeout = timerKey.check(CONTROLLER_TIME);
 	if (!timeout)
 		return;
-	for (unsigned int i = 0; i < GameController::Instance().players().size(); ++i)
-	{
-		const ControlSettings controls = GlobalVariables::Instance().controls().at(i);
-		if (controls.joystickId == 0)
-		{
-			if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(controls.start)))
-				pauseFunc();
-		}
-		else
-		{
-			if (Joystick::isButtonPressed(controls.joystickId, controls.start))
-				pauseFunc();
-		}
-	}
+
+	if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(GlobalVariables::Instance().controls().start)))
+		pauseFunc();
+//	if (Joystick::isButtonPressed(controls.joystickId, controls.start))
+//		pauseFunc();
 }

@@ -11,7 +11,7 @@ public:
 
 	Texture &getTexture(RESOURCES::TEXTURE_TYPE type);
 
-	Texture &getMapTexture(int id, int n);
+//	Texture &getMapTexture(int id, int n);
 
 private:
 	ResourcesManager();
@@ -22,9 +22,7 @@ private:
 
 	void addTexture(RESOURCES::TEXTURE_TYPE type, const string& path);
 
-	map<int, vector<Texture> > maps_textures;
-
-	void loadMapTextures();
+//	map<int, vector<Texture> > maps_textures;
 };
 
 #endif // RESOURCESMANAGER_H

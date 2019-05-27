@@ -8,10 +8,6 @@ class Engine
 public:
 	static Engine &Instance();
 
-//	void loadTextures(const map<int, string>& fileNames);
-
-//	Texture &getTexture(const int id);
-
 	enum GAME_STATE
 	{
 		UNKNNOWN,
@@ -42,7 +38,6 @@ private:
 	Engine(const Engine& root) = delete;
 	Engine& operator=(const Engine&) = delete;
 
-//	map<int, Texture> m_textures;
 	GAME_STATE m_state;
 };
 

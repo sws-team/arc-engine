@@ -1,13 +1,11 @@
 #include "gamewindow.h"
 #include "settings.h"
 #include "controller.h"
-#include "Game/gamecontroller.h"
 #include "Game/Audio/soundcontroller.h"
 #include "Game/level.h"
-#include "Game/SpaceShip/spaceship.h"
-#include "Game/objectsfactory.h"
 #include "savedgame.h"
 #include "globalvariables.h"
+#include "Game/Level/Cursor/cursor.h"
 
 GameWindow::GameWindow()
 	: Menu()
@@ -17,7 +15,8 @@ GameWindow::GameWindow()
 	m_state = PLAYING;
 
 	level = new Level();
-	controller = new Controller(level);
+	cursor = new Cursor();
+	controller = new Controller(level, cursor);
 
 	paused.setString("Paused");
 	paused.setFillColor(Color::Blue);
@@ -32,39 +31,38 @@ GameWindow::GameWindow()
 
 	gameOverImg.texture.loadFromFile("images/Windows/GameOver.png");
 	gameOverImg.sprite.setTexture(gameOverImg.texture);
-
 	//score
 	scoreText.setFillColor(Color::Black);
 	scoreText.setFont(GlobalVariables::Instance().font());
 	scoreText.setString("Congratulations!");
 
-	for (unsigned int i = 0; i < GameController::Instance().players().size(); ++i)
-	{
-		ScoreInfo score;
+//	for (unsigned int i = 0; i < GameController::Instance().players().size(); ++i)
+//	{
+//		ScoreInfo score;
 
-		score.kills.text.setFillColor(Color::Blue);
-		score.kills.text.setFont(GlobalVariables::Instance().font());
-	//	score.kills.text.setString(Language::Instance().translate(Language::DAMAGE) + delimer);
-		score.kills.text.setString("Kills: ");
-		score.kills.valueText.setFillColor(Color::Black);
-		score.kills.valueText.setFont(GlobalVariables::Instance().font());
+//		score.kills.text.setFillColor(Color::Blue);
+//		score.kills.text.setFont(GlobalVariables::Instance().font());
+//	//	score.kills.text.setString(Language::Instance().translate(Language::DAMAGE) + delimer);
+//		score.kills.text.setString("Kills: ");
+//		score.kills.valueText.setFillColor(Color::Black);
+//		score.kills.valueText.setFont(GlobalVariables::Instance().font());
 
-		score.gears.text.setFillColor(Color::Blue);
-		score.gears.text.setFont(GlobalVariables::Instance().font());
-	//	score.score.text.setString(Language::Instance().translate(Language::DAMAGE) + delimer);
-		score.gears.text.setString("Gears: ");
-		score.gears.valueText.setFillColor(Color::Black);
-		score.gears.valueText.setFont(GlobalVariables::Instance().font());
+//		score.gears.text.setFillColor(Color::Blue);
+//		score.gears.text.setFont(GlobalVariables::Instance().font());
+//	//	score.score.text.setString(Language::Instance().translate(Language::DAMAGE) + delimer);
+//		score.gears.text.setString("Gears: ");
+//		score.gears.valueText.setFillColor(Color::Black);
+//		score.gears.valueText.setFont(GlobalVariables::Instance().font());
 
-		score.points.text.setFillColor(Color::Blue);
-		score.points.text.setFont(GlobalVariables::Instance().font());
-	//	score.points.text.setString(Language::Instance().translate(Language::DAMAGE) + delimer);
-		score.points.text.setString("Points: ");
-		score.points.valueText.setFillColor(Color::Black);
-		score.points.valueText.setFont(GlobalVariables::Instance().font());
+//		score.points.text.setFillColor(Color::Blue);
+//		score.points.text.setFont(GlobalVariables::Instance().font());
+//	//	score.points.text.setString(Language::Instance().translate(Language::DAMAGE) + delimer);
+//		score.points.text.setString("Points: ");
+//		score.points.valueText.setFillColor(Color::Black);
+//		score.points.valueText.setFont(GlobalVariables::Instance().font());
 
-		scores.push_back(score);
-	}
+//		scores.push_back(score);
+//	}
 
 	addItem("Continue");
 	addItem("Exit from mission");
@@ -82,6 +80,7 @@ void GameWindow::init()
 void GameWindow::paint(RenderWindow *window)
 {
 	level->draw(window);
+	cursor->draw(window);
 	switch (m_state)
 	{
 	case PLAYING:
@@ -98,11 +97,11 @@ void GameWindow::paint(RenderWindow *window)
 	{
 		window->draw(finishedImg.sprite);
 		window->draw(scoreText);
-		for (unsigned int i = 0; i < GameController::Instance().players().size(); ++i)
-		{
-			SpaceShip *player = GameController::Instance().players().at(i);
-			window->draw(player->getIcon());
-		}
+//		for (unsigned int i = 0; i < GameController::Instance().players().size(); ++i)
+//		{
+//			SpaceShip *player = GameController::Instance().players().at(i);
+//			window->draw(player->getIcon());
+//		}
 		for (unsigned int i = 0; i < scores.size(); ++i)
 		{
 			const ScoreInfo score = scores.at(i);
@@ -140,7 +139,8 @@ void GameWindow::eventFilter(Event *event)
 			break;
 		default:
 			break;
-		}
+		}		
+		controller->keyEvent();
 	}
 		break;
 	case PAUSED:
@@ -172,11 +172,9 @@ void GameWindow::update()
 			setState(FINISHED);
 		//save
 		SavedGameLoader::Instance().save();
-		GameController::Instance().clear();
 		return;
 	}
-
-	controller->update();
+	cursor->update();
 	level->update();
 }
 
@@ -204,11 +202,8 @@ void GameWindow::pause()
 {
 	if (m_state == PAUSED)
 		setState(PLAYING);
-	else if (m_state == PLAYING)
-	{
-		level->shakeOff();
-		setState(PAUSED);
-	}
+	else if (m_state == PLAYING)	
+		setState(PAUSED);	
 }
 
 void GameWindow::accept()
@@ -286,21 +281,21 @@ void GameWindow::setState(const GAME_STATE &state)
 
 		posY += scoreText.getGlobalBounds().height;
 
-		for (unsigned int i = 0; i < GameController::Instance().players().size(); ++i)
-		{
-			SpaceShip *player = GameController::Instance().players().at(i);
+//		for (unsigned int i = 0; i < GameController::Instance().players().size(); ++i)
+//		{
+//			SpaceShip *player = GameController::Instance().players().at(i);
 
-			player->getIcon().setPosition(posX, posY);
+//			player->getIcon().setPosition(posX, posY);
 
-			const float gears = level->getLevelBonuses().at(player);
+//			const float gears = level->getLevelBonuses().at(player);
 
-			scores[i].gears.valueText.setString((String(GlobalVariables::to_string_with_precision(gears, 1))));
+//			scores[i].gears.valueText.setString((String(GlobalVariables::to_string_with_precision(gears, 1))));
 
-			scores[i].gears.text.setPosition(posX, posY);
-			scores[i].gears.valueText.setPosition(posX + scores.at(i).gears.text.getGlobalBounds().width, posY);
+//			scores[i].gears.text.setPosition(posX, posY);
+//			scores[i].gears.valueText.setPosition(posX + scores.at(i).gears.text.getGlobalBounds().width, posY);
 
-			posY +=  scores.at(i).gears.text.getGlobalBounds().height + labelsOffset;
-		}
+//			posY +=  scores.at(i).gears.text.getGlobalBounds().height + labelsOffset;
+//		}
 	}
 		break;
 	case GAME_OVER:

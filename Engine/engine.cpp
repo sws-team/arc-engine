@@ -5,16 +5,11 @@
 #include "Windows/settingswindow.h"
 #include "Windows/closewindow.h"
 #include "Windows/loadgamewindow.h"
-#include "Windows/newgamewindow.h"
 #include "gamewindow.h"
-#include "Game/Locations/garagelocation.h"
-#include "Game/Locations/shoplocation.h"
-#include "Game/Locations/mainlocation.h"
 
 Engine::Engine()
 {
 	m_state = INTRO;
-
 }
 
 Engine::GAME_STATE Engine::getState() const
@@ -50,24 +45,9 @@ StateWindow* Engine::createState(const Engine::GAME_STATE &state)
 	case LOAD_GAME:
 		stateWindow = new LoadGameWindow();
 		break;
-	case NEW_GAME:
-		stateWindow = new NewGameWindow();
-		break;
 	case IN_GAME:
 		stateWindow = new GameWindow();
 		break;
-	case SHOP_LOCATION:
-		stateWindow = new ShopLocation();
-		break;
-	case GARAGE_LOCATION:
-		stateWindow = new GarageLocation();
-		break;
-	case MAIN_LOCATION:
-		stateWindow = new MainLocation();
-		break;
-//	case MISSION:
-//		stateWindow = new MissionWindow();
-//		break;
 	default:
 		break;
 	}
@@ -79,18 +59,3 @@ Engine &Engine::Instance()
     static Engine singleton;
     return singleton;
 }
-
-//void Engine::loadTextures(const map<int, string> &fileNames)
-//{
-//	for(const pair<int, string>& textureFile : fileNames)
-//	{
-//		Texture texture;
-//		texture.loadFromFile(textureFile.second);
-//		m_textures.insert(pair<int, Texture>(textureFile.first, texture));
-//	}
-//}
-
-//Texture &Engine::getTexture(const int id)
-//{
-//	return m_textures.at(id);
-//}

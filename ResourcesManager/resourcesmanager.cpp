@@ -3,7 +3,7 @@
 ResourcesManager::ResourcesManager()
 {
 	loadTextures();
-	loadMapTextures();
+//	loadMapTextures();
 }
 
 ResourcesManager &ResourcesManager::Instance()
@@ -17,37 +17,21 @@ Texture &ResourcesManager::getTexture(RESOURCES::TEXTURE_TYPE type)
 	return m_textures.at(type);
 }
 
-Texture &ResourcesManager::getMapTexture(int id, int n)
-{
-	return maps_textures.at(id).at(n);
-}
-
 void ResourcesManager::loadTextures()
 {
+
 	addTexture(RESOURCES::PANEL_TEXTURE, "images/panel.png");
-
-	addTexture(RESOURCES::GEAR, "images/SpaceShips/gear.png");
-
-	addTexture(RESOURCES::GARAGE_BACKGROUND, "images/Locations/garage.png");
+	addTexture(RESOURCES::CURSOR_TEXTURE, "images/cursor.png");
+//	addTexture(RESOURCES::GARAGE_BACKGROUND, "images/Locations/garage.png");
 	addTexture(RESOURCES::ABOUT_BACKGROUND, "images/about.png");
 	addTexture(RESOURCES::SETTINGS_BACKGROUND, "images/options.png");
 	addTexture(RESOURCES::MENU_BACKGROUND, "images/menu.png");
-	addTexture(RESOURCES::LOAD_GAME_BACKGROUND, "images/Windows/SavedGameWindow.png");
-	addTexture(RESOURCES::NEW_GAME_BACKGROUND, "images/newGameBackground.png");
+//	addTexture(RESOURCES::LOAD_GAME_BACKGROUND, "images/Windows/SavedGameWindow.png");
+//	addTexture(RESOURCES::NEW_GAME_BACKGROUND, "images/newGameBackground.png");
 	addTexture(RESOURCES::CLOSE_BACKGROUND, "images/close.png");
 	addTexture(RESOURCES::INTRO_BACKGROUND, "images/logo.png");
-	addTexture(RESOURCES::SHOP_LOCATION_BACKGROUND, "images/Locations/bar.png");
+	/*
 	addTexture(RESOURCES::PLANETS_BACKGROUND, "images/Locations/planets.png");
-
-	addTexture(RESOURCES::MINIGUN_ICON, "images/icons/Weapons/minigun_icon.png");
-	addTexture(RESOURCES::ROCKET_ICON, "images/icons/Weapons/rocket_icon.png");
-	addTexture(RESOURCES::LASER_ICON, "images/icons/Weapons/laser_icon.png");
-	addTexture(RESOURCES::FLAMETHOWER_ICON, "images/icons/Weapons/flamethower_icon.png");
-
-	addTexture(RESOURCES::ARTIFACT_1, "images/icons/Artifacts/artifact_1.png");
-	addTexture(RESOURCES::ARTIFACT_2, "images/icons/Artifacts/artifact_2.png");
-	addTexture(RESOURCES::ARTIFACT_3, "images/icons/Artifacts/artifact_3.png");
-	addTexture(RESOURCES::ARTIFACT_4, "images/icons/Artifacts/artifact_4.png");
 
 	addTexture(RESOURCES::CRITICAL_EFFECT, "images/Effects/critical.png");
 	addTexture(RESOURCES::BURN_EFFECT, "images/Weapons/burn.png");
@@ -111,7 +95,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::FRAME_2, "images/ui/frame2.png");
 	addTexture(RESOURCES::FRAME_3, "images/ui/frame3.png");
 	addTexture(RESOURCES::FRAME_4, "images/ui/frame4.png");
-
+*/
 //	addTexture(RESOURCES::ENEMY_CHARACTER_ICON, "images/SpaceShips/gear.png");
 //	addTexture(RESOURCES::ENEMY_CHARACTER_ICON, "images/SpaceShips/gear.png");
 //	addTexture(RESOURCES::ENEMY_CHARACTER_ICON, "images/SpaceShips/gear.png");
@@ -134,22 +118,22 @@ void ResourcesManager::addTexture(RESOURCES::TEXTURE_TYPE type, const string &pa
 	m_textures.insert(pair<RESOURCES::TEXTURE_TYPE, Texture>(type, texture));
 }
 
-void ResourcesManager::loadMapTextures()
-{
-	for (int i = 1; i <= 5; ++i)
-	{
-		vector<Texture> textures;
-		Texture texture;
-		for (int j = 0; j <= 3; ++j)
-		{
-			char buffer[64];
-			sprintf (buffer, "images/Maps/map%d/s%d.png", i, j);
-			const string fileName = string(buffer);
-			texture.loadFromFile(fileName);
-			textures.push_back(texture);
-		}
-		textures.push_back(texture);
-		maps_textures.insert(pair<int, vector<Texture>>(i, textures));
-		textures.clear();
-	}
-}
+//void ResourcesManager::loadMapTextures()
+//{
+//	for (int i = 1; i <= 5; ++i)
+//	{
+//		vector<Texture> textures;
+//		Texture texture;
+//		for (int j = 0; j <= 3; ++j)
+//		{
+//			char buffer[64];
+//			sprintf (buffer, "images/Maps/map%d/s%d.png", i, j);
+//			const string fileName = string(buffer);
+//			texture.loadFromFile(fileName);
+//			textures.push_back(texture);
+//		}
+//		textures.push_back(texture);
+//		maps_textures.insert(pair<int, vector<Texture>>(i, textures));
+//		textures.clear();
+//	}
+//}

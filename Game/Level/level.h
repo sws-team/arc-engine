@@ -2,85 +2,66 @@
 #define LEVEL_H
 
 #include "stdheader.h"
+#include "graphics.h"
+#include "gamedrawable.h"
 
 class GameObject;
-class Speech;
-#include "Level/map.h"
-#include "playerleveldata.h"
-#include "Game/player.h"
+class GamePanel;
+class Camera;
 
-class Level
+class Level : public GameDrawable
 {
 public:
-    Level();
+	Level();
+	~Level() override;
 
-    ~Level();
+	void draw(RenderWindow *const window) override;
+	void update() override;
 
-//=======DRAW LEVEL========
-    void update(RenderWindow *const window);
-//=========================
+	static constexpr float LEVEL_SPEED = 1;
 
-    int getTileIdFromPos(const Vector2i &pos) const;    
+	float leftBorder() const;
+	float rightBorder() const;
+	float topBorder() const;
+	float bottomBorder() const;
+	Vector2f getCenter() const;
 
-    Building *getBuildingFromPos(int player, const Vector2i &pos) const;
-    Building *getBuildingFromPos(const Vector2i &pos) const;
-    Unit *getUnitFromPos(int player, const Vector2i &pos) const;
-    Unit *getUnitFromPos(const Vector2i &pos) const;
+	static constexpr float LEVEL_BORDER = 5.f;
 
-    CellInfo getCellInfoFromPos(const Vector2i &pos) const;
+	Vector2f getStartingPos() const;
 
-    Vector2i size() const;
+	void startMission(const unsigned int n);
 
-    void addUnit(int player, Unit *const unit);
-    void playerTurn();
+	bool isFinished() const;
 
-    bool canMoveHere(const Vector2i& pos) const;
-    bool canAttackHere(Unit *const unit) const;
+	bool isFailed() const;
 
-    void execAction(const Vector2i& pos);
+	void action();
+	void change();
 
-	void initialize();
-    void setMap(Map *levelMap);
-    void nextTurn();
-
-    int resources(int player) const;
-
-    int getCurrentPlayer() const;
-
-    bool getLevelEnd() const;
-
-    int getPlayerWin() const;
-
-    Unit *getSelectedUnit() const;
-
-    void setSelectedUnit(Unit *const unit);
-
-    void resetSelectedUnit();
-
-    Vector2i levelPos(GameObject const* object) const;
-
-	Json::Value toJson() const;
-	void loadJson(const Json::Value& json, const vector<Player> &players);
-
-	Map *currentMap();
-	void setCurrentPlayer(int value);
+	void setCamera(Camera *camera);
 
 private:
-	int currentPlayer;
 
-	bool levelEnd;
-    int playerWin;
+	float m_topBorder;
+	float m_bottomBorder;
 
-    class Unit *selectedUnit;
+	void calculateCollisions();
+	GamePanel *panel;
 
-    Vector2f pixelPos(const Vector2i& pos) const;
+	Vector2f m_startPos;
+	void fillLevel();
 
-    int avaliableAttackCount();
+	bool m_finished;
+	bool m_isFailed;	
+	float difficulty;
+	float resolutionOffsetX;
 
-    Map *levelMap;
+	void updateRatio();
 
-    Tile::TileProperties getTileProperties(int tileId) const;
-    void checkPoints();
+	void drawLevel(RenderWindow *const window);
+
+	Camera *p_camera;
 };
 
 #endif // LEVEL_H

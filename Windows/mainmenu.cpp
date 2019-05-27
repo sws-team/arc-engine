@@ -26,7 +26,8 @@ void MainMenu::accept()
 	switch (currentMenu)
 	{
 	case PLAY:
-		Engine::Instance().setState(Engine::LOAD_GAME);
+//		Engine::Instance().setState(Engine::LOAD_GAME);
+		Engine::Instance().setState(Engine::IN_GAME);
 		break;
 	case OPTIONS:
 		Engine::Instance().setState(Engine::OPTIONS);

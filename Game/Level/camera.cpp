@@ -1,5 +1,5 @@
 #include "camera.h"
-#include "Level/Cursor/cursor.h"
+#include "Game/Level/Cursor/cursor.h"
 #include "settings.h"
 #include "globalvariables.h"
 
@@ -100,5 +100,20 @@ void Camera::restore(RenderWindow * const window)
 
 void Camera::setMiniMap(View *minimap)
 {
-    this->minimap = minimap;
+	this->minimap = minimap;
+}
+
+void Camera::zoomIn()
+{
+
+}
+
+void Camera::zoomOut()
+{
+
+}
+
+void Camera::resetZoom()
+{
+
 }

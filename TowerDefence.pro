@@ -58,8 +58,8 @@ include($$PWD/Crypto/Crypto.pri)
 
 #DEFINES += TEST_BUILD
 
-#contains(DEFINES, TEST_BUILD) {
-#QMAKE_LFLAGS += -g
-#QMAKE_CXXFLAGS += -g
-#TARGET = TowerDefence_$${VERSION}_test
-#}
+contains(DEFINES, TEST_BUILD) {
+QMAKE_LFLAGS += -g
+QMAKE_CXXFLAGS += -g
+TARGET = TowerDefence_$${VERSION}_test
+}

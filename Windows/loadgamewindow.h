@@ -19,17 +19,6 @@ protected:
 	void eventFilter(Event *event) override;
 
 private:
-	struct SavedGamePanel
-	{
-		GraphicImage image;
-		bool newGame;
-
-		vector<Sprite> charactersIcons;
-//		Text text;
-	};
-	vector<SavedGamePanel*> panels;
-	unsigned int currentPanel;
-
 	void accept();
 };
 

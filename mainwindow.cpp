@@ -4,8 +4,6 @@
 #include "statewindow.h"
 
 #ifdef TEST_BUILD
-#include "Game/gamecontroller.h"
-#include "Game/objectsfactory.h"
 #include "settings.h"
 #endif
 
@@ -19,20 +17,8 @@ MainWindow::MainWindow()
 
 #ifdef TEST_BUILD
 	SavedGameLoader::Instance().setCurrentSave(0);
-
-	GameController::Instance().clear();
-	const Vector2f startPos = Vector2f(Settings::Instance().getScaleFactor().x * static_cast<float>(Settings::Instance().getResolution().x)/2,
-										Settings::Instance().getScaleFactor().y * static_cast<float>(Settings::Instance().getResolution().y)/2);
-
-	const SavedGame savedGame = SavedGameLoader::Instance().getSavedGame();
-	for(const GameState& data : savedGame.playersData)
-	{
-		SpaceShip *player = ObjectsFactory::Instance().createSpaceShip(data.spaceShip, startPos);
-		player->loadData(data);
-		GameController::Instance().addPlayer(player);
-	}
 	SavedGameLoader::Instance().setCurrentMission(0);
-	Engine::Instance().setState(Engine::MAIN_LOCATION);
+	Engine::Instance().setState(Engine::IN_GAME);
 #endif
 }
 
@@ -46,7 +32,7 @@ int MainWindow::exec()
 	while (isOpen())
 	{
 		if (Engine::Instance().getState() != state)
-		{
+		{			
 			if (currentState != nullptr)
 				delete currentState;
 
@@ -56,10 +42,9 @@ int MainWindow::exec()
 //				SavedGameLoader::Instance().save();
 				return EXIT_SUCCESS;
 			}
-			if (state == Engine::IN_GAME)
-			{
+			if (state == Engine::IN_GAME)			
 				this->setView(this->getDefaultView());
-			}
+
 			currentState = Engine::Instance().createState(Engine::Instance().getState());
 			currentState->init();
 			state = Engine::Instance().getState();

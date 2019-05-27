@@ -3,6 +3,7 @@
 
 #include "stdheader.h"
 #include "Game/gamestate.h"
+#include "Game/Level/map.h"
 
 struct SavedGame
 {	
@@ -33,7 +34,10 @@ public:
 
 	void setCurrentMission(const unsigned int n);
 	unsigned int getCurrentMission() const;
+	bool loadMap(const String &fileName);
+	void loadMaps(const String &path);
 
+	vector<Map*> maps;
 private:
 	SavedGameLoader();
 	SavedGameLoader(const SavedGameLoader& root) = delete;

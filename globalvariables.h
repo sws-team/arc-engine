@@ -14,10 +14,6 @@ public:
     String applicationPath() const;
     void setApplicationPath(const String &applicationPath);
 
-	constexpr static const float CELL_WIDTH = 128;	
-	constexpr static const float SCALED_ICON_SIZE = 48;
-	constexpr static const float SCALE_ICON_RATE = SCALED_ICON_SIZE / CELL_WIDTH;
-	static constexpr size_t MAX_CHARACTERS = 3;
 	static constexpr float FRAME_TIME = 1.0f / 60.0f;
 
     void saveGameSettings();
@@ -42,7 +38,7 @@ public:
 	}
 
 	Vector2i tileSize() const;
-	void setTileSize(const Vector2i &tileSize);
+	constexpr static const int CELL_SIZE = 32;
 
 private:
 	GlobalVariables();
@@ -54,8 +50,6 @@ private:
     Vector2i getScreenResolution() const;
 	bool m_control;
 	ControlSettings m_controls;
-
-	Vector2i m_tileSize;
 
 	void createDefaultControls();
 };

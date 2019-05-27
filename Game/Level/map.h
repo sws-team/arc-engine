@@ -37,32 +37,29 @@ class GameController;
 class Map
 {
 public:
-    Map();
 
-    enum CATEGORY
-    {
-        UNKNOWN,
-        CAMPAIGN,
-        SKIRMISH
-    };
+	Map():
+		width(0)
+	  ,height(0)
+	  ,playersCount(0)
+	{
 
-    CATEGORY category;
+	}
+	~Map()
+	{
 
-    int width;
+	}
+
+
+	int width;
     int height;
 
     string name;
 
-    Vector2i tileSize;
     map<int, Tile::TileProperties> tileProperties;
-    Texture tilesetImage;
-    vector<Layer> layers;
-    list<Building*> buildings;
-
+	Texture tilesetImage;
+	vector<Layer> layers;
     int playersCount;
-
-    Speech *speech;
-    GameController *gameController;
 
     map<int, Sprite> tileSprites;
     Texture icon;

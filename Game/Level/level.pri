@@ -1,11 +1,10 @@
 HEADERS += \
     $$PWD/camera.h \
+    $$PWD/cursor.h \
     $$PWD/level.h \
     $$PWD/map.h
 
 SOURCES += \
     $$PWD/camera.cpp \
-    $$PWD/level.cpp \
-    $$PWD/map.cpp
-
-include($$PWD/Cursor/Cursor.pri)
+    $$PWD/cursor.cpp \
+    $$PWD/level.cpp

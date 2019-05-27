@@ -27,6 +27,10 @@ public:
     void restore(RenderWindow *const window);
     void setMiniMap(View *minimap);
 
+	void zoomIn();
+	void zoomOut();
+	void resetZoom();
+
 private:
     Cursor *cursor;
     constexpr static float CAMERA_OFFSET = 4.f;
@@ -38,6 +42,8 @@ private:
     Vector2f centerOfBottomRightPoint;
 
     View *minimap;
+
+	float m_zoomRatio;
 };
 
 #endif // CAMERA_H

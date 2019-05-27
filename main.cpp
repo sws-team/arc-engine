@@ -2,7 +2,6 @@
 #include "globalvariables.h"
 #include "settings.h"
 #include "savedgame.h"
-#include "Game/mission.h"
 #include "Translations/language.h"
 
 #ifdef OS_WIN
@@ -46,6 +45,8 @@ int main(int argc, char *argv[])
 #endif
 
 	Language::Instance().load();
+	SavedGameLoader::Instance().loadMaps("maps");
+
 //	if (!Campaign::Instance().loadWeapons("weapons"))
 //	{
 //		MessageBoxA(nullptr, "Cant read weapons file", "Error", 0);
@@ -61,7 +62,8 @@ int main(int argc, char *argv[])
 //		MessageBoxA(nullptr, "Cant read campaign file", "Error", 0);
 //		return EXIT_FAILURE;
 //	}
-	SavedGameLoader::Instance().load();
+
+//	SavedGameLoader::Instance().load();
 
 	MainWindow w;
 	Settings::Instance().setMainWindow(&w);

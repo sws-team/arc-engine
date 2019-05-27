@@ -1,9 +1,5 @@
 #include "gamepanel.h"
-#include "SpaceShip/spaceship.h"
 #include "globalvariables.h"
-#include "gamecontroller.h"
-#include "SpaceShip/Weapons/abstractweapon.h"
-#include "Characters/character.h"
 #include "settings.h"
 #include "level.h"
 #include "ResourcesManager/resourcesmanager.h"
@@ -32,43 +28,7 @@ GamePanel::~GamePanel()
 
 void GamePanel::draw(RenderWindow * const window)
 {
-	const bool odd = GameController::Instance().players().size() % 2 == 0;
-	if (GameController::Instance().players().size() > panels.size())
-	{
-		const unsigned int newPanelsCount = GameController::Instance().players().size() - panels.size();
-		for (unsigned int i = 0; i < newPanelsCount; ++i)
-		{
-			Panel panel;
-			panel.sprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_TEXTURE));
-			if (odd)
-				panel.sprite.setTextureRect(IntRect(480, 0, 980, 64));
-			panel.sprite.scale(Settings::Instance().getScaleFactor());
-
-			panel.health.init(Vector2f(LINE_WIDTH * Settings::Instance().getScaleFactor().x,
-									   LINE_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
-
-			panel.shield.init(Vector2f(LINE_WIDTH * Settings::Instance().getScaleFactor().x,
-									   LINE_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Blue);
-
-			panel.energy.init(Vector2f(LINE_WIDTH * Settings::Instance().getScaleFactor().x,
-									   LINE_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Magenta);
-
-			panel.ammoText.setFillColor(Color::White);
-			panel.ammoText.setFont(GlobalVariables::Instance().font());
-			panel.ammoText.setCharacterSize(CHARACTERS_SIZE);
-			panel.ammoText.scale(Settings::Instance().getScaleFactor());
-
-			panel.scoreText.setFillColor(Color::White);
-			panel.scoreText.setFont(GlobalVariables::Instance().font());
-			panel.scoreText.setCharacterSize(CHARACTERS_SIZE);
-			panel.scoreText.scale(Settings::Instance().getScaleFactor());
-
-			panels.push_back(panel);
-		}
-	}
-
-	for (unsigned int i = 0; i < GameController::Instance().players().size(); ++i)
-	{
+/*
 		const float startPosX = i % 2 == 0 ? 0 : Settings::Instance().getResolution().x/2;
 		const float startPoxY = i > 1 ? m_height : 0;
 
@@ -100,7 +60,7 @@ void GamePanel::draw(RenderWindow * const window)
 			posX += m_cellSize.x + m_panelHorizontalOffset/2;
 			window->draw(weapon->getScaledIcon());
 
-			panels.at(i).ammoText.setPosition(posX, posY + m_panelHorizontalOffset/2/* + panels.at(i).ammoText.getGlobalBounds().height/2*/);
+			panels.at(i).ammoText.setPosition(posX, posY + m_panelHorizontalOffset/2);
 			panels.at(i).ammoText.setString(std::to_string(weapon->getAmmo()));
 			window->draw(panels.at(i).ammoText);
 		}
@@ -161,11 +121,11 @@ void GamePanel::draw(RenderWindow * const window)
 		//dollar
 		posX += 16;
 		//score
-		panels.at(i).scoreText.setPosition(posX, posY + m_panelHorizontalOffset/2/* + panels.at(i).scoreText.getGlobalBounds().height/2*/);
+		panels.at(i).scoreText.setPosition(posX, posY + m_panelHorizontalOffset/2);
 		const float score = p_level->getLevelBonuses().at(player);
 		panels.at(i).scoreText.setString(GlobalVariables::to_string_with_precision(score, 1));
 		window->draw(panels.at(i).scoreText);
-	}
+	*/
 }
 
 void GamePanel::update()

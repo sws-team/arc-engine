@@ -40,19 +40,14 @@ Vector2i GlobalVariables::getScreenResolution() const
 
 Vector2i GlobalVariables::tileSize() const
 {
-	return m_tileSize;
-}
-
-void GlobalVariables::setTileSize(const Vector2i &tileSize)
-{
-	m_tileSize = tileSize;
+	return Vector2i(Settings::Instance().getScaleFactor().x * CELL_SIZE,
+					Settings::Instance().getScaleFactor().y * CELL_SIZE);
 }
 
 void GlobalVariables::createDefaultControls()
 {
 	{//keyboard
 		ControlSettings keyboardControls;
-		keyboardControls.joystickId = 0;
 
 		keyboardControls.moveUp = Keyboard::W;
 		keyboardControls.moveDown = Keyboard::S;
@@ -66,7 +61,6 @@ void GlobalVariables::createDefaultControls()
 		m_controls = keyboardControls;
 	}	
 //		ControlSettings joystickSettings;
-//		joystickSettings.joystickId = i + 1;
 
 //		joystickSettings.moveUp = Joystick::Y;
 //		joystickSettings.moveDown = Joystick::Y;
@@ -95,7 +89,6 @@ ControlSettings GlobalVariables::controls() const
 
 void GlobalVariables::loadControls()
 {
-	return;
 	const string fileName = applicationPath().toAnsiString() + string("/controls");
 	ifstream stream(fileName);
 

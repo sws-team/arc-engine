@@ -3,7 +3,7 @@
 
 #include "stdheader.h"
 #include "gamedrawable.h"
-#include "SpaceShip/lifebar.h"
+#include "lifebar.h"
 
 class SpaceShip;
 class Level;
