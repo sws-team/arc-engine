@@ -10,7 +10,7 @@ struct Animation : public GameDrawable
 {
 	Animation();
 	virtual ~Animation() override;
-	virtual void draw(RenderWindow *const window) override;
+	virtual void draw(RenderTarget *const target) override;
 	void update() override;
 
 	void setTextureId(const RESOURCES::TEXTURE_TYPE& texture_id);
@@ -51,7 +51,7 @@ public:
 					   int frameCount,
 					   int row = 0);
 
-	void draw(RenderWindow *const window) override;
+	void draw(RenderTarget *const target) override;
 	void update() override;
 
 	void removeAnimation(Animation *animation);

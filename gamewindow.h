@@ -22,8 +22,6 @@ protected:
 
 private:
 	class Level *level;
-	class Camera *camera;
-	class Cursor *cursor;
 	class Controller *controller;
 
 	Text paused;

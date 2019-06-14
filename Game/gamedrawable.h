@@ -17,7 +17,7 @@ public:
 
 	}
 
-	virtual void draw(RenderWindow *const window) = 0;
+	virtual void draw(RenderTarget *const target) = 0;
 	virtual void update() = 0;
 
 protected:

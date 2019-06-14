@@ -1,119 +1,108 @@
 #include "camera.h"
-#include "Game/Level/Cursor/cursor.h"
+#include "cursor.h"
 #include "settings.h"
 #include "globalvariables.h"
+#include "Engine/engine.h"
 
 Camera::Camera()
 {
 
 }
 
-void Camera::init(const View &fixed, const Vector2i &levelSize)
+void Camera::init()
 {
     const FloatRect gameRect = FloatRect(0, 0, Settings::Instance().getResolution().x, Settings::Instance().getResolution().y);
     view = new View(gameRect);
+	minimap = new View(gameRect);
 
-    this->fixed = fixed;
+	resetZoom();
 
-    view->zoom(Settings::GAME_SCALE);
-
-    centerOfTopLeftPoint = Vector2f(gameRect.width * Settings::GAME_SCALE/2, gameRect.height * Settings::GAME_SCALE/2);
-    view->setCenter(centerOfTopLeftPoint);
-
-    centerOfBottomRightPoint = Vector2f(levelSize.x * GlobalVariables::Instance().tileSize().x, levelSize.y * GlobalVariables::Instance().tileSize().y) - centerOfTopLeftPoint;
-}
-
-void Camera::setCursor(Cursor * const cursor)
-{
-    this->cursor = cursor;
+	view->setCenter(Vector2f(gameRect.width * Settings::GAME_SCALE/2, gameRect.height * Settings::GAME_SCALE/2));
+	minimap->setCenter(Vector2f(150, 150));
 }
 
 void Camera::moveUp(float offset)
 {
-    if (view->getCenter().y > centerOfTopLeftPoint.y)
-    {
-        view->move(0.f, -offset);
-        minimap->move(0.f, -offset);
-    }
+	view->move(0.f, -offset);
+	minimap->move(0.f, -offset);
 }
 
 void Camera::moveDown(float offset)
 {
-    if (view->getCenter().y < centerOfBottomRightPoint.y + GlobalVariables::Instance().tileSize().y)
-    {
-        view->move(0.f, offset);
-        minimap->move(0.f, offset);
-    }
+	view->move(0.f, offset);
+	minimap->move(0.f, offset);
 }
 
 void Camera::moveLeft(float offset)
 {
-    if (view->getCenter().x > centerOfTopLeftPoint.x)
-    {
-        view->move(-offset, 0.f);
-        minimap->move(-offset, 0.f);
-    }
+	view->move(-offset, 0.f);
+	minimap->move(-offset, 0.f);
 }
 
 void Camera::moveRight(float offset)
 {
-    if (view->getCenter().x < centerOfBottomRightPoint.x)
-    {
-        view->move(offset, 0.f);
-        minimap->move(offset, 0.f);
-    }
+	view->move(offset, 0.f);
+	minimap->move(offset, 0.f);
 }
 
 void Camera::moveUpByCell()
 {
-    if (cursor->pos().y * GlobalVariables::Instance().tileSize().y < view->getCenter().y)
-        moveUp(GlobalVariables::Instance().tileSize().y);
+//	if (Engine::Instance().cursor()->pos().y * GlobalVariables::CELL_SIZE < view->getCenter().y)
+		moveUp(GlobalVariables::Instance().tileSize().y);
 }
 
-void Camera::moveDowByCell()
+void Camera::moveDownByCell()
 {
-    if (cursor->pos().y * GlobalVariables::Instance().tileSize().y > view->getCenter().y)
-        moveDown(GlobalVariables::Instance().tileSize().y);
+//	if (Engine::Instance().cursor()->pos().y * GlobalVariables::CELL_SIZE > view->getCenter().y)
+		moveDown(GlobalVariables::Instance().tileSize().y);
 }
 
 void Camera::moveLeftByCell()
 {
-    if (cursor->pos().x * GlobalVariables::Instance().tileSize().x < view->getCenter().x)
-        moveLeft(GlobalVariables::Instance().tileSize().x);
+//	if (Engine::Instance().cursor()->pos().x * GlobalVariables::CELL_SIZE < view->getCenter().x)
+		moveLeft(GlobalVariables::Instance().tileSize().x);
 }
 
 void Camera::moveRightByCell()
 {
-    if (cursor->pos().x * GlobalVariables::Instance().tileSize().x > view->getCenter().x)
-        moveRight(GlobalVariables::Instance().tileSize().x);
+//	if (Engine::Instance().cursor()->pos().x * GlobalVariables::CELL_SIZE > view->getCenter().x)
+	moveRight(GlobalVariables::Instance().tileSize().x);
 }
 
-void Camera::setView(RenderWindow * const window)
+View *Camera::getView()
 {
-    window->setView(*view);
+	return view;
 }
 
-void Camera::restore(RenderWindow * const window)
+View *Camera::getMiniMapView()
 {
-    window->setView(fixed);
-}
-
-void Camera::setMiniMap(View *minimap)
-{
-	this->minimap = minimap;
+	return minimap;
 }
 
 void Camera::zoomIn()
 {
-
+//	if (zoomRatio > MAX_ZOOM)
+//		return;
+	view->zoom(1 - ZOOM_RATIO);
+	minimap->zoom(1 - ZOOM_RATIO);
+	zoomRatio++;
 }
 
 void Camera::zoomOut()
 {
-
+//	if (zoomRatio < -MAX_ZOOM)
+//		return;
+	view->zoom(1 + ZOOM_RATIO);
+	minimap->zoom(1 + ZOOM_RATIO);
+	zoomRatio--;
 }
 
 void Camera::resetZoom()
 {
+	view->setSize(Settings::Instance().getResolution().x, Settings::Instance().getResolution().y);
+	view->zoom(Settings::GAME_SCALE);
 
+	minimap->setSize(300, 300);
+	minimap->zoom(0.1f);
+	zoomRatio = 0;
 }

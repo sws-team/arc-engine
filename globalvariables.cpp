@@ -96,7 +96,7 @@ void GlobalVariables::loadControls()
 	Json::Value obj;
 	if (!reader.parse(stream, obj))
 	{
-		cout << "cant read controls"<<endl;
+		cout << "cant read controls from: "<<fileName << endl;
 		createDefaultControls();
 		return;
 	}

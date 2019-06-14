@@ -7,14 +7,40 @@
 #include "Windows/loadgamewindow.h"
 #include "gamewindow.h"
 
+#include "Game/Level/camera.h"
+#include "Game/Level/cursor.h"
+#include "Game/Level/level.h"
+
 Engine::Engine()
 {
 	m_state = INTRO;
+	m_camera = new Camera();
+	m_cursor = new Cursor();
+}
+
+View Engine::getView() const
+{
+	return m_view;
+}
+
+void Engine::setView(const View &view)
+{
+	m_view = view;
+}
+
+Camera *Engine::camera() const
+{
+	return m_camera;
+}
+
+Cursor *Engine::cursor() const
+{
+	return m_cursor;
 }
 
 Engine::GAME_STATE Engine::getState() const
 {
-    return m_state;
+	return m_state;
 }
 
 void Engine::setState(const GAME_STATE &state)

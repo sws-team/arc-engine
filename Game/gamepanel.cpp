@@ -1,7 +1,7 @@
 #include "gamepanel.h"
 #include "globalvariables.h"
 #include "settings.h"
-#include "level.h"
+#include "Level/level.h"
 #include "ResourcesManager/resourcesmanager.h"
 
 #include <stdlib.h>
@@ -26,7 +26,7 @@ GamePanel::~GamePanel()
 
 }
 
-void GamePanel::draw(RenderWindow * const window)
+void GamePanel::draw(RenderTarget * const target)
 {
 /*
 		const float startPosX = i % 2 == 0 ? 0 : Settings::Instance().getResolution().x/2;

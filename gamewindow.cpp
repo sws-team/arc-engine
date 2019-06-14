@@ -2,10 +2,10 @@
 #include "settings.h"
 #include "controller.h"
 #include "Game/Audio/soundcontroller.h"
-#include "Game/level.h"
+#include "Game/Level/level.h"
 #include "savedgame.h"
 #include "globalvariables.h"
-#include "Game/Level/Cursor/cursor.h"
+#include "Game/Level/cursor.h"
 
 GameWindow::GameWindow()
 	: Menu()
@@ -15,8 +15,7 @@ GameWindow::GameWindow()
 	m_state = PLAYING;
 
 	level = new Level();
-	cursor = new Cursor();
-	controller = new Controller(level, cursor);
+	controller = new Controller();
 
 	paused.setString("Paused");
 	paused.setFillColor(Color::Blue);
@@ -80,7 +79,6 @@ void GameWindow::init()
 void GameWindow::paint(RenderWindow *window)
 {
 	level->draw(window);
-	cursor->draw(window);
 	switch (m_state)
 	{
 	case PLAYING:
@@ -174,7 +172,7 @@ void GameWindow::update()
 		SavedGameLoader::Instance().save();
 		return;
 	}
-	cursor->update();
+	Engine::Instance().cursor()->update();
 	level->update();
 }
 

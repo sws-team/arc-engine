@@ -3,7 +3,7 @@
 
 #include "stdheader.h"
 #include "graphics.h"
-#include "gamedrawable.h"
+#include "Game/gamedrawable.h"
 
 class GameObject;
 class GamePanel;
@@ -15,15 +15,11 @@ public:
 	Level();
 	~Level() override;
 
-	void draw(RenderWindow *const window) override;
+	void draw(RenderTarget * const target) override;
 	void update() override;
 
 	static constexpr float LEVEL_SPEED = 1;
 
-	float leftBorder() const;
-	float rightBorder() const;
-	float topBorder() const;
-	float bottomBorder() const;
 	Vector2f getCenter() const;
 
 	static constexpr float LEVEL_BORDER = 5.f;
@@ -39,29 +35,25 @@ public:
 	void action();
 	void change();
 
-	void setCamera(Camera *camera);
-
 private:
-
-	float m_topBorder;
-	float m_bottomBorder;
-
 	void calculateCollisions();
 	GamePanel *panel;
 
 	Vector2f m_startPos;
-	void fillLevel();
 
 	bool m_finished;
 	bool m_isFailed;	
 	float difficulty;
 	float resolutionOffsetX;
 
-	void updateRatio();
+	void drawLevel(RenderTarget * const target);
 
-	void drawLevel(RenderWindow *const window);
+	Texture testTexture;
+	Sprite m_background;
 
-	Camera *p_camera;
+	RectangleShape minimapRect;
+	RenderTexture rTexture;
+	Texture test;
 };
 
 #endif // LEVEL_H

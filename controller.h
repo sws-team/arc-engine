@@ -11,7 +11,7 @@ class Cursor;
 class Controller
 {
 public:
-	Controller(Level* level, Cursor *cursor);
+	Controller();
 	void setPauseFunc(const function<void ()> &value);
 	void keyEvent();
 	void pausedEvents();
@@ -22,12 +22,10 @@ private:
 	void joystickKeyEvent(const bool timeout);
 
 	Level *level;
-	class Camera *camera;
-	Cursor *cursor;
 	Timer timerKey;
 	Timer timerMove;
 
-	constexpr static int CONTROLLER_TIME = 100;
+	constexpr static int CONTROLLER_TIME = 50;
 
 	function<void()> pauseFunc;
 

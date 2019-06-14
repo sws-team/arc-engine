@@ -33,10 +33,10 @@ void Effects::showAnimation(const RESOURCES::TEXTURE_TYPE& texture_id,
 	animations.push_back(animation);
 }
 
-void Effects::draw(RenderWindow * const window)
+void Effects::draw(RenderTarget * const target)
 {
 	for(Animation* animation : animations)
-		animation->draw(window);
+		animation->draw(target);
 }
 
 void Effects::update()
@@ -90,12 +90,12 @@ void Animation::setShader(Shader *shader)
 	this->shader = shader;
 }
 
-void Animation::draw(RenderWindow * const window)
+void Animation::draw(RenderTarget * const target)
 {
 	if (shader == nullptr)
-		window->draw(sprite, transform);
+		target->draw(sprite, transform);
 	else
-		window->draw(sprite, shader);
+		target->draw(sprite, shader);
 }
 
 void Animation::setTextureId(const RESOURCES::TEXTURE_TYPE &texture_id)

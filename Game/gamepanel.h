@@ -14,7 +14,7 @@ public:
 	GamePanel(Level *level);
 	~GamePanel() override;
 
-	void draw(RenderWindow *const window) override;
+	void draw(RenderTarget *const target) override;
 	void update() override;
 
 	void setLeftBorder(float left);

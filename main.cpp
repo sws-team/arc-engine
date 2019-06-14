@@ -15,6 +15,9 @@
 #include "steam_api.h"
 #endif
 
+#include <iostream>
+#include <fstream>
+
 int main(int argc, char *argv[])
 {
 	std::srand(std::time(nullptr));
@@ -27,7 +30,9 @@ int main(int argc, char *argv[])
 			+ String(".exe")
 #endif
 	;
+//	std::cout << path.toAnsiString() << std::endl << appName.toAnsiString() << std::endl;
 	path.replace(appName, String());
+//	std::cout << path.toAnsiString() << std::endl;
 
     GlobalVariables::Instance().setApplicationPath(path);
 

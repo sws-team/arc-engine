@@ -29,6 +29,7 @@ MainWindow::~MainWindow()
 
 int MainWindow::exec()
 {
+	Engine::Instance().setView(this->getView());
 	while (isOpen())
 	{
 		if (Engine::Instance().getState() != state)

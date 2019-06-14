@@ -1,17 +1,13 @@
 #include "controller.h"
-#include "Game/level.h"
+#include "Game/Level/level.h"
 #include "globalvariables.h"
-#include "Game/Level/Cursor/cursor.h"
+#include "Engine/engine.h"
 #include "Game/Level/camera.h"
+#include "Game/Level/cursor.h"
 
-Controller::Controller(Level *level, Cursor *cursor)
-	: level(level)
-	,cursor(cursor)
+Controller::Controller()
 {
 	m_controls = GlobalVariables::Instance().controls();
-
-	camera = new Camera();
-	level->setCamera(camera);
 }
 
 void Controller::keyEvent()
@@ -32,43 +28,43 @@ void Controller::keyboardKeyEvent(const bool timeout)
 		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.start)))
 			pauseFunc();
 		if (Keyboard::isKeyPressed(Keyboard::Left))
-			camera->moveLeft();
+			Engine::Instance().camera()->moveLeftByCell();
 		if (Keyboard::isKeyPressed(Keyboard::Right))
-			camera->moveRight();
+			Engine::Instance().camera()->moveRightByCell();
 		if (Keyboard::isKeyPressed(Keyboard::Up))
-			camera->moveUp();
+			Engine::Instance().camera()->moveUpByCell();
 		if (Keyboard::isKeyPressed(Keyboard::Down))
-			camera->moveDown();
+			Engine::Instance().camera()->moveDownByCell();
 		if (Keyboard::isKeyPressed(Keyboard::BackSpace))
-			camera->resetZoom();
+			Engine::Instance().camera()->resetZoom();
 		if (Keyboard::isKeyPressed(Keyboard::Add))
-			camera->zoomIn();
+			Engine::Instance().camera()->zoomIn();
 		if (Keyboard::isKeyPressed(Keyboard::Subtract))
-			camera->zoomOut();
+			Engine::Instance().camera()->zoomOut();
 
 		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveLeft)))
 		{
-			if (!cursor->canMove(Cursor::MOVE_LEFT))
+			if (!Engine::Instance().cursor()->canMove(Cursor::MOVE_LEFT))
 				return;
-			cursor->moveLeft();
+			Engine::Instance().cursor()->moveLeft();
 		}
 		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveRight)))
 		{
-			if (!cursor->canMove(Cursor::MOVE_RIGHT))
+			if (!Engine::Instance().cursor()->canMove(Cursor::MOVE_RIGHT))
 				return;
-			cursor->moveRight();
+			Engine::Instance().cursor()->moveRight();
 		}
 		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveUp)))
 		{
-			if (!cursor->canMove(Cursor::MOVE_UP))
+			if (!Engine::Instance().cursor()->canMove(Cursor::MOVE_UP))
 				return;
-			cursor->moveUp();
+			Engine::Instance().cursor()->moveUp();
 		}
 		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveDown)))
 		{
-			if (!cursor->canMove(Cursor::MOVE_DOWN))
+			if (!Engine::Instance().cursor()->canMove(Cursor::MOVE_DOWN))
 				return;
-			cursor->moveDown();
+			Engine::Instance().cursor()->moveDown();
 		}
 	}
 

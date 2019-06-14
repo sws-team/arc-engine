@@ -2,9 +2,10 @@
 #include "globalvariables.h"
 #include "Game/Audio/soundcontroller.h"
 #include "ResourcesManager/textures_types.h"
+#include "settings.h"
 
 Cursor::Cursor()
-	: GameObject(RESOURCES::CURSOR_TEXTURE, Vector2f(0,0), GlobalVariables::Instance().tileSize(), 2)
+	: GameObject(RESOURCES::CURSOR_TEXTURE, Vector2f(0,0), Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE)/* GlobalVariables::Instance().tileSize()*/, 2)
 {
 	m_cell = Vector2i(0, 0);
 	m_maxCell = Vector2i(60, 34);
