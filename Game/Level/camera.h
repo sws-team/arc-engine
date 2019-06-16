@@ -28,16 +28,33 @@ public:
 	void zoomOut();
 	void resetZoom();
 
+	void centerOnCursor(const Vector2i& cell);
+	Vector2i currentCenterCell() const;
+
+	// count of cells on currenr view
+	Vector2i currentViewCells() const;
+
+	void detach();
+	bool isDetached() const;
+
+
+
+	Vector2i posToCell(const Vector2f &pos) const;
+	Vector2f cellToPos(const Vector2i &cell) const;
+
 private:
     constexpr static float CAMERA_OFFSET = 4.f;
+	constexpr static int MAX_ZOOM = 10;
+	constexpr static float ZOOM_RATIO = 0.1f;
+	constexpr static float MINIMAP_ZOOM = 0.1f;
 
 	View *view;
     View *minimap;
 
-	Vector2f m_pos;
 	int zoomRatio;
-	constexpr static int MAX_ZOOM = 10;
-	constexpr static float ZOOM_RATIO = 0.1f;
+
+
+	bool m_detached;
 
 };
 

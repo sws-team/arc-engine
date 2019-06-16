@@ -17,43 +17,15 @@ public:
 	void draw(RenderTarget *const target) override;
 	void update() override;
 
-	void setLeftBorder(float left);
-
-	float height() const;
-
-	void setTop(float y);
-
-private:
-
-	struct Panel
-	{
-		Sprite sprite;
-		LifeBar health;
-		LifeBar shield;
-		LifeBar energy;
-		Text ammoText;
-		Text scoreText;
-	};
-	vector<Panel> panels;
-
-	float m_height;
-
-	float m_top;
-	float m_left;
-
-	constexpr static int CELL_SIZE = 48;
-	Vector2f m_cellSize;
-
-	constexpr static float HORIZONTAL_OFFSET = 16.f;
-	float m_panelHorizontalOffset;
-	constexpr static float VERTICAL_OFFSET = 8.f;
-	float m_panelVerticalOffset;
-
-	constexpr static int LINE_WIDTH = 152.f;
-	constexpr static int LINE_HEIGHT = 24.f;
-	constexpr static int AMMO_SIZE = 40.f;
+private:	
+	constexpr static float PANEL_WIDTH = 1920.f;
+	constexpr static float PANEL_HEIGHT = 320.f;
+	constexpr static float PANEL_SCALE = 0.2f;
 
 	Level *p_level;
+	Sprite m_sprite;
+	RenderTexture rTexture;
+
 };
 
 #endif // GAMEPANEL_H

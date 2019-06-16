@@ -7,7 +7,7 @@
 
 class GameObject;
 class GamePanel;
-class Camera;
+class Tile;
 
 class Level : public GameDrawable
 {
@@ -35,8 +35,17 @@ public:
 	void action();
 	void change();
 
+	void drawLevel(RenderTarget * const target);
+
+	void spawn();
+
+	Tile getTileByPos(const Vector2f& pos);
+	Tile getTileByCell(const Vector2i& cell);
+
 private:
 	void calculateCollisions();
+	void checkDeadZone();
+
 	GamePanel *panel;
 
 	Vector2f m_startPos;
@@ -46,14 +55,15 @@ private:
 	float difficulty;
 	float resolutionOffsetX;
 
-	void drawLevel(RenderTarget * const target);
-
 	Texture testTexture;
 	Sprite m_background;
 
-	RectangleShape minimapRect;
-	RenderTexture rTexture;
-	Texture test;
+	RectangleShape deadZone;
+
+	class Map *gameMap;
+	vector<GameObject*> enemies;
+
+	void moveEnemy(GameObject* enemy, int direction);
 };
 
 #endif // LEVEL_H

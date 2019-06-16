@@ -5,6 +5,7 @@
 #include "Engine/engine.h"
 
 Camera::Camera()
+	: m_detached(false)
 {
 
 }
@@ -103,6 +104,45 @@ void Camera::resetZoom()
 	view->zoom(Settings::GAME_SCALE);
 
 	minimap->setSize(300, 300);
-	minimap->zoom(0.1f);
+	minimap->zoom(MINIMAP_ZOOM);
 	zoomRatio = 0;
+}
+
+void Camera::centerOnCursor(const Vector2i &cell)
+{
+	view->setCenter(cellToPos(cell));
+	m_detached = false;
+}
+
+Vector2i Camera::currentCenterCell() const
+{
+	return posToCell(view->getCenter());
+}
+
+Vector2i Camera::currentViewCells() const
+{
+	return Vector2i(view->getSize().x / GlobalVariables::Instance().tileSize().x,
+					view->getSize().y / GlobalVariables::Instance().tileSize().y);
+}
+
+void Camera::detach()
+{
+	m_detached = true;
+}
+
+bool Camera::isDetached() const
+{
+	return m_detached;
+}
+
+Vector2i Camera::posToCell(const Vector2f& pos) const
+{
+	return Vector2i(floor(pos.x / GlobalVariables::Instance().tileSize().x),
+					floor(pos.y / GlobalVariables::Instance().tileSize().y));
+}
+
+Vector2f Camera::cellToPos(const Vector2i &cell) const
+{
+	return Vector2f(cell.x * GlobalVariables::Instance().tileSize().x,
+					cell.y * GlobalVariables::Instance().tileSize().y);
 }

@@ -6,7 +6,6 @@
 #include "timer.h"
 
 class Level;
-class Cursor;
 
 class Controller
 {
@@ -15,13 +14,14 @@ public:
 	void setPauseFunc(const function<void ()> &value);
 	void keyEvent();
 	void pausedEvents();
+	void setLevel(Level *level);
 
 private:
 
 	void keyboardKeyEvent(const bool timeout);
 	void joystickKeyEvent(const bool timeout);
 
-	Level *level;
+	Level *p_level;
 	Timer timerKey;
 	Timer timerMove;
 

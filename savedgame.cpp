@@ -237,8 +237,6 @@ bool SavedGameLoader::loadMap(const String &fileName)
 
 			if (propertyName == "name")
 				gameMap->name = propertyValue;
-			else if (propertyName == "playerCount")
-				gameMap->playersCount = stoi(propertyValue);
 			else if (propertyName == "description")
 				gameMap->decription = propertyValue;
 			else if (propertyName == "icon")
@@ -267,14 +265,10 @@ bool SavedGameLoader::loadMap(const String &fileName)
 			{
 				const string propertyName = prop->Attribute("name");
 				const string propertyValue = prop->Attribute("value");
-				if (propertyName == "defenceBonus")
-				{
-					tileProperty.defenceBonus = stof(propertyValue);
-				}
-				else if (propertyName == "solid")
-				{
-					tileProperty.isSolid = true;
-				}
+
+				if (propertyName == "direction")
+					tileProperty.direction = stoi(propertyValue);
+
 				prop = prop->NextSiblingElement("property");
 			}
 		}
@@ -317,7 +311,7 @@ bool SavedGameLoader::loadMap(const String &fileName)
 			subRects.push_back(rect);
 		}
 
-	// работа со слоями
+	//tiles
 	TiXmlElement *layerElement = mapElement->FirstChildElement("layer");
 	while (layerElement)
 	{
@@ -374,12 +368,12 @@ bool SavedGameLoader::loadMap(const String &fileName)
 				Tile tile;
 				tile.sprite = sprite;
 				tile.id = tileGID;
-				tile.pos = Vector2i(x, y);
+				tile.cell = Vector2i(x, y);
 
 				layer.tiles.push_back(tile);
 
-				if (gameMap->tileSprites.find(tileGID) == gameMap->tileSprites.end())
-					gameMap->tileSprites.insert(pair<int, Sprite>(tileGID, sprite));
+//				if (gameMap->tileSprites.find(tileGID) == gameMap->tileSprites.end())
+//					gameMap->tileSprites.insert(pair<int, Sprite>(tileGID, sprite));
 			}
 
 			tileElement = tileElement->NextSiblingElement("tile");
@@ -399,11 +393,8 @@ bool SavedGameLoader::loadMap(const String &fileName)
 		layerElement = layerElement->NextSiblingElement("layer");
 	}
 
-	// работа с объектами
+	//objects
 	TiXmlElement *objectGroupElement;
-
-	// если есть слои объектов
-	/*
 	if (mapElement->FirstChildElement("objectgroup") != nullptr)
 	{
 		objectGroupElement = mapElement->FirstChildElement("objectgroup");
@@ -429,13 +420,14 @@ bool SavedGameLoader::loadMap(const String &fileName)
 				int x = atoi(objectElement->Attribute("x"));
 				int y = atoi(objectElement->Attribute("y"));
 
-				int width = 0, height = 0;
+				if (objectName == "spawn")
+				{
+					gameMap->spawnPos.x = x/GlobalVariables::CELL_SIZE;
+					gameMap->spawnPos.y = y/GlobalVariables::CELL_SIZE;
+				}
 
-				Sprite sprite;
-				sprite.setTexture(gameMap.tilesetImage);
-				sprite.setTextureRect(sf::Rect<int>(0, 0, 0, 0));
-				sprite.setPosition(x, y);
-
+				int width = 0;
+				int height = 0;
 				if (objectElement->Attribute("width") != nullptr)
 				{
 					width = atoi(objectElement->Attribute("width"));
@@ -445,18 +437,7 @@ bool SavedGameLoader::loadMap(const String &fileName)
 				{
 					width = subRects[atoi(objectElement->Attribute("gid")) - firstTileID].width;
 					height = subRects[atoi(objectElement->Attribute("gid")) - firstTileID].height;
-					sprite.setTextureRect(subRects[atoi(objectElement->Attribute("gid")) - firstTileID]);
 				}
-
-//				Building *object = new Building();
-//				object->setName(objectName);
-//				//                object.type = objectType;
-//				object->setSprite(sprite);
-
-//				Vector2f objectPos;
-//				objectPos.y = y;
-//				objectPos.x = x;
-//				object->setPos(objectPos);
 
 				// "переменные" объекта
 				TiXmlElement *properties;
@@ -470,13 +451,12 @@ bool SavedGameLoader::loadMap(const String &fileName)
 						{
 							const string propertyName = prop->Attribute("name");
 							const string propertyValue = prop->Attribute("value");
-//							if (propertyName == "number")
-//								object->setNumber(atoi(propertyValue.c_str()));
-//							else if (propertyName == "type")
-//								object->setBuildingType(static_cast<Building::BUILDINGS_TYPE>(atoi(propertyValue.c_str())));
-//							else if(propertyName == "id")
-//								object->setId(atoi(propertyValue.c_str()));
 
+							if (objectName == "spawn")
+							{
+								if (propertyName == "direction")
+									gameMap->spawnDirection = static_cast<Map::MOVE_DIRECTIONS>(atoi(propertyValue.c_str()));
+							}
 							prop = prop->NextSiblingElement("property");
 						}
 					}
@@ -491,7 +471,7 @@ bool SavedGameLoader::loadMap(const String &fileName)
 	}
 	else
 		cout << "No object layers found..." << endl;
-*/
+
 	maps.push_back(gameMap);
 
 	fclose(file);

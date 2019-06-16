@@ -22,6 +22,10 @@ void ResourcesManager::loadTextures()
 
 	addTexture(RESOURCES::PANEL_TEXTURE, "images/panel.png");
 	addTexture(RESOURCES::CURSOR_TEXTURE, "images/cursor.png");
+	addTexture(RESOURCES::ENEMY_TEXTURE, "images/Enemies/enemy.png");
+
+
+
 //	addTexture(RESOURCES::GARAGE_BACKGROUND, "images/Locations/garage.png");
 	addTexture(RESOURCES::ABOUT_BACKGROUND, "images/about.png");
 	addTexture(RESOURCES::SETTINGS_BACKGROUND, "images/options.png");

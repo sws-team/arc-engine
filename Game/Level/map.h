@@ -1,47 +1,47 @@
-#ifndef MAP_H
+﻿#ifndef MAP_H
 #define MAP_H
 
 #include "stdheader.h"
 
-class Building;
-
 struct Tile
 {
-    int id;
-    Vector2i pos;
-    Sprite sprite;
+	int id;
+	Vector2i cell;
+	Sprite sprite;
 
-    struct TileProperties
-    {
-        TileProperties(float _defenceBonus = 0.f)
-            : defenceBonus(_defenceBonus)
-            ,isSolid(false)
-        {
+	struct TileProperties
+	{
+		TileProperties()
+			: direction(0)
+		{
 
-        }
-
-        float defenceBonus;
-        bool isSolid;
-    };
+		}
+		int direction;
+	};
 };
 
 struct Layer
 {
-    int opacity;//непрозрачность слоя
-    vector<Tile> tiles;//закидываем в вектор тайлы
+	int opacity;//непрозрачность слоя
+	vector<Tile> tiles;//закидываем в вектор тайлы
 };
-
-class Speech;
-class GameController;
 
 class Map
 {
 public:
 
+	enum MOVE_DIRECTIONS
+	{
+		STAY,
+		DOWN,
+		UP,
+		LEFT,
+		RIGHT
+	};
+
 	Map():
 		width(0)
 	  ,height(0)
-	  ,playersCount(0)
 	{
 
 	}
@@ -59,11 +59,13 @@ public:
     map<int, Tile::TileProperties> tileProperties;
 	Texture tilesetImage;
 	vector<Layer> layers;
-    int playersCount;
 
-    map<int, Sprite> tileSprites;
     Texture icon;
     string decription;
+
+	vector<MOVE_DIRECTIONS> directions;
+	Vector2i spawnPos;
+	MOVE_DIRECTIONS spawnDirection;
 };
 
 #endif // MAP_H

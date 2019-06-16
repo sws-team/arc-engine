@@ -17,7 +17,6 @@ public:
 		MOVE_UP,
 		MOVE_DOWN
 	};
-	bool canMove(MOVE_DIRECTIONS direction);
 
 	void moveLeft();
 	void moveRight();
@@ -33,6 +32,7 @@ private:
 	Vector2i m_cell;
 	Vector2i m_maxCell;
 
+	bool canMove(MOVE_DIRECTIONS direction);
 	void updateCell();
 };
 

@@ -56,7 +56,7 @@ include($$PWD/Translations/Translations.pri)
 include($$PWD/ResourcesManager/ResourcesManager.pri)
 include($$PWD/Crypto/Crypto.pri)
 
-#DEFINES += TEST_BUILD
+DEFINES += TEST_BUILD
 
 contains(DEFINES, TEST_BUILD) {
 QMAKE_LFLAGS += -g

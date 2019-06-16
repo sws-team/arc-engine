@@ -16,6 +16,7 @@ GameWindow::GameWindow()
 
 	level = new Level();
 	controller = new Controller();
+	controller->setLevel(level);
 
 	paused.setString("Paused");
 	paused.setFillColor(Color::Blue);
