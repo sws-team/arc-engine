@@ -9,7 +9,6 @@ struct SavedGame
 {	
 	vector<unsigned int> completedLevels;
 	vector<GameState> playersData;
-	unsigned int playersCount() const;
 };
 
 class SavedGameLoader

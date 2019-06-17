@@ -66,6 +66,8 @@ public:
 	vector<MOVE_DIRECTIONS> directions;
 	Vector2i spawnPos;
 	MOVE_DIRECTIONS spawnDirection;
+
+	Vector2i endPos;
 };
 
 #endif // MAP_H

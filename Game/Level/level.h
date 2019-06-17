@@ -5,7 +5,7 @@
 #include "graphics.h"
 #include "Game/gamedrawable.h"
 
-class GameObject;
+class Enemy;
 class GamePanel;
 class Tile;
 
@@ -45,6 +45,7 @@ public:
 private:
 	void calculateCollisions();
 	void checkDeadZone();
+	void checkEnd();
 
 	GamePanel *panel;
 
@@ -61,9 +62,27 @@ private:
 	RectangleShape deadZone;
 
 	class Map *gameMap;
-	vector<GameObject*> enemies;
+	vector<Enemy*> enemies;
 
-	void moveEnemy(GameObject* enemy, int direction);
+	enum LEVEL_STATE
+	{
+		READY,
+		CHOOSED_TOWER,
+
+		ADD_TOWER,
+
+		ABILITY_CARPET_BOMBING_PLACE,
+		ABILITY_CARPET_BOMBING_DIRECTION,
+		ABILITY_BOMB,
+		ABILITY_FREEZE_BOMB,
+		ABILITY_INCREASE_TOWER_ATTACK_SPEED,
+		ABILITY_INCREASE_TOWER_DAMAGE,
+
+	};
+	LEVEL_STATE m_state;
+
+	float life;
+	void hitPlayer(float damage);
 };
 
 #endif // LEVEL_H

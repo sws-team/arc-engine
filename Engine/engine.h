@@ -37,13 +37,15 @@ public:
 
 	class StateWindow *createState(const GAME_STATE &state);
 
-
-
 	Camera *camera() const;
 	Cursor *cursor() const;
 
 	void setView(const View &view);
 	View getView() const;
+
+	bool loadMap(const String &fileName);
+	void loadMaps(const String &path);
+
 
 private:
 	Engine();

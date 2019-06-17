@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "Engine/engine.h"
 #include "settings.h"
+#include "Game/gamepanel.h"
 
 Cursor::Cursor()
 	: GameObject(RESOURCES::CURSOR_TEXTURE,
@@ -99,7 +100,7 @@ void Cursor::moveDown()
 		Engine::Instance().camera()->centerOnCursor(m_cell);
 	m_cell.y++;
 	if (m_cell.y > Engine::Instance().camera()->currentCenterCell().y &&
-			m_cell.y < m_maxCell.y - Engine::Instance().camera()->currentViewCells().y / 2)
+			m_cell.y < m_maxCell.y - Engine::Instance().camera()->currentViewCells().y / 2 + GamePanel::PANEL_CELLS_COUNT)
 		Engine::Instance().camera()->moveDownByCell();
 	updateCell();
 }

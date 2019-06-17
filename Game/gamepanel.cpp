@@ -8,6 +8,8 @@
 
 #include <stdlib.h>
 
+const float GamePanel::PANEL_HEIGHT = GlobalVariables::CELL_SIZE * GamePanel::PANEL_CELLS_COUNT;
+
 GamePanel::GamePanel(Level *level) :
 	GameDrawable()
   ,p_level(level)
@@ -24,7 +26,7 @@ void GamePanel::draw(RenderTarget * const target)
 {
 	m_sprite.setScale(target->getView().getSize().x / PANEL_WIDTH,
 					  (target->getView().getSize().y / PANEL_HEIGHT) * PANEL_SCALE);
-//cout << m_sprite.getGlobalBounds().height<<endl;
+
 	const float left = target->getView().getCenter().x - target->getView().getSize().x/2;
 	const float top = target->getView().getCenter().y + target->getView().getSize().y/2 - m_sprite.getGlobalBounds().height;
 

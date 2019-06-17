@@ -11,6 +11,7 @@
 #include "Game/Level/camera.h"
 #include "Engine/engine.h"
 #include "cursor.h"
+#include "enemy.h"
 
 constexpr static int TEXTURE_HEIGHT = 2048;
 constexpr static int MAX_SHAKE_OFFSET = 5;
@@ -21,6 +22,8 @@ Level::Level() :
   ,m_isFailed(false)
   ,difficulty(1.f)
   ,gameMap(nullptr)
+  ,m_state(READY)
+  ,life(0.f)
 {
 	Engine::Instance().camera()->init();
 	panel = new GamePanel(this);
@@ -50,21 +53,25 @@ void Level::update()
 	{
 		calculateCollisions();
 		checkDeadZone();
+		checkEnd();
 
-		for(GameObject* enemy : enemies)
+		for(Enemy* enemy : enemies)
 		{
-			const int id = getTileByPos(enemy->pos()).id;
-			Tile::TileProperties properties = gameMap->tileProperties.at(id);
-			moveEnemy(enemy, properties.direction);
+			if (enemy->moveStep())
+			{
+				const Vector2i cell = Engine::Instance().camera()->posToCell(enemy->pos());
+				if (cell == gameMap->endPos)
+					continue;
+
+
+				const int id = getTileByCell(cell).id;
+				Tile::TileProperties properties = gameMap->tileProperties.at(id);
+				enemy->moveNext(properties.direction);
+			}
 		}
 	}
-//	for(SpaceShip *spaceShip : GameController::Instance().players())
-//	{
-//		spaceShip->updateWithLevel(this);
-//		spaceShip->update();
-//	}
-
-
+//	for(Enemy* enemy : enemies)
+//		enemy->update();
 
 	Effects::Instance().update();
 
@@ -83,6 +90,7 @@ Vector2f Level::getStartingPos() const
 
 void Level::startMission(const unsigned int n)
 {
+	life = 100.f;
 //	this->mission = Campaign::Instance().missions.at(n);
 	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
 //	difficulty = 1.f + static_cast<float>(SavedGameLoader::Instance().getSavedGame().completedLevels.size()) / 10;
@@ -112,33 +120,48 @@ void Level::calculateCollisions()
 }
 
 void Level::checkDeadZone()
-{
-
+{	
+//	for (auto it = enemies.begin(); it != enemies.end();)
+//	{
+//		const Vector2f pos = it->spaceShip->pos();
+//		if (pos.x > rightBorderVal||
+//				pos.x < leftBorderVal ||
+//				pos.y > bottomBorderVal ||
+//				pos.y < topBorderVal)
+//		{
+//			delete it->spaceShip;
+//			it = enemies.erase(it);
+//		}
+//		else
+//			++it;
+//	}
 }
 
-void Level::moveEnemy(GameObject *enemy, int direction)
+void Level::checkEnd()
 {
-	Vector2f d;
-	d.x = 0;
-	d.y = 0;
-	switch (direction)
+	for (auto it = enemies.begin(); it != enemies.end();)
 	{
-	case Map::STAY:
-		break;
-	case Map::UP:
-		d.y = -GlobalVariables::Instance().tileSize().y;
-		break;
-	case Map::DOWN:
-		d.y = GlobalVariables::Instance().tileSize().y;
-		break;
-	case Map::LEFT:
-		d.x = -GlobalVariables::Instance().tileSize().x;
-		break;
-	case Map::RIGHT:
-		d.x = GlobalVariables::Instance().tileSize().x;
-		break;
+		Enemy *enemy = *it;
+		const Vector2i cell = Engine::Instance().camera()->posToCell(enemy->pos());
+		if (cell == gameMap->endPos)
+		{
+			hitPlayer(enemy->getStats().damage);
+			delete enemy;
+			it = enemies.erase(it);
+		}
+		else
+			++it;
 	}
-	enemy->move(d.x, d.y);
+}
+
+void Level::hitPlayer(float damage)
+{
+	cout << "HiT"<<endl;
+	life -= damage;
+	if (life <= 0.f)
+	{
+		//game over
+	}
 }
 
 //void Level::fillLevel()
@@ -160,7 +183,7 @@ void Level::drawLevel(RenderTarget * const target)
 		for (size_t tile = 0; tile < gameMap->layers[layer].tiles.size(); tile++)
 			target->draw(gameMap->layers[layer].tiles[tile].sprite);
 
-	for(GameObject* enemy : enemies)
+	for(Enemy* enemy : enemies)
 	{
 		enemy->draw(target);
 	}
@@ -171,8 +194,8 @@ void Level::drawLevel(RenderTarget * const target)
 
 void Level::spawn()
 {
-	GameObject *enemy = new GameObject(RESOURCES::ENEMY_TEXTURE, Engine::Instance().camera()->cellToPos(gameMap->spawnPos), Vector2i(32, 32), 4);
-	moveEnemy(enemy, gameMap->spawnDirection);
+	Enemy *enemy = EnemiesFactory::createEnemy(EnemiesFactory::SMALL_SLOW, Engine::Instance().camera()->cellToPos(gameMap->spawnPos));
+	enemy->moveNext(gameMap->spawnDirection);
 	enemies.push_back(enemy);
 }
 

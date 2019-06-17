@@ -17,9 +17,10 @@ public:
 	void draw(RenderTarget *const target) override;
 	void update() override;
 
+	constexpr static int PANEL_CELLS_COUNT = 10;
 private:	
 	constexpr static float PANEL_WIDTH = 1920.f;
-	constexpr static float PANEL_HEIGHT = 320.f;
+	const static float PANEL_HEIGHT;
 	constexpr static float PANEL_SCALE = 0.2f;
 
 	Level *p_level;

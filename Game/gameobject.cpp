@@ -40,9 +40,14 @@ void GameObject::setSpriteColor(const Color &color)
 
 void GameObject::move(float dx, float dy)
 {
+	move(Vector2f(dx, dy));
+}
+
+void GameObject::move(const Vector2f &d)
+{
 	if (!m_movable)
 		return;
-	setPos(sprite.getPosition() + Vector2f(dx, dy));
+	setPos(sprite.getPosition() + d);
 }
 
 void GameObject::setPos(const Vector2f &pos)

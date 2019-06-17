@@ -20,6 +20,7 @@ public:
     void setSpriteColor(const Color& color);	
 
 	void move(float dx, float dy);
+	void move(const Vector2f& d);
 	void setPos(const Vector2f &pos);
 	Vector2f pos() const;
 
