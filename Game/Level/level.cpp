@@ -63,7 +63,6 @@ void Level::update()
 				if (cell == gameMap->endPos)
 					continue;
 
-
 				const int id = getTileByCell(cell).id;
 				Tile::TileProperties properties = gameMap->tileProperties.at(id);
 				enemy->moveNext(properties.direction);
@@ -197,6 +196,11 @@ void Level::spawn()
 	Enemy *enemy = EnemiesFactory::createEnemy(EnemiesFactory::SMALL_SLOW, Engine::Instance().camera()->cellToPos(gameMap->spawnPos));
 	enemy->moveNext(gameMap->spawnDirection);
 	enemies.push_back(enemy);
+}
+
+void Level::test()
+{
+
 }
 
 Tile Level::getTileByPos(const Vector2f &pos)

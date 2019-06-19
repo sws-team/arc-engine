@@ -23,6 +23,8 @@ void Controller::keyboardKeyEvent(const bool timeout)
 	{
 		if (Keyboard::isKeyPressed(Keyboard::P))
 			p_level->spawn();
+		if (Keyboard::isKeyPressed(Keyboard::Q))
+			p_level->test();
 
 		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.action)))
 			p_level->action();

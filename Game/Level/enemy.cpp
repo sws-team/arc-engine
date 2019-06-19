@@ -10,6 +10,7 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 				 4)
 	,m_stats(stats)
 	,moveCounter(0)
+	,spriteDirection(DEFAULT_DOWN)
 {
 
 }
@@ -39,6 +40,8 @@ void Enemy::moveNext(int direction)
 
 	currentStep.x = 0;
 	currentStep.y = 0;
+
+	SPRITE_DIRECTION newDirection = DEFAULT_DOWN;
 	switch (currentDirection)
 	{
 	case Map::STAY:
@@ -46,25 +49,87 @@ void Enemy::moveNext(int direction)
 	case Map::UP:
 		targetPos.y -= GlobalVariables::Instance().tileSize().y;
 		currentStep.y = -GlobalVariables::Instance().tileSize().y / m_stats.speed;
+		newDirection = SPRITE_DIRECTION::SPRITE_UP;
 		break;
 	case Map::DOWN:
 		targetPos.y += GlobalVariables::Instance().tileSize().y;
 		currentStep.y = GlobalVariables::Instance().tileSize().y / m_stats.speed;
+		newDirection = SPRITE_DIRECTION::DEFAULT_DOWN;
 		break;
 	case Map::LEFT:
 		targetPos.x -= GlobalVariables::Instance().tileSize().x;
 		currentStep.x = -GlobalVariables::Instance().tileSize().x / m_stats.speed;
+		newDirection = SPRITE_DIRECTION::SPRITE_LEFT;
 		break;
 	case Map::RIGHT:
 		targetPos.x += GlobalVariables::Instance().tileSize().x;
 		currentStep.x = GlobalVariables::Instance().tileSize().x / m_stats.speed;
+		newDirection = SPRITE_DIRECTION::SPRITE_RIGHT;
 		break;
+	}
+	if (newDirection != spriteDirection)
+	{
+		float angle = 0;
+		Vector2f origin;
+		origin.x = 0;
+		origin.y = 0;
+		switch (newDirection)
+		{
+		case DEFAULT_DOWN:
+			if (spriteDirection == SPRITE_LEFT)
+				angle = -RIGHT_ANGLE;
+			else if (spriteDirection == SPRITE_RIGHT)
+				angle = RIGHT_ANGLE;
+			break;
+		case SPRITE_LEFT:
+			if (spriteDirection == DEFAULT_DOWN)
+			{
+				angle = RIGHT_ANGLE;
+				origin.y = GlobalVariables::Instance().tileSize().y * 2;
+			}
+			else if (spriteDirection == SPRITE_UP)
+			{
+				angle = -RIGHT_ANGLE;
+				origin.y = GlobalVariables::Instance().tileSize().y * 2;
+			}
+			break;
+		case SPRITE_UP:
+			if (spriteDirection == SPRITE_LEFT)
+			{
+				angle = RIGHT_ANGLE;
+				origin.x = GlobalVariables::Instance().tileSize().x * 2;
+				origin.y = GlobalVariables::Instance().tileSize().y * 2;
+			}
+			else if (spriteDirection == SPRITE_RIGHT)
+			{
+				angle = -RIGHT_ANGLE;
+				origin.x = GlobalVariables::Instance().tileSize().x * 2;
+				origin.y = GlobalVariables::Instance().tileSize().y * 2;
+			}
+			break;
+		case SPRITE_RIGHT:
+			if (spriteDirection == DEFAULT_DOWN)
+			{
+				angle = -RIGHT_ANGLE;
+				origin.x = GlobalVariables::Instance().tileSize().x * 2;
+			}
+			else if (spriteDirection == SPRITE_UP)
+			{
+				angle = RIGHT_ANGLE;
+				origin.x = GlobalVariables::Instance().tileSize().x * 2;
+			}
+			break;
+		}
+		spriteDirection = newDirection;
+
+		sprite.setOrigin(origin);
+		sprite.rotate(angle);
 	}
 }
 
 void Enemy::update()
 {
-
+	GameObject::update();
 }
 
 Enemy *EnemiesFactory::createEnemy(EnemiesFactory::TYPES type, const Vector2f &startPos)
@@ -79,7 +144,7 @@ Enemy *EnemiesFactory::createEnemy(EnemiesFactory::TYPES type, const Vector2f &s
 	case SMALL_SLOW:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
 		stats.health = 45.f;
-		stats.speed = 10;
+		stats.speed = 5;
 		stats.damage = 1.f;
 		break;
 	case SMALL_MEDIUM:

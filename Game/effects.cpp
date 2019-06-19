@@ -122,7 +122,6 @@ bool Animation::nextFrame()
 									size.x,
 									size.y
 								  ));
-//	sprite.rotate(rotation);
 	return true;
 }
 

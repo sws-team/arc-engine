@@ -23,14 +23,26 @@ public:
 	void moveNext(int direction);
 
 	void update() override;
+
 private:
 	EnemyStats m_stats;
+
+	constexpr static int RIGHT_ANGLE = 90;
 
 	//move
 	int moveCounter;
 	Vector2f currentStep;
 	int currentDirection;
 	Vector2f targetPos;
+
+	enum SPRITE_DIRECTION
+	{
+		DEFAULT_DOWN,
+		SPRITE_LEFT,
+		SPRITE_UP,
+		SPRITE_RIGHT,
+	};
+	SPRITE_DIRECTION spriteDirection;
 };
 
 class EnemiesFactory

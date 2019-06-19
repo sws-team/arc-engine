@@ -22,7 +22,6 @@ struct Animation : public GameDrawable
 	int row;
 	function<void(Animation *)> callback;
 
-	//TODO Graphics
 	Sprite sprite;
 	Vector2i size;
 

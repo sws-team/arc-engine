@@ -38,6 +38,7 @@ public:
 	void drawLevel(RenderTarget * const target);
 
 	void spawn();
+	void test();
 
 	Tile getTileByPos(const Vector2f& pos);
 	Tile getTileByCell(const Vector2i& cell);
