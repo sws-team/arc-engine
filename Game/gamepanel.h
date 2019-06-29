@@ -3,7 +3,6 @@
 
 #include "stdheader.h"
 #include "gamedrawable.h"
-#include "lifebar.h"
 
 class SpaceShip;
 class Level;
@@ -11,22 +10,42 @@ class Level;
 class GamePanel : public GameDrawable
 {
 public:
-	GamePanel(Level *level);
+	GamePanel();
 	~GamePanel() override;
 
 	void draw(RenderTarget *const target) override;
 	void update() override;
 
+	int cellsCount() const;
+
 	constexpr static int PANEL_CELLS_COUNT = 10;
-private:	
+private:
 	constexpr static float PANEL_WIDTH = 1920.f;
+//	constexpr static float BLOCK_WIDTH = PANEL_WIDTH / 3;
 	const static float PANEL_HEIGHT;
 	constexpr static float PANEL_SCALE = 0.2f;
 
-	Level *p_level;
+
+	constexpr static int BLOCK_TOWERS = 1;
+	constexpr static int BLOCK_ABILITIES = 2;
+	constexpr static int BLOCK_MINIMAP = 3;
+
 	Sprite m_sprite;
 	RenderTexture rTexture;
 
+	Sprite abilityBombSprite;
+	Sprite abilityFreezeBombSprite;
+	Sprite abilityCarpetBombingSprite;
+	Sprite abilityIncreaseTowerDamageSprite;
+	Sprite abilityIncreaseTowerAttackSpeedSprite;
+	Sprite abilityTimeStopSprite;
+
+	Sprite towerBaseSprite;
+	Sprite towerLaserSprite;
+	Sprite towerFreezeSprite;
+	Sprite towerRocketSprite;
+	Sprite towerSplashSprite;
+	Sprite towerImprovedSprite;
 };
 
 #endif // GAMEPANEL_H

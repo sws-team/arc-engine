@@ -6,22 +6,22 @@ LifeBar::LifeBar()
 
 }
 
-void LifeBar::init(const Vector2f &size, const Color& color)
+void LifeBar::init(const Vector2i &size, const Color& color)
 {
 	fullSize = size;
-	currentValue.setSize(fullSize);
+	currentValue.setSize(Vector2f(fullSize.x, fullSize.y));
 	currentValue.setFillColor(color);
 
-	fullValue.setSize(fullSize);
+	fullValue.setSize(currentValue.getSize());
 	fullValue.setOutlineColor(Color::White);
 	fullValue.setFillColor(Color::Transparent);
 	fullValue.setOutlineThickness(1 * Settings::Instance().getScaleFactor().y);
 }
 
-void LifeBar::draw(RenderWindow *window)
+void LifeBar::draw(RenderTarget *target)
 {
-	window->draw(currentValue);
-	window->draw(fullValue);
+	target->draw(currentValue);
+	target->draw(fullValue);
 }
 
 void LifeBar::setPos(const Vector2f &pos)

@@ -14,18 +14,15 @@ public:
 	void setPauseFunc(const function<void ()> &value);
 	void keyEvent();
 	void pausedEvents();
-	void setLevel(Level *level);
-
 private:
 
 	void keyboardKeyEvent(const bool timeout);
 	void joystickKeyEvent(const bool timeout);
 
-	Level *p_level;
 	Timer timerKey;
 	Timer timerMove;
 
-	constexpr static int CONTROLLER_TIME = 50;
+	constexpr static int CONTROLLER_TIME = 30;
 
 	function<void()> pauseFunc;
 

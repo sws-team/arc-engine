@@ -16,18 +16,30 @@ public:
 	Enemy(const RESOURCES::TEXTURE_TYPE& texture_id,
 		  const Vector2f& startPos,
 		  const EnemyStats &stats);
+	~Enemy() override;
 
-	EnemyStats getStats() const;
+	EnemyStats getData() const;
 
 	bool moveStep();
 	void moveNext(int direction);
 
-	void update() override;
+	void update() override;	
+	void draw(RenderTarget *const target) override;
+
+	void hit(float damage);
+
+	bool isAlive() const;
+
+	void freeze(float k, int duration);
 
 private:
 	EnemyStats m_stats;
+	EnemyStats m_data;
 
 	constexpr static int RIGHT_ANGLE = 90;
+
+	class LifeBar *lifeBar;
+	void drawLifeBar(RenderTarget *target);
 
 	//move
 	int moveCounter;
@@ -43,6 +55,12 @@ private:
 		SPRITE_RIGHT,
 	};
 	SPRITE_DIRECTION spriteDirection;
+
+	Timer freezeTimer;
+	int freezeDuration;
+	float freezeK;
+	bool isFreezed;
+	bool startFreeze;
 };
 
 class EnemiesFactory

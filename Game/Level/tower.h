@@ -11,14 +11,14 @@ struct TowerStats
 	float radius;
 };
 
-//class Tower : GameObject
-//{
-//public:
-//	Tower();
+class Tower : public GameObject
+{
+public:
+	Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos);
 //	void update() override;
 
-//private:
-//	TowerStats m_stats;
-//};
+private:
+	TowerStats m_stats;
+};
 
 #endif // TOWER_H

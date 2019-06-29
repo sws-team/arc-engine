@@ -6,12 +6,15 @@
 #include "Engine/engine.h"
 #include "settings.h"
 #include "Game/gamepanel.h"
+#include "level.h"
+#include "ResourcesManager/resourcesmanager.h"
 
 Cursor::Cursor()
 	: GameObject(RESOURCES::CURSOR_TEXTURE,
 				 Vector2f(0,0),
 				 Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE),
 				 2)
+	,m_inPanel(false)
 {
 	m_cell = Vector2i(0, 0);
 	m_maxCell = Vector2i(60, 34);
@@ -100,12 +103,12 @@ void Cursor::moveDown()
 		Engine::Instance().camera()->centerOnCursor(m_cell);
 	m_cell.y++;
 	if (m_cell.y > Engine::Instance().camera()->currentCenterCell().y &&
-			m_cell.y < m_maxCell.y - Engine::Instance().camera()->currentViewCells().y / 2 + GamePanel::PANEL_CELLS_COUNT)
+			m_cell.y < Engine::Instance().panel()->cellsCount() + m_maxCell.y - Engine::Instance().camera()->currentViewCells().y / 2)
 		Engine::Instance().camera()->moveDownByCell();
 	updateCell();
 }
 
-Vector2i Cursor::pos() const
+Vector2i Cursor::cell() const
 {
 	return m_cell;
 }
@@ -120,9 +123,139 @@ void Cursor::setMaxCell(const Vector2i &maxCell)
 	m_maxCell = maxCell;
 }
 
+void Cursor::draw(RenderTarget * const target)
+{
+	switch (m_state)
+	{
+	case NORMAL:
+		GameObject::draw(target);
+		break;
+	case ABILITY:
+		target->draw(abilityRect);
+		break;
+	case TOWER:
+		target->draw(towerRadius);
+		target->draw(towerSprite);
+		break;
+	}
+}
+
+void Cursor::update()
+{
+	GameObject::update();
+	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
+	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
+//	const Vector2f cellPos = Engine::Instance().camera()->cellToPos(Engine::Instance().camera()->posToCell(pos));
+//	setPos(cellPos);
+
+	m_cell = Engine::Instance().camera()->posToCell(pos);
+	updateCell();
+}
+
+void Cursor::activateAbility(int x, int y, int hotX, int hotY)
+{
+	abilityHotsPot.x = hotX;
+	abilityHotsPot.y = hotY;
+
+	abilityRect.setFillColor(Color(255, 0, 0, 100));
+	abilityRect.setSize(Vector2f(GlobalVariables::Instance().tileSize().x * x, GlobalVariables::Instance().tileSize().y * y));
+	m_state = ABILITY;
+}
+
+void Cursor::deactivate()
+{
+	m_state = NORMAL;
+}
+
+void Cursor::activateTower(float radius, TOWER_TYPES type)
+{
+	abilityHotsPot.x = 0;
+	abilityHotsPot.y = 0;
+
+	towerRadius.setRadius(radius);
+
+	towerType = type;
+
+	RESOURCES::TEXTURE_TYPE textureType;
+	switch (towerType)
+	{
+	case BASE:
+		textureType = RESOURCES::TOWER_BASE;
+		break;
+	case POWER:
+		textureType = RESOURCES::TOWER_POWER;
+		break;
+	case ROCKET:
+		textureType = RESOURCES::TOWER_ROCKET;
+		break;
+	case FREEZE:
+		textureType = RESOURCES::TOWER_FREEZE;
+		break;
+	case SPLASH:
+		textureType = RESOURCES::TOWER_SPLASH;
+		break;
+	case IMPROVED:
+		textureType = RESOURCES::TOWER_IMPROVED;
+		break;
+	}
+
+	towerSprite.setTexture(ResourcesManager::Instance().getTexture(textureType));
+	towerSprite.setScale(Settings::Instance().getScaleFactor());
+	towerSprite.setColor(sf::Color(255, 255, 255, 128)); // half transparent
+	m_state = TOWER;
+
+	updateCell();
+}
+
+Vector2i Cursor::abilityCell() const
+{
+	return m_cell - abilityHotsPot;
+}
+
+FloatRect Cursor::getAbilityRect() const
+{
+//	const Vector2i cell = abilityCell();
+//	const Vector2f pos = Vector2f(cell.x * GlobalVariables::Instance().tileSize().x, cell.y * GlobalVariables::Instance().tileSize().y);
+	return abilityRect.getGlobalBounds();
+}
+
+void Cursor::swap()
+{
+	m_inPanel = !m_inPanel;
+}
+
+bool Cursor::inPanel() const
+{
+	return m_inPanel;
+}
+
 void Cursor::updateCell()
 {
-	setPos(Vector2f(GlobalVariables::Instance().tileSize().x * m_cell.x, GlobalVariables::Instance().tileSize().y * m_cell.y));
-	SoundController::Instance().playOnce(CURSOR_MOVE_SOUND_FILE);
+	Vector2i cell = m_cell;
+
+	switch (m_state)
+	{
+	case NORMAL:
+
+		break;
+	case ABILITY:
+		cell -= abilityHotsPot;
+		break;
+	case TOWER:
+		const int direction = Engine::Instance().level()->getTileDirectionByCell(m_cell);
+		towerRadius.setFillColor(direction == 0 ? Color(0, 255, 0, 100) : Color(255, 0, 0, 100));
+		break;
+	}
+
+	const Vector2f pos = Vector2f(GlobalVariables::Instance().tileSize().x * cell.x,
+								  GlobalVariables::Instance().tileSize().y * cell.y);
+	setPos(pos);
+	towerSprite.setPosition(pos);
+	abilityRect.setPosition(pos);
+	towerRadius.setPosition(pos);
+	towerRadius.setOrigin(towerRadius.getRadius() - GlobalVariables::Instance().tileSize().x/2,
+						  towerRadius.getRadius() - GlobalVariables::Instance().tileSize().y/2);
+
+//	SoundController::Instance().playOnce(CURSOR_MOVE_SOUND_FILE);
 }
 

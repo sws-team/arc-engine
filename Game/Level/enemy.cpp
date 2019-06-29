@@ -1,6 +1,8 @@
 #include "enemy.h"
 #include "globalvariables.h"
 #include "map.h"
+#include "lifebar.h"
+#include "settings.h"
 
 Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const Vector2f &startPos,
@@ -11,20 +13,28 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 	,m_stats(stats)
 	,moveCounter(0)
 	,spriteDirection(DEFAULT_DOWN)
+	,startFreeze(false)
 {
-
+	m_data = m_stats;
+	lifeBar = new LifeBar();
+	lifeBar->init(Vector2i(size.x * Settings::Instance().getScaleFactor().x, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
 }
 
-EnemyStats Enemy::getStats() const
+Enemy::~Enemy()
 {
-	return m_stats;
+	delete lifeBar;
+}
+
+EnemyStats Enemy::getData() const
+{
+	return m_data;
 }
 
 bool Enemy::moveStep()
 {
 	moveCounter++;
 	move(currentStep);
-	if (moveCounter >= m_stats.speed)
+	if (moveCounter >= m_data.speed)
 	{
 		setPos(targetPos);
 		return true;
@@ -34,6 +44,15 @@ bool Enemy::moveStep()
 
 void Enemy::moveNext(int direction)
 {
+	if (isFreezed)
+	{
+		if (!startFreeze)
+		{
+			startFreeze = true;
+			m_data.speed += freezeK;
+			freezeTimer.clock.restart();
+		}
+	}
 	targetPos = pos();
 	moveCounter = 0;
 	currentDirection = direction;
@@ -48,22 +67,22 @@ void Enemy::moveNext(int direction)
 		break;
 	case Map::UP:
 		targetPos.y -= GlobalVariables::Instance().tileSize().y;
-		currentStep.y = -GlobalVariables::Instance().tileSize().y / m_stats.speed;
+		currentStep.y = -GlobalVariables::Instance().tileSize().y / m_data.speed;
 		newDirection = SPRITE_DIRECTION::SPRITE_UP;
 		break;
 	case Map::DOWN:
 		targetPos.y += GlobalVariables::Instance().tileSize().y;
-		currentStep.y = GlobalVariables::Instance().tileSize().y / m_stats.speed;
+		currentStep.y = GlobalVariables::Instance().tileSize().y / m_data.speed;
 		newDirection = SPRITE_DIRECTION::DEFAULT_DOWN;
 		break;
 	case Map::LEFT:
 		targetPos.x -= GlobalVariables::Instance().tileSize().x;
-		currentStep.x = -GlobalVariables::Instance().tileSize().x / m_stats.speed;
+		currentStep.x = -GlobalVariables::Instance().tileSize().x / m_data.speed;
 		newDirection = SPRITE_DIRECTION::SPRITE_LEFT;
 		break;
 	case Map::RIGHT:
 		targetPos.x += GlobalVariables::Instance().tileSize().x;
-		currentStep.x = GlobalVariables::Instance().tileSize().x / m_stats.speed;
+		currentStep.x = GlobalVariables::Instance().tileSize().x / m_data.speed;
 		newDirection = SPRITE_DIRECTION::SPRITE_RIGHT;
 		break;
 	}
@@ -129,7 +148,54 @@ void Enemy::moveNext(int direction)
 
 void Enemy::update()
 {
+	if (startFreeze)
+	{
+		if (freezeTimer.check(freezeDuration))
+		{
+			m_data.speed -= freezeK;
+			freezeK = 0.f;
+			freezeDuration = 0;
+			isFreezed = false;
+			startFreeze = false;
+		}
+	}
 	GameObject::update();
+}
+
+void Enemy::draw(RenderTarget * const target)
+{
+	GameObject::draw(target);
+	drawLifeBar(target);
+}
+
+void Enemy::hit(float damage)
+{
+	m_data.health -= damage;
+}
+
+bool Enemy::isAlive() const
+{
+	return m_data.health > 0.f;
+}
+
+void Enemy::freeze(float k, int duration)
+{
+	startFreeze = false;
+	freezeDuration = duration;
+	freezeK = k;
+	isFreezed = true;
+}
+
+void Enemy::drawLifeBar(RenderTarget *target)
+{
+//	if (spaceShip->getData().health <= 0)
+//		return;
+
+	const float healthRate = m_data.health / m_stats.health;
+	lifeBar->setPos(pos() - Vector2f(0, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y));
+	lifeBar->setValue(healthRate);
+
+	lifeBar->draw(target);
 }
 
 Enemy *EnemiesFactory::createEnemy(EnemiesFactory::TYPES type, const Vector2f &startPos)

@@ -6,6 +6,7 @@
 class Camera;
 class Cursor;
 class Level;
+class GamePanel;
 
 class Engine
 {
@@ -46,6 +47,11 @@ public:
 	bool loadMap(const String &fileName);
 	void loadMaps(const String &path);
 
+	void setWindow(RenderWindow *window);
+	RenderWindow *window();
+
+	Level *level();
+	GamePanel *panel();
 
 private:
 	Engine();
@@ -56,8 +62,10 @@ private:
 
 	Camera *m_camera;
 	Cursor *m_cursor;
+	Level *m_level;
+	GamePanel *m_panel;
 
-	View m_view;
+	RenderWindow *p_window;
 };
 
 #endif // ENGINE_H

@@ -6,17 +6,18 @@
 #include "savedgame.h"
 #include "globalvariables.h"
 #include "Game/Level/cursor.h"
+#include "Game/Level/camera.h"
 
 GameWindow::GameWindow()
 	: Menu()
 {	
+	Engine::Instance();
+	Engine::Instance().camera()->init();
 	currentMenu = static_cast<GAME_MENU>(CONTINUE_GAME);
 
 	m_state = PLAYING;
 
-	level = new Level();
 	controller = new Controller();
-	controller->setLevel(level);
 
 	paused.setString("Paused");
 	paused.setFillColor(Color::Blue);
@@ -74,12 +75,12 @@ void GameWindow::init()
 {
 	unsigned int missionNumber = SavedGameLoader::Instance().getCurrentMission();
 	controller->setPauseFunc(bind(&GameWindow::pause, this));
-	level->startMission(missionNumber);
+	Engine::Instance().level()->startMission(missionNumber);
 }
 
 void GameWindow::paint(RenderWindow *window)
 {
-	level->draw(window);
+	Engine::Instance().level()->draw(window);
 	switch (m_state)
 	{
 	case PLAYING:
@@ -162,9 +163,9 @@ void GameWindow::update()
 	if (m_state != PLAYING)
 		return;
 
-	if (level->isFinished())
+	if (Engine::Instance().level()->isFinished())
 	{
-		const bool isFailed = level->isFailed();
+		const bool isFailed = Engine::Instance().level()->isFailed();
 		if (isFailed)
 			setState(GAME_OVER);
 		else
@@ -174,7 +175,7 @@ void GameWindow::update()
 		return;
 	}
 	Engine::Instance().cursor()->update();
-	level->update();
+	Engine::Instance().level()->update();
 }
 
 void GameWindow::back()
@@ -241,13 +242,13 @@ void GameWindow::setState(const GAME_STATE &state)
 	case PAUSED:
 	{
 		const Vector2f offset = Vector2f(paused.getGlobalBounds().width/2, paused.getGlobalBounds().height/2);
-		paused.setPosition(level->getCenter() + offset);
+		paused.setPosition(Engine::Instance().level()->getCenter() + offset);
 	}
 		break;
 	case IN_MENU:
 	{
 		const Vector2f offset = Vector2f(menuImg.sprite.getGlobalBounds().width/2, menuImg.sprite.getGlobalBounds().height/2);
-		menuImg.sprite.setPosition(level->getCenter() - offset);
+		menuImg.sprite.setPosition(Engine::Instance().level()->getCenter() - offset);
 
 		const float offsetX = 20.f * Settings::Instance().getScaleFactor().x;
 		const float offsetY = 20.f * Settings::Instance().getScaleFactor().y;
@@ -267,7 +268,7 @@ void GameWindow::setState(const GAME_STATE &state)
 		SavedGameLoader::Instance().addCompletedLevel(SavedGameLoader::Instance().getCurrentMission());
 
 		const Vector2f offset = Vector2f(finishedImg.sprite.getGlobalBounds().width/2, finishedImg.sprite.getGlobalBounds().height/2);
-		finishedImg.sprite.setPosition(level->getCenter() - offset);
+		finishedImg.sprite.setPosition(Engine::Instance().level()->getCenter() - offset);
 
 		const float labelsOffset = 15 * Settings::Instance().getScaleFactor().y;
 		float posX = finishedImg.sprite.getGlobalBounds().left;
@@ -300,7 +301,7 @@ void GameWindow::setState(const GAME_STATE &state)
 	case GAME_OVER:
 	{
 		const Vector2f offset = Vector2f(gameOverImg.sprite.getGlobalBounds().width/2, gameOverImg.sprite.getGlobalBounds().height/2);
-		gameOverImg.sprite.setPosition(level->getCenter() - offset);
+		gameOverImg.sprite.setPosition(Engine::Instance().level()->getCenter() - offset);
 	}
 		break;
 	}

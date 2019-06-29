@@ -33,6 +33,7 @@ public:
 
 	// count of cells on currenr view
 	Vector2i currentViewCells() const;
+	int topCell() const;
 
 	void detach();
 	bool isDetached() const;

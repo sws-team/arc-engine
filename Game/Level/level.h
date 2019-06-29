@@ -8,6 +8,7 @@
 class Enemy;
 class GamePanel;
 class Tile;
+class Tower;
 
 class Level : public GameDrawable
 {
@@ -41,14 +42,20 @@ public:
 	void test();
 
 	Tile getTileByPos(const Vector2f& pos);
-	Tile getTileByCell(const Vector2i& cell);
+	Tile getTileByCell(const Vector2i& cell) const;
+
+	void chooseByPos(const Vector2f& pos);
+	void chooseCurrent();
+
+	int getTileDirectionByCell(const Vector2i &cell) const;
+
 
 private:
+	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();
 	void checkDeadZone();
 	void checkEnd();
-
-	GamePanel *panel;
+	Tower *getTowerAtPos(const Vector2f& pos);
 
 	Vector2f m_startPos;
 
@@ -68,12 +75,10 @@ private:
 	enum LEVEL_STATE
 	{
 		READY,
-		CHOOSED_TOWER,
 
 		ADD_TOWER,
 
-		ABILITY_CARPET_BOMBING_PLACE,
-		ABILITY_CARPET_BOMBING_DIRECTION,
+		ABILITY_CARPET_BOMBING,
 		ABILITY_BOMB,
 		ABILITY_FREEZE_BOMB,
 		ABILITY_INCREASE_TOWER_ATTACK_SPEED,
@@ -82,8 +87,36 @@ private:
 	};
 	LEVEL_STATE m_state;
 
+	union StateOptions
+	{
+		struct AddTower
+		{
+
+		};
+
+		struct CarpetBombing
+		{
+
+		};
+		struct Bomb
+		{
+
+		};
+		struct FreezeBomb
+		{
+
+		};
+
+		AddTower addTower;
+		CarpetBombing carpetBombing;
+		Bomb bomb;
+		FreezeBomb freezeBomb;
+	};
+
 	float life;
 	void hitPlayer(float damage);
+
+	vector<Tower*>  towers;
 };
 
 #endif // LEVEL_H

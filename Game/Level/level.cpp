@@ -12,6 +12,7 @@
 #include "Engine/engine.h"
 #include "cursor.h"
 #include "enemy.h"
+#include "tower.h"
 
 constexpr static int TEXTURE_HEIGHT = 2048;
 constexpr static int MAX_SHAKE_OFFSET = 5;
@@ -25,8 +26,6 @@ Level::Level() :
   ,m_state(READY)
   ,life(0.f)
 {
-	Engine::Instance().camera()->init();
-	panel = new GamePanel(this);
 	const float k = static_cast<float>(Settings::Instance().getInscribedResolution().y)/Settings::Instance().getResolution().y;
 	resolutionOffsetX = Settings::Instance().getResolution().x - k * Settings::Instance().getResolution().x;
 	resolutionOffsetX /= 2;
@@ -34,17 +33,17 @@ Level::Level() :
 
 Level::~Level()
 {
-	delete panel;
+
 }
 
 void Level::draw(RenderTarget *const target)
-{	
+{
 	target->draw(m_background);
 	target->setView(*Engine::Instance().camera()->getView());
 	drawLevel(target);
 	target->draw(deadZone);
 
-	panel->draw(target);
+	Engine::Instance().panel()->draw(target);
 }
 
 void Level::update()
@@ -63,18 +62,18 @@ void Level::update()
 				if (cell == gameMap->endPos)
 					continue;
 
-				const int id = getTileByCell(cell).id;
-				Tile::TileProperties properties = gameMap->tileProperties.at(id);
-				enemy->moveNext(properties.direction);
+				const int direction = getTileDirectionByCell(cell);
+				enemy->moveNext(direction);
 			}
 		}
 	}
-//	for(Enemy* enemy : enemies)
-//		enemy->update();
 
-	Effects::Instance().update();
+	for(Enemy* enemy : enemies)
+		enemy->update();
 
-	panel->update();
+//	Effects::Instance().update();
+
+	Engine::Instance().panel()->update();
 }
 
 Vector2f Level::getCenter() const
@@ -144,13 +143,23 @@ void Level::checkEnd()
 		const Vector2i cell = Engine::Instance().camera()->posToCell(enemy->pos());
 		if (cell == gameMap->endPos)
 		{
-			hitPlayer(enemy->getStats().damage);
+			hitPlayer(enemy->getData().damage);
 			delete enemy;
 			it = enemies.erase(it);
 		}
 		else
 			++it;
 	}
+}
+
+Tower *Level::getTowerAtPos(const Vector2f &pos)
+{
+	for(Tower* tower : towers)
+	{
+		if (tower->pos() == pos)
+			return tower;
+	}
+	return nullptr;
 }
 
 void Level::hitPlayer(float damage)
@@ -183,12 +192,13 @@ void Level::drawLevel(RenderTarget * const target)
 			target->draw(gameMap->layers[layer].tiles[tile].sprite);
 
 	for(Enemy* enemy : enemies)
-	{
 		enemy->draw(target);
-	}
+
+	for(Tower *tower : towers)
+		tower->draw(target);
 
 	Engine::Instance().cursor()->draw(target);
-	Effects::Instance().draw(target);
+	//	Effects::Instance().draw(target);
 }
 
 void Level::spawn()
@@ -209,7 +219,7 @@ Tile Level::getTileByPos(const Vector2f &pos)
 	return getTileByCell(cell);
 }
 
-Tile Level::getTileByCell(const Vector2i &cell)
+Tile Level::getTileByCell(const Vector2i &cell) const
 {
 	const int layer = 0;
 	for (unsigned int i = 0; i < gameMap->layers[layer].tiles.size(); i++)
@@ -220,6 +230,128 @@ Tile Level::getTileByCell(const Vector2i &cell)
 
 	}
 	return Tile();
+}
+
+void Level::chooseCurrent()
+{
+	choose(Engine::Instance().cursor()->cell(), Engine::Instance().cursor()->inPanel());
+}
+
+int Level::getTileDirectionByCell(const Vector2i& cell) const
+{
+	const int id = getTileByCell(cell).id;
+
+	if(gameMap->tileProperties.find(id) != gameMap->tileProperties.end())
+	{
+		const Tile::TileProperties properties = gameMap->tileProperties.at(id);
+		return properties.direction;
+	}
+	return 0;
+}
+
+void Level::chooseByPos(const Vector2f &pos)
+{
+	const Vector2i cell = Engine::Instance(). camera()->posToCell(pos);
+	const int bottomCell = Engine::Instance().camera()->topCell() + Engine::Instance().camera()->currentViewCells().y - Engine::Instance().panel()->cellsCount();
+	const bool inPanel = cell.y > bottomCell;
+	choose(Engine::Instance().camera()->posToCell(pos), inPanel);
+}
+
+void Level::choose(const Vector2i &cell, bool inPanel)
+{
+	if (inPanel)
+	{
+		cout << "PANEL CLICK"<<endl;
+//		m_state = ABILITY_FREEZE_BOMB;
+//		m_state = ABILITY_BOMB;
+		m_state = ADD_TOWER;
+
+		switch (m_state)
+		{
+		case READY:
+			break;
+		case ADD_TOWER:
+		{
+			const TOWER_TYPES type = BASE;
+
+			Engine::Instance().cursor()->activateTower(30, type);
+		}
+			break;
+		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
+		case ABILITY_INCREASE_TOWER_DAMAGE:
+			Engine::Instance().cursor()->activateAbility(1, 1, 0, 0);
+			break;
+		case ABILITY_CARPET_BOMBING:
+			Engine::Instance().cursor()->activateAbility(10, 3, 5, 2);
+			break;
+		case ABILITY_BOMB:
+		case ABILITY_FREEZE_BOMB:
+			Engine::Instance().cursor()->activateAbility(3, 3, 1, 1);
+		break;
+		}
+	}
+	else
+	{
+		switch (m_state)
+		{
+		case READY:
+
+			break;
+		case ADD_TOWER:
+		{
+			const int direction = Engine::Instance().level()->getTileDirectionByCell(cell);
+			if (direction != 0)
+				return;
+			const Vector2f pos = Engine::Instance().camera()->cellToPos(cell);
+			Tower *tower = new Tower(RESOURCES::TOWER_BASE, pos);
+			towers.push_back(tower);
+		}
+			break;
+		case ABILITY_CARPET_BOMBING:
+
+			break;
+		case ABILITY_BOMB:
+			for (auto it = enemies.begin(); it != enemies.end();)
+			{
+				Enemy *enemy = *it;
+				if (enemy->gameRect().intersects(Engine::Instance().cursor()->getAbilityRect()))
+				{
+					enemy->hit(15);
+					if (!enemy->isAlive())
+					{
+						delete enemy;
+						it = enemies.erase(it);
+					}
+					else
+						++it;
+				}
+				else
+					++it;
+			}
+			break;
+		case ABILITY_FREEZE_BOMB:
+			for(Enemy *enemy : enemies)
+			{
+				if (enemy->gameRect().intersects(Engine::Instance().cursor()->getAbilityRect()))
+				{
+					cout << "FREEZE" << endl;
+					enemy->freeze(15.f, 3000);
+				}
+			}
+			break;
+		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
+		{
+			Tower* tower = getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
+		}
+			break;
+		case ABILITY_INCREASE_TOWER_DAMAGE:
+		{
+			Tower* tower = getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
+		}
+			break;
+		}
+		Engine::Instance().cursor()->deactivate();
+	}
 }
 
 bool Level::isFinished() const

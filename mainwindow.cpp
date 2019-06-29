@@ -29,7 +29,7 @@ MainWindow::~MainWindow()
 
 int MainWindow::exec()
 {
-	Engine::Instance().setView(this->getView());
+	Engine::Instance().setWindow(this);
 	while (isOpen())
 	{
 		if (Engine::Instance().getState() != state)
@@ -43,8 +43,8 @@ int MainWindow::exec()
 //				SavedGameLoader::Instance().save();
 				return EXIT_SUCCESS;
 			}
-			if (state == Engine::IN_GAME)			
-				this->setView(this->getDefaultView());
+//			if (state == Engine::IN_GAME)
+//				this->setView(this->getDefaultView());
 
 			currentState = Engine::Instance().createState(Engine::Instance().getState());
 			currentState->init();

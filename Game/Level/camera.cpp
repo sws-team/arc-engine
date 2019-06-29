@@ -125,6 +125,11 @@ Vector2i Camera::currentViewCells() const
 					view->getSize().y / GlobalVariables::Instance().tileSize().y);
 }
 
+int Camera::topCell() const
+{
+	return static_cast<int>( (view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().tileSize().y );
+}
+
 void Camera::detach()
 {
 	m_detached = true;

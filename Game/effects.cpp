@@ -2,7 +2,7 @@
 #include "globalvariables.h"
 #include "settings.h"
 #include "ResourcesManager/resourcesmanager.h"
-
+/*
 Effects::Effects()
 {
 
@@ -56,7 +56,7 @@ void Effects::moveAnimnations(float dy)
 	for(Animation* animation : animations)
 		animation->sprite.move(0, dy);
 }
-
+*/
 Animation::Animation() :
 	GameDrawable()
   ,loop(false)

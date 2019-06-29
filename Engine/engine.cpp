@@ -8,6 +8,7 @@
 #include "gamewindow.h"
 #include "globalvariables.h"
 #include "Game/Level/level.h"
+#include "Game/gamepanel.h"
 #include "settings.h"
 
 #include "Game/Level/camera.h"
@@ -26,19 +27,12 @@ Engine &Engine::Instance()
 
 Engine::Engine()
 {
+	p_window = nullptr;
 	m_state = INTRO;
 	m_camera = new Camera();
 	m_cursor = new Cursor();
-}
-
-View Engine::getView() const
-{
-	return m_view;
-}
-
-void Engine::setView(const View &view)
-{
-	m_view = view;
+	m_panel = new GamePanel();
+	m_level = new Level();
 }
 
 Camera *Engine::camera() const
@@ -49,6 +43,26 @@ Camera *Engine::camera() const
 Cursor *Engine::cursor() const
 {
 	return m_cursor;
+}
+
+void Engine::setWindow(RenderWindow *window)
+{
+	p_window = window;
+}
+
+RenderWindow *Engine::window()
+{
+	return p_window;
+}
+
+Level *Engine::level()
+{
+	return m_level;
+}
+
+GamePanel *Engine::panel()
+{
+	return m_panel;
 }
 
 Engine::GAME_STATE Engine::getState() const

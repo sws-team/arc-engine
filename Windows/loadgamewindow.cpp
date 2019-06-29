@@ -7,8 +7,6 @@
 LoadGameWindow::LoadGameWindow()
 	: StateWindow()
 {
-	setBackground(RESOURCES::LOAD_GAME_BACKGROUND);
-
 	const float offset = Settings::Instance().getScaleFactor().y * 20;
 	const float x = Settings::Instance().getResolution().x * 0.3f;
 	float y = Settings::Instance().getResolution().y * 0.1f;

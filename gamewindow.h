@@ -21,7 +21,6 @@ protected:
 	void closeEvent() override;
 
 private:
-	class Level *level;
 	class Controller *controller;
 
 	Text paused;

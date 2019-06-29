@@ -9,12 +9,13 @@
 struct Animation : public GameDrawable
 {
 	Animation();
+public:
 	virtual ~Animation() override;
 	virtual void draw(RenderTarget *const target) override;
 	void update() override;
 
 	void setTextureId(const RESOURCES::TEXTURE_TYPE& texture_id);
-
+protected:
 	bool loop;
 	int frameCount;
 	int currentFrame;
@@ -36,7 +37,7 @@ private:
 	Shader *shader;
 };
 
-
+/*
 class Effects : public GameDrawable
 {
 public:
@@ -62,5 +63,5 @@ private:
 //TODO singleton
 	Int64 lastTime;
 };
-
+*/
 #endif // EFFECTS_H

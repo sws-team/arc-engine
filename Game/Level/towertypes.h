@@ -1,0 +1,14 @@
+#ifndef TOWERTYPES_H
+#define TOWERTYPES_H
+
+enum TOWER_TYPES
+{
+	BASE,
+	POWER,
+	ROCKET,
+	FREEZE,
+	SPLASH,
+	IMPROVED,
+};
+
+#endif // TOWERTYPES_H

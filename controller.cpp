@@ -1,9 +1,9 @@
 #include "controller.h"
 #include "Game/Level/level.h"
-#include "globalvariables.h"
-#include "Engine/engine.h"
 #include "Game/Level/camera.h"
 #include "Game/Level/cursor.h"
+#include "globalvariables.h"
+#include "Engine/engine.h"
 
 Controller::Controller()
 {
@@ -22,16 +22,28 @@ void Controller::keyboardKeyEvent(const bool timeout)
 	if (timeout)
 	{
 		if (Keyboard::isKeyPressed(Keyboard::P))
-			p_level->spawn();
+			Engine::Instance().level()->spawn();
 		if (Keyboard::isKeyPressed(Keyboard::Q))
-			p_level->test();
+			Engine::Instance().level()->test();
 
+
+
+		if (Mouse::isButtonPressed(Mouse::Left))
+		{
+			const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
+			const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
+			Engine::Instance().level()->chooseByPos(pos);
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Return))
+			Engine::Instance().level()->chooseCurrent();
 		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.action)))
-			p_level->action();
+			Engine::Instance().level()->action();
 		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.change)))
-			p_level->change();
+			Engine::Instance().level()->change();
 		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.start)))
 			pauseFunc();
+		if (Keyboard::isKeyPressed(Keyboard::Q))
+			Engine::Instance().cursor()->swap();
 		if (Keyboard::isKeyPressed(Keyboard::Left))
 		{
 			Engine::Instance().camera()->moveLeftByCell();
@@ -140,7 +152,3 @@ void Controller::pausedEvents()
 	//		pauseFunc();
 }
 
-void Controller::setLevel(Level *level)
-{
-	p_level = level;
-}
