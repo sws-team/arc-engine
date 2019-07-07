@@ -13,7 +13,12 @@ const float GamePanel::PANEL_HEIGHT = GlobalVariables::CELL_SIZE * GamePanel::PA
 GamePanel::GamePanel() :
 	GameDrawable()
 {
+	const Vector2f iconSize = Vector2f(ICON_SIZE * Settings::Instance().getScaleFactor().x,
+								 ICON_SIZE * Settings::Instance().getScaleFactor().y);
+
+
 	m_sprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_TEXTURE));
+
 	abilityBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_BOMB));
 	abilityBombSprite.setScale(Settings::Instance().getScaleFactor());
 
@@ -122,7 +127,7 @@ void GamePanel::draw(RenderTarget * const target)
 	Sprite sprite;
 	sprite.setTexture(rTexture.getTexture());
 	sprite.setPosition(0, 0);
-	sprite.scale(Settings::GAME_SCALE * 0.25f, Settings::GAME_SCALE * 0.25f);
+	sprite.scale(Settings::Instance().gameScale() * 0.25f, Settings::Instance().gameScale() * 0.25f);
 
 	const float minimapOffset = m_sprite.getGlobalBounds().height - sprite.getGlobalBounds().height;
 

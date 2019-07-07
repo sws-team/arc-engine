@@ -25,6 +25,7 @@ Level::Level() :
   ,gameMap(nullptr)
   ,m_state(READY)
   ,life(0.f)
+  ,selectedTower(nullptr)
 {
 	const float k = static_cast<float>(Settings::Instance().getInscribedResolution().y)/Settings::Instance().getResolution().y;
 	resolutionOffsetX = Settings::Instance().getResolution().x - k * Settings::Instance().getResolution().x;
@@ -70,6 +71,12 @@ void Level::update()
 
 	for(Enemy* enemy : enemies)
 		enemy->update();
+
+	for(Tower* tower : towers)
+	{
+		tower->shoot(enemies);
+		tower->update();
+	}
 
 //	Effects::Instance().update();
 
@@ -259,6 +266,11 @@ void Level::chooseByPos(const Vector2f &pos)
 
 void Level::choose(const Vector2i &cell, bool inPanel)
 {
+	if (selectedTower != nullptr)
+	{
+		selectedTower->deselect();
+		selectedTower = nullptr;
+	}
 	if (inPanel)
 	{
 		cout << "PANEL CLICK"<<endl;
@@ -272,9 +284,9 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ADD_TOWER:
 		{
-			const TOWER_TYPES type = BASE;
-
-			Engine::Instance().cursor()->activateTower(30, type);
+			const TowersFactory::TOWER_TYPES type = TowersFactory::BASE;
+			const float radius = TowersFactory::getTowerStats(type).radius * GlobalVariables::Instance().tileSize().x;
+			Engine::Instance().cursor()->activateTower(radius, type);
 		}
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
@@ -295,7 +307,15 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		switch (m_state)
 		{
 		case READY:
-
+		{
+			Tower* tower = getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
+			if (tower != nullptr)
+			{
+				tower->select();
+				cout << "SELECT" << endl;
+				selectedTower = tower;
+			}
+		}
 			break;
 		case ADD_TOWER:
 		{
@@ -303,8 +323,9 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (direction != 0)
 				return;
 			const Vector2f pos = Engine::Instance().camera()->cellToPos(cell);
-			Tower *tower = new Tower(RESOURCES::TOWER_BASE, pos);
-			towers.push_back(tower);
+			Tower *tower = TowersFactory::createTower(TowersFactory::BASE, pos);
+			if (tower != nullptr)
+				towers.push_back(tower);
 		}
 			break;
 		case ABILITY_CARPET_BOMBING:
@@ -350,6 +371,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		}
 			break;
 		}
+		m_state = READY;
 		Engine::Instance().cursor()->deactivate();
 	}
 }

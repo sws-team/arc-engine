@@ -214,7 +214,7 @@ void GameWindow::accept()
 		setState(PLAYING);
 		break;
 	case EXIT_FROM_MISSION:
-		Engine::Instance().setState(Engine::MAIN_LOCATION);
+		Engine::Instance().setState(Engine::CHOOSE_MISSION);
 		break;
 	case EXIT_FROM_GAME:
 		Engine::Instance().setState(Engine::MAIN_MENU);
@@ -265,7 +265,7 @@ void GameWindow::setState(const GAME_STATE &state)
 		break;
 	case FINISHED:
 	{
-		SavedGameLoader::Instance().addCompletedLevel(SavedGameLoader::Instance().getCurrentMission());
+//		SavedGameLoader::Instance().addCompletedLevel(SavedGameLoader::Instance().getCurrentMission());
 
 		const Vector2f offset = Vector2f(finishedImg.sprite.getGlobalBounds().width/2, finishedImg.sprite.getGlobalBounds().height/2);
 		finishedImg.sprite.setPosition(Engine::Instance().level()->getCenter() - offset);
@@ -310,6 +310,6 @@ void GameWindow::setState(const GAME_STATE &state)
 
 void GameWindow::finish()
 {
-	Engine::Instance().setState(Engine::MAIN_LOCATION);
+	Engine::Instance().setState(Engine::CHOOSE_MISSION);
 }
 

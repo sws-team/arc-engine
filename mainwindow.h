@@ -13,8 +13,6 @@ public:
 
     int exec();
 private:
-	View defaultView;
-
 	StateWindow *currentState;
 	Engine::GAME_STATE state;
 };

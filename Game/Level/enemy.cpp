@@ -17,7 +17,7 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 {
 	m_data = m_stats;
 	lifeBar = new LifeBar();
-	lifeBar->init(Vector2i(size.x * Settings::Instance().getScaleFactor().x, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
+	lifeBar->init(Vector2i(getSize().x, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
 }
 
 Enemy::~Enemy()
@@ -210,7 +210,7 @@ Enemy *EnemiesFactory::createEnemy(EnemiesFactory::TYPES type, const Vector2f &s
 	case SMALL_SLOW:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
 		stats.health = 45.f;
-		stats.speed = 5;
+		stats.speed = 15;
 		stats.damage = 1.f;
 		break;
 	case SMALL_MEDIUM:

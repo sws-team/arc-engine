@@ -87,36 +87,37 @@ private:
 	};
 	LEVEL_STATE m_state;
 
-	union StateOptions
-	{
-		struct AddTower
-		{
+//	union StateOptions
+//	{
+//		struct AddTower
+//		{
 
-		};
+//		};
 
-		struct CarpetBombing
-		{
+//		struct CarpetBombing
+//		{
 
-		};
-		struct Bomb
-		{
+//		};
+//		struct Bomb
+//		{
 
-		};
-		struct FreezeBomb
-		{
+//		};
+//		struct FreezeBomb
+//		{
 
-		};
+//		};
 
-		AddTower addTower;
-		CarpetBombing carpetBombing;
-		Bomb bomb;
-		FreezeBomb freezeBomb;
-	};
+//		AddTower addTower;
+//		CarpetBombing carpetBombing;
+//		Bomb bomb;
+//		FreezeBomb freezeBomb;
+//	};
 
 	float life;
 	void hitPlayer(float damage);
 
-	vector<Tower*>  towers;
+	vector<Tower*> towers;
+	Tower* selectedTower;
 };
 
 #endif // LEVEL_H

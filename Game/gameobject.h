@@ -33,6 +33,8 @@ public:
 
 	Sprite &getModifiableSprite();
 
+	Vector2f getCenter() const;
+
 private:
 	bool m_movable;
 };

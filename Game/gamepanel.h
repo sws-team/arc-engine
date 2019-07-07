@@ -18,6 +18,8 @@ public:
 
 	int cellsCount() const;
 
+	constexpr static float ICON_SIZE = 96;
+
 	constexpr static int PANEL_CELLS_COUNT = 10;
 private:
 	constexpr static float PANEL_WIDTH = 1920.f;

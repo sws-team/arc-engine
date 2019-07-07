@@ -8,6 +8,7 @@
 #include "Game/gamepanel.h"
 #include "level.h"
 #include "ResourcesManager/resourcesmanager.h"
+#include "tower.h"
 
 Cursor::Cursor()
 	: GameObject(RESOURCES::CURSOR_TEXTURE,
@@ -167,7 +168,7 @@ void Cursor::deactivate()
 	m_state = NORMAL;
 }
 
-void Cursor::activateTower(float radius, TOWER_TYPES type)
+void Cursor::activateTower(float radius, int type)
 {
 	abilityHotsPot.x = 0;
 	abilityHotsPot.y = 0;
@@ -179,22 +180,22 @@ void Cursor::activateTower(float radius, TOWER_TYPES type)
 	RESOURCES::TEXTURE_TYPE textureType;
 	switch (towerType)
 	{
-	case BASE:
+	case TowersFactory::BASE:
 		textureType = RESOURCES::TOWER_BASE;
 		break;
-	case POWER:
+	case TowersFactory::POWER:
 		textureType = RESOURCES::TOWER_POWER;
 		break;
-	case ROCKET:
+	case TowersFactory::ROCKET:
 		textureType = RESOURCES::TOWER_ROCKET;
 		break;
-	case FREEZE:
+	case TowersFactory::FREEZE:
 		textureType = RESOURCES::TOWER_FREEZE;
 		break;
-	case SPLASH:
+	case TowersFactory::SPLASH:
 		textureType = RESOURCES::TOWER_SPLASH;
 		break;
-	case IMPROVED:
+	case TowersFactory::IMPROVED:
 		textureType = RESOURCES::TOWER_IMPROVED;
 		break;
 	}

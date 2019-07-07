@@ -1,5 +1,6 @@
 #include "gameobject.h"
 #include "globalvariables.h"
+#include "settings.h"
 
 GameObject::GameObject(const RESOURCES::TEXTURE_TYPE& texture_id,
 					   const Vector2f &startPos,
@@ -62,7 +63,7 @@ Vector2f GameObject::pos() const
 
 Vector2f GameObject::getSize() const
 {
-	return Vector2f(size.x, size.y);
+	return Vector2f(size.x * Settings::Instance().getScaleFactor().x, size.y * Settings::Instance().getScaleFactor().y);
 }
 
 FloatRect GameObject::gameRect() const
@@ -83,5 +84,11 @@ void GameObject::setMovable(bool movable)
 Sprite &GameObject::getModifiableSprite()
 {
 	return sprite;
+}
+
+Vector2f GameObject::getCenter() const
+{
+	return Vector2f(this->pos().x + getSize().x/2,
+					this->pos().y + getSize().y/2);
 }
 

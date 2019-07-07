@@ -12,7 +12,6 @@ MainWindow::MainWindow()
 	,currentState(nullptr)
 {
 	GlobalVariables::Instance().loadControls();
-	defaultView = this->getView();
 	state = Engine::UNKNNOWN;
 
 #ifdef TEST_BUILD

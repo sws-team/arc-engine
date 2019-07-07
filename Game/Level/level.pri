@@ -5,8 +5,8 @@ HEADERS += \
     $$PWD/level.h \
     $$PWD/map.h \
     $$PWD/lifebar.h \
-    $$PWD/tower.h \
-    $$PWD/towertypes.h
+    $$PWD/projectile.h \
+    $$PWD/tower.h
 
 SOURCES += \
     $$PWD/camera.cpp \
@@ -14,4 +14,5 @@ SOURCES += \
     $$PWD/enemy.cpp \
     $$PWD/level.cpp \
     $$PWD/lifebar.cpp \
+    $$PWD/projectile.cpp \
     $$PWD/tower.cpp

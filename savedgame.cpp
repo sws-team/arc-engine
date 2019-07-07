@@ -23,8 +23,6 @@ void SavedGameLoader::save()
 
 	Json::Value obj;
 /*
-	for(const SavedGame& save : saves)
-	{
 		Json::Value jsonSave;
 //		jsonSave["name"] = save.name;
 		Json::Value jsonData;
@@ -82,7 +80,6 @@ void SavedGameLoader::save()
 		jsonSave["completed_missions"] = completedMissions;
 
 		obj.append(jsonSave);
-	}
 */
 //	Json::FastWriter fast;
 	Json::StyledWriter styled;
@@ -111,8 +108,6 @@ void SavedGameLoader::load()
 		return;
 	}
 	/*
-	for (unsigned int i = 0; i < obj.size(); i++)
-	{
 		SavedGame savedGame;
 //		savedGame.name = obj[i]["name"].asString();
 
@@ -161,23 +156,7 @@ void SavedGameLoader::load()
 
 			savedGame.playersData.push_back(gameState);
 		}
-		saves.push_back(savedGame);
-	}*/
-}
-
-vector<SavedGame> SavedGameLoader::savedGames() const
-{
-	return saves;
-}
-
-void SavedGameLoader::addSaves(const SavedGame &saveGame)
-{
-	saves.push_back(saveGame);
-}
-
-void SavedGameLoader::addCompletedLevel(const unsigned int level)
-{
-	saves.at(currentSave).completedLevels.push_back(level);
+	*/
 }
 
 void SavedGameLoader::setCurrentSave(const unsigned int n)
@@ -187,7 +166,7 @@ void SavedGameLoader::setCurrentSave(const unsigned int n)
 
 SavedGame SavedGameLoader::getSavedGame() const
 {
-	return saves.at(currentSave);
+	return m_save;
 }
 
 void SavedGameLoader::setCurrentMission(const unsigned int n)

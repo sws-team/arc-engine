@@ -23,13 +23,7 @@ public:
 		CLOSING,
 		EXIT,
 
-		LOAD_GAME,
-		NEW_GAME,
-
-		MAIN_LOCATION,
-		SHOP_LOCATION,
-		GARAGE_LOCATION,
-
+		CHOOSE_MISSION,
 		IN_GAME,
 	};
 
@@ -52,6 +46,8 @@ public:
 
 	Level *level();
 	GamePanel *panel();
+
+	void reset();
 
 private:
 	Engine();

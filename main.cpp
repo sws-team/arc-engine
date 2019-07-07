@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 #endif
 
 	Language::Instance().load();
-	SavedGameLoader::Instance().loadMaps("maps");
+//	SavedGameLoader::Instance().loadMaps("maps");
 
 //	if (!Campaign::Instance().loadWeapons("weapons"))
 //	{

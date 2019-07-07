@@ -1,4 +1,6 @@
 #include "settings.h"
+#include "savedgame.h"
+#include "Engine/engine.h"
 
 const Vector2i Settings::defaultResolution = Vector2i(1920, 1080);
 
@@ -61,6 +63,10 @@ void Settings::updateWindow()
 	mainWindow->setVerticalSyncEnabled(true);
 //	mainWindow->setFramerateLimit(60); // Set a framrate limit to reduce the CPU load
 //	mainWindow->setMouseCursorVisible(false); // Hide the cursor
+
+
+	SavedGameLoader::Instance().loadMaps("maps");
+	Engine::Instance().reset();
 }
 
 bool Settings::getFullscreen() const
@@ -90,5 +96,10 @@ Vector2i Settings::getResolution() const
 
 void Settings::setResolution(const Vector2i &value)
 {
-    resolution = value;
+	resolution = value;
+}
+
+float Settings::gameScale() const
+{
+	return GAME_SCALE * getScaleFactor().x;
 }

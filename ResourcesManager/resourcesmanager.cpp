@@ -36,6 +36,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::TOWER_SPLASH, "images/ui/Panel/Towers/tower_splash.png");
 	addTexture(RESOURCES::TOWER_IMPROVED, "images/ui/Panel/Towers/tower_improved.png");
 
+	addTexture(RESOURCES::BASE_PROJECTILE, "images/Weapons/bullet.png");
 
 	addTexture(RESOURCES::ABOUT_BACKGROUND, "images/about.png");
 	addTexture(RESOURCES::SETTINGS_BACKGROUND, "images/options.png");

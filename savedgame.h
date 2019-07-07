@@ -19,13 +19,7 @@ public:
 	void save();
 	void load();
 
-	vector<SavedGame> savedGames() const;
-
 	static constexpr int MAX_SAVE_SLOTS = 3;
-
-	void addSaves(const SavedGame& saveGame);
-
-	void addCompletedLevel(const unsigned int level);
 
 	void setCurrentSave(const unsigned int n);
 
@@ -42,7 +36,7 @@ private:
 	SavedGameLoader(const SavedGameLoader& root) = delete;
 	SavedGameLoader& operator=(const SavedGameLoader&) = delete;
 
-	vector<SavedGame> saves;
+	SavedGame m_save;
 	string saveFileName;
 	unsigned int currentSave;
 	unsigned int currentMission;

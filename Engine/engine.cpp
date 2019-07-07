@@ -4,7 +4,7 @@
 #include "Windows/aboutwindow.h"
 #include "Windows/settingswindow.h"
 #include "Windows/closewindow.h"
-#include "Windows/loadgamewindow.h"
+#include "Windows/choosemissionwindow.h"
 #include "gamewindow.h"
 #include "globalvariables.h"
 #include "Game/Level/level.h"
@@ -25,10 +25,15 @@ Engine &Engine::Instance()
 	return singleton;
 }
 
-Engine::Engine()
+Engine::Engine() :
+	m_camera(nullptr)
+  ,m_cursor(nullptr)
+  ,m_level(nullptr)
+  ,m_panel(nullptr)
 {
 	p_window = nullptr;
 	m_state = INTRO;
+	reset();
 	m_camera = new Camera();
 	m_cursor = new Cursor();
 	m_panel = new GamePanel();
@@ -65,6 +70,23 @@ GamePanel *Engine::panel()
 	return m_panel;
 }
 
+void Engine::reset()
+{
+	if (m_camera != nullptr)
+		delete m_camera;
+	if (m_cursor != nullptr)
+		delete m_cursor;
+	if (m_panel != nullptr)
+		delete m_panel;
+	if (m_level != nullptr)
+		delete m_level;
+
+	m_camera = new Camera();
+	m_cursor = new Cursor();
+	m_panel = new GamePanel();
+	m_level = new Level();
+}
+
 Engine::GAME_STATE Engine::getState() const
 {
 	return m_state;
@@ -95,8 +117,8 @@ StateWindow* Engine::createState(const Engine::GAME_STATE &state)
 	case CLOSING:
 		stateWindow = new class CloseWindow();
 		break;
-	case LOAD_GAME:
-		stateWindow = new LoadGameWindow();
+	case CHOOSE_MISSION:
+		stateWindow = new ChooseMissionWindow();
 		break;
 	case IN_GAME:
 		stateWindow = new GameWindow();
@@ -387,6 +409,7 @@ bool SavedGameLoader::loadMap(const String &fileName)
 
 void SavedGameLoader::loadMaps(const String &path)
 {
+	maps.clear();
 	tinydir_dir dir;
 	const int result = tinydir_open(&dir, path.toWideString().c_str());
 	while (dir.has_next)
