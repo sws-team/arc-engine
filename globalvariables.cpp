@@ -38,9 +38,9 @@ Vector2i GlobalVariables::getScreenResolution() const
     return Vector2i(screenW, screenH);
 }
 
-Vector2i GlobalVariables::tileSize() const
+Vector2f GlobalVariables::tileSize() const
 {
-	return Vector2i(Settings::Instance().getScaleFactor().x * CELL_SIZE,
+	return Vector2f(Settings::Instance().getScaleFactor().x * CELL_SIZE,
 					Settings::Instance().getScaleFactor().y * CELL_SIZE);
 }
 

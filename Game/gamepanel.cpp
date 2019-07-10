@@ -13,10 +13,6 @@ const float GamePanel::PANEL_HEIGHT = GlobalVariables::CELL_SIZE * GamePanel::PA
 GamePanel::GamePanel() :
 	GameDrawable()
 {
-	const Vector2f iconSize = Vector2f(ICON_SIZE * Settings::Instance().getScaleFactor().x,
-								 ICON_SIZE * Settings::Instance().getScaleFactor().y);
-
-
 	m_sprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_TEXTURE));
 
 	abilityBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_BOMB));
@@ -67,13 +63,18 @@ void GamePanel::draw(RenderTarget * const target)
 	m_sprite.setScale(target->getView().getSize().x / PANEL_WIDTH,
 					  (target->getView().getSize().y / PANEL_HEIGHT) * PANEL_SCALE);
 
+	const Vector2f iconSize = Vector2f(ICON_SIZE * Settings::Instance().getScaleFactor().x,
+								 ICON_SIZE * Settings::Instance().getScaleFactor().y);
+
+
 	Vector2f pos;
 	pos.x = target->getView().getCenter().x - target->getView().getSize().x/2;
 	pos.y = target->getView().getCenter().y + target->getView().getSize().y/2 - m_sprite.getGlobalBounds().height;
 	m_sprite.setPosition(pos);
 
-	pos.y += GlobalVariables::Instance().tileSize().y;
-	float x = pos.x;
+	pos.x = ICONS_START * m_sprite.getScale().x;
+//	cout << m_sprite.getScale().x << endl;
+	pos.y += TOP_MARGIN * m_sprite.getScale().y;
 
 	pos.x += GlobalVariables::Instance().tileSize().x;
 	towerBaseSprite.setPosition(pos);
@@ -87,7 +88,7 @@ void GamePanel::draw(RenderTarget * const target)
 	abilityFreezeBombSprite.setPosition(pos);
 	pos.x += GlobalVariables::Instance().tileSize().x * 2;
 	abilityCarpetBombingSprite.setPosition(pos);
-	pos.x = x;
+
 	pos.y += GlobalVariables::Instance().tileSize().y;
 	towerImprovedSprite.setPosition(pos);
 	pos.x += GlobalVariables::Instance().tileSize().x * 2;

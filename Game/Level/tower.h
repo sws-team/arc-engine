@@ -40,6 +40,8 @@ public:
 	void select();
 	void deselect();
 
+	vector<Projectile *> projectiles() const;
+
 	void removeProjectile(Projectile *projectile);
 
 private:
@@ -50,7 +52,7 @@ private:
 	bool m_selected;
 	Timer shootTimer;
 
-	vector<Projectile*> projectiles;
+	vector<Projectile*> m_projectiles;
 	Timer moveTimer;
 };
 

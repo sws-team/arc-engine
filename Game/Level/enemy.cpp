@@ -104,38 +104,38 @@ void Enemy::moveNext(int direction)
 			if (spriteDirection == DEFAULT_DOWN)
 			{
 				angle = RIGHT_ANGLE;
-				origin.y = GlobalVariables::Instance().tileSize().y * 2;
+				origin.y = GlobalVariables::CELL_SIZE;
 			}
 			else if (spriteDirection == SPRITE_UP)
 			{
 				angle = -RIGHT_ANGLE;
-				origin.y = GlobalVariables::Instance().tileSize().y * 2;
+				origin.y = GlobalVariables::CELL_SIZE;
 			}
 			break;
 		case SPRITE_UP:
 			if (spriteDirection == SPRITE_LEFT)
 			{
 				angle = RIGHT_ANGLE;
-				origin.x = GlobalVariables::Instance().tileSize().x * 2;
-				origin.y = GlobalVariables::Instance().tileSize().y * 2;
+				origin.x = GlobalVariables::CELL_SIZE;
+				origin.y = GlobalVariables::CELL_SIZE;
 			}
 			else if (spriteDirection == SPRITE_RIGHT)
 			{
 				angle = -RIGHT_ANGLE;
-				origin.x = GlobalVariables::Instance().tileSize().x * 2;
-				origin.y = GlobalVariables::Instance().tileSize().y * 2;
+				origin.x = GlobalVariables::CELL_SIZE;
+				origin.y = GlobalVariables::CELL_SIZE;
 			}
 			break;
 		case SPRITE_RIGHT:
 			if (spriteDirection == DEFAULT_DOWN)
 			{
 				angle = -RIGHT_ANGLE;
-				origin.x = GlobalVariables::Instance().tileSize().x * 2;
+				origin.x = GlobalVariables::CELL_SIZE;
 			}
 			else if (spriteDirection == SPRITE_UP)
 			{
 				angle = RIGHT_ANGLE;
-				origin.x = GlobalVariables::Instance().tileSize().x * 2;
+				origin.x = GlobalVariables::CELL_SIZE;
 			}
 			break;
 		}

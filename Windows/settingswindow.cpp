@@ -9,8 +9,10 @@
 const map<String, Vector2i> SettingsWindow::resolutions = {
     {"1920x1080", Vector2i(1920, 1080)},
     {"1440x900", Vector2i(1440, 900)},
-    {"1280x1024", Vector2i(1280, 1024)},
-    {"1024x768", Vector2i(1024, 768)}
+	{"1280x1024", Vector2i(1280, 1024)},
+	{"1024x768", Vector2i(1024, 768)},
+	{"1280x720", Vector2i(1280, 720)},
+	{"1600x900", Vector2i(1600, 900)}
 };
 
 SettingsWindow::SettingsWindow()

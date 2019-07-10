@@ -21,7 +21,7 @@ void Tower::update()
 {
 	if (moveTimer.check(Projectile::PROJECTILE_GAME_SPEED))
 	{
-		for(Projectile *projectile : projectiles)
+		for(Projectile *projectile : m_projectiles)
 		{
 			const float x1 = pos().x;
 			const float y1 = pos().y;
@@ -32,7 +32,7 @@ void Tower::update()
 			projectile->move(x2-x1, y2-y1);
 		}
 	}
-	for(Projectile *projectile : projectiles)
+	for(Projectile *projectile : m_projectiles)
 		projectile->update();
 }
 
@@ -41,7 +41,7 @@ void Tower::draw(RenderTarget * const target)
 	if (m_selected)
 		target->draw(radius);
 	GameObject::draw(target);
-	for(Projectile *projectile : projectiles)
+	for(Projectile *projectile : m_projectiles)
 		projectile->draw(target);
 }
 //#include "Engine/engine.h"
@@ -113,7 +113,7 @@ void Tower::shoot(const vector<Enemy *> &enemies)
 
 		const Vector2i frameSize = Vector2i(10, 6);
 		Projectile *projectile = new Projectile(RESOURCES::BASE_PROJECTILE, aPos, frameSize, 3, angle);
-		projectiles.push_back(projectile);
+		m_projectiles.push_back(projectile);
 	}
 }
 
@@ -127,9 +127,14 @@ void Tower::deselect()
 	m_selected = false;
 }
 
+vector<Projectile *> Tower::projectiles() const
+{
+	return m_projectiles;
+}
+
 void Tower::removeProjectile(Projectile *projectile)
 {
-	projectiles.erase( std::remove( projectiles.begin(), projectiles.end(), projectile ), projectiles.end() );
+	m_projectiles.erase( std::remove( m_projectiles.begin(), m_projectiles.end(), projectile ), m_projectiles.end() );
 	delete projectile;
 	projectile = nullptr;
 }

@@ -20,7 +20,7 @@ void ResourcesManager::loadTextures()
 {
 	addTexture(RESOURCES::PANEL_TEXTURE, "images/ui/Panel/panel.png");
 	addTexture(RESOURCES::CURSOR_TEXTURE, "images/cursor.png");
-	addTexture(RESOURCES::ENEMY_TEXTURE, "images/Enemies/enemy.png");
+	addTexture(RESOURCES::ENEMY_TEXTURE, "images/Enemies/enemy1.png");
 
 	addTexture(RESOURCES::ABILITY_BOMB, "images/ui/Panel/Abilities/ability_bomb.png");
 	addTexture(RESOURCES::ABILITY_FREEZE_BOMB, "images/ui/Panel/Abilities/ability_freeze_bomb.png");

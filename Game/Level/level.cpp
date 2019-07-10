@@ -13,8 +13,8 @@
 #include "cursor.h"
 #include "enemy.h"
 #include "tower.h"
+#include "projectile.h"
 
-constexpr static int TEXTURE_HEIGHT = 2048;
 constexpr static int MAX_SHAKE_OFFSET = 5;
 constexpr static int SHAKE_DURATION = 500;
 
@@ -96,50 +96,64 @@ Vector2f Level::getStartingPos() const
 void Level::startMission(const unsigned int n)
 {
 	life = 100.f;
-//	this->mission = Campaign::Instance().missions.at(n);
 	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
 //	difficulty = 1.f + static_cast<float>(SavedGameLoader::Instance().getSavedGame().completedLevels.size()) / 10;
-//	fillLevel();
 
 	gameMap = SavedGameLoader::Instance().maps.at(n);
 
 	testTexture.loadFromFile("tiles.png", IntRect(0,0,32,32));
 	testTexture.setRepeated(true);
 
-	const Vector2i minPos = Vector2i(-Settings::Instance().getResolution().x,
-									 -Settings::Instance().getResolution().y);
+	constexpr float deadZoneSize = 300;
+	const Vector2f minPos = Vector2f(-deadZoneSize * Settings::Instance().getScaleFactor().x,
+									 -deadZoneSize * Settings::Instance().getScaleFactor().y);
 
 	deadZone.setPosition(minPos.x, minPos.y);
 	deadZone.setOutlineThickness(3.f);
-	deadZone.setSize(Vector2f(abs(minPos.x) * 3, abs(minPos.y) * 3));
+	deadZone.setSize(Vector2f(Settings::Instance().getResolution().x + fabs(minPos.x) * 2,
+							  Settings::Instance().getResolution().y + fabs(minPos.y) * 2));
 	deadZone.setOutlineColor(Color::Red);
 	deadZone.setFillColor(Color::Transparent);
 	m_background.setTexture(testTexture);
 	m_background.setPosition(minPos.x, minPos.y);
-	m_background.setTextureRect(IntRect(minPos.x, minPos.y, abs(minPos.x) * 3, abs(minPos.y) * 3));
+	m_background.setTextureRect(IntRect(minPos.x, minPos.y, deadZone.getSize().x, deadZone.getSize().y));
 }
 
 void Level::calculateCollisions()
 {
-
+	for(Enemy* enemy : enemies)
+	{
+		for(Tower *tower : towers)
+		{
+			for(Projectile *projectile : tower->projectiles())
+			{
+				if (Collision::PixelPerfectTest(enemy->getSprite(), projectile->getSprite()))
+				{
+					enemy->hit(10);
+					tower->removeProjectile(projectile);
+				}
+			}
+		}
+	}
+	checkAlive();
 }
 
 void Level::checkDeadZone()
-{	
-//	for (auto it = enemies.begin(); it != enemies.end();)
-//	{
-//		const Vector2f pos = it->spaceShip->pos();
-//		if (pos.x > rightBorderVal||
-//				pos.x < leftBorderVal ||
-//				pos.y > bottomBorderVal ||
-//				pos.y < topBorderVal)
-//		{
-//			delete it->spaceShip;
-//			it = enemies.erase(it);
-//		}
-//		else
-//			++it;
-//	}
+{
+	for(Tower *tower : towers)
+	{
+		for(Projectile *projectile : tower->projectiles())
+		{
+			const Vector2f pos = projectile->pos();
+			if (pos.x > deadZone.getGlobalBounds().left + deadZone.getGlobalBounds().width ||
+					pos.x < deadZone.getGlobalBounds().left ||
+					pos.y > deadZone.getGlobalBounds().top + deadZone.getGlobalBounds().height ||
+					pos.y < deadZone.getGlobalBounds().top)
+			{
+				tower->removeProjectile(projectile);
+			}
+		}
+	}
 }
 
 void Level::checkEnd()
@@ -151,6 +165,21 @@ void Level::checkEnd()
 		if (cell == gameMap->endPos)
 		{
 			hitPlayer(enemy->getData().damage);
+			delete enemy;
+			it = enemies.erase(it);
+		}
+		else
+			++it;
+	}
+}
+
+void Level::checkAlive()
+{
+	for (auto it = enemies.begin(); it != enemies.end();)
+	{
+		Enemy *enemy = *it;
+		if (!enemy->isAlive())
+		{
 			delete enemy;
 			it = enemies.erase(it);
 		}
@@ -216,8 +245,33 @@ void Level::spawn()
 }
 
 void Level::test()
-{
+{	
+	for(Enemy* enemy : enemies)
+		enemy->moveStep();
+}
 
+void Level::left()
+{
+	for(Enemy* enemy : enemies)
+		enemy->moveNext(Map::LEFT);
+}
+
+void Level::right()
+{
+	for(Enemy* enemy : enemies)
+		enemy->moveNext(Map::RIGHT);
+}
+
+void Level::down()
+{
+	for(Enemy* enemy : enemies)
+		enemy->moveNext(Map::DOWN);
+}
+
+void Level::up()
+{
+	for(Enemy* enemy : enemies)
+		enemy->moveNext(Map::UP);
 }
 
 Tile Level::getTileByPos(const Vector2f &pos)

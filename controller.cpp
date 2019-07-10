@@ -23,9 +23,19 @@ void Controller::keyboardKeyEvent(const bool timeout)
 	{
 		if (Keyboard::isKeyPressed(Keyboard::P))
 			Engine::Instance().level()->spawn();
+
+
 		if (Keyboard::isKeyPressed(Keyboard::Q))
 			Engine::Instance().level()->test();
 
+		if (Keyboard::isKeyPressed(Keyboard::L))
+			Engine::Instance().level()->right();
+		if (Keyboard::isKeyPressed(Keyboard::J))
+			Engine::Instance().level()->left();
+		if (Keyboard::isKeyPressed(Keyboard::I))
+			Engine::Instance().level()->up();
+		if (Keyboard::isKeyPressed(Keyboard::K))
+			Engine::Instance().level()->down();
 
 
 		if (Mouse::isButtonPressed(Mouse::Left))

@@ -40,6 +40,10 @@ public:
 
 	void spawn();
 	void test();
+	void left();
+	void right();
+	void down();
+	void up();
 
 	Tile getTileByPos(const Vector2f& pos);
 	Tile getTileByCell(const Vector2i& cell) const;
@@ -55,6 +59,7 @@ private:
 	void calculateCollisions();
 	void checkDeadZone();
 	void checkEnd();
+	void checkAlive();
 	Tower *getTowerAtPos(const Vector2f& pos);
 
 	Vector2f m_startPos;

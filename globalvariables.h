@@ -37,7 +37,7 @@ public:
 		return out.str();
 	}
 
-	Vector2i tileSize() const;
+	Vector2f tileSize() const;
 	constexpr static const int CELL_SIZE = 32;
 
 private:

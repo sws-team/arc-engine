@@ -45,7 +45,6 @@ void ChooseMissionWindow::eventFilter(Event *event)
 //				  << mission.getGlobalBounds().height << " " << endl<<endl;
 		if (mission.getGlobalBounds().contains(event->mouseButton.x, event->mouseButton.y))
 		{
-			cout << "ACCEPT";
 			accept(0);
 		}
 	}
