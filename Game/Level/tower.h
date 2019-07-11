@@ -36,6 +36,7 @@ public:
 
 	void draw(RenderTarget *const target) override;
 	void shoot(const vector<Enemy*>& enemies);
+	virtual void action(Enemy *enemy);
 
 	void select();
 	void deselect();
@@ -80,5 +81,50 @@ public:
 
 private:
 };
+
+class PowerTower : public Tower
+{
+public:
+	PowerTower(const Vector2f &pos);
+	const static TowerStats STATS;
+};
+
+class RocketTower : public Tower
+{
+public:
+	RocketTower(const Vector2f &pos);
+	const static TowerStats STATS;
+
+private:
+};
+
+class FreezeTower : public Tower
+{
+public:
+	FreezeTower(const Vector2f &pos);
+	const static TowerStats STATS;
+
+	void action(Enemy *enemy) override;
+private:
+};
+
+class SplashTower : public Tower
+{
+public:
+	SplashTower(const Vector2f &pos);
+	const static TowerStats STATS;
+
+private:
+};
+
+class ImprovedTower : public Tower
+{
+public:
+	ImprovedTower(const Vector2f &pos);
+	const static TowerStats STATS;
+
+private:
+};
+
 
 #endif // TOWER_H

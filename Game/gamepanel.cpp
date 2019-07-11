@@ -14,6 +14,7 @@ GamePanel::GamePanel() :
 	GameDrawable()
 {
 	m_sprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_TEXTURE));
+	m_sprite.setScale(Settings::Instance().getScaleFactor());
 
 	abilityBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_BOMB));
 	abilityBombSprite.setScale(Settings::Instance().getScaleFactor());
@@ -60,8 +61,6 @@ GamePanel::~GamePanel()
 
 void GamePanel::draw(RenderTarget * const target)
 {
-	m_sprite.setScale(target->getView().getSize().x / PANEL_WIDTH,
-					  (target->getView().getSize().y / PANEL_HEIGHT) * PANEL_SCALE);
 
 	const Vector2f iconSize = Vector2f(ICON_SIZE * Settings::Instance().getScaleFactor().x,
 								 ICON_SIZE * Settings::Instance().getScaleFactor().y);
@@ -73,7 +72,6 @@ void GamePanel::draw(RenderTarget * const target)
 	m_sprite.setPosition(pos);
 
 	pos.x = ICONS_START * m_sprite.getScale().x;
-//	cout << m_sprite.getScale().x << endl;
 	pos.y += TOP_MARGIN * m_sprite.getScale().y;
 
 	pos.x += GlobalVariables::Instance().tileSize().x;

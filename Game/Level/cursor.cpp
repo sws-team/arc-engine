@@ -230,6 +230,11 @@ bool Cursor::inPanel() const
 	return m_inPanel;
 }
 
+int Cursor::getTowerType() const
+{
+	return towerType;
+}
+
 void Cursor::updateCell()
 {
 	Vector2i cell = m_cell;

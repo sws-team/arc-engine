@@ -13,6 +13,7 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 	,m_stats(stats)
 	,moveCounter(0)
 	,spriteDirection(DEFAULT_DOWN)
+	,isFreezed(false)
 	,startFreeze(false)
 {
 	m_data = m_stats;
@@ -44,15 +45,18 @@ bool Enemy::moveStep()
 
 void Enemy::moveNext(int direction)
 {
-	if (isFreezed)
+	if (isFreezed && !startFreeze)
 	{
-		if (!startFreeze)
-		{
-			startFreeze = true;
-			m_data.speed += freezeK;
-			freezeTimer.clock.restart();
-		}
+		startFreeze = true;
+		m_data.speed += freezeK;
+		freezeTimer.clock.restart();
 	}
+	else if (!isFreezed && startFreeze)
+	{
+		startFreeze = false;
+		m_data.speed -= freezeK;
+	}
+
 	targetPos = pos();
 	moveCounter = 0;
 	currentDirection = direction;
@@ -150,14 +154,8 @@ void Enemy::update()
 {
 	if (startFreeze)
 	{
-		if (freezeTimer.check(freezeDuration))
-		{
-			m_data.speed -= freezeK;
-			freezeK = 0.f;
-			freezeDuration = 0;
+		if (freezeTimer.check(freezeDuration))		
 			isFreezed = false;
-			startFreeze = false;
-		}
 	}
 	GameObject::update();
 }
@@ -180,6 +178,14 @@ bool Enemy::isAlive() const
 
 void Enemy::freeze(float k, int duration)
 {
+	if (isFreezed || startFreeze)
+	{
+		freezeDuration = max(freezeDuration, duration);
+//		m_data.speed += k;
+//		freezeK += k;
+		return;
+	}
+
 	startFreeze = false;
 	freezeDuration = duration;
 	freezeK = k;

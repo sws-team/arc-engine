@@ -44,43 +44,11 @@ void Tower::draw(RenderTarget * const target)
 	for(Projectile *projectile : m_projectiles)
 		projectile->draw(target);
 }
-//#include "Engine/engine.h"
-//#include "camera.h"
+
 void Tower::shoot(const vector<Enemy *> &enemies)
 {
-//	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
-//	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
-//	cout << "POS "<< pos.x << " " << pos.y << endl;
-//	cout << "center "<< getCenter().x << " " << getCenter().y << endl;
-//	const Vector2f R = radius.getPosition() - radius.getOrigin();
-//	cout << "center "<< R.x << " " << R.y << endl << endl;
-
-//	return;
-
-//	for(Enemy *enemy : enemies)
-//	{
-//		cout << "INTERSECTs " << isIntersects(enemy->gameRect(), getCenter(), m_stats.radius) << endl;
-//	}
-//	cout << "RADIUS " << m_stats.radius << endl << endl;
-//	return;
-
-
 	if (!shootTimer.check(m_stats.attackSpeed))
 		return;
-
-//	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
-//	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
-
-//	const float a = this->getCenter().x - pos.x;
-//	const float b = this->getCenter().y - pos.y;
-//	const float tg = ( b / a );
-//	float angle = atanf(tg) * 180 / M_PI;
-
-//	if (a < 0)
-//		angle += 180;
-//	else if (b < 0)
-//		angle += 360;
-//	return;
 
 	Enemy *target = nullptr;
 	float min = INT_MAX;
@@ -117,6 +85,11 @@ void Tower::shoot(const vector<Enemy *> &enemies)
 	}
 }
 
+void Tower::action(Enemy *enemy)
+{
+	enemy->hit(m_stats.damage);
+}
+
 void Tower::select()
 {
 	m_selected = true;
@@ -144,7 +117,7 @@ bool Tower::isIntersects(const FloatRect &rect, const Vector2f &center, float ra
 	float x = fabs(rect.left - center.x);
 	float y = fabs(rect.top - center.y);
 	float r = sqrtf(powf(x, 2) + powf(y, 2));
-//	cout << "top left " << r << endl;
+
 	if (r < radius)
 		return true;
 
@@ -152,7 +125,6 @@ bool Tower::isIntersects(const FloatRect &rect, const Vector2f &center, float ra
 	y = fabs(rect.top - center.y);
 
 	r = sqrtf(powf(x, 2) + powf(y, 2));
-//	cout << "top right " << r << endl;
 	if (r < radius)
 		return true;
 
@@ -160,11 +132,6 @@ bool Tower::isIntersects(const FloatRect &rect, const Vector2f &center, float ra
 	y = fabs(rect.top + rect.height - center.y);
 
 	r = sqrtf(powf(x, 2) + powf(y, 2));
-//	cout << "bottom right " << r << endl;
-
-//	cout << "targetx " << rect.left + rect.width << " targety "<< rect.top + rect.height << endl;
-//	cout << "towerx " << center.x<< " towery "<< center.y << endl;
-//	cout << "x " << x << " y "<< y << endl;
 
 	if (r < radius)
 		return true;
@@ -173,20 +140,11 @@ bool Tower::isIntersects(const FloatRect &rect, const Vector2f &center, float ra
 	y = fabs(rect.top + rect.height - center.y);
 
 	r = sqrtf(powf(x, 2) + powf(y, 2));
-//	cout << "bottom left " << r << endl;
 
 	if (r < radius)
 		return true;
 
 	return false;
-}
-
-const TowerStats BaseTower::STATS = TowerStats(10, 300, 10, 4, 10);
-
-BaseTower::BaseTower(const Vector2f &pos)
-	: Tower(RESOURCES::TOWER_BASE, pos, STATS)
-{
-
 }
 
 Tower *TowersFactory::createTower(TowersFactory::TOWER_TYPES type, const Vector2f &pos)
@@ -198,19 +156,19 @@ Tower *TowersFactory::createTower(TowersFactory::TOWER_TYPES type, const Vector2
 		tower = new BaseTower(pos);
 		break;
 	case POWER:
-
+		tower = new PowerTower(pos);
 		break;
 	case ROCKET:
-
+		tower = new RocketTower(pos);
 		break;
 	case FREEZE:
-
+		tower = new FreezeTower(pos);
 		break;
 	case SPLASH:
-
+		tower = new SplashTower(pos);
 		break;
 	case IMPROVED:
-
+		tower = new ImprovedTower(pos);
 		break;
 	}
 	return tower;
@@ -223,19 +181,64 @@ TowerStats TowersFactory::getTowerStats(TowersFactory::TOWER_TYPES type)
 	case BASE:
 		return BaseTower::STATS;
 	case POWER:
-
-		break;
+		return PowerTower::STATS;
 	case ROCKET:
-
-		break;
+		return RocketTower::STATS;
 	case FREEZE:
-
-		break;
+		return FreezeTower::STATS;
 	case SPLASH:
-
-		break;
+		return SplashTower::STATS;
 	case IMPROVED:
-
-		break;
+		return ImprovedTower::STATS;
 	}
+	return BaseTower::STATS;
+}
+
+const TowerStats BaseTower::STATS = TowerStats(10, 300, 10, 2, 10);
+const TowerStats PowerTower::STATS = TowerStats(10, 300, 10, 4, 10);
+const TowerStats RocketTower::STATS = TowerStats(10, 300, 10, 4, 10);
+const TowerStats FreezeTower::STATS = TowerStats(1, 300, 0, 3, 15);
+const TowerStats SplashTower::STATS = TowerStats(10, 300, 10, 4, 10);
+const TowerStats ImprovedTower::STATS = TowerStats(10, 100, 10, 6, 50);
+
+BaseTower::BaseTower(const Vector2f &pos)
+	: Tower(RESOURCES::TOWER_BASE, pos, STATS)
+{
+
+}
+
+PowerTower::PowerTower(const Vector2f &pos)
+	: Tower(RESOURCES::TOWER_POWER, pos, STATS)
+{
+
+}
+
+RocketTower::RocketTower(const Vector2f &pos)
+	: Tower(RESOURCES::TOWER_ROCKET, pos, STATS)
+{
+
+}
+
+FreezeTower::FreezeTower(const Vector2f &pos)
+	: Tower(RESOURCES::TOWER_FREEZE, pos, STATS)
+{
+
+}
+
+void FreezeTower::action(Enemy *enemy)
+{
+	Tower::action(enemy);
+	enemy->freeze(45.f, 3000);
+}
+
+SplashTower::SplashTower(const Vector2f &pos)
+	: Tower(RESOURCES::TOWER_FREEZE, pos, STATS)
+{
+
+}
+
+ImprovedTower::ImprovedTower(const Vector2f &pos)
+	: Tower(RESOURCES::TOWER_FREEZE, pos, STATS)
+{
+
 }

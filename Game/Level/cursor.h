@@ -44,6 +44,8 @@ public:
 	void swap();
 	bool inPanel() const;
 
+	int getTowerType() const;
+
 private:
 	Vector2i m_cell;
 	Vector2i m_maxCell;

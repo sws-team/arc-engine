@@ -49,6 +49,11 @@ void Level::draw(RenderTarget *const target)
 
 void Level::update()
 {
+	for(Tower* tower : towers)
+	{
+		tower->shoot(enemies);
+		tower->update();
+	}
 	if (timer.check(GlobalVariables::FRAME_TIME))
 	{
 		calculateCollisions();
@@ -72,11 +77,7 @@ void Level::update()
 	for(Enemy* enemy : enemies)
 		enemy->update();
 
-	for(Tower* tower : towers)
-	{
-		tower->shoot(enemies);
-		tower->update();
-	}
+
 
 //	Effects::Instance().update();
 
@@ -129,7 +130,7 @@ void Level::calculateCollisions()
 			{
 				if (Collision::PixelPerfectTest(enemy->getSprite(), projectile->getSprite()))
 				{
-					enemy->hit(10);
+					tower->action(enemy);
 					tower->removeProjectile(projectile);
 				}
 			}
@@ -327,7 +328,6 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 	}
 	if (inPanel)
 	{
-		cout << "PANEL CLICK"<<endl;
 //		m_state = ABILITY_FREEZE_BOMB;
 //		m_state = ABILITY_BOMB;
 		m_state = ADD_TOWER;
@@ -338,7 +338,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ADD_TOWER:
 		{
-			const TowersFactory::TOWER_TYPES type = TowersFactory::BASE;
+			const TowersFactory::TOWER_TYPES type = TowersFactory::FREEZE;
+
 			const float radius = TowersFactory::getTowerStats(type).radius * GlobalVariables::Instance().tileSize().x;
 			Engine::Instance().cursor()->activateTower(radius, type);
 		}
@@ -366,7 +367,6 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (tower != nullptr)
 			{
 				tower->select();
-				cout << "SELECT" << endl;
 				selectedTower = tower;
 			}
 		}
@@ -377,7 +377,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (direction != 0)
 				return;
 			const Vector2f pos = Engine::Instance().camera()->cellToPos(cell);
-			Tower *tower = TowersFactory::createTower(TowersFactory::BASE, pos);
+			const TowersFactory::TOWER_TYPES type = static_cast<TowersFactory::TOWER_TYPES>(Engine::Instance().cursor()->getTowerType());
+			Tower *tower = TowersFactory::createTower(type, pos);
 			if (tower != nullptr)
 				towers.push_back(tower);
 		}
@@ -409,8 +410,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			{
 				if (enemy->gameRect().intersects(Engine::Instance().cursor()->getAbilityRect()))
 				{
-					cout << "FREEZE" << endl;
-					enemy->freeze(15.f, 3000);
+					enemy->freeze(25.f, 5000);
 				}
 			}
 			break;
