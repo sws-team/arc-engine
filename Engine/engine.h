@@ -61,6 +61,8 @@ public:
 	float gameSpeed() const;
 	void setGameSpeed(const float k);
 
+	static float getStartEnergy(const unsigned int n);
+
 private:
 	Engine();
 	Engine(const Engine& root) = delete;

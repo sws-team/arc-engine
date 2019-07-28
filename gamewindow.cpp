@@ -174,20 +174,23 @@ void GameWindow::update()
 
 	if (m_state != PLAYING)
 		return;
-
-	if (Engine::Instance().level()->isFinished())
-	{
-		const bool isFailed = Engine::Instance().level()->isFailed();
-		if (isFailed)
-			setState(GAME_OVER);
-		else
-			setState(FINISHED);
-		//save
-		Engine::Instance().save();
-		return;
-	}
 	Engine::Instance().cursor()->update();
 	Engine::Instance().level()->update();
+
+	switch (Engine::Instance().level()->getState())
+	{
+	case Level::WIN:
+	{
+		Engine::Instance().save();
+		setState(FINISHED);
+	}
+		break;
+	case Level::LOSE:
+		setState(GAME_OVER);
+		break;
+	default:
+		break;
+	}
 }
 
 void GameWindow::back()

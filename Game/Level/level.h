@@ -30,9 +30,6 @@ public:
 
 	void startMission(const unsigned int n);
 
-	bool isFinished() const;
-	bool isFailed() const;
-
 	void action();
 	void change();
 
@@ -53,7 +50,7 @@ public:
 
 	int getTileDirectionByCell(const Vector2i &cell) const;
 
-	int getEnergyCount() const;
+	float getEnergyCount() const;
 	float getLifeCount() const;
 	Tower *getTowerAtPos(const Vector2f& pos) const;
 
@@ -66,6 +63,19 @@ public:
 	void setFastSpeed();
 	void setNullSpeed();
 
+	enum LEVEL_STATE
+	{
+		WAIT_READY,
+		PLAYING,
+		WIN,
+		LOSE
+	};
+	LEVEL_STATE getState() const;
+
+	void ready();
+
+	int currentProgress() const;
+
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();
@@ -76,8 +86,6 @@ private:
 
 	Vector2f m_startPos;
 
-	bool m_finished;
-	bool m_isFailed;	
 	float difficulty;
 	float resolutionOffsetX;
 
@@ -90,7 +98,7 @@ private:
 	vector<Enemy*> enemies;
 
 
-	LEVEL_STATE m_state;
+	ACTION_STATE m_actionState;
 
 //	union StateOptions
 //	{
@@ -120,14 +128,20 @@ private:
 
 	//player data
 	float life;
-	int energy;
+	float energy;
 
 
 	void hitPlayer(float damage);
 
 	vector<Tower*> towers;
 
+
 	vector<ENEMY_TYPES> spawnEnemies;
+	Timer spawnTimer;
+
+
+	LEVEL_STATE m_state;
+	void changeState(LEVEL_STATE state);
 };
 
 #endif // LEVEL_H

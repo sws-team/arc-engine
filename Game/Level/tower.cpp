@@ -5,6 +5,8 @@
 #include "Game/Collisions/collisions.h"
 #include "ResourcesManager/resourcesmanager.h"
 
+const float Tower::LEVEL_GAIN = 0.4f;
+
 Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, const TowerStats &stats)
 	: GameObject(texture_id, pos,
 				 Vector2i(GlobalVariables::CELL_SIZE * 2, GlobalVariables::CELL_SIZE * 2),
@@ -44,8 +46,8 @@ void Tower::action(const vector<Enemy *> &enemies)
 	{
 		if (TowersFactory::isIntersects(enemy->gameRect(), aPos, m_stats.radius * GlobalVariables::Instance().tileSize().x))
 		{
-			const float x = fabs(enemy->getCenter().x - this->getCenter().x);
-			const float y = fabs(enemy->getCenter().y - this->getCenter().y);
+			const float x = fabs(enemy->enemyPos().x - this->getCenter().x);
+			const float y = fabs(enemy->enemyPos().y - this->getCenter().y);
 			if (x + y < min)
 			{
 				min = x + y;
@@ -68,13 +70,12 @@ void Tower::collide(const vector<Enemy *> &enemies)
 
 void Tower::upgrade()
 {
-	level++;
+	m_level++;
 
-	const float k = 0.3f;
-	m_stats.cost = m_stats.cost * k;
-	m_stats.damage = m_stats.damage * k;
-	m_stats.radius = m_stats.radius * k;
-	m_stats.attackSpeed = m_stats.attackSpeed * k;
+	m_stats.cost *= Tower::LEVEL_GAIN;
+	m_stats.damage *= Tower::LEVEL_GAIN;
+	m_stats.radius *= Tower::LEVEL_GAIN;
+	m_stats.attackSpeed *= Tower::LEVEL_GAIN;
 }
 
 void Tower::hitEnemy(Enemy *enemy)
@@ -101,6 +102,7 @@ void Tower::setType(const TOWER_TYPES &type)
 {
 	m_type = type;
 }
+
 
 TowerStats Tower::data() const
 {
@@ -190,13 +192,12 @@ bool TowersFactory::isIntersects(const FloatRect &rect, const Vector2f &center, 
 	return false;
 }
 
-const TowerStats BaseTower::STATS = TowerStats(10, 300, 10, 2, 10, 20);
-const TowerStats PowerTower::STATS = TowerStats(10, 300, 10, 4, 10, 25);
-const TowerStats RocketTower::STATS = TowerStats(1, 3000, 10, 10, 3, 50);
-const TowerStats FreezeTower::STATS = TowerStats(1, 300, 0, 3, 15, 40);
-const TowerStats LaserTower::STATS = TowerStats(10, 300, 10, 4, 10, 80);
-const TowerStats ImprovedTower::STATS = TowerStats(10, 100, 10, 6, 50, 100);
-const TowerStats ElectricTower::STATS = TowerStats(10, 300, 10, 4, 10, 20);
+const TowerStats BaseTower::STATS = TowerStats(5, 300, 4, 20, 45);
+const TowerStats PowerTower::STATS = TowerStats(0, 5000, 5, 0, 55);
+const TowerStats RocketTower::STATS = TowerStats(75, 3500, 12, 20, 150);
+const TowerStats FreezeTower::STATS = TowerStats(10, 350, 7, 5, 75);
+const TowerStats LaserTower::STATS = TowerStats(20, 250, 6, 0, 150);
+const TowerStats ImprovedTower::STATS = TowerStats(10, 150, 8, 50, 250);
 
 BaseTower::BaseTower(const Vector2f &pos)
 	: ProjectilesTower(RESOURCES::TOWER_BASE, RESOURCES::BASE_PROJECTILE, pos, STATS)
@@ -204,6 +205,7 @@ BaseTower::BaseTower(const Vector2f &pos)
 
 }
 
+const int PowerTower::ENERGY_GAIN = 10;
 PowerTower::PowerTower(const Vector2f &pos)
 	: Tower(RESOURCES::TOWER_POWER, pos, STATS)
 	,m_isHighlighted(false)
@@ -215,6 +217,7 @@ PowerTower::PowerTower(const Vector2f &pos)
 	powerRadius.setPosition(pos);
 	powerRadius.setOrigin(powerRadius.getRadius() - GlobalVariables::Instance().tileSize().x/2,
 						  powerRadius.getRadius() - GlobalVariables::Instance().tileSize().y/2);
+	m_gain = ENERGY_GAIN;
 }
 
 void PowerTower::draw(RenderTarget * const target)
@@ -226,12 +229,23 @@ void PowerTower::draw(RenderTarget * const target)
 
 bool PowerTower::hasEnergy()
 {
-	return actionTimer.check(4000);
+	return actionTimer.check(m_stats.attackSpeed);
 }
 
 void PowerTower::setHighlighted(bool isHighlighted)
 {
 	m_isHighlighted = isHighlighted;
+}
+
+float PowerTower::gain() const
+{
+	return m_gain;
+}
+
+void PowerTower::upgrade()
+{
+	m_gain *= LEVEL_GAIN;
+	Tower::upgrade();
 }
 
 
@@ -243,20 +257,22 @@ RocketTower::RocketTower(const Vector2f &pos)
 
 void RocketTower::moveProjectile(Projectile *projectile)
 {
-	const Vector2f aPos = projectile->getCenter();
-	const float a = aPos.x - projectile->target->getCenter().x;
-	const float b = aPos.y - projectile->target->getCenter().y;
-	const float tg = ( b / a );
-	float angle = atanf(tg) * 180 / M_PI;
-	if (a < 0)
-		angle += 180;
-	else if (b < 0)
-		angle += 360;
+	if (projectile->target != nullptr)
+	{
+		const Vector2f aPos = projectile->getCenter();
+		const float a = aPos.x - projectile->target->getCenter().x;
+		const float b = aPos.y - projectile->target->getCenter().y;
+		const float tg = ( b / a );
+		float angle = atanf(tg) * 180 / M_PI;
+		if (a < 0)
+			angle += 180;
+		else if (b < 0)
+			angle += 360;
 
-	angle -= 180;
+		angle -= 180;
 
-	projectile->setAngle(angle);
-
+		projectile->setAngle(angle);
+	}
 	ProjectilesTower::moveProjectile(projectile);
 }
 
@@ -316,11 +332,28 @@ ImprovedTower::ImprovedTower(const Vector2f &pos)
 
 }
 
+ProjectilesTower::ProjectilesTower(const RESOURCES::TEXTURE_TYPE &texture_id, const RESOURCES::TEXTURE_TYPE &projectile_id,
+								   const Vector2f &pos,
+								   const TowerStats &stats)
+	: Tower(texture_id, pos, stats)
+{
+
+}
+
 void ProjectilesTower::removeProjectile(Projectile *projectile)
 {
 	m_projectiles.erase( remove( m_projectiles.begin(), m_projectiles.end(), projectile ), m_projectiles.end() );
 	delete projectile;
 	projectile = nullptr;
+}
+
+void ProjectilesTower::checkEnemy(Enemy *enemy)
+{
+	for(Projectile *projectile : m_projectiles)
+	{
+		if (projectile->target == enemy)
+			projectile->target = nullptr;
+	}
 }
 
 void ProjectilesTower::moveProjectile(Projectile *projectile)
@@ -332,14 +365,6 @@ void ProjectilesTower::moveProjectile(Projectile *projectile)
 	const float x2 = x1 + m_stats.projectileSpeed * cos(projectile->angle() * M_PI/180);
 
 	projectile->move(x2-x1, y2-y1);
-}
-
-ProjectilesTower::ProjectilesTower(const RESOURCES::TEXTURE_TYPE &texture_id, const RESOURCES::TEXTURE_TYPE &projectile_id,
-								   const Vector2f &pos,
-								   const TowerStats &stats)
-	: Tower(texture_id, pos, stats)
-{
-
 }
 
 void ProjectilesTower::draw(RenderTarget * const target)
@@ -367,8 +392,8 @@ void ProjectilesTower::shoot(Enemy *target)
 		return;
 
 	const Vector2f aPos = getCenter();
-	const float a = aPos.x - target->getCenter().x;
-	const float b = aPos.y - target->getCenter().y;
+	const float a = aPos.x - target->enemyPos().x;
+	const float b = aPos.y - target->enemyPos().y;
 	const float tg = ( b / a );
 	float angle = atanf(tg) * 180 / M_PI;
 	if (a < 0)
@@ -408,24 +433,4 @@ vector<Projectile *> ProjectilesTower::projectiles() const
 void ProjectilesTower::projectileAction(Enemy *enemy)
 {
 	enemy->hit(m_stats.damage);
-}
-
-ElectricTower::ElectricTower(const Vector2f &pos)
-	: Tower(RESOURCES::TOWER_ELECTRIC, pos, STATS)
-{
-
-}
-
-void ElectricTower::draw(RenderTarget * const target)
-{
-	Tower::draw(target);
-//	if (currentTarget == nullptr)
-//		return;
-	Vertex line[] = { lineTower, lineTarget };
-	target->draw(line, 2, Lines);
-}
-
-void ElectricTower::shoot(Enemy *target)
-{
-
 }

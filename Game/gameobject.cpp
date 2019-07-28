@@ -88,7 +88,7 @@ Sprite &GameObject::getModifiableSprite()
 
 Vector2f GameObject::getCenter() const
 {
-	return Vector2f(this->pos().x + getSize().x/2,
-					this->pos().y + getSize().y/2);
+	return Vector2f(this->pos().x + sprite.getGlobalBounds().width/2,
+					this->pos().y + sprite.getGlobalBounds().height/2);
 }
 

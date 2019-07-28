@@ -209,6 +209,44 @@ void Engine::setGameSpeed(const float k)
 	m_gameSpeedK = k;
 }
 
+float Engine::getStartEnergy(const unsigned int n)
+{
+	switch (n)
+	{
+	case 0:
+		return 450;
+	case 1:
+		return 550;
+	case 2:
+		return 650;
+	case 3:
+		return 750;
+	case 4:
+		return 1000;
+	case 5:
+		return 1100;
+	case 6:
+		return 1200;
+	case 7:
+		return 1300;
+	case 8:
+		return 1400;
+	case 9:
+		return 2000;
+	case 10:
+		return 2200;
+	case 11:
+		return 2400;
+	case 12:
+		return 2500;
+	case 13:
+		return 2800;
+	case 14:
+		return 3000;
+	}
+	return 0;
+}
+
 Camera *Engine::camera() const
 {
 	return m_camera;

@@ -23,6 +23,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::STAR_TEXTURE, "images/ui/star.png");
 	addTexture(RESOURCES::SELL_TEXTURE, "images/ui/Panel/sell.png");
 	addTexture(RESOURCES::UPGRADE_TEXTURE, "images/ui/Panel/upgrade.png");
+	addTexture(RESOURCES::READY_TEXTURE, "images/ui/ready.png");
 
 	addTexture(RESOURCES::ENEMY_TEXTURE, "images/Enemies/enemy1.png");
 

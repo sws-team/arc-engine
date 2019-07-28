@@ -1,7 +1,7 @@
 #ifndef LEVELDEF_H
 #define LEVELDEF_H
 
-enum LEVEL_STATE
+enum ACTION_STATE
 {
 	READY,
 

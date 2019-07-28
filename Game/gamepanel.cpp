@@ -6,12 +6,14 @@
 #include "Engine/engine.h"
 #include "Level/camera.h"
 #include "Level/tower.h"
+#include "Level/lifebar.h"
 
 #include <stdlib.h>
 
 GamePanel::GamePanel() :
 	GameDrawable()
 {
+	progress = new LifeBar();
 	m_selectedTower = nullptr;
 
 	m_sprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_TEXTURE));
@@ -74,7 +76,11 @@ GamePanel::GamePanel() :
 	towerImprovedSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_IMPROVED));
 	towerImprovedSprite.setScale(Settings::Instance().getScaleFactor());
 
+	spriteReady.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::READY_TEXTURE));
+	spriteReady.setScale(Settings::Instance().getScaleFactor());
+
 	m_bottomValue = 0;
+	progress->init(Vector2i(Settings::Instance().getResolution().x * 0.3f, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
 }
 
 GamePanel::~GamePanel()
@@ -129,15 +135,21 @@ void GamePanel::draw(RenderTarget * const target)
 		target->draw(sellRect);
 		target->draw(upgradeRect);
 	}
+	if(Engine::Instance().level()->getState() == Level::WAIT_READY)
+		target->draw(spriteReady);
 	target->draw(miniMapSprite);
+	progress->draw(target);
 }
 
 void GamePanel::update()
 {
-	const int energy = Engine::Instance().level()->getEnergyCount();
+	const int energy = static_cast<int>(Engine::Instance().level()->getEnergyCount());
 	const int life = static_cast<int>(Engine::Instance().level()->getLifeCount());
 	energyCountText.setString(String(to_string(energy)));
 	lifeCountText.setString(String(to_string(life)));
+
+	const float progressValue = static_cast<float>(Engine::Instance().level()->currentProgress()) / m_progressMax;
+	progress->setValue(progressValue);
 }
 
 int GamePanel::cellsCount() const
@@ -155,7 +167,7 @@ void GamePanel::setSelectedTower(Tower *selectedTower)
 	m_selectedTower = selectedTower;
 }
 
-LEVEL_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
+ACTION_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
 {
 	Vector2f center = pos;
 	center += Vector2f(ICON_SIZE/2, ICON_SIZE/2);
@@ -167,27 +179,27 @@ LEVEL_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
 			towerPowerSprite.getGlobalBounds().contains(center) ||
 			towerImprovedSprite.getGlobalBounds().contains(center)
 			)
-		return LEVEL_STATE::ADD_TOWER;
+		return ACTION_STATE::ADD_TOWER;
 
 	if (abilityBombSprite.getGlobalBounds().contains(center))
-		return LEVEL_STATE::ABILITY_BOMB;
+		return ACTION_STATE::ABILITY_BOMB;
 
 	if (abilityFreezeBombSprite.getGlobalBounds().contains(center))
-		return LEVEL_STATE::ABILITY_FREEZE_BOMB;
+		return ACTION_STATE::ABILITY_FREEZE_BOMB;
 
 	if (abilityTimeStopSprite.getGlobalBounds().contains(center))
-		return LEVEL_STATE::ABILITY_STOP_TIME;
+		return ACTION_STATE::ABILITY_STOP_TIME;
 
 	if (abilityCarpetBombingSprite.getGlobalBounds().contains(center))
-		return LEVEL_STATE::ABILITY_CARPET_BOMBING;
+		return ACTION_STATE::ABILITY_CARPET_BOMBING;
 
 	if (abilityIncreaseTowerDamageSprite.getGlobalBounds().contains(center))
-		return LEVEL_STATE::ABILITY_INCREASE_TOWER_DAMAGE;
+		return ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE;
 
 	if (abilityIncreaseTowerAttackSpeedSprite.getGlobalBounds().contains(center))
-		return LEVEL_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED;
+		return ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED;
 
-	return LEVEL_STATE::READY;
+	return ACTION_STATE::READY;
 }
 
 TOWER_TYPES GamePanel::currentTower(const Vector2f &pos) const
@@ -229,6 +241,9 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	const float text_offset = 320 * Settings::GAME_SCALE;
 
 	Vector2f pos = nullPos;
+
+
+	progress->setPos(Vector2f(pos.x + Settings::Instance().getResolution().x * 0.3f, 20));
 
 	m_sprite.setPosition(pos);
 
@@ -318,12 +333,27 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	pos.y -= iconSize.y;
 	pos.x += icons_space;
 
+
+	spriteReady.setPosition(Vector2f(pos.x, pos.y - 400));
+
 //	miniMapSprite.setPosition(pos);
 	return pos;
+}
+
+void GamePanel::setProgressMax(int progressMax)
+{
+	m_progressMax = progressMax;
 }
 
 float GamePanel::getBottomValue() const
 {
 	return m_bottomValue;
+}
+
+void GamePanel::press(const Vector2i &pos)
+{
+	if (Engine::Instance().level()->getState() == Level::WAIT_READY)
+		if (spriteReady.getGlobalBounds().contains(pos.x, pos.y))
+			Engine::Instance().level()->ready();
 }
 

@@ -26,10 +26,14 @@ public:
 	Tower *selectedTower() const;
 	void setSelectedTower(Tower *selectedTower);
 
-	LEVEL_STATE getCurrentIcon(const Vector2f& pos) const;
+	ACTION_STATE getCurrentIcon(const Vector2f& pos) const;
 	TOWER_TYPES currentTower(const Vector2f &pos) const;
 
 	float getBottomValue() const;
+
+	void press(const Vector2i &pos);
+
+	void setProgressMax(int progressMax);
 
 private:
 	Sprite m_sprite;
@@ -61,6 +65,11 @@ private:
 
 	float m_bottomValue;
 	bool m_isPanelActive;
+
+	Sprite spriteReady;
+
+	class LifeBar *progress;
+	int m_progressMax;
 };
 
 #endif // GAMEPANEL_H

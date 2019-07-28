@@ -2,6 +2,7 @@
 #include "Game/Level/level.h"
 #include "Game/Level/camera.h"
 #include "Game/Level/cursor.h"
+#include "Game/gamepanel.h"
 #include "globalvariables.h"
 #include "Engine/engine.h"
 
@@ -44,6 +45,9 @@ void Controller::keyboardKeyEvent(const bool timeout)
 		if (Keyboard::isKeyPressed(Keyboard::Q))
 			Engine::Instance().level()->test();
 
+
+		if (Keyboard::isKeyPressed(Keyboard::Space))
+			Engine::Instance().level()->ready();
 		if (Keyboard::isKeyPressed(Keyboard::L))
 			Engine::Instance().level()->right();
 		if (Keyboard::isKeyPressed(Keyboard::J))
@@ -59,6 +63,7 @@ void Controller::keyboardKeyEvent(const bool timeout)
 			const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
 			const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
 			Engine::Instance().level()->chooseByPos(pos);
+			Engine::Instance().panel()->press(pixelPos);
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Return))
 			Engine::Instance().level()->chooseCurrent();

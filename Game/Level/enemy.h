@@ -36,6 +36,7 @@ public:
 
 	Vector2f enemyPos() const;
 	Vector2f getOriginalPos() const;
+	Vector2f getMovePos() const;
 
 private:
 	EnemyStats m_stats;
@@ -77,6 +78,9 @@ class EnemiesFactory
 {
 public:
 	static Enemy *createEnemy(ENEMY_TYPES type, const Vector2f &startPos);
+	static vector<ENEMY_TYPES> generateEnemies(unsigned int n);
+private:
+	static void addEnemiesByType(const ENEMY_TYPES type, int count, vector<ENEMY_TYPES> *spawnEnemies);
 };
 
 #endif // ENEMY_H

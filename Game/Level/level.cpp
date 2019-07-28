@@ -18,16 +18,15 @@ constexpr static int MAX_SHAKE_OFFSET = 5;
 constexpr static int SHAKE_DURATION = 500;
 
 Level::Level() :
-	m_finished(false)
-  ,m_isFailed(false)
-  ,difficulty(1.f)
+  difficulty(1.f)
   ,gameMap(nullptr)
-  ,m_state(READY)
+  ,m_actionState(READY)
   ,life(0.f)
+  ,m_state(WAIT_READY)
 {
 	const float k = static_cast<float>(Settings::Instance().getInscribedResolution().y)/Settings::Instance().getResolution().y;
 	resolutionOffsetX = Settings::Instance().getResolution().x - k * Settings::Instance().getResolution().x;
-	resolutionOffsetX /= 2;
+	resolutionOffsetX /= 2;	
 }
 
 Level::~Level()
@@ -42,17 +41,31 @@ void Level::draw(RenderTarget *const target)
 	drawLevel(target);
 	target->draw(deadZone);
 
+	switch (m_state)
+	{
+	case WAIT_READY:
+
+		break;
+	default:
+		break;
+	}
+
+
 	Engine::Instance().panel()->draw(target);
 }
 
 void Level::update()
 {
+	if (m_state != PLAYING)
+		return;
+
 	for(Tower* tower : towers)
 	{
 		if (tower->type() == POWER)
 		{
-			if (static_cast<PowerTower*>(tower)->hasEnergy())
-				energy += 10;
+			PowerTower *powerTower = static_cast<PowerTower*>(tower);
+			if (powerTower->hasEnergy())
+				energy += powerTower->gain();
 		}
 		else
 			tower->action(enemies);
@@ -99,8 +112,13 @@ Vector2f Level::getStartingPos() const
 
 void Level::startMission(const unsigned int n)
 {
-	life = 100.f;
-	energy = 100;
+	m_state = WAIT_READY;
+	spawnEnemies = EnemiesFactory::generateEnemies(n);
+	Engine::Instance().panel()->setProgressMax(spawnEnemies.size());
+	life = 100.f + n * 10;
+	energy = Engine::getStartEnergy(n);
+	Engine::Instance().panel()->update();
+
 	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
 //	difficulty = 1.f + static_cast<float>(SavedGameLoader::Instance().getSavedGame().completedLevels.size()) / 10;
 
@@ -171,6 +189,8 @@ void Level::checkEnd()
 		else
 			++it;
 	}
+	if (spawnEnemies.empty())
+		changeState(WIN);
 }
 
 void Level::checkAlive()
@@ -179,7 +199,11 @@ void Level::checkAlive()
 	{
 		Enemy *enemy = *it;
 		if (!enemy->isAlive())
-		{
+		{			
+			for (Tower *tower : towers)
+				if (tower->type() == ROCKET)
+					static_cast<RocketTower*>(tower)->checkEnemy(enemy);
+
 			delete enemy;
 			it = enemies.erase(it);
 		}
@@ -190,7 +214,14 @@ void Level::checkAlive()
 
 void Level::checkRespawn()
 {
-//	spawn();
+	const int timeOffset = rand() % 1000 - 300;
+	if (spawnTimer.check(1000 + timeOffset))
+	{
+		const int n = rand() % spawnEnemies.size();
+		ENEMY_TYPES type = spawnEnemies.at(n);
+		spawnEnemies.erase(find(spawnEnemies.begin(), spawnEnemies.end(), type));
+		spawn(type);
+	}
 }
 
 Tower *Level::getTowerAtPos(const Vector2f &pos) const
@@ -245,23 +276,29 @@ void Level::hitPlayer(float damage)
 	if (life <= 0.f)
 	{
 		//game over
-		m_isFailed = true;
-		m_finished = true;
+		changeState(LOSE);
 	}
 }
 
-//void Level::fillLevel()
-//{
-//	m_startPos.x = static_cast<float>(Settings::Instance().getResolution().x)/2;
-//	m_startPos.y = static_cast<float>(Settings::Instance().getResolution().y)/2;
+void Level::changeState(Level::LEVEL_STATE state)
+{
+	m_state = state;
+}
 
-//	m_topBorder = view.getCenter().y - view.getSize().y/2;
-//	m_bottomBorder = view.getCenter().y + view.getSize().y/2;
+Level::LEVEL_STATE Level::getState() const
+{
+	return m_state;
+}
 
-//	panel->setLeftBorder(leftBorder());
+void Level::ready()
+{
+	m_state = PLAYING;
+}
 
-	//	SoundController::Instance().startBackgroundSound(mission.backgroundSound);
-//}
+int Level::currentProgress() const
+{
+	return spawnEnemies.size();
+}
 
 void Level::drawLevel(RenderTarget * const target)
 {
@@ -352,7 +389,7 @@ int Level::getTileDirectionByCell(const Vector2i& cell) const
 	return 0;
 }
 
-int Level::getEnergyCount() const
+float Level::getEnergyCount() const
 {
 	return energy;
 }
@@ -380,8 +417,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 	if (inPanel)
 	{
 		const Vector2f pos = Engine::Instance().camera()->cellToPos(cell);
-		m_state = Engine::Instance().panel()->getCurrentIcon(pos);
-		switch (m_state)
+		m_actionState = Engine::Instance().panel()->getCurrentIcon(pos);
+		switch (m_actionState)
 		{
 		case READY:
 			break;
@@ -410,10 +447,11 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (selectedTower == nullptr)
 				return;
 
-			const int cost = selectedTower->data().cost/2;
+			const float cost = selectedTower->data().cost/2;
 			energy += cost;
 			towers.erase( remove( towers.begin(), towers.end(), selectedTower ), towers.end() );
 			delete selectedTower;
+			Engine::Instance().panel()->update();
 		}
 			break;
 		case UPGRADE:
@@ -427,7 +465,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 	}
 	else
 	{
-		switch (m_state)
+		switch (m_actionState)
 		{
 		case READY:
 		{
@@ -448,7 +486,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (type != POWER)
 				highlightPowerTowersRadius(false);
 
-			const int cost = TowersFactory::getTowerStats(type).cost;
+			const float cost = TowersFactory::getTowerStats(type).cost;
 			if (cost > energy)
 				return;
 
@@ -458,6 +496,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 				return;
 			towers.push_back(tower);
 			energy -= cost;
+			Engine::Instance().panel()->update();
 		}
 			break;
 		case ABILITY_CARPET_BOMBING:
@@ -504,19 +543,9 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		default:
 			break;
 		}
-		m_state = READY;
+		m_actionState = READY;
 		Engine::Instance().cursor()->deactivate();
 	}
-}
-
-bool Level::isFinished() const
-{
-	return m_finished;
-}
-
-bool Level::isFailed() const
-{
-	return m_isFailed;
 }
 
 void Level::action()

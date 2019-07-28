@@ -8,13 +8,11 @@ struct TowerStats
 {
 	TowerStats(float damage,
 			   float attackSpeed,
-			   float damageOffset,
-			   float radius,
+			   int radius,
 			   float projectileSpeed,
-			   int cost)
+			   float cost)
 		: damage(damage)
 		,attackSpeed(attackSpeed)
-		,damageOffset(damageOffset)
 		,radius(radius)
 		,projectileSpeed(projectileSpeed)
 		,cost(cost)
@@ -23,10 +21,9 @@ struct TowerStats
 	}
 	float damage;
 	float attackSpeed;
-	float damageOffset;
 	int radius;
 	float projectileSpeed;
-	int cost;
+	float cost;
 };
 
 class Enemy;
@@ -57,7 +54,7 @@ public:
 	void action(const vector<Enemy*>& enemies);
 	virtual void shoot(Enemy* target);
 	virtual void collide(const vector<Enemy*>& enemies);
-	void upgrade();
+	virtual void upgrade();
 	TowerStats data() const;
 
 	void hitEnemy(Enemy* enemy);
@@ -66,6 +63,8 @@ public:
 
 	TOWER_TYPES type() const;
 	void setType(const TOWER_TYPES &type);
+
+	static const float LEVEL_GAIN;
 
 protected:
 	TowerStats m_stats;
@@ -76,7 +75,7 @@ private:
 
 	TOWER_TYPES m_type;
 
-	int level;
+	int m_level;
 };
 
 class ProjectilesTower : public Tower
@@ -98,6 +97,9 @@ public:
 	//ProjectilesTower
 	vector<Projectile*> projectiles() const;
 	void removeProjectile(Projectile *projectile);
+
+	void checkEnemy(Enemy *enemy);
+
 protected:
 	virtual void projectileAction(Enemy *enemy);
 	virtual void moveProjectile(Projectile *projectile);
@@ -127,8 +129,13 @@ public:
 	bool hasEnergy();
 	void setHighlighted(bool isHighlighted);
 
+	float gain() const;
+
+	void upgrade() override;
 private:
+	static const int ENERGY_GAIN;
 	bool m_isHighlighted;
+	int m_gain;
 
 	CircleShape powerRadius;
 };
@@ -176,21 +183,6 @@ class ImprovedTower : public ProjectilesTower
 public:
 	ImprovedTower(const Vector2f &pos);
 	const static TowerStats STATS;
-};
-
-class ElectricTower : public Tower
-{
-public:
-	ElectricTower(const Vector2f &pos);
-	const static TowerStats STATS;
-
-	void draw(RenderTarget *const target) final;
-
-	void shoot(Enemy *target) final;
-
-private:
-	Vertex lineTower;
-	Vertex lineTarget;
 };
 
 #endif // TOWER_H
