@@ -38,7 +38,7 @@ public:
 
 	void drawLevel(RenderTarget * const target);
 
-	void spawn();
+	void spawn(ENEMY_TYPES type);
 	void test();
 	void left();
 	void right();
@@ -57,7 +57,7 @@ public:
 	float getLifeCount() const;
 	Tower *getTowerAtPos(const Vector2f& pos) const;
 
-	bool canAddTower(const Vector2i& cell, int towerType) const;
+	bool canAddTower(const Vector2i& cell, TOWER_TYPES towerType) const;
 
 	void highlightPowerTowersRadius(bool active);
 
@@ -72,6 +72,7 @@ private:
 	void checkDeadZone();
 	void checkEnd();
 	void checkAlive();
+	void checkRespawn();
 
 	Vector2f m_startPos;
 
@@ -125,6 +126,8 @@ private:
 	void hitPlayer(float damage);
 
 	vector<Tower*> towers;
+
+	vector<ENEMY_TYPES> spawnEnemies;
 };
 
 #endif // LEVEL_H

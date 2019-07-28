@@ -4,6 +4,7 @@
 #include "stdheader.h"
 #include <vector>
 #include "Game/gameobject.h"
+#include "Game/leveldef.h"
 
 class Cursor : public GameObject
 {
@@ -34,7 +35,7 @@ public:
 	void activateAbility(int x, int y, int hotX, int hotY);
 	void deactivate();
 
-	void activateTower(float radius, int type);
+	void activateTower(float radius, TOWER_TYPES type);
 
 	Vector2i abilityCell() const;
 
@@ -44,7 +45,7 @@ public:
 	void swap();
 	bool inPanel() const;
 
-	int getTowerType() const;
+	TOWER_TYPES getTowerType() const;
 
 private:
 	Vector2i m_cell;
@@ -70,7 +71,7 @@ private:
 
 	CircleShape towerRadius;
 	Sprite towerSprite;
-	int towerType;
+	TOWER_TYPES towerType;
 };
 
 #endif // CURSOR_H

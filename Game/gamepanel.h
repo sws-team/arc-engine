@@ -27,7 +27,7 @@ public:
 	void setSelectedTower(Tower *selectedTower);
 
 	LEVEL_STATE getCurrentIcon(const Vector2f& pos) const;
-	int currentTower(const Vector2f &pos) const;
+	TOWER_TYPES currentTower(const Vector2f &pos) const;
 
 	float getBottomValue() const;
 

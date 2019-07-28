@@ -190,30 +190,30 @@ LEVEL_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
 	return LEVEL_STATE::READY;
 }
 
-int GamePanel::currentTower(const Vector2f &pos) const
+TOWER_TYPES GamePanel::currentTower(const Vector2f &pos) const
 {
 	Vector2f center = pos;
 	center += Vector2f(ICON_SIZE/2, ICON_SIZE/2);
 
 	if (towerBaseSprite.getGlobalBounds().contains(center))
-		return TowersFactory::BASE;
+		return BASE;
 
 	if (towerLaserSprite.getGlobalBounds().contains(center))
-		return TowersFactory::LASER;
+		return LASER;
 
 	if (towerFreezeSprite.getGlobalBounds().contains(center))
-		return TowersFactory::FREEZE;
+		return FREEZE;
 
 	if (towerRocketSprite.getGlobalBounds().contains(center))
-		return TowersFactory::ROCKET;
+		return ROCKET;
 
 	if (towerPowerSprite.getGlobalBounds().contains(center))
-		return TowersFactory::POWER;
+		return POWER;
 
 	if (towerImprovedSprite.getGlobalBounds().contains(center))
-		return TowersFactory::IMPROVED;
+		return IMPROVED;
 
-	return TowersFactory::POWER;
+	return POWER;
 }
 
 Vector2f GamePanel::updatePos(const Vector2f &nullPos)

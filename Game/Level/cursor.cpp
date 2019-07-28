@@ -168,7 +168,7 @@ void Cursor::deactivate()
 	m_state = NORMAL;
 }
 
-void Cursor::activateTower(float radius, int type)
+void Cursor::activateTower(float radius, TOWER_TYPES type)
 {
 	abilityHotsPot.x = 0;
 	abilityHotsPot.y = 0;
@@ -180,22 +180,22 @@ void Cursor::activateTower(float radius, int type)
 	RESOURCES::TEXTURE_TYPE textureType;
 	switch (towerType)
 	{
-	case TowersFactory::BASE:
+	case BASE:
 		textureType = RESOURCES::TOWER_BASE;
 		break;
-	case TowersFactory::POWER:
+	case POWER:
 		textureType = RESOURCES::TOWER_POWER;
 		break;
-	case TowersFactory::ROCKET:
+	case ROCKET:
 		textureType = RESOURCES::TOWER_ROCKET;
 		break;
-	case TowersFactory::FREEZE:
+	case FREEZE:
 		textureType = RESOURCES::TOWER_FREEZE;
 		break;
-	case TowersFactory::LASER:
+	case LASER:
 		textureType = RESOURCES::TOWER_LASER;
 		break;
-	case TowersFactory::IMPROVED:
+	case IMPROVED:
 		textureType = RESOURCES::TOWER_IMPROVED;
 		break;
 	}
@@ -231,7 +231,7 @@ bool Cursor::inPanel() const
 	return m_inPanel;
 }
 
-int Cursor::getTowerType() const
+TOWER_TYPES Cursor::getTowerType() const
 {
 	return towerType;
 }

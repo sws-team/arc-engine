@@ -2,6 +2,7 @@
 #define TOWER_H
 
 #include "Game/gameobject.h"
+#include "Game/leveldef.h"
 
 struct TowerStats
 {
@@ -35,15 +36,6 @@ class Tower;
 class TowersFactory
 {
 public:
-	enum TOWER_TYPES
-	{
-		BASE,
-		POWER,
-		ROCKET,
-		FREEZE,
-		LASER,
-		IMPROVED,
-	};
 	static Tower *createTower(TOWER_TYPES type, const Vector2f& pos);
 	static TowerStats getTowerStats(TOWER_TYPES type);
 	static bool isIntersects(const FloatRect& rect, const Vector2f& center, float radius);
@@ -72,8 +64,8 @@ public:
 	void select();
 	void deselect();
 
-	TowersFactory::TOWER_TYPES type() const;
-	void setType(const TowersFactory::TOWER_TYPES &type);
+	TOWER_TYPES type() const;
+	void setType(const TOWER_TYPES &type);
 
 protected:
 	TowerStats m_stats;
@@ -82,7 +74,7 @@ private:
 	CircleShape radius;
 	bool m_selected;
 
-	TowersFactory::TOWER_TYPES m_type;
+	TOWER_TYPES m_type;
 
 	int level;
 };

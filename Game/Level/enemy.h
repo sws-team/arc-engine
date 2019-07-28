@@ -2,6 +2,7 @@
 #define ENEMY_H
 
 #include "Game/gameobject.h"
+#include "Game/leveldef.h"
 
 struct EnemyStats
 {
@@ -75,27 +76,7 @@ private:
 class EnemiesFactory
 {
 public:
-	enum TYPES
-	{
-		UNKNOWN,
-
-		SMALL_SLOW,
-		SMALL_MEDIUM,
-		SMALL_FAST,
-
-		MID_SLOW,
-		MID_MEDIUM,
-		MID_FAST,
-
-		BIG_SLOW,
-		BIG_MEDIUM,
-		BIG_FAST,
-
-		VERY_FAST,
-		VERY_BIG
-	};
-
-	static Enemy *createEnemy(TYPES type, const Vector2f &startPos);
+	static Enemy *createEnemy(ENEMY_TYPES type, const Vector2f &startPos);
 };
 
 #endif // ENEMY_H

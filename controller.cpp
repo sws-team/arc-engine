@@ -22,7 +22,7 @@ void Controller::keyboardKeyEvent(const bool timeout)
 	if (timeout)
 	{
 		if (Keyboard::isKeyPressed(Keyboard::P))
-			Engine::Instance().level()->spawn();
+			Engine::Instance().level()->spawn(ENEMY_TYPES::SMALL_SLOW);
 
 		if (Keyboard::isKeyPressed(Keyboard::M))
 			Engine::Instance().setGameSpeed(8);

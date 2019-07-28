@@ -49,7 +49,7 @@ void Level::update()
 {
 	for(Tower* tower : towers)
 	{
-		if (tower->type() == TowersFactory::POWER)
+		if (tower->type() == POWER)
 		{
 			if (static_cast<PowerTower*>(tower)->hasEnergy())
 				energy += 10;
@@ -60,6 +60,7 @@ void Level::update()
 	}
 	if (timer.check(GlobalVariables::FRAME_TIME))
 	{
+		checkRespawn();
 		calculateCollisions();
 		checkDeadZone();
 		checkEnd();
@@ -134,11 +135,11 @@ void Level::checkDeadZone()
 {
 	for(Tower *tower : towers)
 	{
-		const TowersFactory::TOWER_TYPES type = tower->type();
-		if (type == TowersFactory::BASE ||
-				type == TowersFactory::IMPROVED ||
-				type == TowersFactory::FREEZE ||
-				type == TowersFactory::ROCKET)
+		const TOWER_TYPES type = tower->type();
+		if (type == BASE ||
+				type == IMPROVED ||
+				type == FREEZE ||
+				type == ROCKET)
 		{
 			ProjectilesTower *pTower = static_cast<ProjectilesTower*>(tower);
 			for(Projectile *projectile : pTower->projectiles())
@@ -187,6 +188,11 @@ void Level::checkAlive()
 	}
 }
 
+void Level::checkRespawn()
+{
+//	spawn();
+}
+
 Tower *Level::getTowerAtPos(const Vector2f &pos) const
 {
 	for(Tower* tower : towers)
@@ -197,19 +203,19 @@ Tower *Level::getTowerAtPos(const Vector2f &pos) const
 	return nullptr;
 }
 
-bool Level::canAddTower(const Vector2i &cell, int towerType) const
+bool Level::canAddTower(const Vector2i &cell, TOWER_TYPES towerType) const
 {
 	bool canCreate = true;
 	const int direction = Engine::Instance().level()->getTileDirectionByCell(cell);
 	canCreate = canCreate && direction == 0;
 	Tower *tower = this->getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
 	canCreate = canCreate && tower == nullptr;
-	if (towerType != TowersFactory::POWER)
+	if (towerType != POWER)
 	{
 		bool finded = false;
 		for(Tower *tower : towers)
 		{
-			if (tower->type() == TowersFactory::POWER)
+			if (tower->type() == POWER)
 			{				
 				const int radius = tower->data().radius;
 				const Vector2i towerCell = Engine::Instance().camera()->posToCell(tower->pos());
@@ -229,7 +235,7 @@ bool Level::canAddTower(const Vector2i &cell, int towerType) const
 void Level::highlightPowerTowersRadius(bool active)
 {
 	for(Tower *tower : towers)
-		if (tower->type() == TowersFactory::POWER)
+		if (tower->type() == POWER)
 			static_cast<PowerTower*>(tower)->setHighlighted(active);
 }
 
@@ -273,9 +279,9 @@ void Level::drawLevel(RenderTarget * const target)
 	//	Effects::Instance().draw(target);
 }
 
-void Level::spawn()
+void Level::spawn(ENEMY_TYPES type)
 {
-	Enemy *enemy = EnemiesFactory::createEnemy(EnemiesFactory::SMALL_SLOW, Engine::Instance().camera()->cellToPos(gameMap->spawnPos));
+	Enemy *enemy = EnemiesFactory::createEnemy(type, Engine::Instance().camera()->cellToPos(gameMap->spawnPos));
 	enemy->moveNext(gameMap->spawnDirection);
 	enemies.push_back(enemy);
 }
@@ -381,10 +387,10 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ADD_TOWER:
 		{
-			const TowersFactory::TOWER_TYPES type = static_cast<TowersFactory::TOWER_TYPES>(Engine::Instance().panel()->currentTower(pos));
+			const TOWER_TYPES type = Engine::Instance().panel()->currentTower(pos);
 			const float radius = TowersFactory::getTowerStats(type).radius * GlobalVariables::Instance().tileSize().x;
 			Engine::Instance().cursor()->activateTower(radius, type);
-			if (type != TowersFactory::POWER)
+			if (type != POWER)
 				highlightPowerTowersRadius(true);
 		}
 			break;
@@ -435,11 +441,11 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ADD_TOWER:
 		{
-			const TowersFactory::TOWER_TYPES type = static_cast<TowersFactory::TOWER_TYPES>(Engine::Instance().cursor()->getTowerType());
+			const TOWER_TYPES type = Engine::Instance().cursor()->getTowerType();
 			if (!canAddTower(cell, type))
 				return;
 
-			if (type != TowersFactory::POWER)
+			if (type != POWER)
 				highlightPowerTowersRadius(false);
 
 			const int cost = TowersFactory::getTowerStats(type).cost;

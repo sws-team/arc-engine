@@ -234,7 +234,7 @@ Vector2f Enemy::getOriginalPos() const
 	return pos() - offset;
 }
 
-Enemy *EnemiesFactory::createEnemy(EnemiesFactory::TYPES type, const Vector2f &startPos)
+Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 {
 	EnemyStats stats;
 	stats.speed = 0.f;
@@ -247,7 +247,7 @@ Enemy *EnemiesFactory::createEnemy(EnemiesFactory::TYPES type, const Vector2f &s
 	case SMALL_SLOW:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
 		stats.health = 45.f;
-		stats.speed = 3.f;
+		stats.speed = 20.f;
 		stats.damage = 10.f;
 		break;
 	case SMALL_MEDIUM:

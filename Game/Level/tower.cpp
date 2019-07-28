@@ -92,12 +92,12 @@ void Tower::deselect()
 	m_selected = false;
 }
 
-TowersFactory::TOWER_TYPES Tower::type() const
+TOWER_TYPES Tower::type() const
 {
 	return m_type;
 }
 
-void Tower::setType(const TowersFactory::TOWER_TYPES &type)
+void Tower::setType(const TOWER_TYPES &type)
 {
 	m_type = type;
 }
@@ -107,7 +107,7 @@ TowerStats Tower::data() const
 	return m_stats;
 }
 
-Tower *TowersFactory::createTower(TowersFactory::TOWER_TYPES type, const Vector2f &pos)
+Tower *TowersFactory::createTower(TOWER_TYPES type, const Vector2f &pos)
 {
 	Tower *tower = nullptr;
 	switch (type)
@@ -135,7 +135,7 @@ Tower *TowersFactory::createTower(TowersFactory::TOWER_TYPES type, const Vector2
 	return tower;
 }
 
-TowerStats TowersFactory::getTowerStats(TowersFactory::TOWER_TYPES type)
+TowerStats TowersFactory::getTowerStats(TOWER_TYPES type)
 {
 	switch (type)
 	{
