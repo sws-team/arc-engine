@@ -19,9 +19,9 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     settings.cpp \
     controller.cpp \
-    savedgame.cpp \
     statewindow.cpp \
-    gamewindow.cpp
+    gamewindow.cpp \
+    timer.cpp
 HEADERS += \
     globalvariables.h \
     mainwindow.h \
@@ -29,7 +29,6 @@ HEADERS += \
     stdheader.h \
     graphics.h \
     controller.h \
-    savedgame.h \
     controlsettings.h \
     timer.h \
     statewindow.h \

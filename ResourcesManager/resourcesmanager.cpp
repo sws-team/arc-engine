@@ -20,6 +20,10 @@ void ResourcesManager::loadTextures()
 {
 	addTexture(RESOURCES::PANEL_TEXTURE, "images/ui/Panel/panel.png");
 	addTexture(RESOURCES::CURSOR_TEXTURE, "images/cursor.png");
+	addTexture(RESOURCES::STAR_TEXTURE, "images/ui/star.png");
+	addTexture(RESOURCES::SELL_TEXTURE, "images/ui/Panel/sell.png");
+	addTexture(RESOURCES::UPGRADE_TEXTURE, "images/ui/Panel/upgrade.png");
+
 	addTexture(RESOURCES::ENEMY_TEXTURE, "images/Enemies/enemy1.png");
 
 	addTexture(RESOURCES::ABILITY_BOMB, "images/ui/Panel/Abilities/ability_bomb.png");
@@ -33,10 +37,15 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::TOWER_POWER, "images/ui/Panel/Towers/tower_power.png");
 	addTexture(RESOURCES::TOWER_ROCKET, "images/ui/Panel/Towers/tower_rocket.png");
 	addTexture(RESOURCES::TOWER_FREEZE, "images/ui/Panel/Towers/tower_freeze.png");
-	addTexture(RESOURCES::TOWER_SPLASH, "images/ui/Panel/Towers/tower_splash.png");
+	addTexture(RESOURCES::TOWER_LASER, "images/ui/Panel/Towers/tower_splash.png");
 	addTexture(RESOURCES::TOWER_IMPROVED, "images/ui/Panel/Towers/tower_improved.png");
+	addTexture(RESOURCES::TOWER_ELECTRIC, "images/ui/Panel/Towers/tower_splash.png");
 
 	addTexture(RESOURCES::BASE_PROJECTILE, "images/Weapons/bullet.png");
+	addTexture(RESOURCES::IMPROVED_PROJECTILE, "images/Weapons/bullet.png");
+	addTexture(RESOURCES::FREEZE_PROJECTILE, "images/Weapons/bullet.png");
+	addTexture(RESOURCES::ROCKET_PROJECTILE, "images/Weapons/rocket.png");
+	addTexture(RESOURCES::LASER_PROJECTILE, "images/Weapons/laser.png");
 
 	addTexture(RESOURCES::ABOUT_BACKGROUND, "images/about.png");
 	addTexture(RESOURCES::SETTINGS_BACKGROUND, "images/options.png");

@@ -192,8 +192,8 @@ void Cursor::activateTower(float radius, int type)
 	case TowersFactory::FREEZE:
 		textureType = RESOURCES::TOWER_FREEZE;
 		break;
-	case TowersFactory::SPLASH:
-		textureType = RESOURCES::TOWER_SPLASH;
+	case TowersFactory::LASER:
+		textureType = RESOURCES::TOWER_LASER;
 		break;
 	case TowersFactory::IMPROVED:
 		textureType = RESOURCES::TOWER_IMPROVED;
@@ -202,6 +202,7 @@ void Cursor::activateTower(float radius, int type)
 
 	towerSprite.setTexture(ResourcesManager::Instance().getTexture(textureType));
 	towerSprite.setScale(Settings::Instance().getScaleFactor());
+	towerSprite.scale(0.5f, 0.5f);
 	towerSprite.setColor(sf::Color(255, 255, 255, 128)); // half transparent
 	m_state = TOWER;
 
@@ -248,8 +249,9 @@ void Cursor::updateCell()
 		cell -= abilityHotsPot;
 		break;
 	case TOWER:
-		const int direction = Engine::Instance().level()->getTileDirectionByCell(m_cell);
-		towerRadius.setFillColor(direction == 0 ? Color(0, 255, 0, 100) : Color(255, 0, 0, 100));
+
+		const bool canCreate = Engine::Instance().level()->canAddTower(m_cell, towerType);
+		towerRadius.setFillColor(canCreate ? Color(0, 255, 0, 100) : Color(255, 0, 0, 100));
 		break;
 	}
 

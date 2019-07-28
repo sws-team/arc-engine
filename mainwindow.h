@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include "stdheader.h"
-#include "savedgame.h"
 #include "Engine/engine.h"
 
 class MainWindow : public RenderWindow

@@ -3,9 +3,12 @@
 
 #include "stdheader.h"
 #include "gamedrawable.h"
+#include "leveldef.h"
 
 class SpaceShip;
 class Level;
+
+class Tower;
 
 class GamePanel : public GameDrawable
 {
@@ -18,24 +21,24 @@ public:
 
 	int cellsCount() const;
 
-	constexpr static float ICON_SIZE = 96;
-	constexpr static float TOP_MARGIN = ICON_SIZE/2;
-	constexpr static float ICONS_START = 442;
+	constexpr static float ICON_SIZE = 64;
 
-	constexpr static int PANEL_CELLS_COUNT = 10;
+	Tower *selectedTower() const;
+	void setSelectedTower(Tower *selectedTower);
+
+	LEVEL_STATE getCurrentIcon(const Vector2f& pos) const;
+	int currentTower(const Vector2f &pos) const;
+
+	float getBottomValue() const;
+
 private:
-	constexpr static float PANEL_WIDTH = 1920.f;
-//	constexpr static float BLOCK_WIDTH = PANEL_WIDTH / 3;
-	const static float PANEL_HEIGHT;
-	constexpr static float PANEL_SCALE = 0.2f;
-
-
-	constexpr static int BLOCK_TOWERS = 1;
-	constexpr static int BLOCK_ABILITIES = 2;
-	constexpr static int BLOCK_MINIMAP = 3;
-
 	Sprite m_sprite;
 	RenderTexture rTexture;
+	Text energyCountText;
+	Text lifeCountText;
+
+	RectangleShape sellRect;
+	RectangleShape upgradeRect;
 
 	Sprite abilityBombSprite;
 	Sprite abilityFreezeBombSprite;
@@ -48,8 +51,16 @@ private:
 	Sprite towerLaserSprite;
 	Sprite towerFreezeSprite;
 	Sprite towerRocketSprite;
-	Sprite towerSplashSprite;
+	Sprite towerPowerSprite;
 	Sprite towerImprovedSprite;
+
+	Tower *m_selectedTower;
+
+
+	Vector2f updatePos(const Vector2f& nullPos);
+
+	float m_bottomValue;
+	bool m_isPanelActive;
 };
 
 #endif // GAMEPANEL_H

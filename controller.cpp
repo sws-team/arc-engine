@@ -24,6 +24,22 @@ void Controller::keyboardKeyEvent(const bool timeout)
 		if (Keyboard::isKeyPressed(Keyboard::P))
 			Engine::Instance().level()->spawn();
 
+		if (Keyboard::isKeyPressed(Keyboard::M))
+			Engine::Instance().setGameSpeed(8);
+		if (Keyboard::isKeyPressed(Keyboard::N))
+			Engine::Instance().setGameSpeed(2);
+
+
+		if (Keyboard::isKeyPressed(Keyboard::B))
+			Engine::Instance().setGameSpeed(0.1f);
+		if (Keyboard::isKeyPressed(Keyboard::V))
+			Engine::Instance().setGameSpeed(0.5f);
+
+
+		if (Keyboard::isKeyPressed(Keyboard::PageDown))
+			Engine::Instance().level()->setNormalSpeed();
+		if (Keyboard::isKeyPressed(Keyboard::PageUp))
+			Engine::Instance().level()->setFastSpeed();
 
 		if (Keyboard::isKeyPressed(Keyboard::Q))
 			Engine::Instance().level()->test();

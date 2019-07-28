@@ -7,6 +7,7 @@ class Camera;
 class Cursor;
 class Level;
 class GamePanel;
+class Map;
 
 class Engine
 {
@@ -49,6 +50,17 @@ public:
 
 	void reset();
 
+	unsigned int missionsCount() const;
+	unsigned int getMission() const;
+	void setMission(unsigned int mission);
+	Map *getMap(unsigned int mission);
+
+	void save();
+	void load();
+
+	float gameSpeed() const;
+	void setGameSpeed(const float k);
+
 private:
 	Engine();
 	Engine(const Engine& root) = delete;
@@ -62,6 +74,20 @@ private:
 	GamePanel *m_panel;
 
 	RenderWindow *p_window;
+
+	struct SavedLevel
+	{
+		int number;
+		int stars;
+	};
+
+	vector<SavedLevel> m_save;
+	string saveFileName;
+	vector<Map*> maps;
+	unsigned int m_mission;
+	class SavedGameLoader *saveGameLoader;
+
+	float m_gameSpeedK;
 };
 
 #endif // ENGINE_H

@@ -16,6 +16,20 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 	,isFreezed(false)
 	,startFreeze(false)
 {
+	centerOffset.x = GlobalVariables::Instance().tileSize().x/2;
+	centerOffset.y = GlobalVariables::Instance().tileSize().y/2;
+
+	offset.x = rand() % static_cast<int>(GlobalVariables::Instance().tileSize().x * 2) - GlobalVariables::Instance().tileSize().x;
+	offset.y = 0;
+//	offset.y = rand() % static_cast<int>(GlobalVariables::Instance().tileSize().y * 2) - GlobalVariables::Instance().tileSize().y;
+//	if (offset.x < 0)
+//		offset.x = max(offset.x, -GlobalVariables::Instance().tileSize().x + centerOffset.x);
+//	if (offset.x > 0)
+//		offset.x = min(offset.x, GlobalVariables::Instance().tileSize().x - centerOffset.x);
+
+
+	movePos = startPos + centerOffset;
+
 	m_data = m_stats;
 	lifeBar = new LifeBar();
 	lifeBar->init(Vector2i(getSize().x, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
@@ -34,7 +48,8 @@ EnemyStats Enemy::getData() const
 bool Enemy::moveStep()
 {
 	moveCounter++;
-	move(currentStep);
+//	move(currentStep);
+	moveEnemy(currentStep);
 	if (moveCounter >= m_data.speed)
 	{
 		setPos(targetPos);
@@ -57,7 +72,7 @@ void Enemy::moveNext(int direction)
 		m_data.speed -= freezeK;
 	}
 
-	targetPos = pos();
+	targetPos = enemyPos() - centerOffset;
 	moveCounter = 0;
 	currentDirection = direction;
 
@@ -144,7 +159,6 @@ void Enemy::moveNext(int direction)
 			break;
 		}
 		spriteDirection = newDirection;
-
 		sprite.setOrigin(origin);
 		sprite.rotate(angle);
 	}
@@ -154,7 +168,7 @@ void Enemy::update()
 {
 	if (startFreeze)
 	{
-		if (freezeTimer.check(freezeDuration))		
+		if (freezeTimer.check(freezeDuration))
 			isFreezed = false;
 	}
 	GameObject::update();
@@ -168,7 +182,7 @@ void Enemy::draw(RenderTarget * const target)
 
 void Enemy::hit(float damage)
 {
-	m_data.health -= damage;
+	m_data.health -= damage * (1 - m_data.reflection);
 }
 
 bool Enemy::isAlive() const
@@ -204,20 +218,37 @@ void Enemy::drawLifeBar(RenderTarget *target)
 	lifeBar->draw(target);
 }
 
+void Enemy::moveEnemy(const Vector2f &d)
+{
+	movePos += d;
+	setPos(movePos - centerOffset + offset);
+}
+
+Vector2f Enemy::enemyPos() const
+{
+	return movePos + offset;
+}
+
+Vector2f Enemy::getOriginalPos() const
+{
+	return pos() - offset;
+}
+
 Enemy *EnemiesFactory::createEnemy(EnemiesFactory::TYPES type, const Vector2f &startPos)
 {
 	EnemyStats stats;
 	stats.speed = 0.f;
 	stats.health = 0.f;
 	stats.damage = 0.f;
+	stats.reflection = 0.f;
 	RESOURCES::TEXTURE_TYPE texture_id;
 	switch (type)
 	{
 	case SMALL_SLOW:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
 		stats.health = 45.f;
-		stats.speed = 15;
-		stats.damage = 1.f;
+		stats.speed = 3.f;
+		stats.damage = 10.f;
 		break;
 	case SMALL_MEDIUM:
 		texture_id = RESOURCES::ENEMY_TEXTURE;

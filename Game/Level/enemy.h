@@ -8,6 +8,7 @@ struct EnemyStats
 	float speed;
 	float health;
 	float damage;
+	float reflection;
 };
 
 class Enemy : public GameObject
@@ -31,6 +32,9 @@ public:
 	bool isAlive() const;
 
 	void freeze(float k, int duration);
+
+	Vector2f enemyPos() const;
+	Vector2f getOriginalPos() const;
 
 private:
 	EnemyStats m_stats;
@@ -61,6 +65,11 @@ private:
 	float freezeK;
 	bool isFreezed;
 	bool startFreeze;
+
+	Vector2f offset;
+	Vector2f movePos;
+	Vector2f centerOffset;
+	void moveEnemy(const Vector2f& d);
 };
 
 class EnemiesFactory

@@ -5,10 +5,9 @@
 #include "Game/gamepanel.h"
 #include "Game/Audio/soundcontroller.h"
 #include "globalvariables.h"
-#include "Game/Collisions/collisions.h"
-#include "savedgame.h"
 #include "ResourcesManager/resourcesmanager.h"
 #include "Game/Level/camera.h"
+#include "Game/Level/map.h"
 #include "Engine/engine.h"
 #include "cursor.h"
 #include "enemy.h"
@@ -25,7 +24,6 @@ Level::Level() :
   ,gameMap(nullptr)
   ,m_state(READY)
   ,life(0.f)
-  ,selectedTower(nullptr)
 {
 	const float k = static_cast<float>(Settings::Instance().getInscribedResolution().y)/Settings::Instance().getResolution().y;
 	resolutionOffsetX = Settings::Instance().getResolution().x - k * Settings::Instance().getResolution().x;
@@ -51,7 +49,13 @@ void Level::update()
 {
 	for(Tower* tower : towers)
 	{
-		tower->shoot(enemies);
+		if (tower->type() == TowersFactory::POWER)
+		{
+			if (static_cast<PowerTower*>(tower)->hasEnergy())
+				energy += 10;
+		}
+		else
+			tower->action(enemies);
 		tower->update();
 	}
 	if (timer.check(GlobalVariables::FRAME_TIME))
@@ -64,10 +68,10 @@ void Level::update()
 		{
 			if (enemy->moveStep())
 			{
-				const Vector2i cell = Engine::Instance().camera()->posToCell(enemy->pos());
-				if (cell == gameMap->endPos)
+				if (gameMap->endRect.contains(enemy->enemyPos()))
 					continue;
 
+				const Vector2i cell = Engine::Instance().camera()->posToCell(enemy->enemyPos());
 				const int direction = getTileDirectionByCell(cell);
 				enemy->moveNext(direction);
 			}
@@ -76,8 +80,6 @@ void Level::update()
 
 	for(Enemy* enemy : enemies)
 		enemy->update();
-
-
 
 //	Effects::Instance().update();
 
@@ -97,10 +99,11 @@ Vector2f Level::getStartingPos() const
 void Level::startMission(const unsigned int n)
 {
 	life = 100.f;
+	energy = 100;
 	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
 //	difficulty = 1.f + static_cast<float>(SavedGameLoader::Instance().getSavedGame().completedLevels.size()) / 10;
 
-	gameMap = SavedGameLoader::Instance().maps.at(n);
+	gameMap = Engine::Instance().getMap(n);
 
 	testTexture.loadFromFile("tiles.png", IntRect(0,0,32,32));
 	testTexture.setRepeated(true);
@@ -122,20 +125,8 @@ void Level::startMission(const unsigned int n)
 
 void Level::calculateCollisions()
 {
-	for(Enemy* enemy : enemies)
-	{
-		for(Tower *tower : towers)
-		{
-			for(Projectile *projectile : tower->projectiles())
-			{
-				if (Collision::PixelPerfectTest(enemy->getSprite(), projectile->getSprite()))
-				{
-					tower->action(enemy);
-					tower->removeProjectile(projectile);
-				}
-			}
-		}
-	}
+	for(Tower *tower : towers)
+		tower->collide(enemies);
 	checkAlive();
 }
 
@@ -143,15 +134,23 @@ void Level::checkDeadZone()
 {
 	for(Tower *tower : towers)
 	{
-		for(Projectile *projectile : tower->projectiles())
+		const TowersFactory::TOWER_TYPES type = tower->type();
+		if (type == TowersFactory::BASE ||
+				type == TowersFactory::IMPROVED ||
+				type == TowersFactory::FREEZE ||
+				type == TowersFactory::ROCKET)
 		{
-			const Vector2f pos = projectile->pos();
-			if (pos.x > deadZone.getGlobalBounds().left + deadZone.getGlobalBounds().width ||
-					pos.x < deadZone.getGlobalBounds().left ||
-					pos.y > deadZone.getGlobalBounds().top + deadZone.getGlobalBounds().height ||
-					pos.y < deadZone.getGlobalBounds().top)
+			ProjectilesTower *pTower = static_cast<ProjectilesTower*>(tower);
+			for(Projectile *projectile : pTower->projectiles())
 			{
-				tower->removeProjectile(projectile);
+				const Vector2f pos = projectile->pos();
+				if (pos.x > deadZone.getGlobalBounds().left + deadZone.getGlobalBounds().width ||
+						pos.x < deadZone.getGlobalBounds().left ||
+						pos.y > deadZone.getGlobalBounds().top + deadZone.getGlobalBounds().height ||
+						pos.y < deadZone.getGlobalBounds().top)
+				{
+					pTower->removeProjectile(projectile);
+				}
 			}
 		}
 	}
@@ -162,8 +161,7 @@ void Level::checkEnd()
 	for (auto it = enemies.begin(); it != enemies.end();)
 	{
 		Enemy *enemy = *it;
-		const Vector2i cell = Engine::Instance().camera()->posToCell(enemy->pos());
-		if (cell == gameMap->endPos)
+		if (gameMap->endRect.contains(enemy->enemyPos()))
 		{
 			hitPlayer(enemy->getData().damage);
 			delete enemy;
@@ -189,7 +187,7 @@ void Level::checkAlive()
 	}
 }
 
-Tower *Level::getTowerAtPos(const Vector2f &pos)
+Tower *Level::getTowerAtPos(const Vector2f &pos) const
 {
 	for(Tower* tower : towers)
 	{
@@ -199,13 +197,50 @@ Tower *Level::getTowerAtPos(const Vector2f &pos)
 	return nullptr;
 }
 
+bool Level::canAddTower(const Vector2i &cell, int towerType) const
+{
+	bool canCreate = true;
+	const int direction = Engine::Instance().level()->getTileDirectionByCell(cell);
+	canCreate = canCreate && direction == 0;
+	Tower *tower = this->getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
+	canCreate = canCreate && tower == nullptr;
+	if (towerType != TowersFactory::POWER)
+	{
+		bool finded = false;
+		for(Tower *tower : towers)
+		{
+			if (tower->type() == TowersFactory::POWER)
+			{				
+				const int radius = tower->data().radius;
+				const Vector2i towerCell = Engine::Instance().camera()->posToCell(tower->pos());
+				if (abs(towerCell.x - cell.x) < radius &&
+						abs(towerCell.y - cell.y) < radius)
+				{
+					finded = true;
+					break;
+				}
+			}
+		}
+		canCreate = canCreate && finded;
+	}
+	return canCreate;
+}
+
+void Level::highlightPowerTowersRadius(bool active)
+{
+	for(Tower *tower : towers)
+		if (tower->type() == TowersFactory::POWER)
+			static_cast<PowerTower*>(tower)->setHighlighted(active);
+}
+
 void Level::hitPlayer(float damage)
 {
-	cout << "HiT"<<endl;
 	life -= damage;
 	if (life <= 0.f)
 	{
 		//game over
+		m_isFailed = true;
+		m_finished = true;
 	}
 }
 
@@ -311,37 +346,46 @@ int Level::getTileDirectionByCell(const Vector2i& cell) const
 	return 0;
 }
 
+int Level::getEnergyCount() const
+{
+	return energy;
+}
+
+float Level::getLifeCount() const
+{
+	return life;
+}
+
 void Level::chooseByPos(const Vector2f &pos)
 {
-	const Vector2i cell = Engine::Instance(). camera()->posToCell(pos);
-	const int bottomCell = Engine::Instance().camera()->topCell() + Engine::Instance().camera()->currentViewCells().y - Engine::Instance().panel()->cellsCount();
-	const bool inPanel = cell.y > bottomCell;
+	const bool inPanel = pos.y > Engine::Instance().panel()->getBottomValue();
 	choose(Engine::Instance().camera()->posToCell(pos), inPanel);
 }
 
 void Level::choose(const Vector2i &cell, bool inPanel)
 {
-	if (selectedTower != nullptr)
+	Tower *selectedTower = Engine::Instance().panel()->selectedTower();
+	if (Engine::Instance().panel()->selectedTower() != nullptr)
 	{
-		selectedTower->deselect();
-		selectedTower = nullptr;
+		Engine::Instance().panel()->selectedTower()->deselect();
+		Engine::Instance().panel()->setSelectedTower(nullptr);
 	}
+
 	if (inPanel)
 	{
-//		m_state = ABILITY_FREEZE_BOMB;
-//		m_state = ABILITY_BOMB;
-		m_state = ADD_TOWER;
-
+		const Vector2f pos = Engine::Instance().camera()->cellToPos(cell);
+		m_state = Engine::Instance().panel()->getCurrentIcon(pos);
 		switch (m_state)
 		{
 		case READY:
 			break;
 		case ADD_TOWER:
 		{
-			const TowersFactory::TOWER_TYPES type = TowersFactory::FREEZE;
-
+			const TowersFactory::TOWER_TYPES type = static_cast<TowersFactory::TOWER_TYPES>(Engine::Instance().panel()->currentTower(pos));
 			const float radius = TowersFactory::getTowerStats(type).radius * GlobalVariables::Instance().tileSize().x;
 			Engine::Instance().cursor()->activateTower(radius, type);
+			if (type != TowersFactory::POWER)
+				highlightPowerTowersRadius(true);
 		}
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
@@ -355,6 +399,24 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		case ABILITY_FREEZE_BOMB:
 			Engine::Instance().cursor()->activateAbility(3, 3, 1, 1);
 		break;
+		case SELL:
+		{
+			if (selectedTower == nullptr)
+				return;
+
+			const int cost = selectedTower->data().cost/2;
+			energy += cost;
+			towers.erase( remove( towers.begin(), towers.end(), selectedTower ), towers.end() );
+			delete selectedTower;
+		}
+			break;
+		case UPGRADE:
+		{
+			if (selectedTower == nullptr)
+				return;
+			selectedTower->upgrade();
+		}
+			break;
 		}
 	}
 	else
@@ -367,20 +429,29 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (tower != nullptr)
 			{
 				tower->select();
-				selectedTower = tower;
+				Engine::Instance().panel()->setSelectedTower(tower);
 			}
 		}
 			break;
 		case ADD_TOWER:
 		{
-			const int direction = Engine::Instance().level()->getTileDirectionByCell(cell);
-			if (direction != 0)
-				return;
-			const Vector2f pos = Engine::Instance().camera()->cellToPos(cell);
 			const TowersFactory::TOWER_TYPES type = static_cast<TowersFactory::TOWER_TYPES>(Engine::Instance().cursor()->getTowerType());
+			if (!canAddTower(cell, type))
+				return;
+
+			if (type != TowersFactory::POWER)
+				highlightPowerTowersRadius(false);
+
+			const int cost = TowersFactory::getTowerStats(type).cost;
+			if (cost > energy)
+				return;
+
+			const Vector2f pos = Engine::Instance().camera()->cellToPos(cell);
 			Tower *tower = TowersFactory::createTower(type, pos);
-			if (tower != nullptr)
-				towers.push_back(tower);
+			if (tower == nullptr)
+				return;
+			towers.push_back(tower);
+			energy -= cost;
 		}
 			break;
 		case ABILITY_CARPET_BOMBING:
@@ -424,6 +495,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			Tower* tower = getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
 		}
 			break;
+		default:
+			break;
 		}
 		m_state = READY;
 		Engine::Instance().cursor()->deactivate();
@@ -448,4 +521,23 @@ void Level::action()
 void Level::change()
 {
 
+}
+void Level::setDoubleSpeed()
+{
+	Engine::Instance().setGameSpeed(2.f);
+}
+
+void Level::setNormalSpeed()
+{
+	Engine::Instance().setGameSpeed(1.f);
+}
+
+void Level::setFastSpeed()
+{
+	Engine::Instance().setGameSpeed(8.f);
+}
+
+void Level::setNullSpeed()
+{
+	Engine::Instance().setGameSpeed(1/INT_MAX);
 }

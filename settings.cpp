@@ -1,5 +1,4 @@
 #include "settings.h"
-#include "savedgame.h"
 #include "Engine/engine.h"
 
 const Vector2i Settings::defaultResolution = Vector2i(1920, 1080);
@@ -65,7 +64,7 @@ void Settings::updateWindow()
 //	mainWindow->setMouseCursorVisible(false); // Hide the cursor
 
 
-	SavedGameLoader::Instance().loadMaps("maps");
+	Engine::Instance().loadMaps("maps");
 	Engine::Instance().reset();
 }
 

@@ -7,14 +7,17 @@
 #include "Windows/choosemissionwindow.h"
 #include "gamewindow.h"
 #include "globalvariables.h"
+#include "settings.h"
+#include "Crypto/crypto.h"
+
+#include "Game/Level/map.h"
 #include "Game/Level/level.h"
 #include "Game/gamepanel.h"
-#include "settings.h"
-
 #include "Game/Level/camera.h"
 #include "Game/Level/cursor.h"
 #include "Game/Level/level.h"
 
+#include "json/json.h"
 #include <tinyxml.h>
 #include <tinydir.h>
 #include <base64.h>
@@ -30,14 +33,180 @@ Engine::Engine() :
   ,m_cursor(nullptr)
   ,m_level(nullptr)
   ,m_panel(nullptr)
+  ,m_mission(0)
+  ,m_gameSpeedK(1)
 {
 	p_window = nullptr;
 	m_state = INTRO;
 	reset();
-	m_camera = new Camera();
-	m_cursor = new Cursor();
-	m_panel = new GamePanel();
-	m_level = new Level();
+	saveFileName = GlobalVariables::Instance().applicationPath().toAnsiString() + string("/saves");
+}
+
+unsigned int Engine::getMission() const
+{
+	return m_mission;
+}
+
+void Engine::setMission(unsigned int mission)
+{
+	m_mission = mission;
+}
+
+Map *Engine::getMap(unsigned int mission)
+{
+	return maps.at(mission);
+}
+
+void Engine::save()
+{
+	ofstream stream(saveFileName, std::ofstream::out);
+
+	Json::Value obj;
+/*
+		Json::Value jsonSave;
+//		jsonSave["name"] = save.name;
+		Json::Value jsonData;
+
+		for(const GameState& gameState : save.playersData)
+		{
+			Json::Value jsonGameState;
+
+			Json::Value jsonCurrentWeapons;
+
+			for(auto currentWeapon : gameState.current_weapons)
+			{
+				Json::Value jsonCurrentWeapon;
+				jsonCurrentWeapon["type"] = currentWeapon.first;
+				jsonCurrentWeapon["ammo"] = currentWeapon.second;
+				jsonCurrentWeapons.append(jsonCurrentWeapon);
+			}
+			jsonGameState["current_weapons"] = jsonCurrentWeapons;
+			jsonGameState["spaceShip"] = gameState.spaceShip;
+			jsonGameState["artifact"] = gameState.artifact;
+
+			Json::Value jsonCrew;
+			for(const CHARACTERS& character : gameState.crew)
+				jsonCrew.append(static_cast<int>(character));
+			jsonGameState["crew"] = jsonCrew;
+
+			Json::Value jsonArtifacts;
+			for(const ARTIFACT_TYPES& artifact : gameState.artifacts)
+				jsonArtifacts.append(static_cast<int>(artifact));
+			jsonGameState["artifacts"] = jsonArtifacts;
+
+			Json::Value jsonCharacteristics;
+			jsonCharacteristics["attack_speed"] = gameState.characteristics.attack_speed;
+			jsonCharacteristics["crit_chance"] = gameState.characteristics.crit_chance;
+			jsonCharacteristics["crit_damage"] = gameState.characteristics.crit_damage;
+			jsonCharacteristics["reflection"] = gameState.characteristics.reflection;
+			jsonCharacteristics["regen_rate"] = gameState.characteristics.regen_rate;
+			jsonCharacteristics["regen_energy_rate"] = gameState.characteristics.regen_energy_rate;
+			jsonCharacteristics["health"] = gameState.characteristics.health;
+			jsonCharacteristics["energy"] = gameState.characteristics.energy;
+			jsonCharacteristics["shield"] = gameState.characteristics.shield;
+			jsonCharacteristics["ability_cost"] = gameState.characteristics.ability_cost;
+			jsonCharacteristics["unused_points"] = gameState.characteristics.unused_points;
+			jsonGameState["characteristics"] = jsonCharacteristics;
+
+			jsonGameState["money"] = gameState.money;
+
+			jsonData.append(jsonGameState);
+		}
+
+		jsonSave["data"] = jsonData;
+		Json::Value completedMissions;
+		for(const unsigned int n : save.completedLevels)
+			completedMissions.append(n);
+		jsonSave["completed_missions"] = completedMissions;
+
+		obj.append(jsonSave);
+*/
+//	Json::FastWriter fast;
+	Json::StyledWriter styled;
+
+//	const string str = fast.write(obj);
+	const string str = styled.write(obj);
+	const string encodedStr = Crypto::encode(str);
+	stream << encodedStr;
+	stream.close();
+
+//	Json::StyledStreamWriter styledStream;
+//	styledStream.write(ostream, obj);
+}
+
+void Engine::load()
+{
+	ifstream stream(saveFileName, std::ifstream::in);
+	string str((std::istreambuf_iterator<char>(stream)), (std::istreambuf_iterator<char>()));
+	const string decodedStr = Crypto::decode(str);
+
+	Json::Reader reader;
+	Json::Value obj;
+	if (!reader.parse(decodedStr, obj))
+	{
+		cout << "cant read saves"<<saveFileName << endl;
+		return;
+	}
+	/*
+		SavedGame savedGame;
+//		savedGame.name = obj[i]["name"].asString();
+
+		const Json::Value& completedMissions = obj[i]["completed_missions"];
+
+		for (unsigned int k = 0; k < completedMissions.size(); ++k)
+			savedGame.completedLevels.push_back(completedMissions[k].asUInt());
+
+		const Json::Value& data = obj[i]["data"];
+		for (unsigned int j = 0; j < data.size(); j++)
+		{
+			GameState gameState;
+			const Json::Value& current_weapons = data[j]["current_weapons"];
+			for (unsigned int k = 0; k < current_weapons.size(); k++)
+			{
+				const WEAPON_TYPES type = static_cast<WEAPON_TYPES>(current_weapons[k]["type"].asInt());
+				const Int64 ammo = current_weapons[k]["ammo"].asLargestInt();
+				gameState.current_weapons.insert(pair<WEAPON_TYPES, Int64>(type, ammo));
+			}
+
+			gameState.spaceShip = static_cast<SPACESHIP_TYPES>(data[j]["spaceShip"].asInt());
+			gameState.artifact = static_cast<ARTIFACT_TYPES>(data[j]["artifact"].asInt());
+
+			const Json::Value& crew = data[j]["crew"];
+			for (unsigned int k = 0; k < crew.size(); k++)
+				gameState.crew.push_back(static_cast<CHARACTERS>(crew[k].asInt()));
+
+			const Json::Value& artifacts = data[j]["artifacts"];
+			for (unsigned int k = 0; k < artifacts.size(); k++)
+				gameState.artifacts.push_back(static_cast<ARTIFACT_TYPES>(artifacts[k].asInt()));
+
+			const Json::Value& characteristics = data[j]["characteristics"];
+			gameState.characteristics.attack_speed = characteristics["attack_speed"].asFloat();
+			gameState.characteristics.crit_chance = characteristics["crit_chance"].asFloat();
+			gameState.characteristics.crit_damage = characteristics["crit_damage"].asFloat();
+			gameState.characteristics.reflection = characteristics["reflection"].asFloat();
+			gameState.characteristics.regen_rate = characteristics["regen_rate"].asFloat();
+			gameState.characteristics.regen_energy_rate = characteristics["regen_energy_rate"].asFloat();
+			gameState.characteristics.health = characteristics["health"].asFloat();
+			gameState.characteristics.energy = characteristics["energy"].asFloat();
+			gameState.characteristics.shield = characteristics["shield"].asFloat();
+			gameState.characteristics.ability_cost = characteristics["ability_cost"].asFloat();
+			gameState.characteristics.unused_points = characteristics["unused_points"].asInt();
+
+			gameState.money = data[j]["money"].asFloat();
+
+			savedGame.playersData.push_back(gameState);
+		}
+	*/
+}
+
+float Engine::gameSpeed() const
+{
+	return m_gameSpeedK;
+}
+
+void Engine::setGameSpeed(const float k)
+{
+	m_gameSpeedK = k;
 }
 
 Camera *Engine::camera() const
@@ -87,6 +256,11 @@ void Engine::reset()
 	m_level = new Level();
 }
 
+unsigned int Engine::missionsCount() const
+{
+	return maps.size();
+}
+
 Engine::GAME_STATE Engine::getState() const
 {
 	return m_state;
@@ -129,7 +303,7 @@ StateWindow* Engine::createState(const Engine::GAME_STATE &state)
 	return stateWindow;
 }
 
-bool SavedGameLoader::loadMap(const String &fileName)
+bool Engine::loadMap(const String &fileName)
 {
 	FILE* file = nullptr;
 	errno_t err = _wfopen_s(&file, fileName.toWideString().c_str(), L"rb");
@@ -348,11 +522,6 @@ bool SavedGameLoader::loadMap(const String &fileName)
 					gameMap->spawnPos.x = x/GlobalVariables::CELL_SIZE;
 					gameMap->spawnPos.y = y/GlobalVariables::CELL_SIZE;
 				}
-				if (objectName == "end")
-				{
-					gameMap->endPos.x = x/GlobalVariables::CELL_SIZE;
-					gameMap->endPos.y = y/GlobalVariables::CELL_SIZE;
-				}
 
 				int width = 0;
 				int height = 0;
@@ -365,6 +534,14 @@ bool SavedGameLoader::loadMap(const String &fileName)
 				{
 					width = subRects[atoi(objectElement->Attribute("gid")) - firstTileID].width;
 					height = subRects[atoi(objectElement->Attribute("gid")) - firstTileID].height;
+				}
+
+				if (objectName == "end")
+				{
+					gameMap->endRect.left = atof(objectElement->Attribute("x"));
+					gameMap->endRect.top = atof(objectElement->Attribute("y"));
+					gameMap->endRect.width = width;
+					gameMap->endRect.height = height;
 				}
 
 				// "переменные" объекта
@@ -407,7 +584,7 @@ bool SavedGameLoader::loadMap(const String &fileName)
 	return true;
 }
 
-void SavedGameLoader::loadMaps(const String &path)
+void Engine::loadMaps(const String &path)
 {
 	maps.clear();
 	tinydir_dir dir;

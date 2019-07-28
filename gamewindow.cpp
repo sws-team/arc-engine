@@ -3,14 +3,16 @@
 #include "controller.h"
 #include "Game/Audio/soundcontroller.h"
 #include "Game/Level/level.h"
-#include "savedgame.h"
 #include "globalvariables.h"
 #include "Game/Level/cursor.h"
 #include "Game/Level/camera.h"
 
 GameWindow::GameWindow()
 	: Menu()
-{	
+{
+	tick = 0;
+	lastTime = 0;
+
 	Engine::Instance();
 	Engine::Instance().camera()->init();
 	currentMenu = static_cast<GAME_MENU>(CONTINUE_GAME);
@@ -69,11 +71,12 @@ GameWindow::GameWindow()
 	addItem("Exit from mission");
 	addItem("Exit from game");
 	addItem("Exit to OS");
+	clock.restart();
 }
 
 void GameWindow::init()
 {
-	unsigned int missionNumber = SavedGameLoader::Instance().getCurrentMission();
+	unsigned int missionNumber = Engine::Instance().getMission();
 	controller->setPauseFunc(bind(&GameWindow::pause, this));
 	Engine::Instance().level()->startMission(missionNumber);
 }
@@ -159,7 +162,16 @@ void GameWindow::eventFilter(Event *event)
 }
 
 void GameWindow::update()
-{
+{	
+//	const Int64 currentTime = clock.getElapsedTime().asMilliseconds();
+//	const Int64 time = _abs64(currentTime - lastTime);// Время прошедшее с предыдущего раза
+//	if (time < 200)
+//		return;
+
+//	lastTime = currentTime;
+//	tick++;
+//	cout << tick << endl;
+
 	if (m_state != PLAYING)
 		return;
 
@@ -171,7 +183,7 @@ void GameWindow::update()
 		else
 			setState(FINISHED);
 		//save
-		SavedGameLoader::Instance().save();
+		Engine::Instance().save();
 		return;
 	}
 	Engine::Instance().cursor()->update();

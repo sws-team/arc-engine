@@ -67,7 +67,7 @@ public:
 	Vector2i spawnPos;
 	MOVE_DIRECTIONS spawnDirection;
 
-	Vector2i endPos;
+	FloatRect endRect;
 };
 
 #endif // MAP_H

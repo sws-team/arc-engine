@@ -4,6 +4,7 @@
 #include "stdheader.h"
 #include "graphics.h"
 #include "Game/gamedrawable.h"
+#include "Game/leveldef.h"
 
 class Enemy;
 class GamePanel;
@@ -30,7 +31,6 @@ public:
 	void startMission(const unsigned int n);
 
 	bool isFinished() const;
-
 	bool isFailed() const;
 
 	void action();
@@ -53,6 +53,18 @@ public:
 
 	int getTileDirectionByCell(const Vector2i &cell) const;
 
+	int getEnergyCount() const;
+	float getLifeCount() const;
+	Tower *getTowerAtPos(const Vector2f& pos) const;
+
+	bool canAddTower(const Vector2i& cell, int towerType) const;
+
+	void highlightPowerTowersRadius(bool active);
+
+	void setDoubleSpeed();
+	void setNormalSpeed();
+	void setFastSpeed();
+	void setNullSpeed();
 
 private:
 	void choose(const Vector2i& cell, bool inPanel);
@@ -60,7 +72,6 @@ private:
 	void checkDeadZone();
 	void checkEnd();
 	void checkAlive();
-	Tower *getTowerAtPos(const Vector2f& pos);
 
 	Vector2f m_startPos;
 
@@ -77,19 +88,7 @@ private:
 	class Map *gameMap;
 	vector<Enemy*> enemies;
 
-	enum LEVEL_STATE
-	{
-		READY,
 
-		ADD_TOWER,
-
-		ABILITY_CARPET_BOMBING,
-		ABILITY_BOMB,
-		ABILITY_FREEZE_BOMB,
-		ABILITY_INCREASE_TOWER_ATTACK_SPEED,
-		ABILITY_INCREASE_TOWER_DAMAGE,
-
-	};
 	LEVEL_STATE m_state;
 
 //	union StateOptions
@@ -118,11 +117,14 @@ private:
 //		FreezeBomb freezeBomb;
 //	};
 
+	//player data
 	float life;
+	int energy;
+
+
 	void hitPlayer(float damage);
 
 	vector<Tower*> towers;
-	Tower* selectedTower;
 };
 
 #endif // LEVEL_H

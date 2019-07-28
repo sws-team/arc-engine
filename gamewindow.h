@@ -3,6 +3,7 @@
 
 #include "Windows/menu.h"
 #include "graphics.h"
+#include "timer.h"
 
 class GameWindow : public Menu
 {
@@ -57,6 +58,9 @@ private:
 	};
 	Text scoreText;
 	vector<ScoreInfo> scores;
+	Clock clock;
+	Int64 lastTime;
+	Int64 tick;
 };
 
 #endif // GAMEWINDOW_H

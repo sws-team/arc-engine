@@ -3,7 +3,7 @@ HEADERS += \
     $$PWD/effects.h \
     $$PWD/gamedrawable.h \
     $$PWD/gamepanel.h \
-    $$PWD/gamestate.h
+    $$PWD/leveldef.h
 
 SOURCES += \
     $$PWD/gameobject.cpp \

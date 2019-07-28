@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "globalvariables.h"
 #include "settings.h"
-#include "savedgame.h"
 #include "Translations/language.h"
 
 #ifdef OS_WIN

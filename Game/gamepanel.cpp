@@ -5,16 +5,37 @@
 #include "ResourcesManager/resourcesmanager.h"
 #include "Engine/engine.h"
 #include "Level/camera.h"
+#include "Level/tower.h"
 
 #include <stdlib.h>
-
-const float GamePanel::PANEL_HEIGHT = GlobalVariables::CELL_SIZE * GamePanel::PANEL_CELLS_COUNT;
 
 GamePanel::GamePanel() :
 	GameDrawable()
 {
+	m_selectedTower = nullptr;
+
 	m_sprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_TEXTURE));
-	m_sprite.setScale(Settings::Instance().getScaleFactor());
+	m_sprite.setScale(Settings::Instance().getScaleFactor() * Settings::GAME_SCALE);
+
+	energyCountText.setFont(GlobalVariables::Instance().font());
+	energyCountText.setFillColor(Color::Black);
+	energyCountText.setOutlineColor(Color::Yellow);
+	energyCountText.setOutlineThickness(2);
+	energyCountText.setCharacterSize(34);
+
+	lifeCountText.setFont(GlobalVariables::Instance().font());
+	lifeCountText.setFillColor(Color::Black);
+	lifeCountText.setOutlineColor(Color::Yellow);
+	lifeCountText.setOutlineThickness(2);
+	lifeCountText.setCharacterSize(34);
+
+	sellRect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::SELL_TEXTURE));
+	sellRect.setFillColor(Color::Cyan);
+	sellRect.setSize(GlobalVariables::Instance().tileSize());
+
+	upgradeRect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::UPGRADE_TEXTURE));
+	upgradeRect.setFillColor(Color::Cyan);
+	upgradeRect.setSize(GlobalVariables::Instance().tileSize());
 
 	abilityBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_BOMB));
 	abilityBombSprite.setScale(Settings::Instance().getScaleFactor());
@@ -38,7 +59,7 @@ GamePanel::GamePanel() :
 	towerBaseSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_BASE));
 	towerBaseSprite.setScale(Settings::Instance().getScaleFactor());
 
-	towerLaserSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_POWER));
+	towerLaserSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_LASER));
 	towerLaserSprite.setScale(Settings::Instance().getScaleFactor());
 
 	towerFreezeSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_FREEZE));
@@ -47,11 +68,13 @@ GamePanel::GamePanel() :
 	towerRocketSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_ROCKET));
 	towerRocketSprite.setScale(Settings::Instance().getScaleFactor());
 
-	towerSplashSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_SPLASH));
-	towerSplashSprite.setScale(Settings::Instance().getScaleFactor());
+	towerPowerSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_POWER));
+	towerPowerSprite.setScale(Settings::Instance().getScaleFactor());
 
 	towerImprovedSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_IMPROVED));
 	towerImprovedSprite.setScale(Settings::Instance().getScaleFactor());
+
+	m_bottomValue = 0;
 }
 
 GamePanel::~GamePanel()
@@ -61,61 +84,15 @@ GamePanel::~GamePanel()
 
 void GamePanel::draw(RenderTarget * const target)
 {
-
-	const Vector2f iconSize = Vector2f(ICON_SIZE * Settings::Instance().getScaleFactor().x,
-								 ICON_SIZE * Settings::Instance().getScaleFactor().y);
-
-
+	//update pos
 	Vector2f pos;
 	pos.x = target->getView().getCenter().x - target->getView().getSize().x/2;
 	pos.y = target->getView().getCenter().y + target->getView().getSize().y/2 - m_sprite.getGlobalBounds().height;
-	m_sprite.setPosition(pos);
-
-	pos.x = ICONS_START * m_sprite.getScale().x;
-	pos.y += TOP_MARGIN * m_sprite.getScale().y;
-
-	pos.x += GlobalVariables::Instance().tileSize().x;
-	towerBaseSprite.setPosition(pos);
-	pos.x += GlobalVariables::Instance().tileSize().x * 2;
-	towerFreezeSprite.setPosition(pos);
-	pos.x += GlobalVariables::Instance().tileSize().x * 2;
-	towerRocketSprite.setPosition(pos);
-	pos.x += GlobalVariables::Instance().tileSize().x * 2;
-	abilityBombSprite.setPosition(pos);
-	pos.x += GlobalVariables::Instance().tileSize().x * 2;
-	abilityFreezeBombSprite.setPosition(pos);
-	pos.x += GlobalVariables::Instance().tileSize().x * 2;
-	abilityCarpetBombingSprite.setPosition(pos);
-
-	pos.y += GlobalVariables::Instance().tileSize().y;
-	towerImprovedSprite.setPosition(pos);
-	pos.x += GlobalVariables::Instance().tileSize().x * 2;
-	towerLaserSprite.setPosition(pos);
-	pos.x += GlobalVariables::Instance().tileSize().x * 2;
-	towerSplashSprite.setPosition(pos);
-	pos.x += GlobalVariables::Instance().tileSize().x * 4;
-	abilityIncreaseTowerAttackSpeedSprite.setPosition(pos);
-	pos.x += GlobalVariables::Instance().tileSize().x * 2;
-	abilityIncreaseTowerDamageSprite.setPosition(pos);
-	pos.x += GlobalVariables::Instance().tileSize().x * 2;
-	abilityTimeStopSprite.setPosition(pos);
-
-
-	target->draw(m_sprite);
-	target->draw(abilityBombSprite);
-	target->draw(abilityFreezeBombSprite);
-	target->draw(abilityCarpetBombingSprite);
-	target->draw(abilityIncreaseTowerDamageSprite);
-	target->draw(abilityIncreaseTowerAttackSpeedSprite);
-	target->draw(abilityTimeStopSprite);
-	target->draw(towerBaseSprite);
-	target->draw(towerLaserSprite);
-	target->draw(towerFreezeSprite);
-	target->draw(towerRocketSprite);
-	target->draw(towerSplashSprite);
-	target->draw(towerImprovedSprite);
+	m_bottomValue = pos.y;
+	pos = updatePos(pos);
 
 	//draw minimap
+	Sprite miniMapSprite;
 	rTexture.setView(*Engine::Instance().camera()->getMiniMapView());
 	rTexture.create(static_cast<unsigned int>(Settings::Instance().getResolution().x),
 					static_cast<unsigned int>(Settings::Instance().getResolution().y));
@@ -123,27 +100,230 @@ void GamePanel::draw(RenderTarget * const target)
 	Engine::Instance().level()->drawLevel(&rTexture);
 	rTexture.display();
 
-	Sprite sprite;
-	sprite.setTexture(rTexture.getTexture());
-	sprite.setPosition(0, 0);
-	sprite.scale(Settings::Instance().gameScale() * 0.25f, Settings::Instance().gameScale() * 0.25f);
+	miniMapSprite.setTexture(rTexture.getTexture());
+	miniMapSprite.scale(Settings::Instance().gameScale() * 0.3f, Settings::Instance().gameScale() * 0.3f);
+	miniMapSprite.setPosition(pos);
 
-	const float minimapOffset = m_sprite.getGlobalBounds().height - sprite.getGlobalBounds().height;
+	//draw
+	target->draw(m_sprite);
 
+	target->draw(energyCountText);
+	target->draw(lifeCountText);
 
-	sprite.setPosition(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width - sprite.getGlobalBounds().width + minimapOffset,
-					   m_sprite.getPosition().y);
+	target->draw(abilityBombSprite);
+	target->draw(abilityFreezeBombSprite);
+	target->draw(abilityCarpetBombingSprite);
+	target->draw(abilityIncreaseTowerDamageSprite);
+	target->draw(abilityIncreaseTowerAttackSpeedSprite);
+	target->draw(abilityTimeStopSprite);
 
-	target->draw(sprite);
+	target->draw(towerBaseSprite);
+	target->draw(towerLaserSprite);
+	target->draw(towerFreezeSprite);
+	target->draw(towerRocketSprite);
+	target->draw(towerPowerSprite);
+	target->draw(towerImprovedSprite);
+
+	if (m_selectedTower != nullptr)
+	{
+		target->draw(sellRect);
+		target->draw(upgradeRect);
+	}
+	target->draw(miniMapSprite);
 }
 
 void GamePanel::update()
 {
-
+	const int energy = Engine::Instance().level()->getEnergyCount();
+	const int life = static_cast<int>(Engine::Instance().level()->getLifeCount());
+	energyCountText.setString(String(to_string(energy)));
+	lifeCountText.setString(String(to_string(life)));
 }
 
 int GamePanel::cellsCount() const
 {
 	return static_cast<int>(m_sprite.getGlobalBounds().height / GlobalVariables::Instance().tileSize().y);
+}
+
+Tower *GamePanel::selectedTower() const
+{
+	return m_selectedTower;
+}
+
+void GamePanel::setSelectedTower(Tower *selectedTower)
+{
+	m_selectedTower = selectedTower;
+}
+
+LEVEL_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
+{
+	Vector2f center = pos;
+	center += Vector2f(ICON_SIZE/2, ICON_SIZE/2);
+
+	if (towerBaseSprite.getGlobalBounds().contains(center) ||
+			towerLaserSprite.getGlobalBounds().contains(center) ||
+			towerFreezeSprite.getGlobalBounds().contains(center) ||
+			towerRocketSprite.getGlobalBounds().contains(center) ||
+			towerPowerSprite.getGlobalBounds().contains(center) ||
+			towerImprovedSprite.getGlobalBounds().contains(center)
+			)
+		return LEVEL_STATE::ADD_TOWER;
+
+	if (abilityBombSprite.getGlobalBounds().contains(center))
+		return LEVEL_STATE::ABILITY_BOMB;
+
+	if (abilityFreezeBombSprite.getGlobalBounds().contains(center))
+		return LEVEL_STATE::ABILITY_FREEZE_BOMB;
+
+	if (abilityTimeStopSprite.getGlobalBounds().contains(center))
+		return LEVEL_STATE::ABILITY_STOP_TIME;
+
+	if (abilityCarpetBombingSprite.getGlobalBounds().contains(center))
+		return LEVEL_STATE::ABILITY_CARPET_BOMBING;
+
+	if (abilityIncreaseTowerDamageSprite.getGlobalBounds().contains(center))
+		return LEVEL_STATE::ABILITY_INCREASE_TOWER_DAMAGE;
+
+	if (abilityIncreaseTowerAttackSpeedSprite.getGlobalBounds().contains(center))
+		return LEVEL_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED;
+
+	return LEVEL_STATE::READY;
+}
+
+int GamePanel::currentTower(const Vector2f &pos) const
+{
+	Vector2f center = pos;
+	center += Vector2f(ICON_SIZE/2, ICON_SIZE/2);
+
+	if (towerBaseSprite.getGlobalBounds().contains(center))
+		return TowersFactory::BASE;
+
+	if (towerLaserSprite.getGlobalBounds().contains(center))
+		return TowersFactory::LASER;
+
+	if (towerFreezeSprite.getGlobalBounds().contains(center))
+		return TowersFactory::FREEZE;
+
+	if (towerRocketSprite.getGlobalBounds().contains(center))
+		return TowersFactory::ROCKET;
+
+	if (towerPowerSprite.getGlobalBounds().contains(center))
+		return TowersFactory::POWER;
+
+	if (towerImprovedSprite.getGlobalBounds().contains(center))
+		return TowersFactory::IMPROVED;
+
+	return TowersFactory::POWER;
+}
+
+Vector2f GamePanel::updatePos(const Vector2f &nullPos)
+{
+	const Vector2f iconSize = Vector2f(ICON_SIZE * Settings::Instance().getScaleFactor().x * Settings::GAME_SCALE,
+								 ICON_SIZE * Settings::Instance().getScaleFactor().y * Settings::GAME_SCALE);
+
+	const float block_space = iconSize.x/2;
+	const float icons_space = 24 * Settings::GAME_SCALE;
+	const float label_offset = 16 * Settings::GAME_SCALE;
+	const float info_offset = 256 * Settings::GAME_SCALE;
+	const float panel_offset = 62 * Settings::GAME_SCALE;
+	const float text_offset = 320 * Settings::GAME_SCALE;
+
+	Vector2f pos = nullPos;
+
+	m_sprite.setPosition(pos);
+
+	pos.y += icons_space;
+	pos.x += panel_offset;
+	pos.x += label_offset;
+	energyCountText.setPosition(pos);
+
+	pos.y += energyCountText.getGlobalBounds().height;
+	lifeCountText.setPosition(pos);
+	pos.y -= energyCountText.getGlobalBounds().height;
+	pos.x -= label_offset;
+
+	pos.x += info_offset;
+
+	pos.x += block_space;
+	sellRect.setPosition(pos);
+
+	pos.y += iconSize.y;
+	upgradeRect.setPosition(pos);
+
+	pos.y -= iconSize.y;
+	pos.x += iconSize.x;
+
+	pos.x += block_space;
+
+	//text
+
+	pos.x += text_offset;
+	pos.x += block_space;
+
+	const float iconsPosX = pos.x;
+	//towers
+	towerBaseSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	towerFreezeSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	towerRocketSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	towerPowerSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	towerLaserSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	towerImprovedSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	pos.x = iconsPosX;
+	pos.y += iconSize.y;
+	pos.y += icons_space;
+
+	//abilities
+	abilityIncreaseTowerAttackSpeedSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	abilityBombSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	abilityFreezeBombSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	abilityCarpetBombingSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	abilityIncreaseTowerDamageSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	abilityTimeStopSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	pos.y -= iconSize.y;
+	pos.x += icons_space;
+
+//	miniMapSprite.setPosition(pos);
+	return pos;
+}
+
+float GamePanel::getBottomValue() const
+{
+	return m_bottomValue;
 }
 

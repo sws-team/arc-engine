@@ -2,7 +2,6 @@
 #define CHOOSEMISSIONWINDOW_H
 
 #include "statewindow.h"
-#include "savedgame.h"
 
 class ChooseMissionWindow : public StateWindow
 {
@@ -17,9 +16,17 @@ protected:
 	void eventFilter(Event *event) override;
 
 private:
-	void accept(int num);
+	void accept(unsigned int num);
 
-	RectangleShape mission;
+	constexpr static int STARS_COUNT = 5;
+	struct MissionView
+	{
+		RectangleShape rect;
+		bool completed;
+		int activeStars;
+		vector<RectangleShape> stars; //5
+	};
+	vector<MissionView> missions;
 };
 
 #endif // CHOOSEMISSIONWINDOW_H
