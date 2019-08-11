@@ -38,9 +38,8 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::TOWER_POWER, "images/ui/Panel/Towers/tower_power.png");
 	addTexture(RESOURCES::TOWER_ROCKET, "images/ui/Panel/Towers/tower_rocket.png");
 	addTexture(RESOURCES::TOWER_FREEZE, "images/ui/Panel/Towers/tower_freeze.png");
-	addTexture(RESOURCES::TOWER_LASER, "images/ui/Panel/Towers/tower_splash.png");
+	addTexture(RESOURCES::TOWER_LASER, "images/ui/Panel/Towers/tower_laser.png");
 	addTexture(RESOURCES::TOWER_IMPROVED, "images/ui/Panel/Towers/tower_improved.png");
-	addTexture(RESOURCES::TOWER_ELECTRIC, "images/ui/Panel/Towers/tower_splash.png");
 
 	addTexture(RESOURCES::BASE_PROJECTILE, "images/Weapons/bullet.png");
 	addTexture(RESOURCES::IMPROVED_PROJECTILE, "images/Weapons/bullet.png");

@@ -146,11 +146,12 @@ void Cursor::update()
 	GameObject::update();
 	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
 	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
-//	const Vector2f cellPos = Engine::Instance().camera()->cellToPos(Engine::Instance().camera()->posToCell(pos));
-//	setPos(cellPos);
-
-	m_cell = Engine::Instance().camera()->posToCell(pos);
-	updateCell();
+	const Vector2i newCell = Engine::Instance().camera()->posToCell(pos);
+	if (newCell != m_cell)
+	{
+		m_cell = newCell;
+		updateCell();
+	}
 }
 
 void Cursor::activateAbility(int x, int y, int hotX, int hotY)
@@ -202,7 +203,7 @@ void Cursor::activateTower(float radius, TOWER_TYPES type)
 
 	towerSprite.setTexture(ResourcesManager::Instance().getTexture(textureType));
 	towerSprite.setScale(Settings::Instance().getScaleFactor());
-	towerSprite.scale(0.5f, 0.5f);
+	towerSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 	towerSprite.setColor(sf::Color(255, 255, 255, 128)); // half transparent
 	m_state = TOWER;
 
@@ -216,8 +217,6 @@ Vector2i Cursor::abilityCell() const
 
 FloatRect Cursor::getAbilityRect() const
 {
-//	const Vector2i cell = abilityCell();
-//	const Vector2f pos = Vector2f(cell.x * GlobalVariables::Instance().tileSize().x, cell.y * GlobalVariables::Instance().tileSize().y);
 	return abilityRect.getGlobalBounds();
 }
 
@@ -249,15 +248,18 @@ void Cursor::updateCell()
 		cell -= abilityHotsPot;
 		break;
 	case TOWER:
-
-		const bool canCreate = Engine::Instance().level()->canAddTower(m_cell, towerType);
+	{
+		const bool canCreate = Engine::Instance().level()->canAddTower(Engine::Instance().camera()->posToCellMap(Engine::Instance().camera()->cellToPos(m_cell)), towerType);
 		towerRadius.setFillColor(canCreate ? Color(0, 255, 0, 100) : Color(255, 0, 0, 100));
+	}
 		break;
 	}
 
 	const Vector2f pos = Vector2f(GlobalVariables::Instance().tileSize().x * cell.x,
 								  GlobalVariables::Instance().tileSize().y * cell.y);
+
 	setPos(pos);
+//	sprite.setOrigin(GlobalVariables::Instance().mapTileSize());
 	towerSprite.setPosition(pos);
 	abilityRect.setPosition(pos);
 	towerRadius.setPosition(pos);

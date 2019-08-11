@@ -214,7 +214,7 @@ float Engine::getStartEnergy(const unsigned int n)
 	switch (n)
 	{
 	case 0:
-		return 450;
+		return 300;
 	case 1:
 		return 550;
 	case 2:
@@ -427,8 +427,8 @@ bool Engine::loadMap(const String &fileName)
 	gameMap->tilesetImage.setSmooth(false);//сглаживание
 
 	// получаем количество столбцов и строк тайлсета
-	const int columns = gameMap->tilesetImage.getSize().x / GlobalVariables::CELL_SIZE;
-	const int rows = gameMap->tilesetImage.getSize().y / GlobalVariables::CELL_SIZE;
+	const int columns = gameMap->tilesetImage.getSize().x / GlobalVariables::MAP_CELL_SIZE;
+	const int rows = gameMap->tilesetImage.getSize().y / GlobalVariables::MAP_CELL_SIZE;
 
 	// вектор из прямоугольников изображений (TextureRect)
 	vector<sf::Rect<int>> subRects;
@@ -438,10 +438,10 @@ bool Engine::loadMap(const String &fileName)
 		{
 			sf::Rect<int> rect;
 
-			rect.top = y * GlobalVariables::CELL_SIZE;
-			rect.height = GlobalVariables::CELL_SIZE;
-			rect.left = x * GlobalVariables::CELL_SIZE;
-			rect.width = GlobalVariables::CELL_SIZE;
+			rect.top = y * GlobalVariables::MAP_CELL_SIZE;
+			rect.height = GlobalVariables::MAP_CELL_SIZE;
+			rect.left = x * GlobalVariables::MAP_CELL_SIZE;
+			rect.width = GlobalVariables::MAP_CELL_SIZE;
 
 			subRects.push_back(rect);
 		}
@@ -496,7 +496,8 @@ bool Engine::loadMap(const String &fileName)
 				Sprite sprite;
 				sprite.setTexture(gameMap->tilesetImage);
 				sprite.setTextureRect(subRects[subRectToUse]);
-				sprite.setPosition(x * GlobalVariables::CELL_SIZE * Settings::Instance().getScaleFactor().x, y * GlobalVariables::CELL_SIZE * Settings::Instance().getScaleFactor().y);
+				sprite.setPosition(x * GlobalVariables::MAP_CELL_SIZE * Settings::Instance().getScaleFactor().x,
+								   y * GlobalVariables::MAP_CELL_SIZE * Settings::Instance().getScaleFactor().y);
 				sprite.setColor(sf::Color(255, 255, 255, layer.opacity));
 				sprite.scale(Settings::Instance().getScaleFactor());
 
@@ -557,8 +558,8 @@ bool Engine::loadMap(const String &fileName)
 
 				if (objectName == "spawn")
 				{
-					gameMap->spawnPos.x = x/GlobalVariables::CELL_SIZE;
-					gameMap->spawnPos.y = y/GlobalVariables::CELL_SIZE;
+					gameMap->spawnPos.x = x/GlobalVariables::MAP_CELL_SIZE;
+					gameMap->spawnPos.y = y/GlobalVariables::MAP_CELL_SIZE;
 				}
 
 				int width = 0;

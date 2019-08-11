@@ -6,20 +6,21 @@
 #include "ResourcesManager/resourcesmanager.h"
 
 const float Tower::LEVEL_GAIN = 0.4f;
+const float Tower::TOWER_SCAlE = 1.f/3.f;
 
 Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, const TowerStats &stats)
 	: GameObject(texture_id, pos,
-				 Vector2i(GlobalVariables::CELL_SIZE * 2, GlobalVariables::CELL_SIZE * 2),
+				 Vector2i(GlobalVariables::CELL_SIZE/TOWER_SCAlE, GlobalVariables::CELL_SIZE/TOWER_SCAlE),
 				 4)
 	,m_stats(stats)
 	,m_selected(false)
 {
-	radius.setRadius(m_stats.radius * GlobalVariables::Instance().tileSize().x);
+	radius.setRadius(m_stats.radius * GlobalVariables::Instance().mapTileSize().x);
 	radius.setFillColor(Color(34, 255, 56, 120));
 	radius.setPosition(pos);
-	radius.setOrigin(radius.getRadius() - GlobalVariables::Instance().tileSize().x/2,
-					 radius.getRadius() - GlobalVariables::Instance().tileSize().y/2);
-	sprite.scale(0.5f, 0.5f);
+	radius.setOrigin(radius.getRadius() - GlobalVariables::Instance().mapTileSize().x,
+					 radius.getRadius() - GlobalVariables::Instance().mapTileSize().y);
+	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
 }
 
 void Tower::update()
@@ -44,7 +45,7 @@ void Tower::action(const vector<Enemy *> &enemies)
 	const Vector2f aPos = getCenter();
 	for(Enemy *enemy : enemies)
 	{
-		if (TowersFactory::isIntersects(enemy->gameRect(), aPos, m_stats.radius * GlobalVariables::Instance().tileSize().x))
+		if (TowersFactory::isIntersects(enemy->gameRect(), aPos, m_stats.radius * GlobalVariables::Instance().mapTileSize().x))
 		{
 			const float x = fabs(enemy->enemyPos().x - this->getCenter().x);
 			const float y = fabs(enemy->enemyPos().y - this->getCenter().y);
@@ -196,7 +197,7 @@ const TowerStats BaseTower::STATS = TowerStats(5, 300, 4, 20, 45);
 const TowerStats PowerTower::STATS = TowerStats(0, 5000, 5, 0, 55);
 const TowerStats RocketTower::STATS = TowerStats(75, 3500, 12, 20, 150);
 const TowerStats FreezeTower::STATS = TowerStats(10, 350, 7, 5, 75);
-const TowerStats LaserTower::STATS = TowerStats(20, 250, 6, 0, 150);
+const TowerStats LaserTower::STATS = TowerStats(10, 250, 6, 0, 150);
 const TowerStats ImprovedTower::STATS = TowerStats(10, 150, 8, 50, 250);
 
 BaseTower::BaseTower(const Vector2f &pos)
@@ -210,13 +211,13 @@ PowerTower::PowerTower(const Vector2f &pos)
 	: Tower(RESOURCES::TOWER_POWER, pos, STATS)
 	,m_isHighlighted(false)
 {
-	powerRadius.setRadius(STATS.radius * GlobalVariables::Instance().tileSize().x);
+	powerRadius.setRadius(STATS.radius * GlobalVariables::Instance().mapTileSize().x);
 	powerRadius.setFillColor(Color::Transparent);
 	powerRadius.setOutlineColor(Color(23, 200, 124));
 	powerRadius.setOutlineThickness(3);
 	powerRadius.setPosition(pos);
-	powerRadius.setOrigin(powerRadius.getRadius() - GlobalVariables::Instance().tileSize().x/2,
-						  powerRadius.getRadius() - GlobalVariables::Instance().tileSize().y/2);
+	powerRadius.setOrigin(powerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().x/2,
+						  powerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().y/2);
 	m_gain = ENERGY_GAIN;
 }
 

@@ -85,7 +85,7 @@ void Level::update()
 				if (gameMap->endRect.contains(enemy->enemyPos()))
 					continue;
 
-				const Vector2i cell = Engine::Instance().camera()->posToCell(enemy->enemyPos());
+				const Vector2i cell = Engine::Instance().camera()->posToCellMap(enemy->enemyPos());
 				const int direction = getTileDirectionByCell(cell);
 				enemy->moveNext(direction);
 			}
@@ -189,7 +189,7 @@ void Level::checkEnd()
 		else
 			++it;
 	}
-	if (spawnEnemies.empty())
+	if (spawnEnemies.empty() && enemies.empty())
 		changeState(WIN);
 }
 
@@ -247,7 +247,7 @@ bool Level::canAddTower(const Vector2i &cell, TOWER_TYPES towerType) const
 		for(Tower *tower : towers)
 		{
 			if (tower->type() == POWER)
-			{				
+			{
 				const int radius = tower->data().radius;
 				const Vector2i towerCell = Engine::Instance().camera()->posToCell(tower->pos());
 				if (abs(towerCell.x - cell.x) < radius &&
@@ -318,7 +318,7 @@ void Level::drawLevel(RenderTarget * const target)
 
 void Level::spawn(ENEMY_TYPES type)
 {
-	Enemy *enemy = EnemiesFactory::createEnemy(type, Engine::Instance().camera()->cellToPos(gameMap->spawnPos));
+	Enemy *enemy = EnemiesFactory::createEnemy(type, Engine::Instance().camera()->cellToPosMap(gameMap->spawnPos));
 	enemy->moveNext(gameMap->spawnDirection);
 	enemies.push_back(enemy);
 }
@@ -355,7 +355,7 @@ void Level::up()
 
 Tile Level::getTileByPos(const Vector2f &pos)
 {
-	const Vector2i cell = Engine::Instance().camera()->posToCell(pos);
+	const Vector2i cell = Engine::Instance().camera()->posToCellMap(pos);
 	return getTileByCell(cell);
 }
 
@@ -425,7 +425,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		case ADD_TOWER:
 		{
 			const TOWER_TYPES type = Engine::Instance().panel()->currentTower(pos);
-			const float radius = TowersFactory::getTowerStats(type).radius * GlobalVariables::Instance().tileSize().x;
+			const float radius = TowersFactory::getTowerStats(type).radius * GlobalVariables::Instance().mapTileSize().x;
 			Engine::Instance().cursor()->activateTower(radius, type);
 			if (type != POWER)
 				highlightPowerTowersRadius(true);
@@ -508,7 +508,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 				Enemy *enemy = *it;
 				if (enemy->gameRect().intersects(Engine::Instance().cursor()->getAbilityRect()))
 				{
-					enemy->hit(15);
+					enemy->hit(100);
 					if (!enemy->isAlive())
 					{
 						delete enemy;
@@ -526,7 +526,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			{
 				if (enemy->gameRect().intersects(Engine::Instance().cursor()->getAbilityRect()))
 				{
-					enemy->freeze(25.f, 5000);
+					enemy->freeze(35.f, 5000);
 				}
 			}
 			break;

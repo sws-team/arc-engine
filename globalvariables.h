@@ -38,7 +38,9 @@ public:
 	}
 
 	Vector2f tileSize() const;
-	constexpr static const int CELL_SIZE = 32;
+	Vector2f mapTileSize() const;
+	constexpr static const int CELL_SIZE = 64;
+	constexpr static const int MAP_CELL_SIZE = 32;
 
 private:
 	GlobalVariables();

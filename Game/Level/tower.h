@@ -65,6 +65,7 @@ public:
 	void setType(const TOWER_TYPES &type);
 
 	static const float LEVEL_GAIN;
+	static const float TOWER_SCAlE;
 
 protected:
 	TowerStats m_stats;

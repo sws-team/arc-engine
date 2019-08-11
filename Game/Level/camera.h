@@ -40,8 +40,12 @@ public:
 
 
 
+	Vector2i posToCellMap(const Vector2f &pos) const;
+	Vector2f cellToPosMap(const Vector2i &cell) const;
+
 	Vector2i posToCell(const Vector2f &pos) const;
 	Vector2f cellToPos(const Vector2i &cell) const;
+
 
 private:
     constexpr static float CAMERA_OFFSET = 4.f;

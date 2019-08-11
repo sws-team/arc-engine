@@ -8,7 +8,7 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const Vector2f &startPos,
 			 const EnemyStats& stats)
 	: GameObject(texture_id, startPos,
-				 Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE),
+				 Vector2i(GlobalVariables::MAP_CELL_SIZE, GlobalVariables::MAP_CELL_SIZE),
 				 4)
 	,m_stats(stats)
 	,moveCounter(0)
@@ -16,17 +16,12 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 	,isFreezed(false)
 	,startFreeze(false)
 {
-	centerOffset.x = GlobalVariables::Instance().tileSize().x/2;
-	centerOffset.y = GlobalVariables::Instance().tileSize().y/2;
+	centerOffset.x = GlobalVariables::Instance().mapTileSize().x/2;
+	centerOffset.y = GlobalVariables::Instance().mapTileSize().y/2;
 
-	offset.x = rand() % static_cast<int>(GlobalVariables::Instance().tileSize().x * 2) - GlobalVariables::Instance().tileSize().x;
+	const float road = GlobalVariables::Instance().mapTileSize().x * 1.5f;
+	offset.x = rand() % static_cast<int>(road * 2) - road;
 	offset.y = 0;
-//	offset.y = rand() % static_cast<int>(GlobalVariables::Instance().tileSize().y * 2) - GlobalVariables::Instance().tileSize().y;
-//	if (offset.x < 0)
-//		offset.x = max(offset.x, -GlobalVariables::Instance().tileSize().x + centerOffset.x);
-//	if (offset.x > 0)
-//		offset.x = min(offset.x, GlobalVariables::Instance().tileSize().x - centerOffset.x);
-
 
 	movePos = startPos + centerOffset;
 
@@ -85,23 +80,23 @@ void Enemy::moveNext(int direction)
 	case Map::STAY:
 		break;
 	case Map::UP:
-		targetPos.y -= GlobalVariables::Instance().tileSize().y;
-		currentStep.y = -GlobalVariables::Instance().tileSize().y / m_data.speed;
+		targetPos.y -= GlobalVariables::Instance().mapTileSize().y;
+		currentStep.y = -GlobalVariables::Instance().mapTileSize().y / m_data.speed;
 		newDirection = SPRITE_DIRECTION::SPRITE_UP;
 		break;
 	case Map::DOWN:
-		targetPos.y += GlobalVariables::Instance().tileSize().y;
-		currentStep.y = GlobalVariables::Instance().tileSize().y / m_data.speed;
+		targetPos.y += GlobalVariables::Instance().mapTileSize().y;
+		currentStep.y = GlobalVariables::Instance().mapTileSize().y / m_data.speed;
 		newDirection = SPRITE_DIRECTION::DEFAULT_DOWN;
 		break;
 	case Map::LEFT:
-		targetPos.x -= GlobalVariables::Instance().tileSize().x;
-		currentStep.x = -GlobalVariables::Instance().tileSize().x / m_data.speed;
+		targetPos.x -= GlobalVariables::Instance().mapTileSize().x;
+		currentStep.x = -GlobalVariables::Instance().mapTileSize().x / m_data.speed;
 		newDirection = SPRITE_DIRECTION::SPRITE_LEFT;
 		break;
 	case Map::RIGHT:
-		targetPos.x += GlobalVariables::Instance().tileSize().x;
-		currentStep.x = GlobalVariables::Instance().tileSize().x / m_data.speed;
+		targetPos.x += GlobalVariables::Instance().mapTileSize().x;
+		currentStep.x = GlobalVariables::Instance().mapTileSize().x / m_data.speed;
 		newDirection = SPRITE_DIRECTION::SPRITE_RIGHT;
 		break;
 	}
@@ -123,38 +118,38 @@ void Enemy::moveNext(int direction)
 			if (spriteDirection == DEFAULT_DOWN)
 			{
 				angle = RIGHT_ANGLE;
-				origin.y = GlobalVariables::CELL_SIZE;
+				origin.y = GlobalVariables::MAP_CELL_SIZE;
 			}
 			else if (spriteDirection == SPRITE_UP)
 			{
 				angle = -RIGHT_ANGLE;
-				origin.y = GlobalVariables::CELL_SIZE;
+				origin.y = GlobalVariables::MAP_CELL_SIZE;
 			}
 			break;
 		case SPRITE_UP:
 			if (spriteDirection == SPRITE_LEFT)
 			{
 				angle = RIGHT_ANGLE;
-				origin.x = GlobalVariables::CELL_SIZE;
-				origin.y = GlobalVariables::CELL_SIZE;
+				origin.x = GlobalVariables::MAP_CELL_SIZE;
+				origin.y = GlobalVariables::MAP_CELL_SIZE;
 			}
 			else if (spriteDirection == SPRITE_RIGHT)
 			{
 				angle = -RIGHT_ANGLE;
-				origin.x = GlobalVariables::CELL_SIZE;
-				origin.y = GlobalVariables::CELL_SIZE;
+				origin.x = GlobalVariables::MAP_CELL_SIZE;
+				origin.y = GlobalVariables::MAP_CELL_SIZE;
 			}
 			break;
 		case SPRITE_RIGHT:
 			if (spriteDirection == DEFAULT_DOWN)
 			{
 				angle = -RIGHT_ANGLE;
-				origin.x = GlobalVariables::CELL_SIZE;
+				origin.x = GlobalVariables::MAP_CELL_SIZE;
 			}
 			else if (spriteDirection == SPRITE_UP)
 			{
 				angle = RIGHT_ANGLE;
-				origin.x = GlobalVariables::CELL_SIZE;
+				origin.x = GlobalVariables::MAP_CELL_SIZE;
 			}
 			break;
 		}

@@ -44,6 +44,12 @@ Vector2f GlobalVariables::tileSize() const
 					Settings::Instance().getScaleFactor().y * CELL_SIZE);
 }
 
+Vector2f GlobalVariables::mapTileSize() const
+{
+	return Vector2f(Settings::Instance().getScaleFactor().x * MAP_CELL_SIZE,
+					Settings::Instance().getScaleFactor().y * MAP_CELL_SIZE);
+}
+
 void GlobalVariables::createDefaultControls()
 {
 	{//keyboard

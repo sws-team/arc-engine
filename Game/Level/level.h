@@ -20,11 +20,7 @@ public:
 	void draw(RenderTarget * const target) override;
 	void update() override;
 
-	static constexpr float LEVEL_SPEED = 1;
-
 	Vector2f getCenter() const;
-
-	static constexpr float LEVEL_BORDER = 5.f;
 
 	Vector2f getStartingPos() const;
 

@@ -60,21 +60,27 @@ GamePanel::GamePanel() :
 
 	towerBaseSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_BASE));
 	towerBaseSprite.setScale(Settings::Instance().getScaleFactor());
+	towerBaseSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerLaserSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_LASER));
 	towerLaserSprite.setScale(Settings::Instance().getScaleFactor());
+	towerLaserSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerFreezeSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_FREEZE));
 	towerFreezeSprite.setScale(Settings::Instance().getScaleFactor());
+	towerFreezeSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerRocketSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_ROCKET));
 	towerRocketSprite.setScale(Settings::Instance().getScaleFactor());
+	towerRocketSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerPowerSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_POWER));
 	towerPowerSprite.setScale(Settings::Instance().getScaleFactor());
+	towerPowerSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerImprovedSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_IMPROVED));
 	towerImprovedSprite.setScale(Settings::Instance().getScaleFactor());
+	towerImprovedSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	spriteReady.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::READY_TEXTURE));
 	spriteReady.setScale(Settings::Instance().getScaleFactor());
@@ -198,6 +204,12 @@ ACTION_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
 
 	if (abilityIncreaseTowerAttackSpeedSprite.getGlobalBounds().contains(center))
 		return ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED;
+
+	if (sellRect.getGlobalBounds().contains(center))
+		return ACTION_STATE::SELL;
+
+	if (upgradeRect.getGlobalBounds().contains(center))
+		return ACTION_STATE::UPGRADE;
 
 	return ACTION_STATE::READY;
 }

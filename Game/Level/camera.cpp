@@ -49,25 +49,25 @@ void Camera::moveRight(float offset)
 void Camera::moveUpByCell()
 {
 //	if (Engine::Instance().cursor()->pos().y * GlobalVariables::CELL_SIZE < view->getCenter().y)
-		moveUp(GlobalVariables::Instance().tileSize().y);
+		moveUp(GlobalVariables::Instance().mapTileSize().y);
 }
 
 void Camera::moveDownByCell()
 {
 //	if (Engine::Instance().cursor()->pos().y * GlobalVariables::CELL_SIZE > view->getCenter().y)
-		moveDown(GlobalVariables::Instance().tileSize().y);
+		moveDown(GlobalVariables::Instance().mapTileSize().y);
 }
 
 void Camera::moveLeftByCell()
 {
 //	if (Engine::Instance().cursor()->pos().x * GlobalVariables::CELL_SIZE < view->getCenter().x)
-		moveLeft(GlobalVariables::Instance().tileSize().x);
+		moveLeft(GlobalVariables::Instance().mapTileSize().x);
 }
 
 void Camera::moveRightByCell()
 {
 //	if (Engine::Instance().cursor()->pos().x * GlobalVariables::CELL_SIZE > view->getCenter().x)
-	moveRight(GlobalVariables::Instance().tileSize().x);
+	moveRight(GlobalVariables::Instance().mapTileSize().x);
 }
 
 View *Camera::getView()
@@ -110,24 +110,24 @@ void Camera::resetZoom()
 
 void Camera::centerOnCursor(const Vector2i &cell)
 {
-	view->setCenter(cellToPos(cell));
+	view->setCenter(cellToPosMap(cell));
 	m_detached = false;
 }
 
 Vector2i Camera::currentCenterCell() const
 {
-	return posToCell(view->getCenter());
+	return posToCellMap(view->getCenter());
 }
 
 Vector2i Camera::currentViewCells() const
 {
-	return Vector2i(view->getSize().x / GlobalVariables::Instance().tileSize().x,
-					view->getSize().y / GlobalVariables::Instance().tileSize().y);
+	return Vector2i(view->getSize().x / GlobalVariables::Instance().mapTileSize().x,
+					view->getSize().y / GlobalVariables::Instance().mapTileSize().y);
 }
 
 int Camera::topCell() const
 {
-	return static_cast<int>( (view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().tileSize().y );
+	return static_cast<int>( (view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().mapTileSize().y );
 }
 
 void Camera::detach()
@@ -140,7 +140,19 @@ bool Camera::isDetached() const
 	return m_detached;
 }
 
-Vector2i Camera::posToCell(const Vector2f& pos) const
+Vector2i Camera::posToCellMap(const Vector2f& pos) const
+{
+	return Vector2i(floor(pos.x / GlobalVariables::Instance().mapTileSize().x),
+					floor(pos.y / GlobalVariables::Instance().mapTileSize().y));
+}
+
+Vector2f Camera::cellToPosMap(const Vector2i &cell) const
+{
+	return Vector2f(cell.x * GlobalVariables::Instance().mapTileSize().x,
+					cell.y * GlobalVariables::Instance().mapTileSize().y);
+}
+
+Vector2i Camera::posToCell(const Vector2f &pos) const
 {
 	return Vector2i(floor(pos.x / GlobalVariables::Instance().tileSize().x),
 					floor(pos.y / GlobalVariables::Instance().tileSize().y));
