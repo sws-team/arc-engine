@@ -6,6 +6,7 @@
 #include "globalvariables.h"
 #include "Game/Level/cursor.h"
 #include "Game/Level/camera.h"
+#include "ResourcesManager/resourcesmanager.h"
 
 GameWindow::GameWindow()
 	: Menu()
@@ -26,46 +27,12 @@ GameWindow::GameWindow()
 	paused.setCharacterSize(140);
 	paused.setFont(GlobalVariables::Instance().font());
 
-	menuImg.texture.loadFromFile("images/ui/game_menu.png");
-	menuImg.sprite.setTexture(menuImg.texture);
-
-	finishedImg.texture.loadFromFile("images/Locations/score.png");
-	finishedImg.sprite.setTexture(finishedImg.texture);
-
-	gameOverImg.texture.loadFromFile("images/Windows/GameOver.png");
-	gameOverImg.sprite.setTexture(gameOverImg.texture);
+	menuImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::GAME_MENU_TEXTURE));
+	gameOverImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::GAME_OVER_TEXTURE));
+	finishedImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MISSON_COMPLETED_TEXTURE));
 	//score
-	scoreText.setFillColor(Color::Black);
-	scoreText.setFont(GlobalVariables::Instance().font());
-	scoreText.setString("Congratulations!");
-
-//	for (unsigned int i = 0; i < GameController::Instance().players().size(); ++i)
-//	{
-//		ScoreInfo score;
-
-//		score.kills.text.setFillColor(Color::Blue);
-//		score.kills.text.setFont(GlobalVariables::Instance().font());
-//	//	score.kills.text.setString(Language::Instance().translate(Language::DAMAGE) + delimer);
-//		score.kills.text.setString("Kills: ");
-//		score.kills.valueText.setFillColor(Color::Black);
-//		score.kills.valueText.setFont(GlobalVariables::Instance().font());
-
-//		score.gears.text.setFillColor(Color::Blue);
-//		score.gears.text.setFont(GlobalVariables::Instance().font());
-//	//	score.score.text.setString(Language::Instance().translate(Language::DAMAGE) + delimer);
-//		score.gears.text.setString("Gears: ");
-//		score.gears.valueText.setFillColor(Color::Black);
-//		score.gears.valueText.setFont(GlobalVariables::Instance().font());
-
-//		score.points.text.setFillColor(Color::Blue);
-//		score.points.text.setFont(GlobalVariables::Instance().font());
-//	//	score.points.text.setString(Language::Instance().translate(Language::DAMAGE) + delimer);
-//		score.points.text.setString("Points: ");
-//		score.points.valueText.setFillColor(Color::Black);
-//		score.points.valueText.setFont(GlobalVariables::Instance().font());
-
-//		scores.push_back(score);
-//	}
+	text.setFillColor(Color::Black);
+	text.setFont(GlobalVariables::Instance().font());
 
 	addItem("Continue");
 	addItem("Exit from mission");
@@ -93,32 +60,18 @@ void GameWindow::paint(RenderWindow *window)
 		window->draw(paused);
 		break;
 	case IN_MENU:
-		window->draw(menuImg.sprite);
+		window->draw(menuImg);
 		Menu::paint(window);
 		break;
 	case FINISHED:
 	{
-		window->draw(finishedImg.sprite);
-		window->draw(scoreText);
-//		for (unsigned int i = 0; i < GameController::Instance().players().size(); ++i)
-//		{
-//			SpaceShip *player = GameController::Instance().players().at(i);
-//			window->draw(player->getIcon());
-//		}
-		for (unsigned int i = 0; i < scores.size(); ++i)
-		{
-			const ScoreInfo score = scores.at(i);
-			window->draw(score.kills.text);
-			window->draw(score.kills.valueText);
-			window->draw(score.gears.text);
-			window->draw(score.gears.valueText);
-			window->draw(score.points.text);
-			window->draw(score.points.valueText);
-		}
+		window->draw(finishedImg);
+		window->draw(text);
 	}
 		break;
 	case GAME_OVER:
-		window->draw(gameOverImg.sprite);
+		window->draw(gameOverImg);
+		window->draw(text);
 		break;
 	}
 }
@@ -181,7 +134,6 @@ void GameWindow::update()
 	{
 	case Level::WIN:
 	{
-		Engine::Instance().save();
 		setState(FINISHED);
 	}
 		break;
@@ -262,14 +214,14 @@ void GameWindow::setState(const GAME_STATE &state)
 		break;
 	case IN_MENU:
 	{
-		const Vector2f offset = Vector2f(menuImg.sprite.getGlobalBounds().width/2, menuImg.sprite.getGlobalBounds().height/2);
-		menuImg.sprite.setPosition(Engine::Instance().level()->getCenter() - offset);
+		const Vector2f offset = Vector2f(menuImg.getGlobalBounds().width/2, menuImg.getGlobalBounds().height/2);
+		menuImg.setPosition(Engine::Instance().level()->getCenter() - offset);
 
 		const float offsetX = 20.f * Settings::Instance().getScaleFactor().x;
 		const float offsetY = 20.f * Settings::Instance().getScaleFactor().y;
 
-		float posX = menuImg.sprite.getGlobalBounds().left + offsetX;
-		float posY = menuImg.sprite.getGlobalBounds().top;
+		float posX = menuImg.getGlobalBounds().left + offsetX;
+		float posY = menuImg.getGlobalBounds().top;
 
 		for(Text& text : menus)
 		{
@@ -280,43 +232,30 @@ void GameWindow::setState(const GAME_STATE &state)
 		break;
 	case FINISHED:
 	{
-//		SavedGameLoader::Instance().addCompletedLevel(SavedGameLoader::Instance().getCurrentMission());
+		text.setString("Congratulations!");
+		Engine::Instance().setMissionFinished(Engine::Instance().getMission(), 4);
+		Engine::Instance().save();
 
-		const Vector2f offset = Vector2f(finishedImg.sprite.getGlobalBounds().width/2, finishedImg.sprite.getGlobalBounds().height/2);
-		finishedImg.sprite.setPosition(Engine::Instance().level()->getCenter() - offset);
+		const Vector2f offset = Vector2f(finishedImg.getGlobalBounds().width/2, finishedImg.getGlobalBounds().height/2);
+		finishedImg.setPosition(Engine::Instance().level()->getCenter() - offset);
 
 		const float labelsOffset = 15 * Settings::Instance().getScaleFactor().y;
-		float posX = finishedImg.sprite.getGlobalBounds().left;
-		float posY = finishedImg.sprite.getGlobalBounds().top;
+		float posX = finishedImg.getGlobalBounds().left;
+		float posY = finishedImg.getGlobalBounds().top;
 
 		posX += labelsOffset;
 		posY += labelsOffset;
 
-		scoreText.setPosition(posX, posY);
+		text.setPosition(posX, posY);
 
-		posY += scoreText.getGlobalBounds().height;
-
-//		for (unsigned int i = 0; i < GameController::Instance().players().size(); ++i)
-//		{
-//			SpaceShip *player = GameController::Instance().players().at(i);
-
-//			player->getIcon().setPosition(posX, posY);
-
-//			const float gears = level->getLevelBonuses().at(player);
-
-//			scores[i].gears.valueText.setString((String(GlobalVariables::to_string_with_precision(gears, 1))));
-
-//			scores[i].gears.text.setPosition(posX, posY);
-//			scores[i].gears.valueText.setPosition(posX + scores.at(i).gears.text.getGlobalBounds().width, posY);
-
-//			posY +=  scores.at(i).gears.text.getGlobalBounds().height + labelsOffset;
-//		}
+		posY += text.getGlobalBounds().height;
 	}
 		break;
 	case GAME_OVER:
 	{
-		const Vector2f offset = Vector2f(gameOverImg.sprite.getGlobalBounds().width/2, gameOverImg.sprite.getGlobalBounds().height/2);
-		gameOverImg.sprite.setPosition(Engine::Instance().level()->getCenter() - offset);
+		text.setString("Game over!");
+		const Vector2f offset = Vector2f(gameOverImg.getGlobalBounds().width/2, gameOverImg.getGlobalBounds().height/2);
+		gameOverImg.setPosition(Engine::Instance().level()->getCenter() - offset);
 	}
 		break;
 	}

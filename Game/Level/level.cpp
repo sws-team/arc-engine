@@ -325,8 +325,7 @@ void Level::spawn(ENEMY_TYPES type)
 
 void Level::test()
 {	
-	for(Enemy* enemy : enemies)
-		enemy->moveStep();
+	changeState(WIN);
 }
 
 void Level::left()
@@ -556,23 +555,4 @@ void Level::action()
 void Level::change()
 {
 
-}
-void Level::setDoubleSpeed()
-{
-	Engine::Instance().setGameSpeed(2.f);
-}
-
-void Level::setNormalSpeed()
-{
-	Engine::Instance().setGameSpeed(1.f);
-}
-
-void Level::setFastSpeed()
-{
-	Engine::Instance().setGameSpeed(8.f);
-}
-
-void Level::setNullSpeed()
-{
-	Engine::Instance().setGameSpeed(1/INT_MAX);
 }

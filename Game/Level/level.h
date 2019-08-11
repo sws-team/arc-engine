@@ -2,7 +2,6 @@
 #define LEVEL_H
 
 #include "stdheader.h"
-#include "graphics.h"
 #include "Game/gamedrawable.h"
 #include "Game/leveldef.h"
 
@@ -53,11 +52,6 @@ public:
 	bool canAddTower(const Vector2i& cell, TOWER_TYPES towerType) const;
 
 	void highlightPowerTowersRadius(bool active);
-
-	void setDoubleSpeed();
-	void setNormalSpeed();
-	void setFastSpeed();
-	void setNullSpeed();
 
 	enum LEVEL_STATE
 	{

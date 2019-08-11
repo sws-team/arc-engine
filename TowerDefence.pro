@@ -27,7 +27,6 @@ HEADERS += \
     mainwindow.h \
     settings.h \
     stdheader.h \
-    graphics.h \
     controller.h \
     controlsettings.h \
     timer.h \

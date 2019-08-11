@@ -49,25 +49,7 @@ int main(int argc, char *argv[])
 #endif
 
 	Language::Instance().load();
-//	SavedGameLoader::Instance().loadMaps("maps");
-
-//	if (!Campaign::Instance().loadWeapons("weapons"))
-//	{
-//		MessageBoxA(nullptr, "Cant read weapons file", "Error", 0);
-//		return EXIT_FAILURE;
-//	}
-//	if (!Campaign::Instance().loadSpaceShips("spaceships"))
-//	{
-//		MessageBoxA(nullptr, "Cant read spaceships file", "Error", 0);
-//		return EXIT_FAILURE;
-//	}
-//	if (!Campaign::Instance().loadMissions("campaign"))
-//	{
-//		MessageBoxA(nullptr, "Cant read campaign file", "Error", 0);
-//		return EXIT_FAILURE;
-//	}
-
-//	SavedGameLoader::Instance().load();
+	Engine::Instance().load();
 
 	MainWindow w;
 	Settings::Instance().setMainWindow(&w);

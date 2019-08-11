@@ -2,7 +2,6 @@
 #define GAMEWINDOW_H
 
 #include "Windows/menu.h"
-#include "graphics.h"
 #include "timer.h"
 
 class GameWindow : public Menu
@@ -25,7 +24,9 @@ private:
 	class Controller *controller;
 
 	Text paused;
-	GraphicImage menuImg;
+	Sprite menuImg;
+	Sprite finishedImg;
+	Sprite gameOverImg;
 
 	enum GAME_MENU
 	{
@@ -47,17 +48,8 @@ private:
 	void setState(const GAME_STATE &state);
 
 	void finish();
-	GraphicImage finishedImg;
-	GraphicImage gameOverImg;
 
-	struct ScoreInfo
-	{
-		TextInfo kills;
-		TextInfo gears;
-		TextInfo points;
-	};
-	Text scoreText;
-	vector<ScoreInfo> scores;
+	Text text;
 	Clock clock;
 	Int64 lastTime;
 	Int64 tick;

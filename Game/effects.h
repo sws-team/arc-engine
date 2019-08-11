@@ -3,7 +3,6 @@
 
 #include "stdheader.h"
 #include "gamedrawable.h"
-#include "graphics.h"
 #include "ResourcesManager/textures_types.h"
 
 struct Animation : public GameDrawable

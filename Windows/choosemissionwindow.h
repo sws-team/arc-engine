@@ -27,6 +27,8 @@ private:
 		vector<RectangleShape> stars; //5
 	};
 	vector<MissionView> missions;
+
+	unsigned int getRating(unsigned int n) const;
 };
 
 #endif // CHOOSEMISSIONWINDOW_H

@@ -36,9 +36,6 @@ public:
 	Camera *camera() const;
 	Cursor *cursor() const;
 
-	void setView(const View &view);
-	View getView() const;
-
 	bool loadMap(const String &fileName);
 	void loadMaps(const String &path);
 
@@ -58,10 +55,16 @@ public:
 	void save();
 	void load();
 
-	float gameSpeed() const;
-	void setGameSpeed(const float k);
-
 	static float getStartEnergy(const unsigned int n);
+
+	void setMissionFinished(unsigned int n, unsigned int rating);
+
+	struct CompletedMission
+	{
+		unsigned int number;
+		unsigned int stars;
+	};
+	vector<CompletedMission> getCompletedMissions() const;
 
 private:
 	Engine();
@@ -77,19 +80,12 @@ private:
 
 	RenderWindow *p_window;
 
-	struct SavedLevel
-	{
-		int number;
-		int stars;
-	};
 
-	vector<SavedLevel> m_save;
+
+	vector<CompletedMission> m_save;
 	string saveFileName;
 	vector<Map*> maps;
 	unsigned int m_mission;
-	class SavedGameLoader *saveGameLoader;
-
-	float m_gameSpeedK;
 };
 
 #endif // ENGINE_H

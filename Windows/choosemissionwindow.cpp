@@ -11,24 +11,36 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 	const float offset = 160 + Settings::Instance().getScaleFactor().y * 20;
 
-	float x = Settings::Instance().getResolution().x * 0.3f;
+
+	const float left = Settings::Instance().getResolution().x * 0.3f;
+	float x = left;
 	float y = Settings::Instance().getResolution().y * 0.1f;
 
 	for (unsigned int i = 0; i < Engine::Instance().missionsCount(); ++i)
 	{
+		if (i % 5 == 0 && i != 0)
+		{
+			x = left;
+			y += 160 + 32 + 64;
+		}
+
 		MissionView mission;
 		mission.rect.setPosition(x, y);
 		mission.rect.setSize(Vector2f(160, 160));
 		mission.rect.setFillColor(Color::Red);
-
+		unsigned int rating = getRating(i);
 		float posX = x;
-		for (int j = 0; j < STARS_COUNT; ++j)
+		for (unsigned int j = 0; j < STARS_COUNT; ++j)
 		{
 			RectangleShape starRect;
 			starRect.setFillColor(Color::Cyan);
 			starRect.setSize(Vector2f(32, 32));
 			starRect.setPosition(posX, y + 160);
-			starRect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::STAR_TEXTURE));
+			if (j >= rating)
+				starRect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::EMPTY_STAR_TEXTURE));
+			else
+				starRect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::STAR_TEXTURE));
+
 			mission.stars.push_back(starRect);
 			posX += 32;
 		}
@@ -79,7 +91,14 @@ void ChooseMissionWindow::eventFilter(Event *event)
 
 void ChooseMissionWindow::accept(unsigned int num)
 {
-	cout << "ACCEPT "<<num <<endl;
 	Engine::Instance().setMission(num);
 	Engine::Instance().setState(Engine::IN_GAME);
+}
+
+unsigned int ChooseMissionWindow::getRating(unsigned int n) const
+{
+	for(const Engine::CompletedMission& mission : Engine::Instance().getCompletedMissions())
+		if (mission.number == n)
+			return mission.stars;
+	return 0;
 }
