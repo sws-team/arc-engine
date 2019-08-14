@@ -4,6 +4,8 @@
 #include "projectile.h"
 #include "Game/Collisions/collisions.h"
 #include "ResourcesManager/resourcesmanager.h"
+#include "Engine/engine.h"
+#include "Game/Level/level.h"
 
 const float Tower::LEVEL_GAIN = 0.4f;
 const float Tower::TOWER_SCAlE = 1.f/3.f;
@@ -250,10 +252,12 @@ void PowerTower::upgrade()
 }
 
 
+const int RocketTower::ZERO_GROUND = 3;
+
 RocketTower::RocketTower(const Vector2f &pos)
 	: ProjectilesTower(RESOURCES::TOWER_ROCKET, RESOURCES::ROCKET_PROJECTILE, pos, STATS)
 {
-
+	m_zeroGround = GlobalVariables::Instance().tileSize().x * ZERO_GROUND;
 }
 
 void RocketTower::moveProjectile(Projectile *projectile)
@@ -275,6 +279,24 @@ void RocketTower::moveProjectile(Projectile *projectile)
 		projectile->setAngle(angle);
 	}
 	ProjectilesTower::moveProjectile(projectile);
+}
+
+void RocketTower::projectileAction(Enemy *enemy)
+{
+	const Vector2f epicenter = enemy->enemyPos();
+	const vector <Enemy*> enemies = Engine::Instance().level()->getAllEnemies();
+	for(Enemy* levelEnemy : enemies)
+	{
+		const float a = fabs(epicenter.x - levelEnemy->enemyPos().x);
+		const float b = fabs(epicenter.y - levelEnemy->enemyPos().y);
+		const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
+		if (r <= m_zeroGround)
+		{
+			const float actualDamage = r/m_zeroGround * m_stats.damage;
+			levelEnemy->hit(actualDamage);
+		}
+	}
+	ProjectilesTower::projectileAction(enemy);
 }
 
 FreezeTower::FreezeTower(const Vector2f &pos)

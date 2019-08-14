@@ -300,6 +300,11 @@ int Level::currentProgress() const
 	return spawnEnemies.size();
 }
 
+vector<Enemy *> Level::getAllEnemies() const
+{
+	return enemies;
+}
+
 void Level::drawLevel(RenderTarget * const target)
 {
 	for (size_t layer = 0; layer < gameMap->layers.size(); layer++)

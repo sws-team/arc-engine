@@ -147,6 +147,10 @@ public:
 	RocketTower(const Vector2f &pos);
 	const static TowerStats STATS;
 	void moveProjectile(Projectile *projectile) override;
+	void projectileAction(Enemy *enemy) override;
+private:
+	const static int ZERO_GROUND;
+	float m_zeroGround;
 };
 
 class FreezeTower : public ProjectilesTower

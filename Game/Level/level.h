@@ -66,6 +66,7 @@ public:
 
 	int currentProgress() const;
 
+	vector<Enemy *> getAllEnemies() const;
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();
