@@ -17,6 +17,18 @@
 constexpr static int MAX_SHAKE_OFFSET = 5;
 constexpr static int SHAKE_DURATION = 500;
 
+const float Level::FREEZE_ABILITY_K = 35.f;
+const int Level::FREEZE_ABILITY_DURATION = 5000;
+const int Level::INCREASE_DAMAGE_ABILITY_DURATION = 9000;
+const int Level::INCREASE_DAMAGE_ABILITY_VALUE = 100;
+const int Level::INCREASE_ATTACK_SPEED_ABILITY_DURATION = 9000;
+const int Level::INCREASE_ATTACK_SPEED_ABILITY_VALUE = 100;
+
+const float Level::VenomAbility::VENOM_DAMAGE = 10.f;
+const Vector2i Level::VenomAbility::VENOM_SIZE = Vector2i(10, 3);
+const int Level::VenomAbility::VENOM_DAMAGE_COUNT = 15;
+const int Level::VenomAbility::VENOM_ATTACK_SPEED = 500;
+
 Level::Level() :
   difficulty(1.f)
   ,gameMap(nullptr)
@@ -24,6 +36,11 @@ Level::Level() :
   ,life(0.f)
   ,m_state(WAIT_READY)
 {
+	venomAbility.isActive = false;
+	venomAbility.object =  new GameObject(RESOURCES::VENOM_EFFECT, Vector2f(0,0),
+										  Vector2i(VenomAbility::VENOM_SIZE.x * GlobalVariables::Instance().tileSize().x,
+												   VenomAbility::VENOM_SIZE.y * GlobalVariables::Instance().tileSize().y), 1);
+
 	const float k = static_cast<float>(Settings::Instance().getInscribedResolution().y)/Settings::Instance().getResolution().y;
 	resolutionOffsetX = Settings::Instance().getResolution().x - k * Settings::Instance().getResolution().x;
 	resolutionOffsetX /= 2;	
@@ -50,7 +67,6 @@ void Level::draw(RenderTarget *const target)
 		break;
 	}
 
-
 	Engine::Instance().panel()->draw(target);
 }
 
@@ -70,6 +86,20 @@ void Level::update()
 		else
 			tower->action(enemies);
 		tower->update();
+	}
+	if (venomAbility.isActive)
+	{
+		if (venomAbility.timer.check(VenomAbility::VENOM_ATTACK_SPEED))
+		{
+			for(Enemy *enemy : enemies)
+			{
+				if (enemy->gameRect().intersects(venomAbility.object->gameRect()))
+					enemy->hit(VenomAbility::VENOM_DAMAGE);
+			}
+			venomAbility.count++;
+			if (venomAbility.count > VenomAbility::VENOM_DAMAGE_COUNT)
+				venomAbility.isActive = false;
+		}
 	}
 	if (timer.check(GlobalVariables::FRAME_TIME))
 	{
@@ -103,11 +133,6 @@ void Level::update()
 Vector2f Level::getCenter() const
 {
 //	return view.getCenter();
-}
-
-Vector2f Level::getStartingPos() const
-{
-	return m_startPos;
 }
 
 void Level::startMission(const unsigned int n)
@@ -249,7 +274,7 @@ bool Level::canAddTower(const Vector2i &cell, TOWER_TYPES towerType) const
 			if (tower->type() == POWER)
 			{
 				const int radius = tower->data().radius;
-				const Vector2i towerCell = Engine::Instance().camera()->posToCell(tower->pos());
+				const Vector2i towerCell = Engine::Instance().camera()->posToCellMap(tower->pos());
 				if (abs(towerCell.x - cell.x) < radius &&
 						abs(towerCell.y - cell.y) < radius)
 				{
@@ -318,6 +343,10 @@ void Level::drawLevel(RenderTarget * const target)
 		tower->draw(target);
 
 	Engine::Instance().cursor()->draw(target);
+
+	if (venomAbility.isActive)
+		venomAbility.object->draw(target);
+
 	//	Effects::Instance().draw(target);
 }
 
@@ -439,13 +468,15 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		case ABILITY_INCREASE_TOWER_DAMAGE:
 			Engine::Instance().cursor()->activateAbility(1, 1, 0, 0);
 			break;
-		case ABILITY_CARPET_BOMBING:
-			Engine::Instance().cursor()->activateAbility(10, 3, 5, 2);
+		case ABILITY_VENOM:
+			Engine::Instance().cursor()->activateAbility(VenomAbility::VENOM_SIZE.x, VenomAbility::VENOM_SIZE.y, 4, 1);
 			break;
 		case ABILITY_BOMB:
 		case ABILITY_FREEZE_BOMB:
 			Engine::Instance().cursor()->activateAbility(3, 3, 1, 1);
 		break;
+		case ABILITY_UNKNOWN:
+			break;
 		case SELL:
 		{
 			if (selectedTower == nullptr)
@@ -484,7 +515,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		case ADD_TOWER:
 		{
 			const TOWER_TYPES type = Engine::Instance().cursor()->getTowerType();
-			if (!canAddTower(cell, type))
+
+			if (!canAddTower(Engine::Instance().camera()->posToCellMap(Engine::Instance().camera()->cellToPos(cell)), type))
 				return;
 
 			if (type != POWER)
@@ -503,8 +535,14 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			Engine::Instance().panel()->update();
 		}
 			break;
-		case ABILITY_CARPET_BOMBING:
-
+		case ABILITY_VENOM:
+		{
+			venomAbility.isActive = true;
+			const Vector2f pos = Vector2f(Engine::Instance().cursor()->getAbilityRect().left, Engine::Instance().cursor()->getAbilityRect().top);
+			venomAbility.object->setPos(pos);
+			venomAbility.timer.clock.restart();
+			venomAbility.count = 0;
+		}
 			break;
 		case ABILITY_BOMB:
 			for (auto it = enemies.begin(); it != enemies.end();)
@@ -526,22 +564,24 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			}
 			break;
 		case ABILITY_FREEZE_BOMB:
+		{
 			for(Enemy *enemy : enemies)
-			{
 				if (enemy->gameRect().intersects(Engine::Instance().cursor()->getAbilityRect()))
-				{
-					enemy->freeze(35.f, 5000);
-				}
-			}
+					enemy->freeze(FREEZE_ABILITY_K, FREEZE_ABILITY_DURATION);
+		}
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
 		{
 			Tower* tower = getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
+			if (tower != nullptr)
+				tower->increaseAttackSpeed(INCREASE_ATTACK_SPEED_ABILITY_DURATION, INCREASE_ATTACK_SPEED_ABILITY_VALUE);
 		}
 			break;
 		case ABILITY_INCREASE_TOWER_DAMAGE:
 		{
 			Tower* tower = getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
+			if (tower != nullptr)
+				tower->increaseDamage(INCREASE_DAMAGE_ABILITY_DURATION, INCREASE_DAMAGE_ABILITY_VALUE);
 		}
 			break;
 		default:

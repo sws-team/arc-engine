@@ -194,10 +194,10 @@ ACTION_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
 		return ACTION_STATE::ABILITY_FREEZE_BOMB;
 
 	if (abilityTimeStopSprite.getGlobalBounds().contains(center))
-		return ACTION_STATE::ABILITY_STOP_TIME;
+		return ACTION_STATE::ABILITY_UNKNOWN;
 
 	if (abilityCarpetBombingSprite.getGlobalBounds().contains(center))
-		return ACTION_STATE::ABILITY_CARPET_BOMBING;
+		return ACTION_STATE::ABILITY_VENOM;
 
 	if (abilityIncreaseTowerDamageSprite.getGlobalBounds().contains(center))
 		return ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE;

@@ -56,6 +56,8 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::MENU_BACKGROUND, "images/menu.png");
 	addTexture(RESOURCES::CLOSE_BACKGROUND, "images/close.png");
 	addTexture(RESOURCES::INTRO_BACKGROUND, "images/logo.png");
+
+	addTexture(RESOURCES::VENOM_EFFECT, "images/venom.png");
 }
 
 void ResourcesManager::addTexture(RESOURCES::TEXTURE_TYPE type, const string &path)

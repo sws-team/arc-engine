@@ -21,8 +21,6 @@ public:
 
 	Vector2f getCenter() const;
 
-	Vector2f getStartingPos() const;
-
 	void startMission(const unsigned int n);
 
 	void action();
@@ -74,8 +72,6 @@ private:
 	void checkEnd();
 	void checkAlive();
 	void checkRespawn();
-
-	Vector2f m_startPos;
 
 	float difficulty;
 	float resolutionOffsetX;
@@ -133,6 +129,30 @@ private:
 
 	LEVEL_STATE m_state;
 	void changeState(LEVEL_STATE state);
+
+	struct VenomAbility
+	{
+		bool isActive;
+		static const float VENOM_DAMAGE;
+		static const int VENOM_DAMAGE_COUNT;
+		static const int VENOM_ATTACK_SPEED;
+
+		static const Vector2i VENOM_SIZE;
+		class GameObject *object;
+		Timer timer;
+		int count;
+	};
+	VenomAbility venomAbility;
+
+
+	static const float FREEZE_ABILITY_K;
+	static const int FREEZE_ABILITY_DURATION;
+
+	static const int INCREASE_DAMAGE_ABILITY_VALUE;
+	static const int INCREASE_DAMAGE_ABILITY_DURATION;
+
+	static const int INCREASE_ATTACK_SPEED_ABILITY_VALUE;
+	static const int INCREASE_ATTACK_SPEED_ABILITY_DURATION;
 };
 
 #endif // LEVEL_H

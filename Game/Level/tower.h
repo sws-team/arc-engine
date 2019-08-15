@@ -45,7 +45,6 @@ public:
 		  const Vector2f &pos,
 		  const TowerStats& stats);
 
-
 	//GameObject
 	virtual void update() override;
 	virtual void draw(RenderTarget *const target) override;
@@ -67,6 +66,9 @@ public:
 	static const float LEVEL_GAIN;
 	static const float TOWER_SCAlE;
 
+	void increaseAttackSpeed(int duration, int value);
+	void increaseDamage(int duration, int value);
+
 protected:
 	TowerStats m_stats;
 	Timer actionTimer;
@@ -77,6 +79,16 @@ private:
 	TOWER_TYPES m_type;
 
 	int m_level;
+
+	struct Ability
+	{
+		bool isActive;
+		Timer timer;
+		int value;
+		int duration;
+	};
+	Ability abilityDamage;
+	Ability abilityAttackSpeed;
 };
 
 class ProjectilesTower : public Tower

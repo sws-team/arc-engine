@@ -23,11 +23,28 @@ Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, con
 	radius.setOrigin(radius.getRadius() - GlobalVariables::Instance().mapTileSize().x,
 					 radius.getRadius() - GlobalVariables::Instance().mapTileSize().y);
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
+	abilityDamage.isActive = false;
+	abilityAttackSpeed.isActive = false;
 }
 
 void Tower::update()
 {
-
+	if (abilityDamage.isActive)
+	{
+		if (abilityDamage.timer.check(abilityDamage.duration))
+		{
+			abilityDamage.isActive = false;
+			m_stats.damage /= abilityDamage.value;
+		}
+	}
+	if (abilityAttackSpeed.isActive)
+	{
+		if (abilityAttackSpeed.timer.check(abilityAttackSpeed.duration))
+		{
+			abilityAttackSpeed.isActive = false;
+			m_stats.attackSpeed *= abilityAttackSpeed.value;
+		}
+	}
 }
 
 void Tower::draw(RenderTarget * const target)
@@ -106,6 +123,21 @@ void Tower::setType(const TOWER_TYPES &type)
 	m_type = type;
 }
 
+void Tower::increaseAttackSpeed(int duration, int value)
+{
+	abilityAttackSpeed.isActive = true;
+	abilityAttackSpeed.duration = duration;
+	m_stats.attackSpeed /= abilityAttackSpeed.value;
+	abilityAttackSpeed.timer.clock.restart();
+}
+
+void Tower::increaseDamage(int duration, int value)
+{
+	abilityDamage.isActive = true;
+	abilityDamage.duration = duration;
+	m_stats.damage *= abilityDamage.value;
+	abilityDamage.timer.clock.restart();
+}
 
 TowerStats Tower::data() const
 {
@@ -197,7 +229,7 @@ bool TowersFactory::isIntersects(const FloatRect &rect, const Vector2f &center, 
 
 const TowerStats BaseTower::STATS = TowerStats(5, 300, 4, 20, 45);
 const TowerStats PowerTower::STATS = TowerStats(0, 5000, 5, 0, 55);
-const TowerStats RocketTower::STATS = TowerStats(75, 3500, 12, 20, 150);
+const TowerStats RocketTower::STATS = TowerStats(5, 3500, 12, 20, 150);
 const TowerStats FreezeTower::STATS = TowerStats(10, 350, 7, 5, 75);
 const TowerStats LaserTower::STATS = TowerStats(10, 250, 6, 0, 150);
 const TowerStats ImprovedTower::STATS = TowerStats(10, 150, 8, 50, 250);
@@ -399,6 +431,7 @@ void ProjectilesTower::draw(RenderTarget * const target)
 
 void ProjectilesTower::update()
 {
+	Tower::update();
 	if (moveTimer.check(Projectile::PROJECTILE_GAME_SPEED))
 	{
 		for(Projectile *projectile : m_projectiles)
