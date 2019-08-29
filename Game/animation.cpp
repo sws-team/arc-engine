@@ -1,70 +1,16 @@
-#include "effects.h"
+#include "animation.h"
 #include "globalvariables.h"
 #include "settings.h"
 #include "ResourcesManager/resourcesmanager.h"
-/*
-Effects::Effects()
-{
 
-}
-
-Effects &Effects::Instance()
-{
-	static Effects instance;
-	return instance;
-}
-
-void Effects::showAnimation(const RESOURCES::TEXTURE_TYPE& texture_id,
-							const Vector2f &pos,
-							const Vector2i &size,
-							int duration,
-							int frameCount,
-							int row)
-{
-	Animation *animation = new Animation();
-	animation->row = row;
-	animation->animationSpeed = duration;
-	animation->size = size;
-	animation->callback = std::bind(&Effects::removeAnimation, this, animation);
-	animation->frameCount = frameCount;
-	animation->setTextureId(texture_id);
-	animation->sprite.setPosition(pos);
-
-	animations.push_back(animation);
-}
-
-void Effects::draw(RenderTarget * const target)
-{
-	for(Animation* animation : animations)
-		animation->draw(target);
-}
-
-void Effects::update()
-{
-	for(Animation* animation : animations)
-		animation->update();
-}
-
-void Effects::removeAnimation(Animation *animation)
-{
-	animations.erase( std::remove( animations.begin(), animations.end(), animation ), animations.end() );
-	delete animation;
-}
-
-void Effects::moveAnimnations(float dy)
-{
-	for(Animation* animation : animations)
-		animation->sprite.move(0, dy);
-}
-*/
 Animation::Animation() :
 	GameDrawable()
-  ,loop(false)
   ,frameCount(1)
   ,currentFrame(-1)
   ,animationSpeed(300)
   ,row(0)
   ,callback(nullptr)
+  ,loop(false)
   ,lastTimer(0)
   ,shader(nullptr)
 {

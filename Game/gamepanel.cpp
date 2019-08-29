@@ -19,17 +19,23 @@ GamePanel::GamePanel() :
 	m_sprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_TEXTURE));
 	m_sprite.setScale(Settings::Instance().getScaleFactor() * Settings::GAME_SCALE);
 
-	energyCountText.setFont(GlobalVariables::Instance().font());
-	energyCountText.setFillColor(Color::Black);
-	energyCountText.setOutlineColor(Color::Yellow);
-	energyCountText.setOutlineThickness(2);
-	energyCountText.setCharacterSize(34);
+	moneyCountText.setFont(GlobalVariables::Instance().font());
+	moneyCountText.setFillColor(Color::Black);
+	moneyCountText.setOutlineColor(Color::Yellow);
+	moneyCountText.setOutlineThickness(2);
+	moneyCountText.setCharacterSize(34);
 
 	lifeCountText.setFont(GlobalVariables::Instance().font());
 	lifeCountText.setFillColor(Color::Black);
 	lifeCountText.setOutlineColor(Color::Yellow);
 	lifeCountText.setOutlineThickness(2);
 	lifeCountText.setCharacterSize(34);
+
+	energyCountText.setFont(GlobalVariables::Instance().font());
+	energyCountText.setFillColor(Color::Black);
+	energyCountText.setOutlineColor(Color::Yellow);
+	energyCountText.setOutlineThickness(2);
+	energyCountText.setCharacterSize(34);
 
 	sellRect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::SELL_TEXTURE));
 	sellRect.setFillColor(Color::Cyan);
@@ -45,8 +51,8 @@ GamePanel::GamePanel() :
 	abilityFreezeBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_FREEZE_BOMB));
 	abilityFreezeBombSprite.setScale(Settings::Instance().getScaleFactor());
 
-	abilityCarpetBombingSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_CARPET_BOMBING));
-	abilityCarpetBombingSprite.setScale(Settings::Instance().getScaleFactor());
+	abilityVenomSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_CARPET_BOMBING));
+	abilityVenomSprite.setScale(Settings::Instance().getScaleFactor());
 
 	abilityIncreaseTowerDamageSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_INCREASE_TOWER_DAMAGE));
 	abilityIncreaseTowerDamageSprite.setScale(Settings::Instance().getScaleFactor());
@@ -104,14 +110,12 @@ void GamePanel::draw(RenderTarget * const target)
 	pos = updatePos(pos);
 
 	//draw minimap
-	Sprite miniMapSprite;
-	rTexture.setView(*Engine::Instance().camera()->getMiniMapView());
-	rTexture.create(static_cast<unsigned int>(Settings::Instance().getResolution().x),
-					static_cast<unsigned int>(Settings::Instance().getResolution().y));
+
 	rTexture.clear(Color::Transparent);
 	Engine::Instance().level()->drawLevel(&rTexture);
 	rTexture.display();
 
+	Sprite miniMapSprite;
 	miniMapSprite.setTexture(rTexture.getTexture());
 	miniMapSprite.scale(Settings::Instance().gameScale() * 0.3f, Settings::Instance().gameScale() * 0.3f);
 	miniMapSprite.setPosition(pos);
@@ -119,15 +123,20 @@ void GamePanel::draw(RenderTarget * const target)
 	//draw
 	target->draw(m_sprite);
 
-	target->draw(energyCountText);
+	target->draw(moneyCountText);
 	target->draw(lifeCountText);
+	target->draw(energyCountText);
+
+	updateEnaleAbilities();
 
 	target->draw(abilityBombSprite);
 	target->draw(abilityFreezeBombSprite);
-	target->draw(abilityCarpetBombingSprite);
+	target->draw(abilityVenomSprite);
 	target->draw(abilityIncreaseTowerDamageSprite);
 	target->draw(abilityIncreaseTowerAttackSpeedSprite);
 	target->draw(abilityTimeStopSprite);
+
+	updateEnableTowers();
 
 	target->draw(towerBaseSprite);
 	target->draw(towerLaserSprite);
@@ -149,10 +158,12 @@ void GamePanel::draw(RenderTarget * const target)
 
 void GamePanel::update()
 {
-	const int energy = static_cast<int>(Engine::Instance().level()->getEnergyCount());
+	const int money = static_cast<int>(Engine::Instance().level()->getMoneyCount());
 	const int life = static_cast<int>(Engine::Instance().level()->getLifeCount());
-	energyCountText.setString(String(to_string(energy)));
+	const int energy = static_cast<int>(Engine::Instance().level()->getEnergyCount());
+	moneyCountText.setString(String(to_string(money)));
 	lifeCountText.setString(String(to_string(life)));
+	energyCountText.setString(String(to_string(energy)));
 
 	const float progressValue = static_cast<float>(Engine::Instance().level()->currentProgress()) / m_progressMax;
 	progress->setValue(progressValue);
@@ -196,7 +207,7 @@ ACTION_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
 	if (abilityTimeStopSprite.getGlobalBounds().contains(center))
 		return ACTION_STATE::ABILITY_UNKNOWN;
 
-	if (abilityCarpetBombingSprite.getGlobalBounds().contains(center))
+	if (abilityVenomSprite.getGlobalBounds().contains(center))
 		return ACTION_STATE::ABILITY_VENOM;
 
 	if (abilityIncreaseTowerDamageSprite.getGlobalBounds().contains(center))
@@ -262,11 +273,14 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	pos.y += icons_space;
 	pos.x += panel_offset;
 	pos.x += label_offset;
-	energyCountText.setPosition(pos);
+	moneyCountText.setPosition(pos);
 
-	pos.y += energyCountText.getGlobalBounds().height;
+	pos.y += moneyCountText.getGlobalBounds().height;
 	lifeCountText.setPosition(pos);
-	pos.y -= energyCountText.getGlobalBounds().height;
+	pos.y += moneyCountText.getGlobalBounds().height;
+	energyCountText.setPosition(pos);
+	pos.y -= 2 * moneyCountText.getGlobalBounds().height;
+
 	pos.x -= label_offset;
 
 	pos.x += info_offset;
@@ -318,10 +332,6 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	pos.y += icons_space;
 
 	//abilities
-	abilityIncreaseTowerAttackSpeedSprite.setPosition(pos);
-	pos.x += icons_space;
-	pos.x += iconSize.x;
-
 	abilityBombSprite.setPosition(pos);
 	pos.x += icons_space;
 	pos.x += iconSize.x;
@@ -330,11 +340,15 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	pos.x += icons_space;
 	pos.x += iconSize.x;
 
-	abilityCarpetBombingSprite.setPosition(pos);
+	abilityVenomSprite.setPosition(pos);
 	pos.x += icons_space;
 	pos.x += iconSize.x;
 
 	abilityIncreaseTowerDamageSprite.setPosition(pos);
+	pos.x += icons_space;
+	pos.x += iconSize.x;
+
+	abilityIncreaseTowerAttackSpeedSprite.setPosition(pos);
 	pos.x += icons_space;
 	pos.x += iconSize.x;
 
@@ -352,9 +366,105 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	return pos;
 }
 
+void GamePanel::updateEnableTowers()
+{
+	const float money = Engine::Instance().level()->getMoneyCount();
+
+	float cost = TowersFactory::getTowerStats(TOWER_TYPES::BASE).cost;
+	if (money < cost)
+		towerBaseSprite.setColor(GlobalVariables::GrayColor);
+	else
+		towerBaseSprite.setColor(Color::White);
+
+	cost = TowersFactory::getTowerStats(TOWER_TYPES::LASER).cost;
+	if (money < cost)
+		towerLaserSprite.setColor(GlobalVariables::GrayColor);
+	else
+		towerLaserSprite.setColor(Color::White);
+
+	cost = TowersFactory::getTowerStats(TOWER_TYPES::FREEZE).cost;
+	if (money < cost)
+		towerFreezeSprite.setColor(GlobalVariables::GrayColor);
+	else
+		towerFreezeSprite.setColor(Color::White);
+
+	cost = TowersFactory::getTowerStats(TOWER_TYPES::ROCKET).cost;
+	if (money < cost)
+		towerRocketSprite.setColor(GlobalVariables::GrayColor);
+	else
+		towerRocketSprite.setColor(Color::White);
+
+	cost = TowersFactory::getTowerStats(TOWER_TYPES::ROCKET).cost;
+	if (money < cost)
+		towerRocketSprite.setColor(GlobalVariables::GrayColor);
+	else
+		towerRocketSprite.setColor(Color::White);
+
+	cost = TowersFactory::getTowerStats(TOWER_TYPES::POWER).cost;
+	if (money < cost)
+		towerPowerSprite.setColor(GlobalVariables::GrayColor);
+	else
+		towerPowerSprite.setColor(Color::White);
+
+	cost = TowersFactory::getTowerStats(TOWER_TYPES::IMPROVED).cost;
+	if (money < cost)
+		towerImprovedSprite.setColor(GlobalVariables::GrayColor);
+	else
+		towerImprovedSprite.setColor(Color::White);
+}
+
+void GamePanel::updateEnaleAbilities()
+{
+	const float energy = Engine::Instance().level()->getEnergyCount();
+
+	float cost = Level::BOMB_ABILITY_COST;
+	if (energy < cost)
+		abilityBombSprite.setColor(GlobalVariables::GrayColor);
+	else
+		abilityBombSprite.setColor(Color::White);
+
+	cost = Level::FREEZE_BOMB_ABILITY_COST;
+	if (energy < cost)
+		abilityFreezeBombSprite.setColor(GlobalVariables::GrayColor);
+	else
+		abilityFreezeBombSprite.setColor(Color::White);
+
+	cost = Level::VENOM_ABILITY_COST;
+	if (energy < cost)
+		abilityVenomSprite.setColor(GlobalVariables::GrayColor);
+	else
+		abilityVenomSprite.setColor(Color::White);
+
+	cost = Level::INC_TOWER_DMG_ABILITY_COST;
+	if (energy < cost)
+		abilityIncreaseTowerDamageSprite.setColor(GlobalVariables::GrayColor);
+	else
+		abilityIncreaseTowerDamageSprite.setColor(Color::White);
+
+	cost = Level::INC_TOWER_AS_ABILITY_COST;
+	if (energy < cost)
+		abilityIncreaseTowerAttackSpeedSprite.setColor(GlobalVariables::GrayColor);
+	else
+		abilityIncreaseTowerAttackSpeedSprite.setColor(Color::White);
+
+	cost = 10000;
+	if (energy < cost)
+		abilityTimeStopSprite.setColor(GlobalVariables::GrayColor);
+	else
+		abilityTimeStopSprite.setColor(Color::White);
+}
+
 void GamePanel::setProgressMax(int progressMax)
 {
 	m_progressMax = progressMax;
+}
+
+void GamePanel::init()
+{
+	rTexture.setView(*Engine::Instance().camera()->getMiniMapView());
+	rTexture.create(static_cast<unsigned int>(Settings::Instance().getResolution().x),
+					static_cast<unsigned int>(Settings::Instance().getResolution().y));
+
 }
 
 float GamePanel::getBottomValue() const

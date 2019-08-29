@@ -14,16 +14,16 @@ public:
 	void update() override;
 
 	void setTextureId(const RESOURCES::TEXTURE_TYPE& texture_id);
-protected:
-	bool loop;
 	int frameCount;
 	int currentFrame;
 	int animationSpeed;
 	int row;
-	function<void(Animation *)> callback;
-
-	Sprite sprite;
 	Vector2i size;
+	function<void(Animation *)> callback;
+	Sprite sprite;
+protected:
+	bool loop;
+
 
 	Transform transform;
 
@@ -36,31 +36,4 @@ private:
 	Shader *shader;
 };
 
-/*
-class Effects : public GameDrawable
-{
-public:
-	Effects();
-	static Effects &Instance();
-
-	void showAnimation(const RESOURCES::TEXTURE_TYPE &texture_id,
-					   const Vector2f& pos,
-					   const Vector2i& size,
-					   int duration,
-					   int frameCount,
-					   int row = 0);
-
-	void draw(RenderTarget *const target) override;
-	void update() override;
-
-	void removeAnimation(Animation *animation);
-
-	void moveAnimnations(float dy);
-
-private:
-	vector<Animation*> animations;
-//TODO singleton
-	Int64 lastTime;
-};
-*/
 #endif // EFFECTS_H

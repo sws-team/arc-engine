@@ -25,6 +25,7 @@ private:
 		bool completed;
 		int activeStars;
 		vector<RectangleShape> stars; //5
+		bool enabled;
 	};
 	vector<MissionView> missions;
 

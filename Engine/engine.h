@@ -55,7 +55,7 @@ public:
 	void save();
 	void load();
 
-	static float getStartEnergy(const unsigned int n);
+	static float getStartMoney(const unsigned int n);
 
 	void setMissionFinished(unsigned int n, unsigned int rating);
 
@@ -63,8 +63,13 @@ public:
 	{
 		unsigned int number;
 		unsigned int stars;
+		bool operator==(const CompletedMission& other)
+		{
+			return number == other.number;
+		}
 	};
 	vector<CompletedMission> getCompletedMissions() const;
+	unsigned int maxCompletedLevel() const;
 
 private:
 	Engine();

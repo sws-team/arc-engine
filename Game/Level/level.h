@@ -4,11 +4,13 @@
 #include "stdheader.h"
 #include "Game/gamedrawable.h"
 #include "Game/leveldef.h"
+#include "ResourcesManager/textures_types.h"
 
 class Enemy;
 class GamePanel;
 class Tile;
 class Tower;
+class Animation;
 
 class Level : public GameDrawable
 {
@@ -19,9 +21,8 @@ public:
 	void draw(RenderTarget * const target) override;
 	void update() override;
 
-	Vector2f getCenter() const;
-
 	void startMission(const unsigned int n);
+	void clear();
 
 	void action();
 	void change();
@@ -43,8 +44,9 @@ public:
 
 	int getTileDirectionByCell(const Vector2i &cell) const;
 
-	float getEnergyCount() const;
+	float getMoneyCount() const;
 	float getLifeCount() const;
+	float getEnergyCount() const;
 	Tower *getTowerAtPos(const Vector2f& pos) const;
 
 	bool canAddTower(const Vector2i& cell, TOWER_TYPES towerType) const;
@@ -65,6 +67,20 @@ public:
 	int currentProgress() const;
 
 	vector<Enemy *> getAllEnemies() const;
+
+	static const int VENOM_ABILITY_COST;
+	static const int BOMB_ABILITY_COST;
+	static const int FREEZE_BOMB_ABILITY_COST;
+	static const int INC_TOWER_AS_ABILITY_COST;
+	static const int INC_TOWER_DMG_ABILITY_COST;
+
+	void addAnimation(const RESOURCES::TEXTURE_TYPE& texture_id,
+					  const Vector2f &pos,
+					  const Vector2i &size,
+					  int duration,
+					  int frameCount,
+					  int row);
+	void removeAnimation(Animation *animation);
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();
@@ -87,34 +103,9 @@ private:
 
 	ACTION_STATE m_actionState;
 
-//	union StateOptions
-//	{
-//		struct AddTower
-//		{
-
-//		};
-
-//		struct CarpetBombing
-//		{
-
-//		};
-//		struct Bomb
-//		{
-
-//		};
-//		struct FreezeBomb
-//		{
-
-//		};
-
-//		AddTower addTower;
-//		CarpetBombing carpetBombing;
-//		Bomb bomb;
-//		FreezeBomb freezeBomb;
-//	};
-
 	//player data
 	float life;
+	float money;
 	float energy;
 
 
@@ -153,6 +144,13 @@ private:
 
 	static const int INCREASE_ATTACK_SPEED_ABILITY_VALUE;
 	static const int INCREASE_ATTACK_SPEED_ABILITY_DURATION;
+
+	Timer timerRegenEnergy;
+	static const int REGEN_ENERGY_TIMEOUT;
+	static const int REGEN_ENERGY_VALUE;
+	static const float BOMB_ABILITY_DAMAGE;
+
+	vector<Animation*> effects;
 };
 
 #endif // LEVEL_H

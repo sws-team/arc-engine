@@ -17,11 +17,11 @@ Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, con
 	,m_stats(stats)
 	,m_selected(false)
 {
-	radius.setRadius(m_stats.radius * GlobalVariables::Instance().mapTileSize().x);
+	radius.setRadius(m_stats.radius * GlobalVariables::Instance().tileSize().x);
 	radius.setFillColor(Color(34, 255, 56, 120));
 	radius.setPosition(pos);
-	radius.setOrigin(radius.getRadius() - GlobalVariables::Instance().mapTileSize().x,
-					 radius.getRadius() - GlobalVariables::Instance().mapTileSize().y);
+	radius.setOrigin(radius.getRadius() - GlobalVariables::Instance().tileSize().x,
+					 radius.getRadius() - GlobalVariables::Instance().tileSize().y);
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
 	abilityDamage.isActive = false;
 	abilityAttackSpeed.isActive = false;
@@ -64,7 +64,7 @@ void Tower::action(const vector<Enemy *> &enemies)
 	const Vector2f aPos = getCenter();
 	for(Enemy *enemy : enemies)
 	{
-		if (TowersFactory::isIntersects(enemy->gameRect(), aPos, m_stats.radius * GlobalVariables::Instance().mapTileSize().x))
+		if (TowersFactory::isIntersects(enemy->gameRect(), aPos, m_stats.radius * GlobalVariables::Instance().tileSize().x))
 		{
 			const float x = fabs(enemy->enemyPos().x - this->getCenter().x);
 			const float y = fabs(enemy->enemyPos().y - this->getCenter().y);
@@ -245,13 +245,13 @@ PowerTower::PowerTower(const Vector2f &pos)
 	: Tower(RESOURCES::TOWER_POWER, pos, STATS)
 	,m_isHighlighted(false)
 {
-	powerRadius.setRadius(STATS.radius * GlobalVariables::Instance().mapTileSize().x);
+	powerRadius.setRadius(STATS.radius * GlobalVariables::Instance().tileSize().x);
 	powerRadius.setFillColor(Color::Transparent);
 	powerRadius.setOutlineColor(Color(23, 200, 124));
 	powerRadius.setOutlineThickness(3);
 	powerRadius.setPosition(pos);
-	powerRadius.setOrigin(powerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().x/2,
-						  powerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().y/2);
+	powerRadius.setOrigin(powerRadius.getRadius() - GlobalVariables::Instance().tileSize().x/2,
+						  powerRadius.getRadius() - GlobalVariables::Instance().tileSize().y/2);
 	m_gain = ENERGY_GAIN;
 }
 
@@ -489,4 +489,5 @@ vector<Projectile *> ProjectilesTower::projectiles() const
 void ProjectilesTower::projectileAction(Enemy *enemy)
 {
 	enemy->hit(m_stats.damage);
+	Engine::Instance().level()->addAnimation(RESOURCES::EXPLOSION_EFFECT, enemy->pos(), Vector2i(64, 64), 100, 16, 0);
 }

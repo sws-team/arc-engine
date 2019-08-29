@@ -313,6 +313,7 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 	default:
 		break;
 	}
+	stats.speed *= 5;
 	Enemy *enemy = new Enemy(texture_id, startPos, stats);
 	return enemy;
 }

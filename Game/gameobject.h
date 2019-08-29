@@ -3,7 +3,7 @@
 
 #include "stdheader.h"
 #include "gamedrawable.h"
-#include "effects.h"
+#include "animation.h"
 
 class GameObject : public Animation
 {

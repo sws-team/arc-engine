@@ -15,6 +15,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 	const float left = Settings::Instance().getResolution().x * 0.3f;
 	float x = left;
 	float y = Settings::Instance().getResolution().y * 0.1f;
+	const unsigned int maxCompletedLevel = Engine::Instance().maxCompletedLevel();
 
 	for (unsigned int i = 0; i < Engine::Instance().missionsCount(); ++i)
 	{
@@ -27,7 +28,14 @@ ChooseMissionWindow::ChooseMissionWindow()
 		MissionView mission;
 		mission.rect.setPosition(x, y);
 		mission.rect.setSize(Vector2f(160, 160));
-		mission.rect.setFillColor(Color::Red);
+		mission.enabled = false;
+		if (i <= maxCompletedLevel + 1)
+			mission.enabled = true;
+		if (mission.enabled)
+			mission.rect.setFillColor(Color::Red);
+		else
+			mission.rect.setFillColor(GlobalVariables::GrayColor);
+
 		unsigned int rating = getRating(i);
 		float posX = x;
 		for (unsigned int j = 0; j < STARS_COUNT; ++j)

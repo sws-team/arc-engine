@@ -35,18 +35,21 @@ public:
 
 	void setProgressMax(int progressMax);
 
+	void init();
+
 private:
 	Sprite m_sprite;
 	RenderTexture rTexture;
-	Text energyCountText;
+	Text moneyCountText;
 	Text lifeCountText;
+	Text energyCountText;
 
 	RectangleShape sellRect;
 	RectangleShape upgradeRect;
 
 	Sprite abilityBombSprite;
 	Sprite abilityFreezeBombSprite;
-	Sprite abilityCarpetBombingSprite;
+	Sprite abilityVenomSprite;
 	Sprite abilityIncreaseTowerDamageSprite;
 	Sprite abilityIncreaseTowerAttackSpeedSprite;
 	Sprite abilityTimeStopSprite;
@@ -70,6 +73,9 @@ private:
 
 	class LifeBar *progress;
 	int m_progressMax;
+
+	void updateEnableTowers();
+	void updateEnaleAbilities();
 };
 
 #endif // GAMEPANEL_H

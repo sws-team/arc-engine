@@ -1,13 +1,13 @@
 HEADERS += \
+    $$PWD/animation.h \
     $$PWD/gameobject.h \
-    $$PWD/effects.h \
     $$PWD/gamedrawable.h \
     $$PWD/gamepanel.h \
     $$PWD/leveldef.h
 
 SOURCES += \
+    $$PWD/animation.cpp \
     $$PWD/gameobject.cpp \
-    $$PWD/effects.cpp \
     $$PWD/gamepanel.cpp
 
 include($$PWD/Audio/Audio.pri)

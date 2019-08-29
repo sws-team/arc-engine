@@ -107,7 +107,7 @@ void Engine::load()
 	}
 }
 
-float Engine::getStartEnergy(const unsigned int n)
+float Engine::getStartMoney(const unsigned int n)
 {
 	switch (n)
 	{
@@ -150,12 +150,26 @@ void Engine::setMissionFinished(unsigned int n, unsigned int rating)
 	CompletedMission completedMission;
 	completedMission.number = n;
 	completedMission.stars = rating;
-	m_save.push_back(completedMission);
+	if (find(m_save.begin(), m_save.end(), completedMission) == m_save.end())
+		m_save.push_back(completedMission);
+	else
+		m_save[n].stars = rating;
 }
 
 vector<Engine::CompletedMission> Engine::getCompletedMissions() const
 {
 	return m_save;
+}
+
+unsigned int Engine::maxCompletedLevel() const
+{
+	unsigned int max = 0;
+	for(const CompletedMission& completedMission : m_save)
+	{
+		if (completedMission.number > max)
+			max = completedMission.number;
+	}
+	return max;
 }
 
 Camera *Engine::camera() const
