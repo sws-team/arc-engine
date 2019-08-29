@@ -249,7 +249,7 @@ void Cursor::updateCell()
 		break;
 	case TOWER:
 	{
-		const bool canCreate = Engine::Instance().level()->canAddTower(Engine::Instance().camera()->posToCell(Engine::Instance().camera()->cellToPos(m_cell)), towerType);
+		const bool canCreate = Engine::Instance().level()->canAddTower(Engine::Instance().camera()->posToCellMap(Engine::Instance().camera()->cellToPos(m_cell)), towerType);
 		towerRadius.setFillColor(canCreate ? Color(0, 255, 0, 100) : Color(255, 0, 0, 100));
 	}
 		break;
@@ -259,7 +259,7 @@ void Cursor::updateCell()
 								  GlobalVariables::Instance().tileSize().y * cell.y);
 
 	setPos(pos);
-//	sprite.setOrigin(GlobalVariables::Instance().tileSize());
+//	sprite.setOrigin(GlobalVariables::Instance().mapTileSize());
 	towerSprite.setPosition(pos);
 	abilityRect.setPosition(pos);
 	towerRadius.setPosition(pos);
