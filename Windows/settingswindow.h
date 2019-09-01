@@ -3,41 +3,43 @@
 
 #include "statewindow.h"
 
+class ValueScale;
+class CheckBox;
+class Button;
+class ChooseList;
+
 class SettingsWindow : public StateWindow
 {
 public:
     SettingsWindow();
+	~SettingsWindow() override;
 
-//	void init() override;
 	void paint(RenderWindow *window) override;
 	void eventFilter(Event* event) override;
-//	void update() override;
 	void back() override;
 
-    Vector2i getResolution() const;
-    int getSoundLevel() const;
-    int getMusicLevel() const;
-    bool getFullscreen() const;
 private:
-    shared_ptr<tgui::Label> lbl_sound;
-    shared_ptr<tgui::Slider> slider_sound;
 
-    shared_ptr<tgui::Label> lbl_music;
-    shared_ptr<tgui::Slider> slider_music;
-
-    shared_ptr<tgui::Label> lbl_resolution;
-    shared_ptr<tgui::ComboBox> cmb_resolution;
-    shared_ptr<tgui::CheckBox> cbx_fullscreen;
-
-
-	shared_ptr<tgui::ComboBox> cmb_language;
-	shared_ptr<tgui::Button> button_ok;
-
-    static const map<String, Vector2i> resolutions;
-
-	tgui::Gui *gui;
+	static const map<String, Vector2i> resolutionsMap;
 
 	void accept();
+
+	Text *lbl_sound;
+	ValueScale *soundScale;
+
+	Text *lbl_music;
+	ValueScale *musicScale;
+
+	Text *lbl_fullscreen;
+	CheckBox *cbx_fullscreen;
+
+	Text *lbl_resolution;
+	ChooseList *resolutions;
+
+	Text *lbl_language;
+	ChooseList *languages;
+
+	Button *button_accept;
 };
 
 #endif // SETTINGSWINDOW_H

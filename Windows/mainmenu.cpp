@@ -11,6 +11,7 @@ MainMenu::MainMenu()
 	currentMenu = static_cast<MENUS>(PLAY);
 
 	addItem(Language::Instance().translate(Language::PLAY));
+//	addItem("Survival mode");
 	addItem(Language::Instance().translate(Language::OPTIONS));
 	addItem(Language::Instance().translate(Language::CREDITS));
 	addItem(Language::Instance().translate(Language::EXIT));

@@ -19,12 +19,12 @@ Settings::Settings():
 	resolution = defaultResolution;
 }
 
-int Settings::getMusicLevel() const
+float Settings::getMusicLevel() const
 {
     return musicLevel;
 }
 
-void Settings::setMusicLevel(int value)
+void Settings::setMusicLevel(float value)
 {
 	musicLevel = value;
 }
@@ -78,12 +78,12 @@ void Settings::setFullscreen(bool value)
     fullscreen = value;
 }
 
-int Settings::getSoundLevel() const
+float Settings::getSoundLevel() const
 {
     return soundLevel;
 }
 
-void Settings::setSoundLevel(int value)
+void Settings::setSoundLevel(float value)
 {
     soundLevel = value;
 }

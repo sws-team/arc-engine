@@ -3,10 +3,13 @@
 #include "Game/Audio/soundcontroller.h"
 #include "Translations/language.h"
 #include "Engine/engine.h"
+#include "Widgets/valuescale.h"
+#include "Widgets/checkbox.h"
+#include "Widgets/button.h"
+#include "Widgets/chooselist.h"
+#include "globalvariables.h"
 
-#include <TGUI/TGUI.hpp>
-
-const map<String, Vector2i> SettingsWindow::resolutions = {
+const map<String, Vector2i> SettingsWindow::resolutionsMap = {
     {"1920x1080", Vector2i(1920, 1080)},
     {"1440x900", Vector2i(1440, 900)},
 	{"1280x1024", Vector2i(1280, 1024)},
@@ -20,98 +23,160 @@ SettingsWindow::SettingsWindow()
 {
 	setBackground(RESOURCES::SETTINGS_BACKGROUND);
 
-	gui = new tgui::Gui();
-
     const int startPosX = 50;
     int posX = startPosX;
     int posY = 100;
 
-    lbl_sound = tgui::Label::create("Sound");
+	lbl_sound = new Text();
+	lbl_sound->setFont(GlobalVariables::Instance().font());
+	lbl_sound->setCharacterSize(24);
+	lbl_sound->setString("Sound");
     lbl_sound->setPosition(posX, posY);
-    gui->add(lbl_sound);
-    posX += 200;
-    slider_sound = tgui::Slider::create(0, 100);
-    slider_sound->setPosition(posX, posY);
-    gui->add(slider_sound);
+
+	posX += 100;
+
+	soundScale = new ValueScale();
+	soundScale->setSize(Vector2f(100, -20));
+	soundScale->setPos(posX, posY);
+	soundScale->setValue(34);
 
     posY += 100;
+	posX = startPosX;
 
-    posX = startPosX;
-    lbl_music = tgui::Label::create("Music");
+	lbl_music = new Text();
+	lbl_music->setFont(GlobalVariables::Instance().font());
+	lbl_music->setCharacterSize(24);
+	lbl_music->setString("Music");
     lbl_music->setPosition(posX, posY);
-    gui->add(lbl_music);
-    posX += 200;
-    slider_music = tgui::Slider::create(0, 100);
-    slider_music->setPosition(posX, posY);
-    gui->add(slider_music);
+
+	posX += 100;
+
+	musicScale = new ValueScale();
+	musicScale->setSize(Vector2f(100, -20));
+	musicScale->setPos(posX, posY);
+	musicScale->setValue(34);
 
     posX = startPosX;
     posY += 100;
 
-    cbx_fullscreen = tgui::CheckBox::create("FullScreen");
-    cbx_fullscreen->setPosition(posX, posY);
-    gui->add(cbx_fullscreen);
+	lbl_fullscreen = new Text();
+	lbl_fullscreen->setFont(GlobalVariables::Instance().font());
+	lbl_fullscreen->setCharacterSize(24);
+	lbl_fullscreen->setString("Fullscreen");
+	lbl_fullscreen->setPosition(posX, posY);
+
+	posX += 100;
+
+	cbx_fullscreen = new CheckBox();
+	cbx_fullscreen->setSize(Vector2f(32, 32));
+	cbx_fullscreen->setPos(posX, posY);
 
     posX = startPosX;
     posY += 100;
 
-    lbl_resolution = tgui::Label::create("Resolution");
-    lbl_resolution->setPosition(posX, posY);
-    gui->add(lbl_resolution);
-    posX += 200;
-    cmb_resolution = tgui::ComboBox::create();
-    cmb_resolution->setPosition(posX, posY);
-    String currentResolution;
-    for (auto it = resolutions.begin(); it != resolutions.end(); ++it)
-    {
-        if (it->second == Settings::Instance().getResolution())
-            currentResolution = it->first;
-        cmb_resolution->addItem(it->first);
-    }
-    cmb_resolution->setSelectedItem(currentResolution);
-    gui->add(cmb_resolution);
+	lbl_resolution = new Text();
+	lbl_resolution->setFont(GlobalVariables::Instance().font());
+	lbl_resolution->setCharacterSize(24);
+	lbl_resolution->setString("Resolution");
+	lbl_resolution->setPosition(posX, posY);
+
+	posX += 100;
+
+	resolutions = new ChooseList();
+	resolutions->setPos(posX, posY);
+	resolutions->setSize(96, 32);
+
+	String currentResolution;
+	for (auto it = resolutionsMap.begin(); it != resolutionsMap.end(); ++it)
+	{
+		if (it->second == Settings::Instance().getResolution())
+			currentResolution = it->first;
+		resolutions->addItem(it->first);
+	}
+	resolutions->update();
 
     posX = startPosX;
     posY += 100;
 
-	cmb_language = tgui::ComboBox::create();
-	cmb_language->setPosition(posX, posY);
+	lbl_language = new Text();
+	lbl_language->setFont(GlobalVariables::Instance().font());
+	lbl_language->setCharacterSize(24);
+	lbl_language->setString("Language");
+	lbl_language->setPosition(posX, posY);
 
-	const vector<pair<wstring, string> > languanges = Language::Instance().getAvaliableLanguages();
-	for(const pair<wstring, string>& lang : languanges)
-		cmb_language->addItem(lang.first, lang.second);
-	cmb_language->setSelectedItem(Language::Instance().getCurrentLanguageName());
-	gui->add(cmb_language);
+	posX += 200;
+
+	languages = new ChooseList();
+	languages->setPos(posX, posY);
+	languages->setSize(96, 32);
+
+	const vector<wstring> languanges = Language::Instance().getAvaliableLanguageNames();
+	for(const wstring& langName : languanges)
+		languages->addItem(langName);
+
+	languages->update();
 
 	posX = startPosX;
 	posY += 100;
 
-	button_ok = tgui::Button::create();
-	button_ok->setPosition(posX, posY);
-	button_ok->setText("accept");
-	button_ok->connect("pressed", [&]()
-	{
-		this->accept();
-	});
-	gui->add(button_ok);
-    //=========================SET UP========================
+	button_accept = new Button();
+	button_accept->setSize(Vector2f(64, 32));
+	button_accept->setPos(posX, posY);
+	button_accept->setCallback(bind(&SettingsWindow::accept, this));
+	button_accept->setText("Accept");
 
-    if(Settings::Instance().getFullscreen())
-        cbx_fullscreen->check();
-    slider_sound->setValue(Settings::Instance().getSoundLevel());
-	slider_music->setValue(Settings::Instance().getMusicLevel());
+	cbx_fullscreen->setChecked(Settings::Instance().getFullscreen());
+	soundScale->setValue(Settings::Instance().getSoundLevel());
+	musicScale->setValue(Settings::Instance().getMusicLevel());
+	resolutions->setCurrent(currentResolution);
+	languages->setCurrent(Language::Instance().getCurrentLanguageName());
+}
+
+SettingsWindow::~SettingsWindow()
+{
+	delete lbl_sound;
+	delete soundScale;
+	delete lbl_music;
+	delete musicScale;
+	delete lbl_fullscreen;
+	delete cbx_fullscreen;
+	delete lbl_resolution;
+	delete resolutions;
+	delete lbl_language;
+	delete languages;
+	delete button_accept;
 }
 
 void SettingsWindow::paint(RenderWindow *window)
 {
-	gui->setWindow(*window);
 	drawBackground(window);
-	gui->draw();
+
+	window->draw(*lbl_sound);
+	soundScale->draw(window);
+
+	window->draw(*lbl_music);
+	musicScale->draw(window);
+
+	window->draw(*lbl_fullscreen);
+	cbx_fullscreen->draw(window);
+
+	window->draw(*lbl_resolution);
+	resolutions->draw(window);
+
+	window->draw(*lbl_language);
+	languages->draw(window);
+
+	button_accept->draw(window);
 }
 
 void SettingsWindow::eventFilter(Event *event)
 {
-	gui->handleEvent(*event);
+	soundScale->event(event);
+	musicScale->event(event);
+	cbx_fullscreen->event(event);
+	resolutions->event(event);
+	languages->event(event);
+	button_accept->event(event);
 	StateWindow::eventFilter(event);
 }
 
@@ -120,39 +185,21 @@ void SettingsWindow::back()
 	Engine::Instance().setState(Engine::MAIN_MENU);
 }
 
-Vector2i SettingsWindow::getResolution() const
-{
-    return resolutions.at(cmb_resolution->getSelectedItem());
-}
-
-int SettingsWindow::getSoundLevel() const
-{
-    return slider_sound->getValue();
-}
-
-int SettingsWindow::getMusicLevel() const
-{
-    return slider_music->getValue();
-}
-
-bool SettingsWindow::getFullscreen() const
-{
-	return cbx_fullscreen->isChecked();
-}
-
 void SettingsWindow::accept()
 {
-	if (Settings::Instance().getFullscreen() != this->getFullscreen() ||
-		   Settings::Instance().getResolution() != this->getResolution() )
+	const bool fullscreen = cbx_fullscreen->isChecked();
+	const Vector2i resolution = resolutionsMap.at(resolutions->currentText());
+	if (Settings::Instance().getFullscreen() != fullscreen ||
+		   Settings::Instance().getResolution() != resolution )
 	{
-		Settings::Instance().setResolution(this->getResolution());
-		Settings::Instance().setFullscreen(this->getFullscreen());
+		Settings::Instance().setResolution(resolution);
+		Settings::Instance().setFullscreen(fullscreen);
 	}
-	Settings::Instance().setSoundLevel(this->getSoundLevel());
-	Settings::Instance().setMusicLevel(this->getMusicLevel());
+	Settings::Instance().setSoundLevel(soundScale->value());
+	Settings::Instance().setMusicLevel(musicScale->value());
 	SoundController::Instance().updateVolume();
 
-	Language::Instance().setCurrentLanguage(cmb_language->getSelectedItemId());
+	Language::Instance().setCurrentLanguageByName(languages->currentText());
 	Engine::Instance().setState(Engine::MAIN_MENU);
 
 	Settings::Instance().updateWindow();

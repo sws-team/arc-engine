@@ -9,9 +9,7 @@
 #include <vector>
 #include <map>
 #include <list>
-
-//#include "json/json.h"
-#include "TGUI/TGUI.hpp"
+#include <functional>
 
 using namespace std;
 using namespace sf;

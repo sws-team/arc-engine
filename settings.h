@@ -14,14 +14,14 @@ public:
 	constexpr static float GAME_SCALE = 0.85f;
 	float gameScale() const;
 
-    int getSoundLevel() const;
-    void setSoundLevel(int value);
+	float getSoundLevel() const;
+	void setSoundLevel(float value);
 
     bool getFullscreen() const;
     void setFullscreen(bool value);
 
-    int getMusicLevel() const;
-    void setMusicLevel(int value);
+	float getMusicLevel() const;
+	void setMusicLevel(float value);
 
 	Vector2f getScaleFactor() const;	
 	Vector2f getOriginalScaleFactor() const;
@@ -38,8 +38,8 @@ private:
     Settings& operator= (Settings const&) = delete;
 
     Vector2i resolution;
-    int soundLevel;
-    int musicLevel;
+	float soundLevel;
+	float musicLevel;
     bool fullscreen;
 
 	RenderWindow *mainWindow;

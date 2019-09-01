@@ -3,6 +3,7 @@
 
 #include "stdheader.h"
 #include "controlsettings.h"
+#include <sstream>
 
 class GlobalVariables
 {

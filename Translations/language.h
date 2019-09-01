@@ -11,38 +11,29 @@ public:
 	enum TR_TEXT
 	{
 		LANGUAGE_NAME,
+
+		//menu
 		PLAY,
 		OPTIONS,
 		CREDITS,
 		EXIT,
 
-		DAMAGE,
-		ATTACK_SPEED,
-		CRIT_CHANCE,
-		CRIT_DAMAGE,
-		REFLECTION,
-		HEALTH,
-		ENERGY,
-		SHIELD,
-		ABILITY_COST,
-
-		PLAYERS,
-		STATS,
-		WEAPONS,
-		ARTIFACTS,
-		INFORMATION,
-		GEARS,
-		POINTS,
-		CHARACTERS,
-		SPACESHIP,
-
+		//settings
+		SOUND,
+		MUSIC,
+		FULLSCREEN,
+		RESOLUTION,
+		LANGUAGE,
+		ACCEPT,
+		CANCEL,
 	};
 
 	wstring translate(TR_TEXT id) const;
 	wstring translate(int id) const;
 
-	vector<pair<wstring, string> > getAvaliableLanguages() const;
+	vector<wstring> getAvaliableLanguageNames() const;
 	void setCurrentLanguage(const string& lang);
+	void setCurrentLanguageByName(const wstring& name);
 	wstring getCurrentLanguageName() const;
 	void load();
 

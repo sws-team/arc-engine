@@ -1,3 +1,5 @@
+include($$PWD/Widgets/Widgets.pri)
+
 HEADERS += \
     $$PWD/choosemissionwindow.h \
     $$PWD/settingswindow.h \

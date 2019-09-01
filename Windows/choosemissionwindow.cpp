@@ -92,7 +92,25 @@ void ChooseMissionWindow::eventFilter(Event *event)
 //				  << mission.getGlobalBounds().height << " " << endl<<endl;
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 			if (missions.at(mission).rect.getGlobalBounds().contains(event->mouseButton.x, event->mouseButton.y))
-				accept(mission);
+			{
+				if (missions.at(mission).enabled)
+					accept(mission);
+			}
+	}
+	if (event->type == Event::MouseMoved)
+	{
+		for (unsigned int mission = 0; mission < missions.size(); ++mission)
+		{
+			if (missions.at(mission).rect.getGlobalBounds().contains(event->mouseMove.x, event->mouseMove.y))
+				missions[mission].rect.setFillColor(Color::Blue);
+			else
+			{
+				if (missions.at(mission).enabled)
+					missions[mission].rect.setFillColor(Color::Red);
+				else
+					missions[mission].rect.setFillColor(GlobalVariables::GrayColor);
+			}
+		}
 	}
 	StateWindow::eventFilter(event);
 }

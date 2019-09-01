@@ -459,8 +459,8 @@ void ProjectilesTower::shoot(Enemy *target)
 
 	angle -= 180;
 
-	const Vector2i frameSize = Vector2i(10, 6);
-	Projectile *projectile = new Projectile(RESOURCES::BASE_PROJECTILE, aPos, frameSize, 3);
+	const Vector2i frameSize = Vector2i(10, 5);
+	Projectile *projectile = new Projectile(RESOURCES::BASE_PROJECTILE, aPos, frameSize, 1);
 	projectile->setAngle(angle);
 	projectile->target = target;
 	m_projectiles.push_back(projectile);
