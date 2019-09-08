@@ -151,6 +151,23 @@ private:
 	static const float BOMB_ABILITY_DAMAGE;
 
 	vector<Animation*> effects;
+
+	struct Shake
+	{
+		RectangleShape dangerRect;
+		Timer dangerTimer;
+		bool isActive;
+		bool state;
+		int count;
+		float offset;
+
+
+		static const int MAX_SHAKE_COUNT;
+		static const int MAX_SHAKE_OFFSET;
+
+		void startShake();
+	};
+	Shake shake;
 };
 
 #endif // LEVEL_H

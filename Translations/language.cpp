@@ -22,7 +22,8 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(LANGUAGE_NAME, L"Русский"));
 
 	//menu
-	lang.insert(pair<TR_TEXT, wstring>(PLAY, L"Играть"));
+	lang.insert(pair<TR_TEXT, wstring>(CAMPAIGN, L"Кампания"));
+	lang.insert(pair<TR_TEXT, wstring>(SURVIVAL_MODE, L"Режим выживания"));
 	lang.insert(pair<TR_TEXT, wstring>(OPTIONS, L"Опции"));
 	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"О программе"));
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Выход"));
@@ -36,6 +37,29 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(ACCEPT, L"Принять"));
 	lang.insert(pair<TR_TEXT, wstring>(CANCEL, L"Отмена"));
 
+	//panel
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_VENOM, L"Venom"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_BOMB, L"Bomb"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_FREEZE_BOMB, L"Freeze bomb"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"ic tower att speed"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_DAMAGE, L"inc tower dmg"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_UNKNOWN, L"unknown"));
+	lang.insert(pair<TR_TEXT, wstring>(SELL, L"Sell"));
+	lang.insert(pair<TR_TEXT, wstring>(UPGRADE, L"Updgrade"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_BASE, L"Tower base"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_POWER, L"Tower power"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_ROCKET, L"Tower rocket"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_FREEZE, L"Tower freeze"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_LASER, L"Tower laser"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_IMPROVED, L"Tower improved"));
+	lang.insert(pair<TR_TEXT, wstring>(LEVEL, L"Level"));
+	lang.insert(pair<TR_TEXT, wstring>(DAMAGE, L"Damage"));
+	lang.insert(pair<TR_TEXT, wstring>(ATTACK_SPEED, L"Attack speed"));
+	lang.insert(pair<TR_TEXT, wstring>(RADIUS, L"Radius"));
+	lang.insert(pair<TR_TEXT, wstring>(PROJECTILE_SPEED, L"Projectile speed"));
+	lang.insert(pair<TR_TEXT, wstring>(COST, L"Cost"));
+	lang.insert(pair<TR_TEXT, wstring>(SELL_COST, L"Sell cost"));
+
 	langs.insert(pair<string, map<TR_TEXT, wstring> >(rus, lang));
 }
 
@@ -45,7 +69,8 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(LANGUAGE_NAME, L"English(UK)"));
 
 	//menu
-	lang.insert(pair<TR_TEXT, wstring>(PLAY, L"Play"));
+	lang.insert(pair<TR_TEXT, wstring>(CAMPAIGN, L"Play"));
+	lang.insert(pair<TR_TEXT, wstring>(SURVIVAL_MODE, L"Survival mode"));
 	lang.insert(pair<TR_TEXT, wstring>(OPTIONS, L"Options"));
 	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"Credits"));
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Exit"));
@@ -59,6 +84,29 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(ACCEPT, L"Accept"));
 	lang.insert(pair<TR_TEXT, wstring>(CANCEL, L"Cancel"));
 
+	//panel
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_VENOM, L"Venom"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_BOMB, L"Bomb"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_FREEZE_BOMB, L"Freeze bomb"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"ic tower att speed"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_DAMAGE, L"inc tower dmg"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_UNKNOWN, L"unknown"));
+	lang.insert(pair<TR_TEXT, wstring>(SELL, L"Sell"));
+	lang.insert(pair<TR_TEXT, wstring>(UPGRADE, L"Updgrade"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_BASE, L"Tower base"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_POWER, L"Tower power"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_ROCKET, L"Tower rocket"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_FREEZE, L"Tower freeze"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_LASER, L"Tower laser"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_IMPROVED, L"Tower improved"));
+	lang.insert(pair<TR_TEXT, wstring>(LEVEL, L"Level"));
+	lang.insert(pair<TR_TEXT, wstring>(DAMAGE, L"Damage"));
+	lang.insert(pair<TR_TEXT, wstring>(ATTACK_SPEED, L"Attack speed"));
+	lang.insert(pair<TR_TEXT, wstring>(RADIUS, L"Radius"));
+	lang.insert(pair<TR_TEXT, wstring>(PROJECTILE_SPEED, L"Projectile speed"));
+	lang.insert(pair<TR_TEXT, wstring>(COST, L"Cost"));
+	lang.insert(pair<TR_TEXT, wstring>(SELL_COST, L"Sell cost"));
+
 	langs.insert(pair<string, map<TR_TEXT, wstring> >(eng, lang));
 }
 
@@ -68,7 +116,8 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(LANGUAGE_NAME, L"French"));
 
 	//menu
-	lang.insert(pair<TR_TEXT, wstring>(PLAY, L"Jouer"));
+	lang.insert(pair<TR_TEXT, wstring>(CAMPAIGN, L"Jouer"));
+	lang.insert(pair<TR_TEXT, wstring>(SURVIVAL_MODE, L"Survival mode"));
 	lang.insert(pair<TR_TEXT, wstring>(OPTIONS, L"Options"));
 	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"Crédits"));
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Sortir du jeu"));
@@ -81,6 +130,29 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(LANGUAGE, L"Language"));
 	lang.insert(pair<TR_TEXT, wstring>(ACCEPT, L"Accept"));
 	lang.insert(pair<TR_TEXT, wstring>(CANCEL, L"Cancel"));
+
+	//panel
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_VENOM, L"Venom"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_BOMB, L"Bomb"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_FREEZE_BOMB, L"Freeze bomb"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"ic tower att speed"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_DAMAGE, L"inc tower dmg"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_UNKNOWN, L"unknown"));
+	lang.insert(pair<TR_TEXT, wstring>(SELL, L"Sell"));
+	lang.insert(pair<TR_TEXT, wstring>(UPGRADE, L"Updgrade"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_BASE, L"Tower base"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_POWER, L"Tower power"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_ROCKET, L"Tower rocket"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_FREEZE, L"Tower freeze"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_LASER, L"Tower laser"));
+	lang.insert(pair<TR_TEXT, wstring>(TOWER_IMPROVED, L"Tower improved"));
+	lang.insert(pair<TR_TEXT, wstring>(LEVEL, L"Level"));
+	lang.insert(pair<TR_TEXT, wstring>(DAMAGE, L"Damage"));
+	lang.insert(pair<TR_TEXT, wstring>(ATTACK_SPEED, L"Attack speed"));
+	lang.insert(pair<TR_TEXT, wstring>(RADIUS, L"Radius"));
+	lang.insert(pair<TR_TEXT, wstring>(PROJECTILE_SPEED, L"Projectile speed"));
+	lang.insert(pair<TR_TEXT, wstring>(COST, L"Cost"));
+	lang.insert(pair<TR_TEXT, wstring>(SELL_COST, L"Sell cost"));
 
 	langs.insert(pair<string, map<TR_TEXT, wstring> >(fr, lang));
 }

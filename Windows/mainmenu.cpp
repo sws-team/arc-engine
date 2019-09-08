@@ -2,16 +2,17 @@
 #include "Game/Audio/soundcontroller.h"
 #include "Engine/engine.h"
 #include "Translations/language.h"
+#include "globalvariables.h"
 
 MainMenu::MainMenu()
 	: Menu()
 
 {
 	setBackground(RESOURCES::MENU_BACKGROUND);
-	currentMenu = static_cast<MENUS>(PLAY);
+	currentMenu = static_cast<MENUS>(CAMPAIGN);
 
-	addItem(Language::Instance().translate(Language::PLAY));
-//	addItem("Survival mode");
+	addItem(Language::Instance().translate(Language::CAMPAIGN));
+	addItem(Language::Instance().translate(Language::SURVIVAL_MODE));
 	addItem(Language::Instance().translate(Language::OPTIONS));
 	addItem(Language::Instance().translate(Language::CREDITS));
 	addItem(Language::Instance().translate(Language::EXIT));
@@ -26,8 +27,14 @@ void MainMenu::accept()
 {
 	switch (currentMenu)
 	{
-	case PLAY:
+	case CAMPAIGN:
 		Engine::Instance().setState(Engine::CHOOSE_MISSION);
+		break;
+	case SURVIVAL_MODE:
+	{
+		Engine::Instance().setMission(GlobalVariables::SURVIVAL_MODE_ID);
+		Engine::Instance().setState(Engine::IN_GAME);
+	}
 		break;
 	case OPTIONS:
 		Engine::Instance().setState(Engine::OPTIONS);

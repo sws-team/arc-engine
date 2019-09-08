@@ -266,6 +266,8 @@ void Cursor::updateCell()
 	towerRadius.setOrigin(towerRadius.getRadius() - GlobalVariables::Instance().tileSize().x/2,
 						  towerRadius.getRadius() - GlobalVariables::Instance().tileSize().y/2);
 
+	m_inPanel = pos.y > Engine::Instance().panel()->getBottomValue();
+	Engine::Instance().panel()->updateInfo();
 //	SoundController::Instance().playOnce(CURSOR_MOVE_SOUND_FILE);
 }
 

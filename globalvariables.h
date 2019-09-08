@@ -16,6 +16,7 @@ public:
     void setApplicationPath(const String &applicationPath);
 
 	static constexpr float FRAME_TIME = 1.0f / 60.0f;
+	static const unsigned int SURVIVAL_MODE_ID;
 
     void saveGameSettings();
     void loadGameSettings();

@@ -37,6 +37,8 @@ public:
 
 	void init();
 
+	void updateInfo();
+
 private:
 	Sprite m_sprite;
 	RenderTexture rTexture;
@@ -62,6 +64,7 @@ private:
 	Sprite towerImprovedSprite;
 
 	Tower *m_selectedTower;
+	Text info;
 
 
 	Vector2f updatePos(const Vector2f& nullPos);
@@ -75,7 +78,9 @@ private:
 	int m_progressMax;
 
 	void updateEnableTowers();
-	void updateEnaleAbilities();
+	void updateEnableAbilities();
+
+	String towerInfo(TOWER_TYPES type, Tower *tower);
 };
 
 #endif // GAMEPANEL_H

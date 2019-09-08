@@ -14,7 +14,8 @@ public:
 private:
 	enum MENUS
 	{
-		PLAY,
+		CAMPAIGN,
+		SURVIVAL_MODE,
 		OPTIONS,
 		CREDITS,
 		EXIT

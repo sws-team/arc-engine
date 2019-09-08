@@ -14,9 +14,6 @@
 #include "tower.h"
 #include "projectile.h"
 
-constexpr static int MAX_SHAKE_OFFSET = 5;
-constexpr static int SHAKE_DURATION = 500;
-
 const float Level::FREEZE_ABILITY_K = 35.f;
 const int Level::FREEZE_ABILITY_DURATION = 5000;
 const int Level::INCREASE_DAMAGE_ABILITY_DURATION = 9000;
@@ -37,11 +34,16 @@ const int Level::INC_TOWER_AS_ABILITY_COST = 200;
 const int Level::INC_TOWER_DMG_ABILITY_COST = 200;
 const float Level::BOMB_ABILITY_DAMAGE = 111;
 
+const int Level::Shake::MAX_SHAKE_COUNT = 10;
+const int Level::Shake::MAX_SHAKE_OFFSET = 10;
+
 Level::Level() :
-  difficulty(1.f)
+	difficulty(1.f)
   ,gameMap(nullptr)
   ,m_actionState(READY)
   ,life(0.f)
+  ,money(0.f)
+  ,energy(0.f)
   ,m_state(WAIT_READY)
 {
 	venomAbility.isActive = false;
@@ -53,7 +55,10 @@ Level::Level() :
 	resolutionOffsetX = Settings::Instance().getResolution().x - k * Settings::Instance().getResolution().x;
 	resolutionOffsetX /= 2;	
 
-	energy = 1000;
+	shake.dangerRect.setSize(Vector2f(Settings::Instance().getResolution()));
+	shake.dangerRect.setFillColor(Color(255,0,0,96));
+	shake.isActive = false;
+	shake.dangerRect.setPosition(0,0);
 }
 
 Level::~Level()
@@ -84,7 +89,6 @@ void Level::update()
 {
 	if (m_state != PLAYING)
 		return;
-
 	for(Tower* tower : towers)
 	{
 		if (tower->type() == POWER)
@@ -96,6 +100,24 @@ void Level::update()
 		else
 			tower->action(enemies);
 		tower->update();
+	}
+	if (shake.isActive)
+	{
+		if (shake.dangerTimer.check(50))
+		{
+			if (shake.state)
+				shake.offset = rand() % Shake::MAX_SHAKE_OFFSET * 2;
+			else
+				shake.offset = -shake.offset;
+
+			Engine::Instance().camera()->getView()->setCenter(Engine::Instance().camera()->getView()->getCenter().x,
+															  Engine::Instance().camera()->getView()->getCenter().y + shake.offset);
+
+			shake.state = !shake.state;
+			shake.count++;
+			if (shake.count > Shake::MAX_SHAKE_COUNT)
+				shake.isActive = false;
+		}
 	}
 	if (venomAbility.isActive)
 	{
@@ -153,6 +175,7 @@ void Level::startMission(const unsigned int n)
 	Engine::Instance().panel()->setProgressMax(spawnEnemies.size());
 	life = 100.f + n * 10;
 	money = Engine::getStartMoney(n);
+	energy = 1000;
 	Engine::Instance().panel()->update();
 
 	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
@@ -249,7 +272,7 @@ void Level::checkEnd()
 			++it;
 	}
 	if (spawnEnemies.empty() && enemies.empty())
-		changeState(WIN);
+		changeState(WIN);	
 }
 
 void Level::checkAlive()
@@ -334,6 +357,7 @@ void Level::highlightPowerTowersRadius(bool active)
 void Level::hitPlayer(float damage)
 {
 	life -= damage;
+	shake.startShake();
 	if (life <= 0.f)
 	{
 		//game over
@@ -409,6 +433,11 @@ void Level::drawLevel(RenderTarget * const target)
 
 	for(Animation *effect : effects)
 		effect->draw(target);
+
+	if (shake.isActive && shake.state)
+	{
+		target->draw(shake.dangerRect);
+	}
 }
 
 void Level::spawn(ENEMY_TYPES type)
@@ -420,7 +449,8 @@ void Level::spawn(ENEMY_TYPES type)
 
 void Level::test()
 {	
-	changeState(WIN);
+//	changeState(WIN);
+	hitPlayer(10);
 }
 
 void Level::left()
@@ -512,7 +542,6 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		Engine::Instance().panel()->selectedTower()->deselect();
 		Engine::Instance().panel()->setSelectedTower(nullptr);
 	}
-
 	if (inPanel)
 	{
 		const Vector2f pos = Engine::Instance().camera()->cellToPos(cell);
@@ -728,4 +757,12 @@ void Level::action()
 void Level::change()
 {
 
+}
+
+void Level::Shake::startShake()
+{
+	dangerTimer.clock.restart();
+	isActive = true;
+	state = true;
+	count = 0;
 }

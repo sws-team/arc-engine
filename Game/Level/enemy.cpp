@@ -548,6 +548,21 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(VERY_BIG, 30, &spawnEnemies);
 	}
 		break;
+	case 128:
+	{
+		addEnemiesByType(SMALL_SLOW, 100, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 40, &spawnEnemies);
+		addEnemiesByType(SMALL_FAST, 10, &spawnEnemies);
+		addEnemiesByType(MID_SLOW, 5, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 2, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 1, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 0, &spawnEnemies);
+		addEnemiesByType(BIG_MEDIUM, 0, &spawnEnemies);
+		addEnemiesByType(BIG_FAST, 0, &spawnEnemies);
+		addEnemiesByType(VERY_FAST, 0, &spawnEnemies);
+		addEnemiesByType(VERY_BIG, 0, &spawnEnemies);
+	}
+		break;
 	default:
 		break;
 	}

@@ -30,7 +30,7 @@ SettingsWindow::SettingsWindow()
 	lbl_sound = new Text();
 	lbl_sound->setFont(GlobalVariables::Instance().font());
 	lbl_sound->setCharacterSize(24);
-	lbl_sound->setString("Sound");
+	lbl_sound->setString(Language::Instance().translate(Language::SOUND));
     lbl_sound->setPosition(posX, posY);
 
 	posX += 100;
@@ -46,7 +46,7 @@ SettingsWindow::SettingsWindow()
 	lbl_music = new Text();
 	lbl_music->setFont(GlobalVariables::Instance().font());
 	lbl_music->setCharacterSize(24);
-	lbl_music->setString("Music");
+	lbl_music->setString(Language::Instance().translate(Language::MUSIC));
     lbl_music->setPosition(posX, posY);
 
 	posX += 100;
@@ -62,7 +62,7 @@ SettingsWindow::SettingsWindow()
 	lbl_fullscreen = new Text();
 	lbl_fullscreen->setFont(GlobalVariables::Instance().font());
 	lbl_fullscreen->setCharacterSize(24);
-	lbl_fullscreen->setString("Fullscreen");
+	lbl_fullscreen->setString(Language::Instance().translate(Language::FULLSCREEN));
 	lbl_fullscreen->setPosition(posX, posY);
 
 	posX += 100;
@@ -77,7 +77,7 @@ SettingsWindow::SettingsWindow()
 	lbl_resolution = new Text();
 	lbl_resolution->setFont(GlobalVariables::Instance().font());
 	lbl_resolution->setCharacterSize(24);
-	lbl_resolution->setString("Resolution");
+	lbl_resolution->setString(Language::Instance().translate(Language::RESOLUTION));
 	lbl_resolution->setPosition(posX, posY);
 
 	posX += 100;
@@ -101,7 +101,7 @@ SettingsWindow::SettingsWindow()
 	lbl_language = new Text();
 	lbl_language->setFont(GlobalVariables::Instance().font());
 	lbl_language->setCharacterSize(24);
-	lbl_language->setString("Language");
+	lbl_language->setString(Language::Instance().translate(Language::LANGUAGE));
 	lbl_language->setPosition(posX, posY);
 
 	posX += 200;
@@ -123,7 +123,7 @@ SettingsWindow::SettingsWindow()
 	button_accept->setSize(Vector2f(64, 32));
 	button_accept->setPos(posX, posY);
 	button_accept->setCallback(bind(&SettingsWindow::accept, this));
-	button_accept->setText("Accept");
+	button_accept->setText(Language::Instance().translate(Language::ACCEPT));
 
 	cbx_fullscreen->setChecked(Settings::Instance().getFullscreen());
 	soundScale->setValue(Settings::Instance().getSoundLevel());

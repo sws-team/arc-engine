@@ -7,6 +7,8 @@
 #include "Level/camera.h"
 #include "Level/tower.h"
 #include "Level/lifebar.h"
+#include "Level/cursor.h"
+#include "Translations/language.h"
 
 #include <stdlib.h>
 
@@ -18,6 +20,12 @@ GamePanel::GamePanel() :
 
 	m_sprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_TEXTURE));
 	m_sprite.setScale(Settings::Instance().getScaleFactor() * Settings::GAME_SCALE);
+
+	info.setFont(GlobalVariables::Instance().font());
+	info.setFillColor(Color::Black);
+	info.setOutlineColor(Color::Yellow);
+	info.setOutlineThickness(2);
+	info.setCharacterSize(20);
 
 	moneyCountText.setFont(GlobalVariables::Instance().font());
 	moneyCountText.setFillColor(Color::Black);
@@ -127,7 +135,9 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(lifeCountText);
 	target->draw(energyCountText);
 
-	updateEnaleAbilities();
+	updateEnableAbilities();
+
+	target->draw(info);
 
 	target->draw(abilityBombSprite);
 	target->draw(abilityFreezeBombSprite);
@@ -153,7 +163,8 @@ void GamePanel::draw(RenderTarget * const target)
 	if(Engine::Instance().level()->getState() == Level::WAIT_READY)
 		target->draw(spriteReady);
 	target->draw(miniMapSprite);
-	progress->draw(target);
+	if (Engine::Instance().getMission() != GlobalVariables::SURVIVAL_MODE_ID)
+		progress->draw(target);
 }
 
 void GamePanel::update()
@@ -167,6 +178,8 @@ void GamePanel::update()
 
 	const float progressValue = static_cast<float>(Engine::Instance().level()->currentProgress()) / m_progressMax;
 	progress->setValue(progressValue);
+
+	updateInfo();
 }
 
 int GamePanel::cellsCount() const
@@ -296,6 +309,8 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 
 	pos.x += block_space;
 
+	info.setPosition(pos);
+
 	//text
 
 	pos.x += text_offset;
@@ -413,7 +428,7 @@ void GamePanel::updateEnableTowers()
 		towerImprovedSprite.setColor(Color::White);
 }
 
-void GamePanel::updateEnaleAbilities()
+void GamePanel::updateEnableAbilities()
 {
 	const float energy = Engine::Instance().level()->getEnergyCount();
 
@@ -452,6 +467,123 @@ void GamePanel::updateEnaleAbilities()
 		abilityTimeStopSprite.setColor(GlobalVariables::GrayColor);
 	else
 		abilityTimeStopSprite.setColor(Color::White);
+}
+
+String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
+{
+	String str;
+	switch (type)
+	{
+	case BASE:
+		str = Language::Instance().translate(Language::TOWER_BASE);
+		break;
+	case POWER:
+		str = Language::Instance().translate(Language::TOWER_POWER);
+		break;
+	case ROCKET:
+		str = Language::Instance().translate(Language::TOWER_ROCKET);
+		break;
+	case FREEZE:
+		str = Language::Instance().translate(Language::TOWER_FREEZE);
+		break;
+	case LASER:
+		str = Language::Instance().translate(Language::TOWER_LASER);
+		break;
+	case IMPROVED:
+		str = Language::Instance().translate(Language::TOWER_IMPROVED);
+		break;
+	}
+
+	const String endline = "\n";
+	str += endline;
+	const String separator = ": ";
+	if (tower != nullptr)
+		str += Language::Instance().translate(Language::LEVEL) + separator + to_string(tower->level()) + endline;
+
+	const TowerStats towerStats = TowersFactory::getTowerStats(type);
+
+	str += Language::Instance().translate(Language::DAMAGE) + separator + GlobalVariables::to_string_with_precision(towerStats.damage, 2);
+	if (tower != nullptr)
+		str += " + " + GlobalVariables::to_string_with_precision(tower->data().damage - towerStats.damage, 2);
+	str += endline;
+
+	str += Language::Instance().translate(Language::ATTACK_SPEED) + separator + GlobalVariables::to_string_with_precision(towerStats.attackSpeed, 2);
+	if (tower != nullptr)
+		str += " + " + GlobalVariables::to_string_with_precision(tower->data().attackSpeed - towerStats.attackSpeed, 2);
+	str += endline;
+
+	str += Language::Instance().translate(Language::RADIUS) + separator + to_string(towerStats.radius);
+	if (tower != nullptr)
+		str += " + " + to_string(tower->data().radius - towerStats.radius);
+	str += endline;
+
+	str += Language::Instance().translate(Language::PROJECTILE_SPEED) + separator + GlobalVariables::to_string_with_precision(towerStats.projectileSpeed, 2);
+	str += endline;
+
+	if (tower == nullptr)
+	{
+		str += Language::Instance().translate(Language::COST);
+		str += separator;
+		str += GlobalVariables::to_string_with_precision(towerStats.cost, 2);
+	}
+	else
+	{
+		str += Language::Instance().translate(Language::SELL_COST);
+		str += separator;
+		str += GlobalVariables::to_string_with_precision(tower->data().cost/2, 2);
+	}
+	return str;
+}
+
+void GamePanel::updateInfo()
+{
+	String str;
+	if (Engine::Instance().cursor()->inPanel())
+	{
+		const ACTION_STATE state = getCurrentIcon(Engine::Instance().cursor()->pos());
+		switch (state)
+		{
+		case ADD_TOWER:
+		{
+			const TOWER_TYPES type = currentTower(Engine::Instance().cursor()->pos());
+			str = towerInfo(type, nullptr);
+		}
+			break;
+		case ABILITY_VENOM:
+			str = Language::Instance().translate(Language::ABILITY_VENOM);
+			break;
+		case ABILITY_BOMB:
+			str = Language::Instance().translate(Language::ABILITY_BOMB);
+			break;
+		case ABILITY_FREEZE_BOMB:
+			str = Language::Instance().translate(Language::ABILITY_FREEZE_BOMB);
+			break;
+		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
+			str = Language::Instance().translate(Language::ABILITY_INCREASE_TOWER_ATTACK_SPEED);
+			break;
+		case ABILITY_INCREASE_TOWER_DAMAGE:
+			str = Language::Instance().translate(Language::ABILITY_INCREASE_TOWER_DAMAGE);
+			break;
+		case ABILITY_UNKNOWN:
+			str = Language::Instance().translate(Language::ABILITY_UNKNOWN);
+			break;
+		case SELL:
+			str = Language::Instance().translate(Language::SELL);
+			break;
+		case UPGRADE:
+			str = Language::Instance().translate(Language::UPGRADE);
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		Tower* tower = Engine::Instance().level()->getTowerAtPos(Engine::Instance().cursor()->pos());
+		if (tower != nullptr)
+			str = towerInfo(tower->type(), tower);
+	}
+	info.setString(str);
 }
 
 void GamePanel::setProgressMax(int progressMax)

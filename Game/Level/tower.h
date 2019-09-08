@@ -69,6 +69,8 @@ public:
 	void increaseAttackSpeed(int duration, int value);
 	void increaseDamage(int duration, int value);
 
+	int level() const;
+
 protected:
 	TowerStats m_stats;
 	Timer actionTimer;

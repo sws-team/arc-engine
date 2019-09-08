@@ -139,6 +139,11 @@ void Tower::increaseDamage(int duration, int value)
 	abilityDamage.timer.clock.restart();
 }
 
+int Tower::level() const
+{
+	return m_level;
+}
+
 TowerStats Tower::data() const
 {
 	return m_stats;
@@ -491,3 +496,4 @@ void ProjectilesTower::projectileAction(Enemy *enemy)
 	enemy->hit(m_stats.damage);
 	Engine::Instance().level()->addAnimation(RESOURCES::EXPLOSION_EFFECT, enemy->pos(), Vector2i(64, 64), 100, 16, 0);
 }
+

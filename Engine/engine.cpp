@@ -53,6 +53,8 @@ void Engine::setMission(unsigned int mission)
 
 Map *Engine::getMap(unsigned int mission)
 {
+	if (mission == GlobalVariables::SURVIVAL_MODE_ID)
+		return maps.at(0);
 	return maps.at(mission);
 }
 
@@ -111,6 +113,8 @@ float Engine::getStartMoney(const unsigned int n)
 {
 	switch (n)
 	{
+	case 128:
+		return 5000;
 	case 0:
 		return 300;
 	case 1:
