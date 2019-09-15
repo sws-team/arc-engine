@@ -29,8 +29,6 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::GAME_OVER_TEXTURE, "images/GameOver.png");
 	addTexture(RESOURCES::MISSON_COMPLETED_TEXTURE, "images/missionCompleted.png");
 
-	addTexture(RESOURCES::ENEMY_TEXTURE, "images/Enemies/enemy1.png");
-
 	addTexture(RESOURCES::ABILITY_BOMB, "images/ui/Panel/Abilities/ability_bomb.png");
 	addTexture(RESOURCES::ABILITY_FREEZE_BOMB, "images/ui/Panel/Abilities/ability_freeze_bomb.png");
 	addTexture(RESOURCES::ABILITY_CARPET_BOMBING, "images/ui/Panel/Abilities/ability_carpet_bombing.png");
@@ -59,6 +57,11 @@ void ResourcesManager::loadTextures()
 
 	addTexture(RESOURCES::EXPLOSION_EFFECT, "images/Weapons/Effects/explosion.png");
 	addTexture(RESOURCES::VENOM_EFFECT, "images/venom.png");
+
+
+	addTexture(RESOURCES::ENEMY_TEXTURE, "images/Enemies/enemy1.png");
+	addTexture(RESOURCES::ENEMY_BIG_MED, "images/Enemies/big.png");
+	addTexture(RESOURCES::ENEMY_BIG_TEXTURE, "images/Enemies/med.png");
 }
 
 void ResourcesManager::addTexture(RESOURCES::TEXTURE_TYPE type, const string &path)

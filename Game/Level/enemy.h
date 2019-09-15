@@ -17,7 +17,8 @@ class Enemy : public GameObject
 public:
 	Enemy(const RESOURCES::TEXTURE_TYPE& texture_id,
 		  const Vector2f& startPos,
-		  const EnemyStats &stats);
+		  const EnemyStats &stats,
+		  const Vector2i &cellSize);
 	~Enemy() override;
 
 	EnemyStats getData() const;
@@ -35,8 +36,7 @@ public:
 	void freeze(float k, int duration);
 
 	Vector2f enemyPos() const;
-	Vector2f getOriginalPos() const;
-	Vector2f getMovePos() const;
+	Vector2f enemyCenter() const;
 
 private:
 	EnemyStats m_stats;
@@ -67,11 +67,11 @@ private:
 	float freezeK;
 	bool isFreezed;
 	bool startFreeze;
-
-	Vector2f offset;
-	Vector2f movePos;
-	Vector2f centerOffset;
 	void moveEnemy(const Vector2f& d);
+	Vector2f m_size;
+
+	Vector2f m_spritePos;//enemy pos in rect
+	Vector2f m_pos;//global pos
 };
 
 class EnemiesFactory

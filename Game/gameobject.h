@@ -11,7 +11,7 @@ public:
 	GameObject(const RESOURCES::TEXTURE_TYPE& texture_id,
 			   const Vector2f& startPos,
 			   const Vector2i& frameSize,
-			   const int frameCount = 3);
+			   const int fCount = 3);
 	virtual ~GameObject() override;
 
 	Sprite getSprite() const;
@@ -28,15 +28,9 @@ public:
 
 	FloatRect gameRect() const;
 
-	bool getMovable() const;
-	void setMovable(bool movable);
-
 	Sprite &getModifiableSprite();
 
 	Vector2f getCenter() const;
-
-private:
-	bool m_movable;
 };
 
 #endif // GAMEOBJECT_H

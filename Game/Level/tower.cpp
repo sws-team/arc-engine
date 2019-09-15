@@ -66,8 +66,8 @@ void Tower::action(const vector<Enemy *> &enemies)
 	{
 		if (TowersFactory::isIntersects(enemy->gameRect(), aPos, m_stats.radius * GlobalVariables::Instance().mapTileSize().x))
 		{
-			const float x = fabs(enemy->enemyPos().x - this->getCenter().x);
-			const float y = fabs(enemy->enemyPos().y - this->getCenter().y);
+			const float x = fabs(enemy->enemyCenter().x - this->getCenter().x);
+			const float y = fabs(enemy->enemyCenter().y - this->getCenter().y);
 			if (x + y < min)
 			{
 				min = x + y;
@@ -320,12 +320,12 @@ void RocketTower::moveProjectile(Projectile *projectile)
 
 void RocketTower::projectileAction(Enemy *enemy)
 {
-	const Vector2f epicenter = enemy->enemyPos();
+	const Vector2f epicenter = enemy->enemyCenter();
 	const vector <Enemy*> enemies = Engine::Instance().level()->getAllEnemies();
 	for(Enemy* levelEnemy : enemies)
 	{
-		const float a = fabs(epicenter.x - levelEnemy->enemyPos().x);
-		const float b = fabs(epicenter.y - levelEnemy->enemyPos().y);
+		const float a = fabs(epicenter.x - levelEnemy->enemyCenter().x);
+		const float b = fabs(epicenter.y - levelEnemy->enemyCenter().y);
 		const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
 		if (r <= m_zeroGround)
 		{
@@ -453,8 +453,8 @@ void ProjectilesTower::shoot(Enemy *target)
 		return;
 
 	const Vector2f aPos = getCenter();
-	const float a = aPos.x - target->enemyPos().x;
-	const float b = aPos.y - target->enemyPos().y;
+	const float a = aPos.x - target->enemyCenter().x;
+	const float b = aPos.y - target->enemyCenter().y;
 	const float tg = ( b / a );
 	float angle = atanf(tg) * 180 / M_PI;
 	if (a < 0)
@@ -494,6 +494,6 @@ vector<Projectile *> ProjectilesTower::projectiles() const
 void ProjectilesTower::projectileAction(Enemy *enemy)
 {
 	enemy->hit(m_stats.damage);
-	Engine::Instance().level()->addAnimation(RESOURCES::EXPLOSION_EFFECT, enemy->pos(), Vector2i(64, 64), 100, 16, 0);
+	Engine::Instance().level()->addAnimation(RESOURCES::EXPLOSION_EFFECT, enemy->enemyCenter() - Vector2f(32, 32), Vector2i(64, 64), 100, 16, 0);
 }
 

@@ -6,9 +6,10 @@
 
 Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const Vector2f &startPos,
-			 const EnemyStats& stats)
+			 const EnemyStats& stats,
+			 const Vector2i &cellSize)
 	: GameObject(texture_id, startPos,
-				 Vector2i(GlobalVariables::MAP_CELL_SIZE, GlobalVariables::MAP_CELL_SIZE),
+				 Vector2i(GlobalVariables::MAP_CELL_SIZE * cellSize.x, GlobalVariables::MAP_CELL_SIZE * cellSize.y),
 				 4)
 	,m_stats(stats)
 	,moveCounter(0)
@@ -16,14 +17,19 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 	,isFreezed(false)
 	,startFreeze(false)
 {
-	centerOffset.x = GlobalVariables::Instance().mapTileSize().x/2;
-	centerOffset.y = GlobalVariables::Instance().mapTileSize().y/2;
 
-	const float road = GlobalVariables::Instance().mapTileSize().x * 1.5f;
-	offset.x = rand() % static_cast<int>(road * 2) - road;
-	offset.y = 0;
+	m_size.x = GlobalVariables::Instance().mapTileSize().x * cellSize.x;
+	m_size.y = GlobalVariables::Instance().mapTileSize().y * cellSize.y;
 
-	movePos = startPos + centerOffset;
+	m_spritePos = Vector2f(0, 0);
+
+	const float road = 4 * GlobalVariables::MAP_CELL_SIZE - m_size.x;
+	if (road != 0.f)
+	{
+		m_spritePos.x = rand() % static_cast<int>(road);
+		m_spritePos.y = rand() % static_cast<int>(road);
+	}
+	m_pos = startPos;
 
 	m_data = m_stats;
 	lifeBar = new LifeBar();
@@ -43,7 +49,6 @@ EnemyStats Enemy::getData() const
 bool Enemy::moveStep()
 {
 	moveCounter++;
-//	move(currentStep);
 	moveEnemy(currentStep);
 	if (moveCounter >= m_data.speed)
 	{
@@ -67,7 +72,8 @@ void Enemy::moveNext(int direction)
 		m_data.speed -= freezeK;
 	}
 
-	targetPos = enemyPos() - centerOffset;
+	targetPos = m_pos;
+
 	moveCounter = 0;
 	currentDirection = direction;
 
@@ -100,6 +106,7 @@ void Enemy::moveNext(int direction)
 		newDirection = SPRITE_DIRECTION::SPRITE_RIGHT;
 		break;
 	}
+
 	if (newDirection != spriteDirection)
 	{
 		float angle = 0;
@@ -118,44 +125,45 @@ void Enemy::moveNext(int direction)
 			if (spriteDirection == DEFAULT_DOWN)
 			{
 				angle = RIGHT_ANGLE;
-				origin.y = GlobalVariables::MAP_CELL_SIZE;
+				origin.y = m_size.y;
 			}
 			else if (spriteDirection == SPRITE_UP)
 			{
 				angle = -RIGHT_ANGLE;
-				origin.y = GlobalVariables::MAP_CELL_SIZE;
+				origin.y = m_size.y;
 			}
 			break;
 		case SPRITE_UP:
 			if (spriteDirection == SPRITE_LEFT)
 			{
 				angle = RIGHT_ANGLE;
-				origin.x = GlobalVariables::MAP_CELL_SIZE;
-				origin.y = GlobalVariables::MAP_CELL_SIZE;
+				origin.x = m_size.x;
+				origin.y = m_size.y;
 			}
 			else if (spriteDirection == SPRITE_RIGHT)
 			{
 				angle = -RIGHT_ANGLE;
-				origin.x = GlobalVariables::MAP_CELL_SIZE;
-				origin.y = GlobalVariables::MAP_CELL_SIZE;
+				origin.x = m_size.x;
+				origin.y = m_size.y;
 			}
 			break;
 		case SPRITE_RIGHT:
 			if (spriteDirection == DEFAULT_DOWN)
 			{
 				angle = -RIGHT_ANGLE;
-				origin.x = GlobalVariables::MAP_CELL_SIZE;
+				origin.x = m_size.x;
 			}
 			else if (spriteDirection == SPRITE_UP)
 			{
 				angle = RIGHT_ANGLE;
-				origin.x = GlobalVariables::MAP_CELL_SIZE;
+				origin.x = m_size.x;
 			}
 			break;
 		}
 		spriteDirection = newDirection;
 		sprite.setOrigin(origin);
 		sprite.rotate(angle);
+		update();
 	}
 }
 
@@ -166,12 +174,14 @@ void Enemy::update()
 		if (freezeTimer.check(freezeDuration))
 			isFreezed = false;
 	}
+	setPos(m_pos + m_spritePos);
 	GameObject::update();
 }
 
 void Enemy::draw(RenderTarget * const target)
 {
 	GameObject::draw(target);
+
 	drawLifeBar(target);
 }
 
@@ -203,8 +213,8 @@ void Enemy::freeze(float k, int duration)
 
 void Enemy::drawLifeBar(RenderTarget *target)
 {
-//	if (spaceShip->getData().health <= 0)
-//		return;
+	if (m_data.health <= 0)
+		return;
 
 	const float healthRate = m_data.health / m_stats.health;
 	lifeBar->setPos(pos() - Vector2f(0, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y));
@@ -215,27 +225,25 @@ void Enemy::drawLifeBar(RenderTarget *target)
 
 void Enemy::moveEnemy(const Vector2f &d)
 {
-	movePos += d;
-	setPos(movePos - centerOffset + offset);
+	m_pos += d;
+	update();
 }
 
 Vector2f Enemy::enemyPos() const
 {
-	return movePos + offset;
+	return m_pos + Vector2f(1, 1);
 }
 
-Vector2f Enemy::getOriginalPos() const
+Vector2f Enemy::enemyCenter() const
 {
-	return pos() - offset;
-}
-
-Vector2f Enemy::getMovePos() const
-{
-	return movePos;
+	return m_pos + m_spritePos + Vector2f(m_size.x/2, m_size.y/2);
 }
 
 Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 {
+	Vector2i size;
+	size.x = 1;
+	size.y = 1;
 	EnemyStats stats;
 	stats.speed = 0.f;
 	stats.health = 0.f;
@@ -245,16 +253,20 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 	switch (type)
 	{
 	case SMALL_SLOW:
-		texture_id = RESOURCES::ENEMY_TEXTURE;
+		texture_id = RESOURCES::ENEMY_BIG_MED;
 		stats.health = 50.f;
 		stats.speed = 10.f;
 		stats.damage = 20.f;
+		size.x = 4;
+		size.y = 4;
 		break;
 	case SMALL_MEDIUM:
-		texture_id = RESOURCES::ENEMY_TEXTURE;
+		texture_id = RESOURCES::ENEMY_BIG_TEXTURE;
 		stats.health = 40.f;
 		stats.speed = 7.5f;
 		stats.damage = 10.f;
+		size.x = 2;
+		size.y = 2;
 		break;
 	case SMALL_FAST:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
@@ -314,7 +326,7 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 		break;
 	}
 	stats.speed *= 5;
-	Enemy *enemy = new Enemy(texture_id, startPos, stats);
+	Enemy *enemy = new Enemy(texture_id, startPos, stats, size);
 	return enemy;
 }
 

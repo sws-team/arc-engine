@@ -31,6 +31,8 @@ public:
 
 	void spawn(ENEMY_TYPES type);
 	void test();
+	void moveNext();
+	void moveNextUpdate();
 	void left();
 	void right();
 	void down();

@@ -298,14 +298,14 @@ void Level::checkAlive()
 
 void Level::checkRespawn()
 {
-	const int timeOffset = rand() % 1000 - 300;
-	if (spawnTimer.check(1000 + timeOffset))
-	{
-		const int n = rand() % spawnEnemies.size();
-		ENEMY_TYPES type = spawnEnemies.at(n);
-		spawnEnemies.erase(find(spawnEnemies.begin(), spawnEnemies.end(), type));
-		spawn(type);
-	}
+//	const int timeOffset = rand() % 1000 - 300;
+//	if (spawnTimer.check(1000 + timeOffset))
+//	{
+//		const int n = rand() % spawnEnemies.size();
+//		ENEMY_TYPES type = spawnEnemies.at(n);
+//		spawnEnemies.erase(find(spawnEnemies.begin(), spawnEnemies.end(), type));
+//		spawn(type);
+//	}
 }
 
 Tower *Level::getTowerAtPos(const Vector2f &pos) const
@@ -448,9 +448,35 @@ void Level::spawn(ENEMY_TYPES type)
 }
 
 void Level::test()
-{	
-//	changeState(WIN);
-	hitPlayer(10);
+{
+	spawn(ENEMY_TYPES::SMALL_SLOW);
+//	spawn(ENEMY_TYPES::SMALL_MEDIUM);
+//	spawn(ENEMY_TYPES::SMALL_FAST);
+}
+
+void Level::moveNext()
+{
+	for(Enemy* enemy : enemies)
+	{
+		if (enemy->moveStep())
+		{
+			if (gameMap->endRect.contains(enemy->enemyPos()))
+				continue;
+
+			const Vector2i cell = Engine::Instance().camera()->posToCellMap(enemy->enemyPos() + Vector2f(2, 2));
+			const int direction = getTileDirectionByCell(cell);
+
+		cout << cell.x <<" "<<cell.y << "  =  "<<direction<<endl;
+
+			enemy->moveNext(direction);
+		}
+	}
+}
+
+void Level::moveNextUpdate()
+{
+	for(Enemy* enemy : enemies)
+		enemy->update();
 }
 
 void Level::left()

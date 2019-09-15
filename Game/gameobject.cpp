@@ -5,12 +5,11 @@
 GameObject::GameObject(const RESOURCES::TEXTURE_TYPE& texture_id,
 					   const Vector2f &startPos,
 					   const Vector2i &frameSize,
-					   const int frameCount)
+					   const int fCount)
 	: Animation()
-	,m_movable(true)
 {
 	this->size = frameSize;
-	this->frameCount = frameCount;
+	this->frameCount = fCount;
 	this->animationSpeed = 200;
 	this->loop = true;
 	setTextureId(texture_id);
@@ -46,8 +45,6 @@ void GameObject::move(float dx, float dy)
 
 void GameObject::move(const Vector2f &d)
 {
-	if (!m_movable)
-		return;
 	setPos(sprite.getPosition() + d);
 }
 
@@ -69,16 +66,6 @@ Vector2f GameObject::getSize() const
 FloatRect GameObject::gameRect() const
 {
 	return FloatRect(pos(), getSize());
-}
-
-bool GameObject::getMovable() const
-{
-	return m_movable;
-}
-
-void GameObject::setMovable(bool movable)
-{
-	m_movable = movable;
 }
 
 Sprite &GameObject::getModifiableSprite()
