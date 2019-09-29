@@ -298,14 +298,14 @@ void Level::checkAlive()
 
 void Level::checkRespawn()
 {
-//	const int timeOffset = rand() % 1000 - 300;
-//	if (spawnTimer.check(1000 + timeOffset))
-//	{
-//		const int n = rand() % spawnEnemies.size();
-//		ENEMY_TYPES type = spawnEnemies.at(n);
-//		spawnEnemies.erase(find(spawnEnemies.begin(), spawnEnemies.end(), type));
-//		spawn(type);
-//	}
+	const int timeOffset = rand() % 1000 - 300;
+	if (spawnTimer.check(1000 + timeOffset))
+	{
+		const int n = rand() % spawnEnemies.size();
+		ENEMY_TYPES type = spawnEnemies.at(n);
+		spawnEnemies.erase(find(spawnEnemies.begin(), spawnEnemies.end(), type));
+		spawn(type);
+	}
 }
 
 Tower *Level::getTowerAtPos(const Vector2f &pos) const
@@ -534,7 +534,26 @@ int Level::getTileDirectionByCell(const Vector2i& cell) const
 	if(gameMap->tileProperties.find(id) != gameMap->tileProperties.end())
 	{
 		const Tile::TileProperties properties = gameMap->tileProperties.at(id);
-		return properties.direction;
+		if (properties.alternate_direction1 == -1 && properties.alternate_direction2 == -1)
+			return properties.direction;
+		int num = 1;
+		if (properties.alternate_direction1 != -1)
+			num++;
+		if (properties.alternate_direction2 != -1)
+			num++;
+
+		const int result = rand() % num;
+		switch (result)
+		{
+		case 0:
+			return properties.direction;
+		case 1:
+			return properties.alternate_direction1;
+		case 2:
+			return properties.alternate_direction2;
+		default:
+			break;
+		}
 	}
 	return 0;
 }

@@ -332,6 +332,10 @@ bool Engine::loadMap(const String &fileName)
 
 				if (propertyName == "direction")
 					tileProperty.direction = stoi(propertyValue);
+				if (propertyName == "alternate_direction1")
+					tileProperty.alternate_direction1 = stoi(propertyValue);
+				if (propertyName == "alternate_direction2")
+					tileProperty.alternate_direction2 = stoi(propertyValue);
 
 				prop = prop->NextSiblingElement("property");
 			}
