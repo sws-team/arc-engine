@@ -21,8 +21,6 @@ protected:
 	void closeEvent() override;
 
 private:
-	class Controller *controller;
-
 	Text paused;
 	Sprite menuImg;
 	Sprite finishedImg;

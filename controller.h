@@ -11,6 +11,7 @@ class Controller
 {
 public:
 	Controller();
+
 	void setPauseFunc(const function<void ()> &value);
 	void keyEvent();
 	void pausedEvents();
@@ -27,6 +28,9 @@ private:
 	function<void()> pauseFunc;
 
 	ControlSettings m_controls;
+#ifdef STEAM_API
+	class ISteamScreenshots *p_screenShoots;
+#endif
 };
 
 #endif // CONTROLLER_H

@@ -9,6 +9,10 @@
 Controller::Controller()
 {
 	m_controls = GlobalVariables::Instance().controls();
+#ifdef STEAM_API
+	p_screenShoots = SteamScreenshots();
+	p_screenShoots->HookScreenshots(true);
+#endif
 }
 
 void Controller::keyEvent()
@@ -22,6 +26,10 @@ void Controller::keyboardKeyEvent(const bool timeout)
 {
 	if (timeout)
 	{
+#ifdef STEAM_API
+		if (Keyboard::isKeyPressed(Keyboard::F12))
+			p_screenShoots->TriggerScreenshot();
+#endif
 		if (Keyboard::isKeyPressed(Keyboard::P))
 			Engine::Instance().level()->spawn(ENEMY_TYPES::SMALL_SLOW);
 

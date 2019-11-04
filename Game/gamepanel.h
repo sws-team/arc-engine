@@ -39,6 +39,8 @@ public:
 
 	void updateInfo();
 
+	void initMission(unsigned int n);
+
 private:
 	Sprite m_sprite;
 	RenderTexture rTexture;
@@ -46,15 +48,15 @@ private:
 	Text lifeCountText;
 	Text energyCountText;
 
-	RectangleShape sellRect;
-	RectangleShape upgradeRect;
+	Sprite sellSprite;
+	Sprite upgradeSprite;
 
 	Sprite abilityBombSprite;
 	Sprite abilityFreezeBombSprite;
 	Sprite abilityVenomSprite;
 	Sprite abilityIncreaseTowerDamageSprite;
 	Sprite abilityIncreaseTowerAttackSpeedSprite;
-	Sprite abilityTimeStopSprite;
+	Sprite abilityUnknownSprite;
 
 	Sprite towerBaseSprite;
 	Sprite towerLaserSprite;
@@ -77,10 +79,32 @@ private:
 	class LifeBar *progress;
 	int m_progressMax;
 
+	struct IconsAvaliable
+	{
+		bool isRocketEnabled;
+		bool isFreezeEnabled;
+		bool isLaserEnabled;
+		bool isImprovedEnabled;
+
+		bool isAbilityBombEnabled;
+		bool isAbilityFreezeBombEnabled;
+		bool isAbilityVenomEnabled;
+		bool isAbilityIncreaseTowerDamageEnabled;
+		bool isAbilityIncreaseTowerAttackSpeedEnabled;
+		bool isAbilityUnknownEnabled;
+	};
+	IconsAvaliable iconsAvaliable;
+
 	void updateEnableTowers();
 	void updateEnableAbilities();
 
 	String towerInfo(TOWER_TYPES type, Tower *tower);
+
+	Sprite cursorSprite;
+	void updateCursor();
+	bool isCursorVisible;
+
+	vector<Sprite*> actionsSprites;
 };
 
 #endif // GAMEPANEL_H

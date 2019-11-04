@@ -19,6 +19,15 @@
 
 int main(int argc, char *argv[])
 {
+#ifdef STEAM_API
+//	if (SteamAPI_RestartAppIfNecessary(48))
+//		return EXIT_FAILURE;
+	if ( !SteamAPI_Init() )
+	{
+		printf( "Fatal Error - Steam must be running to play this game (SteamAPI_Init() failed).\n" );
+		return EXIT_FAILURE;
+	}
+#endif
 	std::srand(std::time(nullptr));
     String path = String(argv[0]);
 	const String appName = String("TowerDefence_") + String(APP_VERSION)
@@ -34,16 +43,8 @@ int main(int argc, char *argv[])
 //	std::cout << path.toAnsiString() << std::endl;
 
     GlobalVariables::Instance().setApplicationPath(path);
-
 	GlobalVariables::Instance().loadGameSettings();
 
-#ifdef STEAM_API
-    if ( !SteamAPI_Init() )
-    {
-        printf( "Fatal Error - Steam must be running to play this game (SteamAPI_Init() failed).\n" );
-        return 1;
-    }
-#endif
 #ifdef CRASH_REPORTER
     Breakpad::CrashHandler::Init("desktop");
 #endif
@@ -54,5 +55,9 @@ int main(int argc, char *argv[])
 	MainWindow w;
 	Settings::Instance().setMainWindow(&w);
 	Settings::Instance().updateWindow();
-    return w.exec();
+	const int result = w.exec();
+#ifdef STEAM_API
+	SteamAPI_Shutdown();
+#endif
+	return result;
 }

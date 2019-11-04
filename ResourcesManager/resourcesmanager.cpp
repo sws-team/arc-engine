@@ -28,6 +28,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::GAME_MENU_TEXTURE, "images/gameMenu.png");
 	addTexture(RESOURCES::GAME_OVER_TEXTURE, "images/GameOver.png");
 	addTexture(RESOURCES::MISSON_COMPLETED_TEXTURE, "images/missionCompleted.png");
+	addTexture(RESOURCES::PANEL_CURSOR, "images/ui/Panel/panel_cursor.png");
 
 	addTexture(RESOURCES::ABILITY_BOMB, "images/ui/Panel/Abilities/ability_bomb.png");
 	addTexture(RESOURCES::ABILITY_FREEZE_BOMB, "images/ui/Panel/Abilities/ability_freeze_bomb.png");

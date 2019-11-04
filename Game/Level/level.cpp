@@ -182,6 +182,7 @@ void Level::startMission(const unsigned int n)
 //	difficulty = 1.f + static_cast<float>(SavedGameLoader::Instance().getSavedGame().completedLevels.size()) / 10;
 
 	gameMap = Engine::Instance().getMap(n);
+	Engine::Instance().panel()->initMission(n);
 
 	testTexture.loadFromFile("tiles.png", IntRect(0,0,32,32));
 	testTexture.setRepeated(true);

@@ -9,7 +9,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 DESTDIR = TowerDefence
 
-CONFIG += c++14
+CONFIG += c++17
 
 include(../build_environment.pri)
 include($$PWD/3rdPartyIncludes.pri)
@@ -45,6 +45,8 @@ DEFINES += APP_VERSION=\\\"$${NORMAL_VERSION}\\\"
 win32: DEFINES += OS_WIN
 unix: DEFINES += OS_UNIX
 
+DEFINES += STEAM_API
+
 TARGET = TowerDefence_$${VERSION}
 
 include($$PWD/Windows/Windows.pri)
@@ -53,6 +55,10 @@ include($$PWD/Engine/Engine.pri)
 include($$PWD/Translations/Translations.pri)
 include($$PWD/ResourcesManager/ResourcesManager.pri)
 include($$PWD/Crypto/Crypto.pri)
+
+contains(DEFINES, STEAM_API) {
+include($$PWD/../3rdParty/SteamAPI.pri)
+}
 
 #DEFINES += TEST_BUILD
 

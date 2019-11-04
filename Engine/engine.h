@@ -8,6 +8,12 @@ class Cursor;
 class Level;
 class GamePanel;
 class Map;
+class Controller;
+
+#ifdef STEAM_API
+#include "steam_api.h"
+#endif
+#include "Game/achievements.h"
 
 class Engine
 {
@@ -44,6 +50,7 @@ public:
 
 	Level *level();
 	GamePanel *panel();
+	Controller *controller();
 
 	void reset();
 
@@ -71,6 +78,9 @@ public:
 	vector<CompletedMission> getCompletedMissions() const;
 	unsigned int maxCompletedLevel() const;
 
+	void checkAchievments();
+	bool unlockAchievment(GameAchievements::AchievmentsTypes type);
+
 private:
 	Engine();
 	Engine(const Engine& root) = delete;
@@ -82,15 +92,17 @@ private:
 	Cursor *m_cursor;
 	Level *m_level;
 	GamePanel *m_panel;
+	Controller *m_controller;
 
 	RenderWindow *p_window;
-
-
 
 	vector<CompletedMission> m_save;
 	string saveFileName;
 	vector<Map*> maps;
 	unsigned int m_mission;
+#ifdef STEAM_API
+	STEAM_CALLBACK(Engine, OnGameOverlayActivated, GameOverlayActivated_t);
+#endif
 };
 
 #endif // ENGINE_H

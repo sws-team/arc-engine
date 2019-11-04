@@ -21,8 +21,6 @@ GameWindow::GameWindow()
 
 	m_state = PLAYING;
 
-	controller = new Controller();
-
 	paused.setString("Paused");
 	paused.setFillColor(Color::Blue);
 	paused.setCharacterSize(140);
@@ -46,7 +44,7 @@ GameWindow::GameWindow()
 void GameWindow::init()
 {
 	unsigned int missionNumber = Engine::Instance().getMission();
-	controller->setPauseFunc(bind(&GameWindow::pause, this));
+	Engine::Instance().controller()->setPauseFunc(bind(&GameWindow::pause, this));
 	Engine::Instance().level()->startMission(missionNumber);
 }
 
@@ -98,11 +96,11 @@ void GameWindow::eventFilter(Event *event)
 		default:
 			break;
 		}		
-		controller->keyEvent();
+		Engine::Instance().controller()->keyEvent();
 	}
 		break;
 	case PAUSED:
-		controller->pausedEvents();
+		Engine::Instance().controller()->pausedEvents();
 		break;
 	case IN_MENU:
 		Menu::eventFilter(event);

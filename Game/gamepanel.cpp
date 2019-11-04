@@ -14,6 +14,7 @@
 
 GamePanel::GamePanel() :
 	GameDrawable()
+  ,isCursorVisible(false)
 {
 	progress = new LifeBar();
 	m_selectedTower = nullptr;
@@ -45,13 +46,14 @@ GamePanel::GamePanel() :
 	energyCountText.setOutlineThickness(2);
 	energyCountText.setCharacterSize(34);
 
-	sellRect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::SELL_TEXTURE));
-	sellRect.setFillColor(Color::Cyan);
-	sellRect.setSize(GlobalVariables::Instance().tileSize());
+	cursorSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_CURSOR));
+	cursorSprite.setScale(Settings::Instance().getScaleFactor());
 
-	upgradeRect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::UPGRADE_TEXTURE));
-	upgradeRect.setFillColor(Color::Cyan);
-	upgradeRect.setSize(GlobalVariables::Instance().tileSize());
+	sellSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::SELL_TEXTURE));
+	sellSprite.setScale(Settings::Instance().getScaleFactor());
+
+	upgradeSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::UPGRADE_TEXTURE));
+	upgradeSprite.setScale(Settings::Instance().getScaleFactor());
 
 	abilityBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_BOMB));
 	abilityBombSprite.setScale(Settings::Instance().getScaleFactor());
@@ -68,8 +70,8 @@ GamePanel::GamePanel() :
 	abilityIncreaseTowerAttackSpeedSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_INCREASE_TOWER_ATTACK_SPEED));
 	abilityIncreaseTowerAttackSpeedSprite.setScale(Settings::Instance().getScaleFactor());
 
-	abilityTimeStopSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_TIME_STOP));
-	abilityTimeStopSprite.setScale(Settings::Instance().getScaleFactor());
+	abilityUnknownSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_TIME_STOP));
+	abilityUnknownSprite.setScale(Settings::Instance().getScaleFactor());
 
 
 	towerBaseSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_BASE));
@@ -98,6 +100,21 @@ GamePanel::GamePanel() :
 
 	spriteReady.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::READY_TEXTURE));
 	spriteReady.setScale(Settings::Instance().getScaleFactor());
+
+	actionsSprites.push_back(&sellSprite);
+	actionsSprites.push_back(&upgradeSprite);
+	actionsSprites.push_back(&towerBaseSprite);
+	actionsSprites.push_back(&towerFreezeSprite);
+	actionsSprites.push_back(&towerPowerSprite);
+	actionsSprites.push_back(&towerLaserSprite);
+	actionsSprites.push_back(&towerRocketSprite);
+	actionsSprites.push_back(&towerImprovedSprite);
+	actionsSprites.push_back(&abilityBombSprite);
+	actionsSprites.push_back(&abilityFreezeBombSprite);
+	actionsSprites.push_back(&abilityVenomSprite);
+	actionsSprites.push_back(&abilityIncreaseTowerDamageSprite);
+	actionsSprites.push_back(&abilityIncreaseTowerAttackSpeedSprite);
+	actionsSprites.push_back(&abilityUnknownSprite);
 
 	m_bottomValue = 0;
 	progress->init(Vector2i(Settings::Instance().getResolution().x * 0.3f, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
@@ -144,7 +161,7 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(abilityVenomSprite);
 	target->draw(abilityIncreaseTowerDamageSprite);
 	target->draw(abilityIncreaseTowerAttackSpeedSprite);
-	target->draw(abilityTimeStopSprite);
+	target->draw(abilityUnknownSprite);
 
 	updateEnableTowers();
 
@@ -155,16 +172,28 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(towerPowerSprite);
 	target->draw(towerImprovedSprite);
 
-	if (m_selectedTower != nullptr)
+	target->draw(sellSprite);
+	target->draw(upgradeSprite);
+
+	if (m_selectedTower == nullptr)
 	{
-		target->draw(sellRect);
-		target->draw(upgradeRect);
+		sellSprite.setColor(GlobalVariables::GrayColor);
+		upgradeSprite.setColor(GlobalVariables::GrayColor);
 	}
+	else
+	{
+		sellSprite.setColor(Color::White);
+		upgradeSprite.setColor(Color::White);
+	}
+
 	if(Engine::Instance().level()->getState() == Level::WAIT_READY)
 		target->draw(spriteReady);
 	target->draw(miniMapSprite);
 	if (Engine::Instance().getMission() != GlobalVariables::SURVIVAL_MODE_ID)
 		progress->draw(target);
+
+	if (isCursorVisible)
+		target->draw(cursorSprite);
 }
 
 void GamePanel::update()
@@ -179,6 +208,7 @@ void GamePanel::update()
 	const float progressValue = static_cast<float>(Engine::Instance().level()->currentProgress()) / m_progressMax;
 	progress->setValue(progressValue);
 
+	updateCursor();
 	updateInfo();
 }
 
@@ -217,7 +247,7 @@ ACTION_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
 	if (abilityFreezeBombSprite.getGlobalBounds().contains(center))
 		return ACTION_STATE::ABILITY_FREEZE_BOMB;
 
-	if (abilityTimeStopSprite.getGlobalBounds().contains(center))
+	if (abilityUnknownSprite.getGlobalBounds().contains(center))
 		return ACTION_STATE::ABILITY_UNKNOWN;
 
 	if (abilityVenomSprite.getGlobalBounds().contains(center))
@@ -229,10 +259,10 @@ ACTION_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
 	if (abilityIncreaseTowerAttackSpeedSprite.getGlobalBounds().contains(center))
 		return ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED;
 
-	if (sellRect.getGlobalBounds().contains(center))
+	if (sellSprite.getGlobalBounds().contains(center))
 		return ACTION_STATE::SELL;
 
-	if (upgradeRect.getGlobalBounds().contains(center))
+	if (upgradeSprite.getGlobalBounds().contains(center))
 		return ACTION_STATE::UPGRADE;
 
 	return ACTION_STATE::READY;
@@ -299,11 +329,14 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	pos.x += info_offset;
 
 	pos.x += block_space;
-	sellRect.setPosition(pos);
+	sellSprite.setPosition(pos);
 
 	pos.y += iconSize.y;
-	upgradeRect.setPosition(pos);
+	pos.y += icons_space;
 
+	upgradeSprite.setPosition(pos);
+
+	pos.y -= icons_space;
 	pos.y -= iconSize.y;
 	pos.x += iconSize.x;
 
@@ -367,7 +400,7 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	pos.x += icons_space;
 	pos.x += iconSize.x;
 
-	abilityTimeStopSprite.setPosition(pos);
+	abilityUnknownSprite.setPosition(pos);
 	pos.x += icons_space;
 	pos.x += iconSize.x;
 
@@ -392,25 +425,19 @@ void GamePanel::updateEnableTowers()
 		towerBaseSprite.setColor(Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::LASER).cost;
-	if (money < cost)
+	if (money < cost || !iconsAvaliable.isLaserEnabled)
 		towerLaserSprite.setColor(GlobalVariables::GrayColor);
 	else
 		towerLaserSprite.setColor(Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::FREEZE).cost;
-	if (money < cost)
+	if (money < cost || !iconsAvaliable.isFreezeEnabled)
 		towerFreezeSprite.setColor(GlobalVariables::GrayColor);
 	else
 		towerFreezeSprite.setColor(Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::ROCKET).cost;
-	if (money < cost)
-		towerRocketSprite.setColor(GlobalVariables::GrayColor);
-	else
-		towerRocketSprite.setColor(Color::White);
-
-	cost = TowersFactory::getTowerStats(TOWER_TYPES::ROCKET).cost;
-	if (money < cost)
+	if (money < cost || !iconsAvaliable.isRocketEnabled)
 		towerRocketSprite.setColor(GlobalVariables::GrayColor);
 	else
 		towerRocketSprite.setColor(Color::White);
@@ -422,7 +449,7 @@ void GamePanel::updateEnableTowers()
 		towerPowerSprite.setColor(Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::IMPROVED).cost;
-	if (money < cost)
+	if (money < cost || !iconsAvaliable.isImprovedEnabled)
 		towerImprovedSprite.setColor(GlobalVariables::GrayColor);
 	else
 		towerImprovedSprite.setColor(Color::White);
@@ -433,40 +460,40 @@ void GamePanel::updateEnableAbilities()
 	const float energy = Engine::Instance().level()->getEnergyCount();
 
 	float cost = Level::BOMB_ABILITY_COST;
-	if (energy < cost)
+	if (energy < cost || !iconsAvaliable.isAbilityBombEnabled)
 		abilityBombSprite.setColor(GlobalVariables::GrayColor);
 	else
 		abilityBombSprite.setColor(Color::White);
 
 	cost = Level::FREEZE_BOMB_ABILITY_COST;
-	if (energy < cost)
+	if (energy < cost || !iconsAvaliable.isAbilityFreezeBombEnabled)
 		abilityFreezeBombSprite.setColor(GlobalVariables::GrayColor);
 	else
 		abilityFreezeBombSprite.setColor(Color::White);
 
 	cost = Level::VENOM_ABILITY_COST;
-	if (energy < cost)
+	if (energy < cost || !iconsAvaliable.isAbilityVenomEnabled)
 		abilityVenomSprite.setColor(GlobalVariables::GrayColor);
 	else
 		abilityVenomSprite.setColor(Color::White);
 
 	cost = Level::INC_TOWER_DMG_ABILITY_COST;
-	if (energy < cost)
+	if (energy < cost || !iconsAvaliable.isAbilityIncreaseTowerDamageEnabled)
 		abilityIncreaseTowerDamageSprite.setColor(GlobalVariables::GrayColor);
 	else
 		abilityIncreaseTowerDamageSprite.setColor(Color::White);
 
 	cost = Level::INC_TOWER_AS_ABILITY_COST;
-	if (energy < cost)
+	if (energy < cost || !iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled)
 		abilityIncreaseTowerAttackSpeedSprite.setColor(GlobalVariables::GrayColor);
 	else
 		abilityIncreaseTowerAttackSpeedSprite.setColor(Color::White);
 
 	cost = 10000;
-	if (energy < cost)
-		abilityTimeStopSprite.setColor(GlobalVariables::GrayColor);
+	if (energy < cost || !iconsAvaliable.isAbilityUnknownEnabled)
+		abilityUnknownSprite.setColor(GlobalVariables::GrayColor);
 	else
-		abilityTimeStopSprite.setColor(Color::White);
+		abilityUnknownSprite.setColor(Color::White);
 }
 
 String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
@@ -535,6 +562,25 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 	return str;
 }
 
+void GamePanel::updateCursor()
+{
+	isCursorVisible = false;
+	if (!Engine::Instance().cursor()->inPanel())
+		return;
+	const Vector2f pos = Engine::Instance().cursor()->pos();
+	Vector2f center = pos;
+	center += Vector2f(ICON_SIZE/2, ICON_SIZE/2);
+	for(Sprite *sprite : actionsSprites)
+	{
+		if (sprite->getGlobalBounds().contains(center))
+		{
+			cursorSprite.setPosition(sprite->getPosition());
+			isCursorVisible = true;
+			break;
+		}
+	}
+}
+
 void GamePanel::updateInfo()
 {
 	String str;
@@ -584,6 +630,67 @@ void GamePanel::updateInfo()
 			str = towerInfo(tower->type(), tower);
 	}
 	info.setString(str);
+}
+
+void GamePanel::initMission(unsigned int n)
+{
+	iconsAvaliable.isRocketEnabled = true;
+	iconsAvaliable.isFreezeEnabled = true;
+	iconsAvaliable.isLaserEnabled = true;
+	iconsAvaliable.isImprovedEnabled = true;
+	iconsAvaliable.isAbilityBombEnabled = true;
+	iconsAvaliable.isAbilityFreezeBombEnabled = true;
+	iconsAvaliable.isAbilityVenomEnabled = true;
+	iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = true;
+	iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = true;
+	iconsAvaliable.isAbilityUnknownEnabled = true;
+
+	switch (n)
+	{
+	case 0:
+		iconsAvaliable.isRocketEnabled = false;
+		iconsAvaliable.isFreezeEnabled = false;
+		iconsAvaliable.isLaserEnabled = false;
+		iconsAvaliable.isImprovedEnabled = false;
+		iconsAvaliable.isAbilityBombEnabled = false;
+		iconsAvaliable.isAbilityFreezeBombEnabled = false;
+		iconsAvaliable.isAbilityVenomEnabled = false;
+		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
+		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
+		iconsAvaliable.isAbilityUnknownEnabled = false;
+		break;
+	case 1:
+		iconsAvaliable.isRocketEnabled = false;
+		iconsAvaliable.isLaserEnabled = false;
+		iconsAvaliable.isImprovedEnabled = false;
+		iconsAvaliable.isAbilityBombEnabled = false;
+		iconsAvaliable.isAbilityVenomEnabled = false;
+		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
+		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
+		iconsAvaliable.isAbilityUnknownEnabled = false;
+		break;
+	case 2:
+		iconsAvaliable.isLaserEnabled = false;
+		iconsAvaliable.isImprovedEnabled = false;
+		iconsAvaliable.isAbilityVenomEnabled = false;
+		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
+		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
+		iconsAvaliable.isAbilityUnknownEnabled = false;
+		break;
+	case 3:
+		iconsAvaliable.isImprovedEnabled = false;
+		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
+		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
+		iconsAvaliable.isAbilityUnknownEnabled = false;
+		break;
+	case 4:
+		iconsAvaliable.isImprovedEnabled = false;
+		iconsAvaliable.isAbilityUnknownEnabled = false;
+		break;
+	default:
+		break;
+	}
+
 }
 
 void GamePanel::setProgressMax(int progressMax)

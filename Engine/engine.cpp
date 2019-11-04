@@ -16,11 +16,14 @@
 #include "Game/Level/camera.h"
 #include "Game/Level/cursor.h"
 #include "Game/Level/level.h"
+#include "controller.h"
 
 #include "json/json.h"
 #include <tinyxml.h>
 #include <tinydir.h>
 #include <base64.h>
+
+#include "isteamuserstats.h"
 
 Engine &Engine::Instance()
 {
@@ -39,7 +42,25 @@ Engine::Engine() :
 	m_state = INTRO;
 	reset();
 	saveFileName = GlobalVariables::Instance().applicationPath().toAnsiString() + string("/saves");
+	SteamUserStats()->RequestCurrentStats();
+//	SteamUtils()->GetAppID();
+
+//	ISteamUserStats *stats = SteamUserStats();
 }
+
+#ifdef STEAM_API
+void Engine::OnGameOverlayActivated(GameOverlayActivated_t *pCallback)
+{
+	if (pCallback->m_bActive)
+	{
+		//pause
+	}
+	else
+	{
+		//unpause
+	}
+}
+#endif
 
 unsigned int Engine::getMission() const
 {
@@ -176,6 +197,26 @@ unsigned int Engine::maxCompletedLevel() const
 	return max;
 }
 
+void Engine::checkAchievments()
+{
+
+}
+
+bool Engine::unlockAchievment(GameAchievements::AchievmentsTypes type)
+{
+	std::string ID;
+	switch (type)
+	{
+	case GameAchievements::COMPLETE_ALL_LEVELS:
+		ID = GameAchievements::COMPLETE_ALL_LEVELS_STR;
+		break;
+	default:
+		return false;
+	}
+	SteamUserStats()->SetAchievement(ID.data());
+	return SteamUserStats()->StoreStats();
+}
+
 Camera *Engine::camera() const
 {
 	return m_camera;
@@ -206,6 +247,11 @@ GamePanel *Engine::panel()
 	return m_panel;
 }
 
+Controller *Engine::controller()
+{
+	return m_controller;
+}
+
 void Engine::reset()
 {
 	if (m_camera != nullptr)
@@ -221,6 +267,7 @@ void Engine::reset()
 	m_cursor = new Cursor();
 	m_panel = new GamePanel();
 	m_level = new Level();
+	m_controller = new Controller();
 }
 
 unsigned int Engine::missionsCount() const

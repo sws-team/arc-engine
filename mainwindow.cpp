@@ -60,6 +60,9 @@ int MainWindow::exec()
 		clear(Color::Black);
 		currentState->paint(this);
 		display();
+#ifdef STEAM_API
+		SteamAPI_RunCallbacks();
+#endif
 	}
     return EXIT_SUCCESS;
 }

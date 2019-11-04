@@ -1,4 +1,5 @@
 HEADERS += \
+    $$PWD/achievements.h \
     $$PWD/animation.h \
     $$PWD/gameobject.h \
     $$PWD/gamedrawable.h \

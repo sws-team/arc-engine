@@ -257,34 +257,40 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 		stats.health = 50.f;
 		stats.speed = 10.f;
 		stats.damage = 20.f;
-		size.x = 4;
-		size.y = 4;
+		size.x = 1;
+		size.y = 1;
 		break;
 	case SMALL_MEDIUM:
 		texture_id = RESOURCES::ENEMY_BIG_TEXTURE;
 		stats.health = 40.f;
 		stats.speed = 7.5f;
 		stats.damage = 10.f;
-		size.x = 2;
-		size.y = 2;
+		size.x = 1;
+		size.y = 1;
 		break;
 	case SMALL_FAST:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
 		stats.health = 30.f;
 		stats.speed = 5.f;
 		stats.damage = 5.f;
+		size.x = 2;
+		size.y = 2;
 		break;
 	case MID_SLOW:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
 		stats.health = 100.f;
 		stats.speed = 20.f;
 		stats.damage = 40.f;
+		size.x = 2;
+		size.y = 2;
 		break;
 	case MID_MEDIUM:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
 		stats.health = 80.f;
 		stats.speed = 15.f;
 		stats.damage = 20.f;
+		size.x = 2;
+		size.y = 2;
 		break;
 	case MID_FAST:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
@@ -297,18 +303,24 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 		stats.health = 200.f;
 		stats.speed = 40.f;
 		stats.damage = 80.f;
+		size.x = 4;
+		size.y = 4;
 		break;
 	case BIG_MEDIUM:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
 		stats.health = 160.f;
 		stats.speed = 30.f;
 		stats.damage = 40.f;
+		size.x = 4;
+		size.y = 4;
 		break;
 	case BIG_FAST:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
 		stats.health = 120.f;
 		stats.speed = 20.f;
 		stats.damage = 20.f;
+		size.x = 4;
+		size.y = 4;
 		break;
 	case VERY_FAST:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
@@ -321,6 +333,8 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 		stats.health = 400.f;
 		stats.speed = 45.f;
 		stats.damage = 90.f;
+		size.x = 4;
+		size.y = 4;
 		break;
 	default:
 		break;
