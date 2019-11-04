@@ -101,7 +101,7 @@ void Camera::zoomOut()
 void Camera::resetZoom()
 {
 	view->setSize(Settings::Instance().getResolution().x, Settings::Instance().getResolution().y);
-	view->zoom(Settings::Instance().gameScale());
+	view->zoom(Settings::GAME_SCALE);
 
 	minimap->setSize(300, 300);
 	minimap->zoom(MINIMAP_ZOOM);

@@ -273,7 +273,7 @@ void Level::checkEnd()
 			++it;
 	}
 	if (spawnEnemies.empty() && enemies.empty())
-		changeState(WIN);	
+		changeState(WIN);
 }
 
 void Level::checkAlive()
@@ -450,7 +450,8 @@ void Level::spawn(ENEMY_TYPES type)
 
 void Level::test()
 {
-	spawn(ENEMY_TYPES::SMALL_SLOW);
+	changeState(WIN);
+//	spawn(ENEMY_TYPES::SMALL_SLOW);
 //	spawn(ENEMY_TYPES::SMALL_MEDIUM);
 //	spawn(ENEMY_TYPES::SMALL_FAST);
 }

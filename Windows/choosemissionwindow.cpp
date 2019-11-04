@@ -9,8 +9,11 @@ ChooseMissionWindow::ChooseMissionWindow()
 {
 	setBackground(RESOURCES::ABOUT_BACKGROUND);
 
-	const float offset = 160 + Settings::Instance().getScaleFactor().y * 20;
-
+	const float rectSizeX = 160 * Settings::Instance().getScaleFactor().x;
+	const float rectSizeY = 160 * Settings::Instance().getScaleFactor().x;
+	const float offset = rectSizeY + Settings::Instance().getScaleFactor().y * 20;
+	const float iconSizeX = 32 * Settings::Instance().getScaleFactor().x;
+	const float iconSizeY = 32 * Settings::Instance().getScaleFactor().y;
 
 	const float left = Settings::Instance().getResolution().x * 0.3f;
 	float x = left;
@@ -22,12 +25,12 @@ ChooseMissionWindow::ChooseMissionWindow()
 		if (i % 5 == 0 && i != 0)
 		{
 			x = left;
-			y += 160 + 32 + 64;
+			y += rectSizeY + iconSizeY + iconSizeY * 2;
 		}
 
 		MissionView mission;
 		mission.rect.setPosition(x, y);
-		mission.rect.setSize(Vector2f(160, 160));
+		mission.rect.setSize(Vector2f(rectSizeX, rectSizeY));
 		mission.enabled = false;
 		if (i <= maxCompletedLevel + 1)
 			mission.enabled = true;
@@ -42,15 +45,15 @@ ChooseMissionWindow::ChooseMissionWindow()
 		{
 			RectangleShape starRect;
 			starRect.setFillColor(Color::Cyan);
-			starRect.setSize(Vector2f(32, 32));
-			starRect.setPosition(posX, y + 160);
+			starRect.setSize(Vector2f(iconSizeX, iconSizeY));
+			starRect.setPosition(posX, y + rectSizeY);
 			if (j >= rating)
 				starRect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::EMPTY_STAR_TEXTURE));
 			else
 				starRect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::STAR_TEXTURE));
 
 			mission.stars.push_back(starRect);
-			posX += 32;
+			posX += iconSizeX;
 		}
 
 		missions.push_back(mission);

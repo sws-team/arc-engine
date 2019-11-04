@@ -27,24 +27,28 @@ GamePanel::GamePanel() :
 	info.setOutlineColor(Color::Yellow);
 	info.setOutlineThickness(2);
 	info.setCharacterSize(20);
+	info.setScale(Settings::Instance().getScaleFactor());
 
 	moneyCountText.setFont(GlobalVariables::Instance().font());
 	moneyCountText.setFillColor(Color::Black);
 	moneyCountText.setOutlineColor(Color::Yellow);
 	moneyCountText.setOutlineThickness(2);
 	moneyCountText.setCharacterSize(34);
+	moneyCountText.setScale(Settings::Instance().getScaleFactor());
 
 	lifeCountText.setFont(GlobalVariables::Instance().font());
 	lifeCountText.setFillColor(Color::Black);
 	lifeCountText.setOutlineColor(Color::Yellow);
 	lifeCountText.setOutlineThickness(2);
 	lifeCountText.setCharacterSize(34);
+	lifeCountText.setScale(Settings::Instance().getScaleFactor());
 
 	energyCountText.setFont(GlobalVariables::Instance().font());
 	energyCountText.setFillColor(Color::Black);
 	energyCountText.setOutlineColor(Color::Yellow);
 	energyCountText.setOutlineThickness(2);
 	energyCountText.setCharacterSize(34);
+	energyCountText.setScale(Settings::Instance().getScaleFactor());
 
 	cursorSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_CURSOR));
 	cursorSprite.setScale(Settings::Instance().getScaleFactor());
@@ -300,11 +304,11 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 								 ICON_SIZE * Settings::Instance().getScaleFactor().y * Settings::GAME_SCALE);
 
 	const float block_space = iconSize.x/2;
-	const float icons_space = 24 * Settings::GAME_SCALE;
-	const float label_offset = 16 * Settings::GAME_SCALE;
-	const float info_offset = 256 * Settings::GAME_SCALE;
-	const float panel_offset = 62 * Settings::GAME_SCALE;
-	const float text_offset = 320 * Settings::GAME_SCALE;
+	const float icons_space = 24 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().y;
+	const float label_offset = 16 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
+	const float info_offset = 256 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
+	const float panel_offset = 62 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
+	const float text_offset = 320 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
 
 	Vector2f pos = nullPos;
 
