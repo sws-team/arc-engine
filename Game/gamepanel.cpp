@@ -304,7 +304,7 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 								 ICON_SIZE * Settings::Instance().getScaleFactor().y * Settings::GAME_SCALE);
 
 	const float block_space = iconSize.x/2;
-	const float icons_space = 24 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().y;
+	const float icons_space = ICONS_SPACE * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().y;
 	const float label_offset = 16 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
 	const float info_offset = 256 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
 	const float panel_offset = 62 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
@@ -313,7 +313,7 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	Vector2f pos = nullPos;
 
 
-	progress->setPos(Vector2f(pos.x + Settings::Instance().getResolution().x * 0.3f, 20));
+	progress->setPos(Vector2f(pos.x + Settings::Instance().getResolution().x * 0.3f, 20 * Settings::Instance().getScaleFactor().y));
 
 	m_sprite.setPosition(pos);
 
@@ -695,6 +695,53 @@ void GamePanel::initMission(unsigned int n)
 		break;
 	}
 
+}
+
+FloatRect GamePanel::getTowersRect() const
+{
+	const Vector2f pos = Vector2f(towerBaseSprite.getGlobalBounds().left, towerBaseSprite.getGlobalBounds().top);
+	const float icons_space = ICONS_SPACE * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().y;
+	Vector2f size;
+	size.x = towerBaseSprite.getGlobalBounds().width * Settings::GAME_SCALE + icons_space;
+	size.x *= 6;
+	size.y = towerBaseSprite.getGlobalBounds().height;
+	return FloatRect(pos, size);
+}
+
+FloatRect GamePanel::getAbilitiesRect() const
+{
+	const Vector2f pos = Vector2f(abilityBombSprite.getGlobalBounds().left, abilityBombSprite.getGlobalBounds().top);
+	const float icons_space = ICONS_SPACE * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().y;
+	Vector2f size;
+	size.x = abilityBombSprite.getGlobalBounds().width * Settings::GAME_SCALE + icons_space;
+	size.x *= 6;
+	size.y = abilityBombSprite.getGlobalBounds().height;
+	return FloatRect(pos, size);
+}
+
+FloatRect GamePanel::getMoneyRect() const
+{
+	return moneyCountText.getGlobalBounds();
+}
+
+FloatRect GamePanel::getHealthRect() const
+{
+	return lifeCountText.getGlobalBounds();
+}
+
+FloatRect GamePanel::getEnergyRect() const
+{
+	return energyCountText.getGlobalBounds();
+}
+
+FloatRect GamePanel::getRemovRect() const
+{
+	return sellSprite.getGlobalBounds();
+}
+
+FloatRect GamePanel::getUpgradeRect() const
+{
+	return upgradeSprite.getGlobalBounds();
 }
 
 void GamePanel::setProgressMax(int progressMax)

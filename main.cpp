@@ -31,9 +31,6 @@ int main(int argc, char *argv[])
 	std::srand(std::time(nullptr));
     String path = String(argv[0]);
 	const String appName = String("TowerDefence_") + String(APP_VERSION)
-#ifdef TEST_BUILD
-			+ String("_test")
-#endif
 #ifdef OS_WIN
 			+ String(".exe")
 #endif

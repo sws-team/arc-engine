@@ -170,6 +170,7 @@ private:
 		void startShake();
 	};
 	Shake shake;
+
 };
 
 #endif // LEVEL_H

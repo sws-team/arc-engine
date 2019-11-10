@@ -15,7 +15,8 @@
 #include "Game/gamepanel.h"
 #include "Game/Level/camera.h"
 #include "Game/Level/cursor.h"
-#include "Game/Level/level.h"
+#include "Game/Level/level.h""
+#include "Game/Level/instructions.h"
 #include "controller.h"
 
 #include "json/json.h"
@@ -36,6 +37,7 @@ Engine::Engine() :
   ,m_cursor(nullptr)
   ,m_level(nullptr)
   ,m_panel(nullptr)
+  ,m_instructions(nullptr)
   ,m_mission(0)
 {
 	p_window = nullptr;
@@ -170,6 +172,46 @@ float Engine::getStartMoney(const unsigned int n)
 	return 0;
 }
 
+float Engine::getStartEnergy(const unsigned int n)
+{
+	switch (n)
+	{
+	case 128:
+		return 1000;
+	case 0:
+		return 1000;
+	case 1:
+		return 1000;
+	case 2:
+		return 1000;
+	case 3:
+		return 1000;
+	case 4:
+		return 1000;
+	case 5:
+		return 1000;
+	case 6:
+		return 1000;
+	case 7:
+		return 1000;
+	case 8:
+		return 1000;
+	case 9:
+		return 1000;
+	case 10:
+		return 1000;
+	case 11:
+		return 1000;
+	case 12:
+		return 1000;
+	case 13:
+		return 1000;
+	case 14:
+		return 1000;
+	}
+	return 0;
+}
+
 void Engine::setMissionFinished(unsigned int n, unsigned int rating)
 {
 	CompletedMission completedMission;
@@ -252,6 +294,11 @@ Controller *Engine::controller()
 	return m_controller;
 }
 
+Instructions *Engine::instructions()
+{
+	return m_instructions;
+}
+
 void Engine::reset()
 {
 	if (m_camera != nullptr)
@@ -262,12 +309,15 @@ void Engine::reset()
 		delete m_panel;
 	if (m_level != nullptr)
 		delete m_level;
+	if (m_instructions != nullptr)
+		delete m_instructions;
 
 	m_camera = new Camera();
 	m_cursor = new Cursor();
 	m_panel = new GamePanel();
 	m_level = new Level();
 	m_controller = new Controller();
+	m_instructions = new Instructions();
 }
 
 unsigned int Engine::missionsCount() const

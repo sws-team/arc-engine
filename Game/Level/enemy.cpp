@@ -4,6 +4,8 @@
 #include "lifebar.h"
 #include "settings.h"
 
+#define TEST_BUILD
+
 Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const Vector2f &startPos,
 			 const EnemyStats& stats,
@@ -324,7 +326,11 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 		break;
 	case VERY_FAST:
 		texture_id = RESOURCES::ENEMY_TEXTURE;
+#ifdef TEST_BUILD
+		stats.health = 5.f;
+#else
 		stats.health = 35.f;
+#endif
 		stats.speed = 2.5f;
 		stats.damage = 15.f;
 		break;
@@ -351,6 +357,9 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 	{
 	case 0:
 	{
+#ifdef TEST_BUILD
+		addEnemiesByType(VERY_FAST, 3, &spawnEnemies);
+#else
 		addEnemiesByType(SMALL_SLOW, 100, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 40, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 10, &spawnEnemies);
@@ -362,6 +371,7 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(BIG_FAST, 0, &spawnEnemies);
 		addEnemiesByType(VERY_FAST, 0, &spawnEnemies);
 		addEnemiesByType(VERY_BIG, 0, &spawnEnemies);
+#endif
 	}
 		break;
 	case 1:

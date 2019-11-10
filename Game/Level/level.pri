@@ -2,6 +2,7 @@ HEADERS += \
     $$PWD/camera.h \
     $$PWD/cursor.h \
     $$PWD/enemy.h \
+    $$PWD/instructions.h \
     $$PWD/level.h \
     $$PWD/map.h \
     $$PWD/lifebar.h \
@@ -12,6 +13,7 @@ SOURCES += \
     $$PWD/camera.cpp \
     $$PWD/cursor.cpp \
     $$PWD/enemy.cpp \
+    $$PWD/instructions.cpp \
     $$PWD/level.cpp \
     $$PWD/lifebar.cpp \
     $$PWD/projectile.cpp \

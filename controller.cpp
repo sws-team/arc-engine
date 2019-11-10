@@ -5,6 +5,7 @@
 #include "Game/gamepanel.h"
 #include "globalvariables.h"
 #include "Engine/engine.h"
+#include "Game/Level/instructions.h"
 
 Controller::Controller()
 {
@@ -26,6 +27,20 @@ void Controller::keyboardKeyEvent(const bool timeout)
 {
 	if (timeout)
 	{
+		if (Engine::Instance().instructions()->isActive())
+		{
+			if (Keyboard::isKeyPressed(Keyboard::Space))
+				Engine::Instance().instructions()->skip();
+			else if (Keyboard::isKeyPressed(Keyboard::Return))
+				Engine::Instance().instructions()->next();
+
+			if (Mouse::isButtonPressed(Mouse::Left))
+				Engine::Instance().instructions()->next();
+			else if (Mouse::isButtonPressed(Mouse::Right))
+				Engine::Instance().instructions()->skip();
+
+			return;
+		}
 #ifdef STEAM_API
 		if (Keyboard::isKeyPressed(Keyboard::F12))
 			p_screenShoots->TriggerScreenshot();

@@ -3,22 +3,12 @@
 #include "Engine/engine.h"
 #include "statewindow.h"
 
-#ifdef TEST_BUILD
-#include "settings.h"
-#endif
-
 MainWindow::MainWindow()
 	: RenderWindow ()
 	,currentState(nullptr)
 {
 	GlobalVariables::Instance().loadControls();
 	state = Engine::UNKNNOWN;
-
-#ifdef TEST_BUILD
-	SavedGameLoader::Instance().setCurrentSave(0);
-	SavedGameLoader::Instance().setCurrentMission(0);
-	Engine::Instance().setState(Engine::IN_GAME);
-#endif
 }
 
 MainWindow::~MainWindow()

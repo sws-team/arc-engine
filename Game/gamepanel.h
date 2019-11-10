@@ -41,6 +41,14 @@ public:
 
 	void initMission(unsigned int n);
 
+	FloatRect getTowersRect() const;
+	FloatRect getAbilitiesRect() const;
+	FloatRect getMoneyRect() const;
+	FloatRect getHealthRect() const;
+	FloatRect getEnergyRect() const;
+	FloatRect getRemovRect() const;
+	FloatRect getUpgradeRect() const;
+
 private:
 	Sprite m_sprite;
 	RenderTexture rTexture;
@@ -105,6 +113,7 @@ private:
 	bool isCursorVisible;
 
 	vector<Sprite*> actionsSprites;
+	constexpr static float ICONS_SPACE = 24;
 };
 
 #endif // GAMEPANEL_H

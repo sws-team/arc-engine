@@ -9,6 +9,7 @@ class Level;
 class GamePanel;
 class Map;
 class Controller;
+class Instructions;
 
 #ifdef STEAM_API
 #include "steam_api.h"
@@ -51,6 +52,7 @@ public:
 	Level *level();
 	GamePanel *panel();
 	Controller *controller();
+	Instructions *instructions();
 
 	void reset();
 
@@ -63,6 +65,7 @@ public:
 	void load();
 
 	static float getStartMoney(const unsigned int n);
+	static float getStartEnergy(const unsigned int n);
 
 	void setMissionFinished(unsigned int n, unsigned int rating);
 
@@ -93,6 +96,7 @@ private:
 	Level *m_level;
 	GamePanel *m_panel;
 	Controller *m_controller;
+	Instructions *m_instructions;
 
 	RenderWindow *p_window;
 

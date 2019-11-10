@@ -13,6 +13,7 @@
 #include "enemy.h"
 #include "tower.h"
 #include "projectile.h"
+#include "instructions.h"
 
 const float Level::FREEZE_ABILITY_K = 35.f;
 const int Level::FREEZE_ABILITY_DURATION = 5000;
@@ -83,6 +84,7 @@ void Level::draw(RenderTarget *const target)
 	}
 
 	Engine::Instance().panel()->draw(target);
+	Engine::Instance().instructions()->draw(target);
 }
 
 void Level::update()
@@ -175,7 +177,7 @@ void Level::startMission(const unsigned int n)
 	Engine::Instance().panel()->setProgressMax(spawnEnemies.size());
 	life = 100.f + n * 10;
 	money = Engine::getStartMoney(n);
-	energy = 1000;
+	energy = Engine::getStartEnergy(n);
 	Engine::Instance().panel()->update();
 
 	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
@@ -273,7 +275,7 @@ void Level::checkEnd()
 			++it;
 	}
 	if (spawnEnemies.empty() && enemies.empty())
-		changeState(WIN);
+		changeState(WIN);	
 }
 
 void Level::checkAlive()
@@ -299,6 +301,8 @@ void Level::checkAlive()
 
 void Level::checkRespawn()
 {
+	if (spawnEnemies.empty())
+		return;
 	const int timeOffset = rand() % 1000 - 300;
 	if (spawnTimer.check(1000 + timeOffset))
 	{
@@ -467,9 +471,6 @@ void Level::moveNext()
 
 			const Vector2i cell = Engine::Instance().camera()->posToCellMap(enemy->enemyPos() + Vector2f(2, 2));
 			const int direction = getTileDirectionByCell(cell);
-
-		cout << cell.x <<" "<<cell.y << "  =  "<<direction<<endl;
-
 			enemy->moveNext(direction);
 		}
 	}
@@ -607,8 +608,9 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 
 			const float radius = TowersFactory::getTowerStats(type).radius * GlobalVariables::Instance().mapTileSize().x;
 			Engine::Instance().cursor()->activateTower(radius, type);
-			if (type != POWER)
+			if (type != POWER)			
 				highlightPowerTowersRadius(true);
+
 		}
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
