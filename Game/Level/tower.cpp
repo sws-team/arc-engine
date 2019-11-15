@@ -16,6 +16,7 @@ Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, con
 				 4)
 	,m_stats(stats)
 	,m_selected(false)
+	,m_level(1)
 {
 	radius.setRadius(m_stats.radius * GlobalVariables::Instance().mapTileSize().x);
 	radius.setFillColor(Color(34, 255, 56, 120));

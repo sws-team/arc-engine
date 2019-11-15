@@ -672,7 +672,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 
 			if (selectedTower == nullptr)
 				return;
-			selectedTower->upgrade();
+			if (selectedTower->level() < 3)
+				selectedTower->upgrade();
 			Engine::Instance().panel()->update();
 		}
 			break;

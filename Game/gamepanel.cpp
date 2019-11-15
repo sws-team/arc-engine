@@ -122,6 +122,7 @@ GamePanel::GamePanel() :
 
 	m_bottomValue = 0;
 	progress->init(Vector2i(Settings::Instance().getResolution().x * 0.3f, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
+	updateCurrentTower();
 }
 
 GamePanel::~GamePanel()
@@ -146,7 +147,7 @@ void GamePanel::draw(RenderTarget * const target)
 
 	Sprite miniMapSprite;
 	miniMapSprite.setTexture(rTexture.getTexture());
-	miniMapSprite.scale(Settings::Instance().gameScale() * 0.3f, Settings::Instance().gameScale() * 0.3f);
+	miniMapSprite.scale(Settings::Instance().gameScale() * MINIMAP_SCALE, Settings::Instance().gameScale() * MINIMAP_SCALE);
 	miniMapSprite.setPosition(pos);
 
 	//draw
@@ -178,17 +179,6 @@ void GamePanel::draw(RenderTarget * const target)
 
 	target->draw(sellSprite);
 	target->draw(upgradeSprite);
-
-	if (m_selectedTower == nullptr)
-	{
-		sellSprite.setColor(GlobalVariables::GrayColor);
-		upgradeSprite.setColor(GlobalVariables::GrayColor);
-	}
-	else
-	{
-		sellSprite.setColor(Color::White);
-		upgradeSprite.setColor(Color::White);
-	}
 
 	if(Engine::Instance().level()->getState() == Level::WAIT_READY)
 		target->draw(spriteReady);
@@ -229,6 +219,7 @@ Tower *GamePanel::selectedTower() const
 void GamePanel::setSelectedTower(Tower *selectedTower)
 {
 	m_selectedTower = selectedTower;
+	updateCurrentTower();
 }
 
 ACTION_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
@@ -583,6 +574,26 @@ void GamePanel::updateCursor()
 			break;
 		}
 	}
+}
+
+void GamePanel::updateCurrentTower()
+{
+	Color color;
+	int level = 0;
+	if (m_selectedTower == nullptr)
+		color = GlobalVariables::GrayColor;
+	else
+	{
+		color = Color::White;
+		level = m_selectedTower->level();
+
+	}
+
+	upgradeSprite.setTextureRect(IntRect(64*level,0,64,64));
+	sellSprite.setColor(color);
+	upgradeSprite.setColor(color);
+	if (level > 2)
+		upgradeSprite.setColor(GlobalVariables::GrayColor);
 }
 
 void GamePanel::updateInfo()

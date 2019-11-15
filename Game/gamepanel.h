@@ -22,6 +22,7 @@ public:
 	int cellsCount() const;
 
 	constexpr static float ICON_SIZE = 64;
+	constexpr static float MINIMAP_SCALE = 0.3f;
 
 	Tower *selectedTower() const;
 	void setSelectedTower(Tower *selectedTower);
@@ -48,6 +49,8 @@ public:
 	FloatRect getEnergyRect() const;
 	FloatRect getRemovRect() const;
 	FloatRect getUpgradeRect() const;
+
+	void updateCursor();
 
 private:
 	Sprite m_sprite;
@@ -109,11 +112,11 @@ private:
 	String towerInfo(TOWER_TYPES type, Tower *tower);
 
 	Sprite cursorSprite;
-	void updateCursor();
 	bool isCursorVisible;
 
 	vector<Sprite*> actionsSprites;
 	constexpr static float ICONS_SPACE = 24;
+	void updateCurrentTower();
 };
 
 #endif // GAMEPANEL_H

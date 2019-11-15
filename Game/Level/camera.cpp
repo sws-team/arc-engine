@@ -21,6 +21,8 @@ void Camera::init()
 	view->setCenter(Vector2f(gameRect.width/2,
 							 gameRect.height/2));
 
+//	view->reset();
+
 	minimap->setCenter(Vector2f(150 * Settings::Instance().getScaleFactor().x,
 								150 * Settings::Instance().getScaleFactor().y));
 }
@@ -106,7 +108,7 @@ void Camera::resetZoom()
 	view->setSize(Settings::Instance().getResolution().x, Settings::Instance().getResolution().y);
 	view->zoom(Settings::GAME_SCALE);
 
-	minimap->setSize(300 * Settings::Instance().getScaleFactor().x, 300 * Settings::Instance().getScaleFactor().y);
+	minimap->setSize(Settings::Instance().getScaleFactor().x, Settings::Instance().getScaleFactor().y);
 	minimap->zoom(MINIMAP_ZOOM);
 	zoomRatio = 0;
 }
