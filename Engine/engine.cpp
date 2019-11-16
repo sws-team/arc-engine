@@ -47,7 +47,18 @@ Engine::Engine() :
 	SteamUserStats()->RequestCurrentStats();
 //	SteamUtils()->GetAppID();
 
-//	ISteamUserStats *stats = SteamUserStats();
+	//	ISteamUserStats *stats = SteamUserStats();
+}
+
+Map *Engine::findMapByNumber(unsigned int num)
+{
+	const string mapName = "mission" + to_string(num);
+	for(Map *currentMap : maps)
+	{
+		if (currentMap->name == mapName)
+			return currentMap;
+	}
+	return nullptr;
 }
 
 #ifdef STEAM_API
@@ -75,10 +86,10 @@ void Engine::setMission(unsigned int mission)
 }
 
 Map *Engine::getMap(unsigned int mission)
-{
+{	
 	if (mission == GlobalVariables::SURVIVAL_MODE_ID)
-		return maps.at(0);
-	return maps.at(mission);
+		return findMapByNumber(1);
+	return findMapByNumber(mission + 1);
 }
 
 void Engine::save()
@@ -381,6 +392,9 @@ bool Engine::loadMap(const String &fileName)
 		return false;
 	}
 	Map *gameMap = new Map();
+	gameMap->name = fileName.toAnsiString();
+	gameMap->name.erase(fileName.getSize() - 4, 4);
+	gameMap->name.erase(0, 5);
 
 	TiXmlElement *mapElement = doc.FirstChildElement("map");
 
@@ -443,7 +457,7 @@ bool Engine::loadMap(const String &fileName)
 
 	// source - путь до картинки в контейнере image
 	TiXmlElement *image = tilesetElement->FirstChildElement("image");
-	const string imagePath = "tiles.png";/*string(path.begin(), path.end()) +"/"+ string(image->Attribute("source"));*/
+	const string imagePath = string(image->Attribute("source")).erase(0, 3);
 	Image img;
 	if (!img.loadFromFile(imagePath))
 	{

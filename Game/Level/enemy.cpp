@@ -107,6 +107,8 @@ void Enemy::moveNext(int direction)
 		currentStep.x = GlobalVariables::Instance().mapTileSize().x / m_data.speed;
 		newDirection = SPRITE_DIRECTION::SPRITE_RIGHT;
 		break;
+	case Map::NO_MOVE:
+		return;
 	}
 
 	if (newDirection != spriteDirection)

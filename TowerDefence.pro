@@ -10,6 +10,7 @@ CONFIG -= qt
 DESTDIR = TowerDefence
 
 CONFIG += c++17
+QMAKE_CXXFLAGS += -std=c++17
 
 include(../build_environment.pri)
 include($$PWD/3rdPartyIncludes.pri)

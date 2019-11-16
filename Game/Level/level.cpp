@@ -186,7 +186,7 @@ void Level::startMission(const unsigned int n)
 	gameMap = Engine::Instance().getMap(n);
 	Engine::Instance().panel()->initMission(n);
 
-	testTexture.loadFromFile("tiles.png", IntRect(0,0,32,32));
+	testTexture.loadFromFile("tiles_test.png", IntRect(0,0,32,32));
 	testTexture.setRepeated(true);
 
 	constexpr float deadZoneSize = 300;
@@ -325,9 +325,10 @@ Tower *Level::getTowerAtPos(const Vector2f &pos) const
 
 bool Level::canAddTower(const Vector2i &cell, TOWER_TYPES towerType) const
 {
-	bool canCreate = true;
 	const int direction = Engine::Instance().level()->getTileDirectionByCell(cell);
-	canCreate = canCreate && direction == 0;
+	if (direction != Map::STAY)
+		return false;
+	bool canCreate = true;
 	Tower *tower = this->getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
 	canCreate = canCreate && tower == nullptr;
 	if (towerType != POWER)
@@ -454,73 +455,25 @@ void Level::spawn(ENEMY_TYPES type)
 
 void Level::test()
 {
-	changeState(WIN);
+//	changeState(WIN);
 //	spawn(ENEMY_TYPES::SMALL_SLOW);
 //	spawn(ENEMY_TYPES::SMALL_MEDIUM);
 //	spawn(ENEMY_TYPES::SMALL_FAST);
 }
 
-void Level::moveNext()
-{
-	for(Enemy* enemy : enemies)
-	{
-		if (enemy->moveStep())
-		{
-			if (gameMap->endRect.contains(enemy->enemyPos()))
-				continue;
-
-			const Vector2i cell = Engine::Instance().camera()->posToCellMap(enemy->enemyPos() + Vector2f(2, 2));
-			const int direction = getTileDirectionByCell(cell);
-			enemy->moveNext(direction);
-		}
-	}
-}
-
-void Level::moveNextUpdate()
-{
-	for(Enemy* enemy : enemies)
-		enemy->update();
-}
-
-void Level::left()
-{
-	for(Enemy* enemy : enemies)
-		enemy->moveNext(Map::LEFT);
-}
-
-void Level::right()
-{
-	for(Enemy* enemy : enemies)
-		enemy->moveNext(Map::RIGHT);
-}
-
-void Level::down()
-{
-	for(Enemy* enemy : enemies)
-		enemy->moveNext(Map::DOWN);
-}
-
-void Level::up()
-{
-	for(Enemy* enemy : enemies)
-		enemy->moveNext(Map::UP);
-}
-
-Tile Level::getTileByPos(const Vector2f &pos)
+Tile Level::getTileByPos(const Vector2f &pos, unsigned int layer)
 {
 	const Vector2i cell = Engine::Instance().camera()->posToCellMap(pos);
-	return getTileByCell(cell);
+	return getTileByCell(cell, layer);
 }
 
-Tile Level::getTileByCell(const Vector2i &cell) const
+Tile Level::getTileByCell(const Vector2i &cell, unsigned int layer) const
 {
-	const int layer = 0;
 	for (unsigned int i = 0; i < gameMap->layers[layer].tiles.size(); i++)
 	{
 		const Tile tile = gameMap->layers[layer].tiles[i];
 		if (tile.cell == cell)
 			return tile;
-
 	}
 	return Tile();
 }
@@ -532,7 +485,7 @@ void Level::chooseCurrent()
 
 int Level::getTileDirectionByCell(const Vector2i& cell) const
 {
-	const int id = getTileByCell(cell).id;
+	const int id = getTileByCell(cell, 3).id;
 
 	if(gameMap->tileProperties.find(id) != gameMap->tileProperties.end())
 	{

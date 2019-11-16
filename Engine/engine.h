@@ -107,6 +107,7 @@ private:
 #ifdef STEAM_API
 	STEAM_CALLBACK(Engine, OnGameOverlayActivated, GameOverlayActivated_t);
 #endif
+	Map *findMapByNumber(unsigned int num);
 };
 
 #endif // ENGINE_H

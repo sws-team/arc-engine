@@ -31,15 +31,8 @@ public:
 
 	void spawn(ENEMY_TYPES type);
 	void test();
-	void moveNext();
-	void moveNextUpdate();
-	void left();
-	void right();
-	void down();
-	void up();
-
-	Tile getTileByPos(const Vector2f& pos);
-	Tile getTileByCell(const Vector2i& cell) const;
+	Tile getTileByPos(const Vector2f& pos, unsigned int layer = 0);
+	Tile getTileByCell(const Vector2i& cell, unsigned int layer = 0) const;
 
 	void chooseByPos(const Vector2f& pos);
 	void chooseCurrent();

@@ -40,7 +40,8 @@ public:
 		DOWN,
 		UP,
 		LEFT,
-		RIGHT
+		RIGHT,
+		NO_MOVE
 	};
 
 	Map():
