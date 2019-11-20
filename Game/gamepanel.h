@@ -49,6 +49,7 @@ public:
 	FloatRect getEnergyRect() const;
 	FloatRect getRemovRect() const;
 	FloatRect getUpgradeRect() const;
+	FloatRect getProgressRect() const;
 
 	void updateCursor();
 
@@ -116,6 +117,8 @@ private:
 
 	vector<Sprite*> actionsSprites;
 	constexpr static float ICONS_SPACE = 24;
+	constexpr static float PROGRESS_OFFSET = 20;
+	constexpr static float PROGRESS_WIDTH = 0.3f;
 	void updateCurrentTower();
 };
 

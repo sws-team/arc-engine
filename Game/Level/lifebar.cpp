@@ -30,6 +30,11 @@ void LifeBar::setPos(const Vector2f &pos)
 	currentValue.setPosition(pos);
 }
 
+Vector2f LifeBar::pos() const
+{
+	return fullValue.getPosition();
+}
+
 void LifeBar::setValue(float rate)
 {
 	currentValue.setSize(Vector2f(rate * fullSize.x,  fullSize.y));

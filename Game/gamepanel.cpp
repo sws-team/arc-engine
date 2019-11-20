@@ -121,7 +121,8 @@ GamePanel::GamePanel() :
 	actionsSprites.push_back(&abilityUnknownSprite);
 
 	m_bottomValue = 0;
-	progress->init(Vector2i(Settings::Instance().getResolution().x * 0.3f, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
+	progress->init(Vector2i(Settings::Instance().getResolution().x * PROGRESS_WIDTH,
+							LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
 	updateCurrentTower();
 }
 
@@ -135,7 +136,11 @@ void GamePanel::draw(RenderTarget * const target)
 	//update pos
 	Vector2f pos;
 	pos.x = target->getView().getCenter().x - target->getView().getSize().x/2;
-	pos.y = target->getView().getCenter().y + target->getView().getSize().y/2 - m_sprite.getGlobalBounds().height;
+	pos.y = target->getView().getCenter().y + target->getView().getSize().y/2;
+//	progress->setPos(Vector2f(pos.x + Settings::Instance().getResolution().x * 0.3f, 20 * Settings::Instance().getScaleFactor().y));
+	progress->setPos(Vector2f(pos.x + Settings::Instance().getResolution().x * PROGRESS_WIDTH,
+							  pos.y - target->getView().getSize().y + PROGRESS_OFFSET * Settings::Instance().getScaleFactor().y));
+	pos.y -= m_sprite.getGlobalBounds().height;
 	m_bottomValue = pos.y;
 	pos = updatePos(pos);
 
@@ -302,9 +307,6 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	const float text_offset = 320 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
 
 	Vector2f pos = nullPos;
-
-
-	progress->setPos(Vector2f(pos.x + Settings::Instance().getResolution().x * 0.3f, 20 * Settings::Instance().getScaleFactor().y));
 
 	m_sprite.setPosition(pos);
 
@@ -753,6 +755,13 @@ FloatRect GamePanel::getRemovRect() const
 FloatRect GamePanel::getUpgradeRect() const
 {
 	return upgradeSprite.getGlobalBounds();
+}
+
+FloatRect GamePanel::getProgressRect() const
+{
+	return FloatRect(progress->pos().x, progress->pos().y,
+					 Settings::Instance().getResolution().x * PROGRESS_WIDTH,
+					 PROGRESS_OFFSET * Settings::Instance().getScaleFactor().y);
 }
 
 void GamePanel::setProgressMax(int progressMax)

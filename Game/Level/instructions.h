@@ -30,6 +30,7 @@ private:
 		ENERGY,
 		REMOVE,
 		UPGRADE,
+		PROGRESS,
 
 		FINISHED
 	};

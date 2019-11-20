@@ -115,7 +115,13 @@ void Instructions::changeState(Instructions::STATES state)
 		textStr = "Upgrade";
 	}
 		break;
-
+	case PROGRESS:
+	{
+		textRect.setPosition(500, 500);
+		rect = Engine::Instance().panel()->getProgressRect();
+		textStr = "Progress";
+	}
+		break;
 	default:
 		break;
 	}

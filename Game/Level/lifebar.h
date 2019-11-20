@@ -14,6 +14,7 @@ public:
 
 	void draw(RenderTarget *target);
 	void setPos(const Vector2f& pos);
+	Vector2f pos() const;
 
 	void setValue(float rate);
 
