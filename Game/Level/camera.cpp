@@ -17,11 +17,9 @@ void Camera::init()
 	minimap = new View(gameRect);
 
 	resetZoom();
-
+	view->zoom(Settings::GAME_SCALE);
 	view->setCenter(Vector2f(gameRect.width/2,
 							 gameRect.height/2));
-
-//	view->reset();
 
 	minimap->setCenter(Vector2f(150 * Settings::Instance().getScaleFactor().x,
 								150 * Settings::Instance().getScaleFactor().y));
@@ -106,7 +104,7 @@ void Camera::zoomOut()
 void Camera::resetZoom()
 {
 	view->setSize(Settings::Instance().getResolution().x, Settings::Instance().getResolution().y);
-	view->zoom(Settings::GAME_SCALE);
+//	view->zoom(Settings::GAME_SCALE);
 
 	minimap->setSize(Settings::Instance().getScaleFactor().x, Settings::Instance().getScaleFactor().y);
 	minimap->zoom(MINIMAP_ZOOM);
@@ -167,4 +165,10 @@ Vector2f Camera::cellToPos(const Vector2i &cell) const
 {
 	return Vector2f(cell.x * GlobalVariables::Instance().tileSize().x,
 					cell.y * GlobalVariables::Instance().tileSize().y);
+}
+
+void Camera::resetView()
+{
+	resetZoom();
+	view->setCenter(Settings::Instance().getResolution().x/2, Settings::Instance().getResolution().y/2);
 }

@@ -46,6 +46,8 @@ public:
 	Vector2i posToCell(const Vector2f &pos) const;
 	Vector2f cellToPos(const Vector2i &cell) const;
 
+	void resetView();
+
 
 private:
     constexpr static float CAMERA_OFFSET = 4.f;

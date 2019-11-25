@@ -333,7 +333,7 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 #else
 		stats.health = 35.f;
 #endif
-		stats.speed = 2.5f;
+		stats.speed = 5.f;
 		stats.damage = 15.f;
 		break;
 	case VERY_BIG:
@@ -359,9 +359,6 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 	{
 	case 0:
 	{
-#ifdef TEST_BUILD
-		addEnemiesByType(VERY_FAST, 3, &spawnEnemies);
-#else
 		addEnemiesByType(SMALL_SLOW, 100, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 40, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 10, &spawnEnemies);
@@ -373,11 +370,13 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(BIG_FAST, 0, &spawnEnemies);
 		addEnemiesByType(VERY_FAST, 0, &spawnEnemies);
 		addEnemiesByType(VERY_BIG, 0, &spawnEnemies);
-#endif
 	}
 		break;
 	case 1:
 	{
+		#ifdef TEST_BUILD
+		addEnemiesByType(VERY_FAST, 3, &spawnEnemies);
+		#else
 		addEnemiesByType(SMALL_SLOW, 150, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 80, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 20, &spawnEnemies);
@@ -389,6 +388,7 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(BIG_FAST, 0, &spawnEnemies);
 		addEnemiesByType(VERY_FAST, 0, &spawnEnemies);
 		addEnemiesByType(VERY_BIG, 0, &spawnEnemies);
+		#endif
 	}
 		break;
 	case 2:

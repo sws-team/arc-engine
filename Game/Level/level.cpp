@@ -456,7 +456,7 @@ void Level::spawn(ENEMY_TYPES type)
 void Level::test()
 {
 //	changeState(WIN);
-//	spawn(ENEMY_TYPES::SMALL_SLOW);
+	spawn(ENEMY_TYPES::SMALL_SLOW);
 //	spawn(ENEMY_TYPES::SMALL_MEDIUM);
 //	spawn(ENEMY_TYPES::SMALL_FAST);
 }

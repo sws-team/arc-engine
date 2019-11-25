@@ -124,7 +124,10 @@ void GameWindow::update()
 	switch (Engine::Instance().level()->getState())
 	{
 	case Level::WIN:
+	{
+		Engine::Instance().camera()->resetView();
 		setState(FINISHED);
+	}
 		break;
 	case Level::LOSE:
 		setState(GAME_OVER);
