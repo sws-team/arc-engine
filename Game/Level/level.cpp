@@ -419,8 +419,12 @@ void Level::removeAnimation(Animation *animation)
 void Level::drawLevel(RenderTarget * const target)
 {
 	for (size_t layer = 0; layer < gameMap->layers.size(); layer++)
+	{
+		if (!gameMap->layers[layer].visibility)
+			continue;
 		for (size_t tile = 0; tile < gameMap->layers[layer].tiles.size(); tile++)
 			target->draw(gameMap->layers[layer].tiles[tile].sprite);
+	}
 
 	for(Enemy* enemy : enemies)
 		enemy->draw(target);

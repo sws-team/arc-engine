@@ -51,6 +51,8 @@ private:
 	Clock clock;
 	Int64 lastTime;
 	Int64 tick;
+
+	Vector2f viewPos;
 };
 
 #endif // GAMEWINDOW_H

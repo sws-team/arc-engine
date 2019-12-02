@@ -25,6 +25,7 @@ public:
 
 	Vector2f getScaleFactor() const;	
 	Vector2f getOriginalScaleFactor() const;
+	Vector2f getGameScaleFactor() const;
 
 	Vector2i getInscribedResolution() const;
 

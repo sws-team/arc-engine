@@ -42,6 +42,11 @@ Vector2f Settings::getOriginalScaleFactor() const
 					static_cast<float>(resolution.y)/defaultResolution.y);
 }
 
+Vector2f Settings::getGameScaleFactor() const
+{
+	return getScaleFactor() * GAME_SCALE;
+}
+
 Vector2i Settings::getInscribedResolution() const
 {
 	return Vector2i(resolution.x, resolution.x * 9/16);

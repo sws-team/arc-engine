@@ -91,13 +91,12 @@ void Controller::keyboardKeyEvent(const bool timeout)
 			Engine::Instance().camera()->moveDownByCell();			
 			Engine::Instance().camera()->detach();
 		}
-//		if (Keyboard::isKeyPressed(Keyboard::BackSpace))
-//			Engine::Instance().camera()->resetZoom();
+#ifdef TEST_BUILD
 		if (Keyboard::isKeyPressed(Keyboard::Add))
 			Engine::Instance().camera()->zoomIn();
 		if (Keyboard::isKeyPressed(Keyboard::Subtract))
 			Engine::Instance().camera()->zoomOut();
-
+#endif
 		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveLeft)))
 			Engine::Instance().cursor()->moveLeft();
 		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveRight)))

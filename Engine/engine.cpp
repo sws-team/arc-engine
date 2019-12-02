@@ -495,17 +495,18 @@ bool Engine::loadMap(const String &fileName)
 	while (layerElement)
 	{
 		Layer layer;
+		layer.visibility = true;
+		layer.opacity = 255.f;
 
 		// если присутствует opacity, то задаем прозрачность слоя, иначе он полностью непрозрачен
 		if (layerElement->Attribute("opacity") != nullptr)
 		{
-			float opacity = strtod(layerElement->Attribute("opacity"), nullptr);
-			layer.opacity = 255 * opacity;
+			const float opacity = strtod(layerElement->Attribute("opacity"), nullptr);
+			layer.opacity *= opacity;
 		}
-		else
-		{
-			layer.opacity = 255;
-		}
+
+		if (layerElement->Attribute("visible") != nullptr)
+			layer.visibility = static_cast<bool>(atoi(layerElement->Attribute("visible")));
 
 		//  контейнер <data>
 		TiXmlElement *layerDataElement;

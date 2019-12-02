@@ -14,6 +14,6 @@
 using namespace std;
 using namespace sf;
 
-#define watch(x) cout << (#x) << " is " << (x) << endl;
+#define watch(x) cout << (#x) << " is " << (x) << endl
 
 #endif // STDHEADER_H

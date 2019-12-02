@@ -20,87 +20,88 @@ GamePanel::GamePanel() :
 	progress = new LifeBar();
 	m_selectedTower = nullptr;
 
+	const Vector2f scaleFactor = Settings::Instance().getGameScaleFactor();
+
 	m_sprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_TEXTURE));
-	m_sprite.setScale(Settings::Instance().getScaleFactor() * Settings::GAME_SCALE);
+	m_sprite.setScale(scaleFactor);
 
 	info.setFont(GlobalVariables::Instance().font());
 	info.setFillColor(Color::Black);
 	info.setOutlineColor(Color::Yellow);
 	info.setOutlineThickness(2);
 	info.setCharacterSize(20);
-	info.setScale(Settings::Instance().getScaleFactor());
+	info.setScale(scaleFactor);
 
 	moneyCountText.setFont(GlobalVariables::Instance().font());
 	moneyCountText.setFillColor(Color::Black);
 	moneyCountText.setOutlineColor(Color::Yellow);
 	moneyCountText.setOutlineThickness(2);
 	moneyCountText.setCharacterSize(34);
-	moneyCountText.setScale(Settings::Instance().getScaleFactor());
+	moneyCountText.setScale(scaleFactor);
 
 	lifeCountText.setFont(GlobalVariables::Instance().font());
 	lifeCountText.setFillColor(Color::Black);
 	lifeCountText.setOutlineColor(Color::Yellow);
 	lifeCountText.setOutlineThickness(2);
 	lifeCountText.setCharacterSize(34);
-	lifeCountText.setScale(Settings::Instance().getScaleFactor());
+	lifeCountText.setScale(scaleFactor);
 
 	energyCountText.setFont(GlobalVariables::Instance().font());
 	energyCountText.setFillColor(Color::Black);
 	energyCountText.setOutlineColor(Color::Yellow);
 	energyCountText.setOutlineThickness(2);
 	energyCountText.setCharacterSize(34);
-	energyCountText.setScale(Settings::Instance().getScaleFactor());
+	energyCountText.setScale(scaleFactor);
 
 	cursorSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_CURSOR));
-	cursorSprite.setScale(Settings::Instance().getScaleFactor());
+	cursorSprite.setScale(scaleFactor);
 
 	sellSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::SELL_TEXTURE));
-	sellSprite.setScale(Settings::Instance().getScaleFactor());
+	sellSprite.setScale(scaleFactor);
 
 	upgradeSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::UPGRADE_TEXTURE));
-	upgradeSprite.setScale(Settings::Instance().getScaleFactor());
+	upgradeSprite.setScale(scaleFactor);
 
 	abilityBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_BOMB));
-	abilityBombSprite.setScale(Settings::Instance().getScaleFactor());
+	abilityBombSprite.setScale(scaleFactor);
 
 	abilityFreezeBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_FREEZE_BOMB));
-	abilityFreezeBombSprite.setScale(Settings::Instance().getScaleFactor());
+	abilityFreezeBombSprite.setScale(scaleFactor);
 
 	abilityVenomSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_CARPET_BOMBING));
-	abilityVenomSprite.setScale(Settings::Instance().getScaleFactor());
+	abilityVenomSprite.setScale(scaleFactor);
 
 	abilityIncreaseTowerDamageSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_INCREASE_TOWER_DAMAGE));
-	abilityIncreaseTowerDamageSprite.setScale(Settings::Instance().getScaleFactor());
+	abilityIncreaseTowerDamageSprite.setScale(scaleFactor);
 
 	abilityIncreaseTowerAttackSpeedSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_INCREASE_TOWER_ATTACK_SPEED));
-	abilityIncreaseTowerAttackSpeedSprite.setScale(Settings::Instance().getScaleFactor());
+	abilityIncreaseTowerAttackSpeedSprite.setScale(scaleFactor);
 
 	abilityUnknownSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_TIME_STOP));
-	abilityUnknownSprite.setScale(Settings::Instance().getScaleFactor());
-
+	abilityUnknownSprite.setScale(scaleFactor);
 
 	towerBaseSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_BASE));
-	towerBaseSprite.setScale(Settings::Instance().getScaleFactor());
+	towerBaseSprite.setScale(scaleFactor);
 	towerBaseSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerLaserSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_LASER));
-	towerLaserSprite.setScale(Settings::Instance().getScaleFactor());
+	towerLaserSprite.setScale(scaleFactor);
 	towerLaserSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerFreezeSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_FREEZE));
-	towerFreezeSprite.setScale(Settings::Instance().getScaleFactor());
+	towerFreezeSprite.setScale(scaleFactor);
 	towerFreezeSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerRocketSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_ROCKET));
-	towerRocketSprite.setScale(Settings::Instance().getScaleFactor());
+	towerRocketSprite.setScale(scaleFactor);
 	towerRocketSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerPowerSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_POWER));
-	towerPowerSprite.setScale(Settings::Instance().getScaleFactor());
+	towerPowerSprite.setScale(scaleFactor);
 	towerPowerSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerImprovedSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_IMPROVED));
-	towerImprovedSprite.setScale(Settings::Instance().getScaleFactor());
+	towerImprovedSprite.setScale(scaleFactor);
 	towerImprovedSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 
@@ -109,7 +110,7 @@ GamePanel::GamePanel() :
 	readyText.setOutlineColor(Color::Yellow);
 	readyText.setOutlineThickness(2);
 	readyText.setCharacterSize(45);
-	readyText.setScale(Settings::Instance().getScaleFactor());
+	readyText.setScale(scaleFactor);
 	readyText.setString("Press Space to start");
 
 	actionsSprites.push_back(&sellSprite);
@@ -128,20 +129,20 @@ GamePanel::GamePanel() :
 	actionsSprites.push_back(&abilityUnknownSprite);
 
 	moneyIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MONEY_ICON));
-	moneyIcon.setScale(Settings::Instance().getScaleFactor());
+	moneyIcon.setScale(scaleFactor);
 
 	energyIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ENERGY_ICON));
-	energyIcon.setScale(Settings::Instance().getScaleFactor());
+	energyIcon.setScale(scaleFactor);
 
 	healthIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::HEALTH_ICON));
-	healthIcon.setScale(Settings::Instance().getScaleFactor());
+	healthIcon.setScale(scaleFactor);
 
 
 	startSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::START_TEXTURE));
-	startSprite.setScale(Settings::Instance().getScaleFactor());
+	startSprite.setScale(scaleFactor);
 
 	endSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::END_TEXTURE));
-	endSprite.setScale(Settings::Instance().getScaleFactor());
+	endSprite.setScale(scaleFactor);
 
 	m_bottomValue = 0;
 	progress->init(Vector2i(Settings::Instance().getResolution().x * PROGRESS_WIDTH,
@@ -160,8 +161,8 @@ void GamePanel::draw(RenderTarget * const target)
 	Vector2f pos;
 	pos.x = target->getView().getCenter().x - target->getView().getSize().x/2;
 	pos.y = target->getView().getCenter().y + target->getView().getSize().y/2;
-	readyText.setPosition(Vector2f(pos.x + Settings::Instance().getResolution().x/2 - readyText.getGlobalBounds().width/2,
-									pos.y - Settings::Instance().getResolution().y/2 + readyText.getGlobalBounds().height/2));
+	readyText.setPosition(Vector2f(pos.x + Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE - readyText.getGlobalBounds().width/2,
+									pos.y - Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE + readyText.getGlobalBounds().height/2));
 
 	progress->setPos(Vector2f(pos.x + Settings::Instance().getResolution().x * PROGRESS_WIDTH,
 							  pos.y - target->getView().getSize().y + PROGRESS_OFFSET * Settings::Instance().getScaleFactor().y));
@@ -177,7 +178,11 @@ void GamePanel::draw(RenderTarget * const target)
 
 	Sprite miniMapSprite;
 	miniMapSprite.setTexture(rTexture.getTexture());
-	miniMapSprite.scale(Settings::Instance().gameScale() * MINIMAP_SCALE, Settings::Instance().gameScale() * MINIMAP_SCALE);
+
+	const float minimap_scale_x = Settings::GAME_SCALE* 537.f / Settings::Instance().getResolution().x;
+	const float minimap_scale_y = Settings::GAME_SCALE* 152.f / Settings::Instance().getResolution().y;
+
+	miniMapSprite.scale(minimap_scale_x, minimap_scale_y);
 	miniMapSprite.setPosition(pos);
 
 	//draw
@@ -346,8 +351,8 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	const Vector2f iconSize = Vector2f(ICON_SIZE * Settings::Instance().getScaleFactor().x * Settings::GAME_SCALE,
 								 ICON_SIZE * Settings::Instance().getScaleFactor().y * Settings::GAME_SCALE);
 
-	const float info_icons_size = 32 * Settings::Instance().getScaleFactor().x;
-	const float info_icons_offset = 16 * Settings::Instance().getScaleFactor().y;
+	const float info_icons_size = 32 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
+	const float info_icons_offset = 16 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().y;
 	const float block_space = iconSize.x/2;
 	const float icons_space = ICONS_SPACE * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().y;
 	const float label_offset = 16 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
@@ -355,10 +360,11 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	const float panel_offset = 62 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
 	const float text_offset = 320 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
 
-	Vector2f pos = nullPos;
+	Vector2f pos = Vector2f(ceil(nullPos.x), ceil(nullPos.y));
 	m_sprite.setPosition(pos);
 
 	pos.y += icons_space;
+
 	pos.x += panel_offset;
 	pos.x += label_offset;
 	pos.y += info_icons_offset;
@@ -405,7 +411,6 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	info.setPosition(pos);
 
 	//text
-
 	pos.x += text_offset;
 	pos.x += block_space;
 
@@ -462,12 +467,12 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 
 	abilityUnknownSprite.setPosition(pos);
 	pos.x += icons_space;
-	pos.x += iconSize.x;
 
+	pos.y -= icons_space;
 	pos.y -= iconSize.y;
+	pos.x += iconSize.x;
 	pos.x += icons_space;
 
-//	miniMapSprite.setPosition(pos);
 	return pos;
 }
 

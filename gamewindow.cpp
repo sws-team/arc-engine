@@ -50,6 +50,9 @@ void GameWindow::init()
 
 void GameWindow::paint(RenderWindow *window)
 {
+	viewPos = Vector2f(window->getView().getCenter().x - window->getView().getSize().x/2,
+					   window->getView().getCenter().y - window->getView().getSize().y/2);
+
 	Engine::Instance().level()->draw(window);
 	switch (m_state)
 	{
@@ -200,14 +203,23 @@ void GameWindow::setState(const GAME_STATE &state)
 		break;
 	case PAUSED:
 	{
-		paused.setPosition(Vector2f(Settings::Instance().getResolution().x/2 - paused.getGlobalBounds().width/2,
-									Settings::Instance().getResolution().y/2 - paused.getGlobalBounds().height/2));
+		Vector2f pos = viewPos;
+		pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
+		pos.x -= paused.getGlobalBounds().width/2;
+		pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
+		pos.y -= paused.getGlobalBounds().height/2;
+		paused.setPosition(pos);
 	}
 		break;
 	case IN_MENU:
 	{
-		menuImg.setPosition(Vector2f(Settings::Instance().getResolution().x/2 - menuImg.getGlobalBounds().width/2,
-									Settings::Instance().getResolution().y/2 - menuImg.getGlobalBounds().height/2));
+		Vector2f pos = viewPos;
+		pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
+		pos.x -= menuImg.getGlobalBounds().width/2;
+		pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
+		pos.y -= menuImg.getGlobalBounds().height/2;
+
+		menuImg.setPosition(pos);
 
 		const float offsetX = 20.f * Settings::Instance().getScaleFactor().x;
 		const float offsetY = 20.f * Settings::Instance().getScaleFactor().y;

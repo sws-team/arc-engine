@@ -26,7 +26,8 @@ struct Tile
 
 struct Layer
 {
-	int opacity;//непрозрачность слоя
+	float opacity;//непрозрачность слоя
+	bool visibility;
 	vector<Tile> tiles;//закидываем в вектор тайлы
 };
 
