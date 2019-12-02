@@ -69,7 +69,7 @@ public:
     string decription;
 
 	vector<MOVE_DIRECTIONS> directions;
-	Vector2i spawnPos;
+	Vector2f spawnPos;
 	MOVE_DIRECTIONS spawnDirection;
 
 	FloatRect endRect;

@@ -69,7 +69,6 @@ Level::~Level()
 
 void Level::draw(RenderTarget *const target)
 {
-	target->draw(m_background);
 	target->setView(*Engine::Instance().camera()->getView());
 	drawLevel(target);
 	target->draw(deadZone);
@@ -159,7 +158,7 @@ void Level::update()
 	if (timerRegenEnergy.check(REGEN_ENERGY_TIMEOUT))
 	{
 		energy += REGEN_ENERGY_VALUE;
-		Engine::Instance().panel()->update();
+		Engine::Instance().panel()->updatePanel();
 	}
 
 	for(Enemy* enemy : enemies)
@@ -167,7 +166,7 @@ void Level::update()
 	for(Animation *effect : effects)
 		effect->update();
 
-	Engine::Instance().panel()->update();
+	Engine::Instance().panel()->updatePanel();
 }
 
 void Level::startMission(const unsigned int n)
@@ -178,7 +177,7 @@ void Level::startMission(const unsigned int n)
 	life = 100.f + n * 10;
 	money = Engine::getStartMoney(n);
 	energy = Engine::getStartEnergy(n);
-	Engine::Instance().panel()->update();
+	Engine::Instance().panel()->updatePanel();
 
 	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
 //	difficulty = 1.f + static_cast<float>(SavedGameLoader::Instance().getSavedGame().completedLevels.size()) / 10;
@@ -186,8 +185,8 @@ void Level::startMission(const unsigned int n)
 	gameMap = Engine::Instance().getMap(n);
 	Engine::Instance().panel()->initMission(n);
 
-	testTexture.loadFromFile("tiles_test.png", IntRect(0,0,32,32));
-	testTexture.setRepeated(true);
+	Engine::Instance().panel()->updateStartEndPos(gameMap->spawnPos, Vector2f(gameMap->endRect.left, gameMap->endRect.top));
+
 
 	constexpr float deadZoneSize = 300;
 	const Vector2f minPos = Vector2f(-deadZoneSize * Settings::Instance().getScaleFactor().x,
@@ -199,9 +198,6 @@ void Level::startMission(const unsigned int n)
 							  Settings::Instance().getResolution().y + fabs(minPos.y) * 2));
 	deadZone.setOutlineColor(Color::Red);
 	deadZone.setFillColor(Color::Transparent);
-	m_background.setTexture(testTexture);
-	m_background.setPosition(minPos.x, minPos.y);
-	m_background.setTextureRect(IntRect(minPos.x, minPos.y, deadZone.getSize().x, deadZone.getSize().y));
 }
 
 void Level::clear()
@@ -291,7 +287,7 @@ void Level::checkAlive()
 
 			delete enemy;
 			energy++;
-			Engine::Instance().panel()->update();
+			Engine::Instance().panel()->updatePanel();
 			it = enemies.erase(it);
 		}
 		else
@@ -448,7 +444,7 @@ void Level::drawLevel(RenderTarget * const target)
 
 void Level::spawn(ENEMY_TYPES type)
 {
-	Enemy *enemy = EnemiesFactory::createEnemy(type, Engine::Instance().camera()->cellToPosMap(gameMap->spawnPos));
+	Enemy *enemy = EnemiesFactory::createEnemy(type, gameMap->spawnPos);
 	enemy->moveNext(gameMap->spawnDirection);
 	enemies.push_back(enemy);
 }
@@ -612,7 +608,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			money += cost;
 			towers.erase( remove( towers.begin(), towers.end(), selectedTower ), towers.end() );
 			delete selectedTower;
-			Engine::Instance().panel()->update();
+			Engine::Instance().panel()->updatePanel();
 		}
 			break;
 		case UPGRADE:
@@ -627,7 +623,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 				return;
 			if (selectedTower->level() < 3)
 				selectedTower->upgrade();
-			Engine::Instance().panel()->update();
+			Engine::Instance().panel()->updatePanel();
 		}
 			break;
 		}
@@ -666,7 +662,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 				return;
 			towers.push_back(tower);
 			money -= cost;
-			Engine::Instance().panel()->update();
+			Engine::Instance().panel()->updatePanel();
 		}
 			break;
 		case ABILITY_VENOM:
@@ -674,7 +670,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (energy < VENOM_ABILITY_COST)
 				return;
 			energy -= VENOM_ABILITY_COST;
-			Engine::Instance().panel()->update();
+			Engine::Instance().panel()->updatePanel();
 			venomAbility.isActive = true;
 			const Vector2f pos = Vector2f(Engine::Instance().cursor()->getAbilityRect().left, Engine::Instance().cursor()->getAbilityRect().top);
 			venomAbility.object->setPos(pos);
@@ -687,7 +683,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (energy < BOMB_ABILITY_COST)
 				return;
 			energy -= BOMB_ABILITY_COST;
-			Engine::Instance().panel()->update();
+			Engine::Instance().panel()->updatePanel();
 			for (auto it = enemies.begin(); it != enemies.end();)
 			{
 				Enemy *enemy = *it;
@@ -712,7 +708,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (energy < FREEZE_BOMB_ABILITY_COST)
 				return;
 			energy -= FREEZE_BOMB_ABILITY_COST;
-			Engine::Instance().panel()->update();
+			Engine::Instance().panel()->updatePanel();
 			for(Enemy *enemy : enemies)
 				if (enemy->gameRect().intersects(Engine::Instance().cursor()->getAbilityRect()))
 					enemy->freeze(FREEZE_ABILITY_K, FREEZE_ABILITY_DURATION);
@@ -726,7 +722,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (tower != nullptr)
 			{
 				energy -= INC_TOWER_AS_ABILITY_COST;
-				Engine::Instance().panel()->update();
+				Engine::Instance().panel()->updatePanel();
 				tower->increaseAttackSpeed(INCREASE_ATTACK_SPEED_ABILITY_DURATION, INCREASE_ATTACK_SPEED_ABILITY_VALUE);
 			}
 		}
@@ -739,7 +735,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (tower != nullptr)
 			{
 				energy -= INC_TOWER_DMG_ABILITY_COST;
-				Engine::Instance().panel()->update();
+				Engine::Instance().panel()->updatePanel();
 				tower->increaseDamage(INCREASE_DAMAGE_ABILITY_DURATION, INCREASE_DAMAGE_ABILITY_VALUE);
 			}
 		}

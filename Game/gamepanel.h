@@ -19,6 +19,8 @@ public:
 	void draw(RenderTarget *const target) override;
 	void update() override;
 
+	void updatePanel();
+
 	int cellsCount() const;
 
 	constexpr static float ICON_SIZE = 64;
@@ -32,7 +34,7 @@ public:
 
 	float getBottomValue() const;
 
-	void press(const Vector2i &pos);
+//	void press(const Vector2i &pos);
 
 	void setProgressMax(int progressMax);
 
@@ -52,6 +54,7 @@ public:
 	FloatRect getProgressRect() const;
 
 	void updateCursor();
+	void updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos);
 
 private:
 	Sprite m_sprite;
@@ -77,6 +80,10 @@ private:
 	Sprite towerPowerSprite;
 	Sprite towerImprovedSprite;
 
+	Sprite moneyIcon;
+	Sprite energyIcon;
+	Sprite healthIcon;
+
 	Tower *m_selectedTower;
 	Text info;
 
@@ -85,8 +92,6 @@ private:
 
 	float m_bottomValue;
 	bool m_isPanelActive;
-
-	Sprite spriteReady;
 
 	class LifeBar *progress;
 	int m_progressMax;
@@ -120,6 +125,13 @@ private:
 	constexpr static float PROGRESS_OFFSET = 20;
 	constexpr static float PROGRESS_WIDTH = 0.3f;
 	void updateCurrentTower();
+
+	Sprite startSprite;
+	Sprite endSprite;
+	Text readyText;
+	bool waitBlink;
+	Timer blinkTimer;
+	constexpr static int BLINK_TIME = 500;
 };
 
 #endif // GAMEPANEL_H

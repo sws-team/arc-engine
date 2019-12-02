@@ -15,6 +15,7 @@
 GamePanel::GamePanel() :
 	GameDrawable()
   ,isCursorVisible(false)
+  ,waitBlink(false)
 {
 	progress = new LifeBar();
 	m_selectedTower = nullptr;
@@ -102,8 +103,14 @@ GamePanel::GamePanel() :
 	towerImprovedSprite.setScale(Settings::Instance().getScaleFactor());
 	towerImprovedSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
-	spriteReady.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::READY_TEXTURE));
-	spriteReady.setScale(Settings::Instance().getScaleFactor());
+
+	readyText.setFont(GlobalVariables::Instance().font());
+	readyText.setFillColor(Color::Black);
+	readyText.setOutlineColor(Color::Yellow);
+	readyText.setOutlineThickness(2);
+	readyText.setCharacterSize(45);
+	readyText.setScale(Settings::Instance().getScaleFactor());
+	readyText.setString("Press Space to start");
 
 	actionsSprites.push_back(&sellSprite);
 	actionsSprites.push_back(&upgradeSprite);
@@ -119,6 +126,22 @@ GamePanel::GamePanel() :
 	actionsSprites.push_back(&abilityIncreaseTowerDamageSprite);
 	actionsSprites.push_back(&abilityIncreaseTowerAttackSpeedSprite);
 	actionsSprites.push_back(&abilityUnknownSprite);
+
+	moneyIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MONEY_ICON));
+	moneyIcon.setScale(Settings::Instance().getScaleFactor());
+
+	energyIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ENERGY_ICON));
+	energyIcon.setScale(Settings::Instance().getScaleFactor());
+
+	healthIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::HEALTH_ICON));
+	healthIcon.setScale(Settings::Instance().getScaleFactor());
+
+
+	startSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::START_TEXTURE));
+	startSprite.setScale(Settings::Instance().getScaleFactor());
+
+	endSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::END_TEXTURE));
+	endSprite.setScale(Settings::Instance().getScaleFactor());
 
 	m_bottomValue = 0;
 	progress->init(Vector2i(Settings::Instance().getResolution().x * PROGRESS_WIDTH,
@@ -137,7 +160,9 @@ void GamePanel::draw(RenderTarget * const target)
 	Vector2f pos;
 	pos.x = target->getView().getCenter().x - target->getView().getSize().x/2;
 	pos.y = target->getView().getCenter().y + target->getView().getSize().y/2;
-//	progress->setPos(Vector2f(pos.x + Settings::Instance().getResolution().x * 0.3f, 20 * Settings::Instance().getScaleFactor().y));
+	readyText.setPosition(Vector2f(pos.x + Settings::Instance().getResolution().x/2 - readyText.getGlobalBounds().width/2,
+									pos.y - Settings::Instance().getResolution().y/2 + readyText.getGlobalBounds().height/2));
+
 	progress->setPos(Vector2f(pos.x + Settings::Instance().getResolution().x * PROGRESS_WIDTH,
 							  pos.y - target->getView().getSize().y + PROGRESS_OFFSET * Settings::Instance().getScaleFactor().y));
 	pos.y -= m_sprite.getGlobalBounds().height;
@@ -185,8 +210,16 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(sellSprite);
 	target->draw(upgradeSprite);
 
+	target->draw(moneyIcon);
+	target->draw(energyIcon);
+	target->draw(healthIcon);
+
 	if(Engine::Instance().level()->getState() == Level::WAIT_READY)
-		target->draw(spriteReady);
+	{
+		target->draw(readyText);
+		target->draw(startSprite);
+		target->draw(endSprite);
+	}
 	target->draw(miniMapSprite);
 	if (Engine::Instance().getMission() != GlobalVariables::SURVIVAL_MODE_ID)
 		progress->draw(target);
@@ -196,6 +229,20 @@ void GamePanel::draw(RenderTarget * const target)
 }
 
 void GamePanel::update()
+{	
+	if(Engine::Instance().level()->getState() == Level::WAIT_READY)
+	{
+		if (blinkTimer.check(BLINK_TIME))
+		{
+			waitBlink = !waitBlink;
+			readyText.setFillColor(waitBlink?Color::Black:Color::Red);
+			startSprite.setColor(waitBlink?Color::Yellow:Color::Red);
+			endSprite.setColor(waitBlink?Color::Yellow:Color::Red);
+		}
+	}
+}
+
+void GamePanel::updatePanel()
 {
 	const int money = static_cast<int>(Engine::Instance().level()->getMoneyCount());
 	const int life = static_cast<int>(Engine::Instance().level()->getLifeCount());
@@ -299,6 +346,8 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	const Vector2f iconSize = Vector2f(ICON_SIZE * Settings::Instance().getScaleFactor().x * Settings::GAME_SCALE,
 								 ICON_SIZE * Settings::Instance().getScaleFactor().y * Settings::GAME_SCALE);
 
+	const float info_icons_size = 32 * Settings::Instance().getScaleFactor().x;
+	const float info_icons_offset = 16 * Settings::Instance().getScaleFactor().y;
 	const float block_space = iconSize.x/2;
 	const float icons_space = ICONS_SPACE * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().y;
 	const float label_offset = 16 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
@@ -307,18 +356,32 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	const float text_offset = 320 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
 
 	Vector2f pos = nullPos;
-
 	m_sprite.setPosition(pos);
 
 	pos.y += icons_space;
 	pos.x += panel_offset;
 	pos.x += label_offset;
+	pos.y += info_icons_offset;
+	moneyIcon.setPosition(pos);
+	pos.x += info_icons_size;
 	moneyCountText.setPosition(pos);
+	pos.x -= info_icons_size;
 
+	pos.y += info_icons_offset;
 	pos.y += moneyCountText.getGlobalBounds().height;
+	healthIcon.setPosition(pos);
+	pos.x += info_icons_size;
 	lifeCountText.setPosition(pos);
+	pos.x -= info_icons_size;
+
+	pos.y += info_icons_offset;
 	pos.y += moneyCountText.getGlobalBounds().height;
+	energyIcon.setPosition(pos);
+	pos.x += info_icons_size;
 	energyCountText.setPosition(pos);
+	pos.x -= info_icons_size;
+
+	pos.y -= 3 * info_icons_offset;
 	pos.y -= 2 * moneyCountText.getGlobalBounds().height;
 
 	pos.x -= label_offset;
@@ -403,9 +466,6 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 
 	pos.y -= iconSize.y;
 	pos.x += icons_space;
-
-
-	spriteReady.setPosition(Vector2f(pos.x, pos.y - 400));
 
 //	miniMapSprite.setPosition(pos);
 	return pos;
@@ -578,6 +638,87 @@ void GamePanel::updateCursor()
 	}
 }
 
+void GamePanel::updateStartEndPos(const Vector2f &startPos, const Vector2f& endPos)
+{
+	const int centerX = Settings::Instance().getResolution().x/2;
+	const int centerY = Settings::Instance().getResolution().y/2;
+
+	const float x0 = 0;
+	const float x1 = Settings::Instance().getResolution().x;
+	const float y0 = 0;
+	const float y1 = Settings::Instance().getResolution().y;
+
+	const float MAP_OFFSET = GlobalVariables::MAP_CELL_SIZE;
+
+	Vector2f resultStartPos = startPos;
+	Vector2f resultEndPos = endPos;
+
+	//start
+	if (startPos.x <= x0 || startPos.x >= x1)
+	{
+		//x
+		if (startPos.x > centerX)
+		{
+			//-x
+			resultStartPos.x -= MAP_OFFSET + GlobalVariables::Instance().mapTileSize().x;
+		}
+		else
+		{
+			//+x
+			resultStartPos.x += MAP_OFFSET;
+		}
+		resultStartPos.y += GlobalVariables::Instance().mapTileSize().y;
+	}
+	if (startPos.y <= y0 || startPos.y >= y1)
+	{
+		//y
+		if (startPos.y > centerY)
+		{
+			//-y
+			resultStartPos.y -= MAP_OFFSET + GlobalVariables::Instance().mapTileSize().y;
+		}
+		else
+		{
+			//+y
+			resultStartPos.y += MAP_OFFSET;
+		}
+		resultStartPos.x += GlobalVariables::Instance().mapTileSize().x;
+	}
+	//end
+	if (endPos.x <= x0 || endPos.x >= x1)
+	{
+		//x
+		if (endPos.x > centerX)
+		{
+			//-x
+			resultEndPos.x -= MAP_OFFSET + GlobalVariables::Instance().mapTileSize().x;
+		}
+		else
+		{
+			//+x
+			resultEndPos.x += MAP_OFFSET;
+		}
+		resultEndPos.y += GlobalVariables::Instance().mapTileSize().y;
+	}
+	if (endPos.y <= y0 || endPos.y >= y1)
+	{
+		//y
+		if (endPos.y > centerY)
+		{
+			//-y
+			resultEndPos.y -= MAP_OFFSET + GlobalVariables::Instance().mapTileSize().y;
+		}
+		else
+		{
+			//+y
+			resultEndPos.y += MAP_OFFSET;
+		}
+		resultEndPos.x += GlobalVariables::Instance().mapTileSize().x;
+	}
+	startSprite.setPosition(resultStartPos);
+	endSprite.setPosition(resultEndPos);
+}
+
 void GamePanel::updateCurrentTower()
 {
 	Color color;
@@ -707,7 +848,6 @@ void GamePanel::initMission(unsigned int n)
 	default:
 		break;
 	}
-
 }
 
 FloatRect GamePanel::getTowersRect() const
@@ -782,10 +922,10 @@ float GamePanel::getBottomValue() const
 	return m_bottomValue;
 }
 
-void GamePanel::press(const Vector2i &pos)
-{
-	if (Engine::Instance().level()->getState() == Level::WAIT_READY)
-		if (spriteReady.getGlobalBounds().contains(pos.x, pos.y))
-			Engine::Instance().level()->ready();
-}
+//void GamePanel::press(const Vector2i &pos)
+//{
+//	if (Engine::Instance().level()->getState() == Level::WAIT_READY)
+//		if (spriteReady.getGlobalBounds().contains(pos.x, pos.y))
+//			Engine::Instance().level()->ready();
+//}
 

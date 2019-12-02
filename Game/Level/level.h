@@ -87,9 +87,6 @@ private:
 	float difficulty;
 	float resolutionOffsetX;
 
-	Texture testTexture;
-	Sprite m_background;
-
 	RectangleShape deadZone;
 
 	class Map *gameMap;

@@ -602,8 +602,8 @@ bool Engine::loadMap(const String &fileName)
 
 				if (objectName == "spawn")
 				{
-					gameMap->spawnPos.x = x/GlobalVariables::MAP_CELL_SIZE;
-					gameMap->spawnPos.y = y/GlobalVariables::MAP_CELL_SIZE;
+					gameMap->spawnPos.x = x;
+					gameMap->spawnPos.y = y;
 				}
 
 				int width = 0;

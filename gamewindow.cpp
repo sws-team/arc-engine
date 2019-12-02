@@ -120,6 +120,7 @@ void GameWindow::update()
 		return;
 	Engine::Instance().cursor()->update();
 	Engine::Instance().level()->update();
+	Engine::Instance().panel()->update();
 
 	switch (Engine::Instance().level()->getState())
 	{

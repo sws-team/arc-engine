@@ -59,7 +59,7 @@ void Controller::keyboardKeyEvent(const bool timeout)
 			const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
 			const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
 			Engine::Instance().level()->chooseByPos(pos);
-			Engine::Instance().panel()->press(pixelPos);
+//			Engine::Instance().panel()->press(pixelPos);
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Return))
 			Engine::Instance().level()->chooseCurrent();
