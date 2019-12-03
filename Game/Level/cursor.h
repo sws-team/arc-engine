@@ -19,6 +19,9 @@ public:
 		MOVE_DOWN
 	};
 
+	void setMaxCells(int maxWidth, int maxHeight);
+	void setMaxCells(const Vector2i &maxCell);
+
 	void moveLeft();
 	void moveRight();
 	void moveUp();
@@ -27,7 +30,6 @@ public:
     Vector2i cell() const;
     Vector2f pixelPos() const;
 
-    void setMaxCell(const Vector2i &maxCell);
 
 	void draw(RenderTarget *const target) override;
 	void update() override;
@@ -40,7 +42,6 @@ public:
 	Vector2i abilityCell() const;
 
 	FloatRect getAbilityRect() const;
-
 
 	void swap();
 	bool inPanel() const;
@@ -72,6 +73,8 @@ private:
 	CircleShape towerRadius;
 	Sprite towerSprite;
 	TOWER_TYPES towerType;
+
+	void moveMouse(const Vector2f& offset);
 };
 
 #endif // CURSOR_H

@@ -183,6 +183,7 @@ void Level::startMission(const unsigned int n)
 //	difficulty = 1.f + static_cast<float>(SavedGameLoader::Instance().getSavedGame().completedLevels.size()) / 10;
 
 	gameMap = Engine::Instance().getMap(n);
+	Engine::Instance().cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
 	Engine::Instance().panel()->initMission(n);
 
 	Engine::Instance().panel()->updateStartEndPos(gameMap->spawnPos, Vector2f(gameMap->endRect.left, gameMap->endRect.top));

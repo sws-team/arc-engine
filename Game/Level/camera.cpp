@@ -5,7 +5,6 @@
 #include "Engine/engine.h"
 
 Camera::Camera()
-	: m_detached(false)
 {
 
 }
@@ -51,26 +50,22 @@ void Camera::moveRight(float offset)
 
 void Camera::moveUpByCell()
 {
-//	if (Engine::Instance().cursor()->pos().y * GlobalVariables::CELL_SIZE < view->getCenter().y)
-		moveUp(GlobalVariables::Instance().mapTileSize().y);
+	moveUp(GlobalVariables::Instance().tileSize().y);
 }
 
 void Camera::moveDownByCell()
 {
-//	if (Engine::Instance().cursor()->pos().y * GlobalVariables::CELL_SIZE > view->getCenter().y)
-		moveDown(GlobalVariables::Instance().mapTileSize().y);
+	moveDown(GlobalVariables::Instance().tileSize().y);
 }
 
 void Camera::moveLeftByCell()
 {
-//	if (Engine::Instance().cursor()->pos().x * GlobalVariables::CELL_SIZE < view->getCenter().x)
-		moveLeft(GlobalVariables::Instance().mapTileSize().x);
+	moveLeft(GlobalVariables::Instance().tileSize().x);
 }
 
 void Camera::moveRightByCell()
 {
-//	if (Engine::Instance().cursor()->pos().x * GlobalVariables::CELL_SIZE > view->getCenter().x)
-	moveRight(GlobalVariables::Instance().mapTileSize().x);
+	moveRight(GlobalVariables::Instance().tileSize().x);
 }
 
 View *Camera::getView()
@@ -85,8 +80,8 @@ View *Camera::getMiniMapView()
 
 void Camera::zoomIn()
 {
-//	if (zoomRatio > MAX_ZOOM)
-//		return;
+	if (zoomRatio > MAX_ZOOM)
+		return;
 	view->zoom(1 - ZOOM_RATIO);
 	minimap->zoom(1 - ZOOM_RATIO);
 	zoomRatio++;
@@ -94,8 +89,8 @@ void Camera::zoomIn()
 
 void Camera::zoomOut()
 {
-//	if (zoomRatio < -MAX_ZOOM)
-//		return;
+	if (zoomRatio < -MAX_ZOOM)
+		return;
 	view->zoom(1 + ZOOM_RATIO);
 	minimap->zoom(1 + ZOOM_RATIO);
 	zoomRatio--;
@@ -111,37 +106,55 @@ void Camera::resetZoom()
 	zoomRatio = 0;
 }
 
-void Camera::centerOnCursor(const Vector2i &cell)
+FloatRect Camera::viewRect() const
 {
-	view->setCenter(cellToPosMap(cell));
-	m_detached = false;
+	return FloatRect(view->getCenter().x - view->getSize().x/2,
+					 view->getCenter().y - view->getSize().y/2,
+					 view->getSize().x,
+					 view->getSize().y);
 }
 
-Vector2i Camera::currentCenterCell() const
+int Camera::viewTopCell() const
 {
-	return posToCellMap(view->getCenter());
+	return static_cast<int>((view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().tileSize().y);
 }
 
-Vector2i Camera::currentViewCells() const
+int Camera::viewLeftCell() const
 {
-	return Vector2i(view->getSize().x / GlobalVariables::Instance().mapTileSize().x,
-					view->getSize().y / GlobalVariables::Instance().mapTileSize().y);
+	return static_cast<int>((view->getCenter().x - view->getSize().x/2)/GlobalVariables::Instance().tileSize().x);
 }
 
-int Camera::topCell() const
+int Camera::viewRightCell() const
 {
-	return static_cast<int>( (view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().mapTileSize().y );
+	return static_cast<int>((view->getCenter().x + view->getSize().x/2)/GlobalVariables::Instance().tileSize().x);
 }
 
-void Camera::detach()
+int Camera::viewBottomCell() const
 {
-	m_detached = true;
+	return static_cast<int>((view->getCenter().y + view->getSize().y/2)/GlobalVariables::Instance().tileSize().y);
 }
 
-bool Camera::isDetached() const
-{
-	return m_detached;
-}
+//void Camera::centerOnCursor(const Vector2i &cell)
+//{
+//	view->setCenter(cellToPosMap(cell));
+//	m_detached = false;
+//}
+
+//Vector2i Camera::currentCenterCell() const
+//{
+//	return posToCellMap(view->getCenter());
+//}
+
+//Vector2i Camera::currentViewCells() const
+//{
+//	return Vector2i(view->getSize().x / GlobalVariables::Instance().mapTileSize().x,
+//					view->getSize().y / GlobalVariables::Instance().mapTileSize().y);
+//}
+
+//int Camera::topCell() const
+//{
+//	return static_cast<int>( (view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().mapTileSize().y );
+//}
 
 Vector2i Camera::posToCellMap(const Vector2f& pos) const
 {

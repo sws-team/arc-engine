@@ -28,17 +28,17 @@ public:
 	void zoomOut();
 	void resetZoom();
 
-	void centerOnCursor(const Vector2i& cell);
-	Vector2i currentCenterCell() const;
+//	void centerOnCursor(const Vector2i& cell);
+//	Vector2i currentCenterCell() const;
 
-	// count of cells on currenr view
-	Vector2i currentViewCells() const;
-	int topCell() const;
-
-	void detach();
-	bool isDetached() const;
-
-
+	// count of cells on current view
+//	Vector2i currentViewCells() const;
+//	int topCell() const;
+	FloatRect viewRect() const;
+	int viewTopCell() const;
+	int viewLeftCell() const;
+	int viewRightCell() const;
+	int viewBottomCell() const;
 
 	Vector2i posToCellMap(const Vector2f &pos) const;
 	Vector2f cellToPosMap(const Vector2i &cell) const;
@@ -47,7 +47,6 @@ public:
 	Vector2f cellToPos(const Vector2i &cell) const;
 
 	void resetView();
-
 
 private:
     constexpr static float CAMERA_OFFSET = 4.f;
@@ -59,10 +58,6 @@ private:
     View *minimap;
 
 	int zoomRatio;
-
-
-	bool m_detached;
-
 };
 
 #endif // CAMERA_H

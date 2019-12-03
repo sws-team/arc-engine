@@ -103,7 +103,3 @@ void Settings::setResolution(const Vector2i &value)
 	resolution = value;
 }
 
-float Settings::gameScale() const
-{
-	return GAME_SCALE * getScaleFactor().x;
-}

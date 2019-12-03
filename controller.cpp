@@ -48,8 +48,8 @@ void Controller::keyboardKeyEvent(const bool timeout)
 		if (Keyboard::isKeyPressed(Keyboard::P))
 			Engine::Instance().level()->spawn(ENEMY_TYPES::SMALL_SLOW);
 
-		if (Keyboard::isKeyPressed(Keyboard::Q))
-			Engine::Instance().level()->test();
+//		if (Keyboard::isKeyPressed(Keyboard::Z))
+//			Engine::Instance().level()->test();
 
 		if (Keyboard::isKeyPressed(Keyboard::Space))
 			Engine::Instance().level()->ready();
@@ -71,42 +71,21 @@ void Controller::keyboardKeyEvent(const bool timeout)
 			pauseFunc();
 		if (Keyboard::isKeyPressed(Keyboard::Q))
 			Engine::Instance().cursor()->swap();
-		if (Keyboard::isKeyPressed(Keyboard::Left))
-		{
-			Engine::Instance().camera()->moveLeftByCell();
-			Engine::Instance().camera()->detach();
-		}
-		if (Keyboard::isKeyPressed(Keyboard::Right))
-		{
-			Engine::Instance().camera()->moveRightByCell();
-			Engine::Instance().camera()->detach();
-		}
-		if (Keyboard::isKeyPressed(Keyboard::Up))
-		{
-			Engine::Instance().camera()->moveUpByCell();
-			Engine::Instance().camera()->detach();
-		}
-		if (Keyboard::isKeyPressed(Keyboard::Down))
-		{
-			Engine::Instance().camera()->moveDownByCell();			
-			Engine::Instance().camera()->detach();
-		}
 #ifdef TEST_BUILD
 		if (Keyboard::isKeyPressed(Keyboard::Add))
 			Engine::Instance().camera()->zoomIn();
 		if (Keyboard::isKeyPressed(Keyboard::Subtract))
 			Engine::Instance().camera()->zoomOut();
 #endif
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveLeft)))
+		if (Keyboard::isKeyPressed(Keyboard::Left/*static_cast<Keyboard::Key>(m_controls.moveLeft)*/))
 			Engine::Instance().cursor()->moveLeft();
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveRight)))
+		if (Keyboard::isKeyPressed(Keyboard::Right/*static_cast<Keyboard::Key>(m_controls.moveRight)*/))
 			Engine::Instance().cursor()->moveRight();
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveUp)))
+		if (Keyboard::isKeyPressed(Keyboard::Up/*static_cast<Keyboard::Key>(m_controls.moveUp)*/))
 			Engine::Instance().cursor()->moveUp();
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.moveDown)))
+		if (Keyboard::isKeyPressed(Keyboard::Down/*static_cast<Keyboard::Key>(m_controls.moveDown)*/))
 			Engine::Instance().cursor()->moveDown();
 	}
-
 }
 
 void Controller::joystickKeyEvent(const bool timeout)
