@@ -143,6 +143,13 @@ void Engine::load()
 	}
 }
 
+float Engine::getStartHealth(const unsigned int n)
+{
+	if (n == 128)
+		return 1000;
+	return 100.f + n * 10;
+}
+
 float Engine::getStartMoney(const unsigned int n)
 {
 	switch (n)

@@ -61,7 +61,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::INTRO_BACKGROUND, "images/logo.png");
 
 	addTexture(RESOURCES::EXPLOSION_EFFECT, "images/Weapons/Effects/explosion.png");
-	addTexture(RESOURCES::VENOM_EFFECT, "images/venom.png");
+	addTexture(RESOURCES::VENOM_EFFECT, "images/Weapons/Effects/venom.png");
 
 
 	addTexture(RESOURCES::ENEMY_TEXTURE, "images/Enemies/enemy1.png");

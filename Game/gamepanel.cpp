@@ -14,8 +14,8 @@
 
 GamePanel::GamePanel() :
 	GameDrawable()
-  ,isCursorVisible(false)
   ,waitBlink(false)
+  ,currentCursorPos(0)
 {
 	progress = new LifeBar();
 	m_selectedTower = nullptr;
@@ -114,13 +114,13 @@ GamePanel::GamePanel() :
 	readyText.setString("Press Space to start");
 
 	actionsSprites.push_back(&sellSprite);
-	actionsSprites.push_back(&upgradeSprite);
 	actionsSprites.push_back(&towerBaseSprite);
 	actionsSprites.push_back(&towerFreezeSprite);
+	actionsSprites.push_back(&towerRocketSprite);
 	actionsSprites.push_back(&towerPowerSprite);
 	actionsSprites.push_back(&towerLaserSprite);
-	actionsSprites.push_back(&towerRocketSprite);
 	actionsSprites.push_back(&towerImprovedSprite);
+	actionsSprites.push_back(&upgradeSprite);
 	actionsSprites.push_back(&abilityBombSprite);
 	actionsSprites.push_back(&abilityFreezeBombSprite);
 	actionsSprites.push_back(&abilityVenomSprite);
@@ -171,7 +171,6 @@ void GamePanel::draw(RenderTarget * const target)
 	pos = updatePos(pos);
 
 	//draw minimap
-
 	rTexture.clear(Color::Transparent);
 	Engine::Instance().level()->drawLevel(&rTexture);
 	rTexture.display();
@@ -186,6 +185,13 @@ void GamePanel::draw(RenderTarget * const target)
 	miniMapSprite.setPosition(pos);
 
 	//draw
+	if(Engine::Instance().level()->getState() == Level::WAIT_READY)
+	{
+		target->draw(readyText);
+		target->draw(startSprite);
+		target->draw(endSprite);
+	}
+
 	target->draw(m_sprite);
 
 	target->draw(moneyCountText);
@@ -219,17 +225,11 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(energyIcon);
 	target->draw(healthIcon);
 
-	if(Engine::Instance().level()->getState() == Level::WAIT_READY)
-	{
-		target->draw(readyText);
-		target->draw(startSprite);
-		target->draw(endSprite);
-	}
 	target->draw(miniMapSprite);
 	if (Engine::Instance().getMission() != GlobalVariables::SURVIVAL_MODE_ID)
 		progress->draw(target);
 
-	if (isCursorVisible)
+	if (Engine::Instance().cursor()->inPanel())
 		target->draw(cursorSprite);
 }
 
@@ -279,72 +279,127 @@ void GamePanel::setSelectedTower(Tower *selectedTower)
 	updateCurrentTower();
 }
 
-ACTION_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
+ACTION_STATE GamePanel::getCurrentIcon() const
 {
-	Vector2f center = pos;
-	center += Vector2f(ICON_SIZE/2, ICON_SIZE/2);
-
-	if (towerBaseSprite.getGlobalBounds().contains(center) ||
-			towerLaserSprite.getGlobalBounds().contains(center) ||
-			towerFreezeSprite.getGlobalBounds().contains(center) ||
-			towerRocketSprite.getGlobalBounds().contains(center) ||
-			towerPowerSprite.getGlobalBounds().contains(center) ||
-			towerImprovedSprite.getGlobalBounds().contains(center)
-			)
-		return ACTION_STATE::ADD_TOWER;
-
-	if (abilityBombSprite.getGlobalBounds().contains(center))
-		return ACTION_STATE::ABILITY_BOMB;
-
-	if (abilityFreezeBombSprite.getGlobalBounds().contains(center))
-		return ACTION_STATE::ABILITY_FREEZE_BOMB;
-
-	if (abilityUnknownSprite.getGlobalBounds().contains(center))
-		return ACTION_STATE::ABILITY_UNKNOWN;
-
-	if (abilityVenomSprite.getGlobalBounds().contains(center))
-		return ACTION_STATE::ABILITY_VENOM;
-
-	if (abilityIncreaseTowerDamageSprite.getGlobalBounds().contains(center))
-		return ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE;
-
-	if (abilityIncreaseTowerAttackSpeedSprite.getGlobalBounds().contains(center))
-		return ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED;
-
-	if (sellSprite.getGlobalBounds().contains(center))
+	switch (currentCursorPos)
+	{
+	case 0:
 		return ACTION_STATE::SELL;
-
-	if (upgradeSprite.getGlobalBounds().contains(center))
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+	case 5:
+	case 6:
+		return ACTION_STATE::ADD_TOWER;
+	case 7:
 		return ACTION_STATE::UPGRADE;
-
+	case 8:
+		return ACTION_STATE::ABILITY_BOMB;
+	case 9:
+		return ACTION_STATE::ABILITY_FREEZE_BOMB;
+	case 10:
+		return ACTION_STATE::ABILITY_VENOM;
+	case 11:
+		return ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE;
+	case 12:
+		return ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED;
+	case 13:
+		return ACTION_STATE::ABILITY_UNKNOWN;
+	default:
+		break;
+	}
 	return ACTION_STATE::READY;
 }
 
-TOWER_TYPES GamePanel::currentTower(const Vector2f &pos) const
+//ACTION_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
+//{
+//	Vector2f center = pos;
+//	center += Vector2f(ICON_SIZE/2, ICON_SIZE/2);
+
+//	if (towerBaseSprite.getGlobalBounds().contains(center) ||
+//			towerLaserSprite.getGlobalBounds().contains(center) ||
+//			towerFreezeSprite.getGlobalBounds().contains(center) ||
+//			towerRocketSprite.getGlobalBounds().contains(center) ||
+//			towerPowerSprite.getGlobalBounds().contains(center) ||
+//			towerImprovedSprite.getGlobalBounds().contains(center)
+//			)
+//		return ACTION_STATE::ADD_TOWER;
+
+//	if (abilityBombSprite.getGlobalBounds().contains(center))
+//		return ACTION_STATE::ABILITY_BOMB;
+
+//	if (abilityFreezeBombSprite.getGlobalBounds().contains(center))
+//		return ACTION_STATE::ABILITY_FREEZE_BOMB;
+
+//	if (abilityUnknownSprite.getGlobalBounds().contains(center))
+//		return ACTION_STATE::ABILITY_UNKNOWN;
+
+//	if (abilityVenomSprite.getGlobalBounds().contains(center))
+//		return ACTION_STATE::ABILITY_VENOM;
+
+//	if (abilityIncreaseTowerDamageSprite.getGlobalBounds().contains(center))
+//		return ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE;
+
+//	if (abilityIncreaseTowerAttackSpeedSprite.getGlobalBounds().contains(center))
+//		return ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED;
+
+//	if (sellSprite.getGlobalBounds().contains(center))
+//		return ACTION_STATE::SELL;
+
+//	if (upgradeSprite.getGlobalBounds().contains(center))
+//		return ACTION_STATE::UPGRADE;
+
+//	return ACTION_STATE::READY;
+//}
+
+TOWER_TYPES GamePanel::currentTower() const
 {
-	Vector2f center = pos;
-	center += Vector2f(ICON_SIZE/2, ICON_SIZE/2);
-
-	if (towerBaseSprite.getGlobalBounds().contains(center))
+	switch (currentCursorPos)
+	{
+	case 1:
 		return BASE;
-
-	if (towerLaserSprite.getGlobalBounds().contains(center))
-		return LASER;
-
-	if (towerFreezeSprite.getGlobalBounds().contains(center))
+	case 2:
 		return FREEZE;
-
-	if (towerRocketSprite.getGlobalBounds().contains(center))
+	case 3:
 		return ROCKET;
-
-	if (towerPowerSprite.getGlobalBounds().contains(center))
+	case 4:
 		return POWER;
-
-	if (towerImprovedSprite.getGlobalBounds().contains(center))
+	case 5:
+		return LASER;
+	case 6:
 		return IMPROVED;
-
+	default:
+		break;
+	}
 	return POWER;
 }
+
+//TOWER_TYPES GamePanel::currentTower(const Vector2f &pos) const
+//{
+//	Vector2f center = pos;
+//	center += Vector2f(ICON_SIZE/2, ICON_SIZE/2);
+
+//	if (towerBaseSprite.getGlobalBounds().contains(center))
+//		return BASE;
+
+//	if (towerLaserSprite.getGlobalBounds().contains(center))
+//		return LASER;
+
+//	if (towerFreezeSprite.getGlobalBounds().contains(center))
+//		return FREEZE;
+
+//	if (towerRocketSprite.getGlobalBounds().contains(center))
+//		return ROCKET;
+
+//	if (towerPowerSprite.getGlobalBounds().contains(center))
+//		return POWER;
+
+//	if (towerImprovedSprite.getGlobalBounds().contains(center))
+//		return IMPROVED;
+
+//	return POWER;
+//}
 
 Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 {
@@ -626,21 +681,22 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 
 void GamePanel::updateCursor()
 {
-	isCursorVisible = false;
+	m_sprite.setColor(Engine::Instance().cursor()->inPanel()?Color::Red:Color::Green);
+
 	if (!Engine::Instance().cursor()->inPanel())
 		return;
-	const Vector2f pos = Engine::Instance().cursor()->pos();
-	Vector2f center = pos;
-	center += Vector2f(ICON_SIZE/2, ICON_SIZE/2);
-	for(Sprite *sprite : actionsSprites)
+	const Vector2f pos = Engine::Instance().cursor()->windowCursorPos();
+
+	for (unsigned int i = 0; i < actionsSprites.size(); ++i)
 	{
-		if (sprite->getGlobalBounds().contains(center))
+		Sprite *sprite = actionsSprites.at(i);
+		if (sprite->getGlobalBounds().contains(pos))
 		{
-			cursorSprite.setPosition(sprite->getPosition());
-			isCursorVisible = true;
+			currentCursorPos = i;
 			break;
 		}
 	}
+	updateCurrentCursor();
 }
 
 void GamePanel::updateStartEndPos(const Vector2f &startPos, const Vector2f& endPos)
@@ -724,6 +780,30 @@ void GamePanel::updateStartEndPos(const Vector2f &startPos, const Vector2f& endP
 	endSprite.setPosition(resultEndPos);
 }
 
+void GamePanel::moveCursorLeft()
+{
+	currentCursorPos--;
+	updateCurrentCursor();
+}
+
+void GamePanel::moveCursorRight()
+{
+	currentCursorPos++;
+	updateCurrentCursor();
+}
+
+void GamePanel::moveCursorDown()
+{
+	currentCursorPos += 7;
+	updateCurrentCursor();
+}
+
+void GamePanel::moveCursorUp()
+{
+	currentCursorPos -= 7;
+	updateCurrentCursor();
+}
+
 void GamePanel::updateCurrentTower()
 {
 	Color color;
@@ -744,17 +824,26 @@ void GamePanel::updateCurrentTower()
 		upgradeSprite.setColor(GlobalVariables::GrayColor);
 }
 
+void GamePanel::updateCurrentCursor()
+{
+	if(currentCursorPos >= actionsSprites.size())
+		currentCursorPos = 0;
+
+	cursorSprite.setPosition(actionsSprites.at(currentCursorPos)->getPosition());
+	updateInfo();
+}
+
 void GamePanel::updateInfo()
 {
 	String str;
 	if (Engine::Instance().cursor()->inPanel())
 	{
-		const ACTION_STATE state = getCurrentIcon(Engine::Instance().cursor()->pos());
+		const ACTION_STATE state = getCurrentIcon();
 		switch (state)
 		{
 		case ADD_TOWER:
 		{
-			const TOWER_TYPES type = currentTower(Engine::Instance().cursor()->pos());
+			const TOWER_TYPES type = currentTower();
 			str = towerInfo(type, nullptr);
 		}
 			break;

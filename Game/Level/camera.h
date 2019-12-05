@@ -39,6 +39,7 @@ public:
 	int viewLeftCell() const;
 	int viewRightCell() const;
 	int viewBottomCell() const;
+	Vector2i viewCenter() const;
 
 	Vector2i posToCellMap(const Vector2f &pos) const;
 	Vector2f cellToPosMap(const Vector2i &cell) const;

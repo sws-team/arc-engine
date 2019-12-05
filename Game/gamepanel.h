@@ -29,8 +29,10 @@ public:
 	Tower *selectedTower() const;
 	void setSelectedTower(Tower *selectedTower);
 
-	ACTION_STATE getCurrentIcon(const Vector2f& pos) const;
-	TOWER_TYPES currentTower(const Vector2f &pos) const;
+//	ACTION_STATE getCurrentIcon(const Vector2f& pos) const;
+//	TOWER_TYPES currentTower(const Vector2f &pos) const;
+	ACTION_STATE getCurrentIcon() const;
+	TOWER_TYPES currentTower() const;
 
 	float getBottomValue() const;
 
@@ -55,6 +57,11 @@ public:
 
 	void updateCursor();
 	void updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos);
+
+	void moveCursorLeft();
+	void moveCursorRight();
+	void moveCursorDown();
+	void moveCursorUp();
 
 private:
 	Sprite m_sprite;
@@ -118,7 +125,6 @@ private:
 	String towerInfo(TOWER_TYPES type, Tower *tower);
 
 	Sprite cursorSprite;
-	bool isCursorVisible;
 
 	vector<Sprite*> actionsSprites;
 	constexpr static float ICONS_SPACE = 24;
@@ -132,6 +138,9 @@ private:
 	bool waitBlink;
 	Timer blinkTimer;
 	constexpr static int BLINK_TIME = 500;
+
+	unsigned int currentCursorPos;
+	void updateCurrentCursor();
 };
 
 #endif // GAMEPANEL_H

@@ -48,6 +48,12 @@ public:
 
 	TOWER_TYPES getTowerType() const;
 
+	void initCell();
+
+	void updatePanel();
+
+	Vector2f windowCursorPos() const;
+
 private:
 	Vector2i m_cell;
 	Vector2i m_maxCell;
@@ -74,7 +80,12 @@ private:
 	Sprite towerSprite;
 	TOWER_TYPES towerType;
 
-	void moveMouse(const Vector2f& offset);
+	void updateMousePos();
+	void checkBorders();
+	void moveDownCursor();
+	void moveUpCursor();
+	void moveLeftCursor();
+	void moveRightCursor();
 };
 
 #endif // CURSOR_H

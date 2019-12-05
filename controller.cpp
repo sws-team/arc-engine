@@ -18,14 +18,15 @@ Controller::Controller()
 
 void Controller::keyEvent()
 {
-	const bool timeout = timerKey.check(CONTROLLER_TIME);
-	keyboardKeyEvent(timeout);
-	joystickKeyEvent(timeout);
+	const bool timeoutKey = timerKey.check(CONTROLLER_TIME);
+	const bool timeoutMove = timerMove.check(CONTROLLER_MOVE_TIME);
+	keyboardKeyEvent(timeoutKey, timeoutMove);
+	joystickKeyEvent(timeoutKey, timeoutMove);
 }
 
-void Controller::keyboardKeyEvent(const bool timeout)
+void Controller::keyboardKeyEvent(const bool timeoutKey, const bool timeoutMove)
 {
-	if (timeout)
+	if (timeoutKey)
 	{
 		if (Engine::Instance().instructions()->isActive())
 		{
@@ -77,6 +78,9 @@ void Controller::keyboardKeyEvent(const bool timeout)
 		if (Keyboard::isKeyPressed(Keyboard::Subtract))
 			Engine::Instance().camera()->zoomOut();
 #endif
+	}
+	if (timeoutMove)
+	{
 		if (Keyboard::isKeyPressed(Keyboard::Left/*static_cast<Keyboard::Key>(m_controls.moveLeft)*/))
 			Engine::Instance().cursor()->moveLeft();
 		if (Keyboard::isKeyPressed(Keyboard::Right/*static_cast<Keyboard::Key>(m_controls.moveRight)*/))
@@ -85,10 +89,19 @@ void Controller::keyboardKeyEvent(const bool timeout)
 			Engine::Instance().cursor()->moveUp();
 		if (Keyboard::isKeyPressed(Keyboard::Down/*static_cast<Keyboard::Key>(m_controls.moveDown)*/))
 			Engine::Instance().cursor()->moveDown();
+
+		if (Keyboard::isKeyPressed(Keyboard::A))
+			Engine::Instance().camera()->moveLeftByCell();
+		if (Keyboard::isKeyPressed(Keyboard::D))
+			Engine::Instance().camera()->moveRightByCell();
+		if (Keyboard::isKeyPressed(Keyboard::W))
+			Engine::Instance().camera()->moveUpByCell();
+		if (Keyboard::isKeyPressed(Keyboard::S))
+			Engine::Instance().camera()->moveDownByCell();
 	}
 }
 
-void Controller::joystickKeyEvent(const bool timeout)
+void Controller::joystickKeyEvent(const bool timeoutKey, const bool timeoutMove)
 {
 	/*
 	player->shoot(Joystick::isButtonPressed(controls.joystickId, controls.shoot));

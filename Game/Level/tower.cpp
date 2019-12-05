@@ -246,7 +246,8 @@ BaseTower::BaseTower(const Vector2f &pos)
 
 }
 
-const int PowerTower::ENERGY_GAIN = 10;
+const float PowerTower::ENERGY_GAIN = 10;
+
 PowerTower::PowerTower(const Vector2f &pos)
 	: Tower(RESOURCES::TOWER_POWER, pos, STATS)
 	,m_isHighlighted(false)

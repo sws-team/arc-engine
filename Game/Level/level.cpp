@@ -60,6 +60,17 @@ Level::Level() :
 	shake.dangerRect.setFillColor(Color(255,0,0,96));
 	shake.isActive = false;
 	shake.dangerRect.setPosition(0,0);
+
+	constexpr float deadZoneSize = 300;
+	const Vector2f minPos = Vector2f(-deadZoneSize * Settings::Instance().getScaleFactor().x,
+									 -deadZoneSize * Settings::Instance().getScaleFactor().y);
+
+	deadZone.setPosition(minPos.x, minPos.y);
+	deadZone.setOutlineThickness(3.f);
+	deadZone.setSize(Vector2f(Settings::Instance().getResolution().x + fabs(minPos.x) * 2,
+							  Settings::Instance().getResolution().y + fabs(minPos.y) * 2));
+	deadZone.setOutlineColor(Color::Red);
+	deadZone.setFillColor(Color::Transparent);
 }
 
 Level::~Level()
@@ -174,31 +185,20 @@ void Level::startMission(const unsigned int n)
 	m_state = WAIT_READY;
 	spawnEnemies = EnemiesFactory::generateEnemies(n);
 	Engine::Instance().panel()->setProgressMax(spawnEnemies.size());
-	life = 100.f + n * 10;
+	life = Engine::getStartHealth(n);
 	money = Engine::getStartMoney(n);
 	energy = Engine::getStartEnergy(n);
 	Engine::Instance().panel()->updatePanel();
 
 	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
 //	difficulty = 1.f + static_cast<float>(SavedGameLoader::Instance().getSavedGame().completedLevels.size()) / 10;
-
 	gameMap = Engine::Instance().getMap(n);
 	Engine::Instance().cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
 	Engine::Instance().panel()->initMission(n);
-
 	Engine::Instance().panel()->updateStartEndPos(gameMap->spawnPos, Vector2f(gameMap->endRect.left, gameMap->endRect.top));
-
-
-	constexpr float deadZoneSize = 300;
-	const Vector2f minPos = Vector2f(-deadZoneSize * Settings::Instance().getScaleFactor().x,
-									 -deadZoneSize * Settings::Instance().getScaleFactor().y);
-
-	deadZone.setPosition(minPos.x, minPos.y);
-	deadZone.setOutlineThickness(3.f);
-	deadZone.setSize(Vector2f(Settings::Instance().getResolution().x + fabs(minPos.x) * 2,
-							  Settings::Instance().getResolution().y + fabs(minPos.y) * 2));
-	deadZone.setOutlineColor(Color::Red);
-	deadZone.setFillColor(Color::Transparent);
+	if (n != 0)
+		Engine::Instance().instructions()->skip();
+	Engine::Instance().cursor()->initCell();
 }
 
 void Level::clear()
@@ -546,16 +546,14 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 	}
 	if (inPanel)
 	{
-		const Vector2f pos = Engine::Instance().camera()->cellToPos(cell);
-		m_actionState = Engine::Instance().panel()->getCurrentIcon(pos);
+		m_actionState = Engine::Instance().panel()->getCurrentIcon();
 		switch (m_actionState)
 		{
 		case READY:
 			break;
 		case ADD_TOWER:
 		{
-			const TOWER_TYPES type = Engine::Instance().panel()->currentTower(pos);
-
+			const TOWER_TYPES type = Engine::Instance().panel()->currentTower();
 			const float cost = TowersFactory::getTowerStats(type).cost;
 			if (money < cost)
 				return;
@@ -564,7 +562,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			Engine::Instance().cursor()->activateTower(radius, type);
 			if (type != POWER)			
 				highlightPowerTowersRadius(true);
-
+			Engine::Instance().cursor()->swap();
 		}
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
@@ -572,6 +570,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (energy < INC_TOWER_AS_ABILITY_COST)
 				return;
 			Engine::Instance().cursor()->activateAbility(1, 1, 0, 0);
+			Engine::Instance().cursor()->swap();
 		}
 			break;
 		case ABILITY_INCREASE_TOWER_DAMAGE:
@@ -579,6 +578,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (energy < INC_TOWER_DMG_ABILITY_COST)
 				return;
 			Engine::Instance().cursor()->activateAbility(1, 1, 0, 0);
+			Engine::Instance().cursor()->swap();
 		}
 			break;
 		case ABILITY_VENOM:
@@ -586,6 +586,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (energy < VENOM_ABILITY_COST)
 				return;
 			Engine::Instance().cursor()->activateAbility(VenomAbility::VENOM_SIZE.x, VenomAbility::VENOM_SIZE.y, 4, 1);
+			Engine::Instance().cursor()->swap();
 		}
 			break;
 		case ABILITY_BOMB:
@@ -593,6 +594,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (energy < BOMB_ABILITY_COST)
 				return;
 			Engine::Instance().cursor()->activateAbility(3, 3, 1, 1);
+			Engine::Instance().cursor()->swap();
 		}
 			break;
 		case ABILITY_FREEZE_BOMB:
@@ -600,6 +602,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (energy < FREEZE_BOMB_ABILITY_COST)
 				return;
 			Engine::Instance().cursor()->activateAbility(3, 3, 1, 1);
+			Engine::Instance().cursor()->swap();
 		}
 		break;
 		case ABILITY_UNKNOWN:
@@ -614,12 +617,12 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			towers.erase( remove( towers.begin(), towers.end(), selectedTower ), towers.end() );
 			delete selectedTower;
 			Engine::Instance().panel()->updatePanel();
+			Engine::Instance().cursor()->swap();
 		}
 			break;
 		case UPGRADE:
 		{
-			const TOWER_TYPES type = Engine::Instance().panel()->currentTower(pos);
-
+			const TOWER_TYPES type = Engine::Instance().panel()->currentTower();
 			const float cost = TowersFactory::getTowerStats(type).cost * 0.4f;
 			if (money < cost)
 				return;
@@ -629,6 +632,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (selectedTower->level() < 3)
 				selectedTower->upgrade();
 			Engine::Instance().panel()->updatePanel();
+			Engine::Instance().cursor()->swap();
 		}
 			break;
 		}

@@ -19,6 +19,7 @@ MainWindow::~MainWindow()
 int MainWindow::exec()
 {
 	Engine::Instance().setWindow(this);
+	setMouseCursorGrabbed(true);
 	while (isOpen())
 	{
 		if (Engine::Instance().getState() != state)
@@ -32,12 +33,11 @@ int MainWindow::exec()
 //				SavedGameLoader::Instance().save();
 				return EXIT_SUCCESS;
 			}
-//			if (state == Engine::IN_GAME)
-//				this->setView(this->getDefaultView());
 
 			currentState = Engine::Instance().createState(Engine::Instance().getState());
 			currentState->init();
 			state = Engine::Instance().getState();
+			setMouseCursorVisible(state != Engine::IN_GAME);
 		}
 
 		if (currentState == nullptr)

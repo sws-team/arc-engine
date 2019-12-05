@@ -64,6 +64,7 @@ public:
 	void save();
 	void load();
 
+	static float getStartHealth(const unsigned int n);
 	static float getStartMoney(const unsigned int n);
 	static float getStartEnergy(const unsigned int n);
 

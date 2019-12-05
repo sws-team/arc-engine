@@ -28,7 +28,11 @@ private:
 		bool enabled;
 	};
 	vector<MissionView> missions;
+	RectangleShape chooseRect;
+	int currentMission;
+	void updateRect();
 
+	constexpr static int COLUMN_COUNT = 5;
 	unsigned int getRating(unsigned int n) const;
 };
 

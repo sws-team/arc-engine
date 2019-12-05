@@ -134,6 +134,12 @@ int Camera::viewBottomCell() const
 	return static_cast<int>((view->getCenter().y + view->getSize().y/2)/GlobalVariables::Instance().tileSize().y);
 }
 
+Vector2i Camera::viewCenter() const
+{
+	return Vector2i(static_cast<int>(view->getCenter().x/GlobalVariables::Instance().tileSize().x),
+					static_cast<int>(view->getCenter().y/GlobalVariables::Instance().tileSize().y));
+}
+
 //void Camera::centerOnCursor(const Vector2i &cell)
 //{
 //	view->setCenter(cellToPosMap(cell));

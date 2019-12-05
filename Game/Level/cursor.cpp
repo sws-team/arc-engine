@@ -65,50 +65,34 @@ bool Cursor::canMove(Cursor::MOVE_DIRECTIONS direction)
 
 void Cursor::moveLeft()
 {
-	if (!canMove(Cursor::MOVE_LEFT))
-		return;
+	if (m_inPanel)
+		return Engine::Instance().panel()->moveCursorLeft();
 
-	m_cell.x--;
-	moveMouse(Vector2f(-static_cast<int>(GlobalVariables::Instance().tileSize().x), 0));
-	if (Engine::Instance().camera()->viewLeftCell() != 0)
-		Engine::Instance().camera()->moveLeftByCell();
-	updateCell();
+	moveLeftCursor();
 }
 
 void Cursor::moveRight()
 {
-	if (!canMove(Cursor::MOVE_RIGHT))
-		return;
+	if (m_inPanel)
+		return Engine::Instance().panel()->moveCursorRight();
 
-	m_cell.x++;
-	moveMouse(Vector2f(static_cast<int>(GlobalVariables::Instance().tileSize().x), 0));
-	if (Engine::Instance().camera()->viewRightCell() != m_maxCell.x - 1)
-		Engine::Instance().camera()->moveRightByCell();
-	updateCell();
+	moveRightCursor();
 }
 
 void Cursor::moveUp()
 {
-	if (!canMove(Cursor::MOVE_UP))
-		return;
+	if (m_inPanel)
+		return Engine::Instance().panel()->moveCursorUp();
 
-	m_cell.y--;
-	moveMouse(Vector2f(0, -static_cast<int>(GlobalVariables::Instance().tileSize().y)));
-	if (Engine::Instance().camera()->viewTopCell() != 0)
-		Engine::Instance().camera()->moveUpByCell();
-	updateCell();
+	moveUpCursor();
 }
 
 void Cursor::moveDown()
 {
-	if (!canMove(Cursor::MOVE_DOWN))
-		return;
+	if (m_inPanel)
+		return Engine::Instance().panel()->moveCursorDown();
 
-	m_cell.y++;
-	moveMouse(Vector2f(0, static_cast<int>(GlobalVariables::Instance().tileSize().y)));
-	if (Engine::Instance().camera()->viewBottomCell() != m_maxCell.y + Engine::Instance().panel()->cellsCount())
-		Engine::Instance().camera()->moveDownByCell();
-	updateCell();
+	moveDownCursor();
 }
 
 Vector2i Cursor::cell() const
@@ -141,14 +125,15 @@ void Cursor::draw(RenderTarget * const target)
 void Cursor::update()
 {
 	GameObject::update();
-	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
-	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
-	const Vector2i newCell = Engine::Instance().camera()->posToCell(pos);
-	if (newCell != m_cell)
-	{
-		m_cell = newCell;
-		updateCell();
-	}
+	checkBorders();
+//	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
+//	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
+//	const Vector2i newCell = Engine::Instance().camera()->posToCell(pos);
+//	if (newCell != m_cell)
+//	{
+//		m_cell = newCell;
+//		updateCell();
+//	}
 }
 
 void Cursor::activateAbility(int x, int y, int hotX, int hotY)
@@ -175,7 +160,7 @@ void Cursor::activateTower(float radius, TOWER_TYPES type)
 
 	towerType = type;
 
-	RESOURCES::TEXTURE_TYPE textureType;
+	RESOURCES::TEXTURE_TYPE textureType = RESOURCES::TOWER_POWER;;
 	switch (towerType)
 	{
 	case BASE:
@@ -220,6 +205,8 @@ FloatRect Cursor::getAbilityRect() const
 void Cursor::swap()
 {
 	m_inPanel = !m_inPanel;
+	Engine::Instance().panel()->updateCursor();
+	Engine::Instance().window()->setMouseCursorVisible(m_inPanel);
 }
 
 bool Cursor::inPanel() const
@@ -230,6 +217,32 @@ bool Cursor::inPanel() const
 TOWER_TYPES Cursor::getTowerType() const
 {
 	return towerType;
+}
+
+void Cursor::initCell()
+{
+	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
+	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
+	const Vector2i newCell = Engine::Instance().camera()->posToCell(pos);
+	if (newCell != m_cell)
+	{
+		m_cell = newCell;
+		updateCell();
+	}
+}
+
+void Cursor::updatePanel()
+{
+	m_inPanel = windowCursorPos().y > Engine::Instance().panel()->getBottomValue();
+	Engine::Instance().panel()->updateCursor();
+	Engine::Instance().window()->setMouseCursorVisible(m_inPanel);
+}
+
+Vector2f Cursor::windowCursorPos() const
+{
+	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
+	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
+	return pos;
 }
 
 void Cursor::updateCell()
@@ -263,17 +276,89 @@ void Cursor::updateCell()
 	towerRadius.setOrigin(towerRadius.getRadius() - GlobalVariables::Instance().tileSize().x/2,
 						  towerRadius.getRadius() - GlobalVariables::Instance().tileSize().y/2);
 
-	m_inPanel = pos.y > Engine::Instance().panel()->getBottomValue();
 	Engine::Instance().panel()->updateInfo();
 	//	SoundController::Instance().playOnce(CURSOR_MOVE_SOUND_FILE);
 }
 
-void Cursor::moveMouse(const Vector2f &offset)
+void Cursor::updateMousePos()
 {
-	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
-	Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
-	pos += offset;
+	const Vector2f pos = Engine::Instance().camera()->cellToPos(m_cell)
+			+ Vector2f(GlobalVariables::Instance().tileSize().x/2,GlobalVariables::Instance().tileSize().y/2);
+
 	const Vector2i coords = Engine::Instance().window()->mapCoordsToPixel(pos, *Engine::Instance().camera()->getView());
 	Mouse::setPosition(coords, *Engine::Instance().window());
+}
+
+void Cursor::checkBorders()
+{
+	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
+	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
+	const Vector2i cell = Vector2i(pos.x/GlobalVariables::Instance().tileSize().x,
+								   pos.y/GlobalVariables::Instance().tileSize().y);
+
+	if (cell.x == Engine::Instance().camera()->viewLeftCell())
+		moveLeftCursor();
+	if (cell.x == Engine::Instance().camera()->viewRightCell())
+		moveRightCursor();
+	if (cell.y == Engine::Instance().camera()->viewTopCell())
+		moveUpCursor();
+	if (cell.y == Engine::Instance().camera()->viewBottomCell()/* - Engine::Instance().panel()->cellsCount() - 1*/)
+		moveDownCursor();
+}
+
+void Cursor::moveDownCursor()
+{
+	if (!canMove(Cursor::MOVE_DOWN))
+		return;
+
+	m_cell.y++;
+	if (Engine::Instance().camera()->viewBottomCell() != m_maxCell.y + Engine::Instance().panel()->cellsCount() &&
+			m_cell.y > Engine::Instance().camera()->viewCenter().y)
+		Engine::Instance().camera()->moveDownByCell();
+	else
+		updateMousePos();
+	updateCell();
+}
+
+void Cursor::moveUpCursor()
+{
+	if (!canMove(Cursor::MOVE_UP))
+		return;
+
+	m_cell.y--;
+	if (Engine::Instance().camera()->viewTopCell() != 0 &&
+			m_cell.y < Engine::Instance().camera()->viewCenter().y)
+		Engine::Instance().camera()->moveUpByCell();
+	else
+		updateMousePos();
+	updateCell();
+}
+
+void Cursor::moveLeftCursor()
+{
+	if (!canMove(Cursor::MOVE_LEFT))
+		return;
+
+	m_cell.x--;
+	if (Engine::Instance().camera()->viewLeftCell() != 0 &&
+			m_cell.x < Engine::Instance().camera()->viewCenter().x)
+		Engine::Instance().camera()->moveLeftByCell();
+	else
+		updateMousePos();
+	updateCell();
+}
+
+void Cursor::moveRightCursor()
+{
+	if (!canMove(Cursor::MOVE_RIGHT))
+		return;
+
+	m_cell.x++;
+	if (Engine::Instance().camera()->viewRightCell() != m_maxCell.x - 1 &&
+			m_cell.x > Engine::Instance().camera()->viewCenter().x)
+		Engine::Instance().camera()->moveRightByCell();
+	else
+		updateMousePos();
+	updateCell();
 }
 

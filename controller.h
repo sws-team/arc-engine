@@ -17,13 +17,14 @@ public:
 	void pausedEvents();
 private:
 
-	void keyboardKeyEvent(const bool timeout);
-	void joystickKeyEvent(const bool timeout);
+	void keyboardKeyEvent(const bool timeoutKey, const bool timeoutMove);
+	void joystickKeyEvent(const bool timeoutKey, const bool timeoutMove);
 
 	Timer timerKey;
 	Timer timerMove;
 
-	constexpr static int CONTROLLER_TIME = 30;
+	constexpr static int CONTROLLER_TIME = 20;
+	constexpr static int CONTROLLER_MOVE_TIME = 50;
 
 	function<void()> pauseFunc;
 

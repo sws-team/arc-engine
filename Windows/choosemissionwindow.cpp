@@ -9,8 +9,14 @@ ChooseMissionWindow::ChooseMissionWindow()
 {
 	setBackground(RESOURCES::ABOUT_BACKGROUND);
 
+	chooseRect.setOutlineThickness(5);
+	chooseRect.setOutlineColor(Color::Green);
+	chooseRect.setFillColor(Color::Transparent);
+	currentMission = 0;
+
 	const float rectSizeX = 160 * Settings::Instance().getScaleFactor().x;
-	const float rectSizeY = 160 * Settings::Instance().getScaleFactor().x;
+	const float rectSizeY = 160 * Settings::Instance().getScaleFactor().y;
+	chooseRect.setSize(Vector2f(rectSizeX, rectSizeY));
 	const float offset = rectSizeY + Settings::Instance().getScaleFactor().y * 20;
 	const float iconSizeX = 32 * Settings::Instance().getScaleFactor().x;
 	const float iconSizeY = 32 * Settings::Instance().getScaleFactor().y;
@@ -22,7 +28,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 	for (unsigned int i = 0; i < Engine::Instance().missionsCount(); ++i)
 	{
-		if (i % 5 == 0 && i != 0)
+		if (i % COLUMN_COUNT == 0 && i != 0)
 		{
 			x = left;
 			y += rectSizeY + iconSizeY + iconSizeY * 2;
@@ -59,6 +65,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 		missions.push_back(mission);
 		x += offset;
 	}
+	updateRect();
 }
 
 ChooseMissionWindow::~ChooseMissionWindow()
@@ -78,10 +85,9 @@ void ChooseMissionWindow::paint(RenderWindow *window)
 	{
 		window->draw(mission.rect);
 		for(const RectangleShape& rect : mission.stars)
-		{
-			window->draw(rect);
-		}
+			window->draw(rect);		
 	}
+	window->draw(chooseRect);
 }
 
 void ChooseMissionWindow::eventFilter(Event *event)
@@ -100,20 +106,46 @@ void ChooseMissionWindow::eventFilter(Event *event)
 					accept(mission);
 			}
 	}
-	if (event->type == Event::MouseMoved)
+	else if (event->type == Event::MouseMoved)
 	{
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 		{
 			if (missions.at(mission).rect.getGlobalBounds().contains(event->mouseMove.x, event->mouseMove.y))
-				missions[mission].rect.setFillColor(Color::Blue);
-			else
-			{
-				if (missions.at(mission).enabled)
-					missions[mission].rect.setFillColor(Color::Red);
-				else
-					missions[mission].rect.setFillColor(GlobalVariables::GrayColor);
-			}
+				currentMission = mission;
 		}
+		updateRect();
+	}
+	else if (event->type == Event::KeyPressed)
+	{
+		switch (event->key.code)
+		{
+		case Keyboard::Left:
+			currentMission--;
+			break;
+		case Keyboard::Right:
+			currentMission++;
+			break;
+		case Keyboard::Up:
+			currentMission -= COLUMN_COUNT;
+			break;
+		case Keyboard::Down:
+			currentMission += COLUMN_COUNT;
+			break;
+		case Keyboard::Return:
+			if (missions.at(currentMission).enabled)
+			{
+				accept(currentMission);
+				return;
+			}
+			break;
+		default:
+			break;
+		}
+		if (currentMission < 0)
+			currentMission = 0;
+		if (currentMission > missions.size() - 1)
+			currentMission = missions.size() - 1;
+		updateRect();
 	}
 	StateWindow::eventFilter(event);
 }
@@ -122,6 +154,25 @@ void ChooseMissionWindow::accept(unsigned int num)
 {
 	Engine::Instance().setMission(num);
 	Engine::Instance().setState(Engine::IN_GAME);
+}
+
+void ChooseMissionWindow::updateRect()
+{
+	for (unsigned int mission = 0; mission < missions.size(); ++mission)
+	{
+		if (currentMission == mission)
+		{
+			missions[mission].rect.setFillColor(Color::Blue);
+			chooseRect.setPosition(missions[mission].rect.getPosition());
+		}
+		else
+		{
+			if (missions.at(mission).enabled)
+				missions[mission].rect.setFillColor(Color::Red);
+			else
+				missions[mission].rect.setFillColor(GlobalVariables::GrayColor);
+		}
+	}
 }
 
 unsigned int ChooseMissionWindow::getRating(unsigned int n) const

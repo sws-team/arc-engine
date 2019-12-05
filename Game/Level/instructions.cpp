@@ -13,7 +13,7 @@ Instructions::Instructions() :
 	shadowRect.setFillColor(color);
 
 	textRect.setFillColor(Color::Green);
-	textRect.setSize(Vector2f(300, 100));
+	textRect.setSize(Vector2f(400, 100));
 
 	targetRect.setFillColor(Color::Transparent);
 	targetRect.setOutlineThickness(3);
@@ -25,6 +25,8 @@ Instructions::Instructions() :
 	text.setOutlineColor(Color::Black);
 	text.setOutlineThickness(2);
 	text.setScale(Settings::Instance().getScaleFactor());
+
+	changeState(START);
 }
 
 void Instructions::draw(RenderTarget * const target)
@@ -65,6 +67,13 @@ void Instructions::changeState(Instructions::STATES state)
 	String textStr;
 	switch (state)
 	{
+	case START:
+	{
+		textRect.setPosition(500, 500);
+		rect = FloatRect();
+		textStr = "Welcome!";
+	}
+		break;
 	case TOWERS:
 	{
 		textRect.setPosition(500, 500);

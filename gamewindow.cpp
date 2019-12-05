@@ -50,6 +50,8 @@ void GameWindow::init()
 
 void GameWindow::paint(RenderWindow *window)
 {
+//	window->setMouseCursorVisible(false);
+//	window->setMouseCursorGrabbed(true);
 	viewPos = Vector2f(window->getView().getCenter().x - window->getView().getSize().x/2,
 					   window->getView().getCenter().y - window->getView().getSize().y/2);
 
@@ -95,6 +97,12 @@ void GameWindow::eventFilter(Event *event)
 			break;
 		case Event::Closed:
 			Engine::Instance().setState(Engine::EXIT);
+			break;
+		case Event::MouseMoved:
+			Engine::Instance().cursor()->updatePanel();
+			if (!Engine::Instance().cursor()->inPanel())
+				Engine::Instance().cursor()->initCell();
+			Engine::Instance().panel()->updateCursor();
 			break;
 		default:
 			break;
@@ -237,7 +245,25 @@ void GameWindow::setState(const GAME_STATE &state)
 	case FINISHED:
 	{
 		text.setString("Congratulations!");
-		Engine::Instance().setMissionFinished(Engine::Instance().getMission(), 4);
+
+		const float fullLife = Engine::Instance().getStartHealth(Engine::Instance().getMission());
+		const float currentLife = Engine::Instance().level()->getLifeCount();
+		const float k = currentLife/fullLife;
+		unsigned int stars = 0;
+		if (k > 0.9f) // 0.9 1 - 5
+			stars = 5;
+		else if (k > 0.8f) // 0.8 0.9 - 4
+			stars = 4;
+		else if (k > 0.6f) // 0.6 0.8 - 3
+			stars = 3;
+		else if (k > 0.4f) // 0.4 0.6 - 2
+			stars = 2;
+		else if (k > 0.1f) // 0.1 0.4 - 1
+			stars = 1;
+		else // 0 0.1 - 0
+			stars = 0;
+
+		Engine::Instance().setMissionFinished(Engine::Instance().getMission(), stars);
 		Engine::Instance().save();
 
 		finishedImg.setPosition(Vector2f(Settings::Instance().getResolution().x/2 - finishedImg.getGlobalBounds().width/2,

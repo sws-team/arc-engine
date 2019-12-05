@@ -148,9 +148,9 @@ public:
 
 	void upgrade() override;
 private:
-	static const int ENERGY_GAIN;
+	static const float ENERGY_GAIN;
 	bool m_isHighlighted;
-	int m_gain;
+	float m_gain;
 
 	CircleShape powerRadius;
 };
