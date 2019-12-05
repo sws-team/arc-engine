@@ -8,6 +8,7 @@ class GameWindow : public Menu
 {
 public:
 	GameWindow();
+	~GameWindow() override;
 
 	void init() override;
 	void paint(RenderWindow *window) override;

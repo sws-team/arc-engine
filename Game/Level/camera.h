@@ -8,8 +8,9 @@ class Cursor;
 class Camera
 {
 public:
-    Camera();
+	Camera();
 	void init();
+	void destroy();
 
     void moveUp(float offset = CAMERA_OFFSET);
     void moveDown(float offset = CAMERA_OFFSET);

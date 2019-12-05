@@ -33,7 +33,6 @@ int MainWindow::exec()
 //				SavedGameLoader::Instance().save();
 				return EXIT_SUCCESS;
 			}
-
 			currentState = Engine::Instance().createState(Engine::Instance().getState());
 			currentState->init();
 			state = Engine::Instance().getState();

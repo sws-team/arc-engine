@@ -44,6 +44,11 @@ GameWindow::GameWindow()
 	clock.restart();
 }
 
+GameWindow::~GameWindow()
+{
+	Engine::Instance().camera()->destroy();
+}
+
 void GameWindow::init()
 {
 	unsigned int missionNumber = Engine::Instance().getMission();
@@ -136,11 +141,8 @@ void GameWindow::update()
 
 	switch (Engine::Instance().level()->getState())
 	{
-	case Level::WIN:
-	{
-		Engine::Instance().camera()->resetView();
-		setState(FINISHED);
-	}
+	case Level::WIN:	
+		setState(FINISHED);	
 		break;
 	case Level::LOSE:
 		setState(GAME_OVER);

@@ -24,6 +24,13 @@ void Camera::init()
 								150 * Settings::Instance().getScaleFactor().y));
 }
 
+void Camera::destroy()
+{
+	Engine::Instance().window()->setView(Engine::Instance().window()->getDefaultView());
+	delete view;
+	delete minimap;
+}
+
 void Camera::moveUp(float offset)
 {
 	view->move(0.f, -offset);
