@@ -69,35 +69,40 @@ void Instructions::changeState(Instructions::STATES state)
 	{
 	case START:
 	{
-		textRect.setPosition(500, 500);
+		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = FloatRect();
 		textStr = "Welcome!";
 	}
 		break;
 	case TOWERS:
 	{
-		textRect.setPosition(500, 500);
+		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getTowersRect();
 		textStr = "Towers";
 	}
 		break;
 	case ABILITIES:
 	{
-		textRect.setPosition(500, 500);
+		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getAbilitiesRect();
 		textStr = "Abilities";
 	}
 		break;
 	case MONEY:
 	{
-		textRect.setPosition(500, 500);
+		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getMoneyRect();
 		textStr = "Money";
 	}
 		break;
 	case HEALTH:
 	{
-		textRect.setPosition(500, 500);
+		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getHealthRect();
 		textStr = "Health";
 	}
@@ -105,28 +110,32 @@ void Instructions::changeState(Instructions::STATES state)
 
 	case ENERGY:
 	{
-		textRect.setPosition(500, 500);
+		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getEnergyRect();
 		textStr = "Energy";
 	}
 		break;
 	case REMOVE:
 	{
-		textRect.setPosition(500, 500);
+		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getRemovRect();
 		textStr = "Remove";
 	}
 		break;
 	case UPGRADE:
 	{
-		textRect.setPosition(500, 500);
+		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getUpgradeRect();
 		textStr = "Upgrade";
 	}
 		break;
 	case PROGRESS:
 	{
-		textRect.setPosition(500, 500);
+		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getProgressRect();
 		textStr = "Progress";
 	}

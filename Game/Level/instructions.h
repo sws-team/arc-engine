@@ -40,6 +40,8 @@ private:
 	RectangleShape textRect;
 	Text text;
 	RectangleShape targetRect;
+
+	constexpr static int INSTRUCTIONS_OFFSET = 350;
 };
 
 #endif // INSTRUCTIONS_H

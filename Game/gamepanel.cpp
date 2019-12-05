@@ -709,11 +709,10 @@ void GamePanel::updateStartEndPos(const Vector2f &startPos, const Vector2f& endP
 	const float y0 = 0;
 	const float y1 = Settings::Instance().getResolution().y;
 
-	const float MAP_OFFSET = GlobalVariables::MAP_CELL_SIZE;
-
-	Vector2f resultStartPos = startPos;
-	Vector2f resultEndPos = endPos;
-
+	Vector2f resultStartPos = Vector2f(startPos.x * Settings::Instance().getScaleFactor().x,
+									   startPos.y * Settings::Instance().getScaleFactor().y);
+	Vector2f resultEndPos = Vector2f(endPos.x * Settings::Instance().getScaleFactor().x,
+									 endPos.y * Settings::Instance().getScaleFactor().y);
 	//start
 	if (startPos.x <= x0 || startPos.x >= x1)
 	{
@@ -721,27 +720,27 @@ void GamePanel::updateStartEndPos(const Vector2f &startPos, const Vector2f& endP
 		if (startPos.x > centerX)
 		{
 			//-x
-			resultStartPos.x -= MAP_OFFSET + GlobalVariables::Instance().mapTileSize().x;
+			resultStartPos.x -= GlobalVariables::Instance().tileSize().x + GlobalVariables::Instance().mapTileSize().x;
 		}
 		else
 		{
 			//+x
-			resultStartPos.x += MAP_OFFSET;
+			resultStartPos.x += GlobalVariables::Instance().tileSize().x;
 		}
 		resultStartPos.y += GlobalVariables::Instance().mapTileSize().y;
 	}
-	if (startPos.y <= y0 || startPos.y >= y1)
+	else if (startPos.y <= y0 || startPos.y >= y1)
 	{
 		//y
 		if (startPos.y > centerY)
 		{
 			//-y
-			resultStartPos.y -= MAP_OFFSET + GlobalVariables::Instance().mapTileSize().y;
+			resultStartPos.y -= GlobalVariables::Instance().tileSize().y + GlobalVariables::Instance().mapTileSize().y;
 		}
 		else
 		{
 			//+y
-			resultStartPos.y += MAP_OFFSET;
+			resultStartPos.y += GlobalVariables::Instance().tileSize().y;
 		}
 		resultStartPos.x += GlobalVariables::Instance().mapTileSize().x;
 	}
@@ -752,27 +751,27 @@ void GamePanel::updateStartEndPos(const Vector2f &startPos, const Vector2f& endP
 		if (endPos.x > centerX)
 		{
 			//-x
-			resultEndPos.x -= MAP_OFFSET + GlobalVariables::Instance().mapTileSize().x;
+			resultEndPos.x -= GlobalVariables::Instance().mapTileSize().x + GlobalVariables::Instance().tileSize().x;
 		}
 		else
 		{
 			//+x
-			resultEndPos.x += MAP_OFFSET;
+			resultEndPos.x += GlobalVariables::Instance().tileSize().x;
 		}
 		resultEndPos.y += GlobalVariables::Instance().mapTileSize().y;
 	}
-	if (endPos.y <= y0 || endPos.y >= y1)
+	else if (endPos.y <= y0 || endPos.y >= y1)
 	{
 		//y
 		if (endPos.y > centerY)
 		{
 			//-y
-			resultEndPos.y -= MAP_OFFSET + GlobalVariables::Instance().mapTileSize().y;
+			resultEndPos.y -= GlobalVariables::Instance().mapTileSize().y + GlobalVariables::Instance().mapTileSize().y;
 		}
 		else
 		{
 			//+y
-			resultEndPos.y += MAP_OFFSET;
+			resultEndPos.y += GlobalVariables::Instance().tileSize().y;
 		}
 		resultEndPos.x += GlobalVariables::Instance().mapTileSize().x;
 	}

@@ -27,8 +27,11 @@ GameWindow::GameWindow()
 	paused.setFont(GlobalVariables::Instance().font());
 
 	menuImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::GAME_MENU_TEXTURE));
+	menuImg.setScale(Settings::Instance().getScaleFactor());
 	gameOverImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::GAME_OVER_TEXTURE));
+	gameOverImg.setScale(Settings::Instance().getScaleFactor());
 	finishedImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MISSON_COMPLETED_TEXTURE));
+	finishedImg.setScale(Settings::Instance().getScaleFactor());
 	//score
 	text.setFillColor(Color::Black);
 	text.setFont(GlobalVariables::Instance().font());
@@ -50,8 +53,6 @@ void GameWindow::init()
 
 void GameWindow::paint(RenderWindow *window)
 {
-//	window->setMouseCursorVisible(false);
-//	window->setMouseCursorGrabbed(true);
 	viewPos = Vector2f(window->getView().getCenter().x - window->getView().getSize().x/2,
 					   window->getView().getCenter().y - window->getView().getSize().y/2);
 
