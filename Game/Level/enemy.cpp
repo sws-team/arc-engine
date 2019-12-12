@@ -4,7 +4,7 @@
 #include "lifebar.h"
 #include "settings.h"
 
-#define TEST_BUILD
+//#define TEST_BUILD
 
 Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const Vector2f &startPos,
