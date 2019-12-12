@@ -18,6 +18,8 @@ public:
 	void setCurrent(const String& text);
 	String currentText() const;
 
+	void setCharacterSize(unsigned int characterSize);
+
 private:
 	struct ChooseValue
 	{
@@ -28,6 +30,7 @@ private:
 	vector<String> m_list;
 	void updateList();
 	int current;
+	unsigned int m_characterSize;
 };
 
 #endif // CHOOSELIST_H

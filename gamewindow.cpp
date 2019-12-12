@@ -46,6 +46,7 @@ GameWindow::GameWindow()
 
 GameWindow::~GameWindow()
 {
+	Engine::Instance().level()->clear();
 	Engine::Instance().camera()->destroy();
 }
 
@@ -208,9 +209,11 @@ void GameWindow::setState(const GAME_STATE &state)
 {
 	if (state == m_state)
 		return;
+	Engine::Instance().window()->setMouseCursorVisible(true);
 	switch (state)
 	{
 	case PLAYING:
+		Engine::Instance().window()->setMouseCursorVisible(false);
 		break;
 	case PAUSED:
 	{
@@ -282,8 +285,6 @@ void GameWindow::setState(const GAME_STATE &state)
 		text.setPosition(posX, posY);
 
 		posY += text.getGlobalBounds().height;
-
-		Engine::Instance().level()->clear();
 	}
 		break;
 	case GAME_OVER:

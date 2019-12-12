@@ -5,6 +5,7 @@
 #include "Engine/engine.h"
 
 Camera::Camera()
+	: view(nullptr)
 {
 
 }
@@ -29,6 +30,7 @@ void Camera::destroy()
 	Engine::Instance().window()->setView(Engine::Instance().window()->getDefaultView());
 	delete view;
 	delete minimap;
+	view = nullptr;
 }
 
 void Camera::moveUp(float offset)

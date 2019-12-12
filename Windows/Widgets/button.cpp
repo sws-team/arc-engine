@@ -44,3 +44,8 @@ void Button::setText(const String &text)
 	m_text.setString(text);
 	update();
 }
+
+void Button::setTextCharacterSize(unsigned int size)
+{
+	m_text.setCharacterSize(size);
+}

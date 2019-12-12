@@ -6,6 +6,7 @@
 #include "ResourcesManager/resourcesmanager.h"
 #include "Engine/engine.h"
 #include "Game/Level/level.h"
+#include "Game/Audio/soundcontroller.h"
 
 const float Tower::LEVEL_GAIN = 0.4f;
 const float Tower::TOWER_SCAlE = 1.f/3.f;
@@ -81,7 +82,7 @@ void Tower::action(const vector<Enemy *> &enemies)
 
 void Tower::shoot(Enemy *target)
 {
-
+	SoundController::Instance().playOnce(m_shotSound);
 }
 
 void Tower::collide(const vector<Enemy *> &enemies)
@@ -243,7 +244,7 @@ const TowerStats ImprovedTower::STATS = TowerStats(10, 150, 8, 50, 250);
 BaseTower::BaseTower(const Vector2f &pos)
 	: ProjectilesTower(RESOURCES::TOWER_BASE, RESOURCES::BASE_PROJECTILE, pos, STATS)
 {
-
+	m_shotSound = "sounds/towers/base_shot.ogg";
 }
 
 const float PowerTower::ENERGY_GAIN = 10;
@@ -297,6 +298,7 @@ RocketTower::RocketTower(const Vector2f &pos)
 	: ProjectilesTower(RESOURCES::TOWER_ROCKET, RESOURCES::ROCKET_PROJECTILE, pos, STATS)
 {
 	m_zeroGround = GlobalVariables::Instance().tileSize().x * ZERO_GROUND;
+	m_shotSound = "sounds/towers/rocket_shot.ogg";
 }
 
 void RocketTower::moveProjectile(Projectile *projectile)
@@ -341,7 +343,7 @@ void RocketTower::projectileAction(Enemy *enemy)
 FreezeTower::FreezeTower(const Vector2f &pos)
 	: ProjectilesTower(RESOURCES::TOWER_FREEZE, RESOURCES::FREEZE_PROJECTILE, pos, STATS)
 {
-
+	m_shotSound = "sounds/towers/freeze_shot.ogg";
 }
 
 void FreezeTower::projectileAction(Enemy *enemy)
@@ -358,11 +360,14 @@ LaserTower::LaserTower(const Vector2f &pos)
 	lineTower.color = Color::Red;
 	lineTarget.color = Color::Blue;
 	laser.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::LASER_PROJECTILE));
+	m_shotSound = "sounds/towers/laser_shot.ogg";
 }
 
 void LaserTower::shoot(Enemy *target)
 {
 	currentTarget = target;
+	if (target != nullptr)
+		Tower::shoot(target);
 }
 
 void LaserTower::update()
@@ -391,7 +396,7 @@ void LaserTower::draw(RenderTarget * const target)
 ImprovedTower::ImprovedTower(const Vector2f &pos)
 	: ProjectilesTower(RESOURCES::TOWER_IMPROVED, RESOURCES::IMPROVED_PROJECTILE, pos, STATS)
 {
-
+	m_shotSound = "sounds/towers/improved_shot.ogg";
 }
 
 ProjectilesTower::ProjectilesTower(const RESOURCES::TEXTURE_TYPE &texture_id, const RESOURCES::TEXTURE_TYPE &projectile_id,
@@ -423,8 +428,8 @@ void ProjectilesTower::moveProjectile(Projectile *projectile)
 	const float x1 = pos().x;
 	const float y1 = pos().y;
 
-	const float y2 = y1 + m_stats.projectileSpeed * sin(projectile->angle() * M_PI/180);
-	const float x2 = x1 + m_stats.projectileSpeed * cos(projectile->angle() * M_PI/180);
+	const float y2 = y1 + m_stats.projectileSpeed * sinf(projectile->angle() * M_PI/180);
+	const float x2 = x1 + m_stats.projectileSpeed * cosf(projectile->angle() * M_PI/180);
 
 	projectile->move(x2-x1, y2-y1);
 }
@@ -471,6 +476,7 @@ void ProjectilesTower::shoot(Enemy *target)
 	projectile->setAngle(angle);
 	projectile->target = target;
 	m_projectiles.push_back(projectile);
+	Tower::shoot(target);
 }
 
 void ProjectilesTower::collide(const vector<Enemy *> &enemies)

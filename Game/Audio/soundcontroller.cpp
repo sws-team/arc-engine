@@ -42,7 +42,6 @@ void SoundController::endBackgroundSound()
 
 void SoundController::playOnce(const string &fileName)
 {
-	return;
 	auto it = sounds.find(fileName);
 	if (it == sounds.end())
 	{
@@ -50,7 +49,7 @@ void SoundController::playOnce(const string &fileName)
 		sfx.buffer = new SoundBuffer;
 		sfx.sound = new Sound(*sfx.buffer);
 		sfx.buffer->loadFromFile(fileName);
-		sfx.sound->setVolume(Settings::Instance().getSoundLevel());
+		sfx.sound->setVolume(Settings::Instance().getSoundLevel() * 0.3f);
 		sfx.sound->play();
 		sounds.insert(pair<string, SFX>(fileName, sfx));
 		return;

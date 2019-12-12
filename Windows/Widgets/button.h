@@ -15,6 +15,8 @@ public:
 	void setCallback(function<void()> callback);
 	void setText(const String &text);
 
+	void setTextCharacterSize(unsigned int size);
+
 private:
 	RectangleShape rect;
 	Text m_text;

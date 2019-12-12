@@ -3,6 +3,7 @@
 
 ChooseList::ChooseList() :
 	current(0)
+  ,m_characterSize(24)
 {
 
 }
@@ -66,7 +67,7 @@ void ChooseList::addItem(const String &item)
 
 	chooseValue.text.setString(item);
 	chooseValue.text.setFont(GlobalVariables::Instance().font());
-	chooseValue.text.setCharacterSize(24);
+	chooseValue.text.setCharacterSize(m_characterSize);
 	chooseValue.text.setFillColor(Color::Black);
 	rects.push_back(chooseValue);
 }
@@ -101,4 +102,9 @@ void ChooseList::updateList()
 	for (size_t i = 0; i < m_list.size(); ++i)
 		addItem(m_list.at(i));
 	update();
+}
+
+void ChooseList::setCharacterSize(unsigned int characterSize)
+{
+	m_characterSize = characterSize;
 }

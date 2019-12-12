@@ -20,10 +20,14 @@ public:
 		EXIT,
 
 		//settings
+		SETTINGS,
+		AUDIO,
 		SOUND,
 		MUSIC,
+		VIDEO,
 		FULLSCREEN,
 		RESOLUTION,
+		MISC,
 		LANGUAGE,
 		ACCEPT,
 		CANCEL,

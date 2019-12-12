@@ -82,15 +82,15 @@ void ValueScale::updateTriangle()
 	{
 		ConvexShape shape;
 		shape.setPointCount(3);
-		const int x = static_cast<int>(floor(m_size.x - m_size.x / m_scales * i));
-		const int y = static_cast<int>(floor(m_size.y - m_size.y / m_scales * i));
+		const int x = static_cast<int>(trunc(m_size.x - m_size.x / m_scales * i));
+		const int y = static_cast<int>(trunc(m_size.y - m_size.y / m_scales * i));
 
 		shape.setPoint(0, Vector2f(0, 0));
 		shape.setPoint(1, Vector2f(x, y));
 		shape.setPoint(2, Vector2f(x, 0));
 
 		shape.setPosition(m_pos);
-		shape.setOutlineThickness(2);
+		shape.setOutlineThickness(1);
 		shape.setOutlineColor(Color::Black);
 
 		triangles.push_back(shape);

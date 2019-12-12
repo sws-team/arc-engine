@@ -49,3 +49,8 @@ void Widget::setSize(float x, float y)
 {
 	setSize(Vector2f(x, y));
 }
+
+Vector2f Widget::size() const
+{
+    return m_size;
+}

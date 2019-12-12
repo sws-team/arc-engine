@@ -29,10 +29,14 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Выход"));
 
 	//settings
+	lang.insert(pair<TR_TEXT, wstring>(SETTINGS, L"Настройки"));
+	lang.insert(pair<TR_TEXT, wstring>(AUDIO, L"Аудио"));
 	lang.insert(pair<TR_TEXT, wstring>(SOUND, L"Звуки"));
 	lang.insert(pair<TR_TEXT, wstring>(MUSIC, L"Музыка"));
+	lang.insert(pair<TR_TEXT, wstring>(VIDEO, L"Видео"));
 	lang.insert(pair<TR_TEXT, wstring>(FULLSCREEN, L"Полноэкранный режим"));
 	lang.insert(pair<TR_TEXT, wstring>(RESOLUTION, L"Разрешение"));
+	lang.insert(pair<TR_TEXT, wstring>(MISC, L"Разное"));
 	lang.insert(pair<TR_TEXT, wstring>(LANGUAGE, L"Язык"));
 	lang.insert(pair<TR_TEXT, wstring>(ACCEPT, L"Принять"));
 	lang.insert(pair<TR_TEXT, wstring>(CANCEL, L"Отмена"));
@@ -76,10 +80,14 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Exit"));
 
 	//settings
+	lang.insert(pair<TR_TEXT, wstring>(SETTINGS, L"Settings"));
+	lang.insert(pair<TR_TEXT, wstring>(AUDIO, L"Audio"));
 	lang.insert(pair<TR_TEXT, wstring>(SOUND, L"Sound"));
 	lang.insert(pair<TR_TEXT, wstring>(MUSIC, L"Music"));
+	lang.insert(pair<TR_TEXT, wstring>(VIDEO, L"Video"));
 	lang.insert(pair<TR_TEXT, wstring>(FULLSCREEN, L"Fullscreen"));
 	lang.insert(pair<TR_TEXT, wstring>(RESOLUTION, L"Resolution"));
+	lang.insert(pair<TR_TEXT, wstring>(MISC, L"Misc"));
 	lang.insert(pair<TR_TEXT, wstring>(LANGUAGE, L"Language"));
 	lang.insert(pair<TR_TEXT, wstring>(ACCEPT, L"Accept"));
 	lang.insert(pair<TR_TEXT, wstring>(CANCEL, L"Cancel"));
@@ -123,10 +131,14 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Sortir du jeu"));
 
 	//settings
+	lang.insert(pair<TR_TEXT, wstring>(SETTINGS, L"Settings"));
+	lang.insert(pair<TR_TEXT, wstring>(AUDIO, L"Audio"));
 	lang.insert(pair<TR_TEXT, wstring>(SOUND, L"Sound"));
 	lang.insert(pair<TR_TEXT, wstring>(MUSIC, L"Music"));
+	lang.insert(pair<TR_TEXT, wstring>(VIDEO, L"Video"));
 	lang.insert(pair<TR_TEXT, wstring>(FULLSCREEN, L"Fullscreen"));
 	lang.insert(pair<TR_TEXT, wstring>(RESOLUTION, L"Resolution"));
+	lang.insert(pair<TR_TEXT, wstring>(MISC, L"Misc"));
 	lang.insert(pair<TR_TEXT, wstring>(LANGUAGE, L"Language"));
 	lang.insert(pair<TR_TEXT, wstring>(ACCEPT, L"Accept"));
 	lang.insert(pair<TR_TEXT, wstring>(CANCEL, L"Cancel"));

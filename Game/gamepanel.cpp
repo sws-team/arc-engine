@@ -312,47 +312,6 @@ ACTION_STATE GamePanel::getCurrentIcon() const
 	return ACTION_STATE::READY;
 }
 
-//ACTION_STATE GamePanel::getCurrentIcon(const Vector2f &pos) const
-//{
-//	Vector2f center = pos;
-//	center += Vector2f(ICON_SIZE/2, ICON_SIZE/2);
-
-//	if (towerBaseSprite.getGlobalBounds().contains(center) ||
-//			towerLaserSprite.getGlobalBounds().contains(center) ||
-//			towerFreezeSprite.getGlobalBounds().contains(center) ||
-//			towerRocketSprite.getGlobalBounds().contains(center) ||
-//			towerPowerSprite.getGlobalBounds().contains(center) ||
-//			towerImprovedSprite.getGlobalBounds().contains(center)
-//			)
-//		return ACTION_STATE::ADD_TOWER;
-
-//	if (abilityBombSprite.getGlobalBounds().contains(center))
-//		return ACTION_STATE::ABILITY_BOMB;
-
-//	if (abilityFreezeBombSprite.getGlobalBounds().contains(center))
-//		return ACTION_STATE::ABILITY_FREEZE_BOMB;
-
-//	if (abilityUnknownSprite.getGlobalBounds().contains(center))
-//		return ACTION_STATE::ABILITY_UNKNOWN;
-
-//	if (abilityVenomSprite.getGlobalBounds().contains(center))
-//		return ACTION_STATE::ABILITY_VENOM;
-
-//	if (abilityIncreaseTowerDamageSprite.getGlobalBounds().contains(center))
-//		return ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE;
-
-//	if (abilityIncreaseTowerAttackSpeedSprite.getGlobalBounds().contains(center))
-//		return ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED;
-
-//	if (sellSprite.getGlobalBounds().contains(center))
-//		return ACTION_STATE::SELL;
-
-//	if (upgradeSprite.getGlobalBounds().contains(center))
-//		return ACTION_STATE::UPGRADE;
-
-//	return ACTION_STATE::READY;
-//}
-
 TOWER_TYPES GamePanel::currentTower() const
 {
 	switch (currentCursorPos)
@@ -374,32 +333,6 @@ TOWER_TYPES GamePanel::currentTower() const
 	}
 	return POWER;
 }
-
-//TOWER_TYPES GamePanel::currentTower(const Vector2f &pos) const
-//{
-//	Vector2f center = pos;
-//	center += Vector2f(ICON_SIZE/2, ICON_SIZE/2);
-
-//	if (towerBaseSprite.getGlobalBounds().contains(center))
-//		return BASE;
-
-//	if (towerLaserSprite.getGlobalBounds().contains(center))
-//		return LASER;
-
-//	if (towerFreezeSprite.getGlobalBounds().contains(center))
-//		return FREEZE;
-
-//	if (towerRocketSprite.getGlobalBounds().contains(center))
-//		return ROCKET;
-
-//	if (towerPowerSprite.getGlobalBounds().contains(center))
-//		return POWER;
-
-//	if (towerImprovedSprite.getGlobalBounds().contains(center))
-//		return IMPROVED;
-
-//	return POWER;
-//}
 
 Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 {

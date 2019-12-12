@@ -18,6 +18,8 @@ public:
 	void setSize(const Vector2f& size);
 	void setSize(float x, float y);
 
+	Vector2f size() const;
+
 protected:
 	Vector2f m_pos;
 	Vector2f m_size;

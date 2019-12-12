@@ -73,7 +73,8 @@ public:
 
 protected:
 	TowerStats m_stats;
-	Timer actionTimer;
+	Timer actionTimer;	
+	string m_shotSound;
 private:
 	CircleShape radius;
 	bool m_selected;
@@ -159,6 +160,7 @@ class RocketTower : public ProjectilesTower
 {
 public:
 	RocketTower(const Vector2f &pos);
+
 	const static TowerStats STATS;
 	void moveProjectile(Projectile *projectile) override;
 	void projectileAction(Enemy *enemy) override;

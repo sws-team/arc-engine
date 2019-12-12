@@ -24,22 +24,36 @@ private:
 
 	void accept();
 
-	Text *lbl_sound;
+	Text lbl_settings;
+
+	Text lbl_sound;
 	ValueScale *soundScale;
 
-	Text *lbl_music;
+	Text lbl_music;
 	ValueScale *musicScale;
 
-	Text *lbl_fullscreen;
+	Text lbl_fullscreen;
 	CheckBox *cbx_fullscreen;
 
-	Text *lbl_resolution;
+	Text lbl_resolution;
 	ChooseList *resolutions;
 
-	Text *lbl_language;
+	Text lbl_language;
 	ChooseList *languages;
 
 	Button *button_accept;
+	Button *button_cancel;
+
+	RectangleShape settingsRect;
+
+	Text lbl_audio;
+	RectangleShape audioRect;
+
+	Text lbl_video;
+	RectangleShape videoRect;
+
+	Text lbl_misc;
+	RectangleShape miscRect;
 };
 
 #endif // SETTINGSWINDOW_H

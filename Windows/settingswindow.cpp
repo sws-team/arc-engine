@@ -23,68 +23,120 @@ SettingsWindow::SettingsWindow()
 {
 	setBackground(RESOURCES::SETTINGS_BACKGROUND);
 
-    const int startPosX = 50;
-    int posX = startPosX;
-    int posY = 100;
+	const Vector2f settingsSize = Vector2f(Settings::Instance().getResolution().x * 0.7f,
+										   Settings::Instance().getResolution().y * 0.7f);
+	Vector2f pos = Vector2f((Settings::Instance().getResolution().x - settingsSize.x)/2,
+				   (Settings::Instance().getResolution().y - settingsSize.y)/2);
 
-	lbl_sound = new Text();
-	lbl_sound->setFont(GlobalVariables::Instance().font());
-	lbl_sound->setCharacterSize(24);
-	lbl_sound->setString(Language::Instance().translate(Language::SOUND));
-    lbl_sound->setPosition(posX, posY);
+	const int blocksCount = 3;
+	const float settingsModifierY = 0.25f;
+	const Vector2f blockSize = Vector2f(settingsSize.x * 0.9f, settingsSize.y * settingsModifierY);
+	const unsigned int characterSize = static_cast<unsigned int>(30 * Settings::Instance().getScaleFactor().x);
+	const float border = 6 * Settings::Instance().getScaleFactor().x;
 
-	posX += 100;
+	const float borderXOffset = settingsSize.x * 0.1f/2;
+	const float borderYOffset = settingsSize.y * (1 - settingsModifierY*blocksCount)/blocksCount;
+
+	const Vector2f blockOffset = Vector2f(blockSize.x/10, blockSize.y/5);
+	const int secondOffset = 4;
+
+	const float SCALE_WIDTH = 200 * Settings::Instance().getScaleFactor().x;
+	const float SCALE_HEIGHT = 40 * Settings::Instance().getScaleFactor().y;
+	const int defaultAudioLevel = 30;
+	const Vector2f chooseListButtonSize = Vector2f(96 * Settings::Instance().getScaleFactor().x, 32 * Settings::Instance().getScaleFactor().y);
+	const Vector2f checkBoxSize = Vector2f(32 * Settings::Instance().getScaleFactor().x, 32 * Settings::Instance().getScaleFactor().y);
+	const unsigned int chooseListCharacterSize = static_cast<unsigned int>(24 * Settings::Instance().getScaleFactor().x);
+
+	lbl_settings.setFont(GlobalVariables::Instance().font());
+	lbl_settings.setCharacterSize(characterSize * 4);
+	lbl_settings.setStyle(Text::Bold);
+	lbl_settings.setFillColor(Color::Red);
+	lbl_settings.setString(Language::Instance().translate(Language::SETTINGS));
+	lbl_settings.setPosition(pos - Vector2f(0, lbl_settings.getGlobalBounds().height * 2 + border));
+
+	settingsRect.setSize(settingsSize);
+	settingsRect.setFillColor(Color::Transparent);
+	settingsRect.setOutlineThickness(border);
+	settingsRect.setOutlineColor(Color::Red);
+	settingsRect.setPosition(pos);
+
+
+	//audio
+	pos += Vector2f(borderXOffset, borderYOffset);
+
+	audioRect.setSize(blockSize);
+	audioRect.setFillColor(Color::Transparent);
+	audioRect.setOutlineThickness(border);
+	audioRect.setOutlineColor(Color::Blue);
+	audioRect.setPosition(pos);
+
+	lbl_audio.setFont(GlobalVariables::Instance().font());
+	lbl_audio.setCharacterSize(characterSize);
+	lbl_audio.setStyle(Text::Bold);
+	lbl_audio.setString(Language::Instance().translate(Language::AUDIO));
+	lbl_audio.setPosition(pos + Vector2f(blockOffset.x/2, 0));
+
+	//sound
+	lbl_sound.setFont(GlobalVariables::Instance().font());
+	lbl_sound.setCharacterSize(characterSize);
+	lbl_sound.setString(Language::Instance().translate(Language::SOUND));
+	lbl_sound.setPosition(pos + blockOffset + Vector2f(0, lbl_audio.getGlobalBounds().height));
 
 	soundScale = new ValueScale();
-	soundScale->setSize(Vector2f(100, -20));
-	soundScale->setPos(posX, posY);
-	soundScale->setValue(34);
+	soundScale->setSize(Vector2f(SCALE_WIDTH, -SCALE_HEIGHT));
+	soundScale->setValue(defaultAudioLevel);
+	soundScale->setPos(pos + Vector2f(blockOffset.x * secondOffset, blockOffset.y + SCALE_HEIGHT/2 +
+									  lbl_sound.getGlobalBounds().height + lbl_audio.getGlobalBounds().height));
 
-    posY += 100;
-	posX = startPosX;
-
-	lbl_music = new Text();
-	lbl_music->setFont(GlobalVariables::Instance().font());
-	lbl_music->setCharacterSize(24);
-	lbl_music->setString(Language::Instance().translate(Language::MUSIC));
-    lbl_music->setPosition(posX, posY);
-
-	posX += 100;
+	//music
+	lbl_music.setFont(GlobalVariables::Instance().font());
+	lbl_music.setCharacterSize(characterSize);
+	lbl_music.setString(Language::Instance().translate(Language::MUSIC));
+	lbl_music.setPosition(pos + Vector2f(blockOffset.x, blockOffset.y * 2 + lbl_sound.getGlobalBounds().height + lbl_audio.getGlobalBounds().height));
 
 	musicScale = new ValueScale();
-	musicScale->setSize(Vector2f(100, -20));
-	musicScale->setPos(posX, posY);
-	musicScale->setValue(34);
+	musicScale->setSize(Vector2f(SCALE_WIDTH, -SCALE_HEIGHT));
+	musicScale->setValue(defaultAudioLevel);
+	musicScale->setPos(pos + Vector2f(blockOffset.x * secondOffset, blockOffset.y * 2 + SCALE_HEIGHT/2 +
+									  lbl_sound.getGlobalBounds().height + lbl_audio.getGlobalBounds().height + lbl_music.getGlobalBounds().height));
 
-    posX = startPosX;
-    posY += 100;
+	//video
+	pos += Vector2f(0, blockSize.y + borderYOffset/2);
 
-	lbl_fullscreen = new Text();
-	lbl_fullscreen->setFont(GlobalVariables::Instance().font());
-	lbl_fullscreen->setCharacterSize(24);
-	lbl_fullscreen->setString(Language::Instance().translate(Language::FULLSCREEN));
-	lbl_fullscreen->setPosition(posX, posY);
+	videoRect.setSize(blockSize);
+	videoRect.setFillColor(Color::Transparent);
+	videoRect.setOutlineThickness(border);
+	videoRect.setOutlineColor(Color::Green);
+	videoRect.setPosition(pos);
 
-	posX += 100;
+	lbl_video.setFont(GlobalVariables::Instance().font());
+	lbl_video.setCharacterSize(characterSize);
+	lbl_video.setString(Language::Instance().translate(Language::VIDEO));
+	lbl_video.setStyle(Text::Bold);
+	lbl_video.setPosition(pos + Vector2f(blockOffset.x/2, 0));
+
+	//fullscreen
+	lbl_fullscreen.setFont(GlobalVariables::Instance().font());
+	lbl_fullscreen.setCharacterSize(characterSize);
+	lbl_fullscreen.setString(Language::Instance().translate(Language::FULLSCREEN));
+	lbl_fullscreen.setPosition(pos + blockOffset + Vector2f(0, lbl_video.getGlobalBounds().height));
 
 	cbx_fullscreen = new CheckBox();
-	cbx_fullscreen->setSize(Vector2f(32, 32));
-	cbx_fullscreen->setPos(posX, posY);
+	cbx_fullscreen->setSize(checkBoxSize);
+	cbx_fullscreen->setPos(pos + Vector2f(blockOffset.x * secondOffset, blockOffset.y +
+										  lbl_fullscreen.getGlobalBounds().height + lbl_video.getGlobalBounds().height));
 
-    posX = startPosX;
-    posY += 100;
-
-	lbl_resolution = new Text();
-	lbl_resolution->setFont(GlobalVariables::Instance().font());
-	lbl_resolution->setCharacterSize(24);
-	lbl_resolution->setString(Language::Instance().translate(Language::RESOLUTION));
-	lbl_resolution->setPosition(posX, posY);
-
-	posX += 100;
+	//resolutions
+	lbl_resolution.setFont(GlobalVariables::Instance().font());
+	lbl_resolution.setCharacterSize(characterSize);
+	lbl_resolution.setString(Language::Instance().translate(Language::RESOLUTION));
+	lbl_resolution.setPosition(pos + Vector2f(blockOffset.x, blockOffset.y * 2 + lbl_fullscreen.getGlobalBounds().height + lbl_video.getGlobalBounds().height));
 
 	resolutions = new ChooseList();
-	resolutions->setPos(posX, posY);
-	resolutions->setSize(96, 32);
+	resolutions->setCharacterSize(chooseListCharacterSize);
+	resolutions->setPos(pos + Vector2f(blockOffset.x * secondOffset, blockOffset.y * 2 +
+									   lbl_fullscreen.getGlobalBounds().height + lbl_video.getGlobalBounds().height + lbl_resolution.getGlobalBounds().height));
+	resolutions->setSize(chooseListButtonSize);
 
 	String currentResolution;
 	for (auto it = resolutionsMap.begin(); it != resolutionsMap.end(); ++it)
@@ -95,20 +147,30 @@ SettingsWindow::SettingsWindow()
 	}
 	resolutions->update();
 
-    posX = startPosX;
-    posY += 100;
+	//language
+	pos += Vector2f(0, blockSize.y + borderYOffset/2);
+	miscRect.setSize(blockSize);
+	miscRect.setFillColor(Color::Transparent);
+	miscRect.setOutlineThickness(border);
+	miscRect.setOutlineColor(Color::Magenta);
+	miscRect.setPosition(pos);
 
-	lbl_language = new Text();
-	lbl_language->setFont(GlobalVariables::Instance().font());
-	lbl_language->setCharacterSize(24);
-	lbl_language->setString(Language::Instance().translate(Language::LANGUAGE));
-	lbl_language->setPosition(posX, posY);
+	lbl_misc.setFont(GlobalVariables::Instance().font());
+	lbl_misc.setCharacterSize(characterSize);
+	lbl_misc.setString(Language::Instance().translate(Language::MISC));
+	lbl_misc.setStyle(Text::Bold);
+	lbl_misc.setPosition(pos + Vector2f(blockOffset.x/2, 0));
 
-	posX += 200;
+	lbl_language.setFont(GlobalVariables::Instance().font());
+	lbl_language.setCharacterSize(characterSize);
+	lbl_language.setString(Language::Instance().translate(Language::LANGUAGE));
+	lbl_language.setPosition(pos + blockOffset + Vector2f(0, lbl_audio.getGlobalBounds().height));
 
 	languages = new ChooseList();
-	languages->setPos(posX, posY);
-	languages->setSize(96, 32);
+	languages->setCharacterSize(chooseListCharacterSize);
+	languages->setPos(pos + Vector2f(blockOffset.x * secondOffset, blockOffset.y +
+									 lbl_language.getGlobalBounds().height + lbl_audio.getGlobalBounds().height));
+	languages->setSize(chooseListButtonSize);
 
 	const vector<wstring> languanges = Language::Instance().getAvaliableLanguageNames();
 	for(const wstring& langName : languanges)
@@ -116,14 +178,24 @@ SettingsWindow::SettingsWindow()
 
 	languages->update();
 
-	posX = startPosX;
-	posY += 100;
-
+	//buttons
+	const float buttonOffset = border + 50 * Settings::Instance().getScaleFactor().y;
+	const Vector2f buttonSize = Vector2f(128 * Settings::Instance().getScaleFactor().x, 32 * Settings::Instance().getScaleFactor().y);
+	const Vector2f bottomRight = settingsRect.getPosition() + settingsSize;
 	button_accept = new Button();
-	button_accept->setSize(Vector2f(64, 32));
-	button_accept->setPos(posX, posY);
+	button_accept->setSize(buttonSize);
 	button_accept->setCallback(bind(&SettingsWindow::accept, this));
 	button_accept->setText(Language::Instance().translate(Language::ACCEPT));
+	button_accept->setTextCharacterSize(characterSize);
+	button_accept->setPos(bottomRight - Vector2f(buttonSize.x, -buttonOffset));
+
+	const Vector2f bottomLeft = settingsRect.getPosition() + Vector2f(0, settingsSize.y);
+	button_cancel = new Button();
+	button_cancel->setSize(buttonSize);
+	button_cancel->setCallback(bind(&SettingsWindow::back, this));
+	button_cancel->setText(Language::Instance().translate(Language::CANCEL));
+	button_cancel->setTextCharacterSize(characterSize);
+	button_cancel->setPos(bottomLeft + Vector2f(0, buttonOffset));
 
 	cbx_fullscreen->setChecked(Settings::Instance().getFullscreen());
 	soundScale->setValue(Settings::Instance().getSoundLevel());
@@ -134,39 +206,45 @@ SettingsWindow::SettingsWindow()
 
 SettingsWindow::~SettingsWindow()
 {
-	delete lbl_sound;
 	delete soundScale;
-	delete lbl_music;
 	delete musicScale;
-	delete lbl_fullscreen;
 	delete cbx_fullscreen;
-	delete lbl_resolution;
 	delete resolutions;
-	delete lbl_language;
 	delete languages;
 	delete button_accept;
+	delete button_cancel;
 }
 
 void SettingsWindow::paint(RenderWindow *window)
 {
 	drawBackground(window);
 
-	window->draw(*lbl_sound);
-	soundScale->draw(window);
+	window->draw(settingsRect);
+	window->draw(lbl_settings);
 
-	window->draw(*lbl_music);
+	window->draw(audioRect);
+	window->draw(lbl_audio);
+
+	window->draw(lbl_sound);
+	soundScale->draw(window);
+	window->draw(lbl_music);
 	musicScale->draw(window);
 
-	window->draw(*lbl_fullscreen);
-	cbx_fullscreen->draw(window);
+	window->draw(videoRect);
+	window->draw(lbl_video);
 
-	window->draw(*lbl_resolution);
+	window->draw(lbl_fullscreen);
+	cbx_fullscreen->draw(window);
+	window->draw(lbl_resolution);
 	resolutions->draw(window);
 
-	window->draw(*lbl_language);
+	window->draw(miscRect);
+	window->draw(lbl_misc);
+	window->draw(lbl_language);
 	languages->draw(window);
 
 	button_accept->draw(window);
+	button_cancel->draw(window);
 }
 
 void SettingsWindow::eventFilter(Event *event)
@@ -177,6 +255,8 @@ void SettingsWindow::eventFilter(Event *event)
 	resolutions->event(event);
 	languages->event(event);
 	button_accept->event(event);
+	button_cancel->event(event);
+
 	StateWindow::eventFilter(event);
 }
 

@@ -2,6 +2,7 @@
 #include "globalvariables.h"
 #include "Game/Audio/soundcontroller.h"
 #include "Engine/engine.h"
+#include "Game/Level/camera.h"
 
 Menu::Menu()
 	: StateWindow()
@@ -38,6 +39,17 @@ void Menu::eventFilter(Event *event)
 			break;
 		default:
 			break;
+		}
+	}
+		break;
+	case Event::MouseMoved:
+	{
+		const int current = getMenuAtPos(Vector2i(event->mouseMove.x, event->mouseMove.y));
+		if (current != -1 && current != currentMenu)
+		{
+			currentMenu = current;
+			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
+			updateColor();
 		}
 	}
 		break;
@@ -97,12 +109,19 @@ void Menu::menuDown()
 
 int Menu::getMenuAtPos(const Vector2i &point) const
 {
+	View *view = Engine::Instance().camera()->getView();
+	Vector2f pos;
+	if (view == nullptr)
+		pos = Vector2f(point.x, point.y);
+	else
+		pos = Engine::Instance().window()->mapPixelToCoords(point, *view);
+
 	int currentMenu = -1;
 	unsigned int i = 0;
 	while(i != menus.size())
 	{
-		const IntRect rect = IntRect(menus.at(i).getGlobalBounds());
-		if (rect.contains(point))
+		const FloatRect rect = menus.at(i).getGlobalBounds();
+		if (rect.contains(pos))
 		{
 			currentMenu = i;
 			break;
