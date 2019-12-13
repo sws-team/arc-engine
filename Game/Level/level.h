@@ -30,7 +30,6 @@ public:
 	void drawLevel(RenderTarget * const target);
 
 	void spawn(ENEMY_TYPES type);
-	void test();
 	Tile getTileByPos(const Vector2f& pos, unsigned int layer = 0);
 	Tile getTileByCell(const Vector2i& cell, unsigned int layer = 0) const;
 
@@ -161,6 +160,9 @@ private:
 	};
 	Shake shake;
 
+
+	CircleShape currentTowerRadius;
+	void updateRadius();
 };
 
 #endif // LEVEL_H

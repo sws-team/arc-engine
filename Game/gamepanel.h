@@ -63,6 +63,9 @@ public:
 	void moveCursorDown();
 	void moveCursorUp();
 
+	bool isTowerIconActive(TOWER_TYPES type) const;
+	bool isAbilityIconActive(ACTION_STATE type) const;
+
 private:
 	Sprite m_sprite;
 	RenderTexture rTexture;

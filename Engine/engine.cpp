@@ -557,7 +557,6 @@ bool Engine::loadMap(const String &fileName)
 				tile.sprite = sprite;
 				tile.id = tileGID;
 				tile.cell = Vector2i(x, y);
-
 				layer.tiles.push_back(tile);
 
 //				if (gameMap->tileSprites.find(tileGID) == gameMap->tileSprites.end())

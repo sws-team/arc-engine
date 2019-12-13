@@ -83,16 +83,6 @@ void Level::draw(RenderTarget *const target)
 	target->setView(*Engine::Instance().camera()->getView());
 	drawLevel(target);
 	target->draw(deadZone);
-
-	switch (m_state)
-	{
-	case WAIT_READY:
-
-		break;
-	default:
-		break;
-	}
-
 	Engine::Instance().panel()->draw(target);
 	Engine::Instance().instructions()->draw(target);
 }
@@ -222,6 +212,10 @@ void Level::clear()
 	for(Enemy *enemy : enemies)
 		delete enemy;
 	enemies.clear();
+
+	for(Animation *animation : effects)
+		delete animation;
+	effects.clear();
 }
 
 void Level::calculateCollisions()
@@ -325,20 +319,21 @@ bool Level::canAddTower(const Vector2i &cell, TOWER_TYPES towerType) const
 	const int direction = Engine::Instance().level()->getTileDirectionByCell(cell);
 	if (direction != Map::STAY)
 		return false;
+	Tower *tower = this->getTowerAtPos(Engine::Instance().camera()->cellToPosMap(cell));
+	if (tower != nullptr)
+		return false;
 	bool canCreate = true;
-	Tower *tower = this->getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
-	canCreate = canCreate && tower == nullptr;
 	if (towerType != POWER)
 	{
+		const Vector2i targetCell = cell + Vector2i(1, 1);
 		bool finded = false;
 		for(Tower *tower : towers)
 		{
 			if (tower->type() == POWER)
 			{
-				const int radius = tower->data().radius;
-				const Vector2i towerCell = Engine::Instance().camera()->posToCellMap(tower->pos());
-				if (abs(towerCell.x - cell.x) < radius &&
-						abs(towerCell.y - cell.y) < radius)
+				const Vector2i towerCell = Engine::Instance().camera()->posToCellMap(tower->pos() + GlobalVariables::Instance().mapTileSize());
+				if (abs(towerCell.x - targetCell.x) < tower->data().radius
+						&& abs(towerCell.y - targetCell.y) < tower->data().radius)
 				{
 					finded = true;
 					break;
@@ -371,6 +366,19 @@ void Level::hitPlayer(float damage)
 void Level::changeState(Level::LEVEL_STATE state)
 {
 	m_state = state;
+}
+
+void Level::updateRadius()
+{
+	Tower *tower = Engine::Instance().panel()->selectedTower();
+	if (tower == nullptr)
+		return;
+
+	currentTowerRadius.setRadius(tower->data().radius * GlobalVariables::Instance().mapTileSize().x);
+	currentTowerRadius.setFillColor(Color(34, 255, 56, 120));
+	currentTowerRadius.setPosition(tower->pos());
+	currentTowerRadius.setOrigin(currentTowerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().x,
+					 currentTowerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().y);
 }
 
 Level::LEVEL_STATE Level::getState() const
@@ -442,24 +450,19 @@ void Level::drawLevel(RenderTarget * const target)
 		effect->draw(target);
 
 	if (shake.isActive && shake.state)
-	{
-		target->draw(shake.dangerRect);
-	}
+		target->draw(shake.dangerRect);	
+
+	if (Engine::Instance().panel()->selectedTower() != nullptr)
+		target->draw(currentTowerRadius);
 }
 
 void Level::spawn(ENEMY_TYPES type)
 {
-	Enemy *enemy = EnemiesFactory::createEnemy(type, gameMap->spawnPos);
+	const Vector2f spawnPos = Vector2f(gameMap->spawnPos.x * Settings::Instance().getScaleFactor().x,
+									   gameMap->spawnPos.y * Settings::Instance().getScaleFactor().y);
+	Enemy *enemy = EnemiesFactory::createEnemy(type, spawnPos);
 	enemy->moveNext(gameMap->spawnDirection);
 	enemies.push_back(enemy);
-}
-
-void Level::test()
-{
-//	changeState(WIN);
-	spawn(ENEMY_TYPES::SMALL_SLOW);
-//	spawn(ENEMY_TYPES::SMALL_MEDIUM);
-//	spawn(ENEMY_TYPES::SMALL_FAST);
 }
 
 Tile Level::getTileByPos(const Vector2f &pos, unsigned int layer)
@@ -540,10 +543,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 {
 	Tower *selectedTower = Engine::Instance().panel()->selectedTower();
 	if (Engine::Instance().panel()->selectedTower() != nullptr)
-	{
-		Engine::Instance().panel()->selectedTower()->deselect();
-		Engine::Instance().panel()->setSelectedTower(nullptr);
-	}
+		Engine::Instance().panel()->setSelectedTower(nullptr);	
 	if (inPanel)
 	{
 		m_actionState = Engine::Instance().panel()->getCurrentIcon();
@@ -557,6 +557,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			const float cost = TowersFactory::getTowerStats(type).cost;
 			if (money < cost)
 				return;
+			if (!Engine::Instance().panel()->isTowerIconActive(type))
+				return;
 
 			const float radius = TowersFactory::getTowerStats(type).radius * GlobalVariables::Instance().mapTileSize().x;
 			Engine::Instance().cursor()->activateTower(radius, type);
@@ -567,6 +569,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
 		{
+			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_INCREASE_TOWER_ATTACK_SPEED))
+				return;
 			if (energy < INC_TOWER_AS_ABILITY_COST)
 				return;
 			Engine::Instance().cursor()->activateAbility(1, 1, 0, 0);
@@ -575,6 +579,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_INCREASE_TOWER_DAMAGE:
 		{
+			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_INCREASE_TOWER_DAMAGE))
+				return;
 			if (energy < INC_TOWER_DMG_ABILITY_COST)
 				return;
 			Engine::Instance().cursor()->activateAbility(1, 1, 0, 0);
@@ -583,6 +589,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_VENOM:
 		{
+			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_VENOM))
+				return;
 			if (energy < VENOM_ABILITY_COST)
 				return;
 			Engine::Instance().cursor()->activateAbility(VenomAbility::VENOM_SIZE.x, VenomAbility::VENOM_SIZE.y, 4, 1);
@@ -591,6 +599,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_BOMB:
 		{
+			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_BOMB))
+				return;
 			if (energy < BOMB_ABILITY_COST)
 				return;
 			Engine::Instance().cursor()->activateAbility(3, 3, 1, 1);
@@ -599,6 +609,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_FREEZE_BOMB:
 		{
+			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_FREEZE_BOMB))
+				return;
 			if (energy < FREEZE_BOMB_ABILITY_COST)
 				return;
 			Engine::Instance().cursor()->activateAbility(3, 3, 1, 1);
@@ -606,7 +618,11 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		}
 		break;
 		case ABILITY_UNKNOWN:
+		{
+			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_UNKNOWN))
+				return;
 			break;
+		}
 		case SELL:
 		{
 			if (selectedTower == nullptr)
@@ -646,8 +662,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			Tower* tower = getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
 			if (tower != nullptr)
 			{
-				tower->select();
 				Engine::Instance().panel()->setSelectedTower(tower);
+				updateRadius();
 			}
 		}
 			break;

@@ -60,7 +60,8 @@ Vector2f GameObject::pos() const
 
 Vector2f GameObject::getSize() const
 {
-	return Vector2f(size.x * Settings::Instance().getScaleFactor().x, size.y * Settings::Instance().getScaleFactor().y);
+	return Vector2f(size.x * Settings::Instance().getScaleFactor().x,
+					size.y * Settings::Instance().getScaleFactor().y);
 }
 
 FloatRect GameObject::gameRect() const

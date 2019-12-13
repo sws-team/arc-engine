@@ -72,6 +72,8 @@ private:
 
 	Vector2f m_spritePos;//enemy pos in rect
 	Vector2f m_pos;//global pos
+
+	constexpr static float LIFEBAR_OFFSET = 4;
 };
 
 class EnemiesFactory

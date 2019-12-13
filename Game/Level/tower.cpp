@@ -16,14 +16,8 @@ Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, con
 				 Vector2i(GlobalVariables::CELL_SIZE/TOWER_SCAlE, GlobalVariables::CELL_SIZE/TOWER_SCAlE),
 				 4)
 	,m_stats(stats)
-	,m_selected(false)
 	,m_level(1)
 {
-	radius.setRadius(m_stats.radius * GlobalVariables::Instance().mapTileSize().x);
-	radius.setFillColor(Color(34, 255, 56, 120));
-	radius.setPosition(pos);
-	radius.setOrigin(radius.getRadius() - GlobalVariables::Instance().mapTileSize().x,
-					 radius.getRadius() - GlobalVariables::Instance().mapTileSize().y);
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
 	abilityDamage.isActive = false;
 	abilityAttackSpeed.isActive = false;
@@ -51,8 +45,6 @@ void Tower::update()
 
 void Tower::draw(RenderTarget * const target)
 {
-	if (m_selected)
-		target->draw(radius);
 	GameObject::draw(target);
 }
 
@@ -94,25 +86,15 @@ void Tower::upgrade()
 {
 	m_level++;
 
-	m_stats.cost *= Tower::LEVEL_GAIN;
-	m_stats.damage *= Tower::LEVEL_GAIN;
-	m_stats.radius *= Tower::LEVEL_GAIN;
-	m_stats.attackSpeed *= Tower::LEVEL_GAIN;
+	m_stats.cost *= 1 + Tower::LEVEL_GAIN;
+	m_stats.damage *= 1 + Tower::LEVEL_GAIN;
+	m_stats.radius += 2 * m_level;
+	m_stats.attackSpeed *= 1 - Tower::LEVEL_GAIN;
 }
 
 void Tower::hitEnemy(Enemy *enemy)
 {
 
-}
-
-void Tower::select()
-{
-	m_selected = true;
-}
-
-void Tower::deselect()
-{
-	m_selected = false;
 }
 
 TOWER_TYPES Tower::type() const
@@ -237,7 +219,7 @@ bool TowersFactory::isIntersects(const FloatRect &rect, const Vector2f &center, 
 const TowerStats BaseTower::STATS = TowerStats(5, 300, 4, 20, 45);
 const TowerStats PowerTower::STATS = TowerStats(0, 5000, 5, 0, 55);
 const TowerStats RocketTower::STATS = TowerStats(5, 3500, 12, 20, 150);
-const TowerStats FreezeTower::STATS = TowerStats(10, 350, 7, 5, 75);
+const TowerStats FreezeTower::STATS = TowerStats(10, 350, 8, 5, 75);
 const TowerStats LaserTower::STATS = TowerStats(10, 250, 6, 0, 150);
 const TowerStats ImprovedTower::STATS = TowerStats(10, 150, 8, 50, 250);
 
@@ -257,9 +239,9 @@ PowerTower::PowerTower(const Vector2f &pos)
 	powerRadius.setFillColor(Color::Transparent);
 	powerRadius.setOutlineColor(Color(23, 200, 124));
 	powerRadius.setOutlineThickness(3);
-	powerRadius.setPosition(pos);
-	powerRadius.setOrigin(powerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().x/2,
-						  powerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().y/2);
+	powerRadius.setPosition(pos);	
+	powerRadius.setOrigin(powerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().x,
+						  powerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().y);
 	m_gain = ENERGY_GAIN;
 }
 
@@ -289,6 +271,14 @@ void PowerTower::upgrade()
 {
 	m_gain *= LEVEL_GAIN;
 	Tower::upgrade();
+	upgradePowerRadius();
+}
+
+void PowerTower::upgradePowerRadius()
+{
+	powerRadius.setRadius(m_stats.radius * GlobalVariables::Instance().mapTileSize().x);
+	powerRadius.setOrigin(powerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().x,
+						  powerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().y);
 }
 
 

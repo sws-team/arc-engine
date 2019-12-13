@@ -736,6 +736,46 @@ void GamePanel::moveCursorUp()
 	updateCurrentCursor();
 }
 
+bool GamePanel::isTowerIconActive(TOWER_TYPES type) const
+{
+	switch (type)
+	{
+	case BASE:
+	case POWER:
+		return true;
+	case ROCKET:
+		return iconsAvaliable.isRocketEnabled;
+	case FREEZE:
+		return iconsAvaliable.isFreezeEnabled;
+	case LASER:
+		return iconsAvaliable.isLaserEnabled;
+	case IMPROVED:
+		return iconsAvaliable.isImprovedEnabled;
+	}
+}
+
+bool GamePanel::isAbilityIconActive(ACTION_STATE type) const
+{
+	switch (type)
+	{
+	case ABILITY_VENOM:
+		return iconsAvaliable.isAbilityVenomEnabled;
+	case ABILITY_BOMB:
+		return iconsAvaliable.isAbilityBombEnabled;
+	case ABILITY_FREEZE_BOMB:
+		return iconsAvaliable.isAbilityFreezeBombEnabled;
+	case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
+		return iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled;
+	case ABILITY_INCREASE_TOWER_DAMAGE:
+		return iconsAvaliable.isAbilityIncreaseTowerDamageEnabled;
+	case ABILITY_UNKNOWN:
+		return iconsAvaliable.isAbilityUnknownEnabled;
+	default:
+		break;
+	}
+	return false;
+}
+
 void GamePanel::updateCurrentTower()
 {
 	Color color;

@@ -38,7 +38,7 @@ GameWindow::GameWindow()
 	Engine::Instance().panel()->init();
 
 	addItem("Continue");
-	addItem("Exit from mission");
+	addItem("Restart");
 	addItem("Exit from game");
 	addItem("Exit to OS");
 	clock.restart();
@@ -188,13 +188,17 @@ void GameWindow::accept()
 	case CONTINUE_GAME:
 		setState(PLAYING);
 		break;
+	case RESET_MISSION:
+	{
+		Engine::Instance().level()->clear();
+		init();
+		setState(PLAYING);
+	}
+		break;
 	case EXIT_FROM_MISSION:
 		Engine::Instance().setState(Engine::CHOOSE_MISSION);
 		break;
 	case EXIT_FROM_GAME:
-		Engine::Instance().setState(Engine::MAIN_MENU);
-		break;
-	case EXIT_TO_OS:
 		Engine::Instance().setState(Engine::CLOSING);
 		break;
 	}

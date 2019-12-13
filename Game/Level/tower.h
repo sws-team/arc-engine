@@ -8,7 +8,7 @@ struct TowerStats
 {
 	TowerStats(float damage,
 			   float attackSpeed,
-			   int radius,
+			   float radius,
 			   float projectileSpeed,
 			   float cost)
 		: damage(damage)
@@ -21,7 +21,7 @@ struct TowerStats
 	}
 	float damage;
 	float attackSpeed;
-	int radius;
+	float radius;
 	float projectileSpeed;
 	float cost;
 };
@@ -57,8 +57,6 @@ public:
 	TowerStats data() const;
 
 	void hitEnemy(Enemy* enemy);
-	void select();
-	void deselect();
 
 	TOWER_TYPES type() const;
 	void setType(const TOWER_TYPES &type);
@@ -76,11 +74,7 @@ protected:
 	Timer actionTimer;	
 	string m_shotSound;
 private:
-	CircleShape radius;
-	bool m_selected;
-
 	TOWER_TYPES m_type;
-
 	int m_level;
 
 	struct Ability
@@ -154,6 +148,7 @@ private:
 	float m_gain;
 
 	CircleShape powerRadius;
+	void upgradePowerRadius();
 };
 
 class RocketTower : public ProjectilesTower

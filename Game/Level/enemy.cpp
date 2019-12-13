@@ -11,7 +11,8 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const EnemyStats& stats,
 			 const Vector2i &cellSize)
 	: GameObject(texture_id, startPos,
-				 Vector2i(GlobalVariables::MAP_CELL_SIZE * cellSize.x, GlobalVariables::MAP_CELL_SIZE * cellSize.y),
+				 Vector2i(GlobalVariables::MAP_CELL_SIZE * cellSize.x,
+						  GlobalVariables::MAP_CELL_SIZE * cellSize.y),
 				 4)
 	,m_stats(stats)
 	,moveCounter(0)
@@ -25,7 +26,7 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 
 	m_spritePos = Vector2f(0, 0);
 
-	const float road = 4 * GlobalVariables::MAP_CELL_SIZE - m_size.x;
+	const float road = 4 * GlobalVariables::Instance().mapTileSize().x - m_size.x;
 	if (road != 0.f)
 	{
 		m_spritePos.x = rand() % static_cast<int>(road);
@@ -221,9 +222,9 @@ void Enemy::drawLifeBar(RenderTarget *target)
 		return;
 
 	const float healthRate = m_data.health / m_stats.health;
-	lifeBar->setPos(pos() - Vector2f(0, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y));
+	lifeBar->setPos(Vector2f(sprite.getGlobalBounds().left,
+							 sprite.getGlobalBounds().top) - Vector2f(0, (LIFEBAR_OFFSET + LifeBar::LIFE_BAR_HEIGHT) * Settings::Instance().getScaleFactor().y));
 	lifeBar->setValue(healthRate);
-
 	lifeBar->draw(target);
 }
 

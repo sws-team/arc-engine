@@ -30,9 +30,9 @@ private:
 	enum GAME_MENU
 	{
 		CONTINUE_GAME,
+		RESET_MISSION,
 		EXIT_FROM_MISSION,
 		EXIT_FROM_GAME,
-		EXIT_TO_OS
 	};
 
 	enum GAME_STATE
