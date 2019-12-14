@@ -146,7 +146,11 @@ void Level::update()
 		{
 			if (enemy->moveStep())
 			{
-				if (gameMap->endRect.contains(enemy->enemyPos()))
+				const FloatRect endRect = FloatRect(gameMap->endRect.left * Settings::Instance().getScaleFactor().x,
+													gameMap->endRect.top * Settings::Instance().getScaleFactor().y,
+													gameMap->endRect.width * Settings::Instance().getScaleFactor().x,
+													gameMap->endRect.height * Settings::Instance().getScaleFactor().y);
+				if (endRect.contains(enemy->enemyPos()))
 					continue;
 
 				const Vector2i cell = Engine::Instance().camera()->posToCellMap(enemy->enemyPos());
@@ -256,7 +260,11 @@ void Level::checkEnd()
 	for (auto it = enemies.begin(); it != enemies.end();)
 	{
 		Enemy *enemy = *it;
-		if (gameMap->endRect.contains(enemy->enemyPos()))
+		const FloatRect endRect = FloatRect(gameMap->endRect.left * Settings::Instance().getScaleFactor().x,
+											gameMap->endRect.top * Settings::Instance().getScaleFactor().y,
+											gameMap->endRect.width * Settings::Instance().getScaleFactor().x,
+											gameMap->endRect.height * Settings::Instance().getScaleFactor().y);
+		if (endRect.contains(enemy->enemyPos()))
 		{
 			hitPlayer(enemy->getData().damage);
 			delete enemy;
