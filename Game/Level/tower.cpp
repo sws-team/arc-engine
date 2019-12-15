@@ -8,7 +8,7 @@
 #include "Game/Level/level.h"
 #include "Game/Audio/soundcontroller.h"
 
-const float Tower::LEVEL_GAIN = 0.4f;
+const float Tower::LEVEL_GAIN = 0.25f;
 const float Tower::TOWER_SCAlE = 1.f/3.f;
 
 Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, const TowerStats &stats)
@@ -88,7 +88,7 @@ void Tower::upgrade()
 
 	m_stats.cost *= 1 + Tower::LEVEL_GAIN;
 	m_stats.damage *= 1 + Tower::LEVEL_GAIN;
-	m_stats.radius += 2 * m_level;
+	m_stats.radius += 2 * (m_level - 1);
 	m_stats.attackSpeed *= 1 - Tower::LEVEL_GAIN;
 }
 
@@ -215,21 +215,20 @@ bool TowersFactory::isIntersects(const FloatRect &rect, const Vector2f &center, 
 
 	return false;
 }
-
-const TowerStats BaseTower::STATS = TowerStats(5, 300, 4, 20, 45);
-const TowerStats PowerTower::STATS = TowerStats(0, 5000, 5, 0, 55);
-const TowerStats RocketTower::STATS = TowerStats(5, 3500, 12, 20, 150);
-const TowerStats FreezeTower::STATS = TowerStats(10, 350, 8, 5, 75);
-const TowerStats LaserTower::STATS = TowerStats(10, 250, 6, 0, 150);
-const TowerStats ImprovedTower::STATS = TowerStats(10, 150, 8, 50, 250);
+const float PowerTower::ENERGY_GAIN = 10;
+											//		dmg	atk_speed	r	pr_speed	cost
+const TowerStats PowerTower::STATS = TowerStats		(0,		5000,	5,		0,		60);
+const TowerStats BaseTower::STATS = TowerStats		(5,		450,	4,		20,		50);
+const TowerStats FreezeTower::STATS = TowerStats	(5,		350,	6,		10,		80);
+const TowerStats RocketTower::STATS = TowerStats	(100,	3500,	12,		20,		150);
+const TowerStats LaserTower::STATS = TowerStats		(15,	200,	6,		0,		180);
+const TowerStats ImprovedTower::STATS = TowerStats	(20,	150,	7,		50,		250);
 
 BaseTower::BaseTower(const Vector2f &pos)
 	: ProjectilesTower(RESOURCES::TOWER_BASE, RESOURCES::BASE_PROJECTILE, pos, STATS)
 {
 	m_shotSound = "sounds/towers/base_shot.ogg";
 }
-
-const float PowerTower::ENERGY_GAIN = 10;
 
 PowerTower::PowerTower(const Vector2f &pos)
 	: Tower(RESOURCES::TOWER_POWER, pos, STATS)

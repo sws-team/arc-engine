@@ -22,20 +22,17 @@ enum ENEMY_TYPES
 {
 	UNKNOWN,
 
-	SMALL_SLOW,
-	SMALL_MEDIUM,
-	SMALL_FAST,
+	SMALL_SLOW,//scorpion
+	SMALL_MEDIUM,//car
+	SMALL_FAST,//tricycle
 
-	MID_SLOW,
-	MID_MEDIUM,
-	MID_FAST,
+	MID_SLOW,//tank
+	MID_MEDIUM,//spider
+	MID_FAST,//helicopter
 
-	BIG_SLOW,
-	BIG_MEDIUM,
-	BIG_FAST,
-
-	VERY_FAST,
-	VERY_BIG
+	BIG_SLOW,//aircarrier
+	BIG_MEDIUM,//big tank
+	BIG_FAST,//plane
 };
 
 enum TOWER_TYPES

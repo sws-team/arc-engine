@@ -46,12 +46,6 @@ void Controller::keyboardKeyEvent(const bool timeoutKey, const bool timeoutMove)
 		if (Keyboard::isKeyPressed(Keyboard::F12))
 			p_screenShoots->TriggerScreenshot();
 #endif
-		if (Keyboard::isKeyPressed(Keyboard::P))
-			Engine::Instance().level()->spawn(ENEMY_TYPES::SMALL_SLOW);
-
-//		if (Keyboard::isKeyPressed(Keyboard::Z))
-//			Engine::Instance().level()->test();
-
 		if (Keyboard::isKeyPressed(Keyboard::Space))
 			Engine::Instance().level()->ready();
 
@@ -60,24 +54,19 @@ void Controller::keyboardKeyEvent(const bool timeoutKey, const bool timeoutMove)
 			const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
 			const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
 			Engine::Instance().level()->chooseByPos(pos);
-//			Engine::Instance().panel()->press(pixelPos);
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Return))
 			Engine::Instance().level()->chooseCurrent();
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.action)))
-			Engine::Instance().level()->action();
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.change)))
-			Engine::Instance().level()->change();
-		if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(m_controls.start)))
+		if (Keyboard::isKeyPressed(Keyboard::Escape))
 			pauseFunc();
 		if (Keyboard::isKeyPressed(Keyboard::Q))
 			Engine::Instance().cursor()->swap();
-#ifdef TEST_BUILD
+
+
 		if (Keyboard::isKeyPressed(Keyboard::Add))
 			Engine::Instance().camera()->zoomIn();
 		if (Keyboard::isKeyPressed(Keyboard::Subtract))
 			Engine::Instance().camera()->zoomOut();
-#endif
 	}
 	if (timeoutMove)
 	{
@@ -103,54 +92,39 @@ void Controller::keyboardKeyEvent(const bool timeoutKey, const bool timeoutMove)
 
 void Controller::joystickKeyEvent(const bool timeoutKey, const bool timeoutMove)
 {
-	/*
-	player->shoot(Joystick::isButtonPressed(controls.joystickId, controls.shoot));
-	player->shootWithDefaultWeapon(Joystick::isButtonPressed(controls.joystickId, controls.shootWithDefaultWeapon));
-
-	const float joystick1X = Joystick::getAxisPosition(controls.joystickId, static_cast<Joystick::Axis>(controls.moveLeft));
-	const float joystick1Y = Joystick::getAxisPosition(controls.joystickId,  static_cast<Joystick::Axis>(controls.moveUp));
-
-	if (timeout)
+	const int joystickId = 1;
+	if (timeoutKey)
 	{
-		if (Joystick::isButtonPressed(controls.joystickId, controls.nextWeapon))
-			player->nextWeapon();
-		if (Joystick::isButtonPressed(controls.joystickId, controls.previousWeapon))
-			player->previousWeapon();
-
-		if (Joystick::isButtonPressed(controls.joystickId, controls.nextAbility))
-			player->nextCharacter();
-		if (Joystick::isButtonPressed(controls.joystickId, controls.previousAbility))
-			player->previousCharacter();
-		if (Joystick::isButtonPressed(controls.joystickId, controls.useAbility))
-			player->use();
-
-		if (Joystick::isButtonPressed(controls.joystickId, controls.start))
+		if (Engine::Instance().instructions()->isActive())
+		{
+			if (Joystick::isButtonPressed(joystickId, 0))
+				Engine::Instance().instructions()->skip();
+			else if (Joystick::isButtonPressed(joystickId, 1))
+				Engine::Instance().instructions()->next();
+			return;
+		}
+		if (Joystick::isButtonPressed(joystickId, 0))
+			Engine::Instance().level()->ready();
+		if (Joystick::isButtonPressed(joystickId, 1))
+			Engine::Instance().level()->chooseCurrent();
+		if (Joystick::isButtonPressed(joystickId, 3))
 			pauseFunc();
+		if (Joystick::isButtonPressed(joystickId, 4))
+			Engine::Instance().cursor()->swap();
 	}
-	if (joystick1X > 50)
+	if (timeoutMove)
 	{
-		if (!canMove(MOVE_RIGHT, player))
-			return;
-		player->moveRight();
+		const float joystick1X = Joystick::getAxisPosition(joystickId, Joystick::X);
+		const float joystick1Y = Joystick::getAxisPosition(joystickId, Joystick::Y);
+		if (joystick1X > 50)
+			Engine::Instance().cursor()->moveRight();
+		else if (joystick1X < -50)
+			Engine::Instance().cursor()->moveLeft();
+		if (joystick1Y > 50)
+			Engine::Instance().cursor()->moveDown();
+		else if (joystick1Y < -50)
+			Engine::Instance().cursor()->moveUp();
 	}
-	else if (joystick1X < -50)
-	{
-		if (!canMove(MOVE_LEFT, player))
-			return;
-		player->moveLeft();
-	}
-	if (joystick1Y > 50)
-	{
-		if (!canMove(MOVE_DOWN, player))
-			return;
-		player->moveDown();
-	}
-	else if (joystick1Y < -50)
-	{
-		if (!canMove(MOVE_UP, player))
-			return;
-		player->moveUp();
-	}*/
 }
 
 void Controller::setPauseFunc(const function<void ()> &value)

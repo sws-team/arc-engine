@@ -259,7 +259,7 @@ void Cursor::updateCell()
 		break;
 	case TOWER:
 	{
-		const bool canCreate = Engine::Instance().level()->canAddTower(Engine::Instance().camera()->posToCellMap(Engine::Instance().camera()->cellToPos(m_cell)), towerType);
+		const bool canCreate = Engine::Instance().level()->canAddTower(Vector2i(m_cell.x * 2, m_cell.y * 2), towerType);
 		towerRadius.setFillColor(canCreate ? Color(0, 255, 0, 100) : Color(255, 0, 0, 100));
 	}
 		break;

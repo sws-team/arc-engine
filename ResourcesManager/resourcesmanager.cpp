@@ -64,9 +64,15 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::VENOM_EFFECT, "images/Weapons/Effects/venom.png");
 
 
-	addTexture(RESOURCES::ENEMY_TEXTURE, "images/Enemies/enemy1.png");
-	addTexture(RESOURCES::ENEMY_BIG_MED, "images/Enemies/big.png");
-	addTexture(RESOURCES::ENEMY_BIG_TEXTURE, "images/Enemies/med.png");
+	addTexture(RESOURCES::ENEMY_SCORPION, "images/Enemies/scorpion.png");
+	addTexture(RESOURCES::ENEMY_CAR, "images/Enemies/car.png");
+	addTexture(RESOURCES::ENEMY_TRICYCLE, "images/Enemies/tricycle.png");
+	addTexture(RESOURCES::ENEMY_TANK, "images/Enemies/tank.png");
+	addTexture(RESOURCES::ENEMY_SPIDER, "images/Enemies/spider.png");
+	addTexture(RESOURCES::ENEMY_HELICOPTER, "images/Enemies/helicopter.png");
+	addTexture(RESOURCES::ENEMY_AIRCARRIER, "images/Enemies/aircarrier.png");
+	addTexture(RESOURCES::ENEMY_BIG_TANK, "images/Enemies/big_tank.png");
+	addTexture(RESOURCES::ENEMY_PLANE, "images/Enemies/plane.png");
 }
 
 void ResourcesManager::addTexture(RESOURCES::TEXTURE_TYPE type, const string &path)

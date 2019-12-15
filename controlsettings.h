@@ -10,8 +10,6 @@ struct ControlSettings
 	unsigned int action;
 	unsigned int change;
 	unsigned int start;
-
-
 };
 
 #endif // CONTROLSETTINGS_H

@@ -24,9 +24,6 @@ public:
 	void startMission(const unsigned int n);
 	void clear();
 
-	void action();
-	void change();
-
 	void drawLevel(RenderTarget * const target);
 
 	void spawn(ENEMY_TYPES type);
@@ -82,8 +79,8 @@ private:
 	void checkEnd();
 	void checkAlive();
 	void checkRespawn();
+	void spawnEnemy();
 
-	float difficulty;
 	float resolutionOffsetX;
 
 	RectangleShape deadZone;
@@ -107,7 +104,9 @@ private:
 
 	vector<ENEMY_TYPES> spawnEnemies;
 	Timer spawnTimer;
-
+	ENEMY_TYPES bossType;
+	constexpr static int RESPAWN_TIME = 1500;
+	constexpr static int RESPAWN_OFFSET = 250;
 
 	LEVEL_STATE m_state;
 	void changeState(LEVEL_STATE state);
@@ -155,6 +154,7 @@ private:
 
 		static const int MAX_SHAKE_COUNT;
 		static const int MAX_SHAKE_OFFSET;
+		static const int SHAKE_TIME;
 
 		void startShake();
 	};

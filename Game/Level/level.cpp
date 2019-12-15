@@ -37,10 +37,10 @@ const float Level::BOMB_ABILITY_DAMAGE = 111;
 
 const int Level::Shake::MAX_SHAKE_COUNT = 10;
 const int Level::Shake::MAX_SHAKE_OFFSET = 10;
+const int Level::Shake::SHAKE_TIME = 50;
 
 Level::Level() :
-	difficulty(1.f)
-  ,gameMap(nullptr)
+  gameMap(nullptr)
   ,m_actionState(READY)
   ,life(0.f)
   ,money(0.f)
@@ -105,7 +105,7 @@ void Level::update()
 	}
 	if (shake.isActive)
 	{
-		if (shake.dangerTimer.check(50))
+		if (shake.dangerTimer.check(Shake::SHAKE_TIME))
 		{
 			if (shake.state)
 				shake.offset = rand() % Shake::MAX_SHAKE_OFFSET * 2;
@@ -185,7 +185,6 @@ void Level::startMission(const unsigned int n)
 	Engine::Instance().panel()->updatePanel();
 
 	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
-//	difficulty = 1.f + static_cast<float>(SavedGameLoader::Instance().getSavedGame().completedLevels.size()) / 10;
 	gameMap = Engine::Instance().getMap(n);
 	Engine::Instance().cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
 	Engine::Instance().panel()->initMission(n);
@@ -302,34 +301,60 @@ void Level::checkRespawn()
 {
 	if (spawnEnemies.empty())
 		return;
-	const int timeOffset = rand() % 1000 - 300;
-	if (spawnTimer.check(1000 + timeOffset))
+
+	const int time = RESPAWN_TIME - Engine::Instance().getMission() * 100;
+	const int timeOffset = rand() % (RESPAWN_OFFSET + 1) - RESPAWN_OFFSET/2;
+	const int resultTime = time + timeOffset + spawnEnemies.size() * 10;
+
+	int spawnCount = 1;
+	const float k = 1 - static_cast<float>(spawnEnemies.size()) / Engine::Instance().panel()->getProgressMax();
+	if (k > 0.9f)
+		spawnCount = 6;
+	else if(k > 0.8f)
+		spawnCount = 5;
+	else if(k > 0.6f)
+		spawnCount = 4;
+	else if(k > 0.4f)
+		spawnCount = 3;
+	else if(k > 0.2f)
+		spawnCount = 2;
+
+	if (spawnTimer.check(resultTime))
 	{
-		const int n = rand() % spawnEnemies.size();
-		ENEMY_TYPES type = spawnEnemies.at(n);
-		spawnEnemies.erase(find(spawnEnemies.begin(), spawnEnemies.end(), type));
-		spawn(type);
+		for (int i = 0; i < spawnCount; ++i)
+		{
+			if (spawnEnemies.empty())
+				break;
+			spawnEnemy();
+		}
 	}
+}
+
+void Level::spawnEnemy()
+{
+	const int n = rand() % spawnEnemies.size();
+	ENEMY_TYPES type = spawnEnemies.at(n);
+	spawnEnemies.erase(find(spawnEnemies.begin(), spawnEnemies.end(), type));
+	spawn(type);
 }
 
 Tower *Level::getTowerAtPos(const Vector2f &pos) const
 {
 	for(Tower* tower : towers)
-	{
 		if (tower->pos() == pos)
 			return tower;
-	}
 	return nullptr;
 }
 
 bool Level::canAddTower(const Vector2i &cell, TOWER_TYPES towerType) const
 {
-	const int direction = Engine::Instance().level()->getTileDirectionByCell(cell);
+	const int direction = getTileDirectionByCell(cell);
 	if (direction != Map::STAY)
 		return false;
 	Tower *tower = this->getTowerAtPos(Engine::Instance().camera()->cellToPosMap(cell));
 	if (tower != nullptr)
 		return false;
+
 	bool canCreate = true;
 	if (towerType != POWER)
 	{
@@ -498,7 +523,8 @@ void Level::chooseCurrent()
 int Level::getTileDirectionByCell(const Vector2i& cell) const
 {
 	const int id = getTileByCell(cell, 3).id;
-
+	if (id == Map::NO_MOVE)
+		return id;
 	if(gameMap->tileProperties.find(id) != gameMap->tileProperties.end())
 	{
 		const Tile::TileProperties properties = gameMap->tileProperties.at(id);
@@ -647,14 +673,17 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		case UPGRADE:
 		{
 			const TOWER_TYPES type = Engine::Instance().panel()->currentTower();
-			const float cost = TowersFactory::getTowerStats(type).cost * 0.4f;
+			const float cost = TowersFactory::getTowerStats(type).cost * TowersFactory::UPGRADE_COST_MODIFIER;
 			if (money < cost)
 				return;
 
 			if (selectedTower == nullptr)
 				return;
 			if (selectedTower->level() < 3)
+			{
+				money -= cost;
 				selectedTower->upgrade();
+			}
 			Engine::Instance().panel()->updatePanel();
 			Engine::Instance().cursor()->swap();
 		}
@@ -683,7 +712,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (cost > money)
 				return;
 
-			if (!canAddTower(Engine::Instance().camera()->posToCellMap(Engine::Instance().camera()->cellToPos(cell)), type))
+			if (!canAddTower(Vector2i(cell.x * 2, cell.y * 2), type))
 				return;
 
 			if (type != POWER)
@@ -779,16 +808,6 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		m_actionState = READY;
 		Engine::Instance().cursor()->deactivate();
 	}
-}
-
-void Level::action()
-{
-
-}
-
-void Level::change()
-{
-
 }
 
 void Level::Shake::startShake()

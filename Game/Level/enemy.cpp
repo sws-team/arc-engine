@@ -4,8 +4,6 @@
 #include "lifebar.h"
 #include "settings.h"
 
-//#define TEST_BUILD
-
 Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const Vector2f &startPos,
 			 const EnemyStats& stats,
@@ -258,97 +256,82 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 	switch (type)
 	{
 	case SMALL_SLOW:
-		texture_id = RESOURCES::ENEMY_BIG_MED;
-		stats.health = 50.f;
-		stats.speed = 10.f;
-		stats.damage = 20.f;
+		texture_id = RESOURCES::ENEMY_SCORPION;
+		stats.health = 200.f;
+		stats.speed = 15.f;
+		stats.damage = 15.f;
 		size.x = 1;
 		size.y = 1;
 		break;
 	case SMALL_MEDIUM:
-		texture_id = RESOURCES::ENEMY_BIG_TEXTURE;
-		stats.health = 40.f;
+		texture_id = RESOURCES::ENEMY_CAR;
+		stats.health = 150.f;
 		stats.speed = 7.5f;
 		stats.damage = 10.f;
 		size.x = 1;
 		size.y = 1;
 		break;
 	case SMALL_FAST:
-		texture_id = RESOURCES::ENEMY_TEXTURE;
-		stats.health = 30.f;
+		texture_id = RESOURCES::ENEMY_TRICYCLE;
+		stats.health = 100.f;
 		stats.speed = 5.f;
 		stats.damage = 5.f;
-		size.x = 2;
-		size.y = 2;
+		size.x = 1;
+		size.y = 1;
 		break;
 	case MID_SLOW:
-		texture_id = RESOURCES::ENEMY_TEXTURE;
-		stats.health = 100.f;
+		texture_id = RESOURCES::ENEMY_TANK;
+		stats.health = 400.f;
 		stats.speed = 20.f;
 		stats.damage = 40.f;
 		size.x = 2;
 		size.y = 2;
 		break;
 	case MID_MEDIUM:
-		texture_id = RESOURCES::ENEMY_TEXTURE;
-		stats.health = 80.f;
+		texture_id = RESOURCES::ENEMY_SPIDER;
+		stats.health = 300.f;
 		stats.speed = 15.f;
-		stats.damage = 20.f;
+		stats.damage = 30.f;
 		size.x = 2;
 		size.y = 2;
 		break;
 	case MID_FAST:
-		texture_id = RESOURCES::ENEMY_TEXTURE;
-		stats.health = 60.f;
+		texture_id = RESOURCES::ENEMY_HELICOPTER;
+		stats.health = 200.f;
 		stats.speed = 10.f;
-		stats.damage = 10.f;
+		stats.damage = 20.f;
+		size.x = 2;
+		size.y = 2;
 		break;
 	case BIG_SLOW:
-		texture_id = RESOURCES::ENEMY_TEXTURE;
-		stats.health = 200.f;
+		texture_id = RESOURCES::ENEMY_AIRCARRIER;
+		stats.health = 1000.f;
 		stats.speed = 40.f;
 		stats.damage = 80.f;
 		size.x = 4;
 		size.y = 4;
 		break;
 	case BIG_MEDIUM:
-		texture_id = RESOURCES::ENEMY_TEXTURE;
-		stats.health = 160.f;
+		texture_id = RESOURCES::ENEMY_BIG_TANK;
+		stats.health = 750.f;
 		stats.speed = 30.f;
-		stats.damage = 40.f;
+		stats.damage = 60.f;
 		size.x = 4;
 		size.y = 4;
 		break;
 	case BIG_FAST:
-		texture_id = RESOURCES::ENEMY_TEXTURE;
-		stats.health = 120.f;
+		texture_id = RESOURCES::ENEMY_PLANE;
+		stats.health = 500.f;
 		stats.speed = 20.f;
-		stats.damage = 20.f;
-		size.x = 4;
-		size.y = 4;
-		break;
-	case VERY_FAST:
-		texture_id = RESOURCES::ENEMY_TEXTURE;
-#ifdef TEST_BUILD
-		stats.health = 5.f;
-#else
-		stats.health = 35.f;
-#endif
-		stats.speed = 5.f;
-		stats.damage = 15.f;
-		break;
-	case VERY_BIG:
-		texture_id = RESOURCES::ENEMY_TEXTURE;
-		stats.health = 400.f;
-		stats.speed = 45.f;
-		stats.damage = 90.f;
+		stats.damage = 40.f;
 		size.x = 4;
 		size.y = 4;
 		break;
 	default:
 		break;
 	}
-	stats.speed *= 5;
+	stats.health *= 1.5f;
+	stats.speed *= 2.5f;
 	Enemy *enemy = new Enemy(texture_id, startPos, stats, size);
 	return enemy;
 }
@@ -369,63 +352,51 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(BIG_SLOW, 0, &spawnEnemies);
 		addEnemiesByType(BIG_MEDIUM, 0, &spawnEnemies);
 		addEnemiesByType(BIG_FAST, 0, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 0, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 0, &spawnEnemies);
 	}
 		break;
 	case 1:
 	{
-		#ifdef TEST_BUILD
-		addEnemiesByType(VERY_FAST, 3, &spawnEnemies);
-		#else
 		addEnemiesByType(SMALL_SLOW, 150, &spawnEnemies);
-		addEnemiesByType(SMALL_MEDIUM, 80, &spawnEnemies);
-		addEnemiesByType(SMALL_FAST, 20, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 100, &spawnEnemies);
+		addEnemiesByType(SMALL_FAST, 25, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 10, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 5, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 2, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 0, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 7, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 3, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 2, &spawnEnemies);
 		addEnemiesByType(BIG_MEDIUM, 1, &spawnEnemies);
 		addEnemiesByType(BIG_FAST, 0, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 0, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 0, &spawnEnemies);
-		#endif
 	}
 		break;
 	case 2:
 	{
-		addEnemiesByType(SMALL_SLOW, 200, &spawnEnemies);
-		addEnemiesByType(SMALL_MEDIUM, 100, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 250, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 150, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 50, &spawnEnemies);
-		addEnemiesByType(MID_SLOW, 20, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 15, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 5, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 2, &spawnEnemies);
+		addEnemiesByType(MID_SLOW, 30, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 20, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 10, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 5, &spawnEnemies);
 		addEnemiesByType(BIG_MEDIUM, 3, &spawnEnemies);
-		addEnemiesByType(BIG_FAST, 1, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 0, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 0, &spawnEnemies);
+		addEnemiesByType(BIG_FAST, 2, &spawnEnemies);
 	}
 		break;
 	case 3:
 	{
-		addEnemiesByType(SMALL_SLOW, 250, &spawnEnemies);
-		addEnemiesByType(SMALL_MEDIUM, 150, &spawnEnemies);
-		addEnemiesByType(SMALL_FAST, 50, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 300, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 175, &spawnEnemies);
+		addEnemiesByType(SMALL_FAST, 75, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 50, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 25, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 30, &spawnEnemies);
 		addEnemiesByType(MID_FAST, 15, &spawnEnemies);
 		addEnemiesByType(BIG_SLOW, 10, &spawnEnemies);
 		addEnemiesByType(BIG_MEDIUM, 5, &spawnEnemies);
-		addEnemiesByType(BIG_FAST, 2, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 0, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 0, &spawnEnemies);
+		addEnemiesByType(BIG_FAST, 3, &spawnEnemies);
 	}
 		break;
 	case 4:
 	{
-		addEnemiesByType(SMALL_SLOW, 150, &spawnEnemies);
-		addEnemiesByType(SMALL_MEDIUM, 100, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 300, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 200, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 100, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 75, &spawnEnemies);
 		addEnemiesByType(MID_MEDIUM, 30, &spawnEnemies);
@@ -433,14 +404,12 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(BIG_SLOW, 15, &spawnEnemies);
 		addEnemiesByType(BIG_MEDIUM, 10, &spawnEnemies);
 		addEnemiesByType(BIG_FAST, 5, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 0, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 0, &spawnEnemies);
 	}
 		break;
 	case 5:
 	{
-		addEnemiesByType(SMALL_SLOW, 100, &spawnEnemies);
-		addEnemiesByType(SMALL_MEDIUM, 75, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 300, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 300, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 125, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 100, &spawnEnemies);
 		addEnemiesByType(MID_MEDIUM, 50, &spawnEnemies);
@@ -448,83 +417,71 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(BIG_SLOW, 20, &spawnEnemies);
 		addEnemiesByType(BIG_MEDIUM, 25, &spawnEnemies);
 		addEnemiesByType(BIG_FAST, 10, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 0, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 1, &spawnEnemies);
 	}
 		break;
 	case 6:
 	{
-		addEnemiesByType(SMALL_SLOW, 75, &spawnEnemies);
-		addEnemiesByType(SMALL_MEDIUM, 50, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 100, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 300, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 150, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 150, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 75, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 30, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 30, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 25, &spawnEnemies);
-		addEnemiesByType(BIG_FAST, 10, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 0, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 1, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 100, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 40, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 50, &spawnEnemies);
+		addEnemiesByType(BIG_MEDIUM, 35, &spawnEnemies);
+		addEnemiesByType(BIG_FAST, 15, &spawnEnemies);
 	}
 		break;
 	case 7:
 	{
 		addEnemiesByType(SMALL_SLOW, 50, &spawnEnemies);
-		addEnemiesByType(SMALL_MEDIUM, 25, &spawnEnemies);
-		addEnemiesByType(SMALL_FAST, 50, &spawnEnemies);
-		addEnemiesByType(MID_SLOW, 200, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 100, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 35, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 30, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 25, &spawnEnemies);
-		addEnemiesByType(BIG_FAST, 10, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 1, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 1, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 150, &spawnEnemies);
+		addEnemiesByType(SMALL_FAST, 100, &spawnEnemies);
+		addEnemiesByType(MID_SLOW, 300, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 150, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 80, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 40, &spawnEnemies);
+		addEnemiesByType(BIG_MEDIUM, 30, &spawnEnemies);
+		addEnemiesByType(BIG_FAST, 20, &spawnEnemies);
 	}
 		break;
 	case 8:
 	{
 		addEnemiesByType(SMALL_SLOW, 25, &spawnEnemies);
-		addEnemiesByType(SMALL_MEDIUM, 10, &spawnEnemies);
-		addEnemiesByType(SMALL_FAST, 25, &spawnEnemies);
-		addEnemiesByType(MID_SLOW, 250, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 150, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 50, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 45, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 35, &spawnEnemies);
-		addEnemiesByType(BIG_FAST, 20, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 1, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 2, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 100, &spawnEnemies);
+		addEnemiesByType(SMALL_FAST, 50, &spawnEnemies);
+		addEnemiesByType(MID_SLOW, 300, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 300, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 100, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 100, &spawnEnemies);
+		addEnemiesByType(BIG_MEDIUM, 50, &spawnEnemies);
+		addEnemiesByType(BIG_FAST, 25, &spawnEnemies);
 	}
 		break;
 	case 9:
 	{
 		addEnemiesByType(SMALL_SLOW, 10, &spawnEnemies);
-		addEnemiesByType(SMALL_MEDIUM, 5, &spawnEnemies);
-		addEnemiesByType(SMALL_FAST, 5, &spawnEnemies);
-		addEnemiesByType(MID_SLOW, 200, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 200, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 75, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 75, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 50, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 50, &spawnEnemies);
+		addEnemiesByType(SMALL_FAST, 25, &spawnEnemies);
+		addEnemiesByType(MID_SLOW, 350, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 350, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 175, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 125, &spawnEnemies);
+		addEnemiesByType(BIG_MEDIUM, 75, &spawnEnemies);
 		addEnemiesByType(BIG_FAST, 35, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 2, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 2, &spawnEnemies);
 	}
 		break;
 	case 10:
 	{
 		addEnemiesByType(SMALL_SLOW, 0, &spawnEnemies);
-		addEnemiesByType(SMALL_MEDIUM, 0, &spawnEnemies);
-		addEnemiesByType(SMALL_FAST, 0, &spawnEnemies);
-		addEnemiesByType(MID_SLOW, 150, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 100, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 50, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 100, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 75, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 25, &spawnEnemies);
+		addEnemiesByType(SMALL_FAST, 10, &spawnEnemies);
+		addEnemiesByType(MID_SLOW, 450, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 450, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 250, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 150, &spawnEnemies);
+		addEnemiesByType(BIG_MEDIUM, 100, &spawnEnemies);
 		addEnemiesByType(BIG_FAST, 50, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 2, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 3, &spawnEnemies);
 	}
 		break;
 	case 11:
@@ -532,14 +489,12 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(SMALL_SLOW, 0, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 0, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 0, &spawnEnemies);
-		addEnemiesByType(MID_SLOW, 100, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 75, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 25, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 150, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 100, &spawnEnemies);
+		addEnemiesByType(MID_SLOW, 200, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 200, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 200, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 250, &spawnEnemies);
+		addEnemiesByType(BIG_MEDIUM, 150, &spawnEnemies);
 		addEnemiesByType(BIG_FAST, 75, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 5, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 5, &spawnEnemies);
 	}
 		break;
 	case 12:
@@ -547,14 +502,12 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(SMALL_SLOW, 0, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 0, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 0, &spawnEnemies);
-		addEnemiesByType(MID_SLOW, 75, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 50, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 10, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 200, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 150, &spawnEnemies);
+		addEnemiesByType(MID_SLOW, 150, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 150, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 100, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 300, &spawnEnemies);
+		addEnemiesByType(BIG_MEDIUM, 250, &spawnEnemies);
 		addEnemiesByType(BIG_FAST, 100, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 10, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 10, &spawnEnemies);
 	}
 		break;
 	case 13:
@@ -562,14 +515,12 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(SMALL_SLOW, 0, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 0, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 0, &spawnEnemies);
-		addEnemiesByType(MID_SLOW, 50, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 25, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 5, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 300, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 200, &spawnEnemies);
-		addEnemiesByType(BIG_FAST, 100, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 20, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 20, &spawnEnemies);
+		addEnemiesByType(MID_SLOW, 100, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 75, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 50, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 350, &spawnEnemies);
+		addEnemiesByType(BIG_MEDIUM, 300, &spawnEnemies);
+		addEnemiesByType(BIG_FAST, 125, &spawnEnemies);
 	}
 		break;
 	case 14:
@@ -577,14 +528,12 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(SMALL_SLOW, 0, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 0, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 0, &spawnEnemies);
-		addEnemiesByType(MID_SLOW, 25, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 10, &spawnEnemies);
+		addEnemiesByType(MID_SLOW, 0, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 0, &spawnEnemies);
 		addEnemiesByType(MID_FAST, 0, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 150, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 300, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 500, &spawnEnemies);
+		addEnemiesByType(BIG_MEDIUM, 450, &spawnEnemies);
 		addEnemiesByType(BIG_FAST, 200, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 30, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 30, &spawnEnemies);
 	}
 		break;
 	case 128:
@@ -598,8 +547,6 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(BIG_SLOW, 0, &spawnEnemies);
 		addEnemiesByType(BIG_MEDIUM, 0, &spawnEnemies);
 		addEnemiesByType(BIG_FAST, 0, &spawnEnemies);
-		addEnemiesByType(VERY_FAST, 0, &spawnEnemies);
-		addEnemiesByType(VERY_BIG, 0, &spawnEnemies);
 	}
 		break;
 	default:

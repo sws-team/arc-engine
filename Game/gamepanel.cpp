@@ -178,8 +178,8 @@ void GamePanel::draw(RenderTarget * const target)
 	Sprite miniMapSprite;
 	miniMapSprite.setTexture(rTexture.getTexture());
 
-	const float minimap_scale_x = Settings::GAME_SCALE* 537.f / Settings::Instance().getResolution().x;
-	const float minimap_scale_y = Settings::GAME_SCALE* 152.f / Settings::Instance().getResolution().y;
+	const float minimap_scale_x = Settings::Instance().getScaleFactor().x * Settings::GAME_SCALE * 537.f / Settings::Instance().getResolution().x;
+	const float minimap_scale_y = Settings::Instance().getScaleFactor().y * Settings::GAME_SCALE * 152.f / Settings::Instance().getResolution().y;
 
 	miniMapSprite.scale(minimap_scale_x, minimap_scale_y);
 	miniMapSprite.setPosition(pos);
@@ -462,6 +462,11 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	pos.x += icons_space;
 
 	return pos;
+}
+
+int GamePanel::getProgressMax() const
+{
+	return m_progressMax;
 }
 
 void GamePanel::updateEnableTowers()
@@ -786,13 +791,12 @@ void GamePanel::updateCurrentTower()
 	{
 		color = Color::White;
 		level = m_selectedTower->level();
-
 	}
-
 	upgradeSprite.setTextureRect(IntRect(64*level,0,64,64));
 	sellSprite.setColor(color);
 	upgradeSprite.setColor(color);
-	if (level > 2)
+	const bool canBuy = m_selectedTower == nullptr ? false : Engine::Instance().level()->getMoneyCount() < TowersFactory::getTowerStats(m_selectedTower->type()).cost * TowersFactory::UPGRADE_COST_MODIFIER;
+	if (level > 2 || canBuy)
 		upgradeSprite.setColor(GlobalVariables::GrayColor);
 }
 
@@ -887,7 +891,6 @@ void GamePanel::initMission(unsigned int n)
 		iconsAvaliable.isRocketEnabled = false;
 		iconsAvaliable.isLaserEnabled = false;
 		iconsAvaliable.isImprovedEnabled = false;
-		iconsAvaliable.isAbilityBombEnabled = false;
 		iconsAvaliable.isAbilityVenomEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
