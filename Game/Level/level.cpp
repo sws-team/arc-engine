@@ -307,21 +307,20 @@ void Level::checkRespawn()
 
 	const int time = RESPAWN_TIME - Engine::Instance().getMission() * 100;
 	const int timeOffset = rand() % (RESPAWN_OFFSET + 1) - RESPAWN_OFFSET/2;
-	const int resultTime = time + timeOffset + spawnEnemies.size() * 10;
-
 	int spawnCount = 1;
 	const float k = 1 - static_cast<float>(spawnEnemies.size()) / Engine::Instance().panel()->getProgressMax();
-	if (k > 0.9f)
-		spawnCount = 6;
-	else if(k > 0.8f)
-		spawnCount = 5;
-	else if(k > 0.6f)
-		spawnCount = 4;
+	if (k > 0.9f)	
+		spawnCount = 6;	
+	else if(k > 0.8f)	
+		spawnCount = 5;	
+	else if(k > 0.6f)	
+		spawnCount = 4;	
 	else if(k > 0.4f)
-		spawnCount = 3;
-	else if(k > 0.2f)
-		spawnCount = 2;
+		spawnCount = 3;	
+	else if(k > 0.2f)	
+		spawnCount = 2;	
 
+	const int resultTime = time + timeOffset + RESPAWN_TIME * (1 - k);
 	if (spawnTimer.check(resultTime))
 	{
 		for (int i = 0; i < spawnCount; ++i)
