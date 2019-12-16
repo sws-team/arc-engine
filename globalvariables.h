@@ -21,12 +21,8 @@ public:
     void saveGameSettings();
     void loadGameSettings();
 
-	bool getControl() const;
-	void setControl(bool moving);
-
-	ControlSettings controls() const;
-
-	void loadControls();
+//	ControlSettings controls() const;
+//	void loadControls();
 
 	const static Color GrayColor;
 
@@ -52,10 +48,8 @@ private:
     Font m_font;
 	String m_applicationPath;
     Vector2i getScreenResolution() const;
-	bool m_control;
-	ControlSettings m_controls;
-
-	void createDefaultControls();
+//	ControlSettings m_controls;
+//	void createDefaultControls();
 };
 
 #endif // GLOBALVARIABLES_H

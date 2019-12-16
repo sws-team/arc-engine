@@ -7,7 +7,7 @@ MainWindow::MainWindow()
 	: RenderWindow ()
 	,currentState(nullptr)
 {
-	GlobalVariables::Instance().loadControls();
+//	GlobalVariables::Instance().loadControls();
 	state = Engine::UNKNNOWN;
 }
 

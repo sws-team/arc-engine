@@ -330,8 +330,8 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 	default:
 		break;
 	}
-	stats.health *= 1.5f;
-	stats.speed *= 2.5f;
+	stats.health *= 1.2f;
+	stats.speed *= 3.f;
 	Enemy *enemy = new Enemy(texture_id, startPos, stats, size);
 	return enemy;
 }

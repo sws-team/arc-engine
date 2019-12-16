@@ -15,6 +15,14 @@ public:
 	void setPauseFunc(const function<void ()> &value);
 	void keyEvent();
 	void pausedEvents();
+	enum GAMEPAD_KEYS
+	{
+		KEY_START,
+		KEY_CHOOSE,
+		KEY_ESCAPE,
+	};
+	int currentJoystickId() const;
+
 private:
 
 	void keyboardKeyEvent(const bool timeoutKey, const bool timeoutMove);
@@ -28,7 +36,7 @@ private:
 
 	function<void()> pauseFunc;
 
-	ControlSettings m_controls;
+//	ControlSettings m_controls;
 #ifdef STEAM_API
 	class ISteamScreenshots *p_screenShoots;
 #endif

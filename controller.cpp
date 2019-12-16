@@ -9,7 +9,7 @@
 
 Controller::Controller()
 {
-	m_controls = GlobalVariables::Instance().controls();
+//	m_controls = GlobalVariables::Instance().controls();
 #ifdef STEAM_API
 	p_screenShoots = SteamScreenshots();
 	p_screenShoots->HookScreenshots(true);
@@ -92,22 +92,22 @@ void Controller::keyboardKeyEvent(const bool timeoutKey, const bool timeoutMove)
 
 void Controller::joystickKeyEvent(const bool timeoutKey, const bool timeoutMove)
 {
-	const int joystickId = 1;
+	const int joystickId = currentJoystickId();
 	if (timeoutKey)
 	{
 		if (Engine::Instance().instructions()->isActive())
 		{
-			if (Joystick::isButtonPressed(joystickId, 0))
+			if (Joystick::isButtonPressed(joystickId, KEY_START))
 				Engine::Instance().instructions()->skip();
-			else if (Joystick::isButtonPressed(joystickId, 1))
+			else if (Joystick::isButtonPressed(joystickId, KEY_CHOOSE))
 				Engine::Instance().instructions()->next();
 			return;
 		}
-		if (Joystick::isButtonPressed(joystickId, 0))
+		if (Joystick::isButtonPressed(joystickId, KEY_START))
 			Engine::Instance().level()->ready();
-		if (Joystick::isButtonPressed(joystickId, 1))
+		if (Joystick::isButtonPressed(joystickId, KEY_CHOOSE))
 			Engine::Instance().level()->chooseCurrent();
-		if (Joystick::isButtonPressed(joystickId, 3))
+		if (Joystick::isButtonPressed(joystickId, KEY_ESCAPE))
 			pauseFunc();
 		if (Joystick::isButtonPressed(joystickId, 4))
 			Engine::Instance().cursor()->swap();
@@ -138,9 +138,14 @@ void Controller::pausedEvents()
 	if (!timeout)
 		return;
 
-	if (Keyboard::isKeyPressed(static_cast<Keyboard::Key>(GlobalVariables::Instance().controls().start)))
+	if (Keyboard::isKeyPressed(Keyboard::Escape))
 		pauseFunc();
-//	if (Joystick::isButtonPressed(controls.joystickId, controls.start))
-	//		pauseFunc();
+	if (Joystick::isButtonPressed(currentJoystickId(), KEY_ESCAPE))
+			pauseFunc();
+}
+
+int Controller::currentJoystickId() const
+{
+	return 1;
 }
 

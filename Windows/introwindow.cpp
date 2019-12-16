@@ -1,5 +1,6 @@
 #include "introwindow.h"
 #include "Engine/engine.h"
+#include "controller.h"
 
 IntroWindow::IntroWindow()
 	: StateWindow()
@@ -23,6 +24,11 @@ void IntroWindow::eventFilter(Event *event)
 	if (event->type == Event::KeyPressed)
 	{
 		if (event->key.code == Keyboard::Escape)
+			finish();
+	}
+	if (event->type == Event::JoystickButtonPressed)
+	{
+		if (event->joystickButton.button == Controller::KEY_ESCAPE)
 			finish();
 	}
 }

@@ -3,6 +3,7 @@
 #include "Game/Audio/soundcontroller.h"
 #include "Engine/engine.h"
 #include "Game/Level/camera.h"
+#include "controller.h"
 
 Menu::Menu()
 	: StateWindow()
@@ -61,6 +62,23 @@ void Menu::eventFilter(Event *event)
 			currentMenu = current;
 			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
 			accept();
+		}
+	}
+		break;
+	case Event::JoystickButtonPressed:
+	{
+		if (event->joystickButton.button == Controller::KEY_START)
+			accept();
+	}
+		break;
+	case Event::JoystickMoved:
+	{
+		if (event->joystickMove.axis == Joystick::Y)
+		{
+			if (event->joystickMove.position > 50)
+				menuDown();
+			else if (event->joystickMove.position < -50)
+				menuUp();
 		}
 	}
 		break;

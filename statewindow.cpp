@@ -1,6 +1,7 @@
 #include "statewindow.h"
 #include "settings.h"
 #include "ResourcesManager/resourcesmanager.h"
+#include "controller.h"
 
 StateWindow::StateWindow()
 {
@@ -21,9 +22,14 @@ void StateWindow::eventFilter(Event *event)
 {
 	if (event->type == Event::Closed)
 		this->back();
-	if (event->type == Event::KeyPressed)
+	else if (event->type == Event::KeyPressed)
 	{
 		if (event->key.code == Keyboard::Escape)
+			this->back();
+	}
+	else if (event->type == Event::JoystickButtonPressed)
+	{
+		if (event->joystickButton.button == Controller::KEY_ESCAPE)
 			this->back();
 	}
 }

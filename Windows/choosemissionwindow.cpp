@@ -3,6 +3,7 @@
 #include "globalvariables.h"
 #include "Engine/engine.h"
 #include "ResourcesManager/resourcesmanager.h"
+#include "controller.h"
 
 ChooseMissionWindow::ChooseMissionWindow()
 	: StateWindow()
@@ -140,6 +141,39 @@ void ChooseMissionWindow::eventFilter(Event *event)
 			break;
 		default:
 			break;
+		}
+		if (currentMission < 0)
+			currentMission = 0;
+		if (currentMission > missions.size() - 1)
+			currentMission = missions.size() - 1;
+		updateRect();
+	}
+	else if (event->type == Event::JoystickButtonPressed)
+	{
+		if (event->joystickButton.button == Controller::KEY_START)
+		{
+			if (missions.at(currentMission).enabled)
+			{
+				accept(currentMission);
+				return;
+			}
+		}
+	}
+	else if (event->type == Event::JoystickMoved)
+	{
+		if (event->joystickMove.axis == Joystick::X)
+		{
+			if (event->joystickMove.position > 50)
+				currentMission++;
+			else if (event->joystickMove.position < -50)
+				currentMission--;
+		}
+		else if (event->joystickMove.axis == Joystick::Y)
+		{
+			if (event->joystickMove.position > 50)
+				currentMission += COLUMN_COUNT;
+			else if (event->joystickMove.position < -50)
+				currentMission -= COLUMN_COUNT;
 		}
 		if (currentMission < 0)
 			currentMission = 0;

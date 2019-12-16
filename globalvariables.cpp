@@ -51,77 +51,67 @@ Vector2f GlobalVariables::mapTileSize() const
 					Settings::Instance().getScaleFactor().y * MAP_CELL_SIZE);
 }
 
-void GlobalVariables::createDefaultControls()
-{
-	{//keyboard
-		ControlSettings keyboardControls;
+//void GlobalVariables::createDefaultControls()
+//{
+//	{//keyboard
+//		ControlSettings keyboardControls;
 
-		keyboardControls.moveUp = Keyboard::W;
-		keyboardControls.moveDown = Keyboard::S;
-		keyboardControls.moveLeft = Keyboard::A;
-		keyboardControls.moveRight = Keyboard::D;
+//		keyboardControls.moveUp = Keyboard::W;
+//		keyboardControls.moveDown = Keyboard::S;
+//		keyboardControls.moveLeft = Keyboard::A;
+//		keyboardControls.moveRight = Keyboard::D;
 
-		keyboardControls.action = Keyboard::T;
-		keyboardControls.change = Keyboard::Y;
-		keyboardControls.start = Keyboard::L;
+//		keyboardControls.action = Keyboard::T;
+//		keyboardControls.change = Keyboard::Y;
+//		keyboardControls.start = Keyboard::L;
 
-		m_controls = keyboardControls;
-	}	
-//		ControlSettings joystickSettings;
+//		m_controls = keyboardControls;
+//	}
+////		ControlSettings joystickSettings;
 
-//		joystickSettings.moveUp = Joystick::Y;
-//		joystickSettings.moveDown = Joystick::Y;
-//		joystickSettings.moveLeft = Joystick::X;
-//		joystickSettings.moveRight = Joystick::X;
+////		joystickSettings.moveUp = Joystick::Y;
+////		joystickSettings.moveDown = Joystick::Y;
+////		joystickSettings.moveLeft = Joystick::X;
+////		joystickSettings.moveRight = Joystick::X;
 
-//		joystickSettings.action = 7;
-//		joystickSettings.change = 8;
-//		joystickSettings.start = 3;
-}
+////		joystickSettings.action = 7;
+////		joystickSettings.change = 8;
+////		joystickSettings.start = 3;
+//}
 
-bool GlobalVariables::getControl() const
-{
-	return m_control;
-}
+//ControlSettings GlobalVariables::controls() const
+//{
+//	return m_controls;
+//}
 
-void GlobalVariables::setControl(bool moving)
-{
-	m_control = moving;
-}
+//void GlobalVariables::loadControls()
+//{
+//	const string fileName = applicationPath().toAnsiString() + string("/controls");
+//	ifstream stream(fileName);
 
-ControlSettings GlobalVariables::controls() const
-{
-	return m_controls;
-}
+//	Json::Reader reader;
+//	Json::Value obj;
+//	if (!reader.parse(stream, obj))
+//	{
+//		cout << "cant read controls from: "<<fileName << endl;
+//		createDefaultControls();
+//		return;
+//	}
 
-void GlobalVariables::loadControls()
-{
-	const string fileName = applicationPath().toAnsiString() + string("/controls");
-	ifstream stream(fileName);
+//	Json::Value &jsonKeyboard = obj["keyboard"];
+//	Json::Value &jsonJoystick = obj["joystick"];
 
-	Json::Reader reader;
-	Json::Value obj;
-	if (!reader.parse(stream, obj))
-	{
-		cout << "cant read controls from: "<<fileName << endl;
-		createDefaultControls();
-		return;
-	}
+//	ControlSettings controls;
+//	controls.moveUp = jsonKeyboard["moveUp"].asUInt();
+//	controls.moveDown = jsonKeyboard["moveDown"].asUInt();
+//	controls.moveLeft = jsonKeyboard["moveLeft"].asUInt();
+//	controls.moveRight = jsonKeyboard["moveRight"].asUInt();
+//	controls.action = jsonKeyboard["action"].asUInt();
+//	controls.change = jsonKeyboard["change"].asUInt();
+//	controls.start = jsonKeyboard["start"].asUInt();
 
-	Json::Value &jsonKeyboard = obj["keyboard"];
-	Json::Value &jsonJoystick = obj["joystick"];
-
-	ControlSettings controls;
-	controls.moveUp = jsonKeyboard["moveUp"].asUInt();
-	controls.moveDown = jsonKeyboard["moveDown"].asUInt();
-	controls.moveLeft = jsonKeyboard["moveLeft"].asUInt();
-	controls.moveRight = jsonKeyboard["moveRight"].asUInt();
-	controls.action = jsonKeyboard["action"].asUInt();
-	controls.change = jsonKeyboard["change"].asUInt();
-	controls.start = jsonKeyboard["start"].asUInt();
-
-	m_controls = controls;
-}
+//	m_controls = controls;
+//}
 
 void GlobalVariables::saveGameSettings()
 {
