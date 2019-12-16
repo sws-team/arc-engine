@@ -19,12 +19,12 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 	,startFreeze(false)
 {
 
-	m_size.x = GlobalVariables::Instance().mapTileSize().x * cellSize.x;
-	m_size.y = GlobalVariables::Instance().mapTileSize().y * cellSize.y;
+	m_size.x = GlobalVariables::MAP_CELL_SIZE * cellSize.x;
+	m_size.y = GlobalVariables::MAP_CELL_SIZE * cellSize.y;
 
 	m_spritePos = Vector2f(0, 0);
 
-	const float road = 4 * GlobalVariables::Instance().mapTileSize().x - m_size.x;
+	const float road = 4 * GlobalVariables::Instance().mapTileSize().x - GlobalVariables::Instance().mapTileSize().x * cellSize.x;
 	if (road != 0.f)
 	{
 		m_spritePos.x = rand() % static_cast<int>(road);
@@ -239,7 +239,8 @@ Vector2f Enemy::enemyPos() const
 
 Vector2f Enemy::enemyCenter() const
 {
-	return m_pos + m_spritePos + Vector2f(m_size.x/2, m_size.y/2);
+	return Vector2f(sprite.getGlobalBounds().left + sprite.getGlobalBounds().width/2,
+					sprite.getGlobalBounds().top + sprite.getGlobalBounds().height/2);
 }
 
 Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)

@@ -520,8 +520,21 @@ vector<Projectile *> ProjectilesTower::projectiles() const
 void ProjectilesTower::projectileAction(Enemy *enemy)
 {
 	enemy->hit(m_stats.damage);
+	const Vector2f size = enemy->getSize();
+
+	int maxX = size.x/2;
+	if (size.x > projectileInfo.explosionSize.x)
+		maxX = static_cast<int>(size.x/2 - projectileInfo.explosionSize.x/2);
+
+	int maxY = size.y/2;
+	if (size.y > projectileInfo.explosionSize.y)
+		maxY = static_cast<int>(size.y/2 - projectileInfo.explosionSize.y/2);
+
+	const Vector2f offset = Vector2f(rand() % maxX * 2 - maxX, rand() % maxY * 2 - maxY);
+
 	Engine::Instance().level()->addAnimation(projectileInfo.explosion_texture_id,
-											 enemy->enemyCenter() - Vector2f(projectileInfo.explosionSize.x/2, projectileInfo.explosionSize.y/2),
+											 enemy->enemyCenter() + offset -
+											 Vector2f(projectileInfo.explosionSize.x/2, projectileInfo.explosionSize.y/2),
 											 projectileInfo.explosionSize,
 											 50, projectileInfo.explosionFrameCount, 0);
 }
