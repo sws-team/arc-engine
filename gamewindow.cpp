@@ -8,6 +8,7 @@
 #include "Game/Level/camera.h"
 #include "Game/gamepanel.h"
 #include "ResourcesManager/resourcesmanager.h"
+#include "Translations/language.h"
 
 GameWindow::GameWindow()
 	: Menu()
@@ -21,9 +22,9 @@ GameWindow::GameWindow()
 
 	m_state = PLAYING;
 
-	paused.setString("Paused");
+	paused.setString(Language::Instance().translate(Language::PAUSED));
 	paused.setFillColor(Color::Blue);
-	paused.setCharacterSize(140);
+	paused.setScale(Settings::Instance().getScaleFactor());
 	paused.setFont(GlobalVariables::Instance().font());
 
 	menuImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::GAME_MENU_TEXTURE));
@@ -37,10 +38,10 @@ GameWindow::GameWindow()
 	text.setFont(GlobalVariables::Instance().font());
 	Engine::Instance().panel()->init();
 
-	addItem("Continue");
-	addItem("Restart");
-	addItem("Exit from game");
-	addItem("Exit to OS");
+	addItem(Language::Instance().translate(Language::CONTINUE));
+	addItem(Language::Instance().translate(Language::RESTART));
+	addItem(Language::Instance().translate(Language::EXIT_TO_MENU));
+	addItem(Language::Instance().translate(Language::EXIT_FROM_GAME));
 	clock.restart();
 }
 
@@ -254,7 +255,6 @@ void GameWindow::setState(const GAME_STATE &state)
 		break;
 	case FINISHED:
 	{
-		text.setString("Congratulations!");
 
 		const float fullLife = Engine::Instance().getStartHealth(Engine::Instance().getMission());
 		const float currentLife = Engine::Instance().level()->getLifeCount();
@@ -276,9 +276,15 @@ void GameWindow::setState(const GAME_STATE &state)
 		Engine::Instance().setMissionFinished(Engine::Instance().getMission(), stars);
 		Engine::Instance().save();
 
-		finishedImg.setPosition(Vector2f(Settings::Instance().getResolution().x/2 - finishedImg.getGlobalBounds().width/2,
-										 Settings::Instance().getResolution().y/2 - finishedImg.getGlobalBounds().height/2));
 
+		Vector2f pos = viewPos;
+		pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
+		pos.x -= finishedImg.getGlobalBounds().width/2;
+		pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
+		pos.y -= finishedImg.getGlobalBounds().height/2;
+		finishedImg.setPosition(pos);
+
+		text.setString(Language::Instance().translate(Language::CONGRATULATIONS));
 		const float labelsOffset = 15 * Settings::Instance().getScaleFactor().y;
 		float posX = finishedImg.getGlobalBounds().left;
 		float posY = finishedImg.getGlobalBounds().top;
@@ -293,9 +299,14 @@ void GameWindow::setState(const GAME_STATE &state)
 		break;
 	case GAME_OVER:
 	{
-		text.setString("Game over!");
-		gameOverImg.setPosition(Vector2f(Settings::Instance().getResolution().x/2 - gameOverImg.getGlobalBounds().width/2,
-										 Settings::Instance().getResolution().y/2 - gameOverImg.getGlobalBounds().height/2));
+		text.setString(Language::Instance().translate(Language::GAME_OVER));
+
+		Vector2f pos = viewPos;
+		pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
+		pos.x -= gameOverImg.getGlobalBounds().width/2;
+		pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
+		pos.y -= gameOverImg.getGlobalBounds().height/2;
+		gameOverImg.setPosition(pos);
 	}
 		break;
 	}

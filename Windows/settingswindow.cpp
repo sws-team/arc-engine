@@ -31,7 +31,7 @@ SettingsWindow::SettingsWindow()
 	const int blocksCount = 3;
 	const float settingsModifierY = 0.25f;
 	const Vector2f blockSize = Vector2f(settingsSize.x * 0.9f, settingsSize.y * settingsModifierY);
-	const unsigned int characterSize = static_cast<unsigned int>(30 * Settings::Instance().getScaleFactor().x);
+	const unsigned int characterSize = 30;
 	const float border = 6 * Settings::Instance().getScaleFactor().x;
 
 	const float borderXOffset = settingsSize.x * 0.1f/2;
@@ -45,13 +45,14 @@ SettingsWindow::SettingsWindow()
 	const int defaultAudioLevel = 30;
 	const Vector2f chooseListButtonSize = Vector2f(96 * Settings::Instance().getScaleFactor().x, 32 * Settings::Instance().getScaleFactor().y);
 	const Vector2f checkBoxSize = Vector2f(32 * Settings::Instance().getScaleFactor().x, 32 * Settings::Instance().getScaleFactor().y);
-	const unsigned int chooseListCharacterSize = static_cast<unsigned int>(24 * Settings::Instance().getScaleFactor().x);
+	const unsigned int chooseListCharacterSize = 24;
 
 	lbl_settings.setFont(GlobalVariables::Instance().font());
 	lbl_settings.setCharacterSize(characterSize * 4);
 	lbl_settings.setStyle(Text::Bold);
 	lbl_settings.setFillColor(Color::Red);
 	lbl_settings.setString(Language::Instance().translate(Language::SETTINGS));
+	lbl_settings.setScale(Settings::Instance().getScaleFactor());
 	lbl_settings.setPosition(pos - Vector2f(0, lbl_settings.getGlobalBounds().height * 2 + border));
 
 	settingsRect.setSize(settingsSize);
@@ -74,11 +75,13 @@ SettingsWindow::SettingsWindow()
 	lbl_audio.setCharacterSize(characterSize);
 	lbl_audio.setStyle(Text::Bold);
 	lbl_audio.setString(Language::Instance().translate(Language::AUDIO));
+	lbl_audio.setScale(Settings::Instance().getScaleFactor());
 	lbl_audio.setPosition(pos + Vector2f(blockOffset.x/2, 0));
 
 	//sound
 	lbl_sound.setFont(GlobalVariables::Instance().font());
 	lbl_sound.setCharacterSize(characterSize);
+	lbl_sound.setScale(Settings::Instance().getScaleFactor());
 	lbl_sound.setString(Language::Instance().translate(Language::SOUND));
 	lbl_sound.setPosition(pos + blockOffset + Vector2f(0, lbl_audio.getGlobalBounds().height));
 
@@ -91,6 +94,7 @@ SettingsWindow::SettingsWindow()
 	//music
 	lbl_music.setFont(GlobalVariables::Instance().font());
 	lbl_music.setCharacterSize(characterSize);
+	lbl_music.setScale(Settings::Instance().getScaleFactor());
 	lbl_music.setString(Language::Instance().translate(Language::MUSIC));
 	lbl_music.setPosition(pos + Vector2f(blockOffset.x, blockOffset.y * 2 + lbl_sound.getGlobalBounds().height + lbl_audio.getGlobalBounds().height));
 
@@ -111,6 +115,7 @@ SettingsWindow::SettingsWindow()
 
 	lbl_video.setFont(GlobalVariables::Instance().font());
 	lbl_video.setCharacterSize(characterSize);
+	lbl_video.setScale(Settings::Instance().getScaleFactor());
 	lbl_video.setString(Language::Instance().translate(Language::VIDEO));
 	lbl_video.setStyle(Text::Bold);
 	lbl_video.setPosition(pos + Vector2f(blockOffset.x/2, 0));
@@ -118,6 +123,7 @@ SettingsWindow::SettingsWindow()
 	//fullscreen
 	lbl_fullscreen.setFont(GlobalVariables::Instance().font());
 	lbl_fullscreen.setCharacterSize(characterSize);
+	lbl_fullscreen.setScale(Settings::Instance().getScaleFactor());
 	lbl_fullscreen.setString(Language::Instance().translate(Language::FULLSCREEN));
 	lbl_fullscreen.setPosition(pos + blockOffset + Vector2f(0, lbl_video.getGlobalBounds().height));
 
@@ -129,6 +135,7 @@ SettingsWindow::SettingsWindow()
 	//resolutions
 	lbl_resolution.setFont(GlobalVariables::Instance().font());
 	lbl_resolution.setCharacterSize(characterSize);
+	lbl_resolution.setScale(Settings::Instance().getScaleFactor());
 	lbl_resolution.setString(Language::Instance().translate(Language::RESOLUTION));
 	lbl_resolution.setPosition(pos + Vector2f(blockOffset.x, blockOffset.y * 2 + lbl_fullscreen.getGlobalBounds().height + lbl_video.getGlobalBounds().height));
 
@@ -157,12 +164,14 @@ SettingsWindow::SettingsWindow()
 
 	lbl_misc.setFont(GlobalVariables::Instance().font());
 	lbl_misc.setCharacterSize(characterSize);
+	lbl_misc.setScale(Settings::Instance().getScaleFactor());
 	lbl_misc.setString(Language::Instance().translate(Language::MISC));
 	lbl_misc.setStyle(Text::Bold);
 	lbl_misc.setPosition(pos + Vector2f(blockOffset.x/2, 0));
 
 	lbl_language.setFont(GlobalVariables::Instance().font());
 	lbl_language.setCharacterSize(characterSize);
+	lbl_language.setScale(Settings::Instance().getScaleFactor());
 	lbl_language.setString(Language::Instance().translate(Language::LANGUAGE));
 	lbl_language.setPosition(pos + blockOffset + Vector2f(0, lbl_audio.getGlobalBounds().height));
 

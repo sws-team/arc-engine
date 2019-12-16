@@ -3,6 +3,7 @@
 #include "globalvariables.h"
 #include "Game/gamepanel.h"
 #include "Engine/engine.h"
+#include "Translations/language.h"
 
 Instructions::Instructions() :
   m_state(START)
@@ -72,7 +73,7 @@ void Instructions::changeState(Instructions::STATES state)
 		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = FloatRect();
-		textStr = "Welcome!";
+		textStr = Language::Instance().translate(Language::INSTRUCTION_WELCOME);
 	}
 		break;
 	case TOWERS:
@@ -80,7 +81,7 @@ void Instructions::changeState(Instructions::STATES state)
 		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getTowersRect();
-		textStr = "Towers";
+		textStr = Language::Instance().translate(Language::INSTRUCTION_TOWERS);
 	}
 		break;
 	case ABILITIES:
@@ -88,7 +89,7 @@ void Instructions::changeState(Instructions::STATES state)
 		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getAbilitiesRect();
-		textStr = "Abilities";
+		textStr = Language::Instance().translate(Language::INSTRUCTION_ABILITIES);
 	}
 		break;
 	case MONEY:
@@ -96,7 +97,7 @@ void Instructions::changeState(Instructions::STATES state)
 		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getMoneyRect();
-		textStr = "Money";
+		textStr = Language::Instance().translate(Language::INSTRUCTION_MONEY);
 	}
 		break;
 	case HEALTH:
@@ -104,7 +105,7 @@ void Instructions::changeState(Instructions::STATES state)
 		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getHealthRect();
-		textStr = "Health";
+		textStr = Language::Instance().translate(Language::INSTRUCTION_HEALTH);
 	}
 		break;
 
@@ -113,7 +114,7 @@ void Instructions::changeState(Instructions::STATES state)
 		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getEnergyRect();
-		textStr = "Energy";
+		textStr = Language::Instance().translate(Language::INSTRUCTION_ENERGY);
 	}
 		break;
 	case REMOVE:
@@ -121,7 +122,7 @@ void Instructions::changeState(Instructions::STATES state)
 		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getRemovRect();
-		textStr = "Remove";
+		textStr = Language::Instance().translate(Language::INSTRUCTION_REMOVE);
 	}
 		break;
 	case UPGRADE:
@@ -129,7 +130,7 @@ void Instructions::changeState(Instructions::STATES state)
 		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getUpgradeRect();
-		textStr = "Upgrade";
+		textStr = Language::Instance().translate(Language::INSTRUCTION_UPGRADE);
 	}
 		break;
 	case PROGRESS:
@@ -137,13 +138,14 @@ void Instructions::changeState(Instructions::STATES state)
 		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getProgressRect();
-		textStr = "Progress";
+		textStr = Language::Instance().translate(Language::INSTRUCTION_PROGRESS);
 	}
 		break;
 	default:
 		break;
 	}
-	textStr += "\nPress Return to continue or Space to skip";
+	textStr += "\n";
+	textStr += Language::Instance().translate(Language::INSTRUCTION_SKIP);
 	text.setString(textStr);
 	text.setPosition(textRect.getPosition().x,
 					 textRect.getPosition().y);

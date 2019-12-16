@@ -111,7 +111,7 @@ GamePanel::GamePanel() :
 	readyText.setOutlineThickness(2);
 	readyText.setCharacterSize(45);
 	readyText.setScale(scaleFactor);
-	readyText.setString("Press Space to start");
+	readyText.setString(Language::Instance().translate(Language::START_GAME));
 
 	actionsSprites.push_back(&sellSprite);
 	actionsSprites.push_back(&towerBaseSprite);
