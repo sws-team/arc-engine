@@ -40,12 +40,13 @@ const int Level::Shake::MAX_SHAKE_OFFSET = 10;
 const int Level::Shake::SHAKE_TIME = 50;
 
 Level::Level() :
-  gameMap(nullptr)
+	gameMap(nullptr)
   ,m_actionState(READY)
   ,life(0.f)
   ,money(0.f)
   ,energy(0.f)
   ,m_state(WAIT_READY)
+  ,m_powerTowersCount(0)
 {
 	venomAbility.isActive = false;
 	venomAbility.object =  new GameObject(RESOURCES::VENOM_EFFECT, Vector2f(0,0),
@@ -196,6 +197,8 @@ void Level::startMission(const unsigned int n)
 
 void Level::clear()
 {
+	m_powerTowersCount = 0;
+	shake.isActive = false;
 	for(Tower *tower : towers)
 	{
 		const TOWER_TYPES type = tower->type();
@@ -414,6 +417,11 @@ void Level::updateRadius()
 					 currentTowerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().y);
 }
 
+unsigned int Level::getPowerTowersCount() const
+{
+	return m_powerTowersCount;
+}
+
 Level::LEVEL_STATE Level::getState() const
 {
 	return m_state;
@@ -588,7 +596,9 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		case ADD_TOWER:
 		{
 			const TOWER_TYPES type = Engine::Instance().panel()->currentTower();
-			const float cost = TowersFactory::getTowerStats(type).cost;
+			const float cost = type == TOWER_TYPES::POWER ?
+						TowersFactory::getTowerStats(type).cost + m_powerTowersCount * PowerTower::COST_OFFSET :
+						TowersFactory::getTowerStats(type).cost;
 			if (money < cost)
 				return;
 			if (!Engine::Instance().panel()->isTowerIconActive(type))
@@ -662,10 +672,16 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (selectedTower == nullptr)
 				return;
 
-			const float cost = selectedTower->data().cost/2;
+			const TOWER_TYPES type = selectedTower->type();
+			float cost = type == TOWER_TYPES::POWER ?
+						selectedTower->data().cost + (m_powerTowersCount - 1) * PowerTower::COST_OFFSET :
+						selectedTower->data().cost;
+			cost /= 2;
 			money += cost;
 			towers.erase( remove( towers.begin(), towers.end(), selectedTower ), towers.end() );
-			delete selectedTower;
+			delete selectedTower;			
+			if (type == POWER)
+				m_powerTowersCount--;
 			Engine::Instance().panel()->updatePanel();
 			Engine::Instance().cursor()->swap();
 		}
@@ -673,7 +689,10 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		case UPGRADE:
 		{
 			const TOWER_TYPES type = Engine::Instance().panel()->currentTower();
-			const float cost = TowersFactory::getTowerStats(type).cost * TowersFactory::UPGRADE_COST_MODIFIER;
+			float cost = type == TOWER_TYPES::POWER ?
+						TowersFactory::getTowerStats(type).cost + m_powerTowersCount * PowerTower::COST_OFFSET :
+						TowersFactory::getTowerStats(type).cost;
+			cost *= TowersFactory::UPGRADE_COST_MODIFIER;
 			if (money < cost)
 				return;
 
@@ -708,7 +727,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		{
 			const TOWER_TYPES type = Engine::Instance().cursor()->getTowerType();
 
-			const float cost = TowersFactory::getTowerStats(type).cost;
+			const float cost = TowersFactory::getTowerStats(type).cost + m_powerTowersCount * 10;
 			if (cost > money)
 				return;
 
@@ -724,6 +743,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 				return;
 			towers.push_back(tower);
 			money -= cost;
+			if (type == POWER)
+				m_powerTowersCount++;
 			Engine::Instance().panel()->updatePanel();
 		}
 			break;

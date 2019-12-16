@@ -29,7 +29,7 @@ GamePanel::GamePanel() :
 	info.setFillColor(Color::Black);
 	info.setOutlineColor(Color::Yellow);
 	info.setOutlineThickness(2);
-	info.setCharacterSize(20);
+	info.setCharacterSize(25);
 	info.setScale(scaleFactor);
 
 	moneyCountText.setFont(GlobalVariables::Instance().font());
@@ -497,7 +497,7 @@ void GamePanel::updateEnableTowers()
 	else
 		towerRocketSprite.setColor(Color::White);
 
-	cost = TowersFactory::getTowerStats(TOWER_TYPES::POWER).cost;
+	cost = TowersFactory::getTowerStats(TOWER_TYPES::POWER).cost + Engine::Instance().level()->getPowerTowersCount() * PowerTower::COST_OFFSET;
 	if (money < cost)
 		towerPowerSprite.setColor(GlobalVariables::GrayColor);
 	else
@@ -604,15 +604,24 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 
 	if (tower == nullptr)
 	{
+		const float cost = type == TOWER_TYPES::POWER ?
+					towerStats.cost + Engine::Instance().level()->getPowerTowersCount() * PowerTower::COST_OFFSET :
+					towerStats.cost;
+
 		str += Language::Instance().translate(Language::COST);
 		str += separator;
-		str += GlobalVariables::to_string_with_precision(towerStats.cost, 2);
+		str += GlobalVariables::to_string_with_precision(cost, 2);
 	}
 	else
 	{
+		float cost = tower->type() == TOWER_TYPES::POWER ?
+					TowersFactory::getTowerStats(type).cost + (Engine::Instance().level()->getPowerTowersCount() - 1) * PowerTower::COST_OFFSET :
+					TowersFactory::getTowerStats(type).cost;
+		cost /= 2;
+
 		str += Language::Instance().translate(Language::SELL_COST);
 		str += separator;
-		str += GlobalVariables::to_string_with_precision(tower->data().cost/2, 2);
+		str += GlobalVariables::to_string_with_precision(cost, 2);
 	}
 	return str;
 }
@@ -795,8 +804,17 @@ void GamePanel::updateCurrentTower()
 	upgradeSprite.setTextureRect(IntRect(64*level,0,64,64));
 	sellSprite.setColor(color);
 	upgradeSprite.setColor(color);
-	const bool canBuy = m_selectedTower == nullptr ? false : Engine::Instance().level()->getMoneyCount() < TowersFactory::getTowerStats(m_selectedTower->type()).cost * TowersFactory::UPGRADE_COST_MODIFIER;
-	if (level > 2 || canBuy)
+
+	bool canUpgrade = false;;
+	if (m_selectedTower != nullptr)
+	{
+		float cost = m_selectedTower->type() == TOWER_TYPES::POWER ?
+					m_selectedTower->data().cost + Engine::Instance().level()->getPowerTowersCount() * PowerTower::COST_OFFSET :
+					m_selectedTower->data().cost;
+		cost *= TowersFactory::UPGRADE_COST_MODIFIER;
+		canUpgrade = Engine::Instance().level()->getMoneyCount() < cost;
+	}
+	if (level > 2 || canUpgrade)
 		upgradeSprite.setColor(GlobalVariables::GrayColor);
 }
 

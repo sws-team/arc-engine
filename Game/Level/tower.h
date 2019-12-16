@@ -143,6 +143,8 @@ public:
 	float gain() const;
 
 	void upgrade() override;
+
+	static const int COST_OFFSET;
 private:
 	static const float ENERGY_GAIN;
 	bool m_isHighlighted;

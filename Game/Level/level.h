@@ -72,6 +72,8 @@ public:
 					  int frameCount,
 					  int row);
 	void removeAnimation(Animation *animation);
+	unsigned int getPowerTowersCount() const;
+
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();
@@ -163,6 +165,7 @@ private:
 
 	CircleShape currentTowerRadius;
 	void updateRadius();
+	unsigned int m_powerTowersCount;
 };
 
 #endif // LEVEL_H

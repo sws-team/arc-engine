@@ -216,6 +216,7 @@ bool TowersFactory::isIntersects(const FloatRect &rect, const Vector2f &center, 
 	return false;
 }
 const float PowerTower::ENERGY_GAIN = 10;
+const int PowerTower::COST_OFFSET = 10;
 											//		dmg	atk_speed	r	pr_speed	cost
 const TowerStats PowerTower::STATS = TowerStats		(0,		5000,	5,		0,		60);
 const TowerStats BaseTower::STATS = TowerStats		(5,		450,	4,		20,		50);
