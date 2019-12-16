@@ -93,7 +93,6 @@ class ProjectilesTower : public Tower
 {
 public:
 	ProjectilesTower(const RESOURCES::TEXTURE_TYPE &texture_id,
-					 const RESOURCES::TEXTURE_TYPE &projectile_id,
 					 const Vector2f &pos,
 					 const TowerStats& stats);
 
@@ -114,6 +113,17 @@ public:
 protected:
 	virtual void projectileAction(Enemy *enemy);
 	virtual void moveProjectile(Projectile *projectile);
+
+	struct ProjectileInfo
+	{
+		RESOURCES::TEXTURE_TYPE texture_id;
+		Vector2i size;
+		int frameCount;
+		RESOURCES::TEXTURE_TYPE explosion_texture_id;
+		Vector2i explosionSize;
+		int explosionFrameCount;
+	};
+	ProjectileInfo projectileInfo;
 
 private:
 	vector<Projectile*> m_projectiles;

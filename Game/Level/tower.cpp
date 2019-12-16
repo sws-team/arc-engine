@@ -221,13 +221,19 @@ const int PowerTower::COST_OFFSET = 10;
 const TowerStats PowerTower::STATS = TowerStats		(0,		5000,	5,		0,		60);
 const TowerStats BaseTower::STATS = TowerStats		(5,		450,	4,		20,		50);
 const TowerStats FreezeTower::STATS = TowerStats	(5,		350,	6,		10,		80);
-const TowerStats RocketTower::STATS = TowerStats	(100,	3500,	12,		20,		150);
+const TowerStats RocketTower::STATS = TowerStats	(55,	4000,	12,		5,		150);
 const TowerStats LaserTower::STATS = TowerStats		(15,	200,	6,		0,		180);
 const TowerStats ImprovedTower::STATS = TowerStats	(20,	150,	7,		50,		250);
 
 BaseTower::BaseTower(const Vector2f &pos)
-	: ProjectilesTower(RESOURCES::TOWER_BASE, RESOURCES::BASE_PROJECTILE, pos, STATS)
+	: ProjectilesTower(RESOURCES::TOWER_BASE, pos, STATS)
 {
+	projectileInfo.size = Vector2i(10, 5);
+	projectileInfo.frameCount = 1;
+	projectileInfo.texture_id = RESOURCES::BASE_PROJECTILE;
+	projectileInfo.explosion_texture_id = RESOURCES::BASE_EXPLOSION_EFFECT;
+	projectileInfo.explosionSize = Vector2i(12, 12);
+	projectileInfo.explosionFrameCount = 16;
 	m_shotSound = "sounds/towers/base_shot.ogg";
 }
 
@@ -285,10 +291,17 @@ void PowerTower::upgradePowerRadius()
 const int RocketTower::ZERO_GROUND = 3;
 
 RocketTower::RocketTower(const Vector2f &pos)
-	: ProjectilesTower(RESOURCES::TOWER_ROCKET, RESOURCES::ROCKET_PROJECTILE, pos, STATS)
+	: ProjectilesTower(RESOURCES::TOWER_ROCKET, pos, STATS)
 {
 	m_zeroGround = GlobalVariables::Instance().tileSize().x * ZERO_GROUND;
 	m_shotSound = "sounds/towers/rocket_shot.ogg";
+
+	projectileInfo.size = Vector2i(32, 16);
+	projectileInfo.frameCount = 4;
+	projectileInfo.texture_id = RESOURCES::ROCKET_PROJECTILE;
+	projectileInfo.explosion_texture_id = RESOURCES::ROCKET_EXPLOSION_EFFECT;
+	projectileInfo.explosionSize = Vector2i(96, 96);
+	projectileInfo.explosionFrameCount = 16;
 }
 
 void RocketTower::moveProjectile(Projectile *projectile)
@@ -331,9 +344,15 @@ void RocketTower::projectileAction(Enemy *enemy)
 }
 
 FreezeTower::FreezeTower(const Vector2f &pos)
-	: ProjectilesTower(RESOURCES::TOWER_FREEZE, RESOURCES::FREEZE_PROJECTILE, pos, STATS)
+	: ProjectilesTower(RESOURCES::TOWER_FREEZE, pos, STATS)
 {
 	m_shotSound = "sounds/towers/freeze_shot.ogg";
+	projectileInfo.size = Vector2i(20, 10);
+	projectileInfo.frameCount = 1;
+	projectileInfo.texture_id = RESOURCES::FREEZE_PROJECTILE;
+	projectileInfo.explosion_texture_id = RESOURCES::FREEZE_EXPLOSION_EFFECT;
+	projectileInfo.explosionSize = Vector2i(12, 12);
+	projectileInfo.explosionFrameCount = 16;
 }
 
 void FreezeTower::projectileAction(Enemy *enemy)
@@ -384,12 +403,19 @@ void LaserTower::draw(RenderTarget * const target)
 }
 
 ImprovedTower::ImprovedTower(const Vector2f &pos)
-	: ProjectilesTower(RESOURCES::TOWER_IMPROVED, RESOURCES::IMPROVED_PROJECTILE, pos, STATS)
+	: ProjectilesTower(RESOURCES::TOWER_IMPROVED, pos, STATS)
 {
 	m_shotSound = "sounds/towers/improved_shot.ogg";
+
+	projectileInfo.size = Vector2i(40, 16);
+	projectileInfo.frameCount = 5;
+	projectileInfo.texture_id = RESOURCES::IMPROVED_PROJECTILE;
+	projectileInfo.explosion_texture_id = RESOURCES::IMPROVED_EXPLOSION_EFFECT;
+	projectileInfo.explosionSize = Vector2i(32, 32);
+	projectileInfo.explosionFrameCount = 16;
 }
 
-ProjectilesTower::ProjectilesTower(const RESOURCES::TEXTURE_TYPE &texture_id, const RESOURCES::TEXTURE_TYPE &projectile_id,
+ProjectilesTower::ProjectilesTower(const RESOURCES::TEXTURE_TYPE &texture_id,
 								   const Vector2f &pos,
 								   const TowerStats &stats)
 	: Tower(texture_id, pos, stats)
@@ -461,8 +487,10 @@ void ProjectilesTower::shoot(Enemy *target)
 
 	angle -= 180;
 
-	const Vector2i frameSize = Vector2i(10, 5);
-	Projectile *projectile = new Projectile(RESOURCES::BASE_PROJECTILE, aPos, frameSize, 1);
+	Projectile *projectile = new Projectile(projectileInfo.texture_id,
+											aPos,
+											projectileInfo.size,
+											projectileInfo.frameCount);
 	projectile->setAngle(angle);
 	projectile->target = target;
 	m_projectiles.push_back(projectile);
@@ -492,6 +520,9 @@ vector<Projectile *> ProjectilesTower::projectiles() const
 void ProjectilesTower::projectileAction(Enemy *enemy)
 {
 	enemy->hit(m_stats.damage);
-	Engine::Instance().level()->addAnimation(RESOURCES::EXPLOSION_EFFECT, enemy->enemyCenter() - Vector2f(32, 32), Vector2i(64, 64), 100, 16, 0);
+	Engine::Instance().level()->addAnimation(projectileInfo.explosion_texture_id,
+											 enemy->enemyCenter() - Vector2f(projectileInfo.explosionSize.x/2, projectileInfo.explosionSize.y/2),
+											 projectileInfo.explosionSize,
+											 50, projectileInfo.explosionFrameCount, 0);
 }
 

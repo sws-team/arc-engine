@@ -49,8 +49,8 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::TOWER_IMPROVED, "images/ui/Panel/Towers/tower_improved.png");
 
 	addTexture(RESOURCES::BASE_PROJECTILE, "images/Weapons/bullet.png");
-	addTexture(RESOURCES::IMPROVED_PROJECTILE, "images/Weapons/bullet.png");
-	addTexture(RESOURCES::FREEZE_PROJECTILE, "images/Weapons/bullet.png");
+	addTexture(RESOURCES::IMPROVED_PROJECTILE, "images/Weapons/improved_bullet.png");
+	addTexture(RESOURCES::FREEZE_PROJECTILE, "images/Weapons/freeze_bullet.png");
 	addTexture(RESOURCES::ROCKET_PROJECTILE, "images/Weapons/rocket.png");
 	addTexture(RESOURCES::LASER_PROJECTILE, "images/Weapons/laser.png");
 
@@ -60,7 +60,10 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::CLOSE_BACKGROUND, "images/close.png");
 	addTexture(RESOURCES::INTRO_BACKGROUND, "images/logo.png");
 
-	addTexture(RESOURCES::EXPLOSION_EFFECT, "images/Weapons/Effects/explosion.png");
+	addTexture(RESOURCES::BASE_EXPLOSION_EFFECT, "images/Weapons/Effects/base_explosion.png");
+	addTexture(RESOURCES::FREEZE_EXPLOSION_EFFECT, "images/Weapons/Effects/freeze_explosion.png");
+	addTexture(RESOURCES::ROCKET_EXPLOSION_EFFECT, "images/Weapons/Effects/rocket_explosion.png");
+	addTexture(RESOURCES::IMPROVED_EXPLOSION_EFFECT, "images/Weapons/Effects/improved_explosion.png");
 	addTexture(RESOURCES::VENOM_EFFECT, "images/Weapons/Effects/venom.png");
 
 
