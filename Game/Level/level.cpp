@@ -88,85 +88,68 @@ void Level::update()
 {
 	if (m_state != PLAYING)
 		return;
-	for(Tower* tower : towers)
-	{
-		if (tower->type() == POWER)
-		{
-			PowerTower *powerTower = static_cast<PowerTower*>(tower);
-			if (powerTower->hasEnergy())
-				money += powerTower->gain();
-		}
-		else
-			tower->action(enemies);
-		tower->update();
-	}
-	if (shake.isActive)
-	{
-		if (shake.dangerTimer.check(Shake::SHAKE_TIME))
-		{
-			if (shake.state)
-				shake.offset = rand() % Shake::MAX_SHAKE_OFFSET * 2;
-			else
-				shake.offset = -shake.offset;
 
-			Engine::Instance().camera()->getView()->setCenter(Engine::Instance().camera()->getView()->getCenter().x,
-															  Engine::Instance().camera()->getView()->getCenter().y + shake.offset);
-
-			shake.state = !shake.state;
-			shake.count++;
-			if (shake.count > Shake::MAX_SHAKE_COUNT)
-				shake.isActive = false;
-		}
-	}
-	if (venomAbility.isActive)
-	{
-		if (venomAbility.timer.check(VenomAbility::VENOM_ATTACK_SPEED))
-		{
-			for(Enemy *enemy : enemies)
-			{
-				if (enemy->gameRect().intersects(venomAbility.object->gameRect()))
-					enemy->hit(VenomAbility::VENOM_DAMAGE);
-			}
-			venomAbility.count++;
-			if (venomAbility.count > VenomAbility::VENOM_DAMAGE_COUNT)
-				venomAbility.isActive = false;
-		}
-	}
 	if (timer.check(GlobalVariables::FRAME_TIME))
 	{
+		for(Tower* tower : towers)
+		{
+			if (tower->type() == POWER)
+			{
+				PowerTower *powerTower = static_cast<PowerTower*>(tower);
+				if (powerTower->hasEnergy())
+					money += powerTower->gain();
+			}
+			else
+				tower->action(enemies);
+			tower->update();
+		}
+		if (shake.isActive)
+		{
+			if (shake.dangerTimer.check(Shake::SHAKE_TIME))
+			{
+				if (shake.state)
+					shake.offset = rand() % Shake::MAX_SHAKE_OFFSET * 2;
+				else
+					shake.offset = -shake.offset;
+
+				Engine::Instance().camera()->getView()->setCenter(Engine::Instance().camera()->getView()->getCenter().x,
+																  Engine::Instance().camera()->getView()->getCenter().y + shake.offset);
+
+				shake.state = !shake.state;
+				shake.count++;
+				if (shake.count > Shake::MAX_SHAKE_COUNT)
+					shake.isActive = false;
+			}
+		}
+		if (venomAbility.isActive)
+		{
+			if (venomAbility.timer.check(VenomAbility::VENOM_ATTACK_SPEED))
+			{
+				for(Enemy *enemy : enemies)
+				{
+					if (enemy->gameRect().intersects(venomAbility.object->gameRect()))
+						enemy->hit(VenomAbility::VENOM_DAMAGE);
+				}
+				venomAbility.count++;
+				if (venomAbility.count > VenomAbility::VENOM_DAMAGE_COUNT)
+					venomAbility.isActive = false;
+			}
+		}
+
+		if (timerRegenEnergy.check(REGEN_ENERGY_TIMEOUT))
+			energy += REGEN_ENERGY_VALUE;
+
 		checkRespawn();
 		calculateCollisions();
 		checkDeadZone();
 		checkEnd();
+		checkEnemyMove();
 
 		for(Enemy* enemy : enemies)
-		{
-			if (enemy->moveStep())
-			{
-				const FloatRect endRect = FloatRect(gameMap->endRect.left * Settings::Instance().getScaleFactor().x,
-													gameMap->endRect.top * Settings::Instance().getScaleFactor().y,
-													gameMap->endRect.width * Settings::Instance().getScaleFactor().x,
-													gameMap->endRect.height * Settings::Instance().getScaleFactor().y);
-				if (endRect.contains(enemy->enemyPos()))
-					continue;
-
-				const Vector2i cell = Engine::Instance().camera()->posToCellMap(enemy->enemyPos());
-				const int direction = getTileDirectionByCell(cell);
-				enemy->moveNext(direction);
-			}
-		}
+			enemy->update();
+		for(Animation *effect : effects)
+			effect->update();
 	}
-
-	if (timerRegenEnergy.check(REGEN_ENERGY_TIMEOUT))
-	{
-		energy += REGEN_ENERGY_VALUE;
-		Engine::Instance().panel()->updatePanel();
-	}
-
-	for(Enemy* enemy : enemies)
-		enemy->update();
-	for(Animation *effect : effects)
-		effect->update();
 
 	Engine::Instance().panel()->updatePanel();
 }
@@ -334,6 +317,26 @@ void Level::spawnEnemy()
 	ENEMY_TYPES type = spawnEnemies.at(n);
 	spawnEnemies.erase(find(spawnEnemies.begin(), spawnEnemies.end(), type));
 	spawn(type);
+}
+
+void Level::checkEnemyMove()
+{
+	const FloatRect endRect = FloatRect(gameMap->endRect.left * Settings::Instance().getScaleFactor().x,
+										gameMap->endRect.top * Settings::Instance().getScaleFactor().y,
+										gameMap->endRect.width * Settings::Instance().getScaleFactor().x,
+										gameMap->endRect.height * Settings::Instance().getScaleFactor().y);
+	for(Enemy* enemy : enemies)
+	{
+		if (enemy->moveStep())
+		{
+			if (endRect.contains(enemy->enemyPos()))
+				continue;
+
+			const Vector2i cell = Engine::Instance().camera()->posToCellMap(enemy->enemyPos());
+			const int direction = getTileDirectionByCell(cell);
+			enemy->moveNext(direction);
+		}
+	}
 }
 
 Tower *Level::getTowerAtPos(const Vector2f &pos) const

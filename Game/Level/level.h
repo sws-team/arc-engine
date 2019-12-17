@@ -82,6 +82,7 @@ private:
 	void checkAlive();
 	void checkRespawn();
 	void spawnEnemy();
+	void checkEnemyMove();
 
 	RectangleShape deadZone;
 
