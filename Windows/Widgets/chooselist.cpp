@@ -96,6 +96,15 @@ String ChooseList::currentText() const
 	return rects.at(current).text.getString();
 }
 
+void ChooseList::setScale(const Vector2f &scaleFactor)
+{
+	for(ChooseValue& chooseValue: rects)
+	{
+//		chooseValue.rect.setScale(scaleFactor);
+		chooseValue.text.setScale(scaleFactor);
+	}
+}
+
 void ChooseList::updateList()
 {
 	rects.clear();

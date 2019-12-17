@@ -49,3 +49,9 @@ void Button::setTextCharacterSize(unsigned int size)
 {
 	m_text.setCharacterSize(size);
 }
+
+void Button::setScale(const Vector2f &scaleFactor)
+{
+//	rect.setScale(scaleFactor);
+	m_text.setScale(scaleFactor);
+}

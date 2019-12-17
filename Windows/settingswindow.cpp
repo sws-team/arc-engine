@@ -141,10 +141,6 @@ SettingsWindow::SettingsWindow()
 
 	resolutions = new ChooseList();
 	resolutions->setCharacterSize(chooseListCharacterSize);
-	resolutions->setPos(pos + Vector2f(blockOffset.x * secondOffset, blockOffset.y * 2 +
-									   lbl_fullscreen.getGlobalBounds().height + lbl_video.getGlobalBounds().height + lbl_resolution.getGlobalBounds().height));
-	resolutions->setSize(chooseListButtonSize);
-
 	String currentResolution;
 	for (auto it = resolutionsMap.begin(); it != resolutionsMap.end(); ++it)
 	{
@@ -152,6 +148,10 @@ SettingsWindow::SettingsWindow()
 			currentResolution = it->first;
 		resolutions->addItem(it->first);
 	}
+	resolutions->setScale(Settings::Instance().getScaleFactor());
+	resolutions->setPos(pos + Vector2f(blockOffset.x * secondOffset, blockOffset.y * 2 +
+									   lbl_fullscreen.getGlobalBounds().height + lbl_video.getGlobalBounds().height + lbl_resolution.getGlobalBounds().height));
+	resolutions->setSize(chooseListButtonSize);
 	resolutions->update();
 
 	//language
@@ -177,14 +177,13 @@ SettingsWindow::SettingsWindow()
 
 	languages = new ChooseList();
 	languages->setCharacterSize(chooseListCharacterSize);
-	languages->setPos(pos + Vector2f(blockOffset.x * secondOffset, blockOffset.y +
-									 lbl_language.getGlobalBounds().height + lbl_audio.getGlobalBounds().height));
-	languages->setSize(chooseListButtonSize);
-
 	const vector<wstring> languanges = Language::Instance().getAvaliableLanguageNames();
 	for(const wstring& langName : languanges)
 		languages->addItem(langName);
-
+	languages->setScale(Settings::Instance().getScaleFactor());
+	languages->setPos(pos + Vector2f(blockOffset.x * secondOffset, blockOffset.y +
+									 lbl_language.getGlobalBounds().height + lbl_audio.getGlobalBounds().height));
+	languages->setSize(chooseListButtonSize);
 	languages->update();
 
 	//buttons
@@ -196,6 +195,7 @@ SettingsWindow::SettingsWindow()
 	button_accept->setCallback(bind(&SettingsWindow::accept, this));
 	button_accept->setText(Language::Instance().translate(Language::ACCEPT));
 	button_accept->setTextCharacterSize(characterSize);
+	button_accept->setScale(Settings::Instance().getScaleFactor());
 	button_accept->setPos(bottomRight - Vector2f(buttonSize.x, -buttonOffset));
 
 	const Vector2f bottomLeft = settingsRect.getPosition() + Vector2f(0, settingsSize.y);
@@ -203,6 +203,7 @@ SettingsWindow::SettingsWindow()
 	button_cancel->setSize(buttonSize);
 	button_cancel->setCallback(bind(&SettingsWindow::back, this));
 	button_cancel->setText(Language::Instance().translate(Language::CANCEL));
+	button_cancel->setScale(Settings::Instance().getScaleFactor());
 	button_cancel->setTextCharacterSize(characterSize);
 	button_cancel->setPos(bottomLeft + Vector2f(0, buttonOffset));
 

@@ -17,6 +17,7 @@ public:
 	void setCurrent(int n);
 	void setCurrent(const String& text);
 	String currentText() const;
+	void setScale(const Vector2f& scaleFactor);
 
 	void setCharacterSize(unsigned int characterSize);
 

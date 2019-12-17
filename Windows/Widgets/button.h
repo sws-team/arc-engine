@@ -17,6 +17,8 @@ public:
 
 	void setTextCharacterSize(unsigned int size);
 
+	void setScale(const Vector2f& scaleFactor);
+
 private:
 	RectangleShape rect;
 	Text m_text;

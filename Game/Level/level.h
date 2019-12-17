@@ -83,8 +83,6 @@ private:
 	void checkRespawn();
 	void spawnEnemy();
 
-	float resolutionOffsetX;
-
 	RectangleShape deadZone;
 
 	class Map *gameMap;

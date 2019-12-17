@@ -53,10 +53,6 @@ Level::Level() :
 										  Vector2i(VenomAbility::VENOM_SIZE.x * GlobalVariables::Instance().tileSize().x,
 												   VenomAbility::VENOM_SIZE.y * GlobalVariables::Instance().tileSize().y), 1);
 
-	const float k = static_cast<float>(Settings::Instance().getInscribedResolution().y)/Settings::Instance().getResolution().y;
-	resolutionOffsetX = Settings::Instance().getResolution().x - k * Settings::Instance().getResolution().x;
-	resolutionOffsetX /= 2;	
-
 	shake.dangerRect.setSize(Vector2f(Settings::Instance().getResolution()));
 	shake.dangerRect.setFillColor(Color(255,0,0,96));
 	shake.isActive = false;
