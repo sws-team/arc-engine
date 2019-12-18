@@ -21,6 +21,14 @@ public:
 
 	void setCharacterSize(unsigned int characterSize);
 
+	void setTextColor(const Color &textColor);
+
+	void setFillColor(const Color &fillColor);
+
+	void setBorderColor(const Color &borderColor);
+
+	void setCurrentColor(const Color &currentColor);
+
 private:
 	struct ChooseValue
 	{
@@ -32,6 +40,11 @@ private:
 	void updateList();
 	int current;
 	unsigned int m_characterSize;
+
+	Color m_textColor;
+	Color m_fillColor;
+	Color m_borderColor;
+	Color m_currentColor;
 };
 
 #endif // CHOOSELIST_H

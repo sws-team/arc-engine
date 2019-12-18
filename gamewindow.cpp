@@ -24,6 +24,8 @@ GameWindow::GameWindow()
 
 	paused.setString(Language::Instance().translate(Language::PAUSED));
 	paused.setFillColor(Color::Blue);
+	paused.setStyle(Text::Bold);
+	paused.setCharacterSize(100);
 	paused.setScale(Settings::Instance().getScaleFactor());
 	paused.setFont(GlobalVariables::Instance().font());
 
@@ -34,8 +36,10 @@ GameWindow::GameWindow()
 	finishedImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MISSON_COMPLETED_TEXTURE));
 	finishedImg.setScale(Settings::Instance().getScaleFactor());
 	//score
-	text.setFillColor(Color::Black);
+	text.setFillColor(Color::Magenta);
 	text.setFont(GlobalVariables::Instance().font());
+	text.setCharacterSize(100);
+	text.setScale(Settings::Instance().getScaleFactor());
 	Engine::Instance().panel()->init();
 
 	addItem(Language::Instance().translate(Language::CONTINUE));
@@ -279,34 +283,26 @@ void GameWindow::setState(const GAME_STATE &state)
 
 		Vector2f pos = viewPos;
 		pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
-		pos.x -= finishedImg.getGlobalBounds().width/2;
 		pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
-		pos.y -= finishedImg.getGlobalBounds().height/2;
-		finishedImg.setPosition(pos);
-
+		finishedImg.setPosition(pos - Vector2f(finishedImg.getGlobalBounds().width/2,
+											   finishedImg.getGlobalBounds().height/2));
 		text.setString(Language::Instance().translate(Language::CONGRATULATIONS));
-		const float labelsOffset = 15 * Settings::Instance().getScaleFactor().y;
-		float posX = finishedImg.getGlobalBounds().left;
-		float posY = finishedImg.getGlobalBounds().top;
 
-		posX += labelsOffset;
-		posY += labelsOffset;
-
-		text.setPosition(posX, posY);
-
-		posY += text.getGlobalBounds().height;
+		text.setPosition(pos - Vector2f(text.getGlobalBounds().width/2,
+										text.getGlobalBounds().height/2));
 	}
 		break;
 	case GAME_OVER:
 	{
-		text.setString(Language::Instance().translate(Language::GAME_OVER));
-
 		Vector2f pos = viewPos;
 		pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
-		pos.x -= gameOverImg.getGlobalBounds().width/2;
 		pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
-		pos.y -= gameOverImg.getGlobalBounds().height/2;
-		gameOverImg.setPosition(pos);
+		gameOverImg.setPosition(pos - Vector2f(gameOverImg.getGlobalBounds().width/2,
+											   gameOverImg.getGlobalBounds().height/2));
+
+		text.setString(Language::Instance().translate(Language::GAME_OVER));
+		text.setPosition(pos - Vector2f(text.getGlobalBounds().width/2,
+										text.getGlobalBounds().height/2));
 	}
 		break;
 	}

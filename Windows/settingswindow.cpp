@@ -8,6 +8,8 @@
 #include "Widgets/button.h"
 #include "Widgets/chooselist.h"
 #include "globalvariables.h"
+#include "ResourcesManager/resourcesmanager.h"
+#include "controller.h"
 
 const map<String, Vector2i> SettingsWindow::resolutionsMap = {
     {"1920x1080", Vector2i(1920, 1080)},
@@ -20,6 +22,7 @@ const map<String, Vector2i> SettingsWindow::resolutionsMap = {
 
 SettingsWindow::SettingsWindow()
 	: StateWindow()
+	,currentFocus(SOUND)
 {
 	setBackground(RESOURCES::SETTINGS_BACKGROUND);
 
@@ -47,33 +50,58 @@ SettingsWindow::SettingsWindow()
 	const Vector2f checkBoxSize = Vector2f(32 * Settings::Instance().getScaleFactor().x, 32 * Settings::Instance().getScaleFactor().y);
 	const unsigned int chooseListCharacterSize = 24;
 
+	//colors
+	const Color borderColor = Color(31,36,42, 100);
+	const Color mainRectColor = Color(46,54,63, 50);
+	const Color subRectColor = Color(62,73,84, 75);
+	const Color valueScaleColorActive = Color(93,109,127);
+	const Color valueScaleColorInactive = Color(185,204,224);
+	const Color textColor = Color(235,240,246, 200);
+	const Color checkBoxBorderColor = Color(31,36,42, 200);
+	const Color checkboxColor = Color(77,91,106, 200);
+	const Color chooseListCurrentColor = Color(15,18,21, 150);
+	const Color chooseListFillColor = Color(215,226,237, 200);
+	const Color chooseListBorderColor = Color(46,54,63, 100);
+	const Color chooseListTextColor = Color(62,73,84, 200);
+	const Color buttonTextColor = chooseListTextColor;
+	const Color buttonFillColor = chooseListFillColor;
+	const Color buttonBorderColor = chooseListBorderColor;
+
+
 	lbl_settings.setFont(GlobalVariables::Instance().font());
 	lbl_settings.setCharacterSize(characterSize * 4);
 	lbl_settings.setStyle(Text::Bold);
-	lbl_settings.setFillColor(Color::Red);
+	lbl_settings.setFillColor(textColor);
+	lbl_settings.setOutlineThickness(1);
+	lbl_settings.setOutlineColor(Color::Black);
 	lbl_settings.setString(Language::Instance().translate(Language::SETTINGS));
 	lbl_settings.setScale(Settings::Instance().getScaleFactor());
 	lbl_settings.setPosition(pos - Vector2f(0, lbl_settings.getGlobalBounds().height * 2 + border));
 
 	settingsRect.setSize(settingsSize);
-	settingsRect.setFillColor(Color::Transparent);
+	settingsRect.setFillColor(mainRectColor);
 	settingsRect.setOutlineThickness(border);
-	settingsRect.setOutlineColor(Color::Red);
+	settingsRect.setOutlineColor(borderColor);
 	settingsRect.setPosition(pos);
 
+	focusRect.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::FOCUS_ICON));
+	focusRect.setScale(Settings::Instance().getScaleFactor());
 
 	//audio
 	pos += Vector2f(borderXOffset, borderYOffset);
 
 	audioRect.setSize(blockSize);
-	audioRect.setFillColor(Color::Transparent);
+	audioRect.setFillColor(subRectColor);
 	audioRect.setOutlineThickness(border);
-	audioRect.setOutlineColor(Color::Blue);
+	audioRect.setOutlineColor(borderColor);
 	audioRect.setPosition(pos);
 
 	lbl_audio.setFont(GlobalVariables::Instance().font());
 	lbl_audio.setCharacterSize(characterSize);
 	lbl_audio.setStyle(Text::Bold);
+	lbl_audio.setFillColor(textColor);
+	lbl_audio.setOutlineThickness(1);
+	lbl_audio.setOutlineColor(Color::Black);
 	lbl_audio.setString(Language::Instance().translate(Language::AUDIO));
 	lbl_audio.setScale(Settings::Instance().getScaleFactor());
 	lbl_audio.setPosition(pos + Vector2f(blockOffset.x/2, 0));
@@ -81,6 +109,9 @@ SettingsWindow::SettingsWindow()
 	//sound
 	lbl_sound.setFont(GlobalVariables::Instance().font());
 	lbl_sound.setCharacterSize(characterSize);
+	lbl_sound.setFillColor(textColor);
+	lbl_sound.setOutlineThickness(1);
+	lbl_sound.setOutlineColor(Color::Black);
 	lbl_sound.setScale(Settings::Instance().getScaleFactor());
 	lbl_sound.setString(Language::Instance().translate(Language::SOUND));
 	lbl_sound.setPosition(pos + blockOffset + Vector2f(0, lbl_audio.getGlobalBounds().height));
@@ -88,12 +119,17 @@ SettingsWindow::SettingsWindow()
 	soundScale = new ValueScale();
 	soundScale->setSize(Vector2f(SCALE_WIDTH, -SCALE_HEIGHT));
 	soundScale->setValue(defaultAudioLevel);
+	soundScale->setColorActive(valueScaleColorActive);
+	soundScale->setColorInactive(valueScaleColorInactive);
 	soundScale->setPos(pos + Vector2f(blockOffset.x * secondOffset, blockOffset.y + SCALE_HEIGHT/2 +
 									  lbl_sound.getGlobalBounds().height + lbl_audio.getGlobalBounds().height));
 
 	//music
 	lbl_music.setFont(GlobalVariables::Instance().font());
 	lbl_music.setCharacterSize(characterSize);
+	lbl_music.setFillColor(textColor);
+	lbl_music.setOutlineThickness(1);
+	lbl_music.setOutlineColor(Color::Black);
 	lbl_music.setScale(Settings::Instance().getScaleFactor());
 	lbl_music.setString(Language::Instance().translate(Language::MUSIC));
 	lbl_music.setPosition(pos + Vector2f(blockOffset.x, blockOffset.y * 2 + lbl_sound.getGlobalBounds().height + lbl_audio.getGlobalBounds().height));
@@ -101,6 +137,8 @@ SettingsWindow::SettingsWindow()
 	musicScale = new ValueScale();
 	musicScale->setSize(Vector2f(SCALE_WIDTH, -SCALE_HEIGHT));
 	musicScale->setValue(defaultAudioLevel);
+	musicScale->setColorActive(valueScaleColorActive);
+	musicScale->setColorInactive(valueScaleColorInactive);
 	musicScale->setPos(pos + Vector2f(blockOffset.x * secondOffset, blockOffset.y * 2 + SCALE_HEIGHT/2 +
 									  lbl_sound.getGlobalBounds().height + lbl_audio.getGlobalBounds().height + lbl_music.getGlobalBounds().height));
 
@@ -108,13 +146,16 @@ SettingsWindow::SettingsWindow()
 	pos += Vector2f(0, blockSize.y + borderYOffset/2);
 
 	videoRect.setSize(blockSize);
-	videoRect.setFillColor(Color::Transparent);
+	videoRect.setFillColor(subRectColor);
 	videoRect.setOutlineThickness(border);
-	videoRect.setOutlineColor(Color::Green);
+	videoRect.setOutlineColor(borderColor);
 	videoRect.setPosition(pos);
 
 	lbl_video.setFont(GlobalVariables::Instance().font());
 	lbl_video.setCharacterSize(characterSize);
+	lbl_video.setFillColor(textColor);
+	lbl_video.setOutlineThickness(1);
+	lbl_video.setOutlineColor(Color::Black);
 	lbl_video.setScale(Settings::Instance().getScaleFactor());
 	lbl_video.setString(Language::Instance().translate(Language::VIDEO));
 	lbl_video.setStyle(Text::Bold);
@@ -123,11 +164,16 @@ SettingsWindow::SettingsWindow()
 	//fullscreen
 	lbl_fullscreen.setFont(GlobalVariables::Instance().font());
 	lbl_fullscreen.setCharacterSize(characterSize);
+	lbl_fullscreen.setFillColor(textColor);
+	lbl_fullscreen.setOutlineThickness(1);
+	lbl_fullscreen.setOutlineColor(Color::Black);
 	lbl_fullscreen.setScale(Settings::Instance().getScaleFactor());
 	lbl_fullscreen.setString(Language::Instance().translate(Language::FULLSCREEN));
 	lbl_fullscreen.setPosition(pos + blockOffset + Vector2f(0, lbl_video.getGlobalBounds().height));
 
 	cbx_fullscreen = new CheckBox();
+	cbx_fullscreen->setCheckedColor(checkboxColor);
+	cbx_fullscreen->setBorderColor(checkBoxBorderColor);
 	cbx_fullscreen->setSize(checkBoxSize);
 	cbx_fullscreen->setPos(pos + Vector2f(blockOffset.x * secondOffset, blockOffset.y +
 										  lbl_fullscreen.getGlobalBounds().height + lbl_video.getGlobalBounds().height));
@@ -135,12 +181,19 @@ SettingsWindow::SettingsWindow()
 	//resolutions
 	lbl_resolution.setFont(GlobalVariables::Instance().font());
 	lbl_resolution.setCharacterSize(characterSize);
+	lbl_resolution.setFillColor(textColor);
+	lbl_resolution.setOutlineThickness(1);
+	lbl_resolution.setOutlineColor(Color::Black);
 	lbl_resolution.setScale(Settings::Instance().getScaleFactor());
 	lbl_resolution.setString(Language::Instance().translate(Language::RESOLUTION));
 	lbl_resolution.setPosition(pos + Vector2f(blockOffset.x, blockOffset.y * 2 + lbl_fullscreen.getGlobalBounds().height + lbl_video.getGlobalBounds().height));
 
 	resolutions = new ChooseList();
+	resolutions->setFillColor(chooseListFillColor);
+	resolutions->setBorderColor(chooseListBorderColor);
+	resolutions->setCurrentColor(chooseListCurrentColor);
 	resolutions->setCharacterSize(chooseListCharacterSize);
+	resolutions->setTextColor(chooseListTextColor);
 	String currentResolution;
 	for (auto it = resolutionsMap.begin(); it != resolutionsMap.end(); ++it)
 	{
@@ -157,13 +210,16 @@ SettingsWindow::SettingsWindow()
 	//language
 	pos += Vector2f(0, blockSize.y + borderYOffset/2);
 	miscRect.setSize(blockSize);
-	miscRect.setFillColor(Color::Transparent);
+	miscRect.setFillColor(subRectColor);
 	miscRect.setOutlineThickness(border);
-	miscRect.setOutlineColor(Color::Magenta);
+	miscRect.setOutlineColor(borderColor);
 	miscRect.setPosition(pos);
 
 	lbl_misc.setFont(GlobalVariables::Instance().font());
 	lbl_misc.setCharacterSize(characterSize);
+	lbl_misc.setFillColor(textColor);
+	lbl_misc.setOutlineThickness(1);
+	lbl_misc.setOutlineColor(Color::Black);
 	lbl_misc.setScale(Settings::Instance().getScaleFactor());
 	lbl_misc.setString(Language::Instance().translate(Language::MISC));
 	lbl_misc.setStyle(Text::Bold);
@@ -171,12 +227,19 @@ SettingsWindow::SettingsWindow()
 
 	lbl_language.setFont(GlobalVariables::Instance().font());
 	lbl_language.setCharacterSize(characterSize);
+	lbl_language.setFillColor(textColor);
+	lbl_language.setOutlineThickness(1);
+	lbl_language.setOutlineColor(Color::Black);
 	lbl_language.setScale(Settings::Instance().getScaleFactor());
 	lbl_language.setString(Language::Instance().translate(Language::LANGUAGE));
 	lbl_language.setPosition(pos + blockOffset + Vector2f(0, lbl_audio.getGlobalBounds().height));
 
 	languages = new ChooseList();
 	languages->setCharacterSize(chooseListCharacterSize);
+	languages->setFillColor(chooseListFillColor);
+	languages->setBorderColor(chooseListBorderColor);
+	languages->setCurrentColor(chooseListCurrentColor);
+	languages->setTextColor(chooseListTextColor);
 	const vector<wstring> languanges = Language::Instance().getAvaliableLanguageNames();
 	for(const wstring& langName : languanges)
 		languages->addItem(langName);
@@ -192,6 +255,9 @@ SettingsWindow::SettingsWindow()
 	const Vector2f bottomRight = settingsRect.getPosition() + settingsSize;
 	button_accept = new Button();
 	button_accept->setSize(buttonSize);
+	button_accept->setFillColor(buttonFillColor);
+	button_accept->setBorderColor(buttonBorderColor);
+	button_accept->setTextColor(buttonTextColor);
 	button_accept->setCallback(bind(&SettingsWindow::accept, this));
 	button_accept->setText(Language::Instance().translate(Language::ACCEPT));
 	button_accept->setTextCharacterSize(characterSize);
@@ -201,6 +267,9 @@ SettingsWindow::SettingsWindow()
 	const Vector2f bottomLeft = settingsRect.getPosition() + Vector2f(0, settingsSize.y);
 	button_cancel = new Button();
 	button_cancel->setSize(buttonSize);
+	button_cancel->setFillColor(buttonFillColor);
+	button_cancel->setBorderColor(buttonBorderColor);
+	button_cancel->setTextColor(buttonTextColor);
 	button_cancel->setCallback(bind(&SettingsWindow::back, this));
 	button_cancel->setText(Language::Instance().translate(Language::CANCEL));
 	button_cancel->setScale(Settings::Instance().getScaleFactor());
@@ -212,6 +281,8 @@ SettingsWindow::SettingsWindow()
 	musicScale->setValue(Settings::Instance().getMusicLevel());
 	resolutions->setCurrent(currentResolution);
 	languages->setCurrent(Language::Instance().getCurrentLanguageName());
+
+	updateFocus();
 }
 
 SettingsWindow::~SettingsWindow()
@@ -255,18 +326,73 @@ void SettingsWindow::paint(RenderWindow *window)
 
 	button_accept->draw(window);
 	button_cancel->draw(window);
+
+	window->draw(focusRect);
 }
 
 void SettingsWindow::eventFilter(Event *event)
 {
-	soundScale->event(event);
-	musicScale->event(event);
-	cbx_fullscreen->event(event);
-	resolutions->event(event);
-	languages->event(event);
-	button_accept->event(event);
-	button_cancel->event(event);
+	if (event->type == Event::KeyPressed)
+	{
+		if (event->key.code == Keyboard::Down)
+			currentFocus = static_cast<FOCUSES>(currentFocus + 1);
+		if (event->key.code == Keyboard::Up)
+			currentFocus = static_cast<FOCUSES>(currentFocus - 1);
 
+		updateFocus();
+	}
+	else if (event->type == Event::JoystickMoved)
+	{
+		if (event->joystickMove.axis == Joystick::Y)
+		{
+			if (event->joystickMove.position > 50)
+				currentFocus = static_cast<FOCUSES>(currentFocus + 1);
+			else if (event->joystickMove.position < -50)
+				currentFocus = static_cast<FOCUSES>(currentFocus - 1);
+		}
+		updateFocus();
+	}
+	else if (event->type == Event::MouseButtonPressed ||
+			 event->type == Event::MouseButtonReleased)
+	{
+		soundScale->event(event);
+		musicScale->event(event);
+		cbx_fullscreen->event(event);
+		resolutions->event(event);
+		languages->event(event);
+		button_cancel->event(event);
+		button_accept->event(event);
+
+		StateWindow::eventFilter(event);
+		return;
+	}
+
+	switch (currentFocus)
+	{
+	case SOUND:
+		soundScale->event(event);
+		break;
+	case MUSIC:
+		musicScale->event(event);
+		break;
+	case FULLSCREEN:
+		cbx_fullscreen->event(event);
+		break;
+	case RESOLUTION:
+		resolutions->event(event);
+		break;
+	case LANGUAGE:
+		languages->event(event);
+		break;
+	case BUTTON_CANCEL:
+		button_cancel->event(event);
+		break;
+	case BUTTON_ACCEPT:
+		button_accept->event(event);
+		break;
+	default:
+		break;
+	}
 	StateWindow::eventFilter(event);
 }
 
@@ -293,4 +419,42 @@ void SettingsWindow::accept()
 	Engine::Instance().setState(Engine::MAIN_MENU);
 
 	Settings::Instance().updateWindow();
+}
+
+void SettingsWindow::updateFocus()
+{
+	if (currentFocus < SOUND)
+		currentFocus = SOUND;
+	if (currentFocus > BUTTON_ACCEPT)
+		currentFocus = BUTTON_ACCEPT;
+
+	Vector2f pos;
+	switch (currentFocus)
+	{
+	case SOUND:
+		pos = lbl_sound.getPosition();
+		break;
+	case MUSIC:
+		pos = lbl_music.getPosition();
+		break;
+	case FULLSCREEN:
+		pos = lbl_fullscreen.getPosition();
+		break;
+	case RESOLUTION:
+		pos = lbl_resolution.getPosition();
+		break;
+	case LANGUAGE:
+		pos = lbl_language.getPosition();
+		break;
+	case BUTTON_CANCEL:
+		pos = button_cancel->pos();
+		break;
+	case BUTTON_ACCEPT:
+		pos = button_accept->pos();
+		break;
+	default:
+		break;
+	}
+	pos.x -= 10 * Settings::Instance().getScaleFactor().x + GlobalVariables::Instance().mapTileSize().x;
+	focusRect.setPosition(pos);
 }

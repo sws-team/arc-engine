@@ -74,6 +74,8 @@ public:
 	void removeAnimation(Animation *animation);
 	unsigned int getPowerTowersCount() const;
 
+	void clearCursor();
+
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();

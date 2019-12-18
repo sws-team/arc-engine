@@ -54,6 +54,21 @@ private:
 
 	Text lbl_misc;
 	RectangleShape miscRect;
+
+	enum FOCUSES
+	{
+		SOUND,
+		MUSIC,
+		FULLSCREEN,
+		RESOLUTION,
+		LANGUAGE,
+		BUTTON_CANCEL,
+		BUTTON_ACCEPT
+	};
+
+	FOCUSES currentFocus;
+	Sprite focusRect;
+	void updateFocus();
 };
 
 #endif // SETTINGSWINDOW_H

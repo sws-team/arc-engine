@@ -35,7 +35,7 @@ const int Level::INC_TOWER_AS_ABILITY_COST = 200;
 const int Level::INC_TOWER_DMG_ABILITY_COST = 200;
 const float Level::BOMB_ABILITY_DAMAGE = 111;
 
-const int Level::Shake::MAX_SHAKE_COUNT = 10;
+const int Level::Shake::MAX_SHAKE_COUNT = 9;
 const int Level::Shake::MAX_SHAKE_OFFSET = 10;
 const int Level::Shake::SHAKE_TIME = 50;
 
@@ -418,6 +418,12 @@ void Level::updateRadius()
 unsigned int Level::getPowerTowersCount() const
 {
 	return m_powerTowersCount;
+}
+
+void Level::clearCursor()
+{
+	m_actionState = READY;
+	Engine::Instance().cursor()->deactivate();
 }
 
 Level::LEVEL_STATE Level::getState() const

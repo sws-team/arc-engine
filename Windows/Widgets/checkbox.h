@@ -15,6 +15,9 @@ public:
 	bool isChecked() const;
 	void setChecked(bool checked);
 
+	void setBorderColor(const Color &borderColor);
+	void setCheckedColor(const Color& checkedColor);
+
 private:
 	RectangleShape rect;
 	CircleShape circle;

@@ -1,5 +1,6 @@
 #include "button.h"
 #include "globalvariables.h"
+#include "controller.h"
 
 Button::Button()
 {
@@ -22,8 +23,20 @@ void Button::draw(RenderTarget *target)
 void Button::event(Event *event)
 {
 	if (event->type == Event::MouseButtonReleased)
+	{
 		if (rect.getGlobalBounds().contains(event->mouseButton.x, event->mouseButton.y))
 			m_callback();
+	}
+	else if (event->type == Event::KeyPressed)
+	{
+		if (event->key.code == Keyboard::Return)
+			m_callback();
+	}
+	else if (event->type == Event::JoystickButtonPressed)
+	{
+		if (event->joystickButton.button == Controller::KEY_START)
+			m_callback();
+	}
 }
 
 void Button::update()
@@ -54,4 +67,19 @@ void Button::setScale(const Vector2f &scaleFactor)
 {
 //	rect.setScale(scaleFactor);
 	m_text.setScale(scaleFactor);
+}
+
+void Button::setFillColor(const Color &fillColor)
+{
+	rect.setFillColor(fillColor);
+}
+
+void Button::setBorderColor(const Color &borderColor)
+{
+	rect.setOutlineColor(borderColor);
+}
+
+void Button::setTextColor(const Color &textColor)
+{
+	m_text.setFillColor(textColor);
 }

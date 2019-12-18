@@ -11,6 +11,9 @@ public:
 	void init() override;
 	void paint(RenderWindow *window) override;
 	void back() override;
+
+private:
+
 };
 
 #endif // ABOUTWINDOW_H

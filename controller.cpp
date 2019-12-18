@@ -55,6 +55,8 @@ void Controller::keyboardKeyEvent(const bool timeoutKey, const bool timeoutMove)
 			const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
 			Engine::Instance().level()->chooseByPos(pos);
 		}
+		if (Mouse::isButtonPressed(Mouse::Right))
+			Engine::Instance().level()->clearCursor();
 		if (Keyboard::isKeyPressed(Keyboard::Return))
 			Engine::Instance().level()->chooseCurrent();
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
@@ -111,6 +113,8 @@ void Controller::joystickKeyEvent(const bool timeoutKey, const bool timeoutMove)
 			pauseFunc();
 		if (Joystick::isButtonPressed(joystickId, 4))
 			Engine::Instance().cursor()->swap();
+		if (Joystick::isButtonPressed(joystickId, 5))
+			Engine::Instance().level()->clearCursor();
 	}
 	if (timeoutMove)
 	{

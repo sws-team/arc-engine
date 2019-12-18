@@ -20,6 +20,9 @@ public:
 	float value() const;
 	void setValue(float value);
 
+	void setColorActive(const Color &colorActive);
+	void setColorInactive(const Color &colorInactive);
+
 private:
 	int m_scales;
 	int currentTriangle;
@@ -29,6 +32,9 @@ private:
 	void updateTriangle();
 	void updateValue();
 	vector<ConvexShape> triangles;
+
+	Color m_colorActive;
+	Color m_colorInactive;
 };
 
 #endif // VALUESCALE_H

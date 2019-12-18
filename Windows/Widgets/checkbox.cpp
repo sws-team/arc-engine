@@ -1,4 +1,5 @@
 ﻿#include "checkbox.h"
+#include "controller.h"
 
 CheckBox::CheckBox() :
 	m_isChecked(false)
@@ -8,8 +9,8 @@ CheckBox::CheckBox() :
 	rect.setFillColor(Color::Transparent);
 
 	circle.setOutlineThickness(2);
+	circle.setOutlineColor(Color::Black);
 	circle.setFillColor(Color::Blue);
-	circle.setOutlineColor(Color::Green);
 }
 
 void CheckBox::draw(RenderTarget *target)
@@ -24,6 +25,22 @@ void CheckBox::event(Event *event)
 	if (event->type == Event::MouseButtonReleased)
 	{
 		if (rect.getGlobalBounds().contains(event->mouseButton.x, event->mouseButton.y))
+		{
+			m_isChecked = !m_isChecked;
+			update();
+		}
+	}
+	else if (event->type == Event::KeyPressed)
+	{
+		if (event->key.code == Keyboard::Return)
+		{
+			m_isChecked = !m_isChecked;
+			update();
+		}
+	}
+	else if (event->type == Event::JoystickButtonPressed)
+	{
+		if (event->joystickButton.button == Controller::KEY_START)
 		{
 			m_isChecked = !m_isChecked;
 			update();
@@ -49,4 +66,15 @@ bool CheckBox::isChecked() const
 void CheckBox::setChecked(bool checked)
 {
 	m_isChecked = checked;
+}
+
+void CheckBox::setBorderColor(const Color &borderColor)
+{
+	rect.setOutlineColor(borderColor);
+	circle.setOutlineColor(borderColor);
+}
+
+void CheckBox::setCheckedColor(const Color &checkedColor)
+{
+	circle.setFillColor(checkedColor);
 }

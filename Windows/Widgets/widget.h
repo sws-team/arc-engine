@@ -19,6 +19,7 @@ public:
 	void setSize(float x, float y);
 
 	Vector2f size() const;
+	Vector2f pos() const;
 
 protected:
 	Vector2f m_pos;

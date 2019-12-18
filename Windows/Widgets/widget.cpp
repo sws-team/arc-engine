@@ -52,5 +52,10 @@ void Widget::setSize(float x, float y)
 
 Vector2f Widget::size() const
 {
-    return m_size;
+	return m_size;
+}
+
+Vector2f Widget::pos() const
+{
+	return m_pos;
 }

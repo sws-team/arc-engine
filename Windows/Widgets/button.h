@@ -19,6 +19,10 @@ public:
 
 	void setScale(const Vector2f& scaleFactor);
 
+	void setFillColor(const Color &fillColor);
+	void setBorderColor(const Color &borderColor);
+	void setTextColor(const Color &textColor);
+
 private:
 	RectangleShape rect;
 	Text m_text;

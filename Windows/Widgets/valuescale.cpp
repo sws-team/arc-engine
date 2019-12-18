@@ -34,6 +34,35 @@ void ValueScale::event(Event *event)
 		}
 		updateValue();
 	}
+	else if (event->type == Event::KeyPressed)
+	{
+		if (event->key.code == Keyboard::Left)
+			currentTriangle++;
+		if (event->key.code == Keyboard::Right)
+			currentTriangle--;
+		if (currentTriangle < 0)
+			currentTriangle = 0;
+		if (currentTriangle >= triangles.size())
+			currentTriangle = triangles.size() - 1;
+		updateValue();
+	}
+	else if (event->type == Event::JoystickMoved)
+	{
+		if (event->joystickMove.axis == Joystick::X)
+		{
+			if (event->joystickMove.position > 50)
+				currentTriangle--;
+			else if (event->joystickMove.position < -50)
+				currentTriangle++;
+
+			if (currentTriangle < 0)
+				currentTriangle = 0;
+			if (currentTriangle >= triangles.size())
+				currentTriangle = triangles.size() - 1;
+
+			updateValue();
+		}
+	}
 }
 
 void ValueScale::update()
@@ -102,11 +131,19 @@ void ValueScale::updateValue()
 {
 	for (unsigned int i = 0; i < triangles.size(); ++i)
 	{
-		if (i < currentTriangle)
-		{
-			triangles[i].setFillColor(Color::Red);
-		}
+		if (i < currentTriangle)		
+			triangles[i].setFillColor(m_colorInactive);
 		else
-			triangles[i].setFillColor(Color::Blue);
+			triangles[i].setFillColor(m_colorActive);
 	}
+}
+
+void ValueScale::setColorInactive(const Color &colorInactive)
+{
+	m_colorInactive = colorInactive;
+}
+
+void ValueScale::setColorActive(const Color &colorActive)
+{
+	m_colorActive = colorActive;
 }
