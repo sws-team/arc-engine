@@ -17,6 +17,7 @@ Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, con
 				 4)
 	,m_stats(stats)
 	,m_level(1)
+	,m_kills(0)
 {
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
 	abilityDamage.isActive = false;
@@ -126,6 +127,17 @@ void Tower::increaseDamage(int duration, int value)
 int Tower::level() const
 {
 	return m_level;
+}
+
+void Tower::checkKill(Enemy *enemy)
+{
+	if (!enemy->isAlive())
+		m_kills++;
+}
+
+int Tower::kills() const
+{
+	return m_kills;
 }
 
 TowerStats Tower::data() const
@@ -338,6 +350,7 @@ void RocketTower::projectileAction(Enemy *enemy)
 		{
 			const float actualDamage = r/m_zeroGround * m_stats.damage;
 			levelEnemy->hit(actualDamage);
+			checkKill(levelEnemy);
 		}
 	}
 	ProjectilesTower::projectileAction(enemy);
@@ -389,7 +402,10 @@ void LaserTower::update()
 	laser.setPosition(lineTarget.position - Vector2f(laser.getGlobalBounds().width/2, laser.getGlobalBounds().height/2));
 
 	if(damageTimer.check(m_stats.attackSpeed))
+	{
 		currentTarget->hit(m_stats.damage);
+		checkKill(currentTarget);
+	}
 }
 
 void LaserTower::draw(RenderTarget * const target)
@@ -520,6 +536,7 @@ vector<Projectile *> ProjectilesTower::projectiles() const
 void ProjectilesTower::projectileAction(Enemy *enemy)
 {
 	enemy->hit(m_stats.damage);
+	checkKill(enemy);
 	const Vector2f size = enemy->getSize();
 
 	int maxX = size.x/2;

@@ -29,14 +29,10 @@ public:
 	Tower *selectedTower() const;
 	void setSelectedTower(Tower *selectedTower);
 
-//	ACTION_STATE getCurrentIcon(const Vector2f& pos) const;
-//	TOWER_TYPES currentTower(const Vector2f &pos) const;
 	ACTION_STATE getCurrentIcon() const;
 	TOWER_TYPES currentTower() const;
 
 	float getBottomValue() const;
-
-//	void press(const Vector2i &pos);
 
 	void setProgressMax(int progressMax);
 
@@ -146,6 +142,7 @@ private:
 
 	unsigned int currentCursorPos;
 	void updateCurrentCursor();
+	static const String endline;
 };
 
 #endif // GAMEPANEL_H

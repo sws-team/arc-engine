@@ -12,6 +12,8 @@
 
 #include <stdlib.h>
 
+const String GamePanel::endline = "\n";
+
 GamePanel::GamePanel() :
 	GameDrawable()
   ,waitBlink(false)
@@ -557,49 +559,64 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 	switch (type)
 	{
 	case BASE:
+	{
 		str = Language::Instance().translate(Language::TOWER_BASE);
+		str += endline;
+		str += Language::Instance().translate(Language::BASE_TOWER_DESCRIPTION);
+	}
 		break;
 	case POWER:
+	{
 		str = Language::Instance().translate(Language::TOWER_POWER);
+		str += endline;
+		str += Language::Instance().translate(Language::POWER_TOWER_DESCRIPTION);
+	}
 		break;
 	case ROCKET:
+	{
 		str = Language::Instance().translate(Language::TOWER_ROCKET);
+		str += endline;
+		str += Language::Instance().translate(Language::ROCKET_TOWER_DESCRIPTION);
+	}
 		break;
 	case FREEZE:
+	{
 		str = Language::Instance().translate(Language::TOWER_FREEZE);
+		str += endline;
+		str += Language::Instance().translate(Language::FREEZE_TOWER_DESCRIPTION);
+	}
 		break;
 	case LASER:
+	{
 		str = Language::Instance().translate(Language::TOWER_LASER);
+		str += endline;
+		str += Language::Instance().translate(Language::LASER_TOWER_DESCRIPTION);
+	}
 		break;
 	case IMPROVED:
+	{
 		str = Language::Instance().translate(Language::TOWER_IMPROVED);
+		str += endline;
+		str += Language::Instance().translate(Language::IMPROVED_TOWER_DESCRIPTION);
+	}
 		break;
 	}
 
-	const String endline = "\n";
 	str += endline;
+
 	const String separator = ": ";
 	if (tower != nullptr)
 		str += Language::Instance().translate(Language::LEVEL) + separator + to_string(tower->level()) + endline;
 
-	const TowerStats towerStats = TowersFactory::getTowerStats(type);
+	const TowerStats towerStats = tower == nullptr ? TowersFactory::getTowerStats(type) : tower->data();
 
-	str += Language::Instance().translate(Language::DAMAGE) + separator + GlobalVariables::to_string_with_precision(towerStats.damage, 2);
-	if (tower != nullptr)
-		str += " + " + GlobalVariables::to_string_with_precision(tower->data().damage - towerStats.damage, 2);
+
+	const float dps = towerStats.damage / (towerStats.attackSpeed * 0.001f);
+
+	str += Language::Instance().translate(Language::DAMAGE_PER_SECOND) + separator + GlobalVariables::to_string_with_precision(dps, 2);
 	str += endline;
 
-	str += Language::Instance().translate(Language::ATTACK_SPEED) + separator + GlobalVariables::to_string_with_precision(towerStats.attackSpeed, 2);
-	if (tower != nullptr)
-		str += " + " + GlobalVariables::to_string_with_precision(tower->data().attackSpeed - towerStats.attackSpeed, 2);
-	str += endline;
-
-	str += Language::Instance().translate(Language::RADIUS) + separator + to_string(towerStats.radius);
-	if (tower != nullptr)
-		str += " + " + to_string(tower->data().radius - towerStats.radius);
-	str += endline;
-
-	str += Language::Instance().translate(Language::PROJECTILE_SPEED) + separator + GlobalVariables::to_string_with_precision(towerStats.projectileSpeed, 2);
+	str += Language::Instance().translate(Language::RADIUS) + separator + GlobalVariables::to_string_with_precision(towerStats.radius, 1);
 	str += endline;
 
 	if (tower == nullptr)
@@ -614,6 +631,9 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 	}
 	else
 	{
+		str += Language::Instance().translate(Language::KILLS) + separator + to_string(tower->kills());
+		str += endline;
+
 		float cost = tower->type() == TOWER_TYPES::POWER ?
 					TowersFactory::getTowerStats(type).cost + (Engine::Instance().level()->getPowerTowersCount() - 1) * PowerTower::COST_OFFSET :
 					TowersFactory::getTowerStats(type).cost;
@@ -766,6 +786,7 @@ bool GamePanel::isTowerIconActive(TOWER_TYPES type) const
 	case IMPROVED:
 		return iconsAvaliable.isImprovedEnabled;
 	}
+	return true;
 }
 
 bool GamePanel::isAbilityIconActive(ACTION_STATE type) const
@@ -841,23 +862,47 @@ void GamePanel::updateInfo()
 			str = towerInfo(type, nullptr);
 		}
 			break;
-		case ABILITY_VENOM:
-			str = Language::Instance().translate(Language::ABILITY_VENOM);
-			break;
 		case ABILITY_BOMB:
+		{
 			str = Language::Instance().translate(Language::ABILITY_BOMB);
+			str += endline;
+			str += Language::Instance().translate(Language::BOMB_ABILITY_DESCRIPTION);
+		}
 			break;
 		case ABILITY_FREEZE_BOMB:
+		{
 			str = Language::Instance().translate(Language::ABILITY_FREEZE_BOMB);
+			str += endline;
+			str += Language::Instance().translate(Language::FREEZE_BOMB_ABILITY_DESCRIPTION);
+		}
+			break;
+		case ABILITY_VENOM:
+		{
+			str = Language::Instance().translate(Language::ABILITY_VENOM);
+			str += endline;
+			str += Language::Instance().translate(Language::VENOM_ABILITY_DESCRIPTION);
+		}
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
+		{
 			str = Language::Instance().translate(Language::ABILITY_INCREASE_TOWER_ATTACK_SPEED);
+			str += endline;
+			str += Language::Instance().translate(Language::INC_AS_ABILITY_DESCRIPTION);
+		}
 			break;
 		case ABILITY_INCREASE_TOWER_DAMAGE:
+		{
 			str = Language::Instance().translate(Language::ABILITY_INCREASE_TOWER_DAMAGE);
+			str += endline;
+			str += Language::Instance().translate(Language::INC_DMG_ABILITY_DESCRIPTION);
+		}
 			break;
 		case ABILITY_UNKNOWN:
+		{
 			str = Language::Instance().translate(Language::ABILITY_UNKNOWN);
+			str += endline;
+			str += Language::Instance().translate(Language::UNKNOWN_ABILITY_DESCRIPTION);
+		}
 			break;
 		case SELL:
 			str = Language::Instance().translate(Language::SELL);

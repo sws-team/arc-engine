@@ -69,11 +69,13 @@ public:
 	void increaseDamage(int duration, int value);
 
 	int level() const;
+	int kills() const;
 
 protected:
 	TowerStats m_stats;
 	Timer actionTimer;	
 	string m_shotSound;
+	void checkKill(Enemy *enemy);
 private:
 	TOWER_TYPES m_type;
 	int m_level;
@@ -87,6 +89,7 @@ private:
 	};
 	Ability abilityDamage;
 	Ability abilityAttackSpeed;
+	int m_kills;
 };
 
 class ProjectilesTower : public Tower
