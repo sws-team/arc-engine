@@ -34,6 +34,8 @@ const int Level::FREEZE_BOMB_ABILITY_COST = 250;
 const int Level::INC_TOWER_AS_ABILITY_COST = 200;
 const int Level::INC_TOWER_DMG_ABILITY_COST = 200;
 const float Level::BOMB_ABILITY_DAMAGE = 111;
+const int Level::BOMB_ABILITIES_SIZE = 3;
+const int Level::DIRECTION_LAYER = 3;
 
 const int Level::Shake::MAX_SHAKE_COUNT = 9;
 const int Level::Shake::MAX_SHAKE_OFFSET = 10;
@@ -49,9 +51,9 @@ Level::Level() :
   ,m_powerTowersCount(0)
 {
 	venomAbility.isActive = false;
-	venomAbility.object =  new GameObject(RESOURCES::VENOM_EFFECT, Vector2f(0,0),
-										  Vector2i(VenomAbility::VENOM_SIZE.x * GlobalVariables::Instance().tileSize().x,
-												   VenomAbility::VENOM_SIZE.y * GlobalVariables::Instance().tileSize().y), 1);
+	venomAbility.object = new GameObject(RESOURCES::VENOM_EFFECT, Vector2f(0,0),
+										 Vector2i(VenomAbility::VENOM_SIZE.x * GlobalVariables::Instance().tileSize().x,
+												  VenomAbility::VENOM_SIZE.y * GlobalVariables::Instance().tileSize().y), 1);
 
 	shake.dangerRect.setSize(Vector2f(Settings::Instance().getResolution()));
 	shake.dangerRect.setFillColor(Color(255,0,0,96));
@@ -535,7 +537,7 @@ void Level::chooseCurrent()
 
 int Level::getTileDirectionByCell(const Vector2i& cell) const
 {
-	const int id = getTileByCell(cell, 3).id;
+	const int id = getTileByCell(cell, DIRECTION_LAYER).id;
 	if (id == Map::NO_MOVE)
 		return id;
 	if(gameMap->tileProperties.find(id) != gameMap->tileProperties.end())
@@ -641,7 +643,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 				return;
 			if (energy < VENOM_ABILITY_COST)
 				return;
-			Engine::Instance().cursor()->activateAbility(VenomAbility::VENOM_SIZE.x, VenomAbility::VENOM_SIZE.y, 4, 1);
+			Engine::Instance().cursor()->activateAbility(VenomAbility::VENOM_SIZE.x,
+														 VenomAbility::VENOM_SIZE.y, 4, 1);
 			Engine::Instance().cursor()->swap();
 		}
 			break;
@@ -651,7 +654,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 				return;
 			if (energy < BOMB_ABILITY_COST)
 				return;
-			Engine::Instance().cursor()->activateAbility(3, 3, 1, 1);
+			Engine::Instance().cursor()->activateAbility(BOMB_ABILITIES_SIZE, BOMB_ABILITIES_SIZE, 1, 1);
 			Engine::Instance().cursor()->swap();
 		}
 			break;
@@ -661,7 +664,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 				return;
 			if (energy < FREEZE_BOMB_ABILITY_COST)
 				return;
-			Engine::Instance().cursor()->activateAbility(3, 3, 1, 1);
+			Engine::Instance().cursor()->activateAbility(BOMB_ABILITIES_SIZE, BOMB_ABILITIES_SIZE, 1, 1);
 			Engine::Instance().cursor()->swap();
 		}
 		break;
@@ -769,12 +772,17 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		{
 			if (energy < BOMB_ABILITY_COST)
 				return;
+			const FloatRect abilityRect = Engine::Instance().cursor()->getAbilityRect();
+			addAnimation(RESOURCES::BOMB_EXPLOSION,
+						 Vector2f(abilityRect.left, abilityRect.top),
+						 Vector2i(BOMB_ABILITIES_SIZE * GlobalVariables::CELL_SIZE, BOMB_ABILITIES_SIZE * GlobalVariables::CELL_SIZE),
+						 200, 12, 0);
 			energy -= BOMB_ABILITY_COST;
 			Engine::Instance().panel()->updatePanel();
 			for (auto it = enemies.begin(); it != enemies.end();)
 			{
 				Enemy *enemy = *it;
-				if (enemy->gameRect().intersects(Engine::Instance().cursor()->getAbilityRect()))
+				if (enemy->gameRect().intersects(abilityRect))
 				{
 					enemy->hit(BOMB_ABILITY_DAMAGE);
 					if (!enemy->isAlive())
@@ -794,10 +802,15 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		{
 			if (energy < FREEZE_BOMB_ABILITY_COST)
 				return;
+			const FloatRect abilityRect = Engine::Instance().cursor()->getAbilityRect();
+			addAnimation(RESOURCES::FREEZE_BOMB_EXPLOSION,
+						 Vector2f(abilityRect.left, abilityRect.top),
+						 Vector2i(BOMB_ABILITIES_SIZE * GlobalVariables::CELL_SIZE, BOMB_ABILITIES_SIZE * GlobalVariables::CELL_SIZE),
+						 200, 6, 0);
 			energy -= FREEZE_BOMB_ABILITY_COST;
 			Engine::Instance().panel()->updatePanel();
 			for(Enemy *enemy : enemies)
-				if (enemy->gameRect().intersects(Engine::Instance().cursor()->getAbilityRect()))
+				if (enemy->gameRect().intersects(abilityRect))
 					enemy->freeze(FREEZE_ABILITY_K, FREEZE_ABILITY_DURATION);
 		}
 			break;

@@ -167,6 +167,8 @@ private:
 	CircleShape currentTowerRadius;
 	void updateRadius();
 	unsigned int m_powerTowersCount;
+	static const int BOMB_ABILITIES_SIZE;
+	static const int DIRECTION_LAYER;
 };
 
 #endif // LEVEL_H

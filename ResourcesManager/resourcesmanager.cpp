@@ -66,7 +66,8 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::ROCKET_EXPLOSION_EFFECT, "images/Weapons/Effects/rocket_explosion.png");
 	addTexture(RESOURCES::IMPROVED_EXPLOSION_EFFECT, "images/Weapons/Effects/improved_explosion.png");
 	addTexture(RESOURCES::VENOM_EFFECT, "images/Weapons/Effects/venom.png");
-
+	addTexture(RESOURCES::BOMB_EXPLOSION, "images/Weapons/Effects/bomb_explosion.png");
+	addTexture(RESOURCES::FREEZE_BOMB_EXPLOSION, "images/Weapons/Effects/freeze_bomb_explosion.png");
 
 	addTexture(RESOURCES::ENEMY_SCORPION, "images/Enemies/scorpion.png");
 	addTexture(RESOURCES::ENEMY_CAR, "images/Enemies/car.png");
