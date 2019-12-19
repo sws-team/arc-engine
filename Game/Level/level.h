@@ -165,6 +165,7 @@ private:
 
 
 	CircleShape currentTowerRadius;
+	RectangleShape currentTowerRect;
 	void updateRadius();
 	unsigned int m_powerTowersCount;
 	static const int BOMB_ABILITIES_SIZE;

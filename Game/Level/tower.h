@@ -157,14 +157,16 @@ public:
 
 	void upgrade() override;
 
+	FloatRect getValidArea() const;
+
 	static const int COST_OFFSET;
 private:
 	static const float ENERGY_GAIN;
 	bool m_isHighlighted;
 	float m_gain;
 
-	CircleShape powerRadius;
-	void upgradePowerRadius();
+	RectangleShape powerRect;
+	void upgradePowerRect();
 };
 
 class RocketTower : public ProjectilesTower

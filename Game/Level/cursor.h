@@ -77,6 +77,7 @@ private:
 
 
 	CircleShape towerRadius;
+	RectangleShape towerRect;
 	Sprite towerSprite;
 	TOWER_TYPES towerType;
 

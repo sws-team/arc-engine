@@ -116,7 +116,10 @@ void Cursor::draw(RenderTarget * const target)
 		target->draw(abilityRect);
 		break;
 	case TOWER:
-		target->draw(towerRadius);
+		if (towerType == POWER)
+			target->draw(towerRect);
+		else
+			target->draw(towerRadius);
 		target->draw(towerSprite);
 		break;
 	}
@@ -126,14 +129,6 @@ void Cursor::update()
 {
 	GameObject::update();
 	checkBorders();
-//	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
-//	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
-//	const Vector2i newCell = Engine::Instance().camera()->posToCell(pos);
-//	if (newCell != m_cell)
-//	{
-//		m_cell = newCell;
-//		updateCell();
-//	}
 }
 
 void Cursor::activateAbility(int x, int y, int hotX, int hotY)
@@ -156,7 +151,10 @@ void Cursor::activateTower(float radius, TOWER_TYPES type)
 	abilityHotsPot.x = 0;
 	abilityHotsPot.y = 0;
 
-	towerRadius.setRadius(radius);
+	if (type == POWER)
+		towerRect.setSize(Vector2f(radius, radius));
+	else
+		towerRadius.setRadius(radius);
 
 	towerType = type;
 
@@ -186,7 +184,7 @@ void Cursor::activateTower(float radius, TOWER_TYPES type)
 	towerSprite.setTexture(ResourcesManager::Instance().getTexture(textureType));
 	towerSprite.setScale(Settings::Instance().getScaleFactor());
 	towerSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
-	towerSprite.setColor(sf::Color(255, 255, 255, 128)); // half transparent
+	towerSprite.setColor(sf::Color(255, 255, 255, 128));
 	m_state = TOWER;
 
 	updateCell();
@@ -261,6 +259,7 @@ void Cursor::updateCell()
 	{
 		const bool canCreate = Engine::Instance().level()->canAddTower(Vector2i(m_cell.x * 2, m_cell.y * 2), towerType);
 		towerRadius.setFillColor(canCreate ? Color(0, 255, 0, 100) : Color(255, 0, 0, 100));
+		towerRect.setFillColor(canCreate ? Color(0, 255, 0, 100) : Color(255, 0, 0, 100));
 	}
 		break;
 	}
@@ -275,6 +274,7 @@ void Cursor::updateCell()
 	towerRadius.setPosition(pos);
 	towerRadius.setOrigin(towerRadius.getRadius() - GlobalVariables::Instance().tileSize().x/2,
 						  towerRadius.getRadius() - GlobalVariables::Instance().tileSize().y/2);
+	towerRect.setPosition(pos - GlobalVariables::Instance().tileSize());
 
 	Engine::Instance().panel()->updateInfo();
 	//	SoundController::Instance().playOnce(CURSOR_MOVE_SOUND_FILE);
