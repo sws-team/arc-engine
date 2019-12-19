@@ -71,9 +71,8 @@ Level::Level() :
 	deadZone.setOutlineColor(Color::Red);
 	deadZone.setFillColor(Color::Transparent);
 
-	const Color highlightTowerAreaColor = Color(34, 255, 56, 128);
-	currentTowerRadius.setFillColor(highlightTowerAreaColor);
-	currentTowerRect.setFillColor(highlightTowerAreaColor);
+	currentTowerRadius.setFillColor(Cursor::TOWER_AREA_COLOR);
+	currentTowerRect.setFillColor(PowerTower::POWER_TOWER_AREA_COLOR);
 }
 
 Level::~Level()

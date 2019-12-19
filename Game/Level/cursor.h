@@ -54,6 +54,9 @@ public:
 
 	Vector2f windowCursorPos() const;
 
+	static const Color TOWER_AREA_COLOR;
+	static const Color INACTIVE_TOWER_AREA_COLOR;
+
 private:
 	Vector2i m_cell;
 	Vector2i m_maxCell;

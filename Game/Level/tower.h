@@ -160,6 +160,7 @@ public:
 	FloatRect getValidArea() const;
 
 	static const int COST_OFFSET;
+	static const Color POWER_TOWER_AREA_COLOR;
 private:
 	static const float ENERGY_GAIN;
 	bool m_isHighlighted;

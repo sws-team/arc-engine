@@ -249,15 +249,15 @@ BaseTower::BaseTower(const Vector2f &pos)
 	m_shotSound = "sounds/towers/base_shot.ogg";
 }
 
+const Color PowerTower::POWER_TOWER_AREA_COLOR = Color(23, 200, 124, 100);
+
 PowerTower::PowerTower(const Vector2f &pos)
 	: Tower(RESOURCES::TOWER_POWER, pos, STATS)
 	,m_isHighlighted(false)
 {
 	powerRect.setSize(Vector2f(STATS.radius * GlobalVariables::Instance().mapTileSize().x,
 							   STATS.radius * GlobalVariables::Instance().mapTileSize().y));
-	powerRect.setFillColor(Color(23, 200, 124, 100));
-	powerRect.setOutlineColor(Color(23, 200, 124));
-	powerRect.setOutlineThickness(3);
+	powerRect.setFillColor(POWER_TOWER_AREA_COLOR);
 	powerRect.setPosition(pos - GlobalVariables::Instance().tileSize());
 	m_gain = ENERGY_GAIN;
 }

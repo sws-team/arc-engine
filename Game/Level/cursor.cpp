@@ -10,6 +10,9 @@
 #include "ResourcesManager/resourcesmanager.h"
 #include "tower.h"
 
+const Color Cursor::TOWER_AREA_COLOR = Color(0, 255, 0, 128);
+const Color Cursor::INACTIVE_TOWER_AREA_COLOR = Color(255, 0, 0, 128);
+
 Cursor::Cursor()
 	: GameObject(RESOURCES::CURSOR_TEXTURE,
 				 Vector2f(0,0),
@@ -184,7 +187,7 @@ void Cursor::activateTower(float radius, TOWER_TYPES type)
 	towerSprite.setTexture(ResourcesManager::Instance().getTexture(textureType));
 	towerSprite.setScale(Settings::Instance().getScaleFactor());
 	towerSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
-	towerSprite.setColor(sf::Color(255, 255, 255, 128));
+	towerSprite.setColor(Color(255, 255, 255, 128));
 	m_state = TOWER;
 
 	updateCell();
@@ -258,8 +261,8 @@ void Cursor::updateCell()
 	case TOWER:
 	{
 		const bool canCreate = Engine::Instance().level()->canAddTower(Vector2i(m_cell.x * 2, m_cell.y * 2), towerType);
-		towerRadius.setFillColor(canCreate ? Color(0, 255, 0, 100) : Color(255, 0, 0, 100));
-		towerRect.setFillColor(canCreate ? Color(0, 255, 0, 100) : Color(255, 0, 0, 100));
+		towerRadius.setFillColor(canCreate ? TOWER_AREA_COLOR : INACTIVE_TOWER_AREA_COLOR);
+		towerRect.setFillColor(canCreate ? PowerTower::POWER_TOWER_AREA_COLOR : INACTIVE_TOWER_AREA_COLOR);
 	}
 		break;
 	}
@@ -272,8 +275,8 @@ void Cursor::updateCell()
 	towerSprite.setPosition(pos);
 	abilityRect.setPosition(pos);
 	towerRadius.setPosition(pos);
-	towerRadius.setOrigin(towerRadius.getRadius() - GlobalVariables::Instance().tileSize().x/2,
-						  towerRadius.getRadius() - GlobalVariables::Instance().tileSize().y/2);
+	towerRadius.setOrigin(towerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().x,
+						  towerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().y);
 	towerRect.setPosition(pos - GlobalVariables::Instance().tileSize());
 
 	Engine::Instance().panel()->updateInfo();
