@@ -424,6 +424,7 @@ void Level::clearCursor()
 {
 	m_actionState = READY;
 	Engine::Instance().cursor()->deactivate();
+	highlightPowerTowersRadius(false);
 }
 
 Level::LEVEL_STATE Level::getState() const
@@ -609,9 +610,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 				return;
 
 			const float radius = TowersFactory::getTowerStats(type).radius * GlobalVariables::Instance().mapTileSize().x;
-			Engine::Instance().cursor()->activateTower(radius, type);
-			if (type != POWER)			
-				highlightPowerTowersRadius(true);
+			Engine::Instance().cursor()->activateTower(radius, type);			
+			highlightPowerTowersRadius(type != POWER);
 			Engine::Instance().cursor()->swap();
 		}
 			break;
