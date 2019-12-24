@@ -11,7 +11,7 @@ public:
     Vector2i getResolution() const;
     void setResolution(const Vector2i &value);
 
-	constexpr static float GAME_SCALE = 0.85f;
+	constexpr static float GAME_SCALE = 0.8f;
 
 	float getSoundLevel() const;
 	void setSoundLevel(float value);

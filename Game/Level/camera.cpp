@@ -18,8 +18,8 @@ void Camera::init()
 
 	resetZoom();
 	view->zoom(Settings::GAME_SCALE);
-	view->setCenter(Vector2f(gameRect.width/2,
-							 gameRect.height/2));
+	view->setCenter(Vector2f(gameRect.width * Settings::GAME_SCALE/2,
+							 gameRect.height * Settings::GAME_SCALE/2));
 
 	minimap->setCenter(Vector2f(150 * Settings::Instance().getScaleFactor().x,
 								150 * Settings::Instance().getScaleFactor().y));
@@ -125,7 +125,7 @@ FloatRect Camera::viewRect() const
 
 int Camera::viewTopCell() const
 {
-	return static_cast<int>((view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().tileSize().y);
+	return static_cast<int>(ceil((view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().tileSize().y));
 }
 
 int Camera::viewLeftCell() const
@@ -148,28 +148,6 @@ Vector2i Camera::viewCenter() const
 	return Vector2i(static_cast<int>(view->getCenter().x/GlobalVariables::Instance().tileSize().x),
 					static_cast<int>(view->getCenter().y/GlobalVariables::Instance().tileSize().y));
 }
-
-//void Camera::centerOnCursor(const Vector2i &cell)
-//{
-//	view->setCenter(cellToPosMap(cell));
-//	m_detached = false;
-//}
-
-//Vector2i Camera::currentCenterCell() const
-//{
-//	return posToCellMap(view->getCenter());
-//}
-
-//Vector2i Camera::currentViewCells() const
-//{
-//	return Vector2i(view->getSize().x / GlobalVariables::Instance().mapTileSize().x,
-//					view->getSize().y / GlobalVariables::Instance().mapTileSize().y);
-//}
-
-//int Camera::topCell() const
-//{
-//	return static_cast<int>( (view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().mapTileSize().y );
-//}
 
 Vector2i Camera::posToCellMap(const Vector2f& pos) const
 {

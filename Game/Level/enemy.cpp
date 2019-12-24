@@ -3,6 +3,12 @@
 #include "map.h"
 #include "lifebar.h"
 #include "settings.h"
+#include "Engine/engine.h"
+#include "Game/Level/level.h"
+#include "Game/Level/tower.h"
+#include "camera.h"
+#include "Game/Level/projectile.h"
+#include "Game/Collisions/collisions.h"
 
 Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const Vector2f &startPos,
@@ -17,6 +23,9 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 	,spriteDirection(DEFAULT_DOWN)
 	,isFreezed(false)
 	,startFreeze(false)
+	,ability(nullptr)
+	,m_stopped(false)
+	,m_visible(true)
 {
 
 	m_size.x = GlobalVariables::MAP_CELL_SIZE * cellSize.x;
@@ -42,9 +51,19 @@ Enemy::~Enemy()
 	delete lifeBar;
 }
 
+void Enemy::setAbility(EnemyAbility *ability)
+{
+	this->ability = ability;
+}
+
 EnemyStats Enemy::getData() const
 {
 	return m_data;
+}
+
+EnemyStats Enemy::getPureStats() const
+{
+	return m_stats;
 }
 
 bool Enemy::moveStep()
@@ -183,9 +202,14 @@ void Enemy::update()
 
 void Enemy::draw(RenderTarget * const target)
 {
-	GameObject::draw(target);
+	if (!m_visible)
+		return;
 
+	GameObject::draw(target);
 	drawLifeBar(target);
+
+	if (ability != nullptr)
+		ability->draw(target);
 }
 
 void Enemy::hit(float damage)
@@ -196,6 +220,12 @@ void Enemy::hit(float damage)
 bool Enemy::isAlive() const
 {
 	return m_data.health > 0.f;
+}
+
+void Enemy::useAbility()
+{
+	if (ability != nullptr)
+		ability->update();
 }
 
 void Enemy::freeze(float k, int duration)
@@ -214,6 +244,29 @@ void Enemy::freeze(float k, int duration)
 	isFreezed = true;
 }
 
+void Enemy::heal(float health)
+{
+	m_data.health += health;
+	if (m_data.health > m_stats.health)
+		m_data.health = m_stats.health;
+	Engine::Instance().level()->addAnimation(RESOURCES::HEAL_EFFECT,
+											 this->getCenter() - Vector2f(GlobalVariables::MAP_CELL_SIZE/2,
+																		  GlobalVariables::MAP_CELL_SIZE/2),
+											 Vector2i(GlobalVariables::MAP_CELL_SIZE,
+													  GlobalVariables::MAP_CELL_SIZE),
+											 50, 8, 0);
+}
+
+void Enemy::protect(float shell)
+{
+	m_data.reflection += shell;
+	if(m_data.reflection >= 0.9f)
+		m_data.reflection = 0.9f;
+	Engine::Instance().level()->addAnimation(RESOURCES::SHELL_EFFECT, this->pos(),
+											 Vector2i(GlobalVariables::MAP_CELL_SIZE, GlobalVariables::MAP_CELL_SIZE),
+											 50, 4, 0);
+}
+
 void Enemy::drawLifeBar(RenderTarget *target)
 {
 	if (m_data.health <= 0)
@@ -230,6 +283,26 @@ void Enemy::moveEnemy(const Vector2f &d)
 {
 	m_pos += d;
 	update();
+}
+
+bool Enemy::isVisible() const
+{
+	return m_visible;
+}
+
+void Enemy::setVisible(bool visible)
+{
+	m_visible = visible;
+}
+
+bool Enemy::isStopped() const
+{
+	return m_stopped;
+}
+
+void Enemy::setStopped(bool stopped)
+{
+	m_stopped = stopped;
 }
 
 Vector2f Enemy::enemyPos() const
@@ -253,6 +326,7 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 	stats.health = 0.f;
 	stats.damage = 0.f;
 	stats.reflection = 0.f;
+	EnemyAbility *ability = nullptr;
 	RESOURCES::TEXTURE_TYPE texture_id;
 	switch (type)
 	{
@@ -267,7 +341,7 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 	case SMALL_MEDIUM:
 		texture_id = RESOURCES::ENEMY_CAR;
 		stats.health = 150.f;
-		stats.speed = 7.5f;
+		stats.speed = 7.4f;
 		stats.damage = 10.f;
 		size.x = 1;
 		size.y = 1;
@@ -295,6 +369,7 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 		stats.damage = 30.f;
 		size.x = 2;
 		size.y = 2;
+		ability = new ShutdownTowerAbility();
 		break;
 	case MID_FAST:
 		texture_id = RESOURCES::ENEMY_HELICOPTER;
@@ -328,12 +403,60 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 		size.x = 4;
 		size.y = 4;
 		break;
+	case REPAIR_ENEMY:
+		texture_id = RESOURCES::ENEMY_REPAIR;
+		stats.health = 200.f;
+		stats.speed = 8.f;
+		stats.damage = 15.f;
+		size.x = 2;
+		size.y = 2;
+		ability = new HealNearAbility();
+		break;
+	case SHELL_ENEMY:
+		texture_id = RESOURCES::ENEMY_SHELL;
+		stats.health = 200.f;
+		stats.speed = 8.f;
+		stats.damage = 15.f;
+		size.x = 2;
+		size.y = 2;
+		ability = new ShellNearAbility();
+		break;
+	case TELEPORT_ENEMY:
+		texture_id = RESOURCES::ENEMY_TELEPORT;
+		stats.health = 200.f;
+		stats.speed = 12.5f;
+		stats.damage = 15.f;
+		size.x = 2;
+		size.y = 2;
+		ability = new TeleportAbility();
+		break;
+	case SELFHEAL_ENEMY:
+		texture_id = RESOURCES::ENEMY_CAR;
+		stats.health = 250.f;
+		stats.speed = 9.f;
+		stats.damage = 10.f;
+		size.x = 1;
+		size.y = 1;
+		ability = new SelfHealAbility();
+		break;
+	case DOWN_TOWER_ENEMY:
+		texture_id = RESOURCES::ENEMY_DOWN_TOWER;
+		stats.health = 250.f;
+		stats.speed = 10.f;
+		stats.damage = 10.f;
+		size.x = 1;
+		size.y = 1;
+		ability = new DownTowerAbility();
+		break;
 	default:
 		break;
 	}
 	stats.health *= 1.2f;
 	stats.speed *= 3.f;
 	Enemy *enemy = new Enemy(texture_id, startPos, stats, size);
+	enemy->setAbility(ability);
+	if (ability != nullptr)
+		ability->setOwner(enemy);
 	return enemy;
 }
 
@@ -344,41 +467,29 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 	{
 	case 0:
 	{
-		addEnemiesByType(SMALL_SLOW, 100, &spawnEnemies);
-		addEnemiesByType(SMALL_MEDIUM, 40, &spawnEnemies);
-		addEnemiesByType(SMALL_FAST, 10, &spawnEnemies);
-		addEnemiesByType(MID_SLOW, 5, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 2, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 1, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 0, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 0, &spawnEnemies);
-		addEnemiesByType(BIG_FAST, 0, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 150, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 100, &spawnEnemies);
+		addEnemiesByType(SMALL_FAST, 25, &spawnEnemies);
 	}
 		break;
 	case 1:
 	{
 		addEnemiesByType(SMALL_SLOW, 150, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 100, &spawnEnemies);
-		addEnemiesByType(SMALL_FAST, 25, &spawnEnemies);
+		addEnemiesByType(SMALL_FAST, 25, &spawnEnemies);		
 		addEnemiesByType(MID_SLOW, 10, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 7, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 3, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 2, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 1, &spawnEnemies);
-		addEnemiesByType(BIG_FAST, 0, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 5, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 2, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 1, &spawnEnemies);
 	}
 		break;
 	case 2:
 	{
-		addEnemiesByType(SMALL_SLOW, 250, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 300, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 150, &spawnEnemies);
-		addEnemiesByType(SMALL_FAST, 50, &spawnEnemies);
-		addEnemiesByType(MID_SLOW, 30, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 20, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 10, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 5, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 3, &spawnEnemies);
-		addEnemiesByType(BIG_FAST, 2, &spawnEnemies);
+		addEnemiesByType(SMALL_FAST, 25, &spawnEnemies);
+		addEnemiesByType(REPAIR_ENEMY, 5, &spawnEnemies);
+		addEnemiesByType(MID_SLOW, 50, &spawnEnemies);
 	}
 		break;
 	case 3:
@@ -386,17 +497,15 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		addEnemiesByType(SMALL_SLOW, 300, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 175, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 75, &spawnEnemies);
+		addEnemiesByType(REPAIR_ENEMY, 5, &spawnEnemies);
+		addEnemiesByType(SHELL_ENEMY, 5, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 50, &spawnEnemies);
 		addEnemiesByType(MID_MEDIUM, 30, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 15, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 10, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 5, &spawnEnemies);
-		addEnemiesByType(BIG_FAST, 3, &spawnEnemies);
 	}
 		break;
 	case 4:
 	{
-		addEnemiesByType(SMALL_SLOW, 300, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 400, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 200, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 100, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 75, &spawnEnemies);
@@ -409,7 +518,7 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 5:
 	{
-		addEnemiesByType(SMALL_SLOW, 300, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 500, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 300, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 125, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 100, &spawnEnemies);
@@ -422,7 +531,7 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 6:
 	{
-		addEnemiesByType(SMALL_SLOW, 100, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 600, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 300, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 150, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 150, &spawnEnemies);
@@ -435,7 +544,7 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 7:
 	{
-		addEnemiesByType(SMALL_SLOW, 50, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 700, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 150, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 100, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 300, &spawnEnemies);
@@ -448,7 +557,7 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 8:
 	{
-		addEnemiesByType(SMALL_SLOW, 25, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 800, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 100, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 50, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 300, &spawnEnemies);
@@ -461,7 +570,7 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 9:
 	{
-		addEnemiesByType(SMALL_SLOW, 10, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 900, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 50, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 25, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 350, &spawnEnemies);
@@ -474,7 +583,7 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 10:
 	{
-		addEnemiesByType(SMALL_SLOW, 0, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 1000, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 25, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 10, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 450, &spawnEnemies);
@@ -487,7 +596,7 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 11:
 	{
-		addEnemiesByType(SMALL_SLOW, 0, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 1000, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 0, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 0, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 200, &spawnEnemies);
@@ -500,7 +609,7 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 12:
 	{
-		addEnemiesByType(SMALL_SLOW, 0, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 1000, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 0, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 0, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 150, &spawnEnemies);
@@ -513,7 +622,7 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 13:
 	{
-		addEnemiesByType(SMALL_SLOW, 0, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 1000, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 0, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 0, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 100, &spawnEnemies);
@@ -526,7 +635,7 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 14:
 	{
-		addEnemiesByType(SMALL_SLOW, 0, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 1000, &spawnEnemies);
 		addEnemiesByType(SMALL_MEDIUM, 0, &spawnEnemies);
 		addEnemiesByType(SMALL_FAST, 0, &spawnEnemies);
 		addEnemiesByType(MID_SLOW, 0, &spawnEnemies);
@@ -539,15 +648,15 @@ vector<ENEMY_TYPES> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 128:
 	{
-		addEnemiesByType(SMALL_SLOW, 100, &spawnEnemies);
-		addEnemiesByType(SMALL_MEDIUM, 40, &spawnEnemies);
-		addEnemiesByType(SMALL_FAST, 10, &spawnEnemies);
-		addEnemiesByType(MID_SLOW, 5, &spawnEnemies);
-		addEnemiesByType(MID_MEDIUM, 2, &spawnEnemies);
-		addEnemiesByType(MID_FAST, 1, &spawnEnemies);
-		addEnemiesByType(BIG_SLOW, 0, &spawnEnemies);
-		addEnemiesByType(BIG_MEDIUM, 0, &spawnEnemies);
-		addEnemiesByType(BIG_FAST, 0, &spawnEnemies);
+		addEnemiesByType(SMALL_SLOW, 1000, &spawnEnemies);
+		addEnemiesByType(SMALL_MEDIUM, 1000, &spawnEnemies);
+		addEnemiesByType(SMALL_FAST, 1000, &spawnEnemies);
+		addEnemiesByType(MID_SLOW, 500, &spawnEnemies);
+		addEnemiesByType(MID_MEDIUM, 500, &spawnEnemies);
+		addEnemiesByType(MID_FAST, 500, &spawnEnemies);
+		addEnemiesByType(BIG_SLOW, 250, &spawnEnemies);
+		addEnemiesByType(BIG_MEDIUM, 250, &spawnEnemies);
+		addEnemiesByType(BIG_FAST, 250, &spawnEnemies);
 	}
 		break;
 	default:
@@ -560,4 +669,328 @@ void EnemiesFactory::addEnemiesByType(const ENEMY_TYPES type, int count, vector<
 {
 	for (int i = 0; i < count; ++i)
 		spawnEnemies->push_back(type);
+}
+
+EnemyAbility::EnemyAbility(float msec)
+	: GameDrawable()
+	,m_interval(msec)
+{
+	const int offset = static_cast<int>(m_interval * 0.2f);
+	m_abilityInterval = m_interval + rand() % offset - offset/2 ;
+}
+
+void EnemyAbility::draw(RenderTarget * const target)
+{
+
+}
+
+void EnemyAbility::update()
+{
+	if (abilityTimer.check(m_interval))
+		use();
+}
+
+void EnemyAbility::setOwner(Enemy *owner)
+{
+	this->owner = owner;
+}
+
+AreaAbility::AreaAbility(float msec)
+	: EnemyAbility(msec)
+{
+	const int cells = 3 + rand() % 5;
+	area = cells * GlobalVariables::Instance().mapTileSize().x;
+	m_interval = m_abilityInterval;
+}
+
+bool AreaAbility::inArea(Enemy *enemy) const
+{
+	const Vector2f center = owner->enemyCenter();
+	const Vector2f enemyCenter = enemy->enemyCenter();
+	if (center.x < enemyCenter.x  + area &&
+			center.x > enemyCenter.x - area &&
+			center.y < enemyCenter.y  + area &&
+			center.y > enemyCenter.y - area)
+		return true;
+	return false;
+}
+
+HealNearAbility::HealNearAbility()
+	: AreaAbility(HEAL_INTERVAL)
+{
+
+}
+
+void HealNearAbility::use()
+{
+	const vector<Enemy*> enemies = Engine::Instance().level()->getAllEnemies();
+	for(Enemy *enemy : enemies)
+	{
+		if (enemy == owner)
+			continue;
+		if (inArea(enemy))
+			enemy->heal(enemy->getPureStats().health * 0.1f);
+	}
+}
+
+ShellNearAbility::ShellNearAbility()
+	: AreaAbility(SHELL_INTERVAL)
+{
+
+}
+
+void ShellNearAbility::use()
+{
+	const vector<Enemy*> enemies = Engine::Instance().level()->getAllEnemies();
+	for(Enemy *enemy : enemies)
+	{
+		if (inArea(enemy))
+			enemy->protect(0.1f);
+	}
+}
+
+SelfHealAbility::SelfHealAbility()
+	: EnemyAbility(SELF_HEAL_INTERVAL)
+{
+
+}
+
+void SelfHealAbility::use()
+{
+	owner->heal(owner->getPureStats().health * 0.1f);
+}
+
+TeleportAbility::TeleportAbility()
+	: EnemyAbility(TELEPORT_INTERVAL)
+	,m_state(READY)
+{
+
+}
+
+void TeleportAbility::use()
+{
+	switch (m_state)
+	{
+	case READY:
+	{
+		owner->setStopped(true);
+		owner->setVisible(false);
+		Engine::Instance().level()->addAnimation(RESOURCES::ENEMY_TELEPORT,
+												 owner->pos(),
+												 Vector2i(GlobalVariables::CELL_SIZE,
+														  GlobalVariables::CELL_SIZE),
+												 200, 4, TELEPORT_DISAPPEAR_ROW);
+		m_state = DISAPPEAR;
+		m_interval = 250;
+	}
+		break;
+	case DISAPPEAR:
+	{
+		for (int i = 0; i < 6; ++i)
+		{
+			if (Engine::Instance().level()->getEndRect().contains(owner->enemyPos()))
+				continue;
+			while(!owner->moveStep())
+			{
+
+			}
+			const Vector2i cell = Engine::Instance().camera()->posToCellMap(owner->enemyPos());
+			const int direction = Engine::Instance().level()->getTileDirectionByCell(cell);
+			owner->moveNext(direction);
+		}
+		m_state = APPEAR;
+		m_interval = 500;
+	}
+		break;
+	case APPEAR:
+	{
+		Engine::Instance().level()->addAnimation(RESOURCES::ENEMY_TELEPORT,
+												 owner->pos(),
+												 Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE),
+												 200, 4, TELEPORT_APPEAR_ROW);
+		m_state = FINISH;
+		m_interval = 200 * 4;
+	}
+		break;
+	case FINISH:
+	{
+		owner->setVisible(true);
+		owner->setStopped(false);
+		m_state = READY;
+		m_interval = m_abilityInterval;
+	}
+		break;
+	default:
+		break;
+	}
+}
+
+
+
+TowerEffectAbility::TowerEffectAbility()
+	: EnemyAbility(SHUTDOWN_INTERVAL)
+	,targetTower(nullptr)
+	,m_state(READY)
+	,projectile(nullptr)
+{
+
+}
+
+void TowerEffectAbility::draw(RenderTarget * const target)
+{
+	if (projectile != nullptr)
+		projectile->draw(target);
+}
+
+void TowerEffectAbility::update()
+{
+	EnemyAbility::update();
+	if (projectile != nullptr)
+		projectile->update();
+}
+
+void TowerEffectAbility::use()
+{
+	switch (m_state)
+	{
+	case READY:
+	{
+		owner->setStopped(true);
+		Engine::Instance().level()->addAnimation(info.enemyTextureId, owner->pos(),
+												 info.animationSize,
+												 200, 4, 1);
+		m_interval = 800;
+		m_state = SHOOT;
+	}
+		break;
+	case SHOOT:
+	{
+		owner->row = 3;
+		owner->frameCount = 1;
+
+		Tower *target = nullptr;
+		const vector<Tower*> towers = Engine::Instance().level()->getAllTowers();
+		float weightX = INT_MAX;
+		float weightY = INT_MAX;
+		for(Tower* tower : towers)
+		{
+			if (tower->type() == POWER)
+				continue;
+			if (!tower->isActive())
+				continue;
+			if (tower->isDowngraded())
+				continue;
+
+			const float currentWeightX = fabs(tower->getCenter().x - owner->getCenter().x);
+			const float currentWeightY = fabs(tower->getCenter().y - owner->getCenter().y);
+			if (currentWeightX < weightX && currentWeightY < weightY)
+				target = tower;
+		}
+		if (target == nullptr)
+		{
+			getBack();
+			return;
+		}
+		const Vector2f aPos = owner->enemyCenter();
+		const float a = aPos.x - target->getCenter().x;
+		const float b = aPos.y - target->getCenter().y;
+		const float tg = ( b / a );
+		float angle = atanf(tg) * 180 / M_PI;
+		if (a < 0)
+			angle += 180;
+		else if (b < 0)
+			angle += 360;
+		angle -= 180;
+
+		projectile = new GameObject(info.pojectileTextureId, aPos, info.projectileSize, 1);
+		projectile->sprite.setRotation(angle);
+		m_angle = angle;
+		targetTower = target;
+
+		m_interval = 20;
+		m_state = MOVE;
+	}
+		break;
+	case MOVE:
+	{
+		const float projectleSpeed = 5;
+		if (moveTimer.check(Projectile::PROJECTILE_GAME_SPEED))
+		{
+			const float x1 = owner->pos().x;
+			const float y1 = owner->pos().y;
+
+			const float y2 = y1 + projectleSpeed * sinf(m_angle * M_PI/180);
+			const float x2 = x1 + projectleSpeed * cosf(m_angle * M_PI/180);
+
+			projectile->move(x2-x1, y2-y1);
+		}
+		if (Collision::PixelPerfectTest(targetTower->getSprite(), projectile->getSprite()))
+		{
+			delete projectile;
+			projectile = nullptr;
+			getBack();
+			effect(true);
+		}
+	}
+		break;
+	case WAIT:
+	{
+		owner->setStopped(false);
+		m_state = FINISHED;
+		m_interval = info.duration;
+	}
+		break;
+	case FINISHED:
+	{
+		effect(false);
+		m_state = READY;
+		m_interval = m_abilityInterval;
+	}
+		break;
+	default:
+		break;
+	}
+}
+
+void TowerEffectAbility::getBack()
+{
+	owner->row = 0;
+	owner->frameCount = 4;
+	owner->update();
+	Engine::Instance().level()->addAnimation(info.enemyTextureId, owner->pos(),
+											 info.animationSize,
+											 200, 4, 2);
+	m_interval = 200 * 4;
+	m_state = WAIT;
+}
+
+
+ShutdownTowerAbility::ShutdownTowerAbility()
+{
+	info.enemyTextureId = RESOURCES::ENEMY_SPIDER;
+	info.animationSize = Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE);
+	info.pojectileTextureId = RESOURCES::WEB;
+	info.projectileSize = Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE);
+	info.duration = TOWER_DISABLED_DURATION;
+}
+
+void ShutdownTowerAbility::effect(bool isActive)
+{
+	if (targetTower != nullptr)
+		targetTower->setActive(!isActive);
+}
+
+DownTowerAbility::DownTowerAbility()
+{
+	info.enemyTextureId = RESOURCES::ENEMY_DOWN_TOWER;
+	info.animationSize = Vector2i(GlobalVariables::MAP_CELL_SIZE, GlobalVariables::MAP_CELL_SIZE);
+	info.pojectileTextureId = RESOURCES::DOWNGRADE_PROJECTILE;
+	info.projectileSize = Vector2i(200, 16);
+	info.duration = TOWER_DOWNGRADED_DURATION;
+}
+
+void DownTowerAbility::effect(bool isActive)
+{
+	if (targetTower != nullptr)
+		targetTower->setDowngrade(isActive);
 }

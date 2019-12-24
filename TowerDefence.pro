@@ -30,6 +30,7 @@ HEADERS += \
     stdheader.h \
     controller.h \
     controlsettings.h \
+    tile.h \
     timer.h \
     statewindow.h \
     gamewindow.h

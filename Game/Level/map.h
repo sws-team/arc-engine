@@ -2,27 +2,7 @@
 #define MAP_H
 
 #include "stdheader.h"
-
-struct Tile
-{
-	int id;
-	Vector2i cell;
-	Sprite sprite;
-
-	struct TileProperties
-	{
-		TileProperties()
-			: direction(0)
-			,alternate_direction1(-1)
-			,alternate_direction2(-1)
-		{
-
-		}
-		int direction;
-		int alternate_direction1;
-		int alternate_direction2;
-	};
-};
+#include "tile.h"
 
 struct Layer
 {
@@ -62,8 +42,7 @@ public:
 
     string name;
 
-    map<int, Tile::TileProperties> tileProperties;
-	Texture tilesetImage;
+
 	vector<Layer> layers;
 
     Texture icon;

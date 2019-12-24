@@ -15,6 +15,7 @@ class Instructions;
 #include "steam_api.h"
 #endif
 #include "Game/achievements.h"
+#include "tile.h"
 
 class Engine
 {
@@ -43,7 +44,6 @@ public:
 	Camera *camera() const;
 	Cursor *cursor() const;
 
-	bool loadMap(const String &fileName);
 	void loadMaps(const String &path);
 
 	void setWindow(RenderWindow *window);
@@ -85,6 +85,8 @@ public:
 	void checkAchievments();
 	bool unlockAchievment(GameAchievements::AchievmentsTypes type);
 
+	map<int, Tile::TileProperties> getTileProperties() const;
+
 private:
 	Engine();
 	Engine(const Engine& root) = delete;
@@ -109,6 +111,12 @@ private:
 	STEAM_CALLBACK(Engine, OnGameOverlayActivated, GameOverlayActivated_t);
 #endif
 	Map *findMapByNumber(unsigned int num);
+	bool loadMap(const String &fileName);
+	bool loadTiles(const String& fileName);
+
+
+	map<int, Tile::TileProperties> tileProperties;
+	Texture tilesetImage;
 };
 
 #endif // ENGINE_H

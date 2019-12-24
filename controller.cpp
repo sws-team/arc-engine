@@ -49,6 +49,9 @@ void Controller::keyboardKeyEvent(const bool timeoutKey, const bool timeoutMove)
 		if (Keyboard::isKeyPressed(Keyboard::Space))
 			Engine::Instance().level()->ready();
 
+		if (Keyboard::isKeyPressed(Keyboard::Z))
+			Engine::Instance().level()->test();
+
 		if (Mouse::isButtonPressed(Mouse::Left))
 		{
 			const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());

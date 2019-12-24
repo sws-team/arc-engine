@@ -141,10 +141,10 @@ GamePanel::GamePanel() :
 
 
 	startSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::START_TEXTURE));
-	startSprite.setScale(scaleFactor);
+	startSprite.setScale(Settings::Instance().getScaleFactor());
 
 	endSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::END_TEXTURE));
-	endSprite.setScale(scaleFactor);
+	endSprite.setScale(Settings::Instance().getScaleFactor());
 
 	m_bottomValue = 0;
 	progress->init(Vector2i(Settings::Instance().getResolution().x * PROGRESS_WIDTH,
@@ -609,8 +609,6 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 		str += Language::Instance().translate(Language::LEVEL) + separator + to_string(tower->level()) + endline;
 
 	const TowerStats towerStats = tower == nullptr ? TowersFactory::getTowerStats(type) : tower->data();
-
-
 	const float dps = towerStats.damage / (towerStats.attackSpeed * 0.001f);
 
 	str += Language::Instance().translate(Language::DAMAGE_PER_SECOND) + separator + GlobalVariables::to_string_with_precision(dps, 2);
@@ -715,7 +713,7 @@ void GamePanel::updateStartEndPos(const Vector2f &startPos, const Vector2f& endP
 	if (endPos.x <= x0 || endPos.x >= x1)
 	{
 		//x
-		if (endPos.x > centerX)
+		if (endPos.x < centerX)
 		{
 			//-x
 			resultEndPos.x -= GlobalVariables::Instance().mapTileSize().x + GlobalVariables::Instance().tileSize().x;
@@ -723,9 +721,9 @@ void GamePanel::updateStartEndPos(const Vector2f &startPos, const Vector2f& endP
 		else
 		{
 			//+x
-			resultEndPos.x += GlobalVariables::Instance().tileSize().x;
+			resultEndPos.x += GlobalVariables::Instance().mapTileSize().x;
 		}
-		resultEndPos.y += GlobalVariables::Instance().mapTileSize().y;
+		resultEndPos.y -= GlobalVariables::Instance().mapTileSize().y + GlobalVariables::Instance().tileSize().y;
 	}
 	else if (endPos.y <= y0 || endPos.y >= y1)
 	{

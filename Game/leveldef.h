@@ -33,6 +33,13 @@ enum ENEMY_TYPES
 	BIG_SLOW,//aircarrier
 	BIG_MEDIUM,//big tank
 	BIG_FAST,//plane
+
+	//with abilities
+	REPAIR_ENEMY,
+	SHELL_ENEMY,
+	TELEPORT_ENEMY,
+	SELFHEAL_ENEMY,
+	DOWN_TOWER_ENEMY,
 };
 
 enum TOWER_TYPES

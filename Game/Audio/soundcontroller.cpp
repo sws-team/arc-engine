@@ -42,6 +42,7 @@ void SoundController::endBackgroundSound()
 
 void SoundController::playOnce(const string &fileName)
 {
+	return;
 	auto it = sounds.find(fileName);
 	if (it == sounds.end())
 	{

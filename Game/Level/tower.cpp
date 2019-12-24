@@ -18,6 +18,8 @@ Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, con
 	,m_stats(stats)
 	,m_level(1)
 	,m_kills(0)
+	,m_isActive(true)
+	,m_downgraded(false)
 {
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
 	abilityDamage.isActive = false;
@@ -135,9 +137,39 @@ void Tower::checkKill(Enemy *enemy)
 		m_kills++;
 }
 
+bool Tower::isActive() const
+{
+	return m_isActive;
+}
+
+void Tower::setDowngrade(bool isDowngrade)
+{
+	m_downgraded = isDowngrade;
+	if (isDowngrade)
+		Engine::Instance().level()->addAnimation(RESOURCES::DOWN_EFFECT, this->pos(),
+											 Vector2i(GlobalVariables::CELL_SIZE,
+													  GlobalVariables::CELL_SIZE),
+											 DownTowerAbility::TOWER_DOWNGRADED_DURATION/4, 4, 0);
+}
+
+bool Tower::isDowngraded() const
+{
+	return m_downgraded;
+}
+
+void Tower::setActive(bool isActive)
+{
+	m_isActive = isActive;
+	if (!isActive)
+		Engine::Instance().level()->addAnimation(RESOURCES::WEB, this->pos(),
+											 Vector2i(GlobalVariables::CELL_SIZE,
+													  GlobalVariables::CELL_SIZE),
+											 ShutdownTowerAbility::TOWER_DISABLED_DURATION/4, 4, 0);
+}
+
 int Tower::kills() const
 {
-	return m_kills;
+    return m_kills;
 }
 
 TowerStats Tower::data() const
@@ -424,7 +456,8 @@ void LaserTower::update()
 
 	if(damageTimer.check(m_stats.attackSpeed))
 	{
-		currentTarget->hit(m_stats.damage);
+		const float actualDamage = isDowngraded() ? m_stats.damage * DownTowerAbility::DOWNGRADE_VALUE : m_stats.damage;
+		currentTarget->hit(actualDamage);
 		checkKill(currentTarget);
 	}
 }
@@ -556,7 +589,8 @@ vector<Projectile *> ProjectilesTower::projectiles() const
 
 void ProjectilesTower::projectileAction(Enemy *enemy)
 {
-	enemy->hit(m_stats.damage);
+	const float actualDamage = isDowngraded() ? m_stats.damage * DownTowerAbility::DOWNGRADE_VALUE : m_stats.damage;
+	enemy->hit(actualDamage);
 	checkKill(enemy);
 	const Vector2f size = enemy->getSize();
 

@@ -73,6 +73,9 @@ Level::Level() :
 
 	currentTowerRadius.setFillColor(Cursor::TOWER_AREA_COLOR);
 	currentTowerRect.setFillColor(PowerTower::POWER_TOWER_AREA_COLOR);
+
+	spawnRect.setFillColor(Color::Magenta);
+	endRect.setFillColor(Color::Magenta);
 }
 
 Level::~Level()
@@ -85,6 +88,8 @@ void Level::draw(RenderTarget *const target)
 	target->setView(*Engine::Instance().camera()->getView());
 	drawLevel(target);
 	target->draw(deadZone);
+	target->draw(spawnRect);
+	target->draw(endRect);
 	Engine::Instance().panel()->draw(target);
 	Engine::Instance().instructions()->draw(target);
 }
@@ -98,6 +103,9 @@ void Level::update()
 	{
 		for(Tower* tower : towers)
 		{
+			if (!tower->isActive())
+				continue;
+
 			if (tower->type() == POWER)
 			{
 				PowerTower *powerTower = static_cast<PowerTower*>(tower);
@@ -145,6 +153,8 @@ void Level::update()
 			energy += REGEN_ENERGY_VALUE;
 
 		checkRespawn();
+		for(Enemy* enemy : enemies)
+			enemy->useAbility();
 		calculateCollisions();
 		checkDeadZone();
 		checkEnd();
@@ -173,10 +183,20 @@ void Level::startMission(const unsigned int n)
 	gameMap = Engine::Instance().getMap(n);
 	Engine::Instance().cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
 	Engine::Instance().panel()->initMission(n);
-	Engine::Instance().panel()->updateStartEndPos(gameMap->spawnPos, Vector2f(gameMap->endRect.left, gameMap->endRect.top));
+	Engine::Instance().panel()->updateStartEndPos(gameMap->spawnPos,
+												  Vector2f(gameMap->endRect.left, gameMap->endRect.top));
 	if (n != 0)
 		Engine::Instance().instructions()->skip();
 	Engine::Instance().cursor()->initCell();
+
+	spawnRect.setPosition(gameMap->spawnPos.x * Settings::Instance().getScaleFactor().x,
+						  gameMap->spawnPos.y * Settings::Instance().getScaleFactor().y);
+	spawnRect.setSize(GlobalVariables::Instance().mapTileSize());
+
+	endRect.setPosition(gameMap->endRect.left * Settings::Instance().getScaleFactor().x,
+						gameMap->endRect.top * Settings::Instance().getScaleFactor().y);
+	endRect.setSize(Vector2f(gameMap->endRect.width * Settings::Instance().getScaleFactor().x,
+							 gameMap->endRect.height* Settings::Instance().getScaleFactor().y));
 }
 
 void Level::clear()
@@ -243,14 +263,11 @@ void Level::checkDeadZone()
 
 void Level::checkEnd()
 {
+	const FloatRect endFRect = getEndRect();
 	for (auto it = enemies.begin(); it != enemies.end();)
 	{
 		Enemy *enemy = *it;
-		const FloatRect endRect = FloatRect(gameMap->endRect.left * Settings::Instance().getScaleFactor().x,
-											gameMap->endRect.top * Settings::Instance().getScaleFactor().y,
-											gameMap->endRect.width * Settings::Instance().getScaleFactor().x,
-											gameMap->endRect.height * Settings::Instance().getScaleFactor().y);
-		if (endRect.contains(enemy->enemyPos()))
+		if (endFRect.contains(enemy->enemyPos()))
 		{
 			hitPlayer(enemy->getData().damage);
 			delete enemy;
@@ -278,6 +295,7 @@ void Level::checkAlive()
 			energy++;
 			Engine::Instance().panel()->updatePanel();
 			it = enemies.erase(it);
+			enemy = nullptr;
 		}
 		else
 			++it;
@@ -326,15 +344,14 @@ void Level::spawnEnemy()
 
 void Level::checkEnemyMove()
 {
-	const FloatRect endRect = FloatRect(gameMap->endRect.left * Settings::Instance().getScaleFactor().x,
-										gameMap->endRect.top * Settings::Instance().getScaleFactor().y,
-										gameMap->endRect.width * Settings::Instance().getScaleFactor().x,
-										gameMap->endRect.height * Settings::Instance().getScaleFactor().y);
+	const FloatRect endFRect = getEndRect();
 	for(Enemy* enemy : enemies)
 	{
+		if (enemy->isStopped())
+			continue;
 		if (enemy->moveStep())
 		{
-			if (endRect.contains(enemy->enemyPos()))
+			if (endFRect.contains(enemy->enemyPos()))
 				continue;
 
 			const Vector2i cell = Engine::Instance().camera()->posToCellMap(enemy->enemyPos());
@@ -438,6 +455,24 @@ void Level::clearCursor()
 	highlightPowerTowersRadius(false);
 }
 
+vector<Tower *> Level::getAllTowers() const
+{
+	return towers;
+}
+
+FloatRect Level::getEndRect() const
+{
+	return FloatRect(endRect.getPosition(), endRect.getSize());
+}
+
+void Level::test()
+{
+//	spawn(DOWN_TOWER_ENEMY);
+//	spawn(MID_MEDIUM);
+//	spawn(TELEPORT_ENEMY);
+//	spawn(REPAIR_ENEMY);
+}
+
 Level::LEVEL_STATE Level::getState() const
 {
 	return m_state;
@@ -520,9 +555,7 @@ void Level::drawLevel(RenderTarget * const target)
 
 void Level::spawn(ENEMY_TYPES type)
 {
-	const Vector2f spawnPos = Vector2f(gameMap->spawnPos.x * Settings::Instance().getScaleFactor().x,
-									   gameMap->spawnPos.y * Settings::Instance().getScaleFactor().y);
-	Enemy *enemy = EnemiesFactory::createEnemy(type, spawnPos);
+	Enemy *enemy = EnemiesFactory::createEnemy(type, spawnRect.getPosition());
 	enemy->moveNext(gameMap->spawnDirection);
 	enemies.push_back(enemy);
 }
@@ -554,9 +587,10 @@ int Level::getTileDirectionByCell(const Vector2i& cell) const
 	const int id = getTileByCell(cell, DIRECTION_LAYER).id;
 	if (id == Map::NO_MOVE)
 		return id;
-	if(gameMap->tileProperties.find(id) != gameMap->tileProperties.end())
+	const map<int, Tile::TileProperties> tileProperties = Engine::Instance().getTileProperties();
+	if(tileProperties.find(id) != tileProperties.end())
 	{
-		const Tile::TileProperties properties = gameMap->tileProperties.at(id);
+		const Tile::TileProperties properties = tileProperties.at(id);
 		if (properties.alternate_direction1 == -1 && properties.alternate_direction2 == -1)
 			return properties.direction;
 		int num = 1;

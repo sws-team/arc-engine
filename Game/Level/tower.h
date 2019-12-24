@@ -71,9 +71,15 @@ public:
 	int level() const;
 	int kills() const;
 
+	void setActive(bool isActive);
+	bool isActive() const;
+
+	void setDowngrade(bool isDowngrade);
+	bool isDowngraded() const;
+
 protected:
 	TowerStats m_stats;
-	Timer actionTimer;	
+	Timer actionTimer;
 	string m_shotSound;
 	void checkKill(Enemy *enemy);
 private:
@@ -90,6 +96,8 @@ private:
 	Ability abilityDamage;
 	Ability abilityAttackSpeed;
 	int m_kills;
+	bool m_isActive;
+	bool m_downgraded;
 };
 
 class ProjectilesTower : public Tower

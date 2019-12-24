@@ -75,6 +75,11 @@ public:
 	unsigned int getPowerTowersCount() const;
 
 	void clearCursor();
+	vector<Tower *> getAllTowers() const;
+	FloatRect getEndRect() const;
+
+	//delete
+	void test();
 
 private:
 	void choose(const Vector2i& cell, bool inPanel);
@@ -170,6 +175,9 @@ private:
 	unsigned int m_powerTowersCount;
 	static const int BOMB_ABILITIES_SIZE;
 	static const int DIRECTION_LAYER;
+
+	RectangleShape spawnRect;
+	RectangleShape endRect;
 };
 
 #endif // LEVEL_H

@@ -277,6 +277,11 @@ bool Engine::unlockAchievment(GameAchievements::AchievmentsTypes type)
 	return SteamUserStats()->StoreStats();
 }
 
+map<int, Tile::TileProperties> Engine::getTileProperties() const
+{
+	return tileProperties;
+}
+
 Camera *Engine::camera() const
 {
 	return m_camera;
@@ -431,59 +436,14 @@ bool Engine::loadMap(const String &fileName)
 			prop = prop->NextSiblingElement("property");
 		}
 	}
-	TiXmlElement *tilesetElement = mapElement->FirstChildElement("tileset");
-	int firstTileID = atoi(tilesetElement->Attribute("firstgid"));
-	TiXmlElement *tilePropertiesElement = tilesetElement->FirstChildElement("tile");
-	while (tilePropertiesElement)
-	{
-		Tile::TileProperties tileProperty;
-		const int tileId = 1 + atoi(tilePropertiesElement->Attribute("id"));
-		TiXmlElement *properties = tilePropertiesElement->FirstChildElement("properties");
-		if (properties != nullptr)
-		{
-			TiXmlElement *prop = properties->FirstChildElement("property");
-
-			while (prop)
-			{
-				const string propertyName = prop->Attribute("name");
-				const string propertyValue = prop->Attribute("value");
-
-				if (propertyName == "direction")
-					tileProperty.direction = stoi(propertyValue);
-				if (propertyName == "alternate_direction1")
-					tileProperty.alternate_direction1 = stoi(propertyValue);
-				if (propertyName == "alternate_direction2")
-					tileProperty.alternate_direction2 = stoi(propertyValue);
-
-				prop = prop->NextSiblingElement("property");
-			}
-		}
-		gameMap->tileProperties.insert(make_pair(tileId, tileProperty));
-		tilePropertiesElement = tilePropertiesElement->NextSiblingElement("tile");
-	}
-
-	// source - путь до картинки в контейнере image
-	TiXmlElement *image = tilesetElement->FirstChildElement("image");
-	const string imagePath = string(image->Attribute("source")).erase(0, 3);
-	Image img;
-	if (!img.loadFromFile(imagePath))
-	{
-		std::cout << "Failed to load tile sheet." << std::endl;
-		//FIXME memory leak
-		return false;
-	}
-
-	img.createMaskFromColor(sf::Color(255, 255, 255));//для маски цвета.сейчас нет маски
-	gameMap->tilesetImage.loadFromImage(img);
-	gameMap->tilesetImage.setSmooth(false);//сглаживание
+	const int firstTileID = 1;
 
 	// получаем количество столбцов и строк тайлсета
-	const int columns = gameMap->tilesetImage.getSize().x / GlobalVariables::MAP_CELL_SIZE;
-	const int rows = gameMap->tilesetImage.getSize().y / GlobalVariables::MAP_CELL_SIZE;
+	const int columns = tilesetImage.getSize().x / GlobalVariables::MAP_CELL_SIZE;
+	const int rows = tilesetImage.getSize().y / GlobalVariables::MAP_CELL_SIZE;
 
 	// вектор из прямоугольников изображений (TextureRect)
 	vector<sf::Rect<int>> subRects;
-
 	for (int y = 0; y < rows; y++)
 		for (int x = 0; x < columns; x++)
 		{
@@ -546,7 +506,7 @@ bool Engine::loadMap(const String &fileName)
 			if (subRectToUse >= 0)
 			{
 				Sprite sprite;
-				sprite.setTexture(gameMap->tilesetImage);
+				sprite.setTexture(tilesetImage);
 				sprite.setTextureRect(subRects[subRectToUse]);
 				sprite.setPosition(x * GlobalVariables::MAP_CELL_SIZE * Settings::Instance().getScaleFactor().x,
 								   y * GlobalVariables::MAP_CELL_SIZE * Settings::Instance().getScaleFactor().y);
@@ -674,9 +634,80 @@ bool Engine::loadMap(const String &fileName)
 	return true;
 }
 
+bool Engine::loadTiles(const String &fileName)
+{
+	tileProperties.clear();
+
+	FILE* file = nullptr;
+	errno_t err = _wfopen_s(&file, fileName.toWideString().c_str(), L"rb");
+	if( file != nullptr && err )
+		return false;
+
+	TiXmlDocument doc;
+	if (!doc.LoadFile(file))
+	{
+		std::cout << "Loading map failed." << std::endl;
+		return false;
+	}
+
+	TiXmlElement *tilesetElement = doc.FirstChildElement("tileset");
+//	int firstTileID = atoi(tilesetElement->Attribute("firstgid"));
+
+	TiXmlElement *tilePropertiesElement = tilesetElement->FirstChildElement("tile");
+	while (tilePropertiesElement)
+	{
+		Tile::TileProperties tileProperty;
+		const int tileId = 1 + atoi(tilePropertiesElement->Attribute("id"));
+		TiXmlElement *properties = tilePropertiesElement->FirstChildElement("properties");
+		if (properties != nullptr)
+		{
+			TiXmlElement *prop = properties->FirstChildElement("property");
+
+			while (prop)
+			{
+				const string propertyName = prop->Attribute("name");
+				const string propertyValue = prop->Attribute("value");
+				if (propertyName == "direction")
+					tileProperty.direction = stoi(propertyValue);
+				if (propertyName == "alternate_direction1")
+					tileProperty.alternate_direction1 = stoi(propertyValue);
+				if (propertyName == "alternate_direction2")
+					tileProperty.alternate_direction2 = stoi(propertyValue);
+
+				prop = prop->NextSiblingElement("property");
+			}
+		}
+		tileProperties.insert(make_pair(tileId, tileProperty));
+		tilePropertiesElement = tilePropertiesElement->NextSiblingElement("tile");
+	}
+
+
+	// source - путь до картинки в контейнере image
+	TiXmlElement *image = tilesetElement->FirstChildElement("image");
+	const string imagePath = string(image->Attribute("source"));
+	Image img;
+	if (!img.loadFromFile(imagePath))
+	{
+		std::cout << "Failed to load tile sheet." << std::endl;
+		//FIXME memory leak
+		return false;
+	}
+
+	img.createMaskFromColor(sf::Color(255, 255, 255));//для маски цвета.сейчас нет маски
+	tilesetImage.loadFromImage(img);
+	tilesetImage.setSmooth(false);//сглаживание
+	fclose(file);
+	return true;
+}
+
 void Engine::loadMaps(const String &path)
 {
 	maps.clear();
+	if (!loadTiles("tiles.tsx"))
+	{
+		std::cout << "Loading tileset failed." << std::endl;
+		return;
+	}
 	tinydir_dir dir;
 	const int result = tinydir_open(&dir, path.toWideString().c_str());
 	while (dir.has_next)
