@@ -125,7 +125,7 @@ FloatRect Camera::viewRect() const
 
 int Camera::viewTopCell() const
 {
-	return static_cast<int>(ceil((view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().tileSize().y));
+	return static_cast<int>((view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().tileSize().y);
 }
 
 int Camera::viewLeftCell() const
