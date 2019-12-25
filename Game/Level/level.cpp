@@ -41,6 +41,7 @@ const int Level::Shake::MAX_SHAKE_COUNT = 9;
 const int Level::Shake::MAX_SHAKE_OFFSET = 10;
 const int Level::Shake::SHAKE_TIME = 50;
 
+
 Level::Level() :
 	gameMap(nullptr)
   ,m_actionState(READY)
@@ -60,14 +61,7 @@ Level::Level() :
 	shake.isActive = false;
 	shake.dangerRect.setPosition(0,0);
 
-	constexpr float deadZoneSize = 300;
-	const Vector2f minPos = Vector2f(-deadZoneSize * Settings::Instance().getScaleFactor().x,
-									 -deadZoneSize * Settings::Instance().getScaleFactor().y);
-
-	deadZone.setPosition(minPos.x, minPos.y);
 	deadZone.setOutlineThickness(3.f);
-	deadZone.setSize(Vector2f(Settings::Instance().getResolution().x + fabs(minPos.x) * 2,
-							  Settings::Instance().getResolution().y + fabs(minPos.y) * 2));
 	deadZone.setOutlineColor(Color::Red);
 	deadZone.setFillColor(Color::Transparent);
 
@@ -197,6 +191,14 @@ void Level::startMission(const unsigned int n)
 						gameMap->endRect.top * Settings::Instance().getScaleFactor().y);
 	endRect.setSize(Vector2f(gameMap->endRect.width * Settings::Instance().getScaleFactor().x,
 							 gameMap->endRect.height* Settings::Instance().getScaleFactor().y));
+
+	const Vector2f deadZoneSize = Vector2f(gameMap->width * GlobalVariables::Instance().mapTileSize().x,
+										   gameMap->height * GlobalVariables::Instance().mapTileSize().y);
+	const Vector2f minPos = Vector2f(-DEAD_ZONE_SIZE * Settings::Instance().getScaleFactor().x,
+									 -DEAD_ZONE_SIZE * Settings::Instance().getScaleFactor().y);
+	deadZone.setPosition(minPos.x, minPos.y);
+	deadZone.setSize(Vector2f(deadZoneSize.x + fabs(minPos.x) * 2,
+							  deadZoneSize.y + fabs(minPos.y) * 2));
 }
 
 void Level::clear()
