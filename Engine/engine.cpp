@@ -87,8 +87,6 @@ void Engine::setMission(unsigned int mission)
 
 Map *Engine::getMap(unsigned int mission)
 {	
-	if (mission == GlobalVariables::SURVIVAL_MODE_ID)
-		return findMapByNumber(1);
 	return findMapByNumber(mission + 1);
 }
 

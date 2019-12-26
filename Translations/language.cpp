@@ -23,7 +23,6 @@ void Language::loadRus()
 
 	//menu
 	lang.insert(pair<TR_TEXT, wstring>(CAMPAIGN, L"Кампания"));
-	lang.insert(pair<TR_TEXT, wstring>(SURVIVAL_MODE, L"Режим выживания"));
 	lang.insert(pair<TR_TEXT, wstring>(OPTIONS, L"Опции"));
 	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"О программе"));
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Выход"));
@@ -106,7 +105,6 @@ void Language::loadEng()
 
 	//menu
 	lang.insert(pair<TR_TEXT, wstring>(CAMPAIGN, L"Play"));
-	lang.insert(pair<TR_TEXT, wstring>(SURVIVAL_MODE, L"Survival mode"));
 	lang.insert(pair<TR_TEXT, wstring>(OPTIONS, L"Options"));
 	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"Credits"));
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Exit"));
@@ -190,7 +188,6 @@ void Language::loadFr()
 
 	//menu
 	lang.insert(pair<TR_TEXT, wstring>(CAMPAIGN, L"Jouer"));
-	lang.insert(pair<TR_TEXT, wstring>(SURVIVAL_MODE, L"Survival mode"));
 	lang.insert(pair<TR_TEXT, wstring>(OPTIONS, L"Options"));
 	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"Crédits"));
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Sortir du jeu"));

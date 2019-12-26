@@ -14,7 +14,6 @@ public:
 
 		//menu
 		CAMPAIGN,
-		SURVIVAL_MODE,
 		OPTIONS,
 		CREDITS,
 		EXIT,

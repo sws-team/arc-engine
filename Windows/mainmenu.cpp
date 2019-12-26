@@ -12,7 +12,6 @@ MainMenu::MainMenu()
 	currentMenu = static_cast<MENUS>(CAMPAIGN);
 
 	addItem(Language::Instance().translate(Language::CAMPAIGN));
-	addItem(Language::Instance().translate(Language::SURVIVAL_MODE));
 	addItem(Language::Instance().translate(Language::OPTIONS));
 	addItem(Language::Instance().translate(Language::CREDITS));
 	addItem(Language::Instance().translate(Language::EXIT));
@@ -29,12 +28,6 @@ void MainMenu::accept()
 	{
 	case CAMPAIGN:
 		Engine::Instance().setState(Engine::CHOOSE_MISSION);
-		break;
-	case SURVIVAL_MODE:
-	{
-		Engine::Instance().setMission(GlobalVariables::SURVIVAL_MODE_ID);
-		Engine::Instance().setState(Engine::IN_GAME);
-	}
 		break;
 	case OPTIONS:
 		Engine::Instance().setState(Engine::OPTIONS);

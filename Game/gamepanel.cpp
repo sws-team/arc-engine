@@ -240,8 +240,7 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(healthIcon);
 
 	target->draw(miniMapSprite);
-	if (Engine::Instance().getMission() != GlobalVariables::SURVIVAL_MODE_ID)
-		progress->draw(target);
+	progress->draw(target);
 
 	target->draw(waveText);
 

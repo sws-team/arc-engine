@@ -11,7 +11,6 @@
 
 const Color GlobalVariables::GrayColor = Color(133, 133, 133);
 const string settingsFilePath = string("settings.ini");
-const unsigned int GlobalVariables::SURVIVAL_MODE_ID = 128;
 
 GlobalVariables &GlobalVariables::Instance()
 {
