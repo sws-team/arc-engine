@@ -26,7 +26,7 @@ public:
 
 	void drawLevel(RenderTarget * const target);
 
-	void spawn(ENEMY_TYPES type);
+	void spawn(ENEMY_TYPES type, float protection);
 	Tile getTileByPos(const Vector2f& pos, unsigned int layer = 0);
 	Tile getTileByCell(const Vector2i& cell, unsigned int layer = 0) const;
 
@@ -88,7 +88,7 @@ private:
 	void checkEnd();
 	void checkAlive();
 	void checkRespawn();
-	void spawnEnemy();
+	void spawnEnemy(float protection);
 	void checkEnemyMove();
 
 	RectangleShape deadZone;

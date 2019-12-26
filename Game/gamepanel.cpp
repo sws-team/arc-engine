@@ -941,7 +941,6 @@ void GamePanel::initMission(unsigned int n)
 		iconsAvaliable.isFreezeEnabled = false;
 		iconsAvaliable.isLaserEnabled = false;
 		iconsAvaliable.isImprovedEnabled = false;
-		iconsAvaliable.isAbilityBombEnabled = false;
 		iconsAvaliable.isAbilityFreezeBombEnabled = false;
 		iconsAvaliable.isAbilityVenomEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;

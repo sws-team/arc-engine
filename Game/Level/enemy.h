@@ -41,7 +41,7 @@ public:
 	void useAbility();
 	void freeze(float k, int duration);
 	void heal(float health);
-	void protect(float shell);
+	void protect(float shell, bool show = true);
 
 	Vector2f enemyPos() const;
 	Vector2f enemyCenter() const;

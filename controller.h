@@ -12,9 +12,9 @@ class Controller
 public:
 	Controller();
 
+	void eventFilter(Event* event);
+
 	void setPauseFunc(const function<void ()> &value);
-	void keyEvent();
-	void pausedEvents();
 	enum GAMEPAD_KEYS
 	{
 		KEY_START,
@@ -24,19 +24,8 @@ public:
 	int currentJoystickId() const;
 
 private:
-
-	void keyboardKeyEvent(const bool timeoutKey, const bool timeoutMove);
 	void joystickKeyEvent(const bool timeoutKey, const bool timeoutMove);
-
-	Timer timerKey;
-	Timer timerMove;
-
-	constexpr static int CONTROLLER_TIME = 20;
-	constexpr static int CONTROLLER_MOVE_TIME = 50;
-
 	function<void()> pauseFunc;
-
-//	ControlSettings m_controls;
 #ifdef STEAM_API
 	class ISteamScreenshots *p_screenShoots;
 #endif

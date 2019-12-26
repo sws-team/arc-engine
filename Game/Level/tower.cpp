@@ -267,7 +267,7 @@ const TowerStats BaseTower::STATS = TowerStats		(5,		450,	4,		20,		50);
 const TowerStats FreezeTower::STATS = TowerStats	(5,		350,	5,		10,		80);
 const TowerStats RocketTower::STATS = TowerStats	(35,	5000,	12,		5,		150);
 const TowerStats LaserTower::STATS = TowerStats		(15,	200,	6,		0,		180);
-const TowerStats ImprovedTower::STATS = TowerStats	(20,	150,	7,		50,		250);
+const TowerStats ImprovedTower::STATS = TowerStats	(10,	250,	7,		40,		250);
 
 BaseTower::BaseTower(const Vector2f &pos)
 	: ProjectilesTower(RESOURCES::TOWER_BASE, pos, STATS)

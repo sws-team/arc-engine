@@ -118,12 +118,20 @@ void GameWindow::eventFilter(Event *event)
 			break;
 		default:
 			break;
-		}		
-		Engine::Instance().controller()->keyEvent();
+		}
+		Engine::Instance().controller()->eventFilter(event);
 	}
 		break;
 	case PAUSED:
-		Engine::Instance().controller()->pausedEvents();
+	{
+		if (event->type == Event::KeyPressed)
+			if (event->key.code == Keyboard::Escape)
+				pause();
+
+		if (event->type == Event::JoystickButtonPressed)
+			if (event->joystickButton.button == Controller::KEY_ESCAPE)
+				pause();
+	}
 		break;
 	case IN_MENU:
 		Menu::eventFilter(event);

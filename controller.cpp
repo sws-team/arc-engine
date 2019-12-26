@@ -9,89 +9,113 @@
 
 Controller::Controller()
 {
-//	m_controls = GlobalVariables::Instance().controls();
 #ifdef STEAM_API
 	p_screenShoots = SteamScreenshots();
 	p_screenShoots->HookScreenshots(true);
 #endif
 }
 
-void Controller::keyEvent()
+void Controller::eventFilter(Event *event)
 {
-	const bool timeoutKey = timerKey.check(CONTROLLER_TIME);
-	const bool timeoutMove = timerMove.check(CONTROLLER_MOVE_TIME);
-	keyboardKeyEvent(timeoutKey, timeoutMove);
-	joystickKeyEvent(timeoutKey, timeoutMove);
-}
-
-void Controller::keyboardKeyEvent(const bool timeoutKey, const bool timeoutMove)
-{
-	if (timeoutKey)
+	switch (event->type)
 	{
-		if (Engine::Instance().instructions()->isActive())
+	case Event::MouseButtonPressed:
+	{
+		if (event->mouseButton.button == Mouse::Left)
 		{
-			if (Keyboard::isKeyPressed(Keyboard::Space))
-				Engine::Instance().instructions()->skip();
-			else if (Keyboard::isKeyPressed(Keyboard::Return))
+			if (Engine::Instance().instructions()->isActive())
+			{
 				Engine::Instance().instructions()->next();
-
-			if (Mouse::isButtonPressed(Mouse::Left))
-				Engine::Instance().instructions()->next();
-			else if (Mouse::isButtonPressed(Mouse::Right))
-				Engine::Instance().instructions()->skip();
-
-			return;
-		}
-#ifdef STEAM_API
-		if (Keyboard::isKeyPressed(Keyboard::F12))
-			p_screenShoots->TriggerScreenshot();
-#endif
-		if (Keyboard::isKeyPressed(Keyboard::Space))
-			Engine::Instance().level()->ready();
-
-		if (Keyboard::isKeyPressed(Keyboard::Z))
-			Engine::Instance().level()->test();
-
-		if (Mouse::isButtonPressed(Mouse::Left))
-		{
-			const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
-			const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
+				return;
+			}
+			const Vector2i pixelPos = Vector2i(1, 1) + Vector2i(event->mouseButton.x, event->mouseButton.y);//Mouse::getPosition(*Engine::Instance().window());
+			const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
+						pixelPos, *Engine::Instance().camera()->getView());
 			Engine::Instance().level()->chooseByPos(pos);
 		}
-		if (Mouse::isButtonPressed(Mouse::Right))
+		else if (event->mouseButton.button == Mouse::Right)
+		{
+			if (Engine::Instance().instructions()->isActive())
+			{
+				Engine::Instance().instructions()->skip();
+				return;
+			}
 			Engine::Instance().level()->clearCursor();
-		if (Keyboard::isKeyPressed(Keyboard::Return))
-			Engine::Instance().level()->chooseCurrent();
-		if (Keyboard::isKeyPressed(Keyboard::Escape))
-			pauseFunc();
-		if (Keyboard::isKeyPressed(Keyboard::Q))
-			Engine::Instance().cursor()->swap();
-
-
-		if (Keyboard::isKeyPressed(Keyboard::Add))
-			Engine::Instance().camera()->zoomIn();
-		if (Keyboard::isKeyPressed(Keyboard::Subtract))
-			Engine::Instance().camera()->zoomOut();
+		}
 	}
-	if (timeoutMove)
+		break;
+	case Event::KeyPressed:
 	{
-		if (Keyboard::isKeyPressed(Keyboard::Left/*static_cast<Keyboard::Key>(m_controls.moveLeft)*/))
+		switch (event->key.code)
+		{
+		case Keyboard::Space:
+		{
+			if (Engine::Instance().instructions()->isActive())
+			{
+				Engine::Instance().instructions()->skip();
+				return;
+			}
+			Engine::Instance().level()->ready();
+		}
+			break;
+		case Keyboard::Return:
+		{
+			if (Engine::Instance().instructions()->isActive())
+			{
+				Engine::Instance().instructions()->next();
+				return;
+			}
+			Engine::Instance().level()->chooseCurrent();
+		}
+			break;
+		case Keyboard::Escape:
+			pauseFunc();
+			break;
+		case Keyboard::Q:
+			Engine::Instance().cursor()->swap();
+			break;
+		case Keyboard::Add:
+			Engine::Instance().camera()->zoomIn();
+			break;
+		case Keyboard::Subtract:
+			Engine::Instance().camera()->zoomOut();
+			break;
+		case Keyboard::Left:
 			Engine::Instance().cursor()->moveLeft();
-		if (Keyboard::isKeyPressed(Keyboard::Right/*static_cast<Keyboard::Key>(m_controls.moveRight)*/))
+			break;
+		case Keyboard::Right:
 			Engine::Instance().cursor()->moveRight();
-		if (Keyboard::isKeyPressed(Keyboard::Up/*static_cast<Keyboard::Key>(m_controls.moveUp)*/))
+			break;
+		case Keyboard::Up:
 			Engine::Instance().cursor()->moveUp();
-		if (Keyboard::isKeyPressed(Keyboard::Down/*static_cast<Keyboard::Key>(m_controls.moveDown)*/))
+			break;
+		case Keyboard::Down:
 			Engine::Instance().cursor()->moveDown();
-
-		if (Keyboard::isKeyPressed(Keyboard::A))
+			break;
+		case Keyboard::A:
 			Engine::Instance().camera()->moveLeftByCell();
-		if (Keyboard::isKeyPressed(Keyboard::D))
+			break;
+		case Keyboard::D:
 			Engine::Instance().camera()->moveRightByCell();
-		if (Keyboard::isKeyPressed(Keyboard::W))
+			break;
+		case Keyboard::W:
 			Engine::Instance().camera()->moveUpByCell();
-		if (Keyboard::isKeyPressed(Keyboard::S))
+			break;
+		case Keyboard::S:
 			Engine::Instance().camera()->moveDownByCell();
+			break;
+#ifdef STEAM_API
+		case Keyboard::F12:
+			p_screenShoots->TriggerScreenshot();
+			break;
+#endif
+		default:
+			break;
+		}
+	}
+		break;
+	default:
+		break;
 	}
 }
 
@@ -137,18 +161,6 @@ void Controller::joystickKeyEvent(const bool timeoutKey, const bool timeoutMove)
 void Controller::setPauseFunc(const function<void ()> &value)
 {
 	pauseFunc = value;
-}
-
-void Controller::pausedEvents()
-{
-	const bool timeout = timerKey.check(CONTROLLER_TIME);
-	if (!timeout)
-		return;
-
-	if (Keyboard::isKeyPressed(Keyboard::Escape))
-		pauseFunc();
-	if (Joystick::isButtonPressed(currentJoystickId(), KEY_ESCAPE))
-			pauseFunc();
 }
 
 int Controller::currentJoystickId() const

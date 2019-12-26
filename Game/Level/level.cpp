@@ -312,17 +312,33 @@ void Level::checkRespawn()
 	const int time = RESPAWN_TIME - Engine::Instance().getMission() * 100;
 	const int timeOffset = rand() % (RESPAWN_OFFSET + 1) - RESPAWN_OFFSET/2;
 	int spawnCount = 1;
+	float protection = 0.f;
 	const float k = 1 - static_cast<float>(spawnEnemies.size()) / Engine::Instance().panel()->getProgressMax();
-	if (k > 0.9f)	
+	if (k > 0.9f)
+	{
+		protection = 0.5f;
 		spawnCount = 6;	
-	else if(k > 0.8f)	
+	}
+	else if(k > 0.8f)
+	{
+		protection = 0.4f;
 		spawnCount = 5;	
-	else if(k > 0.6f)	
+	}
+	else if(k > 0.6f)
+	{
+		protection = 0.3f;
 		spawnCount = 4;	
+	}
 	else if(k > 0.4f)
+	{
+		protection = 0.2f;
 		spawnCount = 3;	
+	}
 	else if(k > 0.2f)	
+	{
+		protection = 0.1f;
 		spawnCount = 2;	
+	}
 
 	const int resultTime = time + timeOffset + RESPAWN_TIME * (1 - k);
 	if (spawnTimer.check(resultTime))
@@ -331,17 +347,17 @@ void Level::checkRespawn()
 		{
 			if (spawnEnemies.empty())
 				break;
-			spawnEnemy();
+			spawnEnemy(protection);
 		}
 	}
 }
 
-void Level::spawnEnemy()
+void Level::spawnEnemy(float protection)
 {
 	const int n = rand() % spawnEnemies.size();
 	ENEMY_TYPES type = spawnEnemies.at(n);
 	spawnEnemies.erase(find(spawnEnemies.begin(), spawnEnemies.end(), type));
-	spawn(type);
+	spawn(type, protection);
 }
 
 void Level::checkEnemyMove()
@@ -555,9 +571,10 @@ void Level::drawLevel(RenderTarget * const target)
 	}
 }
 
-void Level::spawn(ENEMY_TYPES type)
+void Level::spawn(ENEMY_TYPES type, float protection)
 {
 	Enemy *enemy = EnemiesFactory::createEnemy(type, spawnRect.getPosition());
+	enemy->protect(protection, false);
 	enemy->moveNext(gameMap->spawnDirection);
 	enemies.push_back(enemy);
 }
@@ -761,12 +778,16 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			float cost = type == TOWER_TYPES::POWER ?
 						TowersFactory::getTowerStats(type).cost + m_powerTowersCount * PowerTower::COST_OFFSET :
 						TowersFactory::getTowerStats(type).cost;
+
+			if (selectedTower == nullptr)
+				return;
+			if (selectedTower->level() == 2)
+				cost += cost * TowersFactory::UPGRADE_COST_MODIFIER;
+
 			cost *= TowersFactory::UPGRADE_COST_MODIFIER;
 			if (money < cost)
 				return;
 
-			if (selectedTower == nullptr)
-				return;
 			if (selectedTower->level() < 3)
 			{
 				money -= cost;
@@ -796,7 +817,10 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		{
 			const TOWER_TYPES type = Engine::Instance().cursor()->getTowerType();
 
-			const float cost = TowersFactory::getTowerStats(type).cost + m_powerTowersCount * 10;
+			float cost = type == TOWER_TYPES::POWER ?
+						TowersFactory::getTowerStats(type).cost + m_powerTowersCount * 10 :
+						TowersFactory::getTowerStats(type).cost;
+
 			if (cost > money)
 				return;
 
