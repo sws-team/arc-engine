@@ -66,6 +66,7 @@ public:
 	void updateWaveText();
 
 	float getTowerUpgradeCost(Tower* tower) const;
+	float getTowerSellCost(Tower* tower) const;
 
 private:
 	Sprite m_sprite;

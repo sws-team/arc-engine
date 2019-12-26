@@ -93,6 +93,10 @@ void Tower::upgrade()
 	m_stats.damage *= 1 + Tower::LEVEL_GAIN;
 	m_stats.radius *= 1 + Tower::LEVEL_GAIN;
 	m_stats.attackSpeed *= 1 - Tower::LEVEL_GAIN;
+
+	Engine::Instance().level()->addAnimation(RESOURCES::UPGRADE, this->pos(),
+											 Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE),
+											 250, 4, 0);
 }
 
 void Tower::hitEnemy(Enemy *enemy)

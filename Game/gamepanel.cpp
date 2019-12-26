@@ -516,6 +516,16 @@ float GamePanel::getTowerUpgradeCost(Tower *tower) const
 	return cost;
 }
 
+float GamePanel::getTowerSellCost(Tower *tower) const
+{
+	const TOWER_TYPES type = tower->type();
+	float cost = type == TOWER_TYPES::POWER ?
+				tower->data().cost + (Engine::Instance().level()->getPowerTowersCount() - 1) * PowerTower::COST_OFFSET :
+				tower->data().cost;
+	cost /= 2;
+	return cost;
+}
+
 void GamePanel::updateEnableTowers()
 {
 	const float money = Engine::Instance().level()->getMoneyCount();
@@ -951,7 +961,7 @@ void GamePanel::updateInfo()
 			if (m_selectedTower != nullptr)
 			{
 				str += endline;
-				str += "Cost" +  GlobalVariables::to_string_with_precision(getTowerUpgradeCost(m_selectedTower), 1);
+				str += "Cost" +  GlobalVariables::to_string_with_precision(getTowerSellCost(m_selectedTower), 1);
 			}
 		}
 			break;

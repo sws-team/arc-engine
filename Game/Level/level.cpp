@@ -91,8 +91,7 @@ void Level::draw(RenderTarget *const target)
 
 void Level::update()
 {
-	if (m_state != PLAYING)
-		return;
+	const bool playing = m_state == PLAYING;
 
 	if (timer.check(GlobalVariables::FRAME_TIME))
 	{
@@ -101,7 +100,7 @@ void Level::update()
 			if (!tower->isActive())
 				continue;
 
-			if (tower->type() == POWER)
+			if (playing && tower->type() == POWER)
 			{
 				PowerTower *powerTower = static_cast<PowerTower*>(tower);
 				if (powerTower->hasEnergy())
@@ -144,21 +143,20 @@ void Level::update()
 			}
 		}
 
-		if (timerRegenEnergy.check(REGEN_ENERGY_TIMEOUT))
+		if (timerRegenEnergy.check(REGEN_ENERGY_TIMEOUT) && playing)
 			energy += REGEN_ENERGY_VALUE;
 
-		checkRespawn();
+		if (playing)
+			checkRespawn();
 		for(Enemy* enemy : enemies)
 			enemy->useAbility();
 		calculateCollisions();
 		checkDeadZone();
 		checkEnd();
 		checkEnemyMove();
-
 		for(Enemy* enemy : enemies)
 			enemy->update();
-		for(Animation *effect : effects)
-			effect->update();
+		showAnimations();
 	}
 
 	Engine::Instance().panel()->updatePanel();
@@ -436,6 +434,12 @@ void Level::updateRadius()
 	}
 }
 
+void Level::showAnimations()
+{
+	for(Animation *effect : effects)
+		effect->update();
+}
+
 unsigned int Level::getPowerTowersCount() const
 {
 	return m_powerTowersCount;
@@ -669,8 +673,6 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
 		{
-			if (m_state != PLAYING)
-				return;
 			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_INCREASE_TOWER_ATTACK_SPEED))
 				return;
 			if (energy < INC_TOWER_AS_ABILITY_COST)
@@ -681,8 +683,6 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_INCREASE_TOWER_DAMAGE:
 		{
-			if (m_state != PLAYING)
-				return;
 			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_INCREASE_TOWER_DAMAGE))
 				return;
 			if (energy < INC_TOWER_DMG_ABILITY_COST)
@@ -693,8 +693,6 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_VENOM:
 		{
-			if (m_state != PLAYING)
-				return;
 			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_VENOM))
 				return;
 			if (energy < VENOM_ABILITY_COST)
@@ -706,8 +704,6 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_BOMB:
 		{
-			if (m_state != PLAYING)
-				return;
 			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_BOMB))
 				return;
 			if (energy < BOMB_ABILITY_COST)
@@ -718,8 +714,6 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_FREEZE_BOMB:
 		{
-			if (m_state != PLAYING)
-				return;
 			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_FREEZE_BOMB))
 				return;
 			if (energy < FREEZE_BOMB_ABILITY_COST)
@@ -730,8 +724,6 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_UNKNOWN:
 		{
-			if (m_state != PLAYING)
-				return;
 			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_UNKNOWN))
 				return;
 			break;
@@ -741,15 +733,11 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (selectedTower == nullptr)
 				return;
 
-			const TOWER_TYPES type = selectedTower->type();
-			float cost = type == TOWER_TYPES::POWER ?
-						selectedTower->data().cost + (m_powerTowersCount - 1) * PowerTower::COST_OFFSET :
-						selectedTower->data().cost;
-			cost /= 2;
+			const float cost = Engine::Instance().panel()->getTowerSellCost(selectedTower);
 			money += cost;
 			towers.erase( remove( towers.begin(), towers.end(), selectedTower ), towers.end() );
 			delete selectedTower;			
-			if (type == POWER)
+			if (selectedTower->type() == POWER)
 				m_powerTowersCount--;
 			Engine::Instance().panel()->updatePanel();
 			Engine::Instance().cursor()->swap();

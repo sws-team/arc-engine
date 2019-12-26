@@ -179,6 +179,7 @@ private:
 	RectangleShape spawnRect;
 	RectangleShape endRect;
 	constexpr static float DEAD_ZONE_SIZE = 300;
+	void showAnimations();
 };
 
 #endif // LEVEL_H

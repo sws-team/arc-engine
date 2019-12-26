@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "Game/Level/projectile.h"
 #include "Game/Collisions/collisions.h"
+#include "Game/gamepanel.h"
 
 Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const Vector2f &startPos,
@@ -666,8 +667,7 @@ void TowerEffectAbility::use()
 
 		Tower *target = nullptr;
 		const vector<Tower*> towers = Engine::Instance().level()->getAllTowers();
-		float weightX = INT_MAX;
-		float weightY = INT_MAX;
+		float weight = 0;
 		for(Tower* tower : towers)
 		{
 			if (tower->type() == POWER)
@@ -676,10 +676,8 @@ void TowerEffectAbility::use()
 				continue;
 			if (tower->isDowngraded())
 				continue;
-
-			const float currentWeightX = fabs(tower->getCenter().x - owner->getCenter().x);
-			const float currentWeightY = fabs(tower->getCenter().y - owner->getCenter().y);
-			if (currentWeightX < weightX && currentWeightY < weightY)
+			const float currentWeight = Engine::Instance().panel()->getTowerSellCost(tower);
+			if (currentWeight > weight)
 				target = tower;
 		}
 		if (target == nullptr)
