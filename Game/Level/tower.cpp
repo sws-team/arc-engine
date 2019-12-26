@@ -268,9 +268,9 @@ const int PowerTower::COST_OFFSET = 10;
 											//		dmg	atk_speed	r	pr_speed	cost
 const TowerStats PowerTower::STATS = TowerStats		(0,		5000,	6,		0,		60);
 const TowerStats BaseTower::STATS = TowerStats		(5,		450,	4,		20,		50);
-const TowerStats FreezeTower::STATS = TowerStats	(5,		350,	5,		10,		80);
-const TowerStats RocketTower::STATS = TowerStats	(35,	5000,	12,		5,		150);
-const TowerStats LaserTower::STATS = TowerStats		(15,	200,	6,		0,		180);
+const TowerStats FreezeTower::STATS = TowerStats	(5,		350,	5,		10,		100);
+const TowerStats RocketTower::STATS = TowerStats	(40,	5000,	12,		5,		150);
+const TowerStats LaserTower::STATS = TowerStats		(15,	200,	6,		0,		200);
 const TowerStats ImprovedTower::STATS = TowerStats	(10,	250,	7,		40,		250);
 
 BaseTower::BaseTower(const Vector2f &pos)

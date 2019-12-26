@@ -27,22 +27,20 @@ enum ENEMY_TYPES
 	SCORPION,//scorpion
 	SMALL_MEDIUM,//car
 	SMALL_FAST,//tricycle
+	SMALL_NEXT,
+	SELFHEAL_ENEMY,
+	DOWN_TOWER_ENEMY,
+	ANOTHER_ENEMY,
 
 	MID_SLOW,//tank
 	SPIDER,//spider
 	MID_FAST,//helicopter
-
-	BIG_SLOW,//aircarrier
-	BIG_MEDIUM,//big tank
-	BIG_FAST,//plane
-
-	//with abilities
 	REPAIR_ENEMY,
 	SHELL_ENEMY,
 	TELEPORT_ENEMY,
-	SELFHEAL_ENEMY,
-	DOWN_TOWER_ENEMY,
-	SMALL_NEXT,
+
+	BIG_SLOW,//aircarrier
+	BIG_MEDIUM,//big tank
 	SPAWN_ENEMY,
 };
 

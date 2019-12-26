@@ -42,6 +42,7 @@ public:
 	void freeze(float k, int duration);
 	void heal(float health);
 	void protect(float shell, bool show = true);
+	void setReflection(const float reflection);
 
 	Vector2f enemyPos() const;
 	Vector2f enemyCenter() const;
@@ -248,6 +249,27 @@ private:
 	constexpr static float ACTIVATE_SPAWN_ROW = 1;
 	constexpr static float DEACTIVATE_SPAWN_ROW = 2;
 };
+
+class StrongAbility : public EnemyAbility
+{
+public:
+	StrongAbility();
+
+protected:
+	void use() override;
+	constexpr static float STRONG_INTERVAL = 4500;
+};
+
+class RageAbility : public EnemyAbility
+{
+public:
+	RageAbility();
+
+protected:
+	void use() override;
+	constexpr static float RAGE_INTERVAL = 100;
+};
+
 
 class EnemiesFactory
 {

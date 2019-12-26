@@ -266,7 +266,12 @@ void Enemy::protect(float shell, bool show)
 	if (show)
 		Engine::Instance().level()->addAnimation(RESOURCES::SHELL_EFFECT, this->pos(),
 											 Vector2i(GlobalVariables::MAP_CELL_SIZE, GlobalVariables::MAP_CELL_SIZE),
-											 50, 4, 0);
+												 50, 4, 0);
+}
+
+void Enemy::setReflection(const float reflection)
+{
+	m_data.reflection = reflection;
 }
 
 void Enemy::drawLifeBar(RenderTarget *target)
@@ -332,119 +337,45 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 	RESOURCES::TEXTURE_TYPE texture_id;
 	switch (type)
 	{
-	case SMALL_NEXT:
-		texture_id = RESOURCES::ENEMY_ANT;
-		stats.health = 175.f;
-		stats.speed = 40.f;
-		stats.damage = 15.f;
-		size.x = 1;
-		size.y = 1;
-		break;
+	//small
 	case SCORPION:
 		texture_id = RESOURCES::ENEMY_SCORPION;
-		stats.health = 135.f;
-		stats.speed = 45.f;
-		stats.damage = 15.f;
+		stats.health = 125.f;
+		stats.speed = 60.f;
+		stats.damage = 10.f;
 		size.x = 1;
 		size.y = 1;
 		break;
 	case SMALL_MEDIUM:
 		texture_id = RESOURCES::ENEMY_CAR;
-		stats.health = 115.f;
-		stats.speed = 30.f;
+		stats.health = 175.f;
+		stats.speed = 70.f;
 		stats.damage = 10.f;
 		size.x = 1;
 		size.y = 1;
+		ability = new StrongAbility();
 		break;
 	case SMALL_FAST:
 		texture_id = RESOURCES::ENEMY_TRICYCLE;
-		stats.health = 95.f;
-		stats.speed = 15.f;
+		stats.health = 100.f;
+		stats.speed = 90.f;
 		stats.damage = 5.f;
 		size.x = 1;
 		size.y = 1;
 		break;
-	case MID_SLOW:
-		texture_id = RESOURCES::ENEMY_TANK;
-		stats.health = 400.f;
-		stats.speed = 60.f;
-		stats.damage = 40.f;
-		size.x = 2;
-		size.y = 2;
-		break;
-	case SPIDER:
-		texture_id = RESOURCES::ENEMY_SPIDER;
-		stats.health = 300.f;
-		stats.speed = 50.f;
-		stats.damage = 30.f;
-		size.x = 2;
-		size.y = 2;
-		ability = new ShutdownTowerAbility();
-		break;
-	case MID_FAST:
-		texture_id = RESOURCES::ENEMY_HELICOPTER;
-		stats.health = 200.f;
-		stats.speed = 30.f;
-		stats.damage = 20.f;
-		size.x = 2;
-		size.y = 2;
-		break;
-	case BIG_SLOW:
-		texture_id = RESOURCES::ENEMY_AIRCARRIER;
-		stats.health = 1000.f;
-		stats.speed = 70.f;
-		stats.damage = 80.f;
-		size.x = 4;
-		size.y = 4;
-		break;
-	case BIG_MEDIUM:
-		texture_id = RESOURCES::ENEMY_BIG_TANK;
-		stats.health = 750.f;
-		stats.speed = 40.f;
-		stats.damage = 60.f;
-		size.x = 4;
-		size.y = 4;
-		break;
-	case BIG_FAST:
-		texture_id = RESOURCES::ENEMY_PLANE;
-		stats.health = 500.f;
-		stats.speed = 25.f;
-		stats.damage = 40.f;
-		size.x = 4;
-		size.y = 4;
-		break;
-	case REPAIR_ENEMY:
-		texture_id = RESOURCES::ENEMY_REPAIR;
-		stats.health = 200.f;
-		stats.speed = 35.f;
-		stats.damage = 15.f;
-		size.x = 2;
-		size.y = 2;
-		ability = new HealNearAbility();
-		break;
-	case SHELL_ENEMY:
-		texture_id = RESOURCES::ENEMY_SHELL;
-		stats.health = 200.f;
-		stats.speed = 40.f;
-		stats.damage = 15.f;
-		size.x = 2;
-		size.y = 2;
-		ability = new ShellNearAbility();
-		break;
-	case TELEPORT_ENEMY:
-		texture_id = RESOURCES::ENEMY_TELEPORT;
-		stats.health = 200.f;
-		stats.speed = 25.0f;
-		stats.damage = 15.f;
-		size.x = 2;
-		size.y = 2;
-		ability = new TeleportAbility();
+	case SMALL_NEXT:
+		texture_id = RESOURCES::ENEMY_ANT;
+		stats.health = 50.f;
+		stats.speed = 55.f;
+		stats.damage = 5.f;
+		size.x = 1;
+		size.y = 1;
 		break;
 	case SELFHEAL_ENEMY:
 		texture_id = RESOURCES::ENEMY_CAR;
-		stats.health = 250.f;
-		stats.speed = 30.f;
-		stats.damage = 10.f;
+		stats.health = 225.f;
+		stats.speed = 65.f;
+		stats.damage = 15.f;
 		size.x = 1;
 		size.y = 1;
 		ability = new SelfHealAbility();
@@ -452,17 +383,98 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 	case DOWN_TOWER_ENEMY:
 		texture_id = RESOURCES::ENEMY_DOWN_TOWER;
 		stats.health = 250.f;
-		stats.speed = 45.f;
-		stats.damage = 10.f;
+		stats.speed = 55.f;
+		stats.damage = 15.f;
 		size.x = 1;
 		size.y = 1;
 		ability = new DownTowerAbility();
 		break;
+	case ANOTHER_ENEMY:
+		texture_id = RESOURCES::ENEMY_PLANE;
+		stats.health = 200.f;
+		stats.speed = 75.f;
+		stats.damage = 15.f;
+		size.x = 1;
+		size.y = 1;
+		break;
+		//mid
+	case MID_SLOW:
+		texture_id = RESOURCES::ENEMY_TANK;
+		stats.health = 500.f;
+		stats.speed = 45.f;
+		stats.damage = 35.f;
+		size.x = 2;
+		size.y = 2;
+		ability = new StrongAbility();
+		break;
+	case SPIDER:
+		texture_id = RESOURCES::ENEMY_SPIDER;
+		stats.health = 350.f;
+		stats.speed = 40.f;
+		stats.damage = 30.f;
+		size.x = 2;
+		size.y = 2;
+		ability = new ShutdownTowerAbility();
+		break;
+	case MID_FAST:
+		texture_id = RESOURCES::ENEMY_HELICOPTER;
+		stats.health = 300.f;
+		stats.speed = 70.f;
+		stats.damage = 20.f;
+		size.x = 2;
+		size.y = 2;
+		break;
+	case REPAIR_ENEMY:
+		texture_id = RESOURCES::ENEMY_REPAIR;
+		stats.health = 400.f;
+		stats.speed = 55.f;
+		stats.damage = 20.f;
+		size.x = 2;
+		size.y = 2;
+		ability = new HealNearAbility();
+		break;
+	case SHELL_ENEMY:
+		texture_id = RESOURCES::ENEMY_SHELL;
+		stats.health = 250.f;
+		stats.speed = 50.f;
+		stats.damage = 20.f;
+		size.x = 2;
+		size.y = 2;
+		ability = new ShellNearAbility();
+		break;
+	case TELEPORT_ENEMY:
+		texture_id = RESOURCES::ENEMY_TELEPORT;
+		stats.health = 300.f;
+		stats.speed = 75.0f;
+		stats.damage = 20.f;
+		size.x = 2;
+		size.y = 2;
+		ability = new TeleportAbility();
+		break;
+		//big
+	case BIG_SLOW:
+		texture_id = RESOURCES::ENEMY_AIRCARRIER;
+		stats.health = 2000.f;
+		stats.speed = 30.f;
+		stats.damage = 75.f;
+		stats.reflection = 0.5f;
+		size.x = 4;
+		size.y = 4;
+		break;
+	case BIG_MEDIUM:
+		texture_id = RESOURCES::ENEMY_BIG_TANK;
+		stats.health = 900.f;
+		stats.speed = 35.f;
+		stats.damage = 60.f;
+		size.x = 4;
+		size.y = 4;
+		ability = new RageAbility();
+		break;
 	case SPAWN_ENEMY:
 		texture_id = RESOURCES::ENEMY_COW;
-		stats.health = 800.f;
-		stats.speed = 55.f;
-		stats.damage = 45.f;
+		stats.health = 750.f;
+		stats.speed = 40.f;
+		stats.damage = 40.f;
 		size.x = 4;
 		size.y = 4;
 		ability = new SpawnEnemy();
@@ -470,6 +482,7 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 	default:
 		break;
 	}
+	stats.speed = 100.f - stats.speed;
 	Enemy *enemy = new Enemy(texture_id, startPos, stats, size);
 	enemy->setAbility(ability);
 	if (ability != nullptr)
@@ -612,7 +625,8 @@ void TeleportAbility::use()
 	{
 		Engine::Instance().level()->addAnimation(RESOURCES::ENEMY_TELEPORT,
 												 owner->pos(),
-												 Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE),
+												 Vector2i(GlobalVariables::CELL_SIZE,
+														  GlobalVariables::CELL_SIZE),
 												 200, 4, TELEPORT_APPEAR_ROW);
 		m_state = FINISH;
 		m_interval = 200 * 4;
@@ -811,7 +825,6 @@ void SpawnEnemy::use()
 	{
 	case READY:
 	{
-		cout << "STARTED"<<endl;
 		owner->setStopped(true);
 		Engine::Instance().level()->addAnimation(RESOURCES::ENEMY_COW,
 												 owner->pos(),
@@ -855,7 +868,6 @@ void SpawnEnemy::use()
 
 	case FINISHED:
 	{
-		cout << "FINISHED"<<endl;
 		owner->setStopped(false);
 		m_interval = BEGIN_SPAWN_INTERVAL;
 		m_state = READY;
@@ -864,4 +876,28 @@ void SpawnEnemy::use()
 	default:
 		break;
 	}
+}
+
+StrongAbility::StrongAbility()
+	: EnemyAbility(STRONG_INTERVAL)
+{
+
+}
+
+void StrongAbility::use()
+{
+	owner->protect(0.05f);
+}
+
+RageAbility::RageAbility()
+	: EnemyAbility(RAGE_INTERVAL)
+{
+
+}
+
+void RageAbility::use()
+{
+	const float k = owner->getData().health / owner->getPureStats().health;
+	const float protect = 1 - k;
+	owner->setReflection(protect);
 }
