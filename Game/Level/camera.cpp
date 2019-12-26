@@ -115,32 +115,32 @@ void Camera::resetZoom()
 	zoomRatio = 0;
 }
 
-FloatRect Camera::viewRect() const
-{
-	return FloatRect(view->getCenter().x - view->getSize().x/2,
-					 view->getCenter().y - view->getSize().y/2,
-					 view->getSize().x,
-					 view->getSize().y);
-}
+//FloatRect Camera::viewRect() const
+//{
+//	return FloatRect(view->getCenter().x - view->getSize().x/2,
+//					 view->getCenter().y - view->getSize().y/2,
+//					 view->getSize().x,
+//					 view->getSize().y);
+//}
 
 int Camera::viewTopCell() const
 {
-	return static_cast<int>((view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().tileSize().y);
+	return static_cast<int>(round((view->getCenter().y - view->getSize().y/2)/GlobalVariables::Instance().tileSize().y));
 }
 
 int Camera::viewLeftCell() const
 {
-	return static_cast<int>((view->getCenter().x - view->getSize().x/2)/GlobalVariables::Instance().tileSize().x);
+	return static_cast<int>(round((view->getCenter().x - view->getSize().x/2)/GlobalVariables::Instance().tileSize().x));
 }
 
 int Camera::viewRightCell() const
 {
-	return static_cast<int>((view->getCenter().x + view->getSize().x/2)/GlobalVariables::Instance().tileSize().x);
+	return static_cast<int>(floor((view->getCenter().x + view->getSize().x/2)/GlobalVariables::Instance().tileSize().x));
 }
 
 int Camera::viewBottomCell() const
 {
-	return static_cast<int>((view->getCenter().y + view->getSize().y/2)/GlobalVariables::Instance().tileSize().y);
+	return static_cast<int>(floor((view->getCenter().y + view->getSize().y/2)/GlobalVariables::Instance().tileSize().y));
 }
 
 Vector2i Camera::viewCenter() const

@@ -35,7 +35,7 @@ public:
 	// count of cells on current view
 //	Vector2i currentViewCells() const;
 //	int topCell() const;
-	FloatRect viewRect() const;
+//	FloatRect viewRect() const;
 	int viewTopCell() const;
 	int viewLeftCell() const;
 	int viewRightCell() const;

@@ -295,13 +295,14 @@ void Cursor::updateMousePos()
 void Cursor::checkBorders()
 {
 	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
-	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
+	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
+				pixelPos, *Engine::Instance().camera()->getView()) + Vector2f(1, 1);
 	const Vector2i cell = Vector2i(pos.x/GlobalVariables::Instance().tileSize().x,
 								   pos.y/GlobalVariables::Instance().tileSize().y);
 
 	if (cell.x == Engine::Instance().camera()->viewLeftCell())
 		moveLeftCursor();
-	if (cell.x == Engine::Instance().camera()->viewRightCell())
+	if (cell.x >= Engine::Instance().camera()->viewRightCell())
 		moveRightCursor();
 	if (cell.y == Engine::Instance().camera()->viewTopCell())
 		moveUpCursor();
@@ -331,9 +332,10 @@ void Cursor::moveUpCursor()
 	m_cell.y--;
 	if (Engine::Instance().camera()->viewTopCell() != 0 &&
 			m_cell.y < Engine::Instance().camera()->viewCenter().y)
-		Engine::Instance().camera()->moveUpByCell();
+		Engine::Instance().camera()->moveUpByCell();	
 	else
 		updateMousePos();
+
 	updateCell();
 }
 
