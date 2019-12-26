@@ -324,7 +324,7 @@ void Level::checkRespawn()
 		wave.spawnEnemies.erase(find(wave.spawnEnemies.begin(), wave.spawnEnemies.end(), type));
 		waves[currentWave] = wave;
 
-		spawn(type, wave.protection);
+		spawn(spawnRect.getPosition(), type, wave.protection, gameMap->spawnDirection);
 	}
 	if (wave.spawnEnemies.empty())
 	{
@@ -558,11 +558,11 @@ void Level::drawLevel(RenderTarget * const target)
 	}
 }
 
-void Level::spawn(ENEMY_TYPES type, float protection)
+void Level::spawn(const Vector2f& pos, ENEMY_TYPES type, float protection, int moveDirection)
 {
-	Enemy *enemy = EnemiesFactory::createEnemy(type, spawnRect.getPosition());
+	Enemy *enemy = EnemiesFactory::createEnemy(type, pos);
 	enemy->protect(protection, false);
-	enemy->moveNext(gameMap->spawnDirection);
+	enemy->moveNext(moveDirection);
 	enemies.push_back(enemy);
 }
 

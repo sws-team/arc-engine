@@ -90,6 +90,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::ENEMY_SELF_HEAL, "images/Enemies/enemy.png");
 	addTexture(RESOURCES::ENEMY_DOWN_TOWER, "images/Enemies/enemy1.png");
 	addTexture(RESOURCES::ENEMY_ANT, "images/Enemies/ant.png");
+	addTexture(RESOURCES::ENEMY_COW, "images/Enemies/cow.png");
 }
 
 void ResourcesManager::addTexture(RESOURCES::TEXTURE_TYPE type, const string &path)

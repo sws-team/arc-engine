@@ -333,7 +333,7 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 	switch (type)
 	{
 	case SMALL_NEXT:
-		texture_id = RESOURCES::ENEMY_SCORPION;
+		texture_id = RESOURCES::ENEMY_ANT;
 		stats.health = 175.f;
 		stats.speed = 40.f;
 		stats.damage = 15.f;
@@ -457,6 +457,15 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 		size.x = 1;
 		size.y = 1;
 		ability = new DownTowerAbility();
+		break;
+	case SPAWN_ENEMY:
+		texture_id = RESOURCES::ENEMY_COW;
+		stats.health = 800.f;
+		stats.speed = 55.f;
+		stats.damage = 45.f;
+		size.x = 4;
+		size.y = 4;
+		ability = new SpawnEnemy();
 		break;
 	default:
 		break;
@@ -787,4 +796,72 @@ void DownTowerAbility::effect(bool isActive)
 {
 	if (targetTower != nullptr)
 		targetTower->setDowngrade(isActive);
+}
+
+SpawnEnemy::SpawnEnemy()
+	: EnemyAbility(BEGIN_SPAWN_INTERVAL)
+	,m_state(READY)
+{
+
+}
+
+void SpawnEnemy::use()
+{
+	switch (m_state)
+	{
+	case READY:
+	{
+		cout << "STARTED"<<endl;
+		owner->setStopped(true);
+		Engine::Instance().level()->addAnimation(RESOURCES::ENEMY_COW,
+												 owner->pos(),
+												 Vector2i(GlobalVariables::CELL_SIZE * 2,
+														  GlobalVariables::CELL_SIZE * 2),
+												 200, 4, ACTIVATE_SPAWN_ROW);
+		m_interval = 800;
+		m_state = SPAWN;
+		currentSpawnCount = 0;
+		spawnCount = SPAWN_COUNT + rand() % SPAWN_COUNT_OFFSET;
+	}
+		break;
+	case SPAWN:
+	{
+		const Vector2i cell = Engine::Instance().camera()->posToCellMap(owner->enemyPos());
+		const int direction = Engine::Instance().level()->getTileDirectionByCell(cell);
+
+		Engine::Instance().level()->spawn(owner->pos(), SMALL_NEXT, 0.1f, direction);
+
+		m_interval = SPAWN_INTERVAL;
+		m_state = WAIT_SPAWN;
+		currentSpawnCount++;
+	}
+		break;
+	case WAIT_SPAWN:
+	{
+		if(currentSpawnCount >= spawnCount)
+		{
+			Engine::Instance().level()->addAnimation(RESOURCES::ENEMY_COW,
+													 owner->pos(),
+													 Vector2i(GlobalVariables::CELL_SIZE * 2,
+															  GlobalVariables::CELL_SIZE * 2),
+													 200, 4, DEACTIVATE_SPAWN_ROW);
+			m_interval = 800;
+			m_state = FINISHED;
+		}
+		else
+			m_state = SPAWN;
+	}
+		break;
+
+	case FINISHED:
+	{
+		cout << "FINISHED"<<endl;
+		owner->setStopped(false);
+		m_interval = BEGIN_SPAWN_INTERVAL;
+		m_state = READY;
+	}
+		break;
+	default:
+		break;
+	}
 }

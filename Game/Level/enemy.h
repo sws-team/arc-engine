@@ -224,6 +224,31 @@ protected:
 	void effect(bool isActive) override;
 };
 
+class SpawnEnemy : public EnemyAbility
+{
+public:
+	SpawnEnemy();
+protected:
+	void use() override;
+private:
+	enum STATES
+	{
+		READY,
+		SPAWN,
+		WAIT_SPAWN,
+		FINISHED,
+	};
+	STATES m_state;
+	constexpr static float BEGIN_SPAWN_INTERVAL = 7000;
+	constexpr static float SPAWN_INTERVAL = 700;
+	constexpr static int SPAWN_COUNT = 2;
+	constexpr static int SPAWN_COUNT_OFFSET = 5;
+	int currentSpawnCount;
+	int spawnCount;
+	constexpr static float ACTIVATE_SPAWN_ROW = 1;
+	constexpr static float DEACTIVATE_SPAWN_ROW = 2;
+};
+
 class EnemiesFactory
 {
 public:

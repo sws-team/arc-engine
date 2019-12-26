@@ -5,7 +5,6 @@
 #include "gamedrawable.h"
 #include "leveldef.h"
 
-class SpaceShip;
 class Level;
 
 class Tower;

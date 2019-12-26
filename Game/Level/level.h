@@ -26,7 +26,7 @@ public:
 
 	void drawLevel(RenderTarget * const target);
 
-	void spawn(ENEMY_TYPES type, float protection);
+	void spawn(const Vector2f &pos, ENEMY_TYPES type, float protection, int moveDirection);
 	Tile getTileByPos(const Vector2f& pos, unsigned int layer = 0);
 	Tile getTileByCell(const Vector2i& cell, unsigned int layer = 0) const;
 
