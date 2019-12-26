@@ -36,7 +36,8 @@ public:
 	static Tower *createTower(TOWER_TYPES type, const Vector2f& pos);
 	static TowerStats getTowerStats(TOWER_TYPES type);
 	static bool isIntersects(const FloatRect& rect, const Vector2f& center, float radius);
-	constexpr static float UPGRADE_COST_MODIFIER = 0.5f;
+	constexpr static float UPGRADE_TO_2_COST_MODIFIER = 0.5f;
+	constexpr static float UPGRADE_TO_3_COST_MODIFIER = 0.75f;
 };
 
 class Tower : public GameObject

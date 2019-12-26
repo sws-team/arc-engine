@@ -48,6 +48,7 @@ Level::Level() :
   ,life(0.f)
   ,money(0.f)
   ,energy(0.f)
+  ,currentWave(0)
   ,m_state(WAIT_READY)
   ,m_powerTowersCount(0)
 {
@@ -165,9 +166,13 @@ void Level::update()
 
 void Level::startMission(const unsigned int n)
 {
+	currentWave = 0;
+	Engine::Instance().panel()->updateWaveText();
 	m_state = WAIT_READY;
-	spawnEnemies = EnemiesFactory::generateEnemies(n);
-	Engine::Instance().panel()->setProgressMax(spawnEnemies.size());
+	waves = EnemiesFactory::generateEnemies(n);
+
+	Engine::Instance().panel()->setProgressMax(currentProgress());
+
 	life = Engine::getStartHealth(n);
 	money = Engine::getStartMoney(n);
 	energy = Engine::getStartEnergy(n);
@@ -274,11 +279,12 @@ void Level::checkEnd()
 			hitPlayer(enemy->getData().damage);
 			delete enemy;
 			it = enemies.erase(it);
+			money++;
 		}
 		else
 			++it;
 	}
-	if (spawnEnemies.empty() && enemies.empty())
+	if (currentWave == waves.size() && enemies.empty())
 		changeState(WIN);	
 }
 
@@ -306,58 +312,27 @@ void Level::checkAlive()
 
 void Level::checkRespawn()
 {
-	if (spawnEnemies.empty())
+	if (currentWave == waves.size())
 		return;
 
-	const int time = RESPAWN_TIME - Engine::Instance().getMission() * 100;
-	const int timeOffset = rand() % (RESPAWN_OFFSET + 1) - RESPAWN_OFFSET/2;
-	int spawnCount = 1;
-	float protection = 0.f;
-	const float k = 1 - static_cast<float>(spawnEnemies.size()) / Engine::Instance().panel()->getProgressMax();
-	if (k > 0.9f)
-	{
-		protection = 0.5f;
-		spawnCount = 6;	
-	}
-	else if(k > 0.8f)
-	{
-		protection = 0.4f;
-		spawnCount = 5;	
-	}
-	else if(k > 0.6f)
-	{
-		protection = 0.3f;
-		spawnCount = 4;	
-	}
-	else if(k > 0.4f)
-	{
-		protection = 0.2f;
-		spawnCount = 3;	
-	}
-	else if(k > 0.2f)	
-	{
-		protection = 0.1f;
-		spawnCount = 2;	
-	}
-
-	const int resultTime = time + timeOffset + RESPAWN_TIME * (1 - k);
+	Wave wave = waves.at(currentWave);
+	const int respawnOffset = static_cast<int>(wave.respawnTime * 0.15);
+	const int timeOffset = rand() % (respawnOffset + 1) - respawnOffset/2;
+	const int resultTime = timeOffset + wave.respawnTime;
 	if (spawnTimer.check(resultTime))
 	{
-		for (int i = 0; i < spawnCount; ++i)
-		{
-			if (spawnEnemies.empty())
-				break;
-			spawnEnemy(protection);
-		}
-	}
-}
+		const int n = rand() % wave.spawnEnemies.size();
+		ENEMY_TYPES type = wave.spawnEnemies.at(n);
+		wave.spawnEnemies.erase(find(wave.spawnEnemies.begin(), wave.spawnEnemies.end(), type));
+		waves[currentWave] = wave;
 
-void Level::spawnEnemy(float protection)
-{
-	const int n = rand() % spawnEnemies.size();
-	ENEMY_TYPES type = spawnEnemies.at(n);
-	spawnEnemies.erase(find(spawnEnemies.begin(), spawnEnemies.end(), type));
-	spawn(type, protection);
+		spawn(type, wave.protection);
+	}
+	if (wave.spawnEnemies.empty())
+	{
+		currentWave++;
+		Engine::Instance().panel()->updateWaveText();
+	}
 }
 
 void Level::checkEnemyMove()
@@ -483,6 +458,11 @@ FloatRect Level::getEndRect() const
 	return FloatRect(endRect.getPosition(), endRect.getSize());
 }
 
+unsigned int Level::getCurrentWave() const
+{
+	return currentWave;
+}
+
 void Level::test()
 {
 //	spawn(DOWN_TOWER_ENEMY);
@@ -503,7 +483,10 @@ void Level::ready()
 
 int Level::currentProgress() const
 {
-	return spawnEnemies.size();
+	int progress = 0;
+	for(const Wave& wave : waves)
+		progress += wave.spawnEnemies.size();
+	return progress;
 }
 
 vector<Enemy *> Level::getAllEnemies() const
@@ -774,17 +757,10 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case UPGRADE:
 		{
-			const TOWER_TYPES type = Engine::Instance().panel()->currentTower();
-			float cost = type == TOWER_TYPES::POWER ?
-						TowersFactory::getTowerStats(type).cost + m_powerTowersCount * PowerTower::COST_OFFSET :
-						TowersFactory::getTowerStats(type).cost;
-
 			if (selectedTower == nullptr)
 				return;
-			if (selectedTower->level() == 2)
-				cost += cost * TowersFactory::UPGRADE_COST_MODIFIER;
 
-			cost *= TowersFactory::UPGRADE_COST_MODIFIER;
+			const float cost = Engine::Instance().panel()->getTowerUpgradeCost(selectedTower);
 			if (money < cost)
 				return;
 

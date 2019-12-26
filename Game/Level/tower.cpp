@@ -272,7 +272,7 @@ const TowerStats ImprovedTower::STATS = TowerStats	(10,	250,	7,		40,		250);
 BaseTower::BaseTower(const Vector2f &pos)
 	: ProjectilesTower(RESOURCES::TOWER_BASE, pos, STATS)
 {
-	projectileInfo.size = Vector2i(10, 5);
+	projectileInfo.size = Vector2i(16, 8);
 	projectileInfo.frameCount = 1;
 	projectileInfo.texture_id = RESOURCES::BASE_PROJECTILE;
 	projectileInfo.explosion_texture_id = RESOURCES::BASE_EXPLOSION_EFFECT;

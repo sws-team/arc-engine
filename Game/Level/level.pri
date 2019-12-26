@@ -17,4 +17,5 @@ SOURCES += \
     $$PWD/level.cpp \
     $$PWD/lifebar.cpp \
     $$PWD/projectile.cpp \
-    $$PWD/tower.cpp
+    $$PWD/tower.cpp \
+    $$PWD/waves.cpp

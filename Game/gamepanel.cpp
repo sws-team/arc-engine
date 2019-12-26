@@ -146,6 +146,14 @@ GamePanel::GamePanel() :
 	endSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::END_TEXTURE));
 	endSprite.setScale(Settings::Instance().getScaleFactor());
 
+
+	waveText.setFont(GlobalVariables::Instance().font());
+	waveText.setFillColor(Color::Magenta);
+	waveText.setOutlineThickness(2);
+	waveText.setOutlineColor(Color::Yellow);
+	waveText.setCharacterSize(25);
+	waveText.setScale(scaleFactor);
+
 	m_bottomValue = 0;
 	progress->init(Vector2i(Settings::Instance().getResolution().x * PROGRESS_WIDTH,
 							LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
@@ -167,7 +175,11 @@ void GamePanel::draw(RenderTarget * const target)
 									pos.y - Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE + readyText.getGlobalBounds().height/2));
 
 	progress->setPos(Vector2f(pos.x + Settings::Instance().getResolution().x * PROGRESS_WIDTH,
-							  pos.y - target->getView().getSize().y + PROGRESS_OFFSET * Settings::Instance().getScaleFactor().y));
+							  pos.y - target->getView().getSize().y + PROGRESS_OFFSET *
+							  Settings::Instance().getScaleFactor().y));
+
+	waveText.setPosition(progress->pos());
+
 	pos.y -= m_sprite.getGlobalBounds().height;
 	m_bottomValue = pos.y;
 	pos = updatePos(pos);
@@ -230,6 +242,8 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(miniMapSprite);
 	if (Engine::Instance().getMission() != GlobalVariables::SURVIVAL_MODE_ID)
 		progress->draw(target);
+
+	target->draw(waveText);
 
 	if (Engine::Instance().cursor()->inPanel())
 		target->draw(cursorSprite);
@@ -469,6 +483,37 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 int GamePanel::getProgressMax() const
 {
 	return m_progressMax;
+}
+
+void GamePanel::updateWaveText()
+{
+	waveText.setString("Wave #" + to_string(Engine::Instance().level()->getCurrentWave() + 1));
+}
+
+float GamePanel::getTowerUpgradeCost(Tower *tower) const
+{
+	if (tower == nullptr)
+		return 0.f;
+
+	const TOWER_TYPES type = tower->type();
+	float cost = type == TOWER_TYPES::POWER ?
+				TowersFactory::getTowerStats(type).cost + Engine::Instance().level()->getPowerTowersCount() * PowerTower::COST_OFFSET :
+				TowersFactory::getTowerStats(type).cost;
+
+
+
+	switch (tower->level())
+	{
+	case 1:
+		cost *= TowersFactory::UPGRADE_TO_2_COST_MODIFIER;
+		break;
+	case 2:
+		cost *= TowersFactory::UPGRADE_TO_3_COST_MODIFIER;
+		break;
+	default:
+		break;
+	}
+	return cost;
 }
 
 void GamePanel::updateEnableTowers()
@@ -827,10 +872,7 @@ void GamePanel::updateCurrentTower()
 	bool canUpgrade = false;;
 	if (m_selectedTower != nullptr)
 	{
-		float cost = m_selectedTower->type() == TOWER_TYPES::POWER ?
-					m_selectedTower->data().cost + Engine::Instance().level()->getPowerTowersCount() * PowerTower::COST_OFFSET :
-					m_selectedTower->data().cost;
-		cost *= TowersFactory::UPGRADE_COST_MODIFIER;
+		const float cost = getTowerUpgradeCost(m_selectedTower);
 		canUpgrade = Engine::Instance().level()->getMoneyCount() < cost;
 	}
 	if (level > 2 || canUpgrade)
@@ -903,10 +945,26 @@ void GamePanel::updateInfo()
 		}
 			break;
 		case SELL:
+		{
 			str = Language::Instance().translate(Language::SELL);
+
+			if (m_selectedTower != nullptr)
+			{
+				str += endline;
+				str += "Cost" +  GlobalVariables::to_string_with_precision(getTowerUpgradeCost(m_selectedTower), 1);
+			}
+		}
 			break;
 		case UPGRADE:
+		{
 			str = Language::Instance().translate(Language::UPGRADE);
+
+			if (m_selectedTower != nullptr)
+			{
+				str += endline;
+				str += "Cost" +  GlobalVariables::to_string_with_precision(getTowerUpgradeCost(m_selectedTower), 1);
+			}
+		}
 			break;
 		default:
 			break;

@@ -78,6 +78,8 @@ public:
 	vector<Tower *> getAllTowers() const;
 	FloatRect getEndRect() const;
 
+	unsigned int getCurrentWave() const;
+
 	//delete
 	void test();
 
@@ -88,7 +90,6 @@ private:
 	void checkEnd();
 	void checkAlive();
 	void checkRespawn();
-	void spawnEnemy(float protection);
 	void checkEnemyMove();
 
 	RectangleShape deadZone;
@@ -109,12 +110,11 @@ private:
 
 	vector<Tower*> towers;
 
+	vector<Wave> waves;
+	unsigned int currentWave;
 
-	vector<ENEMY_TYPES> spawnEnemies;
 	Timer spawnTimer;
 	ENEMY_TYPES bossType;
-	constexpr static int RESPAWN_TIME = 1500;
-	constexpr static int RESPAWN_OFFSET = 250;
 
 	LEVEL_STATE m_state;
 	void changeState(LEVEL_STATE state);

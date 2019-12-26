@@ -228,9 +228,9 @@ class EnemiesFactory
 {
 public:
 	static Enemy *createEnemy(ENEMY_TYPES type, const Vector2f &startPos);
-	static vector<ENEMY_TYPES> generateEnemies(unsigned int n);
+	static vector<Wave> generateEnemies(unsigned int n);
 private:
-	static void addEnemiesByType(const ENEMY_TYPES type, int count, vector<ENEMY_TYPES> *spawnEnemies);
+	static Wave createWave(float protection, float time, const map<ENEMY_TYPES, int>& enemies);
 };
 
 #endif // ENEMY_H

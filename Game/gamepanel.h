@@ -63,6 +63,9 @@ public:
 	bool isAbilityIconActive(ACTION_STATE type) const;
 
 	int getProgressMax() const;
+	void updateWaveText();
+
+	float getTowerUpgradeCost(Tower* tower) const;
 
 private:
 	Sprite m_sprite;
@@ -143,6 +146,7 @@ private:
 	unsigned int currentCursorPos;
 	void updateCurrentCursor();
 	static const String endline;
+	Text waveText;
 };
 
 #endif // GAMEPANEL_H

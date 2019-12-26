@@ -1,6 +1,8 @@
 #ifndef LEVELDEF_H
 #define LEVELDEF_H
 
+#include "stdheader.h"
+
 enum ACTION_STATE
 {
 	READY,
@@ -22,12 +24,12 @@ enum ENEMY_TYPES
 {
 	UNKNOWN,
 
-	SMALL_SLOW,//scorpion
+	SCORPION,//scorpion
 	SMALL_MEDIUM,//car
 	SMALL_FAST,//tricycle
 
 	MID_SLOW,//tank
-	MID_MEDIUM,//spider
+	SPIDER,//spider
 	MID_FAST,//helicopter
 
 	BIG_SLOW,//aircarrier
@@ -41,6 +43,13 @@ enum ENEMY_TYPES
 	SELFHEAL_ENEMY,
 	DOWN_TOWER_ENEMY,
 	SMALL_NEXT,
+};
+
+struct Wave
+{
+	vector<ENEMY_TYPES> spawnEnemies;
+	float protection;
+	float respawnTime;
 };
 
 enum TOWER_TYPES
