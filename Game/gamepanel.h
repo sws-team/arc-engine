@@ -95,6 +95,20 @@ private:
 	Sprite energyIcon;
 	Sprite healthIcon;
 
+	Text towerBaseCostText;
+	Text towerFreezeCostText;
+	Text towerRocketCostText;
+	Text towerLaserCostText;
+	Text towerPowerCostText;
+	Text towerImprovedCostText;
+
+	Text abilityBombCostText;
+	Text abilityFreezeBombCostText;
+	Text abilityVenomCostText;
+	Text abilityIncreaseTowerDamageCostText;
+	Text abilityIncreaseTowerAttackSpeedCostText;
+	Text abilityUnknownAttackSpeedCostText;
+
 	Tower *m_selectedTower;
 	Text info;
 

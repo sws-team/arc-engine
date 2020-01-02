@@ -130,6 +130,107 @@ GamePanel::GamePanel() :
 	actionsSprites.push_back(&abilityIncreaseTowerAttackSpeedSprite);
 	actionsSprites.push_back(&abilityUnknownSprite);
 
+	const float costTextCharacterSize = 20;
+	const Color costTextFillColor = Color::Blue;
+	const Color costTextOutlineColor = Color::White;
+	towerBaseCostText.setFont(GlobalVariables::Instance().font());
+	towerBaseCostText.setFillColor(costTextFillColor);
+	towerBaseCostText.setOutlineColor(costTextOutlineColor);
+	towerBaseCostText.setOutlineThickness(1);
+	towerBaseCostText.setCharacterSize(costTextCharacterSize);
+	towerBaseCostText.setScale(scaleFactor);
+
+	towerFreezeCostText.setFont(GlobalVariables::Instance().font());
+	towerFreezeCostText.setFillColor(costTextFillColor);
+	towerFreezeCostText.setOutlineColor(costTextOutlineColor);
+	towerFreezeCostText.setOutlineThickness(1);
+	towerFreezeCostText.setCharacterSize(costTextCharacterSize);
+	towerFreezeCostText.setScale(scaleFactor);
+
+	towerRocketCostText.setFont(GlobalVariables::Instance().font());
+	towerRocketCostText.setFillColor(costTextFillColor);
+	towerRocketCostText.setOutlineColor(costTextOutlineColor);
+	towerRocketCostText.setOutlineThickness(1);
+	towerRocketCostText.setCharacterSize(costTextCharacterSize);
+	towerRocketCostText.setScale(scaleFactor);
+
+	towerLaserCostText.setFont(GlobalVariables::Instance().font());
+	towerLaserCostText.setFillColor(costTextFillColor);
+	towerLaserCostText.setOutlineColor(costTextOutlineColor);
+	towerLaserCostText.setOutlineThickness(1);
+	towerLaserCostText.setCharacterSize(costTextCharacterSize);
+	towerLaserCostText.setScale(scaleFactor);
+
+	towerPowerCostText.setFont(GlobalVariables::Instance().font());
+	towerPowerCostText.setFillColor(costTextFillColor);
+	towerPowerCostText.setOutlineColor(costTextOutlineColor);
+	towerPowerCostText.setOutlineThickness(1);
+	towerPowerCostText.setCharacterSize(costTextCharacterSize);
+	towerPowerCostText.setScale(scaleFactor);
+
+	towerImprovedCostText.setFont(GlobalVariables::Instance().font());
+	towerImprovedCostText.setFillColor(costTextFillColor);
+	towerImprovedCostText.setOutlineColor(costTextOutlineColor);
+	towerImprovedCostText.setOutlineThickness(1);
+	towerImprovedCostText.setCharacterSize(costTextCharacterSize);
+	towerImprovedCostText.setScale(scaleFactor);
+
+	abilityBombCostText.setFont(GlobalVariables::Instance().font());
+	abilityBombCostText.setFillColor(costTextFillColor);
+	abilityBombCostText.setOutlineColor(costTextOutlineColor);
+	abilityBombCostText.setOutlineThickness(1);
+	abilityBombCostText.setCharacterSize(costTextCharacterSize);
+	abilityBombCostText.setScale(scaleFactor);
+
+	abilityFreezeBombCostText.setFont(GlobalVariables::Instance().font());
+	abilityFreezeBombCostText.setFillColor(costTextFillColor);
+	abilityFreezeBombCostText.setOutlineColor(costTextOutlineColor);
+	abilityFreezeBombCostText.setOutlineThickness(1);
+	abilityFreezeBombCostText.setCharacterSize(costTextCharacterSize);
+	abilityFreezeBombCostText.setScale(scaleFactor);
+
+	abilityVenomCostText.setFont(GlobalVariables::Instance().font());
+	abilityVenomCostText.setFillColor(costTextFillColor);
+	abilityVenomCostText.setOutlineColor(costTextOutlineColor);
+	abilityVenomCostText.setOutlineThickness(1);
+	abilityVenomCostText.setCharacterSize(costTextCharacterSize);
+	abilityVenomCostText.setScale(scaleFactor);
+
+	abilityIncreaseTowerDamageCostText.setFont(GlobalVariables::Instance().font());
+	abilityIncreaseTowerDamageCostText.setFillColor(costTextFillColor);
+	abilityIncreaseTowerDamageCostText.setOutlineColor(costTextOutlineColor);
+	abilityIncreaseTowerDamageCostText.setOutlineThickness(1);
+	abilityIncreaseTowerDamageCostText.setCharacterSize(costTextCharacterSize);
+	abilityIncreaseTowerDamageCostText.setScale(scaleFactor);
+
+	abilityIncreaseTowerAttackSpeedCostText.setFont(GlobalVariables::Instance().font());
+	abilityIncreaseTowerAttackSpeedCostText.setFillColor(costTextFillColor);
+	abilityIncreaseTowerAttackSpeedCostText.setOutlineColor(costTextOutlineColor);
+	abilityIncreaseTowerAttackSpeedCostText.setOutlineThickness(1);
+	abilityIncreaseTowerAttackSpeedCostText.setCharacterSize(costTextCharacterSize);
+	abilityIncreaseTowerAttackSpeedCostText.setScale(scaleFactor);
+
+	abilityUnknownAttackSpeedCostText.setFont(GlobalVariables::Instance().font());
+	abilityUnknownAttackSpeedCostText.setFillColor(costTextFillColor);
+	abilityUnknownAttackSpeedCostText.setOutlineColor(costTextOutlineColor);
+	abilityUnknownAttackSpeedCostText.setOutlineThickness(1);
+	abilityUnknownAttackSpeedCostText.setCharacterSize(costTextCharacterSize);
+	abilityUnknownAttackSpeedCostText.setScale(scaleFactor);
+
+	towerBaseCostText.setString(GlobalVariables::to_string_with_precision(BaseTower::STATS.cost, 0));
+	towerFreezeCostText.setString(GlobalVariables::to_string_with_precision(FreezeTower::STATS.cost, 0));
+	towerRocketCostText.setString(GlobalVariables::to_string_with_precision(RocketTower::STATS.cost, 0));
+	towerLaserCostText.setString(GlobalVariables::to_string_with_precision(LaserTower::STATS.cost, 0));
+	towerPowerCostText.setString(GlobalVariables::to_string_with_precision(PowerTower::STATS.cost, 0));
+	towerImprovedCostText.setString(GlobalVariables::to_string_with_precision(ImprovedTower::STATS.cost, 0));
+
+	abilityBombCostText.setString(GlobalVariables::to_string_with_precision(Level::BOMB_ABILITY_COST, 0));
+	abilityFreezeBombCostText.setString(GlobalVariables::to_string_with_precision(Level::FREEZE_BOMB_ABILITY_COST, 0));
+	abilityVenomCostText.setString(GlobalVariables::to_string_with_precision(Level::VENOM_ABILITY_COST, 0));
+	abilityIncreaseTowerDamageCostText.setString(GlobalVariables::to_string_with_precision(Level::INC_TOWER_DMG_ABILITY_COST, 0));
+	abilityIncreaseTowerAttackSpeedCostText.setString(GlobalVariables::to_string_with_precision(Level::INC_TOWER_AS_ABILITY_COST, 0));
+	abilityUnknownAttackSpeedCostText.setString(GlobalVariables::to_string_with_precision(0, 0));
+
 	moneyIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MONEY_ICON));
 	moneyIcon.setScale(scaleFactor);
 
@@ -235,6 +336,21 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(sellSprite);
 	target->draw(upgradeSprite);
 
+	target->draw(towerBaseCostText);
+	target->draw(towerFreezeCostText);
+	target->draw(towerRocketCostText);
+	target->draw(towerLaserCostText);
+	target->draw(towerPowerCostText);
+	target->draw(towerImprovedCostText);
+
+	target->draw(abilityBombCostText);
+	target->draw(abilityFreezeBombCostText);
+	target->draw(abilityVenomCostText);
+	target->draw(abilityIncreaseTowerDamageCostText);
+	target->draw(abilityIncreaseTowerAttackSpeedCostText);
+	target->draw(abilityUnknownAttackSpeedCostText);
+
+
 	target->draw(moneyIcon);
 	target->draw(energyIcon);
 	target->draw(healthIcon);
@@ -273,6 +389,10 @@ void GamePanel::updatePanel()
 
 	const float progressValue = static_cast<float>(Engine::Instance().level()->currentProgress()) / m_progressMax;
 	progress->setValue(progressValue);
+
+	towerPowerCostText.setString(
+				GlobalVariables::to_string_with_precision(
+					PowerTower::STATS.cost + Engine::Instance().level()->getPowerTowersCount() * PowerTower::COST_OFFSET, 0));
 
 	updateCursor();
 	updateInfo();
@@ -475,6 +595,20 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	pos.y -= iconSize.y;
 	pos.x += iconSize.x;
 	pos.x += icons_space;
+
+	towerBaseCostText.setPosition(towerBaseSprite.getPosition());
+	towerFreezeCostText.setPosition(towerFreezeSprite.getPosition());
+	towerRocketCostText.setPosition(towerRocketSprite.getPosition());
+	towerLaserCostText.setPosition(towerLaserSprite.getPosition());
+	towerPowerCostText.setPosition(towerPowerSprite.getPosition());
+	towerImprovedCostText.setPosition(towerImprovedSprite.getPosition());
+
+	abilityBombCostText.setPosition(abilityBombSprite.getPosition());
+	abilityFreezeBombCostText.setPosition(abilityFreezeBombSprite.getPosition());
+	abilityVenomCostText.setPosition(abilityVenomSprite.getPosition());
+	abilityIncreaseTowerDamageCostText.setPosition(abilityIncreaseTowerDamageSprite.getPosition());
+	abilityIncreaseTowerAttackSpeedCostText.setPosition(abilityIncreaseTowerAttackSpeedSprite.getPosition());
+	abilityUnknownAttackSpeedCostText.setPosition(abilityUnknownSprite.getPosition());
 
 	return pos;
 }
