@@ -20,6 +20,7 @@ GamePanel::GamePanel() :
   ,waitBlink(false)
   ,currentCursorPos(0)
 {
+	life = new LifeBar();
 	progress = new LifeBar();
 	m_selectedTower = nullptr;
 
@@ -41,13 +42,6 @@ GamePanel::GamePanel() :
 	moneyCountText.setOutlineThickness(2);
 	moneyCountText.setCharacterSize(34);
 	moneyCountText.setScale(scaleFactor);
-
-	lifeCountText.setFont(GlobalVariables::Instance().font());
-	lifeCountText.setFillColor(Color::Black);
-	lifeCountText.setOutlineColor(Color::Yellow);
-	lifeCountText.setOutlineThickness(2);
-	lifeCountText.setCharacterSize(34);
-	lifeCountText.setScale(scaleFactor);
 
 	cursorSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_CURSOR));
 	cursorSprite.setScale(scaleFactor);
@@ -229,16 +223,11 @@ GamePanel::GamePanel() :
 	moneyIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MONEY_ICON));
 	moneyIcon.setScale(scaleFactor);
 
-	healthIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::HEALTH_ICON));
-	healthIcon.setScale(scaleFactor);
-
-
 	startSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::START_TEXTURE));
 	startSprite.setScale(Settings::Instance().getScaleFactor());
 
 	endSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::END_TEXTURE));
 	endSprite.setScale(Settings::Instance().getScaleFactor());
-
 
 	waveText.setFont(GlobalVariables::Instance().font());
 	waveText.setFillColor(Color::Magenta);
@@ -250,6 +239,9 @@ GamePanel::GamePanel() :
 	m_bottomValue = 0;
 	progress->init(Vector2i(Settings::Instance().getResolution().x * PROGRESS_WIDTH,
 							LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
+	life->init(Vector2i(128 * Settings::Instance().getScaleFactor().x,
+						16 * Settings::Instance().getScaleFactor().y),
+			   Color::Red);
 	updateCurrentTower();
 }
 
@@ -302,7 +294,6 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(m_sprite);
 
 	target->draw(moneyCountText);
-	target->draw(lifeCountText);
 
 	updateEnableAbilities();
 
@@ -349,12 +340,11 @@ void GamePanel::draw(RenderTarget * const target)
 	if (!abilities->unknownAblity->isReady())
 		target->draw(abilityUnknownAttackSpeedDurationText);
 
-
 	target->draw(moneyIcon);
-	target->draw(healthIcon);
 
 	target->draw(miniMapSprite);
 	progress->draw(target);
+	life->draw(target);
 
 	target->draw(waveText);
 
@@ -379,12 +369,12 @@ void GamePanel::update()
 void GamePanel::updatePanel()
 {
 	const int money = static_cast<int>(Engine::Instance().level()->getMoneyCount());
-	const int life = static_cast<int>(Engine::Instance().level()->getLifeCount());
 	moneyCountText.setString(String(to_string(money)));
-	lifeCountText.setString(String(to_string(life)));
 
 	const float progressValue = static_cast<float>(Engine::Instance().level()->currentProgress()) / m_progressMax;
 	progress->setValue(progressValue);
+	const float lifeValue = static_cast<float>(Engine::Instance().level()->getLifeCount()) / m_lifeMax;
+	life->setValue(lifeValue);
 
 	towerPowerCostText.setString(
 				GlobalVariables::to_string_with_precision(
@@ -494,10 +484,11 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 
 	pos.y += info_icons_offset;
 	pos.y += moneyCountText.getGlobalBounds().height;
-	healthIcon.setPosition(pos);
-	pos.x += info_icons_size;
-	lifeCountText.setPosition(pos);
-	pos.x -= info_icons_size;
+
+	life->setPos(pos);
+//	pos.x += info_icons_size;
+//	lifeCountText.setPosition(pos);
+//	pos.x -= info_icons_size;
 
 	pos.y -= 2 * info_icons_offset;
 	pos.y -= moneyCountText.getGlobalBounds().height;
@@ -600,6 +591,11 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	abilityUnknownAttackSpeedDurationText.setPosition(abilityUnknownSprite.getPosition());
 
 	return pos;
+}
+
+void GamePanel::setLifeMax(int lifeMax)
+{
+	m_lifeMax = lifeMax;
 }
 
 int GamePanel::getProgressMax() const
@@ -1204,7 +1200,7 @@ FloatRect GamePanel::getMoneyRect() const
 
 FloatRect GamePanel::getHealthRect() const
 {
-	return lifeCountText.getGlobalBounds();
+	return life->fullValue.getGlobalBounds();
 }
 
 FloatRect GamePanel::getRemovRect() const

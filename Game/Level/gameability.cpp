@@ -171,13 +171,15 @@ void VenomAbility::activate()
 
 void VenomAbility::checkDuration()
 {
+	if (!m_isActive)
+		return;
 	if (abilityTimer.check(VENOM_ATTACK_SPEED))
 	{
 		count++;
 		for(Enemy *enemy : Engine::Instance().level()->getAllEnemies())
 		{
 			if (enemy->gameRect().intersects(object->gameRect()))
-				enemy->hit(VenomAbility::VENOM_DAMAGE);
+				enemy->hit(VenomAbility::VENOM_DAMAGE);			
 		}
 	}
 	if (count >= VENOM_DAMAGE_COUNT)

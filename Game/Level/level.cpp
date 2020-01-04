@@ -127,8 +127,9 @@ void Level::startMission(const unsigned int n)
 	waves = EnemiesFactory::generateEnemies(n);
 
 	Engine::Instance().panel()->setProgressMax(currentProgress());
-
 	life = Engine::getStartHealth(n);
+	Engine::Instance().panel()->setLifeMax(life);
+
 	money = Engine::getStartMoney(n);
 	Engine::Instance().panel()->updatePanel();
 
@@ -361,6 +362,7 @@ void Level::hitPlayer(float damage)
 		//game over
 		changeState(LOSE);
 	}
+	Engine::Instance().panel()->updatePanel();
 }
 
 void Level::changeState(Level::LEVEL_STATE state)

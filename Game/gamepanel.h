@@ -6,7 +6,7 @@
 #include "leveldef.h"
 
 class Level;
-
+class LifeBar;
 class Tower;
 
 class GamePanel : public GameDrawable
@@ -68,11 +68,12 @@ public:
 
 	void updateAbilitiesDuration();
 
+	void setLifeMax(int lifeMax);
+
 private:
 	Sprite m_sprite;
 	RenderTexture rTexture;
 	Text moneyCountText;
-	Text lifeCountText;
 
 	Sprite sellSprite;
 	Sprite upgradeSprite;
@@ -92,7 +93,6 @@ private:
 	Sprite towerImprovedSprite;
 
 	Sprite moneyIcon;
-	Sprite healthIcon;
 
 	Text towerBaseCostText;
 	Text towerFreezeCostText;
@@ -117,8 +117,9 @@ private:
 	float m_bottomValue;
 	bool m_isPanelActive;
 
-	class LifeBar *progress;
+	LifeBar *progress;
 	int m_progressMax;
+	int m_lifeMax;
 
 	struct IconsAvaliable
 	{
@@ -160,6 +161,8 @@ private:
 	void updateCurrentCursor();
 	static const String endline;
 	Text waveText;
+
+	LifeBar *life;
 };
 
 #endif // GAMEPANEL_H
