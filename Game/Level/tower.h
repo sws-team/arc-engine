@@ -66,8 +66,10 @@ public:
 	static const float LEVEL_GAIN;
 	static const float TOWER_SCAlE;
 
-	void increaseAttackSpeed(int duration, int value);
-	void increaseDamage(int duration, int value);
+	void increaseAttackSpeed(float value);
+	void decreaseAttackSpeed(float value);
+	void increaseDamage(float value);
+	void decreaseDamage(float value);
 
 	int level() const;
 	int kills() const;
@@ -87,15 +89,15 @@ private:
 	TOWER_TYPES m_type;
 	int m_level;
 
-	struct Ability
-	{
-		bool isActive;
-		Timer timer;
-		int value;
-		int duration;
-	};
-	Ability abilityDamage;
-	Ability abilityAttackSpeed;
+//	struct Ability
+//	{
+//		bool isActive;
+//		Timer timer;
+//		int value;
+//		int duration;
+//	};
+//	Ability abilityDamage;
+//	Ability abilityAttackSpeed;
 	int m_kills;
 	bool m_isActive;
 	bool m_downgraded;

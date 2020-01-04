@@ -108,15 +108,6 @@ void Instructions::changeState(Instructions::STATES state)
 		textStr = Language::Instance().translate(Language::INSTRUCTION_HEALTH);
 	}
 		break;
-
-	case ENERGY:
-	{
-		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
-							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
-		rect = Engine::Instance().panel()->getEnergyRect();
-		textStr = Language::Instance().translate(Language::INSTRUCTION_ENERGY);
-	}
-		break;
 	case REMOVE:
 	{
 		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,

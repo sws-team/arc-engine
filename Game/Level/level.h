@@ -11,6 +11,7 @@ class GamePanel;
 class Tile;
 class Tower;
 class Animation;
+class Abilities;
 
 class Level : public GameDrawable
 {
@@ -37,7 +38,6 @@ public:
 
 	float getMoneyCount() const;
 	float getLifeCount() const;
-	float getEnergyCount() const;
 	Tower *getTowerAtPos(const Vector2f& pos) const;
 
 	bool canAddTower(const Vector2i& cell, TOWER_TYPES towerType) const;
@@ -59,12 +59,6 @@ public:
 
 	vector<Enemy *> getAllEnemies() const;
 
-	static const int VENOM_ABILITY_COST;
-	static const int BOMB_ABILITY_COST;
-	static const int FREEZE_BOMB_ABILITY_COST;
-	static const int INC_TOWER_AS_ABILITY_COST;
-	static const int INC_TOWER_DMG_ABILITY_COST;
-
 	void addAnimation(const RESOURCES::TEXTURE_TYPE& texture_id,
 					  const Vector2f &pos,
 					  const Vector2i &size,
@@ -83,12 +77,14 @@ public:
 	//delete
 	void test();
 
+	Abilities *getAbilities();
+
+	void checkAlive();
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();
 	void checkDeadZone();
 	void checkEnd();
-	void checkAlive();
 	void checkRespawn();
 	void checkEnemyMove();
 
@@ -103,8 +99,6 @@ private:
 	//player data
 	float life;
 	float money;
-	float energy;
-
 
 	void hitPlayer(float damage);
 
@@ -119,19 +113,19 @@ private:
 	LEVEL_STATE m_state;
 	void changeState(LEVEL_STATE state);
 
-	struct VenomAbility
-	{
-		bool isActive;
-		static const float VENOM_DAMAGE;
-		static const int VENOM_DAMAGE_COUNT;
-		static const int VENOM_ATTACK_SPEED;
+//	struct VenomAbility
+//	{
+//		bool isActive;
+//		static const float VENOM_DAMAGE;
+//		static const int VENOM_DAMAGE_COUNT;
+//		static const int VENOM_ATTACK_SPEED;
 
-		static const Vector2i VENOM_SIZE;
-		class GameObject *object;
-		Timer timer;
-		int count;
-	};
-	VenomAbility venomAbility;
+//		static const Vector2i VENOM_SIZE;
+//		class GameObject *object;
+//		Timer timer;
+//		int count;
+//	};
+//	VenomAbility venomAbility;
 
 
 	static const float FREEZE_ABILITY_K;
@@ -144,9 +138,6 @@ private:
 	static const int INCREASE_ATTACK_SPEED_ABILITY_DURATION;
 
 	Timer timerRegenEnergy;
-	static const int REGEN_ENERGY_TIMEOUT;
-	static const int REGEN_ENERGY_VALUE;
-	static const float BOMB_ABILITY_DAMAGE;
 
 	vector<Animation*> effects;
 
@@ -173,13 +164,14 @@ private:
 	RectangleShape currentTowerRect;
 	void updateRadius();
 	unsigned int m_powerTowersCount;
-	static const int BOMB_ABILITIES_SIZE;
 	static const int DIRECTION_LAYER;
 
 	RectangleShape spawnRect;
 	RectangleShape endRect;
 	constexpr static float DEAD_ZONE_SIZE = 300;
 	void showAnimations();
+
+	Abilities *abilities;
 };
 
 #endif // LEVEL_H

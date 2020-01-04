@@ -27,7 +27,6 @@ private:
 		ABILITIES,
 		MONEY,
 		HEALTH,
-		ENERGY,
 		REMOVE,
 		UPGRADE,
 		PROGRESS,

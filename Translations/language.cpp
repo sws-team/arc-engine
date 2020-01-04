@@ -90,7 +90,6 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_ABILITIES, L"Способности"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_MONEY, L"Валюта"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_HEALTH, L"Здоровье"));
-	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_ENERGY, L"Энергия"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_REMOVE, L"Удалить башню"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_UPGRADE, L"Улучшить башню"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_PROGRESS, L"Прогресс уровня"));
@@ -172,7 +171,6 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_ABILITIES, L"Abilities"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_MONEY, L"Money"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_HEALTH, L"Health"));
-	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_ENERGY, L"Energy"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_REMOVE, L"Remove"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_UPGRADE, L"Upgrade"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_PROGRESS, L"Progress"));
@@ -255,7 +253,6 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_ABILITIES, L"Abilities"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_MONEY, L"Money"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_HEALTH, L"Health"));
-	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_ENERGY, L"Energy"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_REMOVE, L"Remove"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_UPGRADE, L"Upgrade"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_PROGRESS, L"Progress"));

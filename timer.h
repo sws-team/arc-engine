@@ -7,6 +7,8 @@ struct Timer
 {
 	Timer();
 
+	void reset();
+
 	Clock clock;
 	Int64 lastTimer;
 

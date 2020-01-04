@@ -22,28 +22,11 @@ Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, con
 	,m_downgraded(false)
 {
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
-	abilityDamage.isActive = false;
-	abilityAttackSpeed.isActive = false;
 }
 
 void Tower::update()
 {
-	if (abilityDamage.isActive)
-	{
-		if (abilityDamage.timer.check(abilityDamage.duration))
-		{
-			abilityDamage.isActive = false;
-			m_stats.damage /= abilityDamage.value;
-		}
-	}
-	if (abilityAttackSpeed.isActive)
-	{
-		if (abilityAttackSpeed.timer.check(abilityAttackSpeed.duration))
-		{
-			abilityAttackSpeed.isActive = false;
-			m_stats.attackSpeed *= abilityAttackSpeed.value;
-		}
-	}
+
 }
 
 void Tower::draw(RenderTarget * const target)
@@ -114,20 +97,24 @@ void Tower::setType(const TOWER_TYPES &type)
 	m_type = type;
 }
 
-void Tower::increaseAttackSpeed(int duration, int value)
+void Tower::increaseAttackSpeed(float value)
 {
-	abilityAttackSpeed.isActive = true;
-	abilityAttackSpeed.duration = duration;
-	m_stats.attackSpeed /= abilityAttackSpeed.value;
-	abilityAttackSpeed.timer.clock.restart();
+	m_stats.attackSpeed /= value;
 }
 
-void Tower::increaseDamage(int duration, int value)
+void Tower::decreaseAttackSpeed(float value)
 {
-	abilityDamage.isActive = true;
-	abilityDamage.duration = duration;
-	m_stats.damage *= abilityDamage.value;
-	abilityDamage.timer.clock.restart();
+	m_stats.attackSpeed *= value;
+}
+
+void Tower::increaseDamage(float value)
+{
+	m_stats.damage *= value;
+}
+
+void Tower::decreaseDamage(float value)
+{
+	m_stats.damage /= value;
 }
 
 int Tower::level() const

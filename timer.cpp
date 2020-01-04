@@ -3,6 +3,11 @@
 
 Timer::Timer()
 {
+	reset();
+}
+
+void Timer::reset()
+{
 	clock.restart();
 	lastTimer = 0;
 }

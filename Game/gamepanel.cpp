@@ -9,6 +9,7 @@
 #include "Level/lifebar.h"
 #include "Level/cursor.h"
 #include "Translations/language.h"
+#include "Game/Level/gameability.h"
 
 #include <stdlib.h>
 
@@ -47,13 +48,6 @@ GamePanel::GamePanel() :
 	lifeCountText.setOutlineThickness(2);
 	lifeCountText.setCharacterSize(34);
 	lifeCountText.setScale(scaleFactor);
-
-	energyCountText.setFont(GlobalVariables::Instance().font());
-	energyCountText.setFillColor(Color::Black);
-	energyCountText.setOutlineColor(Color::Yellow);
-	energyCountText.setOutlineThickness(2);
-	energyCountText.setCharacterSize(34);
-	energyCountText.setScale(scaleFactor);
 
 	cursorSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_CURSOR));
 	cursorSprite.setScale(scaleFactor);
@@ -175,47 +169,48 @@ GamePanel::GamePanel() :
 	towerImprovedCostText.setCharacterSize(costTextCharacterSize);
 	towerImprovedCostText.setScale(scaleFactor);
 
-	abilityBombCostText.setFont(GlobalVariables::Instance().font());
-	abilityBombCostText.setFillColor(costTextFillColor);
-	abilityBombCostText.setOutlineColor(costTextOutlineColor);
-	abilityBombCostText.setOutlineThickness(1);
-	abilityBombCostText.setCharacterSize(costTextCharacterSize);
-	abilityBombCostText.setScale(scaleFactor);
+	const float durationTextCharacterSize = 40;
+	abilityBombDurationText.setFont(GlobalVariables::Instance().font());
+	abilityBombDurationText.setFillColor(costTextFillColor);
+	abilityBombDurationText.setOutlineColor(costTextOutlineColor);
+	abilityBombDurationText.setOutlineThickness(1);
+	abilityBombDurationText.setCharacterSize(durationTextCharacterSize);
+	abilityBombDurationText.setScale(scaleFactor);
 
-	abilityFreezeBombCostText.setFont(GlobalVariables::Instance().font());
-	abilityFreezeBombCostText.setFillColor(costTextFillColor);
-	abilityFreezeBombCostText.setOutlineColor(costTextOutlineColor);
-	abilityFreezeBombCostText.setOutlineThickness(1);
-	abilityFreezeBombCostText.setCharacterSize(costTextCharacterSize);
-	abilityFreezeBombCostText.setScale(scaleFactor);
+	abilityFreezeBombDurationText.setFont(GlobalVariables::Instance().font());
+	abilityFreezeBombDurationText.setFillColor(costTextFillColor);
+	abilityFreezeBombDurationText.setOutlineColor(costTextOutlineColor);
+	abilityFreezeBombDurationText.setOutlineThickness(1);
+	abilityFreezeBombDurationText.setCharacterSize(durationTextCharacterSize);
+	abilityFreezeBombDurationText.setScale(scaleFactor);
 
-	abilityVenomCostText.setFont(GlobalVariables::Instance().font());
-	abilityVenomCostText.setFillColor(costTextFillColor);
-	abilityVenomCostText.setOutlineColor(costTextOutlineColor);
-	abilityVenomCostText.setOutlineThickness(1);
-	abilityVenomCostText.setCharacterSize(costTextCharacterSize);
-	abilityVenomCostText.setScale(scaleFactor);
+	abilityVenomDurationText.setFont(GlobalVariables::Instance().font());
+	abilityVenomDurationText.setFillColor(costTextFillColor);
+	abilityVenomDurationText.setOutlineColor(costTextOutlineColor);
+	abilityVenomDurationText.setOutlineThickness(1);
+	abilityVenomDurationText.setCharacterSize(durationTextCharacterSize);
+	abilityVenomDurationText.setScale(scaleFactor);
 
-	abilityIncreaseTowerDamageCostText.setFont(GlobalVariables::Instance().font());
-	abilityIncreaseTowerDamageCostText.setFillColor(costTextFillColor);
-	abilityIncreaseTowerDamageCostText.setOutlineColor(costTextOutlineColor);
-	abilityIncreaseTowerDamageCostText.setOutlineThickness(1);
-	abilityIncreaseTowerDamageCostText.setCharacterSize(costTextCharacterSize);
-	abilityIncreaseTowerDamageCostText.setScale(scaleFactor);
+	abilityIncreaseTowerDamageDurationText.setFont(GlobalVariables::Instance().font());
+	abilityIncreaseTowerDamageDurationText.setFillColor(costTextFillColor);
+	abilityIncreaseTowerDamageDurationText.setOutlineColor(costTextOutlineColor);
+	abilityIncreaseTowerDamageDurationText.setOutlineThickness(1);
+	abilityIncreaseTowerDamageDurationText.setCharacterSize(durationTextCharacterSize);
+	abilityIncreaseTowerDamageDurationText.setScale(scaleFactor);
 
-	abilityIncreaseTowerAttackSpeedCostText.setFont(GlobalVariables::Instance().font());
-	abilityIncreaseTowerAttackSpeedCostText.setFillColor(costTextFillColor);
-	abilityIncreaseTowerAttackSpeedCostText.setOutlineColor(costTextOutlineColor);
-	abilityIncreaseTowerAttackSpeedCostText.setOutlineThickness(1);
-	abilityIncreaseTowerAttackSpeedCostText.setCharacterSize(costTextCharacterSize);
-	abilityIncreaseTowerAttackSpeedCostText.setScale(scaleFactor);
+	abilityIncreaseTowerAttackSpeedDurationText.setFont(GlobalVariables::Instance().font());
+	abilityIncreaseTowerAttackSpeedDurationText.setFillColor(costTextFillColor);
+	abilityIncreaseTowerAttackSpeedDurationText.setOutlineColor(costTextOutlineColor);
+	abilityIncreaseTowerAttackSpeedDurationText.setOutlineThickness(1);
+	abilityIncreaseTowerAttackSpeedDurationText.setCharacterSize(durationTextCharacterSize);
+	abilityIncreaseTowerAttackSpeedDurationText.setScale(scaleFactor);
 
-	abilityUnknownAttackSpeedCostText.setFont(GlobalVariables::Instance().font());
-	abilityUnknownAttackSpeedCostText.setFillColor(costTextFillColor);
-	abilityUnknownAttackSpeedCostText.setOutlineColor(costTextOutlineColor);
-	abilityUnknownAttackSpeedCostText.setOutlineThickness(1);
-	abilityUnknownAttackSpeedCostText.setCharacterSize(costTextCharacterSize);
-	abilityUnknownAttackSpeedCostText.setScale(scaleFactor);
+	abilityUnknownAttackSpeedDurationText.setFont(GlobalVariables::Instance().font());
+	abilityUnknownAttackSpeedDurationText.setFillColor(costTextFillColor);
+	abilityUnknownAttackSpeedDurationText.setOutlineColor(costTextOutlineColor);
+	abilityUnknownAttackSpeedDurationText.setOutlineThickness(1);
+	abilityUnknownAttackSpeedDurationText.setCharacterSize(durationTextCharacterSize);
+	abilityUnknownAttackSpeedDurationText.setScale(scaleFactor);
 
 	towerBaseCostText.setString(GlobalVariables::to_string_with_precision(BaseTower::STATS.cost, 0));
 	towerFreezeCostText.setString(GlobalVariables::to_string_with_precision(FreezeTower::STATS.cost, 0));
@@ -224,18 +219,15 @@ GamePanel::GamePanel() :
 	towerPowerCostText.setString(GlobalVariables::to_string_with_precision(PowerTower::STATS.cost, 0));
 	towerImprovedCostText.setString(GlobalVariables::to_string_with_precision(ImprovedTower::STATS.cost, 0));
 
-	abilityBombCostText.setString(GlobalVariables::to_string_with_precision(Level::BOMB_ABILITY_COST, 0));
-	abilityFreezeBombCostText.setString(GlobalVariables::to_string_with_precision(Level::FREEZE_BOMB_ABILITY_COST, 0));
-	abilityVenomCostText.setString(GlobalVariables::to_string_with_precision(Level::VENOM_ABILITY_COST, 0));
-	abilityIncreaseTowerDamageCostText.setString(GlobalVariables::to_string_with_precision(Level::INC_TOWER_DMG_ABILITY_COST, 0));
-	abilityIncreaseTowerAttackSpeedCostText.setString(GlobalVariables::to_string_with_precision(Level::INC_TOWER_AS_ABILITY_COST, 0));
-	abilityUnknownAttackSpeedCostText.setString(GlobalVariables::to_string_with_precision(0, 0));
+	abilityBombDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
+	abilityFreezeBombDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
+	abilityVenomDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
+	abilityIncreaseTowerDamageDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
+	abilityIncreaseTowerAttackSpeedDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
+	abilityUnknownAttackSpeedDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
 
 	moneyIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MONEY_ICON));
 	moneyIcon.setScale(scaleFactor);
-
-	energyIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ENERGY_ICON));
-	energyIcon.setScale(scaleFactor);
 
 	healthIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::HEALTH_ICON));
 	healthIcon.setScale(scaleFactor);
@@ -311,7 +303,6 @@ void GamePanel::draw(RenderTarget * const target)
 
 	target->draw(moneyCountText);
 	target->draw(lifeCountText);
-	target->draw(energyCountText);
 
 	updateEnableAbilities();
 
@@ -343,16 +334,23 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(towerPowerCostText);
 	target->draw(towerImprovedCostText);
 
-	target->draw(abilityBombCostText);
-	target->draw(abilityFreezeBombCostText);
-	target->draw(abilityVenomCostText);
-	target->draw(abilityIncreaseTowerDamageCostText);
-	target->draw(abilityIncreaseTowerAttackSpeedCostText);
-	target->draw(abilityUnknownAttackSpeedCostText);
+
+	Abilities *abilities = Engine::Instance().level()->getAbilities();
+	if (!abilities->bombAbility->isReady())
+		target->draw(abilityBombDurationText);
+	if (!abilities->freezeBombAbility->isReady())
+		target->draw(abilityFreezeBombDurationText);
+	if (!abilities->venomAbility->isReady())
+		target->draw(abilityVenomDurationText);
+	if (!abilities->increaseTowerDamageAbility->isReady())
+		target->draw(abilityIncreaseTowerDamageDurationText);
+	if (!abilities->increaseTowerAttackSpeedAbility->isReady())
+		target->draw(abilityIncreaseTowerAttackSpeedDurationText);
+	if (!abilities->unknownAblity->isReady())
+		target->draw(abilityUnknownAttackSpeedDurationText);
 
 
 	target->draw(moneyIcon);
-	target->draw(energyIcon);
 	target->draw(healthIcon);
 
 	target->draw(miniMapSprite);
@@ -382,10 +380,8 @@ void GamePanel::updatePanel()
 {
 	const int money = static_cast<int>(Engine::Instance().level()->getMoneyCount());
 	const int life = static_cast<int>(Engine::Instance().level()->getLifeCount());
-	const int energy = static_cast<int>(Engine::Instance().level()->getEnergyCount());
 	moneyCountText.setString(String(to_string(money)));
 	lifeCountText.setString(String(to_string(life)));
-	energyCountText.setString(String(to_string(energy)));
 
 	const float progressValue = static_cast<float>(Engine::Instance().level()->currentProgress()) / m_progressMax;
 	progress->setValue(progressValue);
@@ -503,15 +499,8 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	lifeCountText.setPosition(pos);
 	pos.x -= info_icons_size;
 
-	pos.y += info_icons_offset;
-	pos.y += moneyCountText.getGlobalBounds().height;
-	energyIcon.setPosition(pos);
-	pos.x += info_icons_size;
-	energyCountText.setPosition(pos);
-	pos.x -= info_icons_size;
-
-	pos.y -= 3 * info_icons_offset;
-	pos.y -= 2 * moneyCountText.getGlobalBounds().height;
+	pos.y -= 2 * info_icons_offset;
+	pos.y -= moneyCountText.getGlobalBounds().height;
 
 	pos.x -= label_offset;
 
@@ -603,12 +592,12 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	towerPowerCostText.setPosition(towerPowerSprite.getPosition());
 	towerImprovedCostText.setPosition(towerImprovedSprite.getPosition());
 
-	abilityBombCostText.setPosition(abilityBombSprite.getPosition());
-	abilityFreezeBombCostText.setPosition(abilityFreezeBombSprite.getPosition());
-	abilityVenomCostText.setPosition(abilityVenomSprite.getPosition());
-	abilityIncreaseTowerDamageCostText.setPosition(abilityIncreaseTowerDamageSprite.getPosition());
-	abilityIncreaseTowerAttackSpeedCostText.setPosition(abilityIncreaseTowerAttackSpeedSprite.getPosition());
-	abilityUnknownAttackSpeedCostText.setPosition(abilityUnknownSprite.getPosition());
+	abilityBombDurationText.setPosition(abilityBombSprite.getPosition());
+	abilityFreezeBombDurationText.setPosition(abilityFreezeBombSprite.getPosition());
+	abilityVenomDurationText.setPosition(abilityVenomSprite.getPosition());
+	abilityIncreaseTowerDamageDurationText.setPosition(abilityIncreaseTowerDamageSprite.getPosition());
+	abilityIncreaseTowerAttackSpeedDurationText.setPosition(abilityIncreaseTowerAttackSpeedSprite.getPosition());
+	abilityUnknownAttackSpeedDurationText.setPosition(abilityUnknownSprite.getPosition());
 
 	return pos;
 }
@@ -659,6 +648,18 @@ float GamePanel::getTowerSellCost(Tower *tower) const
 	return cost;
 }
 
+void GamePanel::updateAbilitiesDuration()
+{
+	Abilities *abilities = Engine::Instance().level()->getAbilities();
+
+	abilityBombDurationText.setString(to_string(abilities->bombAbility->timeLeft()));
+	abilityFreezeBombDurationText.setString(to_string(abilities->freezeBombAbility->timeLeft()));
+	abilityVenomDurationText.setString(to_string(abilities->venomAbility->timeLeft()));
+	abilityIncreaseTowerDamageDurationText.setString(to_string(abilities->increaseTowerDamageAbility->timeLeft()));
+	abilityIncreaseTowerAttackSpeedDurationText.setString(to_string(abilities->increaseTowerAttackSpeedAbility->timeLeft()));
+	abilityUnknownAttackSpeedDurationText.setString(to_string(abilities->unknownAblity->timeLeft()));
+}
+
 void GamePanel::updateEnableTowers()
 {
 	const float money = Engine::Instance().level()->getMoneyCount();
@@ -702,40 +703,34 @@ void GamePanel::updateEnableTowers()
 
 void GamePanel::updateEnableAbilities()
 {
-	const float energy = Engine::Instance().level()->getEnergyCount();
+	Abilities *abilities = Engine::Instance().level()->getAbilities();
 
-	float cost = Level::BOMB_ABILITY_COST;
-	if (energy < cost || !iconsAvaliable.isAbilityBombEnabled)
+	if (!abilities->bombAbility->isReady() || !iconsAvaliable.isAbilityBombEnabled)
 		abilityBombSprite.setColor(GlobalVariables::GrayColor);
 	else
 		abilityBombSprite.setColor(Color::White);
 
-	cost = Level::FREEZE_BOMB_ABILITY_COST;
-	if (energy < cost || !iconsAvaliable.isAbilityFreezeBombEnabled)
+	if (!abilities->freezeBombAbility->isReady() || !iconsAvaliable.isAbilityFreezeBombEnabled)
 		abilityFreezeBombSprite.setColor(GlobalVariables::GrayColor);
 	else
 		abilityFreezeBombSprite.setColor(Color::White);
 
-	cost = Level::VENOM_ABILITY_COST;
-	if (energy < cost || !iconsAvaliable.isAbilityVenomEnabled)
+	if (!abilities->venomAbility->isReady() || !iconsAvaliable.isAbilityVenomEnabled)
 		abilityVenomSprite.setColor(GlobalVariables::GrayColor);
 	else
 		abilityVenomSprite.setColor(Color::White);
 
-	cost = Level::INC_TOWER_DMG_ABILITY_COST;
-	if (energy < cost || !iconsAvaliable.isAbilityIncreaseTowerDamageEnabled)
+	if (!abilities->increaseTowerDamageAbility->isReady() || !iconsAvaliable.isAbilityIncreaseTowerDamageEnabled)
 		abilityIncreaseTowerDamageSprite.setColor(GlobalVariables::GrayColor);
 	else
 		abilityIncreaseTowerDamageSprite.setColor(Color::White);
 
-	cost = Level::INC_TOWER_AS_ABILITY_COST;
-	if (energy < cost || !iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled)
+	if (!abilities->increaseTowerAttackSpeedAbility->isReady() || !iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled)
 		abilityIncreaseTowerAttackSpeedSprite.setColor(GlobalVariables::GrayColor);
 	else
 		abilityIncreaseTowerAttackSpeedSprite.setColor(Color::White);
 
-	cost = 10000;
-	if (energy < cost || !iconsAvaliable.isAbilityUnknownEnabled)
+	if (!abilities->unknownAblity->isReady() || !iconsAvaliable.isAbilityUnknownEnabled)
 		abilityUnknownSprite.setColor(GlobalVariables::GrayColor);
 	else
 		abilityUnknownSprite.setColor(Color::White);
@@ -1210,11 +1205,6 @@ FloatRect GamePanel::getMoneyRect() const
 FloatRect GamePanel::getHealthRect() const
 {
 	return lifeCountText.getGlobalBounds();
-}
-
-FloatRect GamePanel::getEnergyRect() const
-{
-	return energyCountText.getGlobalBounds();
 }
 
 FloatRect GamePanel::getRemovRect() const

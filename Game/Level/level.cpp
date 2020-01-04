@@ -14,49 +14,23 @@
 #include "tower.h"
 #include "projectile.h"
 #include "instructions.h"
+#include "gameability.h"
 
-const float Level::FREEZE_ABILITY_K = 35.f;
-const int Level::FREEZE_ABILITY_DURATION = 5000;
-const int Level::INCREASE_DAMAGE_ABILITY_DURATION = 9000;
-const int Level::INCREASE_DAMAGE_ABILITY_VALUE = 100;
-const int Level::INCREASE_ATTACK_SPEED_ABILITY_DURATION = 9000;
-const int Level::INCREASE_ATTACK_SPEED_ABILITY_VALUE = 100;
-
-const float Level::VenomAbility::VENOM_DAMAGE = 10.f;
-const Vector2i Level::VenomAbility::VENOM_SIZE = Vector2i(10, 3);
-const int Level::VenomAbility::VENOM_DAMAGE_COUNT = 15;
-const int Level::VenomAbility::VENOM_ATTACK_SPEED = 500;
-const int Level::REGEN_ENERGY_TIMEOUT = 500;
-const int Level::REGEN_ENERGY_VALUE = 5;
-const int Level::VENOM_ABILITY_COST = 500;
-const int Level::BOMB_ABILITY_COST = 350;
-const int Level::FREEZE_BOMB_ABILITY_COST = 250;
-const int Level::INC_TOWER_AS_ABILITY_COST = 200;
-const int Level::INC_TOWER_DMG_ABILITY_COST = 200;
-const float Level::BOMB_ABILITY_DAMAGE = 111;
-const int Level::BOMB_ABILITIES_SIZE = 3;
 const int Level::DIRECTION_LAYER = 3;
-
 const int Level::Shake::MAX_SHAKE_COUNT = 9;
 const int Level::Shake::MAX_SHAKE_OFFSET = 10;
 const int Level::Shake::SHAKE_TIME = 50;
-
 
 Level::Level() :
 	gameMap(nullptr)
   ,m_actionState(READY)
   ,life(0.f)
   ,money(0.f)
-  ,energy(0.f)
   ,currentWave(0)
   ,m_state(WAIT_READY)
   ,m_powerTowersCount(0)
 {
-	venomAbility.isActive = false;
-	venomAbility.object = new GameObject(RESOURCES::VENOM_EFFECT, Vector2f(0,0),
-										 Vector2i(VenomAbility::VENOM_SIZE.x * GlobalVariables::Instance().tileSize().x,
-												  VenomAbility::VENOM_SIZE.y * GlobalVariables::Instance().tileSize().y), 1);
-
+	abilities = new Abilities();
 	shake.dangerRect.setSize(Vector2f(Settings::Instance().getResolution()));
 	shake.dangerRect.setFillColor(Color(255,0,0,96));
 	shake.isActive = false;
@@ -128,24 +102,7 @@ void Level::update()
 					shake.isActive = false;
 			}
 		}
-		if (venomAbility.isActive)
-		{
-			if (venomAbility.timer.check(VenomAbility::VENOM_ATTACK_SPEED))
-			{
-				for(Enemy *enemy : enemies)
-				{
-					if (enemy->gameRect().intersects(venomAbility.object->gameRect()))
-						enemy->hit(VenomAbility::VENOM_DAMAGE);
-				}
-				venomAbility.count++;
-				if (venomAbility.count > VenomAbility::VENOM_DAMAGE_COUNT)
-					venomAbility.isActive = false;
-			}
-		}
-
-		if (timerRegenEnergy.check(REGEN_ENERGY_TIMEOUT) && playing)
-			energy += REGEN_ENERGY_VALUE;
-
+		abilities->update();
 		if (playing)
 			checkRespawn();
 		for(Enemy* enemy : enemies)
@@ -173,7 +130,6 @@ void Level::startMission(const unsigned int n)
 
 	life = Engine::getStartHealth(n);
 	money = Engine::getStartMoney(n);
-	energy = Engine::getStartEnergy(n);
 	Engine::Instance().panel()->updatePanel();
 
 	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
@@ -277,7 +233,6 @@ void Level::checkEnd()
 			hitPlayer(enemy->getData().damage);
 			delete enemy;
 			it = enemies.erase(it);
-			money++;
 		}
 		else
 			++it;
@@ -298,7 +253,7 @@ void Level::checkAlive()
 					static_cast<RocketTower*>(tower)->checkEnemy(enemy);
 
 			delete enemy;
-			energy++;
+			money++;
 			Engine::Instance().panel()->updatePanel();
 			it = enemies.erase(it);
 			enemy = nullptr;
@@ -472,7 +427,12 @@ void Level::test()
 //	spawn(DOWN_TOWER_ENEMY);
 //	spawn(MID_MEDIUM);
 //	spawn(TELEPORT_ENEMY);
-//	spawn(REPAIR_ENEMY);
+	//	spawn(REPAIR_ENEMY);
+}
+
+Abilities *Level::getAbilities()
+{
+	return abilities;
 }
 
 Level::LEVEL_STATE Level::getState() const
@@ -540,8 +500,7 @@ void Level::drawLevel(RenderTarget * const target)
 
 	Engine::Instance().cursor()->draw(target);
 
-	if (venomAbility.isActive)
-		venomAbility.object->draw(target);
+	abilities->draw(target);
 
 	for(Animation *effect : effects)
 		effect->draw(target);
@@ -631,11 +590,6 @@ float Level::getLifeCount() const
 	return life;
 }
 
-float Level::getEnergyCount() const
-{
-	return energy;
-}
-
 void Level::chooseByPos(const Vector2f &pos)
 {
 	const bool inPanel = pos.y > Engine::Instance().panel()->getBottomValue();
@@ -649,8 +603,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		Engine::Instance().panel()->setSelectedTower(nullptr);	
 	if (inPanel)
 	{
-		m_actionState = Engine::Instance().panel()->getCurrentIcon();
-		switch (m_actionState)
+		const ACTION_STATE currentState = Engine::Instance().panel()->getCurrentIcon();
+		switch (currentState)
 		{
 		case READY:
 			break;
@@ -675,58 +629,65 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		{
 			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_INCREASE_TOWER_ATTACK_SPEED))
 				return;
-			if (energy < INC_TOWER_AS_ABILITY_COST)
+
+			if (!abilities->increaseTowerAttackSpeedAbility->isReady())
 				return;
-			Engine::Instance().cursor()->activateAbility(1, 1, 0, 0);
-			Engine::Instance().cursor()->swap();
+
+			abilities->increaseTowerAttackSpeedAbility->setUp();
 		}
 			break;
 		case ABILITY_INCREASE_TOWER_DAMAGE:
 		{
 			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_INCREASE_TOWER_DAMAGE))
 				return;
-			if (energy < INC_TOWER_DMG_ABILITY_COST)
+
+			if (!abilities->increaseTowerDamageAbility->isReady())
 				return;
-			Engine::Instance().cursor()->activateAbility(1, 1, 0, 0);
-			Engine::Instance().cursor()->swap();
+
+			abilities->increaseTowerDamageAbility->setUp();
 		}
 			break;
 		case ABILITY_VENOM:
 		{
 			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_VENOM))
 				return;
-			if (energy < VENOM_ABILITY_COST)
+			if (!abilities->venomAbility->isReady())
 				return;
-			Engine::Instance().cursor()->activateAbility(VenomAbility::VENOM_SIZE.x,
-														 VenomAbility::VENOM_SIZE.y, 4, 1);
-			Engine::Instance().cursor()->swap();
+
+			abilities->venomAbility->setUp();
 		}
 			break;
 		case ABILITY_BOMB:
 		{
 			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_BOMB))
 				return;
-			if (energy < BOMB_ABILITY_COST)
+
+			if (!abilities->bombAbility->isReady())
 				return;
-			Engine::Instance().cursor()->activateAbility(BOMB_ABILITIES_SIZE, BOMB_ABILITIES_SIZE, 1, 1);
-			Engine::Instance().cursor()->swap();
+
+			abilities->bombAbility->setUp();
 		}
 			break;
 		case ABILITY_FREEZE_BOMB:
 		{
 			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_FREEZE_BOMB))
 				return;
-			if (energy < FREEZE_BOMB_ABILITY_COST)
+
+			if (!abilities->freezeBombAbility->isReady())
 				return;
-			Engine::Instance().cursor()->activateAbility(BOMB_ABILITIES_SIZE, BOMB_ABILITIES_SIZE, 1, 1);
-			Engine::Instance().cursor()->swap();
+
+			abilities->freezeBombAbility->setUp();
 		}
 			break;
 		case ABILITY_UNKNOWN:
 		{
 			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_UNKNOWN))
 				return;
-			break;
+
+			if (!abilities->unknownAblity->isReady())
+				return;
+
+			abilities->unknownAblity->setUp();
 		}
 		case SELL:
 		{
@@ -762,6 +723,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		}
 			break;
 		}
+		m_actionState = currentState;
 	}
 	else
 	{
@@ -807,87 +769,27 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_VENOM:
 		{
-			if (energy < VENOM_ABILITY_COST)
-				return;
-			energy -= VENOM_ABILITY_COST;
-			Engine::Instance().panel()->updatePanel();
-			venomAbility.isActive = true;
-			const Vector2f pos = Vector2f(Engine::Instance().cursor()->getAbilityRect().left, Engine::Instance().cursor()->getAbilityRect().top);
-			venomAbility.object->setPos(pos);
-			venomAbility.timer.clock.restart();
-			venomAbility.count = 0;
+			abilities->venomAbility->activate();
 		}
 			break;
 		case ABILITY_BOMB:
 		{
-			if (energy < BOMB_ABILITY_COST)
-				return;
-			const FloatRect abilityRect = Engine::Instance().cursor()->getAbilityRect();
-			addAnimation(RESOURCES::BOMB_EXPLOSION,
-						 Vector2f(abilityRect.left, abilityRect.top),
-						 Vector2i(BOMB_ABILITIES_SIZE * GlobalVariables::CELL_SIZE, BOMB_ABILITIES_SIZE * GlobalVariables::CELL_SIZE),
-						 200, 12, 0);
-			energy -= BOMB_ABILITY_COST;
-			Engine::Instance().panel()->updatePanel();
-			for (auto it = enemies.begin(); it != enemies.end();)
-			{
-				Enemy *enemy = *it;
-				if (enemy->gameRect().intersects(abilityRect))
-				{
-					enemy->hit(BOMB_ABILITY_DAMAGE);
-					if (!enemy->isAlive())
-					{
-						delete enemy;
-						it = enemies.erase(it);
-					}
-					else
-						++it;
-				}
-				else
-					++it;
-			}
+			abilities->bombAbility->activate();
 		}
 			break;
 		case ABILITY_FREEZE_BOMB:
 		{
-			if (energy < FREEZE_BOMB_ABILITY_COST)
-				return;
-			const FloatRect abilityRect = Engine::Instance().cursor()->getAbilityRect();
-			addAnimation(RESOURCES::FREEZE_BOMB_EXPLOSION,
-						 Vector2f(abilityRect.left, abilityRect.top),
-						 Vector2i(BOMB_ABILITIES_SIZE * GlobalVariables::CELL_SIZE, BOMB_ABILITIES_SIZE * GlobalVariables::CELL_SIZE),
-						 200, 6, 0);
-			energy -= FREEZE_BOMB_ABILITY_COST;
-			Engine::Instance().panel()->updatePanel();
-			for(Enemy *enemy : enemies)
-				if (enemy->gameRect().intersects(abilityRect))
-					enemy->freeze(FREEZE_ABILITY_K, FREEZE_ABILITY_DURATION);
+			abilities->freezeBombAbility->activate();
 		}
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
 		{			
-			if (energy < INC_TOWER_AS_ABILITY_COST)
-				return;
-			Tower* tower = getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
-			if (tower != nullptr)
-			{
-				energy -= INC_TOWER_AS_ABILITY_COST;
-				Engine::Instance().panel()->updatePanel();
-				tower->increaseAttackSpeed(INCREASE_ATTACK_SPEED_ABILITY_DURATION, INCREASE_ATTACK_SPEED_ABILITY_VALUE);
-			}
+			abilities->increaseTowerAttackSpeedAbility->activate();
 		}
 			break;
 		case ABILITY_INCREASE_TOWER_DAMAGE:
 		{
-			if (energy < INC_TOWER_DMG_ABILITY_COST)
-				return;
-			Tower* tower = getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
-			if (tower != nullptr)
-			{
-				energy -= INC_TOWER_DMG_ABILITY_COST;
-				Engine::Instance().panel()->updatePanel();
-				tower->increaseDamage(INCREASE_DAMAGE_ABILITY_DURATION, INCREASE_DAMAGE_ABILITY_VALUE);
-			}
+			abilities->increaseTowerDamageAbility->activate();
 		}
 			break;
 		default:

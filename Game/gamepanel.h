@@ -45,7 +45,6 @@ public:
 	FloatRect getAbilitiesRect() const;
 	FloatRect getMoneyRect() const;
 	FloatRect getHealthRect() const;
-	FloatRect getEnergyRect() const;
 	FloatRect getRemovRect() const;
 	FloatRect getUpgradeRect() const;
 	FloatRect getProgressRect() const;
@@ -67,12 +66,13 @@ public:
 	float getTowerUpgradeCost(Tower* tower) const;
 	float getTowerSellCost(Tower* tower) const;
 
+	void updateAbilitiesDuration();
+
 private:
 	Sprite m_sprite;
 	RenderTexture rTexture;
 	Text moneyCountText;
 	Text lifeCountText;
-	Text energyCountText;
 
 	Sprite sellSprite;
 	Sprite upgradeSprite;
@@ -92,7 +92,6 @@ private:
 	Sprite towerImprovedSprite;
 
 	Sprite moneyIcon;
-	Sprite energyIcon;
 	Sprite healthIcon;
 
 	Text towerBaseCostText;
@@ -102,12 +101,12 @@ private:
 	Text towerPowerCostText;
 	Text towerImprovedCostText;
 
-	Text abilityBombCostText;
-	Text abilityFreezeBombCostText;
-	Text abilityVenomCostText;
-	Text abilityIncreaseTowerDamageCostText;
-	Text abilityIncreaseTowerAttackSpeedCostText;
-	Text abilityUnknownAttackSpeedCostText;
+	Text abilityBombDurationText;
+	Text abilityFreezeBombDurationText;
+	Text abilityVenomDurationText;
+	Text abilityIncreaseTowerDamageDurationText;
+	Text abilityIncreaseTowerAttackSpeedDurationText;
+	Text abilityUnknownAttackSpeedDurationText;
 
 	Tower *m_selectedTower;
 	Text info;

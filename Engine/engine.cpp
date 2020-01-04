@@ -188,46 +188,6 @@ float Engine::getStartMoney(const unsigned int n)
 	return 0;
 }
 
-float Engine::getStartEnergy(const unsigned int n)
-{
-	switch (n)
-	{
-	case 128:
-		return 1000;
-	case 0:
-		return 1000;
-	case 1:
-		return 1000;
-	case 2:
-		return 1000;
-	case 3:
-		return 1000;
-	case 4:
-		return 1000;
-	case 5:
-		return 1000;
-	case 6:
-		return 1000;
-	case 7:
-		return 1000;
-	case 8:
-		return 1000;
-	case 9:
-		return 1000;
-	case 10:
-		return 1000;
-	case 11:
-		return 1000;
-	case 12:
-		return 1000;
-	case 13:
-		return 1000;
-	case 14:
-		return 1000;
-	}
-	return 0;
-}
-
 void Engine::setMissionFinished(unsigned int n, unsigned int rating)
 {
 	CompletedMission completedMission;
