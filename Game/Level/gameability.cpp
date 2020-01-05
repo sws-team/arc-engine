@@ -89,6 +89,7 @@ void Abilities::update()
 	venomAbility->checkDuration();
 	increaseTowerAttackSpeedAbility->checkDuration();
 	increaseTowerDamageAbility->checkDuration();
+	unknownAblity->checkDuration();
 
 	bombAbility->checkReady();
 	freezeBombAbility->checkReady();
@@ -155,15 +156,17 @@ VenomAbility::VenomAbility()
 	,count(0)
 {
 	object = new GameObject(RESOURCES::VENOM_EFFECT, Vector2f(0, 0),
-										 Vector2i(m_areaSize.x * GlobalVariables::Instance().tileSize().x,
-												  m_areaSize.y * GlobalVariables::Instance().tileSize().y), 1);
+										 Vector2i(m_areaSize.x * GlobalVariables::CELL_SIZE,
+												  m_areaSize.y * GlobalVariables::CELL_SIZE), 1);
 }
 
 void VenomAbility::activate()
 {
 	GameAbility::activate();
 //	Engine::Instance().panel()->updatePanel();
-	const Vector2f pos = Vector2f(Engine::Instance().cursor()->getAbilityRect().left, Engine::Instance().cursor()->getAbilityRect().top);
+	const Vector2f pos = Vector2f(Engine::Instance().cursor()->getAbilityRect().left,
+								  Engine::Instance().cursor()->getAbilityRect().top);
+
 	object->setPos(pos);
 	abilityTimer.reset();
 	count = 0;
@@ -250,12 +253,19 @@ void IncreaseTowerAttackSpeedAbility::checkDuration()
 }
 
 UnknownAbility::UnknownAbility()
-	: GameAbility(Vector2i(3, 3), Vector2i(1, 1), 50)
+	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 50000)
 {
 
 }
 
 void UnknownAbility::activate()
 {
+	GameAbility::activate();
+	abilityTimer.reset();
+}
 
+void UnknownAbility::checkDuration()
+{
+	if (abilityTimer.check(UNKNOWN_ABILITY_DURATION))
+		finish();
 }

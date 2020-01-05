@@ -266,6 +266,8 @@ void Level::checkAlive()
 
 void Level::checkRespawn()
 {
+	if (abilities->unknownAblity->isActive())
+		return;
 	if (currentWave == waves.size())
 		return;
 
@@ -291,6 +293,9 @@ void Level::checkRespawn()
 
 void Level::checkEnemyMove()
 {
+	if (abilities->unknownAblity->isActive())
+		return;
+
 	const FloatRect endFRect = getEndRect();
 	for(Enemy* enemy : enemies)
 	{
@@ -689,8 +694,9 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (!abilities->unknownAblity->isReady())
 				return;
 
-			abilities->unknownAblity->setUp();
+			abilities->unknownAblity->activate();
 		}
+			break;
 		case SELL:
 		{
 			if (selectedTower == nullptr)
@@ -769,30 +775,22 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			Engine::Instance().panel()->updatePanel();
 		}
 			break;
-		case ABILITY_VENOM:
-		{
-			abilities->venomAbility->activate();
-		}
+		case ABILITY_VENOM:		
+			abilities->venomAbility->activate();		
 			break;
-		case ABILITY_BOMB:
-		{
-			abilities->bombAbility->activate();
-		}
+		case ABILITY_BOMB:		
+			abilities->bombAbility->activate();		
 			break;
-		case ABILITY_FREEZE_BOMB:
-		{
-			abilities->freezeBombAbility->activate();
-		}
+		case ABILITY_FREEZE_BOMB:		
+			abilities->freezeBombAbility->activate();		
 			break;
-		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
-		{			
-			abilities->increaseTowerAttackSpeedAbility->activate();
-		}
+		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:		
+			abilities->increaseTowerAttackSpeedAbility->activate();		
 			break;
 		case ABILITY_INCREASE_TOWER_DAMAGE:
-		{
 			abilities->increaseTowerDamageAbility->activate();
-		}
+			break;
+		case ABILITY_UNKNOWN:			
 			break;
 		default:
 			break;

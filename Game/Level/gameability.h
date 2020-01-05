@@ -111,6 +111,10 @@ public:
 	UnknownAbility();
 
 	void activate() override;
+	void checkDuration() override;
+private:
+	static constexpr int UNKNOWN_ABILITY_DURATION = 5000;
+	Timer abilityTimer;
 };
 
 class Abilities : public GameDrawable
