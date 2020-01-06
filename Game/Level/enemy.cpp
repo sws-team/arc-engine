@@ -658,11 +658,6 @@ TowerEffectAbility::TowerEffectAbility()
 
 }
 
-TowerEffectAbility::~TowerEffectAbility()
-{
-
-}
-
 void TowerEffectAbility::draw(RenderTarget * const target)
 {
 	if (projectile != nullptr)
@@ -804,6 +799,12 @@ ShutdownTowerAbility::ShutdownTowerAbility()
 	info.duration = TOWER_DISABLED_DURATION;
 }
 
+ShutdownTowerAbility::~ShutdownTowerAbility()
+{
+	if (targetTower != nullptr && !targetTower->isActive())
+		targetTower->setActive(true);
+}
+
 void ShutdownTowerAbility::effect(bool isActive)
 {
 	if (targetTower != nullptr)
@@ -817,6 +818,12 @@ DownTowerAbility::DownTowerAbility()
 	info.pojectileTextureId = RESOURCES::DOWNGRADE_PROJECTILE;
 	info.projectileSize = Vector2i(200, 16);
 	info.duration = TOWER_DOWNGRADED_DURATION;
+}
+
+DownTowerAbility::~DownTowerAbility()
+{
+	if (targetTower != nullptr && targetTower->isDowngraded())
+		targetTower->setDowngrade(false);
 }
 
 void DownTowerAbility::effect(bool isActive)

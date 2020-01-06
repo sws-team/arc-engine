@@ -172,7 +172,6 @@ class TowerEffectAbility : public EnemyAbility
 {
 public:
 	TowerEffectAbility();
-	~TowerEffectAbility();
 	void draw(RenderTarget *const target) override;
 	void update() override;
 protected:
@@ -212,6 +211,7 @@ class ShutdownTowerAbility : public TowerEffectAbility
 {
 public:
 	ShutdownTowerAbility();
+	~ShutdownTowerAbility();
 
 	constexpr static float TOWER_DISABLED_DURATION = 10000;
 protected:
@@ -222,6 +222,8 @@ class DownTowerAbility : public TowerEffectAbility
 {
 public:
 	DownTowerAbility();
+	~DownTowerAbility();
+
 	constexpr static float DOWNGRADE_VALUE = 0.3f;
 	constexpr static float TOWER_DOWNGRADED_DURATION = 9000;
 protected:

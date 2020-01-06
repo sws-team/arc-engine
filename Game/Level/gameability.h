@@ -31,6 +31,7 @@ protected:
 	Vector2i m_areaSize;
 	Vector2i m_offset;
 	float m_time;
+	bool m_rotated;
 private:
 	Timer cooldownTimer;
 };
@@ -83,7 +84,7 @@ public:
 	void checkDuration() override;
 
 	static constexpr int INCREASE_ATTACK_SPEED_ABILITY_DURATION = 9000;
-	static constexpr int INCREASE_ATTACK_SPEED_ABILITY_VALUE = 100;
+	static constexpr int INCREASE_ATTACK_SPEED_ABILITY_VALUE = 5;
 private:
 	Timer abilityTimer;
 	Tower *target;
@@ -98,7 +99,7 @@ public:
 	void checkDuration() override;
 
 	static constexpr int INCREASE_DAMAGE_ABILITY_DURATION = 9000;
-	static constexpr int INCREASE_DAMAGE_ABILITY_VALUE = 100;
+	static constexpr int INCREASE_DAMAGE_ABILITY_VALUE = 5;
 
 private:
 	Timer abilityTimer;

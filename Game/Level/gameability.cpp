@@ -16,6 +16,7 @@ GameAbility::GameAbility(const Vector2i &areaSize,
   ,m_areaSize(areaSize)
   ,m_offset(offset)
   ,m_time(time)
+  ,m_rotated(false)
 {
 
 }
@@ -27,7 +28,11 @@ bool GameAbility::isReady()
 
 void GameAbility::setUp()
 {
-	Engine::Instance().cursor()->activateAbility(m_areaSize.x, m_areaSize.y, m_offset.x, m_offset.y);
+	m_rotated = Keyboard::isKeyPressed(Keyboard::LShift);
+	if (m_rotated)
+		Engine::Instance().cursor()->activateAbility(m_areaSize.y, m_areaSize.x, m_offset.y, m_offset.x);
+	else
+		Engine::Instance().cursor()->activateAbility(m_areaSize.x, m_areaSize.y, m_offset.x, m_offset.y);
 	Engine::Instance().cursor()->swap();
 }
 
@@ -153,15 +158,20 @@ void FreezeBombAbility::activate()
 
 VenomAbility::VenomAbility()
 	: GameAbility(Vector2i(10, 3), Vector2i(4, 1), 30000)
+	,object(nullptr)
 	,count(0)
 {
-	object = new GameObject(RESOURCES::VENOM_EFFECT, Vector2f(0, 0),
-										 Vector2i(m_areaSize.x * GlobalVariables::CELL_SIZE,
-												  m_areaSize.y * GlobalVariables::CELL_SIZE), 1);
+
 }
 
 void VenomAbility::activate()
 {
+	const Vector2i size = m_rotated ? Vector2i(m_areaSize.y * GlobalVariables::CELL_SIZE,
+											   m_areaSize.x * GlobalVariables::CELL_SIZE) :
+									  Vector2i(m_areaSize.x * GlobalVariables::CELL_SIZE,
+											   m_areaSize.y * GlobalVariables::CELL_SIZE);
+
+	object = new GameObject(RESOURCES::VENOM_EFFECT, Vector2f(0, 0), size, 1);
 	GameAbility::activate();
 //	Engine::Instance().panel()->updatePanel();
 	const Vector2f pos = Vector2f(Engine::Instance().cursor()->getAbilityRect().left,
