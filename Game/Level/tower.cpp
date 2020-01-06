@@ -36,10 +36,17 @@ void Tower::draw(RenderTarget * const target)
 
 void Tower::action(const vector<Enemy *> &enemies)
 {
+	if (!isActive())
+	{
+		shoot(nullptr);
+		return;
+	}
+
 	if (!actionTimer.check(m_stats.attackSpeed))
 		return;
 
 	Enemy *target = nullptr;
+	//finding target
 	float min = INT_MAX;
 	const Vector2f aPos = getCenter();
 	for(Enemy *enemy : enemies)
@@ -257,7 +264,7 @@ const TowerStats PowerTower::STATS = TowerStats		(0,		5000,	6,		0,		60);
 const TowerStats BaseTower::STATS = TowerStats		(5,		450,	4,		20,		50);
 const TowerStats FreezeTower::STATS = TowerStats	(5,		350,	5,		10,		100);
 const TowerStats RocketTower::STATS = TowerStats	(40,	5000,	12,		5,		150);
-const TowerStats LaserTower::STATS = TowerStats		(15,	200,	6,		0,		200);
+const TowerStats LaserTower::STATS = TowerStats		(5,		100,	6,		0,		200);
 const TowerStats ImprovedTower::STATS = TowerStats	(10,	250,	7,		40,		250);
 
 BaseTower::BaseTower(const Vector2f &pos)
@@ -270,6 +277,13 @@ BaseTower::BaseTower(const Vector2f &pos)
 	projectileInfo.explosionSize = Vector2i(12, 12);
 	projectileInfo.explosionFrameCount = 16;
 	m_shotSound = "sounds/towers/base_shot.ogg";
+}
+
+void BaseTower::projectileAction(Enemy *enemy)
+{
+	ProjectilesTower::projectileAction(enemy);
+	const float penetration = 0.001f * level();
+	enemy->protect(penetration, false);
 }
 
 const Color PowerTower::POWER_TOWER_AREA_COLOR = Color(23, 200, 124, 100);
@@ -415,7 +429,9 @@ FreezeTower::FreezeTower(const Vector2f &pos)
 void FreezeTower::projectileAction(Enemy *enemy)
 {
 	ProjectilesTower::projectileAction(enemy);
-	enemy->freeze(45.f, 3000);
+	const float freezeOffset = level() * 10;
+	const int durationOffset = level() * 1000;
+	enemy->freeze(35.f + freezeOffset, 2000 + durationOffset);
 }
 
 LaserTower::LaserTower(const Vector2f &pos)

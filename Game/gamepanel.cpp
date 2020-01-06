@@ -67,8 +67,8 @@ GamePanel::GamePanel() :
 	abilityIncreaseTowerAttackSpeedSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_INCREASE_TOWER_ATTACK_SPEED));
 	abilityIncreaseTowerAttackSpeedSprite.setScale(scaleFactor);
 
-	abilityUnknownSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_TIME_STOP));
-	abilityUnknownSprite.setScale(scaleFactor);
+	abilityStopSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_TIME_STOP));
+	abilityStopSprite.setScale(scaleFactor);
 
 	towerBaseSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_BASE));
 	towerBaseSprite.setScale(scaleFactor);
@@ -116,7 +116,7 @@ GamePanel::GamePanel() :
 	actionsSprites.push_back(&abilityVenomSprite);
 	actionsSprites.push_back(&abilityIncreaseTowerDamageSprite);
 	actionsSprites.push_back(&abilityIncreaseTowerAttackSpeedSprite);
-	actionsSprites.push_back(&abilityUnknownSprite);
+	actionsSprites.push_back(&abilityStopSprite);
 
 	const float costTextCharacterSize = 20;
 	const Color costTextFillColor = Color::Blue;
@@ -199,12 +199,12 @@ GamePanel::GamePanel() :
 	abilityIncreaseTowerAttackSpeedDurationText.setCharacterSize(durationTextCharacterSize);
 	abilityIncreaseTowerAttackSpeedDurationText.setScale(scaleFactor);
 
-	abilityUnknownAttackSpeedDurationText.setFont(GlobalVariables::Instance().font());
-	abilityUnknownAttackSpeedDurationText.setFillColor(costTextFillColor);
-	abilityUnknownAttackSpeedDurationText.setOutlineColor(costTextOutlineColor);
-	abilityUnknownAttackSpeedDurationText.setOutlineThickness(1);
-	abilityUnknownAttackSpeedDurationText.setCharacterSize(durationTextCharacterSize);
-	abilityUnknownAttackSpeedDurationText.setScale(scaleFactor);
+	abilityStopDurationText.setFont(GlobalVariables::Instance().font());
+	abilityStopDurationText.setFillColor(costTextFillColor);
+	abilityStopDurationText.setOutlineColor(costTextOutlineColor);
+	abilityStopDurationText.setOutlineThickness(1);
+	abilityStopDurationText.setCharacterSize(durationTextCharacterSize);
+	abilityStopDurationText.setScale(scaleFactor);
 
 	towerBaseCostText.setString(GlobalVariables::to_string_with_precision(BaseTower::STATS.cost, 0));
 	towerFreezeCostText.setString(GlobalVariables::to_string_with_precision(FreezeTower::STATS.cost, 0));
@@ -218,7 +218,7 @@ GamePanel::GamePanel() :
 	abilityVenomDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
 	abilityIncreaseTowerDamageDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
 	abilityIncreaseTowerAttackSpeedDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
-	abilityUnknownAttackSpeedDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
+	abilityStopDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
 
 	moneyIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MONEY_ICON));
 	moneyIcon.setScale(scaleFactor);
@@ -304,7 +304,7 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(abilityVenomSprite);
 	target->draw(abilityIncreaseTowerDamageSprite);
 	target->draw(abilityIncreaseTowerAttackSpeedSprite);
-	target->draw(abilityUnknownSprite);
+	target->draw(abilityStopSprite);
 
 	updateEnableTowers();
 
@@ -337,8 +337,8 @@ void GamePanel::draw(RenderTarget * const target)
 		target->draw(abilityIncreaseTowerDamageDurationText);
 	if (!abilities->increaseTowerAttackSpeedAbility->isReady())
 		target->draw(abilityIncreaseTowerAttackSpeedDurationText);
-	if (!abilities->unknownAblity->isReady())
-		target->draw(abilityUnknownAttackSpeedDurationText);
+	if (!abilities->stopAblity->isReady())
+		target->draw(abilityStopDurationText);
 
 	target->draw(moneyIcon);
 
@@ -426,7 +426,7 @@ ACTION_STATE GamePanel::getCurrentIcon() const
 	case 12:
 		return ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED;
 	case 13:
-		return ACTION_STATE::ABILITY_UNKNOWN;
+		return ACTION_STATE::ABILITY_STOP;
 	default:
 		break;
 	}
@@ -568,7 +568,7 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	pos.x += icons_space;
 	pos.x += iconSize.x;
 
-	abilityUnknownSprite.setPosition(pos);
+	abilityStopSprite.setPosition(pos);
 	pos.x += icons_space;
 
 	pos.y -= icons_space;
@@ -588,7 +588,7 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	abilityVenomDurationText.setPosition(abilityVenomSprite.getPosition());
 	abilityIncreaseTowerDamageDurationText.setPosition(abilityIncreaseTowerDamageSprite.getPosition());
 	abilityIncreaseTowerAttackSpeedDurationText.setPosition(abilityIncreaseTowerAttackSpeedSprite.getPosition());
-	abilityUnknownAttackSpeedDurationText.setPosition(abilityUnknownSprite.getPosition());
+	abilityStopDurationText.setPosition(abilityStopSprite.getPosition());
 
 	return pos;
 }
@@ -653,7 +653,7 @@ void GamePanel::updateAbilitiesDuration()
 	abilityVenomDurationText.setString(to_string(abilities->venomAbility->timeLeft()));
 	abilityIncreaseTowerDamageDurationText.setString(to_string(abilities->increaseTowerDamageAbility->timeLeft()));
 	abilityIncreaseTowerAttackSpeedDurationText.setString(to_string(abilities->increaseTowerAttackSpeedAbility->timeLeft()));
-	abilityUnknownAttackSpeedDurationText.setString(to_string(abilities->unknownAblity->timeLeft()));
+	abilityStopDurationText.setString(to_string(abilities->stopAblity->timeLeft()));
 }
 
 void GamePanel::updateEnableTowers()
@@ -726,10 +726,10 @@ void GamePanel::updateEnableAbilities()
 	else
 		abilityIncreaseTowerAttackSpeedSprite.setColor(Color::White);
 
-	if (!abilities->unknownAblity->isReady() || !iconsAvaliable.isAbilityUnknownEnabled)
-		abilityUnknownSprite.setColor(GlobalVariables::GrayColor);
+	if (!abilities->stopAblity->isReady() || !iconsAvaliable.isAbilityStopEnabled)
+		abilityStopSprite.setColor(GlobalVariables::GrayColor);
 	else
-		abilityUnknownSprite.setColor(Color::White);
+		abilityStopSprite.setColor(Color::White);
 }
 
 String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
@@ -810,12 +810,7 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 	{
 		str += Language::Instance().translate(Language::KILLS) + separator + to_string(tower->kills());
 		str += endline;
-
-		float cost = tower->type() == TOWER_TYPES::POWER ?
-					TowersFactory::getTowerStats(type).cost + (Engine::Instance().level()->getPowerTowersCount() - 1) * PowerTower::COST_OFFSET :
-					TowersFactory::getTowerStats(type).cost;
-		cost /= 2;
-
+		const float cost = getTowerSellCost(tower);
 		str += Language::Instance().translate(Language::SELL_COST);
 		str += separator;
 		str += GlobalVariables::to_string_with_precision(cost, 2);
@@ -980,8 +975,8 @@ bool GamePanel::isAbilityIconActive(ACTION_STATE type) const
 		return iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled;
 	case ABILITY_INCREASE_TOWER_DAMAGE:
 		return iconsAvaliable.isAbilityIncreaseTowerDamageEnabled;
-	case ABILITY_UNKNOWN:
-		return iconsAvaliable.isAbilityUnknownEnabled;
+	case ABILITY_STOP:
+		return iconsAvaliable.isAbilityStopEnabled;
 	default:
 		break;
 	}
@@ -1071,11 +1066,11 @@ void GamePanel::updateInfo()
 			str += Language::Instance().translate(Language::INC_DMG_ABILITY_DESCRIPTION);
 		}
 			break;
-		case ABILITY_UNKNOWN:
+		case ABILITY_STOP:
 		{
-			str = Language::Instance().translate(Language::ABILITY_UNKNOWN);
+			str = Language::Instance().translate(Language::ABILITY_STOP);
 			str += endline;
-			str += Language::Instance().translate(Language::UNKNOWN_ABILITY_DESCRIPTION);
+			str += Language::Instance().translate(Language::STOP_ABILITY_DESCRIPTION);
 		}
 			break;
 		case SELL:
@@ -1124,7 +1119,7 @@ void GamePanel::initMission(unsigned int n)
 	iconsAvaliable.isAbilityVenomEnabled = true;
 	iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = true;
 	iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = true;
-	iconsAvaliable.isAbilityUnknownEnabled = true;
+	iconsAvaliable.isAbilityStopEnabled = true;
 
 	switch (n)
 	{
@@ -1137,7 +1132,7 @@ void GamePanel::initMission(unsigned int n)
 		iconsAvaliable.isAbilityVenomEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
-		iconsAvaliable.isAbilityUnknownEnabled = false;
+		iconsAvaliable.isAbilityStopEnabled = false;
 		break;
 	case 1:
 		iconsAvaliable.isRocketEnabled = false;
@@ -1146,25 +1141,24 @@ void GamePanel::initMission(unsigned int n)
 		iconsAvaliable.isAbilityVenomEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
-		iconsAvaliable.isAbilityUnknownEnabled = false;
+		iconsAvaliable.isAbilityStopEnabled = false;
 		break;
 	case 2:
 		iconsAvaliable.isLaserEnabled = false;
 		iconsAvaliable.isImprovedEnabled = false;
-		iconsAvaliable.isAbilityVenomEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
-		iconsAvaliable.isAbilityUnknownEnabled = false;
+		iconsAvaliable.isAbilityStopEnabled = false;
 		break;
 	case 3:
 		iconsAvaliable.isImprovedEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
-		iconsAvaliable.isAbilityUnknownEnabled = false;
+		iconsAvaliable.isAbilityStopEnabled = false;
 		break;
 	case 4:
 		iconsAvaliable.isImprovedEnabled = false;
-		iconsAvaliable.isAbilityUnknownEnabled = false;
+		iconsAvaliable.isAbilityStopEnabled = false;
 		break;
 	default:
 		break;

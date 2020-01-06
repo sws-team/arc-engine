@@ -50,6 +50,8 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 Enemy::~Enemy()
 {
 	delete lifeBar;
+	if (ability != nullptr)
+		delete ability;
 }
 
 void Enemy::setAbility(EnemyAbility *ability)
@@ -234,8 +236,6 @@ void Enemy::freeze(float k, int duration)
 	if (isFreezed || startFreeze)
 	{
 		freezeDuration = max(freezeDuration, duration);
-//		m_data.speed += k;
-//		freezeK += k;
 		return;
 	}
 
@@ -263,6 +263,8 @@ void Enemy::protect(float shell, bool show)
 	m_data.reflection += shell;
 	if(m_data.reflection >= 0.9f)
 		m_data.reflection = 0.9f;
+	if (m_data.reflection < 0.f)
+		m_data.reflection = 0.f;
 	if (show)
 		Engine::Instance().level()->addAnimation(RESOURCES::SHELL_EFFECT, this->pos(),
 											 Vector2i(GlobalVariables::MAP_CELL_SIZE, GlobalVariables::MAP_CELL_SIZE),
@@ -656,6 +658,11 @@ TowerEffectAbility::TowerEffectAbility()
 
 }
 
+TowerEffectAbility::~TowerEffectAbility()
+{
+
+}
+
 void TowerEffectAbility::draw(RenderTarget * const target)
 {
 	if (projectile != nullptr)
@@ -675,6 +682,8 @@ void TowerEffectAbility::use()
 	{
 	case READY:
 	{
+		reflection = owner->getData().reflection;
+		owner->setReflection(reflection + REFLECTION_MODIFIER);
 		owner->setStopped(true);
 		Engine::Instance().level()->addAnimation(info.enemyTextureId, owner->pos(),
 												 info.animationSize,
@@ -701,7 +710,10 @@ void TowerEffectAbility::use()
 				continue;
 			const float currentWeight = Engine::Instance().panel()->getTowerSellCost(tower);
 			if (currentWeight > weight)
+			{
 				target = tower;
+				weight = currentWeight;
+			}
 		}
 		if (target == nullptr)
 		{
@@ -753,6 +765,7 @@ void TowerEffectAbility::use()
 	case WAIT:
 	{
 		owner->setStopped(false);
+		owner->setReflection(reflection - REFLECTION_MODIFIER);
 		m_state = FINISHED;
 		m_interval = info.duration;
 	}

@@ -88,16 +88,6 @@ protected:
 private:
 	TOWER_TYPES m_type;
 	int m_level;
-
-//	struct Ability
-//	{
-//		bool isActive;
-//		Timer timer;
-//		int value;
-//		int duration;
-//	};
-//	Ability abilityDamage;
-//	Ability abilityAttackSpeed;
 	int m_kills;
 	bool m_isActive;
 	bool m_downgraded;
@@ -149,6 +139,7 @@ class BaseTower : public ProjectilesTower
 public:
 	BaseTower(const Vector2f &pos);
 	const static TowerStats STATS;
+	void projectileAction(Enemy *enemy) override;
 
 private:
 };

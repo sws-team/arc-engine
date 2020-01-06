@@ -172,6 +172,7 @@ class TowerEffectAbility : public EnemyAbility
 {
 public:
 	TowerEffectAbility();
+	~TowerEffectAbility();
 	void draw(RenderTarget *const target) override;
 	void update() override;
 protected:
@@ -203,6 +204,8 @@ private:
 	float m_angle;
 	constexpr static float SHUTDOWN_INTERVAL = 5000;
 	void getBack();
+	float reflection;
+	constexpr static float REFLECTION_MODIFIER = 0.5f;
 };
 
 class ShutdownTowerAbility : public TowerEffectAbility

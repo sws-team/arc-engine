@@ -71,9 +71,6 @@ void Level::update()
 	{
 		for(Tower* tower : towers)
 		{
-			if (!tower->isActive())
-				continue;
-
 			if (playing && tower->type() == POWER)
 			{
 				PowerTower *powerTower = static_cast<PowerTower*>(tower);
@@ -266,7 +263,7 @@ void Level::checkAlive()
 
 void Level::checkRespawn()
 {
-	if (abilities->unknownAblity->isActive())
+	if (abilities->stopAblity->isActive())
 		return;
 	if (currentWave == waves.size())
 		return;
@@ -293,7 +290,7 @@ void Level::checkRespawn()
 
 void Level::checkEnemyMove()
 {
-	if (abilities->unknownAblity->isActive())
+	if (abilities->stopAblity->isActive())
 		return;
 
 	const FloatRect endFRect = getEndRect();
@@ -686,15 +683,16 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			abilities->freezeBombAbility->setUp();
 		}
 			break;
-		case ABILITY_UNKNOWN:
+		case ABILITY_STOP:
 		{
-			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_UNKNOWN))
+			if (!Engine::Instance().panel()->isAbilityIconActive(ABILITY_STOP))
 				return;
 
-			if (!abilities->unknownAblity->isReady())
+			if (!abilities->stopAblity->isReady())
 				return;
 
-			abilities->unknownAblity->activate();
+			Engine::Instance().cursor()->swap();
+			abilities->stopAblity->activate();
 		}
 			break;
 		case SELL:
@@ -790,7 +788,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		case ABILITY_INCREASE_TOWER_DAMAGE:
 			abilities->increaseTowerDamageAbility->activate();
 			break;
-		case ABILITY_UNKNOWN:			
+		case ABILITY_STOP:
 			break;
 		default:
 			break;

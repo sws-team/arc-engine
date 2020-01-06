@@ -54,7 +54,7 @@ int GameAbility::timeLeft() const
 	const float t = m_time/1000 - cooldownTimer.clock.getElapsedTime().asSeconds();
 //	if (t < 0)
 //		return 0;
-	return static_cast<int>(t);
+	return static_cast<int>(ceil(t));
 }
 
 void GameAbility::finish()
@@ -75,7 +75,7 @@ Abilities::Abilities()
 	freezeBombAbility = new FreezeBombAbility();
 	increaseTowerAttackSpeedAbility = new IncreaseTowerAttackSpeedAbility();
 	increaseTowerDamageAbility = new IncreaseTowerDamageAbility();
-	unknownAblity = new UnknownAbility();
+	stopAblity = new StopAbility();
 }
 
 void Abilities::draw(RenderTarget * const target)
@@ -89,20 +89,20 @@ void Abilities::update()
 	venomAbility->checkDuration();
 	increaseTowerAttackSpeedAbility->checkDuration();
 	increaseTowerDamageAbility->checkDuration();
-	unknownAblity->checkDuration();
+	stopAblity->checkDuration();
 
 	bombAbility->checkReady();
 	freezeBombAbility->checkReady();
 	venomAbility->checkReady();
 	increaseTowerAttackSpeedAbility->checkReady();
 	increaseTowerDamageAbility->checkReady();
-	unknownAblity->checkReady();
+	stopAblity->checkReady();
 
 	Engine::Instance().panel()->updateAbilitiesDuration();
 }
 
 BombAbility::BombAbility()
-	: GameAbility(Vector2i(3, 3), Vector2i(1, 1), 10000)
+	: GameAbility(Vector2i(3, 3), Vector2i(1, 1), 15000)
 {
 
 }
@@ -152,7 +152,7 @@ void FreezeBombAbility::activate()
 }
 
 VenomAbility::VenomAbility()
-	: GameAbility(Vector2i(10, 3), Vector2i(4, 1), 10000)
+	: GameAbility(Vector2i(10, 3), Vector2i(4, 1), 30000)
 	,count(0)
 {
 	object = new GameObject(RESOURCES::VENOM_EFFECT, Vector2f(0, 0),
@@ -190,7 +190,7 @@ void VenomAbility::checkDuration()
 }
 
 IncreaseTowerDamageAbility::IncreaseTowerDamageAbility()
-	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 10000)
+	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 20000)
 	,target(nullptr)
 {
 
@@ -222,7 +222,8 @@ void IncreaseTowerDamageAbility::checkDuration()
 }
 
 IncreaseTowerAttackSpeedAbility::IncreaseTowerAttackSpeedAbility()
-	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 10000)
+	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 20000)
+	,target(nullptr)
 {
 
 }
@@ -252,20 +253,20 @@ void IncreaseTowerAttackSpeedAbility::checkDuration()
 	}
 }
 
-UnknownAbility::UnknownAbility()
+StopAbility::StopAbility()
 	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 50000)
 {
 
 }
 
-void UnknownAbility::activate()
+void StopAbility::activate()
 {
 	GameAbility::activate();
 	abilityTimer.reset();
 }
 
-void UnknownAbility::checkDuration()
+void StopAbility::checkDuration()
 {
-	if (abilityTimer.check(UNKNOWN_ABILITY_DURATION))
+	if (abilityTimer.check(STOP_ABILITY_DURATION))
 		finish();
 }

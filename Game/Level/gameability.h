@@ -41,7 +41,7 @@ public:
 	BombAbility();
 
 	void activate() override;
-	static constexpr float BOMB_ABILITY_DAMAGE = 111;
+	static constexpr float BOMB_ABILITY_DAMAGE = 200;
 };
 
 class FreezeBombAbility : public GameAbility
@@ -64,7 +64,7 @@ public:
 	void activate() override;
 	void checkDuration() override;
 
-	static constexpr float VENOM_DAMAGE = 10.f;
+	static constexpr float VENOM_DAMAGE = 15.f;
 	static constexpr int VENOM_DAMAGE_COUNT = 15;
 	static constexpr int VENOM_ATTACK_SPEED = 500;
 
@@ -105,15 +105,15 @@ private:
 	Tower *target;
 };
 
-class UnknownAbility : public GameAbility
+class StopAbility : public GameAbility
 {
 public:
-	UnknownAbility();
+	StopAbility();
 
 	void activate() override;
 	void checkDuration() override;
 private:
-	static constexpr int UNKNOWN_ABILITY_DURATION = 5000;
+	static constexpr int STOP_ABILITY_DURATION = 5000;
 	Timer abilityTimer;
 };
 
@@ -130,7 +130,7 @@ public:
 	FreezeBombAbility *freezeBombAbility;
 	IncreaseTowerAttackSpeedAbility *increaseTowerAttackSpeedAbility;
 	IncreaseTowerDamageAbility *increaseTowerDamageAbility;
-	UnknownAbility *unknownAblity;
+	StopAbility *stopAblity;
 };
 
 #endif // GAMEABILITY_H

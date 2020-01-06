@@ -83,7 +83,7 @@ private:
 	Sprite abilityVenomSprite;
 	Sprite abilityIncreaseTowerDamageSprite;
 	Sprite abilityIncreaseTowerAttackSpeedSprite;
-	Sprite abilityUnknownSprite;
+	Sprite abilityStopSprite;
 
 	Sprite towerBaseSprite;
 	Sprite towerLaserSprite;
@@ -106,7 +106,7 @@ private:
 	Text abilityVenomDurationText;
 	Text abilityIncreaseTowerDamageDurationText;
 	Text abilityIncreaseTowerAttackSpeedDurationText;
-	Text abilityUnknownAttackSpeedDurationText;
+	Text abilityStopDurationText;
 
 	Tower *m_selectedTower;
 	Text info;
@@ -133,7 +133,7 @@ private:
 		bool isAbilityVenomEnabled;
 		bool isAbilityIncreaseTowerDamageEnabled;
 		bool isAbilityIncreaseTowerAttackSpeedEnabled;
-		bool isAbilityUnknownEnabled;
+		bool isAbilityStopEnabled;
 	};
 	IconsAvaliable iconsAvaliable;
 

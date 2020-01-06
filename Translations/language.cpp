@@ -46,7 +46,7 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_FREEZE_BOMB, L"Морозная бомба"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Ускорение башни"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_DAMAGE, L"Увеличение урона башни"));
-	lang.insert(pair<TR_TEXT, wstring>(ABILITY_UNKNOWN, L"Неизвестно"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_STOP, L"stop"));
 	lang.insert(pair<TR_TEXT, wstring>(SELL, L"Продать"));
 	lang.insert(pair<TR_TEXT, wstring>(UPGRADE, L"Улучшить"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_BASE, L"Обычная башня"));
@@ -72,7 +72,7 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(VENOM_ABILITY_DESCRIPTION, L"Venom on area"));
 	lang.insert(pair<TR_TEXT, wstring>(INC_DMG_ABILITY_DESCRIPTION, L"Increase damage on tower"));
 	lang.insert(pair<TR_TEXT, wstring>(INC_AS_ABILITY_DESCRIPTION, L"Increase attack speed on tower"));
-	lang.insert(pair<TR_TEXT, wstring>(UNKNOWN_ABILITY_DESCRIPTION, L"Unknown"));
+	lang.insert(pair<TR_TEXT, wstring>(STOP_ABILITY_DESCRIPTION, L"Остановка"));
 
 	//game
 	lang.insert(pair<TR_TEXT, wstring>(PAUSED, L"Пауза"));
@@ -127,7 +127,7 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_FREEZE_BOMB, L"Freeze bomb"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"ic tower att speed"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_DAMAGE, L"inc tower dmg"));
-	lang.insert(pair<TR_TEXT, wstring>(ABILITY_UNKNOWN, L"unknown"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_STOP, L"stop"));
 	lang.insert(pair<TR_TEXT, wstring>(SELL, L"Sell"));
 	lang.insert(pair<TR_TEXT, wstring>(UPGRADE, L"Updgrade"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_BASE, L"Tower base"));
@@ -153,7 +153,7 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(VENOM_ABILITY_DESCRIPTION, L"Venom on area"));
 	lang.insert(pair<TR_TEXT, wstring>(INC_DMG_ABILITY_DESCRIPTION, L"Increase damage on tower"));
 	lang.insert(pair<TR_TEXT, wstring>(INC_AS_ABILITY_DESCRIPTION, L"Increase attack speed on tower"));
-	lang.insert(pair<TR_TEXT, wstring>(UNKNOWN_ABILITY_DESCRIPTION, L"Unknown"));
+	lang.insert(pair<TR_TEXT, wstring>(STOP_ABILITY_DESCRIPTION, L"Stop enemies"));
 
 	//game
 	lang.insert(pair<TR_TEXT, wstring>(PAUSED, L"Paused"));
@@ -209,7 +209,7 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_FREEZE_BOMB, L"Bombe-glace"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Tour à vitesse d'attaque augmentée"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_DAMAGE, L"Tour aux dommages augmentés"));
-	lang.insert(pair<TR_TEXT, wstring>(ABILITY_UNKNOWN, L"unknown"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_STOP, L"stop"));
 	lang.insert(pair<TR_TEXT, wstring>(SELL, L"Vendre"));
 	lang.insert(pair<TR_TEXT, wstring>(UPGRADE, L"Améliorer"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_BASE, L"Tour de base"));
@@ -235,7 +235,7 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(VENOM_ABILITY_DESCRIPTION, L"Venom on area"));
 	lang.insert(pair<TR_TEXT, wstring>(INC_DMG_ABILITY_DESCRIPTION, L"Increase damage on tower"));
 	lang.insert(pair<TR_TEXT, wstring>(INC_AS_ABILITY_DESCRIPTION, L"Increase attack speed on tower"));
-	lang.insert(pair<TR_TEXT, wstring>(UNKNOWN_ABILITY_DESCRIPTION, L"Unknown"));
+	lang.insert(pair<TR_TEXT, wstring>(STOP_ABILITY_DESCRIPTION, L"Stop enemies"));
 
 	//game
 	lang.insert(pair<TR_TEXT, wstring>(PAUSED, L"Pause"));
