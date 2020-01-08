@@ -28,9 +28,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::GAME_OVER_TEXTURE, "images/GameOver.png");
 	addTexture(RESOURCES::MISSON_COMPLETED_TEXTURE, "images/missionCompleted.png");
 	addTexture(RESOURCES::PANEL_CURSOR, "images/ui/Panel/panel_cursor.png");
-	addTexture(RESOURCES::HEALTH_ICON, "images/ui/star.png");
-	addTexture(RESOURCES::ENERGY_ICON, "images/ui/star.png");
-	addTexture(RESOURCES::MONEY_ICON, "images/ui/star.png");
+	addTexture(RESOURCES::MONEY_ICON, "images/ui/money.png");
 	addTexture(RESOURCES::START_TEXTURE, "images/ui/start.png");
 	addTexture(RESOURCES::END_TEXTURE, "images/ui/end.png");
 	addTexture(RESOURCES::FOCUS_ICON, "images/ui/focus.png");

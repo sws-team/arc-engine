@@ -1,5 +1,5 @@
 #include "camera.h"
-#include "cursor.h"
+#include "gamecursor.h"
 #include "settings.h"
 #include "globalvariables.h"
 #include "Engine/engine.h"

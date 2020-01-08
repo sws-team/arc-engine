@@ -45,8 +45,6 @@ public:
 	FloatRect getAbilitiesRect() const;
 	FloatRect getMoneyRect() const;
 	FloatRect getHealthRect() const;
-	FloatRect getRemovRect() const;
-	FloatRect getUpgradeRect() const;
 	FloatRect getProgressRect() const;
 
 	void updateCursor();
@@ -69,6 +67,8 @@ public:
 	void updateAbilitiesDuration();
 
 	void setLifeMax(int lifeMax);
+
+	ACTION_STATE isFieldButtons(const Vector2f& pos) const;
 
 private:
 	Sprite m_sprite;
@@ -108,6 +108,9 @@ private:
 	Text abilityIncreaseTowerAttackSpeedDurationText;
 	Text abilityStopDurationText;
 
+	Text sellCostText;
+	Text upgradeCostText;
+
 	Tower *m_selectedTower;
 	Text info;
 
@@ -143,6 +146,7 @@ private:
 	String towerInfo(TOWER_TYPES type, Tower *tower);
 
 	Sprite cursorSprite;
+	RectangleShape currentIconRect;
 
 	vector<Sprite*> actionsSprites;
 	constexpr static float ICONS_SPACE = 24;

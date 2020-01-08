@@ -1,7 +1,7 @@
 #include "gameability.h"
 #include "Game/Level/level.h"
 #include "Engine/engine.h"
-#include "Game/Level/cursor.h"
+#include "Game/Level/gamecursor.h"
 #include "Game/Level/camera.h"
 #include "Game/gamepanel.h"
 #include "Game/Level/enemy.h"
@@ -107,7 +107,7 @@ void Abilities::update()
 }
 
 BombAbility::BombAbility()
-	: GameAbility(Vector2i(3, 3), Vector2i(1, 1), 15000)
+	: GameAbility(Vector2i(3, 3), Vector2i(2, 2), 15000)
 {
 
 }
@@ -135,7 +135,7 @@ void BombAbility::activate()
 }
 
 FreezeBombAbility::FreezeBombAbility()
-	: GameAbility(Vector2i(3, 3), Vector2i(1, 1), 10000)
+	: GameAbility(Vector2i(3, 3), Vector2i(2, 2), 10000)
 {
 
 }
@@ -157,7 +157,7 @@ void FreezeBombAbility::activate()
 }
 
 VenomAbility::VenomAbility()
-	: GameAbility(Vector2i(10, 3), Vector2i(4, 1), 30000)
+	: GameAbility(Vector2i(10, 3), Vector2i(7, 2), 30000)
 	,object(nullptr)
 	,count(0)
 {

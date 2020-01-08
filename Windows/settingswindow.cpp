@@ -12,7 +12,7 @@
 #include "controller.h"
 
 const map<String, Vector2i> SettingsWindow::resolutionsMap = {
-    {"1920x1080", Vector2i(1920, 1080)},
+	{"1920x1080", Vector2i(1920, 1080)},
 	{"1360x768", Vector2i(1360, 768)},
 	{"1280x1024", Vector2i(1280, 1024)},
 	{"1024x768", Vector2i(1024, 768)},
@@ -415,7 +415,7 @@ void SettingsWindow::accept()
 	Settings::Instance().setMusicLevel(musicScale->value());
 	SoundController::Instance().updateVolume();
 
-	Language::Instance().setCurrentLanguageByName(languages->currentText());
+	Language::Instance().setCurrentLanguageByName(languages->currentText().toWideString());
 	Engine::Instance().setState(Engine::MAIN_MENU);
 
 	Settings::Instance().updateWindow();

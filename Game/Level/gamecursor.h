@@ -6,10 +6,10 @@
 #include "Game/gameobject.h"
 #include "Game/leveldef.h"
 
-class Cursor : public GameObject
+class GameCursor : public GameObject
 {
 public:
-	Cursor();
+	GameCursor();
 
 	enum MOVE_DIRECTIONS
 	{
@@ -39,8 +39,6 @@ public:
 
 	void activateTower(float radius, TOWER_TYPES type);
 
-	Vector2i abilityCell() const;
-
 	FloatRect getAbilityRect() const;
 
 	void swap();
@@ -56,6 +54,8 @@ public:
 
 	static const Color TOWER_AREA_COLOR;
 	static const Color INACTIVE_TOWER_AREA_COLOR;
+
+	void setHighlight(bool highlight);
 
 private:
 	Vector2i m_cell;
@@ -90,6 +90,8 @@ private:
 	void moveUpCursor();
 	void moveLeftCursor();
 	void moveRightCursor();
+
+	bool m_highlight;
 };
 
 #endif // CURSOR_H

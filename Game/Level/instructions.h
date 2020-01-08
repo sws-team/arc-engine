@@ -27,8 +27,6 @@ private:
 		ABILITIES,
 		MONEY,
 		HEALTH,
-		REMOVE,
-		UPGRADE,
 		PROGRESS,
 
 		FINISHED

@@ -4,11 +4,15 @@
 #include "Engine/engine.h"
 #include "Game/Level/camera.h"
 #include "controller.h"
+#include "settings.h"
 
 Menu::Menu()
 	: StateWindow()
 {
-
+	m_pos = Vector2f(0, 0);
+	m_color = Color::Red;
+	m_currentColor = Color::Green;
+	yPos = 0;
 }
 
 void Menu::paint(RenderWindow *window)
@@ -101,10 +105,14 @@ void Menu::addItem(const String& str)
 	text.setFillColor(Color::Black);
 
 	text.setString(str);
-	text.setCharacterSize(80);
+	text.setCharacterSize(100);
 	text.setStyle(Text::Bold);
+	text.setOutlineThickness(2);
+	text.setScale(Settings::Instance().getScaleFactor());
 
-	text.setPosition(x, offset * (menus.size()));
+	text.setPosition(m_pos.x,
+					 m_pos.y + yPos + Y_OFFSET * Settings::Instance().getScaleFactor().y * menus.size());
+	yPos += text.getGlobalBounds().height;
 
 	menus.push_back(text);
 
@@ -152,7 +160,22 @@ int Menu::getMenuAtPos(const Vector2i &point) const
 void Menu::updateColor()
 {
 	for(Text& menu : menus)
-		menu.setFillColor(Color::Red);
+		menu.setFillColor(m_color);
+	menus.at(currentMenu).setFillColor(m_currentColor);
+	menus.at(currentMenu).setOutlineColor(Color::Black);
+}
 
-	menus.at(currentMenu).setFillColor(Color::Green);
+void Menu::setCurrentColor(const Color &currentColor)
+{
+	m_currentColor = currentColor;
+}
+
+void Menu::setColor(const Color &color)
+{
+	m_color = color;
+}
+
+void Menu::setPos(const Vector2f &pos)
+{
+	m_pos = pos;
 }

@@ -7,7 +7,7 @@
 #include "Level/camera.h"
 #include "Level/tower.h"
 #include "Level/lifebar.h"
-#include "Level/cursor.h"
+#include "Level/gamecursor.h"
 #include "Translations/language.h"
 #include "Game/Level/gameability.h"
 
@@ -46,11 +46,15 @@ GamePanel::GamePanel() :
 	cursorSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_CURSOR));
 	cursorSprite.setScale(scaleFactor);
 
+	currentIconRect.setSize(Vector2f(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE));
+	currentIconRect.setFillColor(Color(160,69,34,100));
+	currentIconRect.setScale(scaleFactor);
+
 	sellSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::SELL_TEXTURE));
-	sellSprite.setScale(scaleFactor);
+	sellSprite.setScale(Settings::Instance().getScaleFactor());
 
 	upgradeSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::UPGRADE_TEXTURE));
-	upgradeSprite.setScale(scaleFactor);
+	upgradeSprite.setScale(Settings::Instance().getScaleFactor());
 
 	abilityBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_BOMB));
 	abilityBombSprite.setScale(scaleFactor);
@@ -119,8 +123,8 @@ GamePanel::GamePanel() :
 	actionsSprites.push_back(&abilityStopSprite);
 
 	const float costTextCharacterSize = 20;
-	const Color costTextFillColor = Color::Blue;
-	const Color costTextOutlineColor = Color::White;
+	const Color costTextFillColor = Color::White;
+	const Color costTextOutlineColor = Color::Black;
 	towerBaseCostText.setFont(GlobalVariables::Instance().font());
 	towerBaseCostText.setFillColor(costTextFillColor);
 	towerBaseCostText.setOutlineColor(costTextOutlineColor);
@@ -206,6 +210,21 @@ GamePanel::GamePanel() :
 	abilityStopDurationText.setCharacterSize(durationTextCharacterSize);
 	abilityStopDurationText.setScale(scaleFactor);
 
+	const float fieldIconsCharacterSize = costTextCharacterSize * 1.5f;
+	sellCostText.setFont(GlobalVariables::Instance().font());
+	sellCostText.setFillColor(costTextFillColor);
+	sellCostText.setOutlineColor(costTextOutlineColor);
+	sellCostText.setOutlineThickness(1);
+	sellCostText.setCharacterSize(fieldIconsCharacterSize);
+	sellCostText.setScale(scaleFactor);
+
+	upgradeCostText.setFont(GlobalVariables::Instance().font());
+	upgradeCostText.setFillColor(costTextFillColor);
+	upgradeCostText.setOutlineColor(costTextOutlineColor);
+	upgradeCostText.setOutlineThickness(1);
+	upgradeCostText.setCharacterSize(fieldIconsCharacterSize);
+	upgradeCostText.setScale(scaleFactor);
+
 	towerBaseCostText.setString(GlobalVariables::to_string_with_precision(BaseTower::STATS.cost, 0));
 	towerFreezeCostText.setString(GlobalVariables::to_string_with_precision(FreezeTower::STATS.cost, 0));
 	towerRocketCostText.setString(GlobalVariables::to_string_with_precision(RocketTower::STATS.cost, 0));
@@ -242,6 +261,7 @@ GamePanel::GamePanel() :
 	life->init(Vector2i(128 * Settings::Instance().getScaleFactor().x,
 						16 * Settings::Instance().getScaleFactor().y),
 			   Color::Red);
+
 	updateCurrentTower();
 }
 
@@ -253,6 +273,15 @@ GamePanel::~GamePanel()
 void GamePanel::draw(RenderTarget * const target)
 {
 	//update pos
+
+	if (m_selectedTower != nullptr)
+	{
+		target->draw(sellSprite);
+		target->draw(upgradeSprite);
+		target->draw(sellCostText);
+		target->draw(upgradeCostText);
+
+	}
 	Vector2f pos;
 	pos.x = target->getView().getCenter().x - target->getView().getSize().x/2;
 	pos.y = target->getView().getCenter().y + target->getView().getSize().y/2;
@@ -315,16 +344,12 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(towerPowerSprite);
 	target->draw(towerImprovedSprite);
 
-	target->draw(sellSprite);
-	target->draw(upgradeSprite);
-
 	target->draw(towerBaseCostText);
 	target->draw(towerFreezeCostText);
 	target->draw(towerRocketCostText);
 	target->draw(towerLaserCostText);
 	target->draw(towerPowerCostText);
 	target->draw(towerImprovedCostText);
-
 
 	Abilities *abilities = Engine::Instance().level()->getAbilities();
 	if (!abilities->bombAbility->isReady())
@@ -349,7 +374,10 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(waveText);
 
 	if (Engine::Instance().cursor()->inPanel())
+	{
+		target->draw(currentIconRect);
 		target->draw(cursorSprite);
+	}
 }
 
 void GamePanel::update()
@@ -498,12 +526,12 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	pos.x += info_offset;
 
 	pos.x += block_space;
-	sellSprite.setPosition(pos);
+//	sellSprite.setPosition(pos);
 
 	pos.y += iconSize.y;
 	pos.y += icons_space;
 
-	upgradeSprite.setPosition(pos);
+//	upgradeSprite.setPosition(pos);
 
 	pos.y -= icons_space;
 	pos.y -= iconSize.y;
@@ -598,6 +626,18 @@ void GamePanel::setLifeMax(int lifeMax)
 	m_lifeMax = lifeMax;
 }
 
+ACTION_STATE GamePanel::isFieldButtons(const Vector2f &pos) const
+{
+	const Vector2f gPos = pos + Vector2f(1, 1);
+
+	if (sellSprite.getGlobalBounds().contains(gPos))
+		return SELL;
+	if (upgradeSprite.getGlobalBounds().contains(gPos))
+		return UPGRADE;
+
+	return READY;
+}
+
 int GamePanel::getProgressMax() const
 {
 	return m_progressMax;
@@ -617,8 +657,6 @@ float GamePanel::getTowerUpgradeCost(Tower *tower) const
 	float cost = type == TOWER_TYPES::POWER ?
 				TowersFactory::getTowerStats(type).cost + Engine::Instance().level()->getPowerTowersCount() * PowerTower::COST_OFFSET :
 				TowersFactory::getTowerStats(type).cost;
-
-
 
 	switch (tower->level())
 	{
@@ -998,11 +1036,26 @@ void GamePanel::updateCurrentTower()
 	sellSprite.setColor(color);
 	upgradeSprite.setColor(color);
 
-	bool canUpgrade = false;;
+	bool canUpgrade = false;
 	if (m_selectedTower != nullptr)
 	{
 		const float cost = getTowerUpgradeCost(m_selectedTower);
 		canUpgrade = Engine::Instance().level()->getMoneyCount() < cost;
+
+		Vector2f optionsPos = m_selectedTower->pos();
+		optionsPos.x -= GlobalVariables::Instance().tileSize().x;
+		sellSprite.setPosition(optionsPos);
+		optionsPos.x += GlobalVariables::Instance().tileSize().x * 2;
+		upgradeSprite.setPosition(optionsPos);
+
+		const float sellCost = getTowerSellCost(m_selectedTower);
+		const float upgradeCost = getTowerUpgradeCost(m_selectedTower);
+
+		sellCostText.setString(GlobalVariables::to_string_with_precision(sellCost, 1));
+		upgradeCostText.setString(GlobalVariables::to_string_with_precision(upgradeCost, 0));
+
+		sellCostText.setPosition(sellSprite.getPosition());
+		upgradeCostText.setPosition(upgradeSprite.getPosition());
 	}
 	if (level > 2 || canUpgrade)
 		upgradeSprite.setColor(GlobalVariables::GrayColor);
@@ -1014,6 +1067,7 @@ void GamePanel::updateCurrentCursor()
 		currentCursorPos = 0;
 
 	cursorSprite.setPosition(actionsSprites.at(currentCursorPos)->getPosition());
+	currentIconRect.setPosition(cursorSprite.getPosition());
 	updateInfo();
 }
 
@@ -1073,28 +1127,28 @@ void GamePanel::updateInfo()
 			str += Language::Instance().translate(Language::STOP_ABILITY_DESCRIPTION);
 		}
 			break;
-		case SELL:
-		{
-			str = Language::Instance().translate(Language::SELL);
+//		case SELL:
+//		{
+//			str = Language::Instance().translate(Language::SELL);
 
-			if (m_selectedTower != nullptr)
-			{
-				str += endline;
-				str += "Cost" +  GlobalVariables::to_string_with_precision(getTowerSellCost(m_selectedTower), 1);
-			}
-		}
-			break;
-		case UPGRADE:
-		{
-			str = Language::Instance().translate(Language::UPGRADE);
+//			if (m_selectedTower != nullptr)
+//			{
+//				str += endline;
+//				str += "Cost" +  GlobalVariables::to_string_with_precision(getTowerSellCost(m_selectedTower), 1);
+//			}
+//		}
+//			break;
+//		case UPGRADE:
+//		{
+//			str = Language::Instance().translate(Language::UPGRADE);
 
-			if (m_selectedTower != nullptr)
-			{
-				str += endline;
-				str += "Cost" +  GlobalVariables::to_string_with_precision(getTowerUpgradeCost(m_selectedTower), 1);
-			}
-		}
-			break;
+//			if (m_selectedTower != nullptr)
+//			{
+//				str += endline;
+//				str += "Cost" +  GlobalVariables::to_string_with_precision(getTowerUpgradeCost(m_selectedTower), 1);
+//			}
+//		}
+//			break;
 		default:
 			break;
 		}
@@ -1104,6 +1158,7 @@ void GamePanel::updateInfo()
 		Tower* tower = Engine::Instance().level()->getTowerAtPos(Engine::Instance().cursor()->pos());
 		if (tower != nullptr)
 			str = towerInfo(tower->type(), tower);
+		Engine::Instance().cursor()->setHighlight(m_selectedTower != tower && tower != nullptr);
 	}
 	info.setString(str);
 }
@@ -1195,16 +1250,6 @@ FloatRect GamePanel::getMoneyRect() const
 FloatRect GamePanel::getHealthRect() const
 {
 	return life->fullValue.getGlobalBounds();
-}
-
-FloatRect GamePanel::getRemovRect() const
-{
-	return sellSprite.getGlobalBounds();
-}
-
-FloatRect GamePanel::getUpgradeRect() const
-{
-	return upgradeSprite.getGlobalBounds();
 }
 
 FloatRect GamePanel::getProgressRect() const

@@ -3,6 +3,7 @@
 #include "Engine/engine.h"
 #include "Translations/language.h"
 #include "globalvariables.h"
+#include "settings.h"
 
 MainMenu::MainMenu()
 	: Menu()
@@ -10,6 +11,11 @@ MainMenu::MainMenu()
 {
 	setBackground(RESOURCES::MENU_BACKGROUND);
 	currentMenu = static_cast<MENUS>(CAMPAIGN);
+
+	setPos(Vector2f(120 * Settings::Instance().getScaleFactor().x,
+					590 * Settings::Instance().getScaleFactor().y));
+	setColor(Color(64,224,208, 100));
+	setCurrentColor(Color(64,224,208));
 
 	addItem(Language::Instance().translate(Language::CAMPAIGN));
 	addItem(Language::Instance().translate(Language::OPTIONS));

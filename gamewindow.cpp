@@ -4,7 +4,7 @@
 #include "Game/Audio/soundcontroller.h"
 #include "Game/Level/level.h"
 #include "globalvariables.h"
-#include "Game/Level/cursor.h"
+#include "Game/Level/gamecursor.h"
 #include "Game/Level/camera.h"
 #include "Game/gamepanel.h"
 #include "ResourcesManager/resourcesmanager.h"
@@ -226,11 +226,11 @@ void GameWindow::setState(const GAME_STATE &state)
 {
 	if (state == m_state)
 		return;
-	Engine::Instance().window()->setMouseCursorVisible(true);
+//	Engine::Instance().window()->setMouseCursorVisible(true);
 	switch (state)
 	{
 	case PLAYING:
-		Engine::Instance().window()->setMouseCursorVisible(false);
+//		Engine::Instance().window()->setMouseCursorVisible(false);
 		break;
 	case PAUSED:
 	{

@@ -1,7 +1,7 @@
 #include "controller.h"
 #include "Game/Level/level.h"
 #include "Game/Level/camera.h"
-#include "Game/Level/cursor.h"
+#include "Game/Level/gamecursor.h"
 #include "Game/gamepanel.h"
 #include "globalvariables.h"
 #include "Engine/engine.h"

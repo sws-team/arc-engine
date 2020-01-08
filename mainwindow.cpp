@@ -2,12 +2,12 @@
 #include "globalvariables.h"
 #include "Engine/engine.h"
 #include "statewindow.h"
+#include <SFML/Window/Cursor.hpp>
 
 MainWindow::MainWindow()
 	: RenderWindow ()
 	,currentState(nullptr)
 {
-//	GlobalVariables::Instance().loadControls();
 	state = Engine::UNKNNOWN;
 }
 
@@ -20,6 +20,13 @@ int MainWindow::exec()
 {
 	Engine::Instance().setWindow(this);
 	setMouseCursorGrabbed(true);
+
+	Image img;
+	img.loadFromFile("images/ui/cursor.png");
+	Cursor cursor;
+	if (cursor.loadFromPixels(img.getPixelsPtr(), Vector2u(32,32), Vector2u(0,0)))
+		setMouseCursor(cursor);
+
 	while (isOpen())
 	{
 		if (Engine::Instance().getState() != state)
@@ -36,7 +43,6 @@ int MainWindow::exec()
 			currentState = Engine::Instance().createState(Engine::Instance().getState());
 			currentState->init();
 			state = Engine::Instance().getState();
-			setMouseCursorVisible(state != Engine::IN_GAME);
 		}
 
 		if (currentState == nullptr)

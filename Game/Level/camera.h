@@ -3,7 +3,7 @@
 
 #include "stdheader.h"
 
-class Cursor;
+class GameCursor;
 
 class Camera
 {

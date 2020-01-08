@@ -4,7 +4,7 @@
 #include "stdheader.h"
 
 class Camera;
-class Cursor;
+class GameCursor;
 class Level;
 class GamePanel;
 class Map;
@@ -42,7 +42,7 @@ public:
 	class StateWindow *createState(const GAME_STATE &state);
 
 	Camera *camera() const;
-	Cursor *cursor() const;
+	GameCursor *cursor() const;
 
 	void loadMaps(const String &path);
 
@@ -94,7 +94,7 @@ private:
 	GAME_STATE m_state;
 
 	Camera *m_camera;
-	Cursor *m_cursor;
+	GameCursor *m_cursor;
 	Level *m_level;
 	GamePanel *m_panel;
 	Controller *m_controller;

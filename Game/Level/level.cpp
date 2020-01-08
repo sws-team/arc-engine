@@ -9,7 +9,7 @@
 #include "Game/Level/camera.h"
 #include "Game/Level/map.h"
 #include "Engine/engine.h"
-#include "cursor.h"
+#include "gamecursor.h"
 #include "enemy.h"
 #include "tower.h"
 #include "projectile.h"
@@ -40,7 +40,7 @@ Level::Level() :
 	deadZone.setOutlineColor(Color::Red);
 	deadZone.setFillColor(Color::Transparent);
 
-	currentTowerRadius.setFillColor(Cursor::TOWER_AREA_COLOR);
+	currentTowerRadius.setFillColor(GameCursor::TOWER_AREA_COLOR);
 	currentTowerRect.setFillColor(PowerTower::POWER_TOWER_AREA_COLOR);
 
 	spawnRect.setFillColor(Color::Magenta);
@@ -406,6 +406,7 @@ unsigned int Level::getPowerTowersCount() const
 
 void Level::clearCursor()
 {
+	Engine::Instance().panel()->setSelectedTower(nullptr);
 	m_actionState = READY;
 	Engine::Instance().cursor()->deactivate();
 	highlightPowerTowersRadius(false);
@@ -604,7 +605,8 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 {
 	Tower *selectedTower = Engine::Instance().panel()->selectedTower();
 	if (Engine::Instance().panel()->selectedTower() != nullptr)
-		Engine::Instance().panel()->setSelectedTower(nullptr);	
+		Engine::Instance().panel()->setSelectedTower(nullptr);
+
 	if (inPanel)
 	{
 		const ACTION_STATE currentState = Engine::Instance().panel()->getCurrentIcon();
@@ -695,49 +697,25 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			abilities->stopAblity->activate();
 		}
 			break;
-		case SELL:
-		{
-			if (selectedTower == nullptr)
-				return;
-
-			const float cost = Engine::Instance().panel()->getTowerSellCost(selectedTower);
-			money += cost;
-			towers.erase( remove( towers.begin(), towers.end(), selectedTower ), towers.end() );
-			delete selectedTower;			
-			if (selectedTower->type() == POWER)
-				m_powerTowersCount--;
-			Engine::Instance().panel()->updatePanel();
-			Engine::Instance().cursor()->swap();
-		}
-			break;
-		case UPGRADE:
-		{
-			if (selectedTower == nullptr)
-				return;
-
-			const float cost = Engine::Instance().panel()->getTowerUpgradeCost(selectedTower);
-			if (money < cost)
-				return;
-
-			if (selectedTower->level() < 3)
-			{
-				money -= cost;
-				selectedTower->upgrade();
-			}
-			Engine::Instance().panel()->updatePanel();
-			Engine::Instance().cursor()->swap();
-		}
+		default:
 			break;
 		}
 		m_actionState = currentState;
 	}
 	else
 	{
+		const Vector2f pos = Engine::Instance().camera()->cellToPos(cell);
+		if (m_actionState == READY && selectedTower != nullptr)
+		{
+			const ACTION_STATE fieldState = Engine::Instance().panel()->isFieldButtons(pos);
+			if (fieldState != READY)
+				m_actionState = fieldState;
+		}
 		switch (m_actionState)
 		{
 		case READY:
 		{
-			Tower* tower = getTowerAtPos(Engine::Instance().camera()->cellToPos(cell));
+			Tower* tower = getTowerAtPos(pos);
 			if (tower != nullptr)
 			{
 				Engine::Instance().panel()->setSelectedTower(tower);
@@ -762,7 +740,6 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (type != POWER)
 				highlightPowerTowersRadius(false);
 
-			const Vector2f pos = Engine::Instance().camera()->cellToPos(cell);
 			Tower *tower = TowersFactory::createTower(type, pos);
 			if (tower == nullptr)
 				return;
@@ -789,6 +766,39 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			abilities->increaseTowerDamageAbility->activate();
 			break;
 		case ABILITY_STOP:
+			break;
+		case SELL:
+		{
+			if (selectedTower == nullptr)
+				return;
+
+			const float cost = Engine::Instance().panel()->getTowerSellCost(selectedTower);
+			money += cost;
+			towers.erase( remove( towers.begin(), towers.end(), selectedTower ), towers.end() );
+			delete selectedTower;
+			if (selectedTower->type() == POWER)
+				m_powerTowersCount--;
+			Engine::Instance().panel()->updatePanel();
+			Engine::Instance().cursor()->swap();
+		}
+			break;
+		case UPGRADE:
+		{
+			if (selectedTower == nullptr)
+				return;
+
+			const float cost = Engine::Instance().panel()->getTowerUpgradeCost(selectedTower);
+			if (money < cost)
+				return;
+
+			if (selectedTower->level() < 3)
+			{
+				money -= cost;
+				selectedTower->upgrade();
+			}
+			Engine::Instance().panel()->updatePanel();
+			Engine::Instance().cursor()->swap();
+		}
 			break;
 		default:
 			break;

@@ -65,10 +65,6 @@ void Settings::updateWindow()
 					   ContextSettings(0, 0, 8)
 					   );
 	mainWindow->setVerticalSyncEnabled(true);
-//	mainWindow->setFramerateLimit(60); // Set a framrate limit to reduce the CPU load
-//	mainWindow->setMouseCursorVisible(false); // Hide the cursor
-
-
 	Engine::Instance().loadMaps("maps");
 	Engine::Instance().reset();
 }

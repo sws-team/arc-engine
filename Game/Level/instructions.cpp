@@ -108,22 +108,6 @@ void Instructions::changeState(Instructions::STATES state)
 		textStr = Language::Instance().translate(Language::INSTRUCTION_HEALTH);
 	}
 		break;
-	case REMOVE:
-	{
-		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
-							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
-		rect = Engine::Instance().panel()->getRemovRect();
-		textStr = Language::Instance().translate(Language::INSTRUCTION_REMOVE);
-	}
-		break;
-	case UPGRADE:
-	{
-		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
-							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
-		rect = Engine::Instance().panel()->getUpgradeRect();
-		textStr = Language::Instance().translate(Language::INSTRUCTION_UPGRADE);
-	}
-		break;
 	case PROGRESS:
 	{
 		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,

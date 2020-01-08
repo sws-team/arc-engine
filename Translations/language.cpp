@@ -24,7 +24,7 @@ void Language::loadRus()
 	//menu
 	lang.insert(pair<TR_TEXT, wstring>(CAMPAIGN, L"Кампания"));
 	lang.insert(pair<TR_TEXT, wstring>(OPTIONS, L"Опции"));
-	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"О программе"));
+	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"Авторы"));
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Выход"));
 
 	//settings
@@ -90,8 +90,6 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_ABILITIES, L"Способности"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_MONEY, L"Валюта"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_HEALTH, L"Здоровье"));
-	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_REMOVE, L"Удалить башню"));
-	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_UPGRADE, L"Улучшить башню"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_PROGRESS, L"Прогресс уровня"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_SKIP, L"Нажмите Ввод чтобы продолжить или Пробел чтобы пропустить"));
 	langs.insert(pair<string, map<TR_TEXT, wstring> >(rus, lang));
@@ -171,8 +169,6 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_ABILITIES, L"Abilities"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_MONEY, L"Money"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_HEALTH, L"Health"));
-	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_REMOVE, L"Remove"));
-	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_UPGRADE, L"Upgrade"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_PROGRESS, L"Progress"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_SKIP, L"Press Return to continue or Space to skip"));
 
@@ -253,8 +249,6 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_ABILITIES, L"Abilities"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_MONEY, L"Money"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_HEALTH, L"Health"));
-	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_REMOVE, L"Remove"));
-	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_UPGRADE, L"Upgrade"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_PROGRESS, L"Progress"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_SKIP, L"Taper la Touche d'entrée pour continuer ou l'Espace pour passer"));
 	langs.insert(pair<string, map<TR_TEXT, wstring> >(fr, lang));

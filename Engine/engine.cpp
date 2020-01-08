@@ -14,7 +14,7 @@
 #include "Game/Level/level.h"
 #include "Game/gamepanel.h"
 #include "Game/Level/camera.h"
-#include "Game/Level/cursor.h"
+#include "Game/Level/gamecursor.h"
 #include "Game/Level/level.h""
 #include "Game/Level/instructions.h"
 #include "controller.h"
@@ -245,7 +245,7 @@ Camera *Engine::camera() const
 	return m_camera;
 }
 
-Cursor *Engine::cursor() const
+GameCursor *Engine::cursor() const
 {
 	return m_cursor;
 }
@@ -294,7 +294,7 @@ void Engine::reset()
 		delete m_instructions;
 
 	m_camera = new Camera();
-	m_cursor = new Cursor();
+	m_cursor = new GameCursor();
 	m_panel = new GamePanel();
 	m_level = new Level();
 	m_controller = new Controller();
