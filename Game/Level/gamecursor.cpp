@@ -71,7 +71,7 @@ void GameCursor::moveLeft()
 {
 	if (m_inPanel)
 		return Engine::Instance().panel()->moveCursorLeft();
-
+cout << "MOVE LEFY"<<endl;
 	moveLeftCursor();
 }
 
@@ -86,7 +86,7 @@ void GameCursor::moveRight()
 void GameCursor::moveUp()
 {
 	if (m_inPanel)
-		return Engine::Instance().panel()->moveCursorUp();
+		return;
 
 	moveUpCursor();
 }
@@ -94,7 +94,7 @@ void GameCursor::moveUp()
 void GameCursor::moveDown()
 {
 	if (m_inPanel)
-		return Engine::Instance().panel()->moveCursorDown();
+		return;
 
 	moveDownCursor();
 }
@@ -290,9 +290,9 @@ void GameCursor::checkBorders()
 	const Vector2i cell = Vector2i(pos.x/GlobalVariables::Instance().tileSize().x,
 								   pos.y/GlobalVariables::Instance().tileSize().y);
 
-	if (cell.x == Engine::Instance().camera()->viewLeftCell())
+	if (cell.x == Engine::Instance().camera()->viewLeftCell() && !m_inPanel)
 		moveLeftCursor();
-	if (cell.x >= Engine::Instance().camera()->viewRightCell())
+	if (cell.x >= Engine::Instance().camera()->viewRightCell() && !m_inPanel)
 		moveRightCursor();
 	if (cell.y == Engine::Instance().camera()->viewTopCell())
 		moveUpCursor();

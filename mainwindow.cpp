@@ -20,6 +20,7 @@ int MainWindow::exec()
 {
 	Engine::Instance().setWindow(this);
 	setMouseCursorGrabbed(true);
+	setMouseCursorVisible(false);
 
 	Image img;
 	img.loadFromFile("images/ui/cursor.png");
@@ -43,6 +44,7 @@ int MainWindow::exec()
 			currentState = Engine::Instance().createState(Engine::Instance().getState());
 			currentState->init();
 			state = Engine::Instance().getState();
+			setMouseCursorVisible(state != Engine::INTRO);
 		}
 
 		if (currentState == nullptr)

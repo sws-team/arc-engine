@@ -52,8 +52,6 @@ public:
 
 	void moveCursorLeft();
 	void moveCursorRight();
-	void moveCursorDown();
-	void moveCursorUp();
 
 	bool isTowerIconActive(TOWER_TYPES type) const;
 	bool isAbilityIconActive(ACTION_STATE type) const;
@@ -93,6 +91,7 @@ private:
 	Sprite towerImprovedSprite;
 
 	Sprite moneyIcon;
+	Sprite lifeIcon;
 
 	Text towerBaseCostText;
 	Text towerFreezeCostText;

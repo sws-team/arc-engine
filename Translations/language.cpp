@@ -1,5 +1,4 @@
 #include "language.h"
-#include "json/json.h"
 
 const string eng = "eng";
 const string rus = "rus";

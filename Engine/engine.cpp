@@ -15,7 +15,7 @@
 #include "Game/gamepanel.h"
 #include "Game/Level/camera.h"
 #include "Game/Level/gamecursor.h"
-#include "Game/Level/level.h""
+#include "Game/Level/level.h"
 #include "Game/Level/instructions.h"
 #include "controller.h"
 
@@ -24,7 +24,9 @@
 #include <tinydir.h>
 #include <base64.h>
 
+#ifdef STEAM_API
 #include "isteamuserstats.h"
+#endif
 
 Engine &Engine::Instance()
 {
@@ -44,10 +46,11 @@ Engine::Engine() :
 	m_state = INTRO;
 	reset();
 	saveFileName = GlobalVariables::Instance().applicationPath().toAnsiString() + string("/saves");
+#ifdef STEAM_API
 	SteamUserStats()->RequestCurrentStats();
 //	SteamUtils()->GetAppID();
-
 	//	ISteamUserStats *stats = SteamUserStats();
+#endif
 }
 
 Map *Engine::findMapByNumber(unsigned int num)
@@ -231,8 +234,12 @@ bool Engine::unlockAchievment(GameAchievements::AchievmentsTypes type)
 	default:
 		return false;
 	}
+#ifdef STEAM_API
 	SteamUserStats()->SetAchievement(ID.data());
 	return SteamUserStats()->StoreStats();
+#else
+	return false;
+#endif
 }
 
 map<int, Tile::TileProperties> Engine::getTileProperties() const
@@ -290,6 +297,8 @@ void Engine::reset()
 		delete m_panel;
 	if (m_level != nullptr)
 		delete m_level;
+	if (m_controller != nullptr)
+		delete m_controller;
 	if (m_instructions != nullptr)
 		delete m_instructions;
 

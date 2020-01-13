@@ -107,14 +107,12 @@ GamePanel::GamePanel() :
 	readyText.setScale(scaleFactor);
 	readyText.setString(Language::Instance().translate(Language::START_GAME));
 
-	actionsSprites.push_back(&sellSprite);
 	actionsSprites.push_back(&towerBaseSprite);
 	actionsSprites.push_back(&towerFreezeSprite);
 	actionsSprites.push_back(&towerRocketSprite);
 	actionsSprites.push_back(&towerPowerSprite);
 	actionsSprites.push_back(&towerLaserSprite);
 	actionsSprites.push_back(&towerImprovedSprite);
-	actionsSprites.push_back(&upgradeSprite);
 	actionsSprites.push_back(&abilityBombSprite);
 	actionsSprites.push_back(&abilityFreezeBombSprite);
 	actionsSprites.push_back(&abilityVenomSprite);
@@ -210,17 +208,18 @@ GamePanel::GamePanel() :
 	abilityStopDurationText.setCharacterSize(durationTextCharacterSize);
 	abilityStopDurationText.setScale(scaleFactor);
 
-	const float fieldIconsCharacterSize = costTextCharacterSize * 1.5f;
+	const float fieldIconsCharacterSize = costTextCharacterSize * 1.3f;
 	sellCostText.setFont(GlobalVariables::Instance().font());
-	sellCostText.setFillColor(costTextFillColor);
-	sellCostText.setOutlineColor(costTextOutlineColor);
-	sellCostText.setOutlineThickness(1);
+	sellCostText.setFillColor(Color::Black);
+//	sellCostText.setOutlineColor(costTextOutlineColor);
+//	sellCostText.setOutlineThickness(1);
 	sellCostText.setCharacterSize(fieldIconsCharacterSize);
 	sellCostText.setScale(scaleFactor);
 
 	upgradeCostText.setFont(GlobalVariables::Instance().font());
-	upgradeCostText.setFillColor(costTextFillColor);
-	upgradeCostText.setOutlineColor(costTextOutlineColor);
+	upgradeCostText.setFillColor(Color(236,169,114));
+	upgradeCostText.setStyle(Text::Bold);
+	upgradeCostText.setOutlineColor(Color(104,75,56));
 	upgradeCostText.setOutlineThickness(1);
 	upgradeCostText.setCharacterSize(fieldIconsCharacterSize);
 	upgradeCostText.setScale(scaleFactor);
@@ -242,6 +241,9 @@ GamePanel::GamePanel() :
 	moneyIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MONEY_ICON));
 	moneyIcon.setScale(scaleFactor);
 
+	lifeIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::LIFE_ICON));
+	lifeIcon.setScale(scaleFactor);
+
 	startSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::START_TEXTURE));
 	startSprite.setScale(Settings::Instance().getScaleFactor());
 
@@ -258,9 +260,7 @@ GamePanel::GamePanel() :
 	m_bottomValue = 0;
 	progress->init(Vector2i(Settings::Instance().getResolution().x * PROGRESS_WIDTH,
 							LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
-	life->init(Vector2i(128 * Settings::Instance().getScaleFactor().x,
-						16 * Settings::Instance().getScaleFactor().y),
-			   Color::Red);
+	life->init(Vector2i(722 * scaleFactor.x, 37 * scaleFactor.y), Color::Cyan);
 
 	updateCurrentTower();
 }
@@ -306,8 +306,8 @@ void GamePanel::draw(RenderTarget * const target)
 	Sprite miniMapSprite;
 	miniMapSprite.setTexture(rTexture.getTexture());
 
-	const float minimap_scale_x = Settings::Instance().getScaleFactor().x * Settings::GAME_SCALE * 537.f / Settings::Instance().getResolution().x;
-	const float minimap_scale_y = Settings::Instance().getScaleFactor().y * Settings::GAME_SCALE * 152.f / Settings::Instance().getResolution().y;
+	const float minimap_scale_x = Settings::Instance().getScaleFactor().x * Settings::GAME_SCALE * 374.f / Settings::Instance().getResolution().x;
+	const float minimap_scale_y = Settings::Instance().getScaleFactor().y * Settings::GAME_SCALE * 157.f / Settings::Instance().getResolution().y;
 
 	miniMapSprite.scale(minimap_scale_x, minimap_scale_y);
 	miniMapSprite.setPosition(pos);
@@ -366,6 +366,7 @@ void GamePanel::draw(RenderTarget * const target)
 		target->draw(abilityStopDurationText);
 
 	target->draw(moneyIcon);
+	target->draw(lifeIcon);
 
 	target->draw(miniMapSprite);
 	progress->draw(target);
@@ -433,27 +434,23 @@ ACTION_STATE GamePanel::getCurrentIcon() const
 	switch (currentCursorPos)
 	{
 	case 0:
-		return ACTION_STATE::SELL;
 	case 1:
 	case 2:
 	case 3:
 	case 4:
 	case 5:
-	case 6:
 		return ACTION_STATE::ADD_TOWER;
-	case 7:
-		return ACTION_STATE::UPGRADE;
-	case 8:
+	case 6:
 		return ACTION_STATE::ABILITY_BOMB;
-	case 9:
+	case 7:
 		return ACTION_STATE::ABILITY_FREEZE_BOMB;
-	case 10:
+	case 8:
 		return ACTION_STATE::ABILITY_VENOM;
-	case 11:
+	case 9:
 		return ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE;
-	case 12:
+	case 10:
 		return ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED;
-	case 13:
+	case 11:
 		return ACTION_STATE::ABILITY_STOP;
 	default:
 		break;
@@ -465,17 +462,17 @@ TOWER_TYPES GamePanel::currentTower() const
 {
 	switch (currentCursorPos)
 	{
-	case 1:
+	case 0:
 		return BASE;
-	case 2:
+	case 1:
 		return FREEZE;
-	case 3:
+	case 2:
 		return ROCKET;
-	case 4:
+	case 3:
 		return POWER;
-	case 5:
+	case 4:
 		return LASER;
-	case 6:
+	case 5:
 		return IMPROVED;
 	default:
 		break;
@@ -485,124 +482,86 @@ TOWER_TYPES GamePanel::currentTower() const
 
 Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 {
-	const Vector2f iconSize = Vector2f(ICON_SIZE * Settings::Instance().getScaleFactor().x * Settings::GAME_SCALE,
-								 ICON_SIZE * Settings::Instance().getScaleFactor().y * Settings::GAME_SCALE);
+	const Vector2f scaleFactor = Settings::Instance().getGameScaleFactor();
+	const Vector2f iconSize = Vector2f(ICON_SIZE * scaleFactor.x, ICON_SIZE * scaleFactor.y);
 
-	const float info_icons_size = 32 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
-	const float info_icons_offset = 16 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().y;
-	const float block_space = iconSize.x/2;
-	const float icons_space = ICONS_SPACE * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().y;
-	const float label_offset = 16 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
-	const float info_offset = 256 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
-	const float panel_offset = 62 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
-	const float text_offset = 320 * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().x;
+	const float top_offset = 40 * scaleFactor.x;
+	const float left_offset = 40 * scaleFactor.x;
+	const float icon_offset = 24 * scaleFactor.x;
+	const float text_offset = 338 * scaleFactor.x;
 
 	Vector2f pos = Vector2f(ceil(nullPos.x), ceil(nullPos.y));
 	m_sprite.setPosition(pos);
+	pos.x += left_offset;
+	pos.y += top_offset;
 
-	pos.y += icons_space;
 
-	pos.x += panel_offset;
-	pos.x += label_offset;
-	pos.y += info_icons_offset;
-	moneyIcon.setPosition(pos);
-	pos.x += info_icons_size;
-	moneyCountText.setPosition(pos);
-	pos.x -= info_icons_size;
+	Vector2f secondRow = Vector2f(pos.x, pos.y + iconSize.y + icon_offset);
+	moneyIcon.setPosition(secondRow);
+	secondRow.x += iconSize.x;
+	moneyCountText.setPosition(secondRow);
+	secondRow.x += 178 * scaleFactor.x;
+	secondRow.x += icon_offset;
+	lifeIcon.setPosition(secondRow);
+	secondRow.x += iconSize.x;
+	life->setPos(secondRow);
 
-	pos.y += info_icons_offset;
-	pos.y += moneyCountText.getGlobalBounds().height;
-
-	life->setPos(pos);
-//	pos.x += info_icons_size;
-//	lifeCountText.setPosition(pos);
-//	pos.x -= info_icons_size;
-
-	pos.y -= 2 * info_icons_offset;
-	pos.y -= moneyCountText.getGlobalBounds().height;
-
-	pos.x -= label_offset;
-
-	pos.x += info_offset;
-
-	pos.x += block_space;
-//	sellSprite.setPosition(pos);
-
-	pos.y += iconSize.y;
-	pos.y += icons_space;
-
-//	upgradeSprite.setPosition(pos);
-
-	pos.y -= icons_space;
-	pos.y -= iconSize.y;
-	pos.x += iconSize.x;
-
-	pos.x += block_space;
-
-	info.setPosition(pos);
-
-	//text
-	pos.x += text_offset;
-	pos.x += block_space;
-
-	const float iconsPosX = pos.x;
 	//towers
 	towerBaseSprite.setPosition(pos);
-	pos.x += icons_space;
 	pos.x += iconSize.x;
+	pos.x += icon_offset;
 
 	towerFreezeSprite.setPosition(pos);
-	pos.x += icons_space;
 	pos.x += iconSize.x;
+	pos.x += icon_offset;
 
 	towerRocketSprite.setPosition(pos);
-	pos.x += icons_space;
 	pos.x += iconSize.x;
+	pos.x += icon_offset;
 
 	towerPowerSprite.setPosition(pos);
-	pos.x += icons_space;
 	pos.x += iconSize.x;
+	pos.x += icon_offset;
 
 	towerLaserSprite.setPosition(pos);
-	pos.x += icons_space;
 	pos.x += iconSize.x;
+	pos.x += icon_offset;
 
 	towerImprovedSprite.setPosition(pos);
-	pos.x += icons_space;
 	pos.x += iconSize.x;
+	pos.x += left_offset;
 
-	pos.x = iconsPosX;
-	pos.y += iconSize.y;
-	pos.y += icons_space;
 
 	//abilities
 	abilityBombSprite.setPosition(pos);
-	pos.x += icons_space;
 	pos.x += iconSize.x;
+	pos.x += icon_offset;
 
 	abilityFreezeBombSprite.setPosition(pos);
-	pos.x += icons_space;
 	pos.x += iconSize.x;
+	pos.x += icon_offset;
 
 	abilityVenomSprite.setPosition(pos);
-	pos.x += icons_space;
 	pos.x += iconSize.x;
+	pos.x += icon_offset;
 
 	abilityIncreaseTowerDamageSprite.setPosition(pos);
-	pos.x += icons_space;
 	pos.x += iconSize.x;
+	pos.x += icon_offset;
 
 	abilityIncreaseTowerAttackSpeedSprite.setPosition(pos);
-	pos.x += icons_space;
 	pos.x += iconSize.x;
+	pos.x += icon_offset;
 
 	abilityStopSprite.setPosition(pos);
-	pos.x += icons_space;
+	pos.x += iconSize.x;	
+	pos.x += left_offset;
 
-	pos.y -= icons_space;
-	pos.y -= iconSize.y;
-	pos.x += iconSize.x;
-	pos.x += icons_space;
+	//text
+	pos.y = nullPos.y + 24 * scaleFactor.y;
+	info.setPosition(pos);
+	pos.x += text_offset;
+	pos.x += left_offset;
 
 	towerBaseCostText.setPosition(towerBaseSprite.getPosition());
 	towerFreezeCostText.setPosition(towerFreezeSprite.getPosition());
@@ -858,7 +817,7 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 
 void GamePanel::updateCursor()
 {
-	m_sprite.setColor(Engine::Instance().cursor()->inPanel()?Color::Red:Color::Green);
+//	m_sprite.setColor(Engine::Instance().cursor()->inPanel()?Color::Red:Color::Green);
 
 	if (!Engine::Instance().cursor()->inPanel())
 		return;
@@ -968,18 +927,6 @@ void GamePanel::moveCursorRight()
 	updateCurrentCursor();
 }
 
-void GamePanel::moveCursorDown()
-{
-	currentCursorPos += 7;
-	updateCurrentCursor();
-}
-
-void GamePanel::moveCursorUp()
-{
-	currentCursorPos -= 7;
-	updateCurrentCursor();
-}
-
 bool GamePanel::isTowerIconActive(TOWER_TYPES type) const
 {
 	switch (type)
@@ -1032,7 +979,7 @@ void GamePanel::updateCurrentTower()
 		color = Color::White;
 		level = m_selectedTower->level();
 	}
-	upgradeSprite.setTextureRect(IntRect(64*level,0,64,64));
+//	upgradeSprite.setTextureRect(IntRect(64*level,0,64,64));
 	sellSprite.setColor(color);
 	upgradeSprite.setColor(color);
 
@@ -1064,6 +1011,8 @@ void GamePanel::updateCurrentTower()
 void GamePanel::updateCurrentCursor()
 {
 	if(currentCursorPos >= actionsSprites.size())
+		currentCursorPos = actionsSprites.size() - 1;
+	if (currentCursorPos < 0)
 		currentCursorPos = 0;
 
 	cursorSprite.setPosition(actionsSprites.at(currentCursorPos)->getPosition());
