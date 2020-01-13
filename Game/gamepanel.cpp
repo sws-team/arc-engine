@@ -282,6 +282,9 @@ void GamePanel::draw(RenderTarget * const target)
 		target->draw(upgradeCostText);
 
 	}
+
+	const Vector2f scaleFactor = Settings::Instance().getGameScaleFactor();
+
 	Vector2f pos;
 	pos.x = target->getView().getCenter().x - target->getView().getSize().x/2;
 	pos.y = target->getView().getCenter().y + target->getView().getSize().y/2;
@@ -290,12 +293,12 @@ void GamePanel::draw(RenderTarget * const target)
 
 	progress->setPos(Vector2f(pos.x + Settings::Instance().getResolution().x * PROGRESS_WIDTH,
 							  pos.y - target->getView().getSize().y + PROGRESS_OFFSET *
-							  Settings::Instance().getScaleFactor().y));
+							  scaleFactor.y));
 
 	waveText.setPosition(progress->pos());
 
 	pos.y -= m_sprite.getGlobalBounds().height;
-	m_bottomValue = pos.y;
+	m_bottomValue = pos.y + PANEL_OFFSET * scaleFactor.y;
 	pos = updatePos(pos);
 
 	//draw minimap
@@ -306,8 +309,8 @@ void GamePanel::draw(RenderTarget * const target)
 	Sprite miniMapSprite;
 	miniMapSprite.setTexture(rTexture.getTexture());
 
-	const float minimap_scale_x = Settings::Instance().getScaleFactor().x * Settings::GAME_SCALE * 374.f / Settings::Instance().getResolution().x;
-	const float minimap_scale_y = Settings::Instance().getScaleFactor().y * Settings::GAME_SCALE * 157.f / Settings::Instance().getResolution().y;
+	const float minimap_scale_x = scaleFactor.x * 344.f / Settings::Instance().getResolution().x;
+	const float minimap_scale_y = scaleFactor.y * 213.f / Settings::Instance().getResolution().y;
 
 	miniMapSprite.scale(minimap_scale_x, minimap_scale_y);
 	miniMapSprite.setPosition(pos);
@@ -320,6 +323,7 @@ void GamePanel::draw(RenderTarget * const target)
 		target->draw(endSprite);
 	}
 
+	target->draw(miniMapSprite);
 	target->draw(m_sprite);
 
 	target->draw(moneyCountText);
@@ -368,7 +372,6 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(moneyIcon);
 	target->draw(lifeIcon);
 
-	target->draw(miniMapSprite);
 	progress->draw(target);
 	life->draw(target);
 
@@ -415,7 +418,7 @@ void GamePanel::updatePanel()
 
 int GamePanel::cellsCount() const
 {
-	return static_cast<int>(m_sprite.getGlobalBounds().height / GlobalVariables::Instance().tileSize().y);
+	return static_cast<int>(-1 + m_sprite.getGlobalBounds().height / GlobalVariables::Instance().tileSize().y);
 }
 
 Tower *GamePanel::selectedTower() const
@@ -489,12 +492,15 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	const float left_offset = 40 * scaleFactor.x;
 	const float icon_offset = 24 * scaleFactor.x;
 	const float text_offset = 338 * scaleFactor.x;
+	const float panel_offset = PANEL_OFFSET * scaleFactor.x;
 
 	Vector2f pos = Vector2f(ceil(nullPos.x), ceil(nullPos.y));
 	m_sprite.setPosition(pos);
+
+	pos.y += panel_offset;
+
 	pos.x += left_offset;
 	pos.y += top_offset;
-
 
 	Vector2f secondRow = Vector2f(pos.x, pos.y + iconSize.y + icon_offset);
 	moneyIcon.setPosition(secondRow);
@@ -558,10 +564,13 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	pos.x += left_offset;
 
 	//text
-	pos.y = nullPos.y + 24 * scaleFactor.y;
+	pos.y = nullPos.y + 24 * scaleFactor.y + panel_offset;
 	info.setPosition(pos);
 	pos.x += text_offset;
 	pos.x += left_offset;
+
+	pos.x += icon_offset;
+	pos.y = nullPos.y + 43 * scaleFactor.y;
 
 	towerBaseCostText.setPosition(towerBaseSprite.getPosition());
 	towerFreezeCostText.setPosition(towerFreezeSprite.getPosition());

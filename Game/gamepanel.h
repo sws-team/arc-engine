@@ -166,6 +166,8 @@ private:
 	Text waveText;
 
 	LifeBar *life;
+
+	static constexpr float PANEL_OFFSET = 73;
 };
 
 #endif // GAMEPANEL_H

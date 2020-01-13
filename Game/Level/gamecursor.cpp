@@ -71,7 +71,7 @@ void GameCursor::moveLeft()
 {
 	if (m_inPanel)
 		return Engine::Instance().panel()->moveCursorLeft();
-cout << "MOVE LEFY"<<endl;
+
 	moveLeftCursor();
 }
 
@@ -106,7 +106,8 @@ Vector2i GameCursor::cell() const
 
 Vector2f GameCursor::pixelPos() const
 {
-	return Vector2f(m_cell.x * GlobalVariables::Instance().tileSize().x, m_cell.y * GlobalVariables::Instance().tileSize().y);
+	return Vector2f(m_cell.x * GlobalVariables::Instance().tileSize().x,
+					m_cell.y * GlobalVariables::Instance().tileSize().y);
 }
 
 void GameCursor::draw(RenderTarget * const target)
