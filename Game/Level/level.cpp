@@ -54,7 +54,7 @@ Level::Level() :
 //	smoke->setEnabled(true);
 //	mapExplosion->setEnabled(true);
 //	moneyDrain->setEnabled(true);
-	towersRegress->setEnabled(true);
+//	towersRegress->setEnabled(true);
 
 	deadZone.setOutlineThickness(3.f);
 	deadZone.setOutlineColor(Color::Red);

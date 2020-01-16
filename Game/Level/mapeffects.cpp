@@ -137,6 +137,30 @@ void MapEffect::setState(MapEffect::STATES state)
 	stepTimer.reset();
 }
 
+vector<Tower *> MapEffect::getRandomTowers(int count, const vector<Tower *> &towers)
+{
+	const int actualCount = ceil(count * 0.2f);
+	const int interval = actualCount * 2 + 1;
+	const int offset = rand() % interval - actualCount;
+	const int resultCount = count + offset;
+
+	const unsigned int towersCount = min(static_cast<unsigned int>(resultCount), towers.size());
+	set<int> numbers;
+	vector<Tower *> resultTowers;
+	for (unsigned int i = 0; i < towersCount; ++i)
+	{
+		const int n = rand() % towers.size();
+		if (numbers.count(n) == 0)
+		{
+			numbers.insert(n);
+			resultTowers.push_back(towers.at(n));
+		}
+		else
+			i--;
+	}
+	cout << "GENERATED "<< resultTowers.size()<<endl;
+	return resultTowers;
+}
 
 MapExplosion::MapExplosion()
 	: MapEffect()
@@ -187,8 +211,8 @@ void MapExplosion::stateChanged()
 	case PREPARE_ACTIVE:
 	{
 		m_interval = m_duration;
-		vector<Tower *> towers = Engine::Instance().level()->getAllTowers();
-		for (unsigned int i = 0; i < min(m_count, towers.size()); ++i)
+		vector<Tower *> towers = getRandomTowers(m_count, Engine::Instance().level()->getAllTowers());
+		for (unsigned int i = 0; i < towers.size(); ++i)
 		{
 			CircleShape circle;
 			circle.setFillColor(Color(255, 15, 15, 0));
@@ -272,7 +296,7 @@ void TowersRegress::stateChanged()
 	case PREPARE_ACTIVE:
 	{
 		m_interval = 800 * 4;
-		const vector<Tower *> towers = Engine::Instance().level()->getAllTowers();
+		const vector<Tower *> towers = getRandomTowers(m_count, Engine::Instance().level()->getAllTowers());
 		for (unsigned int i = 0; i < towers.size(); ++i)
 		{
 			towers.at(i)->setRegressed(true);
@@ -481,7 +505,14 @@ void MoneyDrain::stateChanged()
 	case PREPARE_ACTIVE:
 	{
 		m_interval = 800 * 4;
-		const vector<Tower *> towers = Engine::Instance().level()->getAllTowers();
+
+		vector<Tower*> powerTowers;
+		for(Tower* tower : Engine::Instance().level()->getAllTowers())
+		{
+			if (tower->type() == POWER)
+				powerTowers.push_back(tower);
+		}
+		const vector<Tower *> towers = getRandomTowers(m_count, powerTowers);
 		for (unsigned int i = 0; i < towers.size(); ++i)
 		{
 			if (towers.at(i)->type() == POWER)

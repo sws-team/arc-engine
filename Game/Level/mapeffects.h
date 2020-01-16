@@ -6,6 +6,7 @@
 #include "Game/gamedrawable.h"
 
 class GameObject;
+class Tower;
 
 class Shake : public GameDrawable
 {
@@ -63,6 +64,8 @@ protected:
 	};
 	STATES m_state;
 	void setState(STATES state);
+
+	static vector<Tower *> getRandomTowers(int count, const vector<Tower*>& towers);
 
 private:
 	void step();
