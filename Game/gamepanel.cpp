@@ -19,6 +19,8 @@ GamePanel::GamePanel() :
 	GameDrawable()
   ,waitBlink(false)
   ,currentCursorPos(0)
+  ,m_drain(false)
+  ,drainState(false)
 {
 	life = new LifeBar();
 	progress = new LifeBar();
@@ -262,6 +264,10 @@ GamePanel::GamePanel() :
 							LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
 	life->init(Vector2i(722 * scaleFactor.x, 37 * scaleFactor.y), Color::Cyan);
 
+	drainRect.setFillColor(Color::Transparent);
+	drainRect.setOutlineThickness(2);
+	drainRect.setOutlineColor(Color::Transparent);
+
 	updateCurrentTower();
 }
 
@@ -376,6 +382,8 @@ void GamePanel::draw(RenderTarget * const target)
 	life->draw(target);
 
 	target->draw(waveText);
+	if (m_drain)
+		target->draw(drainRect);
 
 	if (Engine::Instance().cursor()->inPanel())
 	{
@@ -394,6 +402,14 @@ void GamePanel::update()
 			readyText.setFillColor(waitBlink?Color::Black:Color::Red);
 			startSprite.setColor(waitBlink?Color::Yellow:Color::Red);
 			endSprite.setColor(waitBlink?Color::Yellow:Color::Red);
+		}
+	}
+	if (m_drain)
+	{
+		if (drainBlinkTimer.check(100))
+		{
+			drainState = !drainState;
+			drainRect.setOutlineColor(drainState ? Color::Red : Color::Transparent);
 		}
 	}
 }
@@ -511,6 +527,9 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	lifeIcon.setPosition(secondRow);
 	secondRow.x += iconSize.x;
 	life->setPos(secondRow);
+
+	drainRect.setPosition(moneyCountText.getGlobalBounds().left, moneyCountText.getGlobalBounds().top);
+	drainRect.setSize(Vector2f(moneyCountText.getGlobalBounds().width, moneyCountText.getGlobalBounds().height));
 
 	//towers
 	towerBaseSprite.setPosition(pos);
@@ -794,12 +813,13 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 		str += Language::Instance().translate(Language::LEVEL) + separator + to_string(tower->level()) + endline;
 
 	const TowerStats towerStats = tower == nullptr ? TowersFactory::getTowerStats(type) : tower->data();
-	const float dps = towerStats.damage / (towerStats.attackSpeed * 0.001f);
+	const float dps = towerStats.damage / ((tower == nullptr ? towerStats.attackSpeed : tower->actualAttackSpeed()) * 0.001f);
 
 	str += Language::Instance().translate(Language::DAMAGE_PER_SECOND) + separator + GlobalVariables::to_string_with_precision(dps, 2);
 	str += endline;
 
-	str += Language::Instance().translate(Language::RADIUS) + separator + GlobalVariables::to_string_with_precision(towerStats.radius, 1);
+	str += Language::Instance().translate(Language::RADIUS) + separator +
+			GlobalVariables::to_string_with_precision(tower == nullptr ? towerStats.radius : tower->actualRadius(), 1);
 	str += endline;
 
 	if (tower == nullptr)
@@ -1027,6 +1047,12 @@ void GamePanel::updateCurrentCursor()
 	cursorSprite.setPosition(actionsSprites.at(currentCursorPos)->getPosition());
 	currentIconRect.setPosition(cursorSprite.getPosition());
 	updateInfo();
+}
+
+void GamePanel::setDrain(bool drain)
+{
+	m_drain = drain;
+	drainBlinkTimer.reset();
 }
 
 void GamePanel::updateInfo()

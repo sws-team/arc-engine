@@ -7,6 +7,7 @@
 #include "Engine/engine.h"
 #include "Game/Level/level.h"
 #include "Game/Audio/soundcontroller.h"
+#include "mapeffects.h"
 
 const float Tower::LEVEL_GAIN = 0.25f;
 const float Tower::TOWER_SCAlE = 1.f/3.f;
@@ -20,6 +21,8 @@ Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, con
 	,m_kills(0)
 	,m_isActive(true)
 	,m_downgraded(false)
+	,m_blinded(false)
+	,m_regressed(false)
 {
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
 }
@@ -42,7 +45,7 @@ void Tower::action(const vector<Enemy *> &enemies)
 		return;
 	}
 
-	if (!actionTimer.check(m_stats.attackSpeed))
+	if (!actionTimer.check(actualAttackSpeed()))
 		return;
 
 	Enemy *target = nullptr;
@@ -51,7 +54,7 @@ void Tower::action(const vector<Enemy *> &enemies)
 	const Vector2f aPos = getCenter();
 	for(Enemy *enemy : enemies)
 	{
-		if (TowersFactory::isIntersects(enemy->gameRect(), aPos, m_stats.radius * GlobalVariables::Instance().mapTileSize().x))
+		if (TowersFactory::isIntersects(enemy->gameRect(), aPos, actualRadius() * GlobalVariables::Instance().mapTileSize().x))
 		{
 			const float x = fabs(enemy->enemyCenter().x - this->getCenter().x);
 			const float y = fabs(enemy->enemyCenter().y - this->getCenter().y);
@@ -135,6 +138,26 @@ void Tower::checkKill(Enemy *enemy)
 		m_kills++;
 }
 
+bool Tower::isRegressed() const
+{
+    return m_regressed;
+}
+
+void Tower::setRegressed(bool regressed)
+{
+    m_regressed = regressed;
+}
+
+bool Tower::isBlinded() const
+{
+    return m_blinded;
+}
+
+void Tower::setBlinded(bool blinded)
+{
+	m_blinded = blinded;
+}
+
 bool Tower::isActive() const
 {
 	return m_isActive;
@@ -153,6 +176,26 @@ void Tower::setDowngrade(bool isDowngrade)
 bool Tower::isDowngraded() const
 {
 	return m_downgraded;
+}
+
+float Tower::actualRadius() const
+{
+	if (m_blinded)
+		return m_stats.radius/3;
+	return m_stats.radius;
+}
+
+float Tower::actualDamage() const
+{
+	float damage = m_downgraded ? m_stats.damage * DownTowerAbility::DOWNGRADE_VALUE : m_stats.damage;
+	damage = m_regressed ? damage * TowersRegress::REGRESS_VALUE : damage;
+	return damage;
+}
+
+float Tower::actualAttackSpeed() const
+{
+	const float attackSpeed = m_regressed ? m_stats.attackSpeed / TowersRegress::REGRESS_VALUE : m_stats.attackSpeed;
+	return attackSpeed;
 }
 
 void Tower::setActive(bool isActive)
@@ -308,7 +351,7 @@ void PowerTower::draw(RenderTarget * const target)
 
 bool PowerTower::hasEnergy()
 {
-	return actionTimer.check(m_stats.attackSpeed);
+	return actionTimer.check(actualAttackSpeed());
 }
 
 void PowerTower::setHighlighted(bool isHighlighted)
@@ -461,10 +504,9 @@ void LaserTower::update()
 	lineTarget = currentTarget->getCenter();
 	laser.setPosition(lineTarget.position - Vector2f(laser.getGlobalBounds().width/2, laser.getGlobalBounds().height/2));
 
-	if(damageTimer.check(m_stats.attackSpeed))
+	if(damageTimer.check(actualAttackSpeed()))
 	{
-		const float actualDamage = isDowngraded() ? m_stats.damage * DownTowerAbility::DOWNGRADE_VALUE : m_stats.damage;
-		currentTarget->hit(actualDamage);
+		currentTarget->hit(actualDamage());
 		checkKill(currentTarget);
 	}
 }
@@ -596,8 +638,7 @@ vector<Projectile *> ProjectilesTower::projectiles() const
 
 void ProjectilesTower::projectileAction(Enemy *enemy)
 {
-	const float actualDamage = isDowngraded() ? m_stats.damage * DownTowerAbility::DOWNGRADE_VALUE : m_stats.damage;
-	enemy->hit(actualDamage);
+	enemy->hit(actualDamage());
 	checkKill(enemy);
 	const Vector2f size = enemy->getSize();
 

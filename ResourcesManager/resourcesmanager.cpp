@@ -73,6 +73,10 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::DOWN_EFFECT, "images/Weapons/Effects/down.png");
 	addTexture(RESOURCES::DOWNGRADE_PROJECTILE, "images/Weapons/electric.png");
 	addTexture(RESOURCES::UPGRADE, "images/Weapons/Effects/upgrade.png");
+	addTexture(RESOURCES::SMOKE, "images/Weapons/Effects/smoke.png");
+	addTexture(RESOURCES::EXPLOSION, "images/Weapons/Effects/explosion.png");
+	addTexture(RESOURCES::DRAIN, "images/Weapons/Effects/drain.png");
+	addTexture(RESOURCES::REGRESS, "images/Weapons/Effects/regress.png");
 
 	addTexture(RESOURCES::ENEMY_SCORPION, "images/Enemies/scorpion.png");
 	addTexture(RESOURCES::ENEMY_CAR, "images/Enemies/car.png");

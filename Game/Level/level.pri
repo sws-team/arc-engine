@@ -7,6 +7,7 @@ HEADERS += \
     $$PWD/level.h \
     $$PWD/map.h \
     $$PWD/lifebar.h \
+    $$PWD/mapeffects.h \
     $$PWD/projectile.h \
     $$PWD/tower.h
 
@@ -18,6 +19,7 @@ SOURCES += \
     $$PWD/instructions.cpp \
     $$PWD/level.cpp \
     $$PWD/lifebar.cpp \
+    $$PWD/mapeffects.cpp \
     $$PWD/projectile.cpp \
     $$PWD/tower.cpp \
     $$PWD/waves.cpp

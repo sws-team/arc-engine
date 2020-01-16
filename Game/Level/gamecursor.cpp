@@ -363,3 +363,8 @@ void GameCursor::setHighlight(bool highlight)
 	m_highlight = highlight;
 }
 
+Vector2i GameCursor::getMaxCell() const
+{
+	return m_maxCell;
+}
+

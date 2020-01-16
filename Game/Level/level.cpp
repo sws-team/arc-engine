@@ -15,11 +15,9 @@
 #include "projectile.h"
 #include "instructions.h"
 #include "gameability.h"
+#include "mapeffects.h"
 
 const int Level::DIRECTION_LAYER = 3;
-const int Level::Shake::MAX_SHAKE_COUNT = 9;
-const int Level::Shake::MAX_SHAKE_OFFSET = 10;
-const int Level::Shake::SHAKE_TIME = 50;
 
 Level::Level() :
 	gameMap(nullptr)
@@ -30,11 +28,33 @@ Level::Level() :
   ,m_state(WAIT_READY)
   ,m_powerTowersCount(0)
 {
+	shake = new Shake();
 	abilities = new Abilities();
-	shake.dangerRect.setSize(Vector2f(Settings::Instance().getResolution()));
-	shake.dangerRect.setFillColor(Color(255,0,0,96));
-	shake.isActive = false;
-	shake.dangerRect.setPosition(0,0);
+	mapExplosion = new MapExplosion();
+	smoke = new Smoke();
+	moneyDrain = new MoneyDrain();
+	towersRegress = new TowersRegress();
+
+	smoke->setTime(12000);
+	smoke->setDuration(4000);
+	smoke->setCount(10);
+
+	mapExplosion->setTime(12000);
+	mapExplosion->setDuration(2000);
+	mapExplosion->setCount(3);
+
+	moneyDrain->setTime(15000);
+	moneyDrain->setDuration(6000);
+	moneyDrain->setCount(1);
+
+	towersRegress->setTime(10000);
+	towersRegress->setDuration(3000);
+	towersRegress->setCount(4);
+
+//	smoke->setEnabled(true);
+//	mapExplosion->setEnabled(true);
+//	moneyDrain->setEnabled(true);
+	towersRegress->setEnabled(true);
 
 	deadZone.setOutlineThickness(3.f);
 	deadZone.setOutlineColor(Color::Red);
@@ -43,13 +63,18 @@ Level::Level() :
 	currentTowerRadius.setFillColor(GameCursor::TOWER_AREA_COLOR);
 	currentTowerRect.setFillColor(PowerTower::POWER_TOWER_AREA_COLOR);
 
-	spawnRect.setFillColor(Color::Magenta);
-	endRect.setFillColor(Color::Magenta);
+	spawnRect.setFillColor(Color::Transparent);
+	endRect.setFillColor(Color::Transparent);
 }
 
 Level::~Level()
 {
-
+	delete shake;
+	delete abilities;
+	delete mapExplosion;
+	delete smoke;
+	delete moneyDrain;
+	delete towersRegress;
 }
 
 void Level::draw(RenderTarget *const target)
@@ -81,24 +106,11 @@ void Level::update()
 				tower->action(enemies);
 			tower->update();
 		}
-		if (shake.isActive)
-		{
-			if (shake.dangerTimer.check(Shake::SHAKE_TIME))
-			{
-				if (shake.state)
-					shake.offset = rand() % Shake::MAX_SHAKE_OFFSET * 2;
-				else
-					shake.offset = -shake.offset;
-
-				Engine::Instance().camera()->getView()->setCenter(Engine::Instance().camera()->getView()->getCenter().x,
-																  Engine::Instance().camera()->getView()->getCenter().y + shake.offset);
-
-				shake.state = !shake.state;
-				shake.count++;
-				if (shake.count > Shake::MAX_SHAKE_COUNT)
-					shake.isActive = false;
-			}
-		}
+		shake->update();
+		mapExplosion->update();
+		moneyDrain->update();
+		towersRegress->update();
+		smoke->update();
 		abilities->update();
 		if (playing)
 			checkRespawn();
@@ -118,6 +130,10 @@ void Level::update()
 
 void Level::startMission(const unsigned int n)
 {
+	smoke->init();
+	mapExplosion->init();
+	moneyDrain->init();
+	towersRegress->init();
 	currentWave = 0;
 	Engine::Instance().panel()->updateWaveText();
 	m_state = WAIT_READY;
@@ -161,7 +177,7 @@ void Level::startMission(const unsigned int n)
 void Level::clear()
 {
 	m_powerTowersCount = 0;
-	shake.isActive = false;
+	shake->deactivate();
 	for(Tower *tower : towers)
 	{
 		const TOWER_TYPES type = tower->type();
@@ -261,6 +277,23 @@ void Level::checkAlive()
 	}
 }
 
+void Level::deleteTower(Tower *tower)
+{
+	if (tower == Engine::Instance().panel()->selectedTower())
+		clearCursor();
+
+	towers.erase( remove( towers.begin(), towers.end(), tower ), towers.end() );
+	delete tower;
+	tower = nullptr;
+}
+
+void Level::drainMoney(float m)
+{
+	money -= m;
+	if (money < 0)
+		money = 0;
+}
+
 void Level::checkRespawn()
 {
 	if (abilities->stopAblity->isActive())
@@ -358,7 +391,7 @@ void Level::highlightPowerTowersRadius(bool active)
 void Level::hitPlayer(float damage)
 {
 	life -= damage;
-	shake.startShake();
+	shake->start();
 	if (life <= 0.f)
 	{
 		//game over
@@ -386,7 +419,7 @@ void Level::updateRadius()
 	}
 	else
 	{
-		currentTowerRadius.setRadius(tower->data().radius * GlobalVariables::Instance().mapTileSize().x);
+		currentTowerRadius.setRadius(tower->actualRadius() * GlobalVariables::Instance().mapTileSize().x);
 		currentTowerRadius.setPosition(tower->pos());
 		currentTowerRadius.setOrigin(currentTowerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().x,
 						 currentTowerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().y);
@@ -510,8 +543,11 @@ void Level::drawLevel(RenderTarget * const target)
 	for(Animation *effect : effects)
 		effect->draw(target);
 
-	if (shake.isActive && shake.state)
-		target->draw(shake.dangerRect);	
+	shake->draw(target);
+	mapExplosion->draw(target);
+	smoke->draw(target);
+	moneyDrain->draw(target);
+	towersRegress->draw(target);
 
 	if (Engine::Instance().panel()->selectedTower() != nullptr)
 	{
@@ -753,8 +789,11 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		case ABILITY_VENOM:		
 			abilities->venomAbility->activate();		
 			break;
-		case ABILITY_BOMB:		
-			abilities->bombAbility->activate();		
+		case ABILITY_BOMB:
+		{
+			abilities->bombAbility->activate();
+			moneyDrain->explosion(Engine::Instance().cursor()->getAbilityRect());
+		}
 			break;
 		case ABILITY_FREEZE_BOMB:		
 			abilities->freezeBombAbility->activate();		
@@ -806,12 +845,4 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		m_actionState = READY;
 		Engine::Instance().cursor()->deactivate();
 	}
-}
-
-void Level::Shake::startShake()
-{
-	dangerTimer.clock.restart();
-	isActive = true;
-	state = true;
-	count = 0;
 }

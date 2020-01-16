@@ -57,6 +57,8 @@ public:
 
 	void setHighlight(bool highlight);
 
+	Vector2i getMaxCell() const;
+
 private:
 	Vector2i m_cell;
 	Vector2i m_maxCell;

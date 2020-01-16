@@ -12,6 +12,11 @@ class Tile;
 class Tower;
 class Animation;
 class Abilities;
+class Shake;
+class MapExplosion;
+class Smoke;
+class MoneyDrain;
+class TowersRegress;
 
 class Level : public GameDrawable
 {
@@ -80,6 +85,11 @@ public:
 	Abilities *getAbilities();
 
 	void checkAlive();
+
+	void deleteTower(Tower *tower);
+
+	void drainMoney(float m);
+
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();
@@ -113,21 +123,6 @@ private:
 	LEVEL_STATE m_state;
 	void changeState(LEVEL_STATE state);
 
-//	struct VenomAbility
-//	{
-//		bool isActive;
-//		static const float VENOM_DAMAGE;
-//		static const int VENOM_DAMAGE_COUNT;
-//		static const int VENOM_ATTACK_SPEED;
-
-//		static const Vector2i VENOM_SIZE;
-//		class GameObject *object;
-//		Timer timer;
-//		int count;
-//	};
-//	VenomAbility venomAbility;
-
-
 	static const float FREEZE_ABILITY_K;
 	static const int FREEZE_ABILITY_DURATION;
 
@@ -141,23 +136,8 @@ private:
 
 	vector<Animation*> effects;
 
-	struct Shake
-	{
-		RectangleShape dangerRect;
-		Timer dangerTimer;
-		bool isActive;
-		bool state;
-		int count;
-		float offset;
 
-
-		static const int MAX_SHAKE_COUNT;
-		static const int MAX_SHAKE_OFFSET;
-		static const int SHAKE_TIME;
-
-		void startShake();
-	};
-	Shake shake;
+	Shake *shake;
 
 
 	CircleShape currentTowerRadius;
@@ -172,6 +152,10 @@ private:
 	void showAnimations();
 
 	Abilities *abilities;
+	MapExplosion *mapExplosion;
+	Smoke *smoke;
+	MoneyDrain *moneyDrain;
+	TowersRegress *towersRegress;
 };
 
 #endif // LEVEL_H

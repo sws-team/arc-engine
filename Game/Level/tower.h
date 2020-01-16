@@ -80,6 +80,16 @@ public:
 	void setDowngrade(bool isDowngrade);
 	bool isDowngraded() const;
 
+	bool isBlinded() const;
+	void setBlinded(bool blinded);
+
+	void setRegressed(bool regressed);
+	bool isRegressed() const;
+
+	float actualRadius() const;
+	float actualDamage() const;
+	float actualAttackSpeed() const;
+
 protected:
 	TowerStats m_stats;
 	Timer actionTimer;
@@ -91,6 +101,8 @@ private:
 	int m_kills;
 	bool m_isActive;
 	bool m_downgraded;
+	bool m_blinded;
+	bool m_regressed;
 };
 
 class ProjectilesTower : public Tower

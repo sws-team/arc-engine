@@ -68,6 +68,8 @@ public:
 
 	ACTION_STATE isFieldButtons(const Vector2f& pos) const;
 
+	void setDrain(bool drain);
+
 private:
 	Sprite m_sprite;
 	RenderTexture rTexture;
@@ -168,6 +170,11 @@ private:
 	LifeBar *life;
 
 	static constexpr float PANEL_OFFSET = 73;
+
+	bool m_drain;
+	Timer drainBlinkTimer;
+	RectangleShape drainRect;
+	bool drainState;
 };
 
 #endif // GAMEPANEL_H
