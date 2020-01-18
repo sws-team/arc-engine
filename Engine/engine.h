@@ -64,9 +64,6 @@ public:
 	void save();
 	void load();
 
-	static float getStartHealth(const unsigned int n);
-	static float getStartMoney(const unsigned int n);
-
 	void setMissionFinished(unsigned int n, unsigned int rating);
 
 	struct CompletedMission
@@ -85,6 +82,8 @@ public:
 	bool unlockAchievment(GameAchievements::AchievmentsTypes type);
 
 	map<int, Tile::TileProperties> getTileProperties() const;
+
+	constexpr static float MSEC = 1000;
 
 private:
 	Engine();

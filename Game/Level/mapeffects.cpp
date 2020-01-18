@@ -158,7 +158,6 @@ vector<Tower *> MapEffect::getRandomTowers(int count, const vector<Tower *> &tow
 		else
 			i--;
 	}
-	cout << "GENERATED "<< resultTowers.size()<<endl;
 	return resultTowers;
 }
 

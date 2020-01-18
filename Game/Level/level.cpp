@@ -35,27 +35,6 @@ Level::Level() :
 	moneyDrain = new MoneyDrain();
 	towersRegress = new TowersRegress();
 
-	smoke->setTime(12000);
-	smoke->setDuration(4000);
-	smoke->setCount(10);
-
-	mapExplosion->setTime(12000);
-	mapExplosion->setDuration(2000);
-	mapExplosion->setCount(3);
-
-	moneyDrain->setTime(15000);
-	moneyDrain->setDuration(6000);
-	moneyDrain->setCount(1);
-
-	towersRegress->setTime(10000);
-	towersRegress->setDuration(3000);
-	towersRegress->setCount(4);
-
-//	smoke->setEnabled(true);
-//	mapExplosion->setEnabled(true);
-//	moneyDrain->setEnabled(true);
-//	towersRegress->setEnabled(true);
-
 	deadZone.setOutlineThickness(3.f);
 	deadZone.setOutlineColor(Color::Red);
 	deadZone.setFillColor(Color::Transparent);
@@ -130,24 +109,20 @@ void Level::update()
 
 void Level::startMission(const unsigned int n)
 {
-	smoke->init();
-	mapExplosion->init();
-	moneyDrain->init();
-	towersRegress->init();
 	currentWave = 0;
 	Engine::Instance().panel()->updateWaveText();
 	m_state = WAIT_READY;
 	waves = EnemiesFactory::generateEnemies(n);
-
+	gameMap = Engine::Instance().getMap(n);
 	Engine::Instance().panel()->setProgressMax(currentProgress());
-	life = Engine::getStartHealth(n);
+	life = gameMap->life;
 	Engine::Instance().panel()->setLifeMax(life);
 
-	money = Engine::getStartMoney(n);
+	money = gameMap->money;
 	Engine::Instance().panel()->updatePanel();
 
 	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
-	gameMap = Engine::Instance().getMap(n);
+
 	Engine::Instance().cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
 	Engine::Instance().panel()->initMission(n);
 	Engine::Instance().panel()->updateStartEndPos(gameMap->spawnPos,
@@ -172,6 +147,27 @@ void Level::startMission(const unsigned int n)
 	deadZone.setPosition(minPos.x, minPos.y);
 	deadZone.setSize(Vector2f(deadZoneSize.x + fabs(minPos.x) * 2,
 							  deadZoneSize.y + fabs(minPos.y) * 2));
+
+	smoke->setTime(gameMap->smoke.time);
+	smoke->setDuration(gameMap->smoke.duration);
+	smoke->setCount(gameMap->smoke.count);
+
+	mapExplosion->setTime(gameMap->explosions.time);
+	mapExplosion->setDuration(gameMap->explosions.duration);
+	mapExplosion->setCount(gameMap->explosions.count);
+
+	moneyDrain->setTime(gameMap->moneyDrain.time);
+	moneyDrain->setDuration(gameMap->moneyDrain.duration);
+	moneyDrain->setCount(gameMap->moneyDrain.count);
+
+	towersRegress->setTime(gameMap->regress.time);
+	towersRegress->setDuration(gameMap->regress.duration);
+	towersRegress->setCount(gameMap->regress.count);
+
+	smoke->init();
+	mapExplosion->init();
+	moneyDrain->init();
+	towersRegress->init();
 }
 
 void Level::clear()
@@ -292,6 +288,11 @@ void Level::drainMoney(float m)
 	money -= m;
 	if (money < 0)
 		money = 0;
+}
+
+float Level::getStartLife() const
+{
+	return gameMap->life;
 }
 
 void Level::checkRespawn()
@@ -481,6 +482,11 @@ Level::LEVEL_STATE Level::getState() const
 void Level::ready()
 {
 	m_state = PLAYING;
+
+	towersRegress->setEnabled(gameMap->regress.enabled);
+	smoke->setEnabled(gameMap->smoke.enabled);
+	moneyDrain->setEnabled(gameMap->moneyDrain.enabled);
+	mapExplosion->setEnabled(gameMap->explosions.enabled);
 }
 
 int Level::currentProgress() const

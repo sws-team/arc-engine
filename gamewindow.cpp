@@ -267,8 +267,7 @@ void GameWindow::setState(const GAME_STATE &state)
 		break;
 	case FINISHED:
 	{
-
-		const float fullLife = Engine::Instance().getStartHealth(Engine::Instance().getMission());
+		const float fullLife = Engine::Instance().level()->getStartLife();
 		const float currentLife = Engine::Instance().level()->getLifeCount();
 		const float k = currentLife/fullLife;
 		unsigned int stars = 0;

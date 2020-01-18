@@ -40,19 +40,41 @@ public:
 	int width;
     int height;
 
-    string name;
-
-
 	vector<Layer> layers;
 
     Texture icon;
-    string decription;
 
 	vector<MOVE_DIRECTIONS> directions;
 	Vector2f spawnPos;
 	MOVE_DIRECTIONS spawnDirection;
 
 	FloatRect endRect;
+
+	string name;
+	string decription;
+	float money;
+	float life;
+
+	struct MapDanger
+	{
+		MapDanger()
+			: enabled(false)
+			,time(10000)
+			,duration(2000)
+			,count(1)
+		{
+
+		}
+		bool enabled;
+		float time;
+		float duration;
+		int count;
+	};
+
+	MapDanger explosions;
+	MapDanger smoke;
+	MapDanger moneyDrain;
+	MapDanger regress;
 };
 
 #endif // MAP_H

@@ -90,6 +90,8 @@ public:
 
 	void drainMoney(float m);
 
+	float getStartLife() const;
+
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();

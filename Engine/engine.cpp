@@ -144,53 +144,6 @@ void Engine::load()
 	}
 }
 
-float Engine::getStartHealth(const unsigned int n)
-{
-	if (n == 128)
-		return 1000;
-	return 100.f + n * 10;
-}
-
-float Engine::getStartMoney(const unsigned int n)
-{
-	switch (n)
-	{
-	case 128:
-		return 5000;
-	case 0:
-		return 300;
-	case 1:
-		return 550;
-	case 2:
-		return 650;
-	case 3:
-		return 750;
-	case 4:
-		return 1000;
-	case 5:
-		return 1100;
-	case 6:
-		return 1200;
-	case 7:
-		return 1300;
-	case 8:
-		return 1400;
-	case 9:
-		return 2000;
-	case 10:
-		return 2200;
-	case 11:
-		return 2400;
-	case 12:
-		return 2500;
-	case 13:
-		return 2800;
-	case 14:
-		return 3000;
-	}
-	return 0;
-}
-
 void Engine::setMissionFinished(unsigned int n, unsigned int rating)
 {
 	CompletedMission completedMission;
@@ -393,12 +346,53 @@ bool Engine::loadMap(const String &fileName)
 				gameMap->name = propertyValue;
 			else if (propertyName == "description")
 				gameMap->decription = propertyValue;
+			else if (propertyName == "life")
+				gameMap->life = stod(propertyValue);
+			else if (propertyName == "money")
+				gameMap->money = stod(propertyValue);
 			else if (propertyName == "icon")
 			{
 				string imgString;
 				Base64::Decode(propertyValue, &imgString);
 				gameMap->icon.loadFromMemory(imgString.c_str(), imgString.size());
 			}
+
+			else if (propertyName == "smoke")
+				gameMap->smoke.enabled = static_cast<bool>(stoi(propertyValue));
+			else if (propertyName == "smoke_count")
+				gameMap->smoke.count = stoi(propertyValue);
+			else if (propertyName == "smoke_duration")
+				gameMap->smoke.duration = stod(propertyValue) * MSEC;
+			else if (propertyName == "smoke_time")
+				gameMap->smoke.time = stod(propertyValue) * MSEC;
+
+			else if (propertyName == "regress")
+				gameMap->regress.enabled = static_cast<bool>(stoi(propertyValue));
+			else if (propertyName == "regress_count")
+				gameMap->regress.count = stoi(propertyValue);
+			else if (propertyName == "regress_duration")
+				gameMap->regress.duration = stod(propertyValue) * MSEC;
+			else if (propertyName == "regress_time")
+				gameMap->regress.time = stod(propertyValue) * MSEC;
+
+			else if (propertyName == "moneyDrain")
+				gameMap->moneyDrain.enabled = static_cast<bool>(stoi(propertyValue));
+			else if (propertyName == "moneyDrain_count")
+				gameMap->moneyDrain.count = stoi(propertyValue);
+			else if (propertyName == "moneyDrain_duration")
+				gameMap->moneyDrain.duration = stod(propertyValue) * MSEC;
+			else if (propertyName == "moneyDrain_time")
+				gameMap->moneyDrain.time = stod(propertyValue) * MSEC;
+
+			else if (propertyName == "explosions")
+				gameMap->explosions.enabled = static_cast<bool>(stoi(propertyValue));
+			else if (propertyName == "explosions_count")
+				gameMap->explosions.count = stoi(propertyValue);
+			else if (propertyName == "explosions_duration")
+				gameMap->explosions.duration = stod(propertyValue) * MSEC;
+			else if (propertyName == "explosions_time")
+				gameMap->explosions.time = stod(propertyValue) * MSEC;
+
 
 			prop = prop->NextSiblingElement("property");
 		}
