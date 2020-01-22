@@ -146,7 +146,6 @@ private:
 	RectangleShape currentTowerRect;
 	void updateRadius();
 	unsigned int m_powerTowersCount;
-	static const int DIRECTION_LAYER;
 
 	RectangleShape spawnRect;
 	RectangleShape endRect;

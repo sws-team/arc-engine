@@ -17,8 +17,6 @@
 #include "gameability.h"
 #include "mapeffects.h"
 
-const int Level::DIRECTION_LAYER = 3;
-
 Level::Level() :
 	gameMap(nullptr)
   ,m_actionState(READY)
@@ -596,7 +594,7 @@ void Level::chooseCurrent()
 
 int Level::getTileDirectionByCell(const Vector2i& cell) const
 {
-	const int id = getTileByCell(cell, DIRECTION_LAYER).id;
+	const int id = getTileByCell(cell, gameMap->directionsLayer).id;
 	if (id == Map::NO_MOVE)
 		return id;
 	const map<int, Tile::TileProperties> tileProperties = Engine::Instance().getTileProperties();

@@ -419,6 +419,7 @@ bool Engine::loadMap(const String &fileName)
 		}
 
 	//tiles
+	int layersCount = 0;
 	TiXmlElement *layerElement = mapElement->FirstChildElement("layer");
 	while (layerElement)
 	{
@@ -432,6 +433,11 @@ bool Engine::loadMap(const String &fileName)
 			const float opacity = strtod(layerElement->Attribute("opacity"), nullptr);
 			layer.opacity *= opacity;
 		}
+
+		if (string(layerElement->Attribute("name")) == string("directions"))
+			gameMap->directionsLayer = layersCount;
+
+		layersCount++;
 
 		if (layerElement->Attribute("visible") != nullptr)
 			layer.visibility = static_cast<bool>(atoi(layerElement->Attribute("visible")));

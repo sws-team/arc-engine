@@ -28,6 +28,7 @@ public:
 	Map():
 		width(0)
 	  ,height(0)
+	  ,directionsLayer(3)
 	{
 
 	}
@@ -54,6 +55,7 @@ public:
 	string decription;
 	float money;
 	float life;
+	int directionsLayer;
 
 	struct MapDanger
 	{
