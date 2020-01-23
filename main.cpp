@@ -24,10 +24,11 @@ int main(int argc, char *argv[])
 //		return EXIT_FAILURE;
 	if ( !SteamAPI_Init() )
 	{
-		printf( "Fatal Error - Steam must be running to play this game (SteamAPI_Init() failed).\n" );
+		MessageBoxA(NULL, "Steam must be running to play this game", "Fatal Error!", MB_OK | MB_ICONERROR);
 		return EXIT_FAILURE;
 	}
 #endif
+
 	std::srand(std::time(nullptr));
     String path = String(argv[0]);
 	const String appName = String("TowerDefence_") + String(APP_VERSION)

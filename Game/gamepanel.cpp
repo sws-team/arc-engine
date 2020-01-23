@@ -632,7 +632,8 @@ int GamePanel::getProgressMax() const
 
 void GamePanel::updateWaveText()
 {
-	waveText.setString("Wave #" + to_string(Engine::Instance().level()->getCurrentWave() + 1));
+	waveText.setString(Language::Instance().translate(Language::WAVE) +
+				" #" + to_string(Engine::Instance().level()->getCurrentWave() + 1));
 }
 
 float GamePanel::getTowerUpgradeCost(Tower *tower) const
@@ -1023,7 +1024,25 @@ void GamePanel::updateCurrentTower()
 		sellSprite.setPosition(optionsPos);
 		optionsPos.x += GlobalVariables::Instance().tileSize().x * 2;
 		upgradeSprite.setPosition(optionsPos);
-
+		const Vector2i towerCell = Engine::Instance().camera()->posToCell(m_selectedTower->pos());
+		if (towerCell.x == 0)
+		{
+			if (towerCell.y == 0)
+				sellSprite.setPosition(sellSprite.getPosition().x + GlobalVariables::Instance().tileSize().x,
+									   sellSprite.getPosition().y + GlobalVariables::Instance().tileSize().x);
+			else
+				sellSprite.setPosition(sellSprite.getPosition().x + GlobalVariables::Instance().tileSize().x,
+									   sellSprite.getPosition().y - GlobalVariables::Instance().tileSize().x);
+		}
+		else if (towerCell.x == Engine::Instance().cursor()->getMaxCell().x - 1)
+		{
+			if (towerCell.y == 0)
+				upgradeSprite.setPosition(upgradeSprite.getPosition().x - GlobalVariables::Instance().tileSize().x,
+										  upgradeSprite.getPosition().y + GlobalVariables::Instance().tileSize().x);
+			else
+				upgradeSprite.setPosition(upgradeSprite.getPosition().x - GlobalVariables::Instance().tileSize().x,
+										  upgradeSprite.getPosition().y - GlobalVariables::Instance().tileSize().x);
+		}
 		const float sellCost = getTowerSellCost(m_selectedTower);
 		const float upgradeCost = getTowerUpgradeCost(m_selectedTower);
 
@@ -1111,28 +1130,6 @@ void GamePanel::updateInfo()
 			str += Language::Instance().translate(Language::STOP_ABILITY_DESCRIPTION);
 		}
 			break;
-//		case SELL:
-//		{
-//			str = Language::Instance().translate(Language::SELL);
-
-//			if (m_selectedTower != nullptr)
-//			{
-//				str += endline;
-//				str += "Cost" +  GlobalVariables::to_string_with_precision(getTowerSellCost(m_selectedTower), 1);
-//			}
-//		}
-//			break;
-//		case UPGRADE:
-//		{
-//			str = Language::Instance().translate(Language::UPGRADE);
-
-//			if (m_selectedTower != nullptr)
-//			{
-//				str += endline;
-//				str += "Cost" +  GlobalVariables::to_string_with_precision(getTowerUpgradeCost(m_selectedTower), 1);
-//			}
-//		}
-//			break;
 		default:
 			break;
 		}
@@ -1260,11 +1257,3 @@ float GamePanel::getBottomValue() const
 {
 	return m_bottomValue;
 }
-
-//void GamePanel::press(const Vector2i &pos)
-//{
-//	if (Engine::Instance().level()->getState() == Level::WAIT_READY)
-//		if (spriteReady.getGlobalBounds().contains(pos.x, pos.y))
-//			Engine::Instance().level()->ready();
-//}
-

@@ -60,6 +60,7 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(KILLS, L"Фраги"));
 	lang.insert(pair<TR_TEXT, wstring>(COST, L"Цена"));
 	lang.insert(pair<TR_TEXT, wstring>(SELL_COST, L"Цена продажи"));
+	lang.insert(pair<TR_TEXT, wstring>(WAVE, L"Волна"));
 	lang.insert(pair<TR_TEXT, wstring>(BASE_TOWER_DESCRIPTION, L"Base tower"));
 	lang.insert(pair<TR_TEXT, wstring>(FREEZE_TOWER_DESCRIPTION, L"This tower freeze traget"));
 	lang.insert(pair<TR_TEXT, wstring>(POWER_TOWER_DESCRIPTION, L"Energy tower to gain resources"));
@@ -139,6 +140,7 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(KILLS, L"Kills"));
 	lang.insert(pair<TR_TEXT, wstring>(COST, L"Cost"));
 	lang.insert(pair<TR_TEXT, wstring>(SELL_COST, L"Sell cost"));
+	lang.insert(pair<TR_TEXT, wstring>(WAVE, L"Wave"));
 	lang.insert(pair<TR_TEXT, wstring>(BASE_TOWER_DESCRIPTION, L"Base tower"));
 	lang.insert(pair<TR_TEXT, wstring>(FREEZE_TOWER_DESCRIPTION, L"This tower freeze traget"));
 	lang.insert(pair<TR_TEXT, wstring>(POWER_TOWER_DESCRIPTION, L"Energy tower to gain resources"));
@@ -219,6 +221,7 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(KILLS, L"Kills"));
 	lang.insert(pair<TR_TEXT, wstring>(COST, L"Prix"));
 	lang.insert(pair<TR_TEXT, wstring>(SELL_COST, L"Prix de la vente"));
+	lang.insert(pair<TR_TEXT, wstring>(WAVE, L"Wave"));
 	lang.insert(pair<TR_TEXT, wstring>(BASE_TOWER_DESCRIPTION, L"Base tower"));
 	lang.insert(pair<TR_TEXT, wstring>(FREEZE_TOWER_DESCRIPTION, L"This tower freeze traget"));
 	lang.insert(pair<TR_TEXT, wstring>(POWER_TOWER_DESCRIPTION, L"Energy tower to gain resources"));

@@ -25,15 +25,16 @@ int MainWindow::exec()
 	Image img;
 	img.loadFromFile("images/ui/cursor.png");
 	Cursor cursor;
-	if (cursor.loadFromPixels(img.getPixelsPtr(), Vector2u(32,32), Vector2u(0,0)))
-		setMouseCursor(cursor);
-
+	const bool cursorLoaded = cursor.loadFromPixels(img.getPixelsPtr(), Vector2u(32,32), Vector2u(0,0));
 	while (isOpen())
 	{
 		if (Engine::Instance().getState() != state)
 		{			
 			if (currentState != nullptr)
 				delete currentState;
+
+			if (cursorLoaded)
+				setMouseCursor(cursor);
 
 			if (Engine::Instance().getState() == Engine::EXIT)
 			{
