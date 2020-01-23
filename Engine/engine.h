@@ -45,6 +45,7 @@ public:
 	GameCursor *cursor() const;
 
 	void loadMaps(const String &path);
+	bool checkMaps(const String &path) const;
 
 	void setWindow(RenderWindow *window);
 	RenderWindow *window();

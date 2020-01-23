@@ -9,6 +9,8 @@
 #include "globalvariables.h"
 #include "settings.h"
 #include "Crypto/crypto.h"
+#include "Crypto/picosha2.h"
+#include "Crypto/checksums.h"
 
 #include "Game/Level/map.h"
 #include "Game/Level/level.h"
@@ -595,9 +597,7 @@ bool Engine::loadMap(const String &fileName)
 		cout << "No object layers found..." << endl;
 
 	maps.push_back(gameMap);
-
 	fclose(file);
-
 	return true;
 }
 
@@ -687,4 +687,34 @@ void Engine::loadMaps(const String &path)
 		tinydir_next(&dir);
 	}
 	tinydir_close(&dir);
+}
+
+bool Engine::checkMaps(const String &path) const
+{
+	tinydir_dir dir;
+	const int result = tinydir_open(&dir, path.toWideString().c_str());
+	int count = 0;
+	while (dir.has_next)
+	{
+		tinydir_file file;
+		tinydir_readfile(&dir, &file);
+		if (!file.is_dir)
+		{
+			ifstream stream(String(file.path).toAnsiString());
+			const string src = string((std::istreambuf_iterator<char>(stream)),
+									  std::istreambuf_iterator<char>());
+			const string checksum = picosha2::hash256_hex_string(src);
+			stream.close();
+//			cout << checksum << endl << count << endl << MISSIONS_CHECKSUM[count] << endl << endl;
+//			if (checksum != MISSIONS_CHECKSUM[count])
+//			{
+//				tinydir_close(&dir);
+//				return false;
+//			}
+			count++;
+		}
+		tinydir_next(&dir);
+	}
+	tinydir_close(&dir);
+	return true;
 }

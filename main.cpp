@@ -50,6 +50,12 @@ int main(int argc, char *argv[])
 	Language::Instance().load();
 	Engine::Instance().load();
 
+	if (!Engine::Instance().checkMaps("maps"))
+	{
+		MessageBoxA(NULL, "Checksum error", "Fatal Error!", MB_OK | MB_ICONERROR);
+		return EXIT_FAILURE;
+	}
+
 	MainWindow w;
 	Settings::Instance().setMainWindow(&w);
 	Settings::Instance().updateWindow();
