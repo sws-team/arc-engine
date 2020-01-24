@@ -23,13 +23,14 @@ GameWindow::GameWindow()
 	m_state = PLAYING;
 
 	menuImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::GAME_MENU_TEXTURE));
-	menuImg.setScale(Settings::Instance().getGameScaleFactor());
+	menuImg.setScale(Settings::Instance().getScaleFactor());
 
 	gameOverImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::GAME_OVER_TEXTURE));
 	gameOverImg.setScale(Settings::Instance().getScaleFactor());
 
 	finishedImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MISSON_COMPLETED_TEXTURE));
 	finishedImg.setScale(Settings::Instance().getScaleFactor());
+
 	//score
 	text.setFillColor(Color::Magenta);
 	text.setFont(GlobalVariables::Instance().font());
@@ -42,11 +43,43 @@ GameWindow::GameWindow()
 	addItem(Language::Instance().translate(Language::EXIT_TO_MENU));
 	addItem(Language::Instance().translate(Language::EXIT_FROM_GAME));
 
+
+	Vector2f pos = Vector2f(0, 0);
+	menuImg.setPosition(pos);
+
+	const float offsetY = 20.f * Settings::Instance().getScaleFactor().y;
+
+	pos.x += GlobalVariables::Instance().tileSize().x;
+	pos.y += Settings::Instance().getResolution().y/2;
+
 	for(Text& text : menus)
 	{
 		text.setCharacterSize(30);
 		text.setScale(Settings::Instance().getScaleFactor());
+		text.setPosition(pos);
+		pos.y += text.getGlobalBounds().height + offsetY;
 	}
+
+	pos = Vector2f(0, 0);
+	pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
+	pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
+	finishedImg.setPosition(pos - Vector2f(finishedImg.getGlobalBounds().width/2,
+										   finishedImg.getGlobalBounds().height/2));
+	text.setString(Language::Instance().translate(Language::CONGRATULATIONS));
+
+	text.setPosition(pos - Vector2f(text.getGlobalBounds().width/2,
+									text.getGlobalBounds().height/2));
+
+	pos = Vector2f(0, 0);
+	pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
+	pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
+	gameOverImg.setPosition(pos - Vector2f(gameOverImg.getGlobalBounds().width/2,
+										   gameOverImg.getGlobalBounds().height/2));
+
+	text.setString(Language::Instance().translate(Language::GAME_OVER));
+	text.setPosition(pos - Vector2f(text.getGlobalBounds().width/2,
+									text.getGlobalBounds().height/2));
+
 
 	clock.restart();
 }
@@ -66,9 +99,6 @@ void GameWindow::init()
 
 void GameWindow::paint(RenderWindow *window)
 {
-	viewPos = Vector2f(window->getView().getCenter().x - window->getView().getSize().x/2,
-					   window->getView().getCenter().y - window->getView().getSize().y/2);
-
 	Engine::Instance().level()->draw(window);
 	switch (m_state)
 	{
@@ -104,6 +134,9 @@ void GameWindow::eventFilter(Event *event)
 		case Event::LostFocus:
 			pause();
 			break;
+//		case Event::GainedFocus:
+//			pause();
+//			break;
 		case Event::Closed:
 			Engine::Instance().setState(Engine::EXIT);
 			break;
@@ -224,31 +257,7 @@ void GameWindow::setState(const GAME_STATE &state)
 {
 	if (state == m_state)
 		return;
-//	Engine::Instance().window()->setMouseCursorVisible(true);
-	switch (state)
-	{
-	case PLAYING:
-//		Engine::Instance().window()->setMouseCursorVisible(false);
-		break;
-	case PAUSED:
-	{	
-		Vector2f pos = viewPos;
-		menuImg.setPosition(pos);
-
-		const float offsetY = 20.f * Settings::Instance().getScaleFactor().y;
-
-		pos.x += GlobalVariables::Instance().tileSize().x;
-		pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
-		pos.y -= menuImg.getGlobalBounds().height/2;
-
-		for(Text& text : menus)
-		{
-			text.setPosition(pos);
-			pos.y += text.getGlobalBounds().height + offsetY;
-		}
-	}
-		break;
-	case FINISHED:
+	if (state == FINISHED)
 	{
 		const float fullLife = Engine::Instance().level()->getStartLife();
 		const float currentLife = Engine::Instance().level()->getLifeCount();
@@ -269,32 +278,6 @@ void GameWindow::setState(const GAME_STATE &state)
 
 		Engine::Instance().setMissionFinished(Engine::Instance().getMission(), stars);
 		Engine::Instance().save();
-
-
-		Vector2f pos = viewPos;
-		pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
-		pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
-		finishedImg.setPosition(pos - Vector2f(finishedImg.getGlobalBounds().width/2,
-											   finishedImg.getGlobalBounds().height/2));
-		text.setString(Language::Instance().translate(Language::CONGRATULATIONS));
-
-		text.setPosition(pos - Vector2f(text.getGlobalBounds().width/2,
-										text.getGlobalBounds().height/2));
-	}
-		break;
-	case GAME_OVER:
-	{
-		Vector2f pos = viewPos;
-		pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
-		pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
-		gameOverImg.setPosition(pos - Vector2f(gameOverImg.getGlobalBounds().width/2,
-											   gameOverImg.getGlobalBounds().height/2));
-
-		text.setString(Language::Instance().translate(Language::GAME_OVER));
-		text.setPosition(pos - Vector2f(text.getGlobalBounds().width/2,
-										text.getGlobalBounds().height/2));
-	}
-		break;
 	}
 	m_state = state;
 }

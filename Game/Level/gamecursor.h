@@ -51,6 +51,7 @@ public:
 	void updatePanel();
 
 	Vector2f windowCursorPos() const;
+	Vector2f windowScreenPos() const;
 
 	static const Color TOWER_AREA_COLOR;
 	static const Color INACTIVE_TOWER_AREA_COLOR;

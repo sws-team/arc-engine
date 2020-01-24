@@ -25,6 +25,7 @@ Level::Level() :
   ,currentWave(0)
   ,m_state(WAIT_READY)
   ,m_powerTowersCount(0)
+  ,m_selectedTower(nullptr)
 {
 	shake = new Shake();
 	abilities = new Abilities();
@@ -42,6 +43,32 @@ Level::Level() :
 
 	spawnRect.setFillColor(Color::Transparent);
 	endRect.setFillColor(Color::Transparent);
+
+	sellSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::SELL_TEXTURE));
+	sellSprite.setScale(Settings::Instance().getScaleFactor());
+
+	upgradeSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::UPGRADE_TEXTURE));
+	upgradeSprite.setScale(Settings::Instance().getScaleFactor());
+
+	const Color textColor = Color(236,169,114);
+	const Color textOutlineColor = Color(104,75,56);
+	const float fieldIconsCharacterSize = 25;
+	sellCostText.setFont(GlobalVariables::Instance().font());
+	sellCostText.setFillColor(textColor);
+	sellCostText.setOutlineColor(textOutlineColor);
+	sellCostText.setOutlineThickness(1);
+	sellCostText.setCharacterSize(fieldIconsCharacterSize);
+	sellCostText.setScale(Settings::Instance().getScaleFactor());
+
+	upgradeCostText.setFont(GlobalVariables::Instance().font());
+	upgradeCostText.setFillColor(textColor);
+	upgradeCostText.setStyle(Text::Bold);
+	upgradeCostText.setOutlineColor(textOutlineColor);
+	upgradeCostText.setOutlineThickness(1);
+	upgradeCostText.setCharacterSize(fieldIconsCharacterSize);
+	upgradeCostText.setScale(Settings::Instance().getScaleFactor());
+
+	updateCurrentTower();
 }
 
 Level::~Level()
@@ -61,8 +88,10 @@ void Level::draw(RenderTarget *const target)
 	target->draw(deadZone);
 	target->draw(spawnRect);
 	target->draw(endRect);
-	Engine::Instance().panel()->draw(target);
 	Engine::Instance().instructions()->draw(target);
+
+	Engine::Instance().window()->setView(Engine::Instance().window()->getDefaultView());
+	Engine::Instance().panel()->draw(target);
 }
 
 void Level::update()
@@ -273,7 +302,7 @@ void Level::checkAlive()
 
 void Level::deleteTower(Tower *tower)
 {
-	if (tower == Engine::Instance().panel()->selectedTower())
+	if (tower == m_selectedTower)
 		clearCursor();
 
 	towers.erase( remove( towers.begin(), towers.end(), tower ), towers.end() );
@@ -291,6 +320,71 @@ void Level::drainMoney(float m)
 float Level::getStartLife() const
 {
 	return gameMap->life;
+}
+
+void Level::updateCurrentTower()
+{
+	Color color;
+	int level = 0;
+	if (m_selectedTower == nullptr)
+		color = GlobalVariables::GrayColor;
+	else
+	{
+		color = Color::White;
+		level = m_selectedTower->level();
+	}
+
+	sellSprite.setColor(color);
+	upgradeSprite.setColor(color);
+
+	bool canUpgrade = false;
+	if (m_selectedTower != nullptr)
+	{
+		const float cost = Engine::Instance().panel()->getTowerUpgradeCost(m_selectedTower);
+		canUpgrade = Engine::Instance().level()->getMoneyCount() < cost;
+
+//		const Vector2i pixelPos = Engine::Instance().window()->mapCoordsToPixel(m_selectedTower->pos(), *Engine::Instance().camera()->getView());
+//		Vector2f optionsPos = Vector2f(pixelPos.x, pixelPos.y);
+		Vector2f optionsPos = m_selectedTower->pos();
+		optionsPos.x -= GlobalVariables::Instance().tileSize().x;
+		sellSprite.setPosition(optionsPos);
+		const Vector2i towerCell = Engine::Instance().camera()->posToCell(m_selectedTower->pos());
+		if (towerCell.x == 0)
+		{
+			if (towerCell.y == 0)
+				sellSprite.setPosition(optionsPos.x + GlobalVariables::Instance().tileSize().x,
+									   optionsPos.y + GlobalVariables::Instance().tileSize().x);
+			else
+				sellSprite.setPosition(optionsPos.x + GlobalVariables::Instance().tileSize().x,
+									   optionsPos.y - GlobalVariables::Instance().tileSize().x);
+		}
+		optionsPos.x += GlobalVariables::Instance().tileSize().x * 2;
+		upgradeSprite.setPosition(optionsPos);
+		if (towerCell.x == Engine::Instance().cursor()->getMaxCell().x - 1)
+		{
+			if (towerCell.y == 0)
+				upgradeSprite.setPosition(optionsPos.x - GlobalVariables::Instance().tileSize().x,
+										  optionsPos.y + GlobalVariables::Instance().tileSize().x);
+			else
+				upgradeSprite.setPosition(optionsPos.x - GlobalVariables::Instance().tileSize().x,
+										  optionsPos.y - GlobalVariables::Instance().tileSize().x);
+		}
+		const float sellCost = Engine::Instance().panel()->getTowerSellCost(m_selectedTower);
+		const float upgradeCost = Engine::Instance().panel()->getTowerUpgradeCost(m_selectedTower);
+
+		sellCostText.setString(GlobalVariables::to_string_with_precision(sellCost, 1));
+		upgradeCostText.setString(GlobalVariables::to_string_with_precision(upgradeCost, 0));
+
+		sellCostText.setPosition(sellSprite.getPosition());
+		upgradeCostText.setPosition(upgradeSprite.getPosition());
+	}
+	if (level > 2 || canUpgrade)
+		upgradeSprite.setColor(GlobalVariables::GrayColor);
+}
+
+Tower *Level::selectedTower() const
+{
+	return m_selectedTower;
 }
 
 void Level::checkRespawn()
@@ -406,20 +500,19 @@ void Level::changeState(Level::LEVEL_STATE state)
 
 void Level::updateRadius()
 {
-	Tower *tower = Engine::Instance().panel()->selectedTower();
-	if (tower == nullptr)
+	if (m_selectedTower == nullptr)
 		return;
 
-	if (tower->type() == POWER)
+	if (m_selectedTower->type() == POWER)
 	{
-		const FloatRect rect = static_cast<PowerTower*>(tower)->getValidArea();
+		const FloatRect rect = static_cast<PowerTower*>(m_selectedTower)->getValidArea();
 		currentTowerRect.setPosition(rect.left, rect.top);
 		currentTowerRect.setSize(Vector2f(rect.width, rect.height));
 	}
 	else
 	{
-		currentTowerRadius.setRadius(tower->actualRadius() * GlobalVariables::Instance().mapTileSize().x);
-		currentTowerRadius.setPosition(tower->pos());
+		currentTowerRadius.setRadius(m_selectedTower->actualRadius() * GlobalVariables::Instance().mapTileSize().x);
+		currentTowerRadius.setPosition(m_selectedTower->pos());
 		currentTowerRadius.setOrigin(currentTowerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().x,
 						 currentTowerRadius.getRadius() - GlobalVariables::Instance().mapTileSize().y);
 	}
@@ -431,6 +524,24 @@ void Level::showAnimations()
 		effect->update();
 }
 
+ACTION_STATE Level::isFieldButtons(const Vector2f &pos) const
+{
+	const Vector2f gPos = pos + Vector2f(1, 1);
+
+	if (sellSprite.getGlobalBounds().contains(gPos))
+		return SELL;
+	if (upgradeSprite.getGlobalBounds().contains(gPos))
+		return UPGRADE;
+
+	return READY;
+}
+
+void Level::setSelectedTower(Tower *tower)
+{
+	m_selectedTower = tower;
+	updateCurrentTower();
+}
+
 unsigned int Level::getPowerTowersCount() const
 {
 	return m_powerTowersCount;
@@ -438,7 +549,7 @@ unsigned int Level::getPowerTowersCount() const
 
 void Level::clearCursor()
 {
-	Engine::Instance().panel()->setSelectedTower(nullptr);
+	setSelectedTower(nullptr);
 	m_actionState = READY;
 	Engine::Instance().cursor()->deactivate();
 	highlightPowerTowersRadius(false);
@@ -553,12 +664,17 @@ void Level::drawLevel(RenderTarget * const target)
 	moneyDrain->draw(target);
 	towersRegress->draw(target);
 
-	if (Engine::Instance().panel()->selectedTower() != nullptr)
+	if (m_selectedTower != nullptr)
 	{
-		if (Engine::Instance().panel()->selectedTower()->type() == POWER)
+		if (m_selectedTower->type() == POWER)
 			target->draw(currentTowerRect);
 		else
 			target->draw(currentTowerRadius);
+
+		target->draw(sellSprite);
+		target->draw(upgradeSprite);
+		target->draw(sellCostText);
+		target->draw(upgradeCostText);
 	}
 }
 
@@ -643,9 +759,9 @@ void Level::chooseByPos(const Vector2f &pos)
 
 void Level::choose(const Vector2i &cell, bool inPanel)
 {
-	Tower *selectedTower = Engine::Instance().panel()->selectedTower();
-	if (Engine::Instance().panel()->selectedTower() != nullptr)
-		Engine::Instance().panel()->setSelectedTower(nullptr);
+	Tower *selectedTower = m_selectedTower;
+	if (m_selectedTower != nullptr)
+		setSelectedTower(nullptr);
 
 	if (inPanel)
 	{
@@ -747,7 +863,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		const Vector2f pos = Engine::Instance().camera()->cellToPos(cell);
 		if (m_actionState == READY && selectedTower != nullptr)
 		{
-			const ACTION_STATE fieldState = Engine::Instance().panel()->isFieldButtons(pos);
+			const ACTION_STATE fieldState = isFieldButtons(pos);
 			if (fieldState != READY)
 				m_actionState = fieldState;
 		}
@@ -758,7 +874,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			Tower* tower = getTowerAtPos(pos);
 			if (tower != nullptr)
 			{
-				Engine::Instance().panel()->setSelectedTower(tower);
+				setSelectedTower(tower);
 				updateRadius();
 			}
 		}

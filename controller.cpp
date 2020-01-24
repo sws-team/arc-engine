@@ -68,6 +68,9 @@ void Controller::eventFilter(Event *event)
 			Engine::Instance().level()->chooseCurrent();
 		}
 			break;
+		case Keyboard::BackSpace:
+			Engine::Instance().camera()->resetView();
+			break;
 		case Keyboard::Escape:
 			pauseFunc();
 			break;
@@ -112,6 +115,14 @@ void Controller::eventFilter(Event *event)
 		default:
 			break;
 		}
+	}
+		break;
+	case Event::MouseWheelScrolled:
+	{
+		if (event->mouseWheelScroll.delta < 0)
+			Engine::Instance().camera()->zoomOut();
+		else
+			Engine::Instance().camera()->zoomIn();
 	}
 		break;
 	default:

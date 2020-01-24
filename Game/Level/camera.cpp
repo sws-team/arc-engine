@@ -98,7 +98,7 @@ void Camera::zoomIn()
 
 void Camera::zoomOut()
 {
-	if (zoomRatio < -MAX_ZOOM)
+	if (zoomRatio <= 0)
 		return;
 	view->zoom(1 + ZOOM_RATIO);
 	minimap->zoom(1 + ZOOM_RATIO);
@@ -114,14 +114,6 @@ void Camera::resetZoom()
 	minimap->zoom(MINIMAP_ZOOM);
 	zoomRatio = 0;
 }
-
-//FloatRect Camera::viewRect() const
-//{
-//	return FloatRect(view->getCenter().x - view->getSize().x/2,
-//					 view->getCenter().y - view->getSize().y/2,
-//					 view->getSize().x,
-//					 view->getSize().y);
-//}
 
 int Camera::viewTopCell() const
 {

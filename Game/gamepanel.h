@@ -25,9 +25,6 @@ public:
 	constexpr static float ICON_SIZE = 64;
 	constexpr static float MINIMAP_SCALE = 0.3f;
 
-	Tower *selectedTower() const;
-	void setSelectedTower(Tower *selectedTower);
-
 	ACTION_STATE getCurrentIcon() const;
 	TOWER_TYPES currentTower() const;
 
@@ -66,17 +63,12 @@ public:
 
 	void setLifeMax(int lifeMax);
 
-	ACTION_STATE isFieldButtons(const Vector2f& pos) const;
-
 	void setDrain(bool drain);
 
 private:
 	Sprite m_sprite;
 	RenderTexture rTexture;
 	Text moneyCountText;
-
-	Sprite sellSprite;
-	Sprite upgradeSprite;
 
 	Sprite abilityBombSprite;
 	Sprite abilityFreezeBombSprite;
@@ -109,16 +101,11 @@ private:
 	Text abilityIncreaseTowerAttackSpeedDurationText;
 	Text abilityStopDurationText;
 
-	Text sellCostText;
-	Text upgradeCostText;
-
-	Tower *m_selectedTower;
 	Text info;
 
+	Vector2f updatePos();
 
-	Vector2f updatePos(const Vector2f& nullPos);
-
-	float m_bottomValue;
+	int m_bottomValue;
 	bool m_isPanelActive;
 
 	LifeBar *progress;
@@ -153,7 +140,6 @@ private:
 	constexpr static float ICONS_SPACE = 24;
 	constexpr static float PROGRESS_OFFSET = 20;
 	constexpr static float PROGRESS_WIDTH = 0.3f;
-	void updateCurrentTower();
 
 	Sprite startSprite;
 	Sprite endSprite;
@@ -169,12 +155,13 @@ private:
 
 	LifeBar *life;
 
-	static constexpr float PANEL_OFFSET = 73;
+	static constexpr int PANEL_OFFSET = 73;
 
 	bool m_drain;
 	Timer drainBlinkTimer;
 	RectangleShape drainRect;
 	bool drainState;
+	Sprite miniMapSprite;
 };
 
 #endif // GAMEPANEL_H

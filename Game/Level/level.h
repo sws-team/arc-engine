@@ -92,6 +92,9 @@ public:
 
 	float getStartLife() const;
 
+	void updateCurrentTower();
+
+	Tower *selectedTower() const;
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();
@@ -157,6 +160,15 @@ private:
 	Smoke *smoke;
 	MoneyDrain *moneyDrain;
 	TowersRegress *towersRegress;
+
+
+	Sprite sellSprite;
+	Sprite upgradeSprite;
+	Text sellCostText;
+	Text upgradeCostText;
+	ACTION_STATE isFieldButtons(const Vector2f& pos) const;
+	Tower *m_selectedTower;
+	void setSelectedTower(Tower* tower);
 };
 
 #endif // LEVEL_H

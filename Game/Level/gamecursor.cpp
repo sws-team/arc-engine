@@ -241,13 +241,19 @@ void GameCursor::updatePanel()
 {
 	m_inPanel = windowCursorPos().y > Engine::Instance().panel()->getBottomValue();
 	Engine::Instance().panel()->updateCursor();
-//	Engine::Instance().window()->setMouseCursorVisible(m_inPanel);
 }
 
 Vector2f GameCursor::windowCursorPos() const
 {
 	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
 	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().camera()->getView());
+	return pos;
+}
+
+Vector2f GameCursor::windowScreenPos() const
+{
+	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
+	const Vector2f pos = Vector2f(pixelPos.x, pixelPos.y);
 	return pos;
 }
 

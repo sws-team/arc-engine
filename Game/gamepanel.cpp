@@ -24,9 +24,8 @@ GamePanel::GamePanel() :
 {
 	life = new LifeBar();
 	progress = new LifeBar();
-	m_selectedTower = nullptr;
 
-	const Vector2f scaleFactor = Settings::Instance().getGameScaleFactor();
+	const Vector2f scaleFactor = Settings::Instance().getScaleFactor();
 
 	m_sprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_TEXTURE));
 	m_sprite.setScale(scaleFactor);
@@ -51,12 +50,6 @@ GamePanel::GamePanel() :
 	currentIconRect.setSize(Vector2f(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE));
 	currentIconRect.setFillColor(Color(160,69,34,100));
 	currentIconRect.setScale(scaleFactor);
-
-	sellSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::SELL_TEXTURE));
-	sellSprite.setScale(Settings::Instance().getScaleFactor());
-
-	upgradeSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::UPGRADE_TEXTURE));
-	upgradeSprite.setScale(Settings::Instance().getScaleFactor());
 
 	abilityBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_BOMB));
 	abilityBombSprite.setScale(scaleFactor);
@@ -125,6 +118,7 @@ GamePanel::GamePanel() :
 	const float costTextCharacterSize = 20;
 	const Color costTextFillColor = Color::White;
 	const Color costTextOutlineColor = Color::Black;
+
 	towerBaseCostText.setFont(GlobalVariables::Instance().font());
 	towerBaseCostText.setFillColor(costTextFillColor);
 	towerBaseCostText.setOutlineColor(costTextOutlineColor);
@@ -210,21 +204,6 @@ GamePanel::GamePanel() :
 	abilityStopDurationText.setCharacterSize(durationTextCharacterSize);
 	abilityStopDurationText.setScale(scaleFactor);
 
-	const float fieldIconsCharacterSize = costTextCharacterSize * 1.3f;
-	sellCostText.setFont(GlobalVariables::Instance().font());
-	sellCostText.setFillColor(Color::Black);
-//	sellCostText.setOutlineColor(costTextOutlineColor);
-//	sellCostText.setOutlineThickness(1);
-	sellCostText.setCharacterSize(fieldIconsCharacterSize);
-	sellCostText.setScale(scaleFactor);
-
-	upgradeCostText.setFont(GlobalVariables::Instance().font());
-	upgradeCostText.setFillColor(Color(236,169,114));
-	upgradeCostText.setStyle(Text::Bold);
-	upgradeCostText.setOutlineColor(Color(104,75,56));
-	upgradeCostText.setOutlineThickness(1);
-	upgradeCostText.setCharacterSize(fieldIconsCharacterSize);
-	upgradeCostText.setScale(scaleFactor);
 
 	towerBaseCostText.setString(GlobalVariables::to_string_with_precision(BaseTower::STATS.cost, 0));
 	towerFreezeCostText.setString(GlobalVariables::to_string_with_precision(FreezeTower::STATS.cost, 0));
@@ -260,15 +239,24 @@ GamePanel::GamePanel() :
 	waveText.setScale(scaleFactor);
 
 	m_bottomValue = 0;
-	progress->init(Vector2i(Settings::Instance().getResolution().x * PROGRESS_WIDTH,
-							LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
+	const int progressWidth = Settings::Instance().getResolution().x * PROGRESS_WIDTH;
+	progress->init(Vector2i(progressWidth, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
 	life->init(Vector2i(722 * scaleFactor.x, 37 * scaleFactor.y), Color::Cyan);
 
 	drainRect.setFillColor(Color::Transparent);
 	drainRect.setOutlineThickness(2);
 	drainRect.setOutlineColor(Color::Transparent);
 
-	updateCurrentTower();
+	const float minimap_scale_x = scaleFactor.x * 344.f / Settings::Instance().getResolution().x;
+	const float minimap_scale_y = scaleFactor.y * 213.f / Settings::Instance().getResolution().y;
+	miniMapSprite.scale(minimap_scale_x, minimap_scale_y);
+
+	//set pos
+	//	pos.x = target->getView().getCenter().x - target->getView().getSize().x/2;
+	//	pos.y = target->getView().getCenter().y + target->getView().getSize().y/2;
+
+	progress->setPos(Vector2f(progressWidth, PROGRESS_OFFSET * scaleFactor.y));
+	updatePos();
 }
 
 GamePanel::~GamePanel()
@@ -278,48 +266,11 @@ GamePanel::~GamePanel()
 
 void GamePanel::draw(RenderTarget * const target)
 {
-	//update pos
-
-	if (m_selectedTower != nullptr)
-	{
-		target->draw(sellSprite);
-		target->draw(upgradeSprite);
-		target->draw(sellCostText);
-		target->draw(upgradeCostText);
-
-	}
-
-	const Vector2f scaleFactor = Settings::Instance().getGameScaleFactor();
-
-	Vector2f pos;
-	pos.x = target->getView().getCenter().x - target->getView().getSize().x/2;
-	pos.y = target->getView().getCenter().y + target->getView().getSize().y/2;
-	readyText.setPosition(Vector2f(pos.x + Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE - readyText.getGlobalBounds().width/2,
-									pos.y - Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE + readyText.getGlobalBounds().height/2));
-
-	progress->setPos(Vector2f(pos.x + Settings::Instance().getResolution().x * PROGRESS_WIDTH,
-							  pos.y - target->getView().getSize().y + PROGRESS_OFFSET *
-							  scaleFactor.y));
-
-	waveText.setPosition(progress->pos());
-
-	pos.y -= m_sprite.getGlobalBounds().height;
-	m_bottomValue = pos.y + PANEL_OFFSET * scaleFactor.y;
-	pos = updatePos(pos);
-
 	//draw minimap
 	rTexture.clear(Color::Transparent);
 	Engine::Instance().level()->drawLevel(&rTexture);
 	rTexture.display();
-
-	Sprite miniMapSprite;
 	miniMapSprite.setTexture(rTexture.getTexture());
-
-	const float minimap_scale_x = scaleFactor.x * 344.f / Settings::Instance().getResolution().x;
-	const float minimap_scale_y = scaleFactor.y * 213.f / Settings::Instance().getResolution().y;
-
-	miniMapSprite.scale(minimap_scale_x, minimap_scale_y);
-	miniMapSprite.setPosition(pos);
 
 	//draw
 	if(Engine::Instance().level()->getState() == Level::WAIT_READY)
@@ -331,11 +282,7 @@ void GamePanel::draw(RenderTarget * const target)
 
 	target->draw(miniMapSprite);
 	target->draw(m_sprite);
-
 	target->draw(moneyCountText);
-
-	updateEnableAbilities();
-
 	target->draw(info);
 
 	target->draw(abilityBombSprite);
@@ -344,8 +291,6 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(abilityIncreaseTowerDamageSprite);
 	target->draw(abilityIncreaseTowerAttackSpeedSprite);
 	target->draw(abilityStopSprite);
-
-	updateEnableTowers();
 
 	target->draw(towerBaseSprite);
 	target->draw(towerLaserSprite);
@@ -412,6 +357,8 @@ void GamePanel::update()
 			drainRect.setOutlineColor(drainState ? Color::Red : Color::Transparent);
 		}
 	}
+	updateEnableTowers();
+	updateEnableAbilities();
 }
 
 void GamePanel::updatePanel()
@@ -435,17 +382,6 @@ void GamePanel::updatePanel()
 int GamePanel::cellsCount() const
 {
 	return static_cast<int>(-1 + m_sprite.getGlobalBounds().height / GlobalVariables::Instance().tileSize().y);
-}
-
-Tower *GamePanel::selectedTower() const
-{
-	return m_selectedTower;
-}
-
-void GamePanel::setSelectedTower(Tower *selectedTower)
-{
-	m_selectedTower = selectedTower;
-	updateCurrentTower();
 }
 
 ACTION_STATE GamePanel::getCurrentIcon() const
@@ -499,9 +435,10 @@ TOWER_TYPES GamePanel::currentTower() const
 	return POWER;
 }
 
-Vector2f GamePanel::updatePos(const Vector2f &nullPos)
+Vector2f GamePanel::updatePos()
 {
-	const Vector2f scaleFactor = Settings::Instance().getGameScaleFactor();
+	const Vector2f nullPos = Vector2f(0, Settings::Instance().getResolution().y - m_sprite.getGlobalBounds().height);
+	const Vector2f scaleFactor = Settings::Instance().getScaleFactor();
 	const Vector2f iconSize = Vector2f(ICON_SIZE * scaleFactor.x, ICON_SIZE * scaleFactor.y);
 
 	const float top_offset = 40 * scaleFactor.x;
@@ -509,6 +446,8 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	const float icon_offset = 24 * scaleFactor.x;
 	const float text_offset = 338 * scaleFactor.x;
 	const float panel_offset = PANEL_OFFSET * scaleFactor.x;
+
+	m_bottomValue = nullPos.y + PANEL_OFFSET * scaleFactor.y;
 
 	Vector2f pos = Vector2f(ceil(nullPos.x), ceil(nullPos.y));
 	m_sprite.setPosition(pos);
@@ -591,6 +530,10 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	pos.x += icon_offset;
 	pos.y = nullPos.y + 43 * scaleFactor.y;
 
+	readyText.setPosition(Vector2f(Settings::Instance().getResolution().x/2 - readyText.getGlobalBounds().width/2,
+								   Settings::Instance().getResolution().y/2 + readyText.getGlobalBounds().height/2));
+	waveText.setPosition(progress->pos());
+
 	towerBaseCostText.setPosition(towerBaseSprite.getPosition());
 	towerFreezeCostText.setPosition(towerFreezeSprite.getPosition());
 	towerRocketCostText.setPosition(towerRocketSprite.getPosition());
@@ -605,24 +548,14 @@ Vector2f GamePanel::updatePos(const Vector2f &nullPos)
 	abilityIncreaseTowerAttackSpeedDurationText.setPosition(abilityIncreaseTowerAttackSpeedSprite.getPosition());
 	abilityStopDurationText.setPosition(abilityStopSprite.getPosition());
 
+	miniMapSprite.setPosition(pos);
+
 	return pos;
 }
 
 void GamePanel::setLifeMax(int lifeMax)
 {
 	m_lifeMax = lifeMax;
-}
-
-ACTION_STATE GamePanel::isFieldButtons(const Vector2f &pos) const
-{
-	const Vector2f gPos = pos + Vector2f(1, 1);
-
-	if (sellSprite.getGlobalBounds().contains(gPos))
-		return SELL;
-	if (upgradeSprite.getGlobalBounds().contains(gPos))
-		return UPGRADE;
-
-	return READY;
 }
 
 int GamePanel::getProgressMax() const
@@ -847,11 +780,11 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 
 void GamePanel::updateCursor()
 {
-//	m_sprite.setColor(Engine::Instance().cursor()->inPanel()?Color::Red:Color::Green);
+	m_sprite.setColor(Engine::Instance().cursor()->inPanel()?Color::Red:Color::Green);
 
 	if (!Engine::Instance().cursor()->inPanel())
 		return;
-	const Vector2f pos = Engine::Instance().cursor()->windowCursorPos();
+	const Vector2f pos = Engine::Instance().cursor()->windowScreenPos();
 
 	for (unsigned int i = 0; i < actionsSprites.size(); ++i)
 	{
@@ -998,64 +931,6 @@ bool GamePanel::isAbilityIconActive(ACTION_STATE type) const
 	return false;
 }
 
-void GamePanel::updateCurrentTower()
-{
-	Color color;
-	int level = 0;
-	if (m_selectedTower == nullptr)
-		color = GlobalVariables::GrayColor;
-	else
-	{
-		color = Color::White;
-		level = m_selectedTower->level();
-	}
-//	upgradeSprite.setTextureRect(IntRect(64*level,0,64,64));
-	sellSprite.setColor(color);
-	upgradeSprite.setColor(color);
-
-	bool canUpgrade = false;
-	if (m_selectedTower != nullptr)
-	{
-		const float cost = getTowerUpgradeCost(m_selectedTower);
-		canUpgrade = Engine::Instance().level()->getMoneyCount() < cost;
-
-		Vector2f optionsPos = m_selectedTower->pos();
-		optionsPos.x -= GlobalVariables::Instance().tileSize().x;
-		sellSprite.setPosition(optionsPos);
-		optionsPos.x += GlobalVariables::Instance().tileSize().x * 2;
-		upgradeSprite.setPosition(optionsPos);
-		const Vector2i towerCell = Engine::Instance().camera()->posToCell(m_selectedTower->pos());
-		if (towerCell.x == 0)
-		{
-			if (towerCell.y == 0)
-				sellSprite.setPosition(sellSprite.getPosition().x + GlobalVariables::Instance().tileSize().x,
-									   sellSprite.getPosition().y + GlobalVariables::Instance().tileSize().x);
-			else
-				sellSprite.setPosition(sellSprite.getPosition().x + GlobalVariables::Instance().tileSize().x,
-									   sellSprite.getPosition().y - GlobalVariables::Instance().tileSize().x);
-		}
-		else if (towerCell.x == Engine::Instance().cursor()->getMaxCell().x - 1)
-		{
-			if (towerCell.y == 0)
-				upgradeSprite.setPosition(upgradeSprite.getPosition().x - GlobalVariables::Instance().tileSize().x,
-										  upgradeSprite.getPosition().y + GlobalVariables::Instance().tileSize().x);
-			else
-				upgradeSprite.setPosition(upgradeSprite.getPosition().x - GlobalVariables::Instance().tileSize().x,
-										  upgradeSprite.getPosition().y - GlobalVariables::Instance().tileSize().x);
-		}
-		const float sellCost = getTowerSellCost(m_selectedTower);
-		const float upgradeCost = getTowerUpgradeCost(m_selectedTower);
-
-		sellCostText.setString(GlobalVariables::to_string_with_precision(sellCost, 1));
-		upgradeCostText.setString(GlobalVariables::to_string_with_precision(upgradeCost, 0));
-
-		sellCostText.setPosition(sellSprite.getPosition());
-		upgradeCostText.setPosition(upgradeSprite.getPosition());
-	}
-	if (level > 2 || canUpgrade)
-		upgradeSprite.setColor(GlobalVariables::GrayColor);
-}
-
 void GamePanel::updateCurrentCursor()
 {
 	if(currentCursorPos >= actionsSprites.size())
@@ -1139,7 +1014,8 @@ void GamePanel::updateInfo()
 		Tower* tower = Engine::Instance().level()->getTowerAtPos(Engine::Instance().cursor()->pos());
 		if (tower != nullptr)
 			str = towerInfo(tower->type(), tower);
-		Engine::Instance().cursor()->setHighlight(m_selectedTower != tower && tower != nullptr);
+		Engine::Instance().cursor()->setHighlight(
+					Engine::Instance().level()->selectedTower() != tower && tower != nullptr);
 	}
 	info.setString(str);
 }
@@ -1255,5 +1131,9 @@ void GamePanel::init()
 
 float GamePanel::getBottomValue() const
 {
-	return m_bottomValue;
+	const Vector2i pixelPos = Vector2i(0, m_bottomValue);
+	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
+				pixelPos, *Engine::Instance().camera()->getView());
+
+	return pos.y;
 }

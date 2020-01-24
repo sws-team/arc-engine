@@ -135,13 +135,7 @@ void Menu::menuDown()
 
 int Menu::getMenuAtPos(const Vector2i &point) const
 {
-	View *view = Engine::Instance().camera()->getView();
-	Vector2f pos;
-	if (view == nullptr)
-		pos = Vector2f(point.x, point.y);
-	else
-		pos = Engine::Instance().window()->mapPixelToCoords(point, *view);
-
+	const Vector2f pos = Vector2f(point.x, point.y);
 	int currentMenu = -1;
 	unsigned int i = 0;
 	while(i != menus.size())
