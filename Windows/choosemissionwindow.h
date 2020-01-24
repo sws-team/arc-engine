@@ -21,7 +21,9 @@ private:
 	constexpr static int STARS_COUNT = 5;
 	struct MissionView
 	{
+		Text numberText;
 		RectangleShape rect;
+		RectangleShape highlight;
 		bool completed;
 		int activeStars;
 		vector<RectangleShape> stars; //5
@@ -34,6 +36,10 @@ private:
 
 	constexpr static int COLUMN_COUNT = 5;
 	unsigned int getRating(unsigned int n) const;
+
+	static const Color DISABLED_COLOR;
+	static const Color CURRENT_COLOR;
+	static const Color CURRENT_BORDER_COLOR;
 };
 
 #endif // CHOOSEMISSIONWINDOW_H

@@ -4,6 +4,11 @@
 #include "Engine/engine.h"
 #include "ResourcesManager/resourcesmanager.h"
 #include "controller.h"
+#include "Game/Level/map.h"
+
+const Color ChooseMissionWindow::DISABLED_COLOR = Color(0,34,52, 128);
+const Color ChooseMissionWindow::CURRENT_COLOR = Color(0,85,130, 128);
+const Color ChooseMissionWindow::CURRENT_BORDER_COLOR = Color(0,51,78, 150);
 
 ChooseMissionWindow::ChooseMissionWindow()
 	: StateWindow()
@@ -11,17 +16,17 @@ ChooseMissionWindow::ChooseMissionWindow()
 	setBackground(RESOURCES::ABOUT_BACKGROUND);
 
 	chooseRect.setOutlineThickness(5);
-	chooseRect.setOutlineColor(Color::Green);
+	chooseRect.setOutlineColor(CURRENT_BORDER_COLOR);
 	chooseRect.setFillColor(Color::Transparent);
 	currentMission = 0;
 
 	const float rectSizeX = 160 * Settings::Instance().getScaleFactor().x;
 	const float rectSizeY = 160 * Settings::Instance().getScaleFactor().y;
-	chooseRect.setSize(Vector2f(rectSizeX, rectSizeY));
 	const float offset = rectSizeY + Settings::Instance().getScaleFactor().y * 20;
 	const float iconSizeX = 32 * Settings::Instance().getScaleFactor().x;
 	const float iconSizeY = 32 * Settings::Instance().getScaleFactor().y;
 
+	chooseRect.setSize(Vector2f(rectSizeX, rectSizeY + iconSizeY));
 	const float left = Settings::Instance().getResolution().x * 0.3f;
 	float x = left;
 	float y = Settings::Instance().getResolution().y * 0.1f;
@@ -38,20 +43,32 @@ ChooseMissionWindow::ChooseMissionWindow()
 		MissionView mission;
 		mission.rect.setPosition(x, y);
 		mission.rect.setSize(Vector2f(rectSizeX, rectSizeY));
+		mission.highlight.setPosition(x, y);
+		mission.highlight.setSize(Vector2f(rectSizeX, rectSizeY + iconSizeY));
+		mission.numberText.setFont(GlobalVariables::Instance().font());
+		mission.numberText.setCharacterSize(60);
+		mission.numberText.setScale(Settings::Instance().getScaleFactor());
+		mission.numberText.setString(to_string(i + 1));
+		mission.numberText.setPosition(x, y);
+		mission.numberText.setFillColor(Color::White);
+		mission.numberText.setOutlineColor(Color::Black);
+		mission.numberText.setOutlineThickness(3);
 		mission.enabled = false;
 		if (i <= maxCompletedLevel + 1)
 			mission.enabled = true;
 		if (mission.enabled)
-			mission.rect.setFillColor(Color::Red);
+			mission.highlight.setFillColor(Color::Transparent);
 		else
-			mission.rect.setFillColor(GlobalVariables::GrayColor);
+			mission.highlight.setFillColor(DISABLED_COLOR);
+
+		mission.rect.setTexture(&Engine::Instance().getMap(i)->icon);
 
 		unsigned int rating = getRating(i);
 		float posX = x;
 		for (unsigned int j = 0; j < STARS_COUNT; ++j)
 		{
 			RectangleShape starRect;
-			starRect.setFillColor(Color::Cyan);
+			starRect.setFillColor(Color::White);
 			starRect.setSize(Vector2f(iconSizeX, iconSizeY));
 			starRect.setPosition(posX, y + rectSizeY);
 			if (j >= rating)
@@ -84,9 +101,11 @@ void ChooseMissionWindow::paint(RenderWindow *window)
 	drawBackground(window);
 	for (const MissionView& mission : missions)
 	{
-		window->draw(mission.rect);
 		for(const RectangleShape& rect : mission.stars)
-			window->draw(rect);		
+			window->draw(rect);
+		window->draw(mission.rect);
+		window->draw(mission.numberText);
+		window->draw(mission.highlight);
 	}
 	window->draw(chooseRect);
 }
@@ -101,7 +120,7 @@ void ChooseMissionWindow::eventFilter(Event *event)
 //				  << mission.getGlobalBounds().width << " "
 //				  << mission.getGlobalBounds().height << " " << endl<<endl;
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
-			if (missions.at(mission).rect.getGlobalBounds().contains(event->mouseButton.x, event->mouseButton.y))
+			if (missions.at(mission).highlight.getGlobalBounds().contains(event->mouseButton.x, event->mouseButton.y))
 			{
 				if (missions.at(mission).enabled)
 					accept(mission);
@@ -111,7 +130,7 @@ void ChooseMissionWindow::eventFilter(Event *event)
 	{
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 		{
-			if (missions.at(mission).rect.getGlobalBounds().contains(event->mouseMove.x, event->mouseMove.y))
+			if (missions.at(mission).highlight.getGlobalBounds().contains(event->mouseMove.x, event->mouseMove.y))
 				currentMission = mission;
 		}
 		updateRect();
@@ -196,15 +215,15 @@ void ChooseMissionWindow::updateRect()
 	{
 		if (currentMission == mission)
 		{
-			missions[mission].rect.setFillColor(Color::Blue);
-			chooseRect.setPosition(missions[mission].rect.getPosition());
+			missions[mission].highlight.setFillColor(CURRENT_COLOR);
+			chooseRect.setPosition(missions[mission].highlight.getPosition());
 		}
 		else
 		{
 			if (missions.at(mission).enabled)
-				missions[mission].rect.setFillColor(Color::Red);
+				missions[mission].highlight.setFillColor(Color::Transparent);
 			else
-				missions[mission].rect.setFillColor(GlobalVariables::GrayColor);
+				missions[mission].highlight.setFillColor(DISABLED_COLOR);
 		}
 	}
 }

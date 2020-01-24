@@ -22,17 +22,12 @@ GameWindow::GameWindow()
 
 	m_state = PLAYING;
 
-	paused.setString(Language::Instance().translate(Language::PAUSED));
-	paused.setFillColor(Color::Blue);
-	paused.setStyle(Text::Bold);
-	paused.setCharacterSize(100);
-	paused.setScale(Settings::Instance().getScaleFactor());
-	paused.setFont(GlobalVariables::Instance().font());
-
 	menuImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::GAME_MENU_TEXTURE));
-	menuImg.setScale(Settings::Instance().getScaleFactor());
+	menuImg.setScale(Settings::Instance().getGameScaleFactor());
+
 	gameOverImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::GAME_OVER_TEXTURE));
 	gameOverImg.setScale(Settings::Instance().getScaleFactor());
+
 	finishedImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MISSON_COMPLETED_TEXTURE));
 	finishedImg.setScale(Settings::Instance().getScaleFactor());
 	//score
@@ -46,6 +41,13 @@ GameWindow::GameWindow()
 	addItem(Language::Instance().translate(Language::RESTART));
 	addItem(Language::Instance().translate(Language::EXIT_TO_MENU));
 	addItem(Language::Instance().translate(Language::EXIT_FROM_GAME));
+
+	for(Text& text : menus)
+	{
+		text.setCharacterSize(30);
+		text.setScale(Settings::Instance().getScaleFactor());
+	}
+
 	clock.restart();
 }
 
@@ -71,12 +73,8 @@ void GameWindow::paint(RenderWindow *window)
 	switch (m_state)
 	{
 	case PLAYING:
-
 		break;
 	case PAUSED:
-		window->draw(paused);
-		break;
-	case IN_MENU:
 		window->draw(menuImg);
 		Menu::paint(window);
 		break;
@@ -90,14 +88,13 @@ void GameWindow::paint(RenderWindow *window)
 		window->draw(gameOverImg);
 		window->draw(text);
 		break;
+	default:
+		break;
 	}
 }
 
 void GameWindow::eventFilter(Event *event)
 {
-	if (event->type == Event::KeyPressed && event->key.code == Keyboard::F10)
-		setState(IN_MENU);
-
 	switch (m_state)
 	{
 	case PLAYING:
@@ -126,15 +123,19 @@ void GameWindow::eventFilter(Event *event)
 	{
 		if (event->type == Event::KeyPressed)
 			if (event->key.code == Keyboard::Escape)
+			{
 				pause();
+				return;
+			}
 
 		if (event->type == Event::JoystickButtonPressed)
 			if (event->joystickButton.button == Controller::KEY_ESCAPE)
+			{
 				pause();
-	}
-		break;
-	case IN_MENU:
+				return;
+			}
 		Menu::eventFilter(event);
+	}
 		break;
 	case FINISHED:
 	case GAME_OVER:
@@ -175,9 +176,6 @@ void GameWindow::back()
 		break;
 	case PAUSED:
 		pause();
-		break;
-	case IN_MENU:
-		closeEvent();
 		break;
 	case FINISHED:
 	case GAME_OVER:
@@ -233,35 +231,20 @@ void GameWindow::setState(const GAME_STATE &state)
 //		Engine::Instance().window()->setMouseCursorVisible(false);
 		break;
 	case PAUSED:
-	{
+	{	
 		Vector2f pos = viewPos;
-		pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
-		pos.x -= paused.getGlobalBounds().width/2;
-		pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
-		pos.y -= paused.getGlobalBounds().height/2;
-		paused.setPosition(pos);
-	}
-		break;
-	case IN_MENU:
-	{
-		Vector2f pos = viewPos;
-		pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
-		pos.x -= menuImg.getGlobalBounds().width/2;
+		menuImg.setPosition(pos);
+
+		const float offsetY = 20.f * Settings::Instance().getScaleFactor().y;
+
+		pos.x += GlobalVariables::Instance().tileSize().x;
 		pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
 		pos.y -= menuImg.getGlobalBounds().height/2;
 
-		menuImg.setPosition(pos);
-
-		const float offsetX = 20.f * Settings::Instance().getScaleFactor().x;
-		const float offsetY = 20.f * Settings::Instance().getScaleFactor().y;
-
-		float posX = menuImg.getGlobalBounds().left + offsetX;
-		float posY = menuImg.getGlobalBounds().top;
-
 		for(Text& text : menus)
 		{
-			text.setPosition(posX, posY);
-			posY += text.getGlobalBounds().height + offsetY;
+			text.setPosition(pos);
+			pos.y += text.getGlobalBounds().height + offsetY;
 		}
 	}
 		break;

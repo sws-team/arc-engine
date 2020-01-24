@@ -22,7 +22,6 @@ protected:
 	void closeEvent() override;
 
 private:
-	Text paused;
 	Sprite menuImg;
 	Sprite finishedImg;
 	Sprite gameOverImg;
@@ -39,7 +38,6 @@ private:
 	{
 		PLAYING,
 		PAUSED,
-		IN_MENU,
 		FINISHED,
 		GAME_OVER
 	};
