@@ -37,24 +37,32 @@ void Camera::moveUp(float offset)
 {
 	view->move(0.f, -offset);
 	minimap->move(0.f, -offset);
+
+	checkBorders();
 }
 
 void Camera::moveDown(float offset)
 {
 	view->move(0.f, offset);
 	minimap->move(0.f, offset);
+
+	checkBorders();
 }
 
 void Camera::moveLeft(float offset)
 {
 	view->move(-offset, 0.f);
 	minimap->move(-offset, 0.f);
+
+	checkBorders();
 }
 
 void Camera::moveRight(float offset)
 {
 	view->move(offset, 0.f);
 	minimap->move(offset, 0.f);
+
+	checkBorders();
 }
 
 void Camera::moveUpByCell()
@@ -91,8 +99,7 @@ void Camera::zoomIn()
 {
 	if (zoomRatio > MAX_ZOOM)
 		return;
-	view->zoom(1 - ZOOM_RATIO);
-	minimap->zoom(1 - ZOOM_RATIO);
+	view->zoom(ZOOM_STEP);
 	zoomRatio++;
 }
 
@@ -100,16 +107,15 @@ void Camera::zoomOut()
 {
 	if (zoomRatio <= 0)
 		return;
-	view->zoom(1 + ZOOM_RATIO);
-	minimap->zoom(1 + ZOOM_RATIO);
+	view->zoom(1/ZOOM_STEP);
 	zoomRatio--;
+
+	checkBorders();
 }
 
 void Camera::resetZoom()
 {
 	view->setSize(Settings::Instance().getResolution().x, Settings::Instance().getResolution().y);
-//	view->zoom(Settings::GAME_SCALE);
-
 	minimap->setSize(Settings::Instance().getScaleFactor().x, Settings::Instance().getScaleFactor().y);
 	minimap->zoom(MINIMAP_ZOOM);
 	zoomRatio = 0;
@@ -169,4 +175,27 @@ void Camera::resetView()
 {
 	resetZoom();
 	view->setCenter(Settings::Instance().getResolution().x/2, Settings::Instance().getResolution().y/2);
+}
+
+void Camera::checkBorders()
+{
+	const Vector2f topLeft = Vector2f(view->getCenter().x - view->getSize().x/2,
+								view->getCenter().y - view->getSize().y/2);
+
+	if (topLeft.x < 0)
+		view->setCenter(view->getSize().x/2, view->getCenter().y);
+	if (topLeft.y < 0)
+		view->setCenter(view->getCenter().x, view->getSize().y/2);
+
+
+	const Vector2f bottomRight = Vector2f(view->getCenter().x + view->getSize().x/2,
+										  view->getCenter().y + view->getSize().y/2);
+
+	const float maxX = Engine::Instance().cursor()->getMaxCell().x * GlobalVariables::Instance().tileSize().x;
+	if (bottomRight.x > maxX)
+		view->setCenter(maxX - view->getSize().x/2, view->getCenter().y);
+
+	const float maxY = Engine::Instance().cursor()->getMaxCell().y * GlobalVariables::Instance().tileSize().y;
+	if (bottomRight.y > maxY)
+		view->setCenter(view->getCenter().x, maxY - view->getSize().y/2);
 }

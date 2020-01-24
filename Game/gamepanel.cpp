@@ -780,7 +780,7 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 
 void GamePanel::updateCursor()
 {
-	m_sprite.setColor(Engine::Instance().cursor()->inPanel()?Color::Red:Color::Green);
+//	m_sprite.setColor(Engine::Instance().cursor()->inPanel()?Color::Red:Color::Green);
 
 	if (!Engine::Instance().cursor()->inPanel())
 		return;

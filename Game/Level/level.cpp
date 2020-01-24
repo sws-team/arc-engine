@@ -171,9 +171,10 @@ void Level::startMission(const unsigned int n)
 										   gameMap->height * GlobalVariables::Instance().mapTileSize().y);
 	const Vector2f minPos = Vector2f(-DEAD_ZONE_SIZE * Settings::Instance().getScaleFactor().x,
 									 -DEAD_ZONE_SIZE * Settings::Instance().getScaleFactor().y);
-	deadZone.setPosition(minPos.x, minPos.y);
+	deadZone.setPosition(minPos);
 	deadZone.setSize(Vector2f(deadZoneSize.x + fabs(minPos.x) * 2,
 							  deadZoneSize.y + fabs(minPos.y) * 2));
+
 
 	smoke->setTime(gameMap->smoke.time);
 	smoke->setDuration(gameMap->smoke.duration);

@@ -29,13 +29,6 @@ public:
 	void zoomOut();
 	void resetZoom();
 
-//	void centerOnCursor(const Vector2i& cell);
-//	Vector2i currentCenterCell() const;
-
-	// count of cells on current view
-//	Vector2i currentViewCells() const;
-//	int topCell() const;
-//	FloatRect viewRect() const;
 	int viewTopCell() const;
 	int viewLeftCell() const;
 	int viewRightCell() const;
@@ -50,11 +43,13 @@ public:
 
 	void resetView();
 
+	void checkBorders();
+
 private:
     constexpr static float CAMERA_OFFSET = 4.f;
-	constexpr static int MAX_ZOOM = 10;
-	constexpr static float ZOOM_RATIO = 0.1f;
+	constexpr static int MAX_ZOOM = 20;
 	constexpr static float MINIMAP_ZOOM = 0.1f;
+	constexpr static float ZOOM_STEP = 0.95f;
 
 	View *view;
     View *minimap;
