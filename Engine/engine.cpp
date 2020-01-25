@@ -24,7 +24,6 @@
 #include "json/json.h"
 #include <tinyxml.h>
 #include <tinydir.h>
-#include <base64.h>
 
 #ifdef STEAM_API
 #include "isteamuserstats.h"
@@ -352,12 +351,6 @@ bool Engine::loadMap(const String &fileName)
 				gameMap->life = stod(propertyValue);
 			else if (propertyName == "money")
 				gameMap->money = stod(propertyValue);
-			else if (propertyName == "icon")
-			{
-				string imgString;
-				Base64::Decode(propertyValue, &imgString);
-				gameMap->icon.loadFromMemory(imgString.c_str(), imgString.size());
-			}
 
 			else if (propertyName == "smoke")
 				gameMap->smoke.enabled = static_cast<bool>(stoi(propertyValue));

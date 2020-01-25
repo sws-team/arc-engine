@@ -33,6 +33,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::START_TEXTURE, "images/ui/start.png");
 	addTexture(RESOURCES::END_TEXTURE, "images/ui/end.png");
 	addTexture(RESOURCES::FOCUS_ICON, "images/ui/focus.png");
+	addTexture(RESOURCES::LOCKED_ICON, "images/ui/locked.png");
 
 	addTexture(RESOURCES::ABILITY_BOMB, "images/ui/Panel/Abilities/ability_bomb.png");
 	addTexture(RESOURCES::ABILITY_FREEZE_BOMB, "images/ui/Panel/Abilities/ability_freeze_bomb.png");
@@ -77,6 +78,22 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::EXPLOSION, "images/Weapons/Effects/explosion.png");
 	addTexture(RESOURCES::DRAIN, "images/Weapons/Effects/drain.png");
 	addTexture(RESOURCES::REGRESS, "images/Weapons/Effects/regress.png");
+
+	addTexture(RESOURCES::MAP_ICON_MISSION_1, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_2, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_3, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_4, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_5, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_6, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_7, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_8, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_9, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_10, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_11, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_12, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_13, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_14, "images/maps_icons/mission2.png");
+	addTexture(RESOURCES::MAP_ICON_MISSION_15, "images/maps_icons/mission2.png");
 
 	addTexture(RESOURCES::ENEMY_SCORPION, "images/Enemies/scorpion.png");
 	addTexture(RESOURCES::ENEMY_CAR, "images/Enemies/car.png");

@@ -43,8 +43,6 @@ public:
 
 	vector<Layer> layers;
 
-    Texture icon;
-
 	vector<MOVE_DIRECTIONS> directions;
 	Vector2f spawnPos;
 	MOVE_DIRECTIONS spawnDirection;

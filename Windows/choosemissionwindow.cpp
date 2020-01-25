@@ -4,7 +4,6 @@
 #include "Engine/engine.h"
 #include "ResourcesManager/resourcesmanager.h"
 #include "controller.h"
-#include "Game/Level/map.h"
 
 const Color ChooseMissionWindow::DISABLED_COLOR = Color(0,34,52, 128);
 const Color ChooseMissionWindow::CURRENT_COLOR = Color(0,85,130, 128);
@@ -32,6 +31,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 	float y = Settings::Instance().getResolution().y * 0.1f;
 	const unsigned int maxCompletedLevel = Engine::Instance().maxCompletedLevel();
 
+	RESOURCES::TEXTURE_TYPE textureType = RESOURCES::MAP_ICON_MISSION_1;
 	for (unsigned int i = 0; i < Engine::Instance().missionsCount(); ++i)
 	{
 		if (i % COLUMN_COUNT == 0 && i != 0)
@@ -57,11 +57,17 @@ ChooseMissionWindow::ChooseMissionWindow()
 		if (i <= maxCompletedLevel + 1)
 			mission.enabled = true;
 		if (mission.enabled)
+		{
 			mission.highlight.setFillColor(Color::Transparent);
+			mission.rect.setTexture(&ResourcesManager::Instance().getTexture(textureType));
+		}
 		else
+		{
+			mission.rect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::LOCKED_ICON));
 			mission.highlight.setFillColor(DISABLED_COLOR);
+		}
 
-		mission.rect.setTexture(&Engine::Instance().getMap(i)->icon);
+		textureType = static_cast<RESOURCES::TEXTURE_TYPE>(static_cast<int>(textureType) + 1);
 
 		unsigned int rating = getRating(i);
 		float posX = x;
