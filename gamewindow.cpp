@@ -20,6 +20,9 @@ GameWindow::GameWindow()
 	Engine::Instance().camera()->init();
 	currentMenu = static_cast<GAME_MENU>(CONTINUE_GAME);
 
+	setColor(Color(64,224,208, 100));
+	setCurrentColor(Color(64,224,208));
+
 	m_state = PLAYING;
 
 	menuImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::GAME_MENU_TEXTURE));

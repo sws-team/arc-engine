@@ -45,7 +45,6 @@ public:
 	FloatRect getProgressRect() const;
 
 	void updateCursor();
-	void updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos);
 
 	void moveCursorLeft();
 	void moveCursorRight();
@@ -141,8 +140,6 @@ private:
 	constexpr static float PROGRESS_OFFSET = 20;
 	constexpr static float PROGRESS_WIDTH = 0.3f;
 
-	Sprite startSprite;
-	Sprite endSprite;
 	Text readyText;
 	bool waitBlink;
 	Timer blinkTimer;

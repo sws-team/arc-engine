@@ -180,6 +180,8 @@ void Camera::resetView()
 
 void Camera::checkBorders()
 {
+//	return;
+
 	const Vector2f topLeft = Vector2f(view->getCenter().x - view->getSize().x/2,
 								view->getCenter().y - view->getSize().y/2);
 

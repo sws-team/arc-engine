@@ -225,12 +225,6 @@ GamePanel::GamePanel() :
 	lifeIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::LIFE_ICON));
 	lifeIcon.setScale(scaleFactor);
 
-	startSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::START_TEXTURE));
-	startSprite.setScale(Settings::Instance().getScaleFactor());
-
-	endSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::END_TEXTURE));
-	endSprite.setScale(Settings::Instance().getScaleFactor());
-
 	waveText.setFont(GlobalVariables::Instance().font());
 	waveText.setFillColor(Color::Magenta);
 	waveText.setOutlineThickness(2);
@@ -273,12 +267,8 @@ void GamePanel::draw(RenderTarget * const target)
 	miniMapSprite.setTexture(rTexture.getTexture());
 
 	//draw
-	if(Engine::Instance().level()->getState() == Level::WAIT_READY)
-	{
-		target->draw(readyText);
-		target->draw(startSprite);
-		target->draw(endSprite);
-	}
+	if(Engine::Instance().level()->getState() == Level::WAIT_READY)	
+		target->draw(readyText);	
 
 	target->draw(miniMapSprite);
 	target->draw(m_sprite);
@@ -345,8 +335,7 @@ void GamePanel::update()
 		{
 			waitBlink = !waitBlink;
 			readyText.setFillColor(waitBlink?Color::Black:Color::Red);
-			startSprite.setColor(waitBlink?Color::Yellow:Color::Red);
-			endSprite.setColor(waitBlink?Color::Yellow:Color::Red);
+			Engine::Instance().level()->blinkStartEnd(waitBlink);
 		}
 	}
 	if (m_drain)
@@ -796,86 +785,6 @@ void GamePanel::updateCursor()
 		}
 	}
 	updateCurrentCursor();
-}
-
-void GamePanel::updateStartEndPos(const Vector2f &startPos, const Vector2f& endPos)
-{
-	const int centerX = Settings::Instance().getResolution().x/2;
-	const int centerY = Settings::Instance().getResolution().y/2;
-
-	const float x0 = 0;
-	const float x1 = Settings::Instance().getResolution().x;
-	const float y0 = 0;
-	const float y1 = Settings::Instance().getResolution().y;
-
-	Vector2f resultStartPos = Vector2f(startPos.x * Settings::Instance().getScaleFactor().x,
-									   startPos.y * Settings::Instance().getScaleFactor().y);
-	Vector2f resultEndPos = Vector2f(endPos.x * Settings::Instance().getScaleFactor().x,
-									 endPos.y * Settings::Instance().getScaleFactor().y);
-	//start
-	if (startPos.x <= x0 || startPos.x >= x1)
-	{
-		//x
-		if (startPos.x > centerX)
-		{
-			//-x
-			resultStartPos.x -= GlobalVariables::Instance().tileSize().x + GlobalVariables::Instance().mapTileSize().x;
-		}
-		else
-		{
-			//+x
-			resultStartPos.x += GlobalVariables::Instance().tileSize().x;
-		}
-		resultStartPos.y += GlobalVariables::Instance().mapTileSize().y;
-	}
-	else if (startPos.y <= y0 || startPos.y >= y1)
-	{
-		//y
-		if (startPos.y > centerY)
-		{
-			//-y
-			resultStartPos.y -= GlobalVariables::Instance().tileSize().y + GlobalVariables::Instance().mapTileSize().y;
-		}
-		else
-		{
-			//+y
-			resultStartPos.y += GlobalVariables::Instance().tileSize().y;
-		}
-		resultStartPos.x += GlobalVariables::Instance().mapTileSize().x;
-	}
-	//end
-	if (endPos.x <= x0 || endPos.x >= x1)
-	{
-		//x
-		if (endPos.x < centerX)
-		{
-			//-x
-			resultEndPos.x -= GlobalVariables::Instance().mapTileSize().x + GlobalVariables::Instance().tileSize().x;
-		}
-		else
-		{
-			//+x
-			resultEndPos.x += GlobalVariables::Instance().mapTileSize().x;
-		}
-		resultEndPos.y -= GlobalVariables::Instance().mapTileSize().y + GlobalVariables::Instance().tileSize().y;
-	}
-	else if (endPos.y <= y0 || endPos.y >= y1)
-	{
-		//y
-		if (endPos.y > centerY)
-		{
-			//-y
-			resultEndPos.y -= GlobalVariables::Instance().mapTileSize().y + GlobalVariables::Instance().mapTileSize().y;
-		}
-		else
-		{
-			//+y
-			resultEndPos.y += GlobalVariables::Instance().tileSize().y;
-		}
-		resultEndPos.x += GlobalVariables::Instance().mapTileSize().x;
-	}
-	startSprite.setPosition(resultStartPos);
-	endSprite.setPosition(resultEndPos);
 }
 
 void GamePanel::moveCursorLeft()

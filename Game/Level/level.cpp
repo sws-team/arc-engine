@@ -68,6 +68,12 @@ Level::Level() :
 	upgradeCostText.setCharacterSize(fieldIconsCharacterSize);
 	upgradeCostText.setScale(Settings::Instance().getScaleFactor());
 
+	startSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::START_TEXTURE));
+	startSprite.setScale(Settings::Instance().getScaleFactor());
+
+	endSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::END_TEXTURE));
+	endSprite.setScale(Settings::Instance().getScaleFactor());
+
 	updateCurrentTower();
 }
 
@@ -88,6 +94,11 @@ void Level::draw(RenderTarget *const target)
 	target->draw(deadZone);
 	target->draw(spawnRect);
 	target->draw(endRect);
+	if(m_state == Level::WAIT_READY)
+	{
+		target->draw(startSprite);
+		target->draw(endSprite);
+	}
 	Engine::Instance().instructions()->draw(target);
 
 	Engine::Instance().window()->setView(Engine::Instance().window()->getDefaultView());
@@ -152,8 +163,8 @@ void Level::startMission(const unsigned int n)
 
 	Engine::Instance().cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
 	Engine::Instance().panel()->initMission(n);
-	Engine::Instance().panel()->updateStartEndPos(gameMap->spawnPos,
-												  Vector2f(gameMap->endRect.left, gameMap->endRect.top));
+	updateStartEndPos(gameMap->spawnPos, Vector2f(gameMap->endRect.left, gameMap->endRect.top));
+
 	if (n != 0)
 		Engine::Instance().instructions()->skip();
 	Engine::Instance().cursor()->initCell();
@@ -388,6 +399,12 @@ Tower *Level::selectedTower() const
 	return m_selectedTower;
 }
 
+void Level::blinkStartEnd(bool state)
+{
+	startSprite.setColor(state?Color::Yellow:Color::Red);
+	endSprite.setColor(state?Color::Yellow:Color::Red);
+}
+
 void Level::checkRespawn()
 {
 	if (abilities->stopAblity->isActive())
@@ -541,6 +558,86 @@ void Level::setSelectedTower(Tower *tower)
 {
 	m_selectedTower = tower;
 	updateCurrentTower();
+}
+
+void Level::updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos)
+{
+	const int centerX = Settings::Instance().getResolution().x/2;
+	const int centerY = Settings::Instance().getResolution().y/2;
+
+	const float x0 = 0;
+	const float x1 = Settings::Instance().getResolution().x;
+	const float y0 = 0;
+	const float y1 = Settings::Instance().getResolution().y;
+
+	Vector2f resultStartPos = Vector2f(startPos.x * Settings::Instance().getScaleFactor().x,
+									   startPos.y * Settings::Instance().getScaleFactor().y);
+	Vector2f resultEndPos = Vector2f(endPos.x * Settings::Instance().getScaleFactor().x,
+									 endPos.y * Settings::Instance().getScaleFactor().y);
+	//start
+	if (startPos.x <= x0 || startPos.x >= x1)
+	{
+		//x
+		if (startPos.x > centerX)
+		{
+			//-x
+			resultStartPos.x -= GlobalVariables::Instance().tileSize().x + GlobalVariables::Instance().mapTileSize().x;
+		}
+		else
+		{
+			//+x
+			resultStartPos.x += GlobalVariables::Instance().tileSize().x;
+		}
+		resultStartPos.y += GlobalVariables::Instance().mapTileSize().y;
+	}
+	else if (startPos.y <= y0 || startPos.y >= y1)
+	{
+		//y
+		if (startPos.y > centerY)
+		{
+			//-y
+			resultStartPos.y -= GlobalVariables::Instance().tileSize().y + GlobalVariables::Instance().mapTileSize().y;
+		}
+		else
+		{
+			//+y
+			resultStartPos.y += GlobalVariables::Instance().tileSize().y;
+		}
+		resultStartPos.x += GlobalVariables::Instance().mapTileSize().x;
+	}
+	//end
+	if (endPos.x <= x0 || endPos.x >= x1)
+	{
+		//x
+		if (endPos.x < centerX)
+		{
+			//-x
+			resultEndPos.x += GlobalVariables::Instance().mapTileSize().x + GlobalVariables::Instance().tileSize().x;
+		}
+		else
+		{
+			//+x
+			resultEndPos.x -= GlobalVariables::Instance().mapTileSize().x + GlobalVariables::Instance().tileSize().x;
+		}
+		resultEndPos.y += GlobalVariables::Instance().mapTileSize().y;
+	}
+	else if (endPos.y <= y0 || endPos.y >= y1)
+	{
+		//y
+		if (endPos.y > centerY)
+		{
+			//-y
+			resultEndPos.y -= GlobalVariables::Instance().mapTileSize().y + GlobalVariables::Instance().mapTileSize().y;
+		}
+		else
+		{
+			//+y
+			resultEndPos.y += GlobalVariables::Instance().tileSize().y;
+		}
+		resultEndPos.x += GlobalVariables::Instance().mapTileSize().x;
+	}
+	startSprite.setPosition(resultStartPos);
+	endSprite.setPosition(resultEndPos);
 }
 
 unsigned int Level::getPowerTowersCount() const

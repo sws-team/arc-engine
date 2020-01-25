@@ -184,7 +184,7 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Sortir du jeu"));
 
 	//settings
-	lang.insert(pair<TR_TEXT, wstring>(SETTINGS, L"Settings"));
+	lang.insert(pair<TR_TEXT, wstring>(SETTINGS, L"Paramètres"));
 	lang.insert(pair<TR_TEXT, wstring>(AUDIO, L"Audio"));
 	lang.insert(pair<TR_TEXT, wstring>(SOUND, L"Sons"));
 	lang.insert(pair<TR_TEXT, wstring>(MUSIC, L"Musique"));
@@ -197,12 +197,12 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(CANCEL, L"Rejet"));
 
 	//panel
-	lang.insert(pair<TR_TEXT, wstring>(ABILITY_VENOM, L"Poison"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_VENOM, L"Acide"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_BOMB, L"Bombe"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_FREEZE_BOMB, L"Bombe-glace"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Tour à vitesse d'attaque augmentée"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_DAMAGE, L"Tour aux dommages augmentés"));
-	lang.insert(pair<TR_TEXT, wstring>(ABILITY_STOP, L"stop"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_STOP, L"Stopper"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_BASE, L"Tour de base"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_POWER, L"Tour de production d'énergie"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_ROCKET, L"Tour réacteur-fusée"));
@@ -212,22 +212,22 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(LEVEL, L"Niveau"));
 	lang.insert(pair<TR_TEXT, wstring>(DAMAGE_PER_SECOND, L"Dommages"));
 	lang.insert(pair<TR_TEXT, wstring>(RADIUS, L"Rayon"));
-	lang.insert(pair<TR_TEXT, wstring>(KILLS, L"Kills"));
+	lang.insert(pair<TR_TEXT, wstring>(KILLS, L"Ennemis tués"));
 	lang.insert(pair<TR_TEXT, wstring>(COST, L"Prix"));
 	lang.insert(pair<TR_TEXT, wstring>(SELL_COST, L"Prix de la vente"));
-	lang.insert(pair<TR_TEXT, wstring>(WAVE, L"Wave"));
-	lang.insert(pair<TR_TEXT, wstring>(BASE_TOWER_DESCRIPTION, L"Has a cumulative effect of reducing enemy armor"));
-	lang.insert(pair<TR_TEXT, wstring>(FREEZE_TOWER_DESCRIPTION, L"Slows down the enemy"));
-	lang.insert(pair<TR_TEXT, wstring>(POWER_TOWER_DESCRIPTION, L"Produces resources"));
-	lang.insert(pair<TR_TEXT, wstring>(ROCKET_TOWER_DESCRIPTION, L"Rocket explosion deals area damage"));
-	lang.insert(pair<TR_TEXT, wstring>(LASER_TOWER_DESCRIPTION, L"Attacks continuously"));
-	lang.insert(pair<TR_TEXT, wstring>(IMPROVED_TOWER_DESCRIPTION, L"Most effective in all stats"));
-	lang.insert(pair<TR_TEXT, wstring>(BOMB_ABILITY_DESCRIPTION, L"Deals damage instantly"));
-	lang.insert(pair<TR_TEXT, wstring>(FREEZE_BOMB_ABILITY_DESCRIPTION, L"Slows down enemies instantly"));
-	lang.insert(pair<TR_TEXT, wstring>(VENOM_ABILITY_DESCRIPTION, L"Continuously deals damage in an area."));
-	lang.insert(pair<TR_TEXT, wstring>(INC_DMG_ABILITY_DESCRIPTION, L"Temporarily increases tower damage"));
-	lang.insert(pair<TR_TEXT, wstring>(INC_AS_ABILITY_DESCRIPTION, L"Temporarily increases tower attack speed"));
-	lang.insert(pair<TR_TEXT, wstring>(STOP_ABILITY_DESCRIPTION, L"Stops the movement of all enemies"));
+	lang.insert(pair<TR_TEXT, wstring>(WAVE, L"Vague"));
+	lang.insert(pair<TR_TEXT, wstring>(BASE_TOWER_DESCRIPTION, L"Effet cumulatif de réduire la cuirasse d'un ennemi"));
+	lang.insert(pair<TR_TEXT, wstring>(FREEZE_TOWER_DESCRIPTION, L"Ralentissement d'un ennemi"));
+	lang.insert(pair<TR_TEXT, wstring>(POWER_TOWER_DESCRIPTION, L"Extraire les ressourses"));
+	lang.insert(pair<TR_TEXT, wstring>(ROCKET_TOWER_DESCRIPTION, L"Dommage d'une certaine territoire"));
+	lang.insert(pair<TR_TEXT, wstring>(LASER_TOWER_DESCRIPTION, L"Attaquer continuellement"));
+	lang.insert(pair<TR_TEXT, wstring>(IMPROVED_TOWER_DESCRIPTION, L"Attaquer avec les meilleurs indices"));
+	lang.insert(pair<TR_TEXT, wstring>(BOMB_ABILITY_DESCRIPTION, L"Exploision instantanée"));
+	lang.insert(pair<TR_TEXT, wstring>(FREEZE_BOMB_ABILITY_DESCRIPTION, L"Ralentissement instantané d'un ennemi"));
+	lang.insert(pair<TR_TEXT, wstring>(VENOM_ABILITY_DESCRIPTION, L"Dommages prolongé d'une certaine territoire"));
+	lang.insert(pair<TR_TEXT, wstring>(INC_DMG_ABILITY_DESCRIPTION, L"Amélioration temporaire des dommages causés"));
+	lang.insert(pair<TR_TEXT, wstring>(INC_AS_ABILITY_DESCRIPTION, L"Accélération temporaire des tirs"));
+	lang.insert(pair<TR_TEXT, wstring>(STOP_ABILITY_DESCRIPTION, L"Stopper tous les ennemis"));
 
 	//game
 	lang.insert(pair<TR_TEXT, wstring>(PAUSED, L"Pause"));

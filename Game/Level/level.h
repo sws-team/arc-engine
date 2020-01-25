@@ -95,6 +95,8 @@ public:
 	void updateCurrentTower();
 
 	Tower *selectedTower() const;
+
+	void blinkStartEnd(bool state);
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();
@@ -169,6 +171,11 @@ private:
 	ACTION_STATE isFieldButtons(const Vector2f& pos) const;
 	Tower *m_selectedTower;
 	void setSelectedTower(Tower* tower);
+
+	Sprite startSprite;
+	Sprite endSprite;
+
+	void updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos);
 };
 
 #endif // LEVEL_H
