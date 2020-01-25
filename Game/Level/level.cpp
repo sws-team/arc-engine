@@ -763,7 +763,6 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 	Tower *selectedTower = m_selectedTower;
 	if (m_selectedTower != nullptr)
 		setSelectedTower(nullptr);
-
 	if (inPanel)
 	{
 		const ACTION_STATE currentState = Engine::Instance().panel()->getCurrentIcon();
@@ -871,7 +870,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		switch (m_actionState)
 		{
 		case READY:
-		{
+		{			
 			Tower* tower = getTowerAtPos(pos);
 			if (tower != nullptr)
 			{
@@ -945,11 +944,11 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		case UPGRADE:
 		{
 			if (selectedTower == nullptr)
-				return;
+				break;
 
 			const float cost = Engine::Instance().panel()->getTowerUpgradeCost(selectedTower);
 			if (money < cost)
-				return;
+				break;
 
 			if (selectedTower->level() < 3)
 			{

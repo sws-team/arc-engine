@@ -48,7 +48,7 @@ GamePanel::GamePanel() :
 	cursorSprite.setScale(scaleFactor);
 
 	currentIconRect.setSize(Vector2f(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE));
-	currentIconRect.setFillColor(Color(160,69,34,100));
+	currentIconRect.setFillColor(Color(34,69,160,100));
 	currentIconRect.setScale(scaleFactor);
 
 	abilityBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_BOMB));
@@ -523,7 +523,7 @@ Vector2f GamePanel::updatePos()
 
 	//text
 	pos.y = nullPos.y + 24 * scaleFactor.y + panel_offset;
-	info.setPosition(pos);
+	info.setPosition(pos.x + 8 * scaleFactor.x, pos.y - 6 * scaleFactor.y);
 	pos.x += text_offset;
 	pos.x += left_offset;
 

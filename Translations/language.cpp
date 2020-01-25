@@ -40,14 +40,12 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(CANCEL, L"Отмена"));
 
 	//panel
-	lang.insert(pair<TR_TEXT, wstring>(ABILITY_VENOM, L"Яд"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_VENOM, L"Кислота"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_BOMB, L"Бомба"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_FREEZE_BOMB, L"Морозная бомба"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Ускорение башни"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_DAMAGE, L"Увеличение урона башни"));
-	lang.insert(pair<TR_TEXT, wstring>(ABILITY_STOP, L"stop"));
-	lang.insert(pair<TR_TEXT, wstring>(SELL, L"Продать"));
-	lang.insert(pair<TR_TEXT, wstring>(UPGRADE, L"Улучшить"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_STOP, L"Остановка"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_BASE, L"Обычная башня"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_POWER, L"Энергетическая башня"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_ROCKET, L"Ракетная башня"));
@@ -61,18 +59,18 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(COST, L"Цена"));
 	lang.insert(pair<TR_TEXT, wstring>(SELL_COST, L"Цена продажи"));
 	lang.insert(pair<TR_TEXT, wstring>(WAVE, L"Волна"));
-	lang.insert(pair<TR_TEXT, wstring>(BASE_TOWER_DESCRIPTION, L"Base tower"));
-	lang.insert(pair<TR_TEXT, wstring>(FREEZE_TOWER_DESCRIPTION, L"This tower freeze traget"));
-	lang.insert(pair<TR_TEXT, wstring>(POWER_TOWER_DESCRIPTION, L"Energy tower to gain resources"));
-	lang.insert(pair<TR_TEXT, wstring>(ROCKET_TOWER_DESCRIPTION, L"Aoe explosion"));
-	lang.insert(pair<TR_TEXT, wstring>(LASER_TOWER_DESCRIPTION, L"Laser automaticly hit target"));
-	lang.insert(pair<TR_TEXT, wstring>(IMPROVED_TOWER_DESCRIPTION, L"Improved version of base tower"));
-	lang.insert(pair<TR_TEXT, wstring>(BOMB_ABILITY_DESCRIPTION, L"Big explosion"));
-	lang.insert(pair<TR_TEXT, wstring>(FREEZE_BOMB_ABILITY_DESCRIPTION, L"Instantly freeze area"));
-	lang.insert(pair<TR_TEXT, wstring>(VENOM_ABILITY_DESCRIPTION, L"Venom on area"));
-	lang.insert(pair<TR_TEXT, wstring>(INC_DMG_ABILITY_DESCRIPTION, L"Increase damage on tower"));
-	lang.insert(pair<TR_TEXT, wstring>(INC_AS_ABILITY_DESCRIPTION, L"Increase attack speed on tower"));
-	lang.insert(pair<TR_TEXT, wstring>(STOP_ABILITY_DESCRIPTION, L"Остановка"));
+	lang.insert(pair<TR_TEXT, wstring>(BASE_TOWER_DESCRIPTION, L"Имеет кумулятивный эффект\nпо снижению вражеской брони"));
+	lang.insert(pair<TR_TEXT, wstring>(FREEZE_TOWER_DESCRIPTION, L"Замедляет врага"));
+	lang.insert(pair<TR_TEXT, wstring>(POWER_TOWER_DESCRIPTION, L"Производит ресурсы"));
+	lang.insert(pair<TR_TEXT, wstring>(ROCKET_TOWER_DESCRIPTION, L"Взрыв от ракеты наносит урон\nпо площади"));
+	lang.insert(pair<TR_TEXT, wstring>(LASER_TOWER_DESCRIPTION, L"Атакует непрерывно"));
+	lang.insert(pair<TR_TEXT, wstring>(IMPROVED_TOWER_DESCRIPTION, L"Наиболее эффективна по всем\nпоказателям"));
+	lang.insert(pair<TR_TEXT, wstring>(BOMB_ABILITY_DESCRIPTION, L"Наносит урон мгновенно"));
+	lang.insert(pair<TR_TEXT, wstring>(FREEZE_BOMB_ABILITY_DESCRIPTION, L"Замедляет врагов мгновенно"));
+	lang.insert(pair<TR_TEXT, wstring>(VENOM_ABILITY_DESCRIPTION, L"Непрерывно наносит урон\nв области"));
+	lang.insert(pair<TR_TEXT, wstring>(INC_DMG_ABILITY_DESCRIPTION, L"Временно увеличивает урон\nбашни"));
+	lang.insert(pair<TR_TEXT, wstring>(INC_AS_ABILITY_DESCRIPTION, L"Временно увеличивает скорость\nатаки башни"));
+	lang.insert(pair<TR_TEXT, wstring>(STOP_ABILITY_DESCRIPTION, L"Останавливает движение всех\nврагов"));
 
 	//game
 	lang.insert(pair<TR_TEXT, wstring>(PAUSED, L"Пауза"));
@@ -123,11 +121,9 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_VENOM, L"Venom"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_BOMB, L"Bomb"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_FREEZE_BOMB, L"Freeze bomb"));
-	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"ic tower att speed"));
-	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_DAMAGE, L"inc tower dmg"));
-	lang.insert(pair<TR_TEXT, wstring>(ABILITY_STOP, L"stop"));
-	lang.insert(pair<TR_TEXT, wstring>(SELL, L"Sell"));
-	lang.insert(pair<TR_TEXT, wstring>(UPGRADE, L"Updgrade"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Speed up tower"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_DAMAGE, L"Strengthen tower"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY_STOP, L"Stop all"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_BASE, L"Tower base"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_POWER, L"Tower power"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_ROCKET, L"Tower rocket"));
@@ -141,18 +137,18 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(COST, L"Cost"));
 	lang.insert(pair<TR_TEXT, wstring>(SELL_COST, L"Sell cost"));
 	lang.insert(pair<TR_TEXT, wstring>(WAVE, L"Wave"));
-	lang.insert(pair<TR_TEXT, wstring>(BASE_TOWER_DESCRIPTION, L"Base tower"));
-	lang.insert(pair<TR_TEXT, wstring>(FREEZE_TOWER_DESCRIPTION, L"This tower freeze traget"));
-	lang.insert(pair<TR_TEXT, wstring>(POWER_TOWER_DESCRIPTION, L"Energy tower to gain resources"));
-	lang.insert(pair<TR_TEXT, wstring>(ROCKET_TOWER_DESCRIPTION, L"Aoe explosion"));
-	lang.insert(pair<TR_TEXT, wstring>(LASER_TOWER_DESCRIPTION, L"Laser automaticly hit target"));
-	lang.insert(pair<TR_TEXT, wstring>(IMPROVED_TOWER_DESCRIPTION, L"Improved version of base tower"));
-	lang.insert(pair<TR_TEXT, wstring>(BOMB_ABILITY_DESCRIPTION, L"Big explosion"));
-	lang.insert(pair<TR_TEXT, wstring>(FREEZE_BOMB_ABILITY_DESCRIPTION, L"Instantly freeze area"));
-	lang.insert(pair<TR_TEXT, wstring>(VENOM_ABILITY_DESCRIPTION, L"Venom on area"));
-	lang.insert(pair<TR_TEXT, wstring>(INC_DMG_ABILITY_DESCRIPTION, L"Increase damage on tower"));
-	lang.insert(pair<TR_TEXT, wstring>(INC_AS_ABILITY_DESCRIPTION, L"Increase attack speed on tower"));
-	lang.insert(pair<TR_TEXT, wstring>(STOP_ABILITY_DESCRIPTION, L"Stop enemies"));
+	lang.insert(pair<TR_TEXT, wstring>(BASE_TOWER_DESCRIPTION, L"Has a cumulative effect of reducing enemy armor"));
+	lang.insert(pair<TR_TEXT, wstring>(FREEZE_TOWER_DESCRIPTION, L"Slows down the enemy"));
+	lang.insert(pair<TR_TEXT, wstring>(POWER_TOWER_DESCRIPTION, L"Produces resources"));
+	lang.insert(pair<TR_TEXT, wstring>(ROCKET_TOWER_DESCRIPTION, L"Rocket explosion deals area damage"));
+	lang.insert(pair<TR_TEXT, wstring>(LASER_TOWER_DESCRIPTION, L"Attacks continuously"));
+	lang.insert(pair<TR_TEXT, wstring>(IMPROVED_TOWER_DESCRIPTION, L"Most effective in all stats"));
+	lang.insert(pair<TR_TEXT, wstring>(BOMB_ABILITY_DESCRIPTION, L"Deals damage instantly"));
+	lang.insert(pair<TR_TEXT, wstring>(FREEZE_BOMB_ABILITY_DESCRIPTION, L"Slows down enemies instantly"));
+	lang.insert(pair<TR_TEXT, wstring>(VENOM_ABILITY_DESCRIPTION, L"Continuously deals damage in an area."));
+	lang.insert(pair<TR_TEXT, wstring>(INC_DMG_ABILITY_DESCRIPTION, L"Temporarily increases tower damage"));
+	lang.insert(pair<TR_TEXT, wstring>(INC_AS_ABILITY_DESCRIPTION, L"Temporarily increases tower attack speed"));
+	lang.insert(pair<TR_TEXT, wstring>(STOP_ABILITY_DESCRIPTION, L"Stops the movement of all enemies"));
 
 	//game
 	lang.insert(pair<TR_TEXT, wstring>(PAUSED, L"Paused"));
@@ -207,8 +203,6 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Tour à vitesse d'attaque augmentée"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_INCREASE_TOWER_DAMAGE, L"Tour aux dommages augmentés"));
 	lang.insert(pair<TR_TEXT, wstring>(ABILITY_STOP, L"stop"));
-	lang.insert(pair<TR_TEXT, wstring>(SELL, L"Vendre"));
-	lang.insert(pair<TR_TEXT, wstring>(UPGRADE, L"Améliorer"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_BASE, L"Tour de base"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_POWER, L"Tour de production d'énergie"));
 	lang.insert(pair<TR_TEXT, wstring>(TOWER_ROCKET, L"Tour réacteur-fusée"));
@@ -222,18 +216,18 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(COST, L"Prix"));
 	lang.insert(pair<TR_TEXT, wstring>(SELL_COST, L"Prix de la vente"));
 	lang.insert(pair<TR_TEXT, wstring>(WAVE, L"Wave"));
-	lang.insert(pair<TR_TEXT, wstring>(BASE_TOWER_DESCRIPTION, L"Base tower"));
-	lang.insert(pair<TR_TEXT, wstring>(FREEZE_TOWER_DESCRIPTION, L"This tower freeze traget"));
-	lang.insert(pair<TR_TEXT, wstring>(POWER_TOWER_DESCRIPTION, L"Energy tower to gain resources"));
-	lang.insert(pair<TR_TEXT, wstring>(ROCKET_TOWER_DESCRIPTION, L"Aoe explosion"));
-	lang.insert(pair<TR_TEXT, wstring>(LASER_TOWER_DESCRIPTION, L"Laser automaticly hit target"));
-	lang.insert(pair<TR_TEXT, wstring>(IMPROVED_TOWER_DESCRIPTION, L"Improved version of base tower"));
-	lang.insert(pair<TR_TEXT, wstring>(BOMB_ABILITY_DESCRIPTION, L"Big explosion"));
-	lang.insert(pair<TR_TEXT, wstring>(FREEZE_BOMB_ABILITY_DESCRIPTION, L"Instantly freeze area"));
-	lang.insert(pair<TR_TEXT, wstring>(VENOM_ABILITY_DESCRIPTION, L"Venom on area"));
-	lang.insert(pair<TR_TEXT, wstring>(INC_DMG_ABILITY_DESCRIPTION, L"Increase damage on tower"));
-	lang.insert(pair<TR_TEXT, wstring>(INC_AS_ABILITY_DESCRIPTION, L"Increase attack speed on tower"));
-	lang.insert(pair<TR_TEXT, wstring>(STOP_ABILITY_DESCRIPTION, L"Stop enemies"));
+	lang.insert(pair<TR_TEXT, wstring>(BASE_TOWER_DESCRIPTION, L"Has a cumulative effect of reducing enemy armor"));
+	lang.insert(pair<TR_TEXT, wstring>(FREEZE_TOWER_DESCRIPTION, L"Slows down the enemy"));
+	lang.insert(pair<TR_TEXT, wstring>(POWER_TOWER_DESCRIPTION, L"Produces resources"));
+	lang.insert(pair<TR_TEXT, wstring>(ROCKET_TOWER_DESCRIPTION, L"Rocket explosion deals area damage"));
+	lang.insert(pair<TR_TEXT, wstring>(LASER_TOWER_DESCRIPTION, L"Attacks continuously"));
+	lang.insert(pair<TR_TEXT, wstring>(IMPROVED_TOWER_DESCRIPTION, L"Most effective in all stats"));
+	lang.insert(pair<TR_TEXT, wstring>(BOMB_ABILITY_DESCRIPTION, L"Deals damage instantly"));
+	lang.insert(pair<TR_TEXT, wstring>(FREEZE_BOMB_ABILITY_DESCRIPTION, L"Slows down enemies instantly"));
+	lang.insert(pair<TR_TEXT, wstring>(VENOM_ABILITY_DESCRIPTION, L"Continuously deals damage in an area."));
+	lang.insert(pair<TR_TEXT, wstring>(INC_DMG_ABILITY_DESCRIPTION, L"Temporarily increases tower damage"));
+	lang.insert(pair<TR_TEXT, wstring>(INC_AS_ABILITY_DESCRIPTION, L"Temporarily increases tower attack speed"));
+	lang.insert(pair<TR_TEXT, wstring>(STOP_ABILITY_DESCRIPTION, L"Stops the movement of all enemies"));
 
 	//game
 	lang.insert(pair<TR_TEXT, wstring>(PAUSED, L"Pause"));

@@ -3,6 +3,7 @@
 #include "settings.h"
 #include "globalvariables.h"
 #include "Engine/engine.h"
+#include "Game/gamepanel.h"
 
 Camera::Camera()
 	: view(nullptr)
@@ -195,7 +196,8 @@ void Camera::checkBorders()
 	if (bottomRight.x > maxX)
 		view->setCenter(maxX - view->getSize().x/2, view->getCenter().y);
 
-	const float maxY = Engine::Instance().cursor()->getMaxCell().y * GlobalVariables::Instance().tileSize().y;
+	const float maxY = (Engine::Instance().cursor()->getMaxCell().y + Engine::Instance().panel()->cellsCount() - 1)
+			* GlobalVariables::Instance().tileSize().y;
 	if (bottomRight.y > maxY)
 		view->setCenter(view->getCenter().x, maxY - view->getSize().y/2);
 }
