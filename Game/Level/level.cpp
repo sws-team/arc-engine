@@ -75,6 +75,33 @@ Level::Level() :
 	endSprite.setScale(Settings::Instance().getScaleFactor());
 
 	updateCurrentTower();
+
+
+
+
+//	// It is important to set repeated to true to enable scrolling upwards
+//	distortionMap.setRepeated(true);
+
+//	// Setting smooth to true lets us use small maps even on larger images
+//	distortionMap.setSmooth(true);
+
+//	if (!distortionMap.loadFromFile("images/noise.png"))
+//	{
+//		err() << "Failed to load distortion map, exiting..." << std::endl;
+//		return;
+//	}
+//	if (!mapShader.loadFromFile("images/heat_shader.vs", "images/heat_shader.fs"))
+//	{
+//		err() << "Failed to load shader, exiting..." << std::endl;
+//		return;
+//	}
+//	float distortionFactor = .04f;
+//	float riseFactor = 1.6f;
+//	mapShader.setParameter("currentTexture", Shader::CurrentTexture);
+//	mapShader.setParameter("distortionMapTexture", distortionMap);
+//	mapShader.setParameter("distortionFactor", distortionFactor);
+//	mapShader.setParameter("riseFactor", riseFactor);
+//	flameClock.restart();
 }
 
 Level::~Level()
@@ -123,6 +150,7 @@ void Level::update()
 				tower->action(enemies);
 			tower->update();
 		}
+		updateUpgrade();
 		shake->update();
 		mapExplosion->update();
 		moneyDrain->update();
@@ -140,8 +168,10 @@ void Level::update()
 		for(Enemy* enemy : enemies)
 			enemy->update();
 		showAnimations();
+//		mapShader.setParameter("time", flameClock.getElapsedTime().asSeconds());
 	}
-
+	for(GameObject *object : objects)
+		object->update();
 	Engine::Instance().panel()->updatePanel();
 }
 
@@ -207,6 +237,16 @@ void Level::startMission(const unsigned int n)
 	mapExplosion->init();
 	moneyDrain->init();
 	towersRegress->init();
+
+	for(const Map::MapObject& mapObject : gameMap->objects)
+	{
+		Vector2f startPos = mapObject.pos;
+		startPos.x *= Settings::Instance().getScaleFactor().x;
+		startPos.y *= Settings::Instance().getScaleFactor().y;
+		GameObject *object = Engine::Instance().createObject(mapObject.type, startPos);
+		if (object != nullptr)
+			objects.push_back(object);
+	}
 }
 
 void Level::clear()
@@ -232,6 +272,10 @@ void Level::clear()
 	for(Enemy *enemy : enemies)
 		delete enemy;
 	enemies.clear();
+
+	for(GameObject *object : objects)
+		delete object;
+	objects.clear();
 
 	for(Animation *animation : effects)
 		delete animation;
@@ -336,62 +380,42 @@ float Level::getStartLife() const
 
 void Level::updateCurrentTower()
 {
-	Color color;
-	int level = 0;
 	if (m_selectedTower == nullptr)
-		color = GlobalVariables::GrayColor;
-	else
+		return;
+
+	Vector2f optionsPos = m_selectedTower->pos();
+	optionsPos.x -= GlobalVariables::Instance().tileSize().x;
+	sellSprite.setPosition(optionsPos);
+	const Vector2i towerCell = Engine::Instance().camera()->posToCell(m_selectedTower->pos());
+	if (towerCell.x == 0)
 	{
-		color = Color::White;
-		level = m_selectedTower->level();
+		if (towerCell.y == 0)
+			sellSprite.setPosition(optionsPos.x + GlobalVariables::Instance().tileSize().x,
+								   optionsPos.y + GlobalVariables::Instance().tileSize().x);
+		else
+			sellSprite.setPosition(optionsPos.x + GlobalVariables::Instance().tileSize().x,
+								   optionsPos.y - GlobalVariables::Instance().tileSize().x);
 	}
-
-	sellSprite.setColor(color);
-	upgradeSprite.setColor(color);
-
-	bool canUpgrade = false;
-	if (m_selectedTower != nullptr)
+	optionsPos.x += GlobalVariables::Instance().tileSize().x * 2;
+	upgradeSprite.setPosition(optionsPos);
+	if (towerCell.x == Engine::Instance().cursor()->getMaxCell().x - 1)
 	{
-		const float cost = Engine::Instance().panel()->getTowerUpgradeCost(m_selectedTower);
-		canUpgrade = Engine::Instance().level()->getMoneyCount() < cost;
-
-//		const Vector2i pixelPos = Engine::Instance().window()->mapCoordsToPixel(m_selectedTower->pos(), *Engine::Instance().camera()->getView());
-//		Vector2f optionsPos = Vector2f(pixelPos.x, pixelPos.y);
-		Vector2f optionsPos = m_selectedTower->pos();
-		optionsPos.x -= GlobalVariables::Instance().tileSize().x;
-		sellSprite.setPosition(optionsPos);
-		const Vector2i towerCell = Engine::Instance().camera()->posToCell(m_selectedTower->pos());
-		if (towerCell.x == 0)
-		{
-			if (towerCell.y == 0)
-				sellSprite.setPosition(optionsPos.x + GlobalVariables::Instance().tileSize().x,
-									   optionsPos.y + GlobalVariables::Instance().tileSize().x);
-			else
-				sellSprite.setPosition(optionsPos.x + GlobalVariables::Instance().tileSize().x,
-									   optionsPos.y - GlobalVariables::Instance().tileSize().x);
-		}
-		optionsPos.x += GlobalVariables::Instance().tileSize().x * 2;
-		upgradeSprite.setPosition(optionsPos);
-		if (towerCell.x == Engine::Instance().cursor()->getMaxCell().x - 1)
-		{
-			if (towerCell.y == 0)
-				upgradeSprite.setPosition(optionsPos.x - GlobalVariables::Instance().tileSize().x,
-										  optionsPos.y + GlobalVariables::Instance().tileSize().x);
-			else
-				upgradeSprite.setPosition(optionsPos.x - GlobalVariables::Instance().tileSize().x,
-										  optionsPos.y - GlobalVariables::Instance().tileSize().x);
-		}
-		const float sellCost = Engine::Instance().panel()->getTowerSellCost(m_selectedTower);
-		const float upgradeCost = Engine::Instance().panel()->getTowerUpgradeCost(m_selectedTower);
-
-		sellCostText.setString(GlobalVariables::to_string_with_precision(sellCost, 1));
-		upgradeCostText.setString(GlobalVariables::to_string_with_precision(upgradeCost, 0));
-
-		sellCostText.setPosition(sellSprite.getPosition());
-		upgradeCostText.setPosition(upgradeSprite.getPosition());
+		if (towerCell.y == 0)
+			upgradeSprite.setPosition(optionsPos.x - GlobalVariables::Instance().tileSize().x,
+									  optionsPos.y + GlobalVariables::Instance().tileSize().x);
+		else
+			upgradeSprite.setPosition(optionsPos.x - GlobalVariables::Instance().tileSize().x,
+									  optionsPos.y - GlobalVariables::Instance().tileSize().x);
 	}
-	if (level > 2 || canUpgrade)
-		upgradeSprite.setColor(GlobalVariables::GrayColor);
+	const float sellCost = Engine::Instance().panel()->getTowerSellCost(m_selectedTower);
+	const float upgradeCost = Engine::Instance().panel()->getTowerUpgradeCost(m_selectedTower);
+
+	sellCostText.setString(GlobalVariables::to_string_with_precision(sellCost, 1));
+	upgradeCostText.setString(GlobalVariables::to_string_with_precision(upgradeCost, 0));
+
+	sellCostText.setPosition(sellSprite.getPosition());
+	upgradeCostText.setPosition(upgradeSprite.getPosition());
+	updateUpgrade();
 }
 
 Tower *Level::selectedTower() const
@@ -403,6 +427,42 @@ void Level::blinkStartEnd(bool state)
 {
 	startSprite.setColor(state?Color::Yellow:Color::Red);
 	endSprite.setColor(state?Color::Yellow:Color::Red);
+}
+
+void Level::activateBombAbility()
+{
+	Engine::Instance().panel()->setCurrentIcon(ACTION_STATE::ABILITY_BOMB);
+	choose(Vector2i(0,0), true);
+}
+
+void Level::activateFreezeBombAbility()
+{
+	Engine::Instance().panel()->setCurrentIcon(ACTION_STATE::ABILITY_FREEZE_BOMB);
+	choose(Vector2i(0,0), true);
+}
+
+void Level::activateVenomAbility()
+{
+	Engine::Instance().panel()->setCurrentIcon(ACTION_STATE::ABILITY_VENOM);
+	choose(Vector2i(0,0), true);
+}
+
+void Level::activateIncreaseTowerDamageAbility()
+{
+	Engine::Instance().panel()->setCurrentIcon(ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE);
+	choose(Vector2i(0,0), true);
+}
+
+void Level::activateIncreaseTowerAttackSpeedAbility()
+{
+	Engine::Instance().panel()->setCurrentIcon(ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED);
+	choose(Vector2i(0,0), true);
+}
+
+void Level::activateStopAbility()
+{
+	Engine::Instance().panel()->setCurrentIcon(ACTION_STATE::ABILITY_STOP);
+	choose(Vector2i(0,0), true);
 }
 
 void Level::checkRespawn()
@@ -505,6 +565,7 @@ void Level::hitPlayer(float damage)
 	shake->start();
 	if (life <= 0.f)
 	{
+		life = 0.f;
 		//game over
 		changeState(LOSE);
 	}
@@ -550,7 +611,6 @@ ACTION_STATE Level::isFieldButtons(const Vector2f &pos) const
 		return SELL;
 	if (upgradeSprite.getGlobalBounds().contains(gPos))
 		return UPGRADE;
-
 	return READY;
 }
 
@@ -640,6 +700,17 @@ void Level::updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos)
 	endSprite.setPosition(resultEndPos);
 }
 
+void Level::updateUpgrade()
+{
+	if (m_selectedTower == nullptr)
+		return;
+
+	upgradeSprite.setColor(Color::White);
+	const float cost = Engine::Instance().panel()->getTowerUpgradeCost(m_selectedTower);
+	if (money < cost)
+		upgradeSprite.setColor(GlobalVariables::GrayColor);
+}
+
 unsigned int Level::getPowerTowersCount() const
 {
 	return m_powerTowersCount;
@@ -670,6 +741,7 @@ unsigned int Level::getCurrentWave() const
 
 void Level::test()
 {
+	changeState(LEVEL_STATE::LOSE);
 //	spawn(DOWN_TOWER_ENEMY);
 //	spawn(MID_MEDIUM);
 //	spawn(TELEPORT_ENEMY);
@@ -743,6 +815,9 @@ void Level::drawLevel(RenderTarget * const target)
 			target->draw(gameMap->layers[layer].tiles[tile].sprite);
 	}
 
+	for(GameObject *object : objects)
+		object->draw(target);
+
 	for(Enemy* enemy : enemies)
 		enemy->draw(target);
 
@@ -770,9 +845,12 @@ void Level::drawLevel(RenderTarget * const target)
 			target->draw(currentTowerRadius);
 
 		target->draw(sellSprite);
-		target->draw(upgradeSprite);
 		target->draw(sellCostText);
-		target->draw(upgradeCostText);
+		if (m_selectedTower->level() <= 2)
+		{
+			target->draw(upgradeSprite);
+			target->draw(upgradeCostText);
+		}
 	}
 }
 
@@ -962,7 +1040,11 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 		{
 			const ACTION_STATE fieldState = isFieldButtons(pos);
 			if (fieldState != READY)
+			{
 				m_actionState = fieldState;
+				if (m_actionState == UPGRADE && selectedTower->level() > 2)
+					m_actionState = READY;
+			}
 		}
 		switch (m_actionState)
 		{

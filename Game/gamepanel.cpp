@@ -858,6 +858,33 @@ void GamePanel::setDrain(bool drain)
 	drainBlinkTimer.reset();
 }
 
+void GamePanel::setCurrentIcon(const ACTION_STATE &state)
+{
+	switch (state)
+	{
+	case ACTION_STATE::ABILITY_BOMB:
+		currentCursorPos = 6;
+		break;
+	case ACTION_STATE::ABILITY_FREEZE_BOMB:
+		currentCursorPos = 7;
+		break;
+	case ACTION_STATE::ABILITY_VENOM:
+		currentCursorPos = 8;
+		break;
+	case ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE:
+		currentCursorPos = 9;
+		break;
+	case ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED:
+		currentCursorPos = 10;
+		break;
+	case ACTION_STATE::ABILITY_STOP:
+		currentCursorPos = 11;
+		break;
+	default:
+		break;
+	}
+}
+
 void GamePanel::updateInfo()
 {
 	String str;

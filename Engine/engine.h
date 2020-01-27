@@ -3,6 +3,7 @@
 
 #include "stdheader.h"
 
+class GameObject;
 class Camera;
 class GameCursor;
 class Level;
@@ -16,6 +17,7 @@ class Instructions;
 #endif
 #include "Game/achievements.h"
 #include "tile.h"
+#include "Game/Level/objects_types.h"
 
 class Engine
 {
@@ -85,6 +87,8 @@ public:
 	map<int, Tile::TileProperties> getTileProperties() const;
 
 	constexpr static float MSEC = 1000;
+
+	GameObject *createObject(OBJECTS::OBJECT_TYPES type, const Vector2f &pos);
 
 private:
 	Engine();

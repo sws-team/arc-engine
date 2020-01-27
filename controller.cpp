@@ -107,6 +107,27 @@ void Controller::eventFilter(Event *event)
 		case Keyboard::S:
 			Engine::Instance().camera()->moveDownByCell();
 			break;
+		case Keyboard::Z:
+			Engine::Instance().level()->activateBombAbility();
+			break;
+		case Keyboard::X:
+			Engine::Instance().level()->activateFreezeBombAbility();
+			break;
+		case Keyboard::C:
+			Engine::Instance().level()->activateVenomAbility();
+			break;
+		case Keyboard::V:
+			Engine::Instance().level()->activateIncreaseTowerDamageAbility();
+			break;
+		case Keyboard::B:
+			Engine::Instance().level()->activateIncreaseTowerAttackSpeedAbility();
+			break;
+		case Keyboard::N:
+			Engine::Instance().level()->activateStopAbility();
+			break;
+		case Keyboard::R:
+			Engine::Instance().level()->test();
+			break;
 #ifdef STEAM_API
 		case Keyboard::F12:
 			p_screenShoots->TriggerScreenshot();

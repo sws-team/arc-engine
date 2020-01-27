@@ -23,8 +23,7 @@ protected:
 
 private:
 	Sprite menuImg;
-	Sprite finishedImg;
-	Sprite gameOverImg;
+	Sprite windowSprite;
 
 	enum GAME_MENU
 	{
@@ -50,6 +49,7 @@ private:
 	Clock clock;
 	Int64 lastTime;
 	Int64 tick;
+	void updateTextPos();
 };
 
 #endif // GAMEWINDOW_H

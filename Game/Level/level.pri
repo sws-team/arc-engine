@@ -8,6 +8,7 @@ HEADERS += \
     $$PWD/map.h \
     $$PWD/lifebar.h \
     $$PWD/mapeffects.h \
+    $$PWD/objects_types.h \
     $$PWD/projectile.h \
     $$PWD/tower.h
 

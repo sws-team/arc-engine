@@ -25,8 +25,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::SELL_TEXTURE, "images/ui/Panel/sell.png");
 	addTexture(RESOURCES::UPGRADE_TEXTURE, "images/ui/Panel/upgrade.png");
 	addTexture(RESOURCES::GAME_MENU_TEXTURE, "images/gameMenu.png");
-	addTexture(RESOURCES::GAME_OVER_TEXTURE, "images/GameOver.png");
-	addTexture(RESOURCES::MISSON_COMPLETED_TEXTURE, "images/missionCompleted.png");
+	addTexture(RESOURCES::WINDOW_TEXTURE, "images/window.png");
 	addTexture(RESOURCES::PANEL_CURSOR, "images/ui/Panel/panel_cursor.png");
 	addTexture(RESOURCES::MONEY_ICON, "images/ui/money.png");
 	addTexture(RESOURCES::LIFE_ICON, "images/ui/money.png");
@@ -79,6 +78,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::DRAIN, "images/Weapons/Effects/drain.png");
 	addTexture(RESOURCES::REGRESS, "images/Weapons/Effects/regress.png");
 
+	//map icons
 	addTexture(RESOURCES::MAP_ICON_MISSION_1, "images/maps_icons/mission2.png");
 	addTexture(RESOURCES::MAP_ICON_MISSION_2, "images/maps_icons/mission2.png");
 	addTexture(RESOURCES::MAP_ICON_MISSION_3, "images/maps_icons/mission2.png");
@@ -95,6 +95,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::MAP_ICON_MISSION_14, "images/maps_icons/mission2.png");
 	addTexture(RESOURCES::MAP_ICON_MISSION_15, "images/maps_icons/mission2.png");
 
+	//enemies
 	addTexture(RESOURCES::ENEMY_SCORPION, "images/Enemies/scorpion.png");
 	addTexture(RESOURCES::ENEMY_CAR, "images/Enemies/car.png");
 	addTexture(RESOURCES::ENEMY_TRICYCLE, "images/Enemies/tricycle.png");
@@ -111,6 +112,9 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::ENEMY_DOWN_TOWER, "images/Enemies/enemy1.png");
 	addTexture(RESOURCES::ENEMY_ANT, "images/Enemies/ant.png");
 	addTexture(RESOURCES::ENEMY_COW, "images/Enemies/cow.png");
+
+	//objects
+	addTexture(RESOURCES::OBJECT_TREE, "images/maps_objects/tree.png");
 }
 
 void ResourcesManager::addTexture(RESOURCES::TEXTURE_TYPE type, const string &path)

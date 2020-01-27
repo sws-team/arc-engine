@@ -6,6 +6,7 @@
 #include "Game/leveldef.h"
 #include "ResourcesManager/textures_types.h"
 
+class GameObject;
 class Enemy;
 class GamePanel;
 class Tile;
@@ -97,6 +98,13 @@ public:
 	Tower *selectedTower() const;
 
 	void blinkStartEnd(bool state);
+
+	void activateBombAbility();
+	void activateFreezeBombAbility();
+	void activateVenomAbility();
+	void activateIncreaseTowerDamageAbility();
+	void activateIncreaseTowerAttackSpeedAbility();
+	void activateStopAbility();
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();
@@ -176,6 +184,14 @@ private:
 	Sprite endSprite;
 
 	void updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos);
+	void updateUpgrade();
+
+	vector<GameObject*> objects;
+
+
+//	Shader mapShader;
+//	Texture distortionMap;
+//	Clock flameClock;
 };
 
 #endif // LEVEL_H

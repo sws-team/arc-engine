@@ -3,6 +3,7 @@
 
 #include "stdheader.h"
 #include "tile.h"
+#include "objects_types.h"
 
 struct Layer
 {
@@ -75,6 +76,14 @@ public:
 	MapDanger smoke;
 	MapDanger moneyDrain;
 	MapDanger regress;
+
+	struct MapObject
+	{
+		Vector2f pos;
+		OBJECTS::OBJECT_TYPES type;
+	};
+
+	vector<MapObject> objects;
 };
 
 #endif // MAP_H

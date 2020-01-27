@@ -28,17 +28,16 @@ GameWindow::GameWindow()
 	menuImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::GAME_MENU_TEXTURE));
 	menuImg.setScale(Settings::Instance().getScaleFactor());
 
-	gameOverImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::GAME_OVER_TEXTURE));
-	gameOverImg.setScale(Settings::Instance().getScaleFactor());
+	windowSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::WINDOW_TEXTURE));
+	windowSprite.setScale(Settings::Instance().getScaleFactor());
 
-	finishedImg.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MISSON_COMPLETED_TEXTURE));
-	finishedImg.setScale(Settings::Instance().getScaleFactor());
-
-	//score
 	text.setFillColor(Color::Magenta);
+	text.setOutlineThickness(5);
+	text.setOutlineColor(Color::Yellow);
 	text.setFont(GlobalVariables::Instance().font());
 	text.setCharacterSize(100);
 	text.setScale(Settings::Instance().getScaleFactor());
+
 	Engine::Instance().panel()->init();
 
 	addItem(Language::Instance().translate(Language::CONTINUE));
@@ -55,35 +54,15 @@ GameWindow::GameWindow()
 	pos.x += GlobalVariables::Instance().tileSize().x;
 	pos.y += Settings::Instance().getResolution().y/2;
 
-	for(Text& text : menus)
+	for(Text& menuText : menus)
 	{
-		text.setCharacterSize(30);
-		text.setScale(Settings::Instance().getScaleFactor());
-		text.setPosition(pos);
-		pos.y += text.getGlobalBounds().height + offsetY;
+		menuText.setCharacterSize(30);
+		menuText.setScale(Settings::Instance().getScaleFactor());
+		menuText.setPosition(pos);
+		pos.y += menuText.getGlobalBounds().height + offsetY;
 	}
-
-	pos = Vector2f(0, 0);
-	pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
-	pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
-	finishedImg.setPosition(pos - Vector2f(finishedImg.getGlobalBounds().width/2,
-										   finishedImg.getGlobalBounds().height/2));
-	text.setString(Language::Instance().translate(Language::CONGRATULATIONS));
-
-	text.setPosition(pos - Vector2f(text.getGlobalBounds().width/2,
-									text.getGlobalBounds().height/2));
-
-	pos = Vector2f(0, 0);
-	pos.x += Settings::Instance().getResolution().x/2 * Settings::GAME_SCALE;
-	pos.y += Settings::Instance().getResolution().y/2 * Settings::GAME_SCALE;
-	gameOverImg.setPosition(pos - Vector2f(gameOverImg.getGlobalBounds().width/2,
-										   gameOverImg.getGlobalBounds().height/2));
-
-	text.setString(Language::Instance().translate(Language::GAME_OVER));
-	text.setPosition(pos - Vector2f(text.getGlobalBounds().width/2,
-									text.getGlobalBounds().height/2));
-
-
+	windowSprite.setPosition(Settings::Instance().getResolution().x/2 - windowSprite.getGlobalBounds().width/2,
+							 Settings::Instance().getResolution().y/2 - windowSprite.getGlobalBounds().height/2);
 	clock.restart();
 }
 
@@ -112,13 +91,8 @@ void GameWindow::paint(RenderWindow *window)
 		Menu::paint(window);
 		break;
 	case FINISHED:
-	{
-		window->draw(finishedImg);
-		window->draw(text);
-	}
-		break;
 	case GAME_OVER:
-		window->draw(gameOverImg);
+		window->draw(windowSprite);
 		window->draw(text);
 		break;
 	default:
@@ -260,7 +234,10 @@ void GameWindow::setState(const GAME_STATE &state)
 {
 	if (state == m_state)
 		return;
-	if (state == FINISHED)
+
+	switch (state)
+	{
+	case FINISHED:
 	{
 		const float fullLife = Engine::Instance().level()->getStartLife();
 		const float currentLife = Engine::Instance().level()->getLifeCount();
@@ -279,8 +256,21 @@ void GameWindow::setState(const GAME_STATE &state)
 		else // 0 0.1 - 0
 			stars = 0;
 
+		text.setString(Language::Instance().translate(Language::CONGRATULATIONS));
+		updateTextPos();
+
 		Engine::Instance().setMissionFinished(Engine::Instance().getMission(), stars);
 		Engine::Instance().save();
+	}
+		break;
+	case GAME_OVER:
+	{
+		text.setString(Language::Instance().translate(Language::GAME_OVER));
+		updateTextPos();
+	}
+		break;
+	default:
+		break;
 	}
 	m_state = state;
 }
@@ -288,5 +278,11 @@ void GameWindow::setState(const GAME_STATE &state)
 void GameWindow::finish()
 {
 	Engine::Instance().setState(Engine::CHOOSE_MISSION);
+}
+
+void GameWindow::updateTextPos()
+{
+	text.setPosition(Settings::Instance().getResolution().x/2 - text.getGlobalBounds().width/2,
+					 Settings::Instance().getResolution().y/2 - text.getGlobalBounds().height/2);
 }
 

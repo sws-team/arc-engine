@@ -64,6 +64,8 @@ public:
 
 	void setDrain(bool drain);
 
+	void setCurrentIcon(const ACTION_STATE& state);
+
 private:
 	Sprite m_sprite;
 	RenderTexture rTexture;

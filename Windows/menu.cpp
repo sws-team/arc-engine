@@ -2,7 +2,6 @@
 #include "globalvariables.h"
 #include "Game/Audio/soundcontroller.h"
 #include "Engine/engine.h"
-#include "Game/Level/camera.h"
 #include "controller.h"
 #include "settings.h"
 

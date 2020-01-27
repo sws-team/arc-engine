@@ -201,6 +201,22 @@ map<int, Tile::TileProperties> Engine::getTileProperties() const
 	return tileProperties;
 }
 
+GameObject *Engine::createObject(OBJECTS::OBJECT_TYPES type, const Vector2f& pos)
+{
+	GameObject *object = nullptr;
+
+	switch (type)
+	{
+	case OBJECTS::TREE:
+		object = new GameObject(RESOURCES::OBJECT_TREE, pos, Vector2i(64, 64), 4);
+		break;
+	default:
+		break;
+	}
+
+	return object;
+}
+
 Camera *Engine::camera() const
 {
 	return m_camera;
@@ -521,7 +537,7 @@ bool Engine::loadMap(const String &fileName)
 				{
 					objectType = objectElement->Attribute("type");
 				}
-				std::string objectName;
+				string objectName;
 				if (objectElement->Attribute("name") != nullptr)
 				{
 					objectName = objectElement->Attribute("name");
@@ -569,17 +585,22 @@ bool Engine::loadMap(const String &fileName)
 							const string propertyName = prop->Attribute("name");
 							const string propertyValue = prop->Attribute("value");
 
-							if (objectName == "spawn")
+							if (propertyName == "direction" && objectName == "spawn")
+								gameMap->spawnDirection = static_cast<Map::MOVE_DIRECTIONS>(atoi(propertyValue.c_str()));
+
+							if (propertyName == "id")
 							{
-								if (propertyName == "direction")
-									gameMap->spawnDirection = static_cast<Map::MOVE_DIRECTIONS>(atoi(propertyValue.c_str()));
+								Map::MapObject object;
+								object.type = static_cast<OBJECTS::OBJECT_TYPES>(stoi(propertyValue));
+								object.pos = Vector2f(x, y);
+								gameMap->objects.push_back(object);
 							}
 							prop = prop->NextSiblingElement("property");
 						}
 					}
 				}
 
-//				gameMap->buildings.push_back(object);
+				//				gameMap->buildings.push_back(object);
 
 				objectElement = objectElement->NextSiblingElement("object");
 			}
