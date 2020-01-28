@@ -126,10 +126,9 @@ void Level::draw(RenderTarget *const target)
 		target->draw(startSprite);
 		target->draw(endSprite);
 	}
-	Engine::Instance().instructions()->draw(target);
-
 	Engine::Instance().window()->setView(Engine::Instance().window()->getDefaultView());
 	Engine::Instance().panel()->draw(target);
+	Engine::Instance().instructions()->draw(target);
 }
 
 void Level::update()
@@ -815,6 +814,8 @@ void Level::drawLevel(RenderTarget * const target)
 			target->draw(gameMap->layers[layer].tiles[tile].sprite);
 	}
 
+	abilities->draw(target);
+
 	for(GameObject *object : objects)
 		object->draw(target);
 
@@ -825,8 +826,6 @@ void Level::drawLevel(RenderTarget * const target)
 		tower->draw(target);
 
 	Engine::Instance().cursor()->draw(target);
-
-	abilities->draw(target);
 
 	for(Animation *effect : effects)
 		effect->draw(target);

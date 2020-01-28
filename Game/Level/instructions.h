@@ -34,7 +34,7 @@ private:
 	STATES m_state;
 	void changeState(STATES state);
 
-	RectangleShape textRect;
+	Sprite textSprite;
 	Text text;
 	RectangleShape targetRect;
 

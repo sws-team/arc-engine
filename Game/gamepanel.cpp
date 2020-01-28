@@ -10,6 +10,7 @@
 #include "Level/gamecursor.h"
 #include "Translations/language.h"
 #include "Game/Level/gameability.h"
+#include "Level/instructions.h"
 
 #include <stdlib.h>
 
@@ -267,8 +268,9 @@ void GamePanel::draw(RenderTarget * const target)
 	miniMapSprite.setTexture(rTexture.getTexture());
 
 	//draw
-	if(Engine::Instance().level()->getState() == Level::WAIT_READY)	
-		target->draw(readyText);	
+	if(Engine::Instance().level()->getState() == Level::WAIT_READY &&
+			!Engine::Instance().instructions()->isActive())
+		target->draw(readyText);		
 
 	target->draw(miniMapSprite);
 	target->draw(m_sprite);
@@ -1016,10 +1018,10 @@ void GamePanel::initMission(unsigned int n)
 FloatRect GamePanel::getTowersRect() const
 {
 	const Vector2f pos = Vector2f(towerBaseSprite.getGlobalBounds().left, towerBaseSprite.getGlobalBounds().top);
-	const float icons_space = ICONS_SPACE * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().y;
+	const float icons_space = ICONS_SPACE * Settings::Instance().getScaleFactor().x;
 	Vector2f size;
-	size.x = towerBaseSprite.getGlobalBounds().width * Settings::GAME_SCALE + icons_space;
-	size.x *= 6;
+	size.x = towerBaseSprite.getGlobalBounds().width * 6;
+	size.x += icons_space * 5;
 	size.y = towerBaseSprite.getGlobalBounds().height;
 	return FloatRect(pos, size);
 }
@@ -1027,10 +1029,10 @@ FloatRect GamePanel::getTowersRect() const
 FloatRect GamePanel::getAbilitiesRect() const
 {
 	const Vector2f pos = Vector2f(abilityBombSprite.getGlobalBounds().left, abilityBombSprite.getGlobalBounds().top);
-	const float icons_space = ICONS_SPACE * Settings::GAME_SCALE * Settings::Instance().getScaleFactor().y;
+	const float icons_space = ICONS_SPACE * Settings::Instance().getScaleFactor().x;
 	Vector2f size;
-	size.x = abilityBombSprite.getGlobalBounds().width * Settings::GAME_SCALE + icons_space;
-	size.x *= 6;
+	size.x = abilityBombSprite.getGlobalBounds().width * 6;
+	size.x += icons_space * 5;
 	size.y = abilityBombSprite.getGlobalBounds().height;
 	return FloatRect(pos, size);
 }

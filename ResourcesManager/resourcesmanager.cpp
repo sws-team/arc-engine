@@ -33,6 +33,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::END_TEXTURE, "images/ui/end.png");
 	addTexture(RESOURCES::FOCUS_ICON, "images/ui/focus.png");
 	addTexture(RESOURCES::LOCKED_ICON, "images/ui/locked.png");
+	addTexture(RESOURCES::INSTRUCTIONS_TEXTURE, "images/ui/instructions.png");
 
 	addTexture(RESOURCES::ABILITY_BOMB, "images/ui/Panel/Abilities/ability_bomb.png");
 	addTexture(RESOURCES::ABILITY_FREEZE_BOMB, "images/ui/Panel/Abilities/ability_freeze_bomb.png");

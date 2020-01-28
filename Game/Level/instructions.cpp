@@ -4,6 +4,7 @@
 #include "Game/gamepanel.h"
 #include "Engine/engine.h"
 #include "Translations/language.h"
+#include "ResourcesManager/resourcesmanager.h"
 
 Instructions::Instructions() :
   m_state(START)
@@ -13,8 +14,8 @@ Instructions::Instructions() :
 	color.a = 150;
 	shadowRect.setFillColor(color);
 
-	textRect.setFillColor(Color::Green);
-	textRect.setSize(Vector2f(400, 100));
+	textSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::INSTRUCTIONS_TEXTURE));
+	textSprite.setScale(Settings::Instance().getScaleFactor());
 
 	targetRect.setFillColor(Color::Transparent);
 	targetRect.setOutlineThickness(3);
@@ -37,7 +38,7 @@ void Instructions::draw(RenderTarget * const target)
 
 	target->draw(shadowRect);
 
-	target->draw(textRect);
+	target->draw(textSprite);
 	target->draw(text);
 	target->draw(targetRect);
 }
@@ -70,7 +71,7 @@ void Instructions::changeState(Instructions::STATES state)
 	{
 	case START:
 	{
-		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+		textSprite.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = FloatRect();
 		textStr = Language::Instance().translate(Language::INSTRUCTION_WELCOME);
@@ -78,7 +79,7 @@ void Instructions::changeState(Instructions::STATES state)
 		break;
 	case TOWERS:
 	{
-		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+		textSprite.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getTowersRect();
 		textStr = Language::Instance().translate(Language::INSTRUCTION_TOWERS);
@@ -86,7 +87,7 @@ void Instructions::changeState(Instructions::STATES state)
 		break;
 	case ABILITIES:
 	{
-		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+		textSprite.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getAbilitiesRect();
 		textStr = Language::Instance().translate(Language::INSTRUCTION_ABILITIES);
@@ -94,7 +95,7 @@ void Instructions::changeState(Instructions::STATES state)
 		break;
 	case MONEY:
 	{
-		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+		textSprite.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getMoneyRect();
 		textStr = Language::Instance().translate(Language::INSTRUCTION_MONEY);
@@ -102,7 +103,7 @@ void Instructions::changeState(Instructions::STATES state)
 		break;
 	case HEALTH:
 	{
-		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+		textSprite.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getHealthRect();
 		textStr = Language::Instance().translate(Language::INSTRUCTION_HEALTH);
@@ -110,7 +111,7 @@ void Instructions::changeState(Instructions::STATES state)
 		break;
 	case PROGRESS:
 	{
-		textRect.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
+		textSprite.setPosition(INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Settings::Instance().getScaleFactor().y);
 		rect = Engine::Instance().panel()->getProgressRect();
 		textStr = Language::Instance().translate(Language::INSTRUCTION_PROGRESS);
@@ -122,8 +123,8 @@ void Instructions::changeState(Instructions::STATES state)
 	textStr += "\n";
 	textStr += Language::Instance().translate(Language::INSTRUCTION_SKIP);
 	text.setString(textStr);
-	text.setPosition(textRect.getPosition().x,
-					 textRect.getPosition().y);
+	text.setPosition(textSprite.getPosition().x,
+					 textSprite.getPosition().y);
 	targetRect.setPosition(rect.left, rect.top);
 	targetRect.setSize(Vector2f(rect.width, rect.height));
 	m_state = state;
