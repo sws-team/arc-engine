@@ -104,6 +104,7 @@ enum TEXTURE_TYPE
 
 	//objects
 	OBJECT_TREE,
+	OBJECT_RIVER,
 };
 }
 

@@ -5,6 +5,7 @@ HEADERS += \
     $$PWD/gamecursor.h \
     $$PWD/instructions.h \
     $$PWD/level.h \
+    $$PWD/levelobject.h \
     $$PWD/map.h \
     $$PWD/lifebar.h \
     $$PWD/mapeffects.h \
@@ -19,6 +20,7 @@ SOURCES += \
     $$PWD/gamecursor.cpp \
     $$PWD/instructions.cpp \
     $$PWD/level.cpp \
+    $$PWD/levelobject.cpp \
     $$PWD/lifebar.cpp \
     $$PWD/mapeffects.cpp \
     $$PWD/projectile.cpp \

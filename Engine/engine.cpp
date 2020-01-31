@@ -20,6 +20,7 @@
 #include "Game/Level/level.h"
 #include "Game/Level/instructions.h"
 #include "controller.h"
+#include "Game/Level/levelobject.h"
 
 #include "json/json.h"
 #include <tinyxml.h>
@@ -201,14 +202,17 @@ map<int, Tile::TileProperties> Engine::getTileProperties() const
 	return tileProperties;
 }
 
-GameObject *Engine::createObject(OBJECTS::OBJECT_TYPES type, const Vector2f& pos)
+LevelObject *Engine::createObject(OBJECTS::OBJECT_TYPES type, const Vector2f& pos)
 {
-	GameObject *object = nullptr;
+	LevelObject *object = nullptr;
 
 	switch (type)
 	{
 	case OBJECTS::TREE:
-		object = new GameObject(RESOURCES::OBJECT_TREE, pos, Vector2i(64, 64), 4);
+		object = new LevelObject(RESOURCES::OBJECT_TREE, pos, Vector2i(64, 64), 4);
+		break;
+	case OBJECTS::RIVER:
+		object = new LevelObject(RESOURCES::OBJECT_RIVER, pos, Vector2i(480, 1088), 1);
 		break;
 	default:
 		break;
@@ -479,9 +483,8 @@ bool Engine::loadMap(const String &fileName)
 		{
 			int tileGID = atoi(tileElement->Attribute("gid"));
 			int subRectToUse = tileGID - firstTileID;
-
 			// Устанавливаем TextureRect каждого тайла
-			if (subRectToUse >= 0)
+			if (subRectToUse >= 0 && !subRects.empty())
 			{
 				Sprite sprite;
 				sprite.setTexture(tilesetImage);
@@ -563,7 +566,6 @@ bool Engine::loadMap(const String &fileName)
 					width = subRects[atoi(objectElement->Attribute("gid")) - firstTileID].width;
 					height = subRects[atoi(objectElement->Attribute("gid")) - firstTileID].height;
 				}
-
 				if (objectName == "end")
 				{
 					gameMap->endRect.left = atof(objectElement->Attribute("x"));
@@ -580,6 +582,11 @@ bool Engine::loadMap(const String &fileName)
 					TiXmlElement *prop = properties->FirstChildElement("property");
 					if (prop != nullptr)
 					{
+						Map::MapObject object;
+						object.pos = Vector2f(x, y);
+						object.type = OBJECTS::UNKNOWN;
+						object.layer = -1;
+						object.shader_type = OBJECTS::UNDEFINED;
 						while (prop)
 						{
 							const string propertyName = prop->Attribute("name");
@@ -589,14 +596,15 @@ bool Engine::loadMap(const String &fileName)
 								gameMap->spawnDirection = static_cast<Map::MOVE_DIRECTIONS>(atoi(propertyValue.c_str()));
 
 							if (propertyName == "id")
-							{
-								Map::MapObject object;
 								object.type = static_cast<OBJECTS::OBJECT_TYPES>(stoi(propertyValue));
-								object.pos = Vector2f(x, y);
-								gameMap->objects.push_back(object);
-							}
+							if (propertyName == "layer")
+								object.layer = stoi(propertyValue);
+							if (propertyName == "shader_id")
+								object.shader_type = static_cast<OBJECTS::SHADER_TYPES>(stoi(propertyValue));
+
 							prop = prop->NextSiblingElement("property");
 						}
+						gameMap->objects.push_back(object);
 					}
 				}
 

@@ -39,7 +39,7 @@ void Animation::setShader(Shader *shader)
 void Animation::draw(RenderTarget * const target)
 {
 	if (shader == nullptr)
-		target->draw(sprite, transform);
+		target->draw(sprite);
 	else
 		target->draw(sprite, shader);
 }

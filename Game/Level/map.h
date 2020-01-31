@@ -81,6 +81,8 @@ public:
 	{
 		Vector2f pos;
 		OBJECTS::OBJECT_TYPES type;
+		OBJECTS::SHADER_TYPES shader_type;
+		int layer;
 	};
 
 	vector<MapObject> objects;

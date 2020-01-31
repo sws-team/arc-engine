@@ -16,6 +16,7 @@
 #include "instructions.h"
 #include "gameability.h"
 #include "mapeffects.h"
+#include "levelobject.h"
 
 Level::Level() :
 	gameMap(nullptr)
@@ -33,6 +34,8 @@ Level::Level() :
 	smoke = new Smoke();
 	moneyDrain = new MoneyDrain();
 	towersRegress = new TowersRegress();
+
+	shadersFactory = new ShadersFactory();
 
 	deadZone.setOutlineThickness(3.f);
 	deadZone.setOutlineColor(Color::Red);
@@ -75,33 +78,6 @@ Level::Level() :
 	endSprite.setScale(Settings::Instance().getScaleFactor());
 
 	updateCurrentTower();
-
-
-
-
-//	// It is important to set repeated to true to enable scrolling upwards
-//	distortionMap.setRepeated(true);
-
-//	// Setting smooth to true lets us use small maps even on larger images
-//	distortionMap.setSmooth(true);
-
-//	if (!distortionMap.loadFromFile("images/noise.png"))
-//	{
-//		err() << "Failed to load distortion map, exiting..." << std::endl;
-//		return;
-//	}
-//	if (!mapShader.loadFromFile("images/heat_shader.vs", "images/heat_shader.fs"))
-//	{
-//		err() << "Failed to load shader, exiting..." << std::endl;
-//		return;
-//	}
-//	float distortionFactor = .04f;
-//	float riseFactor = 1.6f;
-//	mapShader.setParameter("currentTexture", Shader::CurrentTexture);
-//	mapShader.setParameter("distortionMapTexture", distortionMap);
-//	mapShader.setParameter("distortionFactor", distortionFactor);
-//	mapShader.setParameter("riseFactor", riseFactor);
-//	flameClock.restart();
 }
 
 Level::~Level()
@@ -167,11 +143,12 @@ void Level::update()
 		for(Enemy* enemy : enemies)
 			enemy->update();
 		showAnimations();
-//		mapShader.setParameter("time", flameClock.getElapsedTime().asSeconds());
 	}
-	for(GameObject *object : objects)
+	for(LevelObject *object : objects)
 		object->update();
 	Engine::Instance().panel()->updatePanel();
+
+	shadersFactory->update();
 }
 
 void Level::startMission(const unsigned int n)
@@ -242,9 +219,15 @@ void Level::startMission(const unsigned int n)
 		Vector2f startPos = mapObject.pos;
 		startPos.x *= Settings::Instance().getScaleFactor().x;
 		startPos.y *= Settings::Instance().getScaleFactor().y;
-		GameObject *object = Engine::Instance().createObject(mapObject.type, startPos);
+		LevelObject *object = Engine::Instance().createObject(mapObject.type, startPos);
 		if (object != nullptr)
+		{
+			object->setLayer(mapObject.layer);
+			Shader *shader = shadersFactory->getShader(mapObject.shader_type);
+			if (shader != nullptr)
+				object->setShader(shader);
 			objects.push_back(object);
+		}
 	}
 }
 
@@ -272,7 +255,7 @@ void Level::clear()
 		delete enemy;
 	enemies.clear();
 
-	for(GameObject *object : objects)
+	for(LevelObject *object : objects)
 		delete object;
 	objects.clear();
 
@@ -812,12 +795,20 @@ void Level::drawLevel(RenderTarget * const target)
 			continue;
 		for (size_t tile = 0; tile < gameMap->layers[layer].tiles.size(); tile++)
 			target->draw(gameMap->layers[layer].tiles[tile].sprite);
+		for(LevelObject *object : objects)
+		{
+			if (object->layer() == layer)
+				object->draw(target);
+		}
+	}
+
+	for(LevelObject *object : objects)
+	{
+		if (object->layer() == -1)
+			object->draw(target);
 	}
 
 	abilities->draw(target);
-
-	for(GameObject *object : objects)
-		object->draw(target);
 
 	for(Enemy* enemy : enemies)
 		enemy->draw(target);

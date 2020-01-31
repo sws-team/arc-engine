@@ -3,7 +3,7 @@
 
 #include "stdheader.h"
 
-class GameObject;
+class LevelObject;
 class Camera;
 class GameCursor;
 class Level;
@@ -88,8 +88,7 @@ public:
 
 	constexpr static float MSEC = 1000;
 
-	GameObject *createObject(OBJECTS::OBJECT_TYPES type, const Vector2f &pos);
-
+	LevelObject *createObject(OBJECTS::OBJECT_TYPES type, const Vector2f &pos);
 private:
 	Engine();
 	Engine(const Engine& root) = delete;

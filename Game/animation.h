@@ -21,15 +21,13 @@ public:
 	Vector2i size;
 	function<void(Animation *)> callback;
 	Sprite sprite;
+	void setShader(Shader *shader);
+
 protected:
 	bool loop;
 
-
-	Transform transform;
-
 	bool nextFrame();
 	void stop();
-	void setShader(Shader *shader);
 
 private:
 	Int64 lastTimer;

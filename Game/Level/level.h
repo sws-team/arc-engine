@@ -6,7 +6,7 @@
 #include "Game/leveldef.h"
 #include "ResourcesManager/textures_types.h"
 
-class GameObject;
+class LevelObject;
 class Enemy;
 class GamePanel;
 class Tile;
@@ -18,6 +18,7 @@ class MapExplosion;
 class Smoke;
 class MoneyDrain;
 class TowersRegress;
+class ShadersFactory;
 
 class Level : public GameDrawable
 {
@@ -186,12 +187,8 @@ private:
 	void updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos);
 	void updateUpgrade();
 
-	vector<GameObject*> objects;
-
-
-//	Shader mapShader;
-//	Texture distortionMap;
-//	Clock flameClock;
+	vector<LevelObject*> objects;
+	ShadersFactory *shadersFactory;
 };
 
 #endif // LEVEL_H

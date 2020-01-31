@@ -8,6 +8,13 @@ enum OBJECT_TYPES
 	UNKNOWN,
 
 	TREE,
+	RIVER,
+};
+enum SHADER_TYPES
+{
+	UNDEFINED,
+
+	WAVE,
 };
 }
 

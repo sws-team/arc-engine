@@ -116,6 +116,7 @@ void ResourcesManager::loadTextures()
 
 	//objects
 	addTexture(RESOURCES::OBJECT_TREE, "images/maps_objects/tree.png");
+	addTexture(RESOURCES::OBJECT_RIVER, "images/maps_objects/river.png");
 }
 
 void ResourcesManager::addTexture(RESOURCES::TEXTURE_TYPE type, const string &path)
