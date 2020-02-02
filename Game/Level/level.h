@@ -106,6 +106,9 @@ public:
 	void activateIncreaseTowerDamageAbility();
 	void activateIncreaseTowerAttackSpeedAbility();
 	void activateStopAbility();
+	void upgradeTower(Tower *tower);
+	void sellTower(Tower *tower);
+
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();

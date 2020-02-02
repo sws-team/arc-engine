@@ -77,6 +77,9 @@ void Controller::eventFilter(Event *event)
 		case Keyboard::Q:
 			Engine::Instance().cursor()->swap();
 			break;
+		case Keyboard::F:
+			Engine::Instance().level()->upgradeTower(Engine::Instance().level()->selectedTower());
+			break;
 		case Keyboard::Add:
 			Engine::Instance().camera()->zoomIn();
 			break;
@@ -127,6 +130,9 @@ void Controller::eventFilter(Event *event)
 			break;
 		case Keyboard::R:
 			Engine::Instance().level()->test();
+			break;
+		case Keyboard::Delete:
+			Engine::Instance().level()->sellTower(Engine::Instance().level()->selectedTower());
 			break;
 #ifdef STEAM_API
 		case Keyboard::F12:

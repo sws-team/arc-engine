@@ -448,6 +448,37 @@ void Level::activateStopAbility()
 	choose(Vector2i(0,0), true);
 }
 
+void Level::upgradeTower(Tower *tower)
+{
+	if (tower == nullptr)
+		return;
+
+	const float cost = Engine::Instance().panel()->getTowerUpgradeCost(tower);
+	if (money < cost)
+		return;
+
+	if (tower->level() < 3)
+	{
+		money -= cost;
+		tower->upgrade();
+	}
+	Engine::Instance().panel()->updatePanel();
+}
+
+void Level::sellTower(Tower *tower)
+{
+	if (tower == nullptr)
+		return;
+
+	const float cost = Engine::Instance().panel()->getTowerSellCost(tower);
+	money += cost;
+	towers.erase( remove( towers.begin(), towers.end(), tower ), towers.end() );
+	if (tower->type() == POWER)
+		m_powerTowersCount--;
+	delete tower;
+	Engine::Instance().panel()->updatePanel();
+}
+
 void Level::checkRespawn()
 {
 	if (abilities->stopAblity->isActive())
@@ -1096,38 +1127,11 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			break;
 		case ABILITY_STOP:
 			break;
-		case SELL:
-		{
-			if (selectedTower == nullptr)
-				return;
-
-			const float cost = Engine::Instance().panel()->getTowerSellCost(selectedTower);
-			money += cost;
-			towers.erase( remove( towers.begin(), towers.end(), selectedTower ), towers.end() );
-			delete selectedTower;
-			if (selectedTower->type() == POWER)
-				m_powerTowersCount--;
-			Engine::Instance().panel()->updatePanel();
-			Engine::Instance().cursor()->swap();
-		}
+		case SELL:		
+			sellTower(selectedTower);
 			break;
 		case UPGRADE:
-		{
-			if (selectedTower == nullptr)
-				break;
-
-			const float cost = Engine::Instance().panel()->getTowerUpgradeCost(selectedTower);
-			if (money < cost)
-				break;
-
-			if (selectedTower->level() < 3)
-			{
-				money -= cost;
-				selectedTower->upgrade();
-			}
-			Engine::Instance().panel()->updatePanel();
-			Engine::Instance().cursor()->swap();
-		}
+			upgradeTower(selectedTower);
 			break;
 		default:
 			break;
