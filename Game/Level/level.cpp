@@ -233,6 +233,7 @@ void Level::startMission(const unsigned int n)
 
 void Level::clear()
 {
+	clearCursor();
 	m_powerTowersCount = 0;
 	shake->deactivate();
 	for(Tower *tower : towers)
