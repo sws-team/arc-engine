@@ -129,6 +129,7 @@ public:
 protected:
 	virtual void projectileAction(Enemy *enemy);
 	virtual void moveProjectile(Projectile *projectile);
+	virtual Vector2f shootPos() const;
 
 	struct ProjectileInfo
 	{

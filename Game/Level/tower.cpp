@@ -8,14 +8,16 @@
 #include "Game/Level/level.h"
 #include "Game/Audio/soundcontroller.h"
 #include "mapeffects.h"
+#include "settings.h"
 
 const float Tower::LEVEL_GAIN = 0.25f;
 const float Tower::TOWER_SCAlE = 1.f/3.f;
 
 Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, const TowerStats &stats)
 	: GameObject(texture_id, pos,
-				 Vector2i(GlobalVariables::CELL_SIZE/TOWER_SCAlE, GlobalVariables::CELL_SIZE/TOWER_SCAlE),
-				 4)
+				 Vector2i(GlobalVariables::CELL_SIZE/TOWER_SCAlE,
+						  GlobalVariables::CELL_SIZE/TOWER_SCAlE),
+				 1)
 	,m_stats(stats)
 	,m_level(1)
 	,m_kills(0)
@@ -29,7 +31,7 @@ Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, con
 
 void Tower::update()
 {
-
+	GameObject::update();
 }
 
 void Tower::draw(RenderTarget * const target)
@@ -325,7 +327,7 @@ BaseTower::BaseTower(const Vector2f &pos)
 void BaseTower::projectileAction(Enemy *enemy)
 {
 	ProjectilesTower::projectileAction(enemy);
-	const float penetration = 0.001f * level();
+	const float penetration = 0.001f * powf(10, level());
 	enemy->protect(penetration, false);
 }
 
@@ -481,7 +483,8 @@ LaserTower::LaserTower(const Vector2f &pos)
 	: Tower(RESOURCES::TOWER_LASER, pos, STATS)
 {
 	currentTarget = nullptr;
-	lineTower.position = getCenter();
+	lineTower.position = this->pos() + Vector2f(97 * Settings::Instance().getScaleFactor().x * TOWER_SCAlE,
+												24 * Settings::Instance().getScaleFactor().y * TOWER_SCAlE);
 	lineTower.color = Color::Red;
 	lineTarget.color = Color::Blue;
 	laser.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::LASER_PROJECTILE));
@@ -569,6 +572,11 @@ void ProjectilesTower::moveProjectile(Projectile *projectile)
 	projectile->move(x2-x1, y2-y1);
 }
 
+Vector2f ProjectilesTower::shootPos() const
+{
+	return getCenter();
+}
+
 void ProjectilesTower::draw(RenderTarget * const target)
 {
 	Tower::draw(target);
@@ -594,7 +602,7 @@ void ProjectilesTower::shoot(Enemy *target)
 	if (target == nullptr)
 		return;
 
-	const Vector2f aPos = getCenter();
+	const Vector2f aPos = shootPos();
 	const float a = aPos.x - target->enemyCenter().x;
 	const float b = aPos.y - target->enemyCenter().y;
 	const float tg = ( b / a );
