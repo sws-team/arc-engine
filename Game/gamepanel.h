@@ -68,6 +68,8 @@ public:
 
 	void resetPanelIcon();
 
+	bool clickOnMiniMap(const Vector2f& pos);
+
 private:
 	Sprite m_sprite;
 	RenderTexture rTexture;

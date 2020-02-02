@@ -110,7 +110,6 @@ void Level::draw(RenderTarget *const target)
 void Level::update()
 {
 	const bool playing = m_state == PLAYING;
-
 	if (timer.check(GlobalVariables::FRAME_TIME))
 	{
 		for(Tower* tower : towers)
@@ -755,11 +754,20 @@ unsigned int Level::getCurrentWave() const
 
 void Level::test()
 {
-	changeState(LEVEL_STATE::LOSE);
+//	changeState(LEVEL_STATE::LOSE);
 //	spawn(DOWN_TOWER_ENEMY);
 //	spawn(MID_MEDIUM);
 //	spawn(TELEPORT_ENEMY);
 	//	spawn(REPAIR_ENEMY);
+}
+
+void Level::plus()
+{
+}
+
+void Level::minus()
+{
+
 }
 
 Abilities *Level::getAbilities()

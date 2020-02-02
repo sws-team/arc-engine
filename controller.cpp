@@ -28,6 +28,10 @@ void Controller::eventFilter(Event *event)
 				Engine::Instance().instructions()->next();
 				return;
 			}
+
+			if (Engine::Instance().panel()->clickOnMiniMap(Vector2f(event->mouseButton.x, event->mouseButton.y)))
+				return;
+
 			const Vector2i pixelPos = Vector2i(1, 1) + Vector2i(event->mouseButton.x, event->mouseButton.y);//Mouse::getPosition(*Engine::Instance().window());
 			const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
 						pixelPos, *Engine::Instance().camera()->getView());
@@ -131,6 +135,12 @@ void Controller::eventFilter(Event *event)
 			break;
 		case Keyboard::R:
 			Engine::Instance().level()->test();
+			break;
+		case Keyboard::P:
+			Engine::Instance().level()->plus();
+			break;
+		case Keyboard::O:
+			Engine::Instance().level()->minus();
 			break;
 		case Keyboard::Delete:
 			Engine::Instance().level()->sellTower(Engine::Instance().level()->selectedTower());

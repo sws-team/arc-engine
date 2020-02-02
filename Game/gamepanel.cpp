@@ -899,6 +899,27 @@ void GamePanel::resetPanelIcon()
 	updateCursor();
 }
 
+bool GamePanel::clickOnMiniMap(const Vector2f &pos)
+{
+	if (miniMapSprite.getGlobalBounds().contains(pos))
+	{
+		Vector2f rectPos;
+		rectPos.x = pos.x - miniMapSprite.getGlobalBounds().left;
+		rectPos.y = pos.y - miniMapSprite.getGlobalBounds().top;
+		Vector2f k;
+		k.x = rectPos.x/miniMapSprite.getGlobalBounds().width;
+		k.y = rectPos.y/miniMapSprite.getGlobalBounds().height;
+		Vector2f center;
+		center.x = Engine::Instance().cursor()->getMaxCell().x * GlobalVariables::Instance().tileSize().x;
+		center.y = Engine::Instance().cursor()->getMaxCell().y * GlobalVariables::Instance().tileSize().y;
+		center.x *= k.x;
+		center.y *= k.y;
+		Engine::Instance().camera()->setCenter(center);
+		return true;
+	}
+	return false;
+}
+
 void GamePanel::updateInfo()
 {
 	String str;

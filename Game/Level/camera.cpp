@@ -13,7 +13,9 @@ Camera::Camera()
 
 void Camera::init()
 {
-    const FloatRect gameRect = FloatRect(0, 0, Settings::Instance().getResolution().x, Settings::Instance().getResolution().y);
+	const FloatRect gameRect = FloatRect(0, 0,
+										 Settings::Instance().getResolution().x,
+										 Settings::Instance().getResolution().y);
     view = new View(gameRect);
 	minimap = new View(gameRect);
 
@@ -202,4 +204,10 @@ void Camera::checkBorders()
 			* GlobalVariables::Instance().tileSize().y;
 	if (bottomRight.y > maxY)
 		view->setCenter(view->getCenter().x, maxY - view->getSize().y/2);
+}
+
+void Camera::setCenter(const Vector2f &pos)
+{
+	view->setCenter(pos);
+	checkBorders();
 }

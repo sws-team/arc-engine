@@ -45,6 +45,8 @@ public:
 
 	void checkBorders();
 
+	void setCenter(const Vector2f& pos);
+
 private:
     constexpr static float CAMERA_OFFSET = 4.f;
 	constexpr static int MAX_ZOOM = 20;
