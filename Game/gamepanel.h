@@ -66,6 +66,8 @@ public:
 
 	void setCurrentIcon(const ACTION_STATE& state);
 
+	void resetPanelIcon();
+
 private:
 	Sprite m_sprite;
 	RenderTexture rTexture;
@@ -161,6 +163,8 @@ private:
 	RectangleShape drainRect;
 	bool drainState;
 	Sprite miniMapSprite;
+
+	static constexpr unsigned int PANEL_POS_ID = 128;
 };
 
 #endif // GAMEPANEL_H

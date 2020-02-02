@@ -324,8 +324,11 @@ void GamePanel::draw(RenderTarget * const target)
 
 	if (Engine::Instance().cursor()->inPanel())
 	{
-		target->draw(currentIconRect);
-		target->draw(cursorSprite);
+		if (currentCursorPos != PANEL_POS_ID)
+		{
+			target->draw(currentIconRect);
+			target->draw(cursorSprite);
+		}
 	}
 }
 
@@ -844,6 +847,9 @@ bool GamePanel::isAbilityIconActive(ACTION_STATE type) const
 
 void GamePanel::updateCurrentCursor()
 {
+	if (currentCursorPos == PANEL_POS_ID)
+		return;
+
 	if(currentCursorPos >= actionsSprites.size())
 		currentCursorPos = actionsSprites.size() - 1;
 	if (currentCursorPos < 0)
@@ -885,6 +891,12 @@ void GamePanel::setCurrentIcon(const ACTION_STATE &state)
 	default:
 		break;
 	}
+}
+
+void GamePanel::resetPanelIcon()
+{
+	currentCursorPos = 128;
+	updateCursor();
 }
 
 void GamePanel::updateInfo()

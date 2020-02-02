@@ -31,6 +31,7 @@ void Controller::eventFilter(Event *event)
 			const Vector2i pixelPos = Vector2i(1, 1) + Vector2i(event->mouseButton.x, event->mouseButton.y);//Mouse::getPosition(*Engine::Instance().window());
 			const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
 						pixelPos, *Engine::Instance().camera()->getView());
+			Engine::Instance().panel()->resetPanelIcon();
 			Engine::Instance().level()->chooseByPos(pos);
 		}
 		else if (event->mouseButton.button == Mouse::Right)
