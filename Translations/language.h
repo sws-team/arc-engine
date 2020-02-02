@@ -15,6 +15,7 @@ public:
 		//menu
 		CAMPAIGN,
 		OPTIONS,
+		MANUAL,
 		CREDITS,
 		EXIT,
 

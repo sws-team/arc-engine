@@ -16,6 +16,7 @@ private:
 	{
 		CAMPAIGN,
 		OPTIONS,
+		MANUAL,
 		CREDITS,
 		EXIT
 	};

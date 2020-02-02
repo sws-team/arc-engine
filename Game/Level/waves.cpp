@@ -668,3 +668,4 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 	return waves;
 }
 
+

@@ -281,6 +281,7 @@ class EnemiesFactory
 public:
 	static Enemy *createEnemy(ENEMY_TYPES type, const Vector2f &startPos);
 	static vector<Wave> generateEnemies(unsigned int n);
+	static Vector2i enemySize(ENEMY_TYPES type);
 private:
 	static Wave createWave(float protection, float time, const map<ENEMY_TYPES, int>& enemies);
 };

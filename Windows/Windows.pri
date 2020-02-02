@@ -2,6 +2,7 @@ include($$PWD/Widgets/Widgets.pri)
 
 HEADERS += \
     $$PWD/choosemissionwindow.h \
+    $$PWD/manualwindow.h \
     $$PWD/settingswindow.h \
     $$PWD/aboutwindow.h \
     $$PWD/player.h \
@@ -12,6 +13,7 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/choosemissionwindow.cpp \
+    $$PWD/manualwindow.cpp \
     $$PWD/settingswindow.cpp \
     $$PWD/aboutwindow.cpp \
     $$PWD/mainmenu.cpp \

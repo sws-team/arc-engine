@@ -30,6 +30,7 @@ public:
 		INTRO,
 		MAIN_MENU,
 		OPTIONS,
+		MANUAL,
 		ABOUT,
 		CLOSING,
 		EXIT,

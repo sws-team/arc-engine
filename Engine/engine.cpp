@@ -5,6 +5,7 @@
 #include "Windows/settingswindow.h"
 #include "Windows/closewindow.h"
 #include "Windows/choosemissionwindow.h"
+#include "Windows/manualwindow.h"
 #include "gamewindow.h"
 #include "globalvariables.h"
 #include "settings.h"
@@ -312,6 +313,9 @@ StateWindow* Engine::createState(const Engine::GAME_STATE &state)
 		break;
 	case OPTIONS:
 		stateWindow = new SettingsWindow();
+		break;
+	case MANUAL:
+		stateWindow = new ManualWindow();
 		break;
 	case ABOUT:
 		stateWindow = new AboutWindow();
