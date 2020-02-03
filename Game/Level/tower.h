@@ -6,6 +6,10 @@
 
 struct TowerStats
 {
+	TowerStats()
+	{
+
+	}
 	TowerStats(float damage,
 			   float attackSpeed,
 			   float radius,
@@ -52,7 +56,7 @@ public:
 	virtual void draw(RenderTarget *const target) override;
 
 	//Tower
-	void action(const vector<Enemy*>& enemies);
+	void action();
 	virtual void shoot(Enemy* target);
 	virtual void collide(const vector<Enemy*>& enemies);
 	virtual void upgrade();
@@ -90,11 +94,14 @@ public:
 	float actualDamage() const;
 	float actualAttackSpeed() const;
 
+	static constexpr int ABILITY_LEVEL = 4;
 protected:
 	TowerStats m_stats;
 	Timer actionTimer;
 	string m_shotSound;
 	void checkKill(Enemy *enemy);
+	Enemy *findNearestEnemy(const vector<Enemy*>& exclude);
+
 private:
 	TOWER_TYPES m_type;
 	int m_level;
@@ -206,6 +213,8 @@ public:
 
 	void projectileAction(Enemy *enemy) override;
 private:
+	static constexpr int ABILITY_FREEZE_CELLS = 2;
+	static constexpr float BASE_FREEZE_VALUE = 35.f;
 };
 
 class LaserTower : public Tower
@@ -221,11 +230,21 @@ public:
 
 private:	
 	Vertex lineTower;
-	Vertex lineTarget;
-	Sprite laser;
 
-	Enemy *currentTarget;
-	Timer damageTimer;
+	struct LaserTarget
+	{
+		Vertex lineTarget;
+		Sprite laser;
+		Enemy *currentTarget;
+		Timer damageTimer;
+	};
+	vector<LaserTarget> targets;
+	LaserTarget mainTarget;
+	static constexpr int MAX_EXTRA_TARGETS = 4;
+
+	void updateLaserTarget(LaserTarget *laserTarget, float damageModifier);
+	void drawLaserTarget(RenderTarget * const target,
+						 LaserTarget *laserTarget);
 };
 
 class ImprovedTower : public ProjectilesTower

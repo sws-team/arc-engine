@@ -121,7 +121,7 @@ void Level::update()
 					money += powerTower->gain();
 			}
 			else
-				tower->action(enemies);
+				tower->action();
 			tower->update();
 		}
 		updateUpgrade();
@@ -456,7 +456,7 @@ void Level::upgradeTower(Tower *tower)
 	if (money < cost)
 		return;
 
-	if (tower->level() < 3)
+	if (tower->level() < Tower::ABILITY_LEVEL)
 	{
 		money -= cost;
 		tower->upgrade();
@@ -876,7 +876,7 @@ void Level::drawLevel(RenderTarget * const target)
 
 		target->draw(sellSprite);
 		target->draw(sellCostText);
-		if (m_selectedTower->level() <= 2)
+		if (m_selectedTower->level() < Tower::ABILITY_LEVEL)
 		{
 			target->draw(upgradeSprite);
 			target->draw(upgradeCostText);
@@ -1072,7 +1072,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			if (fieldState != READY)
 			{
 				m_actionState = fieldState;
-				if (m_actionState == UPGRADE && selectedTower->level() > 2)
+				if (m_actionState == UPGRADE && selectedTower->level() >= Tower::ABILITY_LEVEL)
 					m_actionState = READY;
 			}
 		}

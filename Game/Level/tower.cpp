@@ -39,7 +39,7 @@ void Tower::draw(RenderTarget * const target)
 	GameObject::draw(target);
 }
 
-void Tower::action(const vector<Enemy *> &enemies)
+void Tower::action()
 {
 	if (!isActive())
 	{
@@ -50,23 +50,8 @@ void Tower::action(const vector<Enemy *> &enemies)
 	if (!actionTimer.check(actualAttackSpeed()))
 		return;
 
-	Enemy *target = nullptr;
 	//finding target
-	float min = INT_MAX;
-	const Vector2f aPos = getCenter();
-	for(Enemy *enemy : enemies)
-	{
-		if (TowersFactory::isIntersects(enemy->gameRect(), aPos, actualRadius() * GlobalVariables::Instance().mapTileSize().x))
-		{
-			const float x = fabs(enemy->enemyCenter().x - this->getCenter().x);
-			const float y = fabs(enemy->enemyCenter().y - this->getCenter().y);
-			if (x + y < min)
-			{
-				min = x + y;
-				target = enemy;
-			}
-		}
-	}
+	Enemy *target = findNearestEnemy(vector<Enemy*>());
 	shoot(target);
 }
 
@@ -138,6 +123,31 @@ void Tower::checkKill(Enemy *enemy)
 {
 	if (!enemy->isAlive())
 		m_kills++;
+}
+
+Enemy *Tower::findNearestEnemy(const vector<Enemy *> &exclude)
+{
+	Enemy *target = nullptr;
+	float min = INT_MAX;
+	const Vector2f aPos = getCenter();
+	const vector <Enemy*> enemies = Engine::Instance().level()->getAllEnemies();
+	for(Enemy *enemy : enemies)
+	{
+		if (find(exclude.begin(), exclude.end(), enemy) != exclude.end())
+			continue;
+		if (TowersFactory::isIntersects(enemy->gameRect(), aPos,
+										actualRadius() * GlobalVariables::Instance().mapTileSize().x))
+		{
+			const float x = fabs(enemy->enemyCenter().x - this->getCenter().x);
+			const float y = fabs(enemy->enemyCenter().y - this->getCenter().y);
+			if (x + y < min)
+			{
+				min = x + y;
+				target = enemy;
+			}
+		}
+	}
+	return target;
 }
 
 bool Tower::isRegressed() const
@@ -309,7 +319,7 @@ const TowerStats PowerTower::STATS = TowerStats		(0,		5000,	6,		0,		60);
 const TowerStats BaseTower::STATS = TowerStats		(5,		450,	4,		20,		50);
 const TowerStats FreezeTower::STATS = TowerStats	(5,		350,	5,		10,		100);
 const TowerStats RocketTower::STATS = TowerStats	(40,	5000,	12,		5,		150);
-const TowerStats LaserTower::STATS = TowerStats		(5,		100,	6,		0,		200);
+const TowerStats LaserTower::STATS = TowerStats		(5,		135,	6,		0,		200);
 const TowerStats ImprovedTower::STATS = TowerStats	(10,	250,	7,		40,		250);
 
 BaseTower::BaseTower(const Vector2f &pos)
@@ -475,53 +485,130 @@ void FreezeTower::projectileAction(Enemy *enemy)
 {
 	ProjectilesTower::projectileAction(enemy);
 	const float freezeOffset = level() * 10;
-	const int durationOffset = level() * 1000;
-	enemy->freeze(35.f + freezeOffset, 2000 + durationOffset);
+	const float durationOffset = level() * 1000;
+	const float freezeValue = BASE_FREEZE_VALUE + freezeOffset;
+	const float freezeDuration = 2000 + durationOffset;
+	enemy->freeze(freezeValue, freezeDuration);
+
+	if (level() == ABILITY_LEVEL)
+	{
+		const Vector2f epicenter = enemy->enemyCenter();
+		const vector <Enemy*> enemies = Engine::Instance().level()->getAllEnemies();
+		for(Enemy* levelEnemy : enemies)
+		{
+			const float a = fabs(epicenter.x - levelEnemy->enemyCenter().x);
+			const float b = fabs(epicenter.y - levelEnemy->enemyCenter().y);
+			const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
+			if (r <= GlobalVariables::Instance().tileSize().x * ABILITY_FREEZE_CELLS)
+				levelEnemy->freeze(BASE_FREEZE_VALUE, freezeDuration);
+		}
+	}
 }
 
 LaserTower::LaserTower(const Vector2f &pos)
 	: Tower(RESOURCES::TOWER_LASER, pos, STATS)
 {
-	currentTarget = nullptr;
 	lineTower.position = this->pos() + Vector2f(97 * Settings::Instance().getScaleFactor().x * TOWER_SCAlE,
 												24 * Settings::Instance().getScaleFactor().y * TOWER_SCAlE);
-	lineTower.color = Color::Red;
-	lineTarget.color = Color::Blue;
-	laser.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::LASER_PROJECTILE));
+	lineTower.color = Color::Cyan;
+	mainTarget.lineTarget.color = Color::Cyan;
+	mainTarget.currentTarget = nullptr;
+	mainTarget.laser.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::LASER_PROJECTILE));
 	m_shotSound = "sounds/towers/laser_shot.ogg";
 }
 
 void LaserTower::shoot(Enemy *target)
 {
-	currentTarget = target;
+	if (level() == ABILITY_LEVEL && target != nullptr)
+	{
+		targets.clear();
+		vector<Enemy*> exclude;
+		exclude.push_back(target);
+		while(true)
+		{
+			Enemy *enemy = findNearestEnemy(exclude);
+			if (enemy == nullptr)
+				break;
+			if (targets.size() == MAX_EXTRA_TARGETS)
+				break;
+
+			exclude.push_back(enemy);
+
+			LaserTarget laserTarget;
+			laserTarget.lineTarget.color = Color::Cyan;
+			laserTarget.currentTarget = enemy;
+			laserTarget.laser.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::LASER_PROJECTILE));
+			targets.push_back(laserTarget);
+		}
+	}
+
+	mainTarget.currentTarget = target;
 	if (target != nullptr)
 		Tower::shoot(target);
+}
+
+void LaserTower::updateLaserTarget(LaserTower::LaserTarget *laserTarget, float damageModifier)
+{
+	if (laserTarget->currentTarget == nullptr)
+		return;
+
+	laserTarget->lineTarget = laserTarget->currentTarget->getCenter();
+	laserTarget->laser.setPosition(laserTarget->lineTarget.position -
+								  Vector2f(laserTarget->laser.getGlobalBounds().width/2,
+										   laserTarget->laser.getGlobalBounds().height/2));
+
+	if(laserTarget->damageTimer.check(actualAttackSpeed()))
+	{
+		laserTarget->currentTarget->hit(actualDamage() * damageModifier);
+		checkKill(laserTarget->currentTarget);
+		if (!laserTarget->currentTarget->isAlive())
+			laserTarget->currentTarget = nullptr;
+	}
+}
+
+void LaserTower::drawLaserTarget(RenderTarget * const target,
+								 LaserTower::LaserTarget *laserTarget)
+{
+	if (laserTarget->currentTarget == nullptr)
+		return;
+	Vertex line[] = { lineTower, laserTarget->lineTarget };
+	target->draw(line, 2, Lines);
+	target->draw(laserTarget->laser);
 }
 
 void LaserTower::update()
 {
 	Tower::update();
-	if (currentTarget == nullptr)
-		return;
-
-	lineTarget = currentTarget->getCenter();
-	laser.setPosition(lineTarget.position - Vector2f(laser.getGlobalBounds().width/2, laser.getGlobalBounds().height/2));
-
-	if(damageTimer.check(actualAttackSpeed()))
+	updateLaserTarget(&mainTarget, 1.f);
+	float damageModifier = 0.8f;
+	for(LaserTarget& laserTarget : targets)
 	{
-		currentTarget->hit(actualDamage());
-		checkKill(currentTarget);
+		updateLaserTarget(&laserTarget, damageModifier);
+		damageModifier -= 0.2f;
+	}
+
+	for (auto it = targets.begin(); it != targets.end();)
+	{
+		LaserTarget& laserTarget = *it;
+		if (laserTarget.currentTarget == nullptr)
+			it = targets.erase(it);
+		else
+			++it;
 	}
 }
 
 void LaserTower::draw(RenderTarget * const target)
 {
 	Tower::draw(target);
-	if (currentTarget == nullptr)
-		return;
-	Vertex line[] = { lineTower, lineTarget };
-	target->draw(line, 2, Lines);
-	target->draw(laser);
+
+	drawLaserTarget(target, &mainTarget);
+
+	Vertex lastVertex = mainTarget.lineTarget;
+	for(LaserTarget& laserTarget : targets)
+	{
+		drawLaserTarget(target, &laserTarget);
+		lastVertex = laserTarget.lineTarget;
+	}
 }
 
 ImprovedTower::ImprovedTower(const Vector2f &pos)

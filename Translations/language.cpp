@@ -91,6 +91,38 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_HEALTH, L"Здоровье"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_PROGRESS, L"Прогресс уровня"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_SKIP, L"Нажмите Ввод чтобы продолжить или Пробел чтобы пропустить"));
+
+	//enemies
+	lang.insert(pair<TR_TEXT, wstring>(SCORPION, L"Скорпион"));
+	lang.insert(pair<TR_TEXT, wstring>(CAR, L"Машина"));
+	lang.insert(pair<TR_TEXT, wstring>(TRICYCLE, L"Трицикл"));
+	lang.insert(pair<TR_TEXT, wstring>(TANK, L"Танк"));
+	lang.insert(pair<TR_TEXT, wstring>(SPIDER, L"Паук"));
+	lang.insert(pair<TR_TEXT, wstring>(HELICOPTER, L"Вертолет"));
+	lang.insert(pair<TR_TEXT, wstring>(AIRCARRIER, L"Авианосец"));
+	lang.insert(pair<TR_TEXT, wstring>(BIG_TANK, L"Большой танк"));
+	lang.insert(pair<TR_TEXT, wstring>(PLANE, L"Самолет"));
+	lang.insert(pair<TR_TEXT, wstring>(REPAIR, L"Скорая"));
+	lang.insert(pair<TR_TEXT, wstring>(SHELL, L"Ракушка"));
+	lang.insert(pair<TR_TEXT, wstring>(TELEPORT, L"Телепорт"));
+	lang.insert(pair<TR_TEXT, wstring>(SELF_HEAL, L"Самолечит"));
+	lang.insert(pair<TR_TEXT, wstring>(DOWN_TOWER, L"Ухудшение башни"));
+	lang.insert(pair<TR_TEXT, wstring>(ANT, L"Муравей"));
+	lang.insert(pair<TR_TEXT, wstring>(COW, L"Корова"));
+
+	//manual
+	lang.insert(pair<TR_TEXT, wstring>(SPEED, L"Скорость"));
+	lang.insert(pair<TR_TEXT, wstring>(SIZE, L"Размер"));
+	lang.insert(pair<TR_TEXT, wstring>(ARMOR, L"Броня"));
+	lang.insert(pair<TR_TEXT, wstring>(HEALTH, L"Здоровье"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY, L"Особые способности"));
+	lang.insert(pair<TR_TEXT, wstring>(SMALL, L"Мелкий"));
+	lang.insert(pair<TR_TEXT, wstring>(MID, L"Средний"));
+	lang.insert(pair<TR_TEXT, wstring>(BIG, L"Крупный"));
+	lang.insert(pair<TR_TEXT, wstring>(SLOW, L"Медленный"));
+	lang.insert(pair<TR_TEXT, wstring>(NORMAL, L"Нормальная"));
+	lang.insert(pair<TR_TEXT, wstring>(FAST, L"Быстрая"));
+
 	langs.insert(pair<string, map<TR_TEXT, wstring> >(rus, lang));
 }
 
@@ -171,6 +203,24 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_PROGRESS, L"Progress"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_SKIP, L"Press Return to continue or Space to skip"));
 
+	//enemies
+	lang.insert(pair<TR_TEXT, wstring>(SCORPION, L"Башни"));
+	lang.insert(pair<TR_TEXT, wstring>(CAR, L"Машина"));
+	lang.insert(pair<TR_TEXT, wstring>(TRICYCLE, L"Трицикл"));
+	lang.insert(pair<TR_TEXT, wstring>(TANK, L"Танк"));
+	lang.insert(pair<TR_TEXT, wstring>(SPIDER, L"Паук"));
+	lang.insert(pair<TR_TEXT, wstring>(HELICOPTER, L"Вертолет"));
+	lang.insert(pair<TR_TEXT, wstring>(AIRCARRIER, L"Авианосец"));
+	lang.insert(pair<TR_TEXT, wstring>(BIG_TANK, L"Большой танк"));
+	lang.insert(pair<TR_TEXT, wstring>(PLANE, L"Самолет"));
+	lang.insert(pair<TR_TEXT, wstring>(REPAIR, L"Скорая"));
+	lang.insert(pair<TR_TEXT, wstring>(SHELL, L"Ракушка"));
+	lang.insert(pair<TR_TEXT, wstring>(TELEPORT, L"Телепорт"));
+	lang.insert(pair<TR_TEXT, wstring>(SELF_HEAL, L"Самолечит"));
+	lang.insert(pair<TR_TEXT, wstring>(DOWN_TOWER, L"Ухудшение башни"));
+	lang.insert(pair<TR_TEXT, wstring>(ANT, L"Муравей"));
+	lang.insert(pair<TR_TEXT, wstring>(COW, L"Корова"));
+
 	langs.insert(pair<string, map<TR_TEXT, wstring> >(eng, lang));
 }
 
@@ -250,6 +300,25 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_HEALTH, L"Health"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_PROGRESS, L"Progress"));
 	lang.insert(pair<TR_TEXT, wstring>(INSTRUCTION_SKIP, L"Taper la Touche d'entrée pour continuer ou l'Espace pour passer"));
+
+	//enemies
+	lang.insert(pair<TR_TEXT, wstring>(SCORPION, L"Башни"));
+	lang.insert(pair<TR_TEXT, wstring>(CAR, L"Машина"));
+	lang.insert(pair<TR_TEXT, wstring>(TRICYCLE, L"Трицикл"));
+	lang.insert(pair<TR_TEXT, wstring>(TANK, L"Танк"));
+	lang.insert(pair<TR_TEXT, wstring>(SPIDER, L"Паук"));
+	lang.insert(pair<TR_TEXT, wstring>(HELICOPTER, L"Вертолет"));
+	lang.insert(pair<TR_TEXT, wstring>(AIRCARRIER, L"Авианосец"));
+	lang.insert(pair<TR_TEXT, wstring>(BIG_TANK, L"Большой танк"));
+	lang.insert(pair<TR_TEXT, wstring>(PLANE, L"Самолет"));
+	lang.insert(pair<TR_TEXT, wstring>(REPAIR, L"Скорая"));
+	lang.insert(pair<TR_TEXT, wstring>(SHELL, L"Ракушка"));
+	lang.insert(pair<TR_TEXT, wstring>(TELEPORT, L"Телепорт"));
+	lang.insert(pair<TR_TEXT, wstring>(SELF_HEAL, L"Самолечит"));
+	lang.insert(pair<TR_TEXT, wstring>(DOWN_TOWER, L"Ухудшение башни"));
+	lang.insert(pair<TR_TEXT, wstring>(ANT, L"Муравей"));
+	lang.insert(pair<TR_TEXT, wstring>(COW, L"Корова"));
+
 	langs.insert(pair<string, map<TR_TEXT, wstring> >(fr, lang));
 }
 

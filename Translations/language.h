@@ -87,6 +87,38 @@ public:
 		INSTRUCTION_HEALTH,
 		INSTRUCTION_PROGRESS,
 		INSTRUCTION_SKIP,
+
+		//enemies
+		SCORPION,
+		CAR,
+		TRICYCLE,
+		TANK,
+		SPIDER,
+		HELICOPTER,
+		AIRCARRIER,
+		BIG_TANK,
+		PLANE,
+		REPAIR,
+		SHELL,
+		TELEPORT,
+		SELF_HEAL,
+		DOWN_TOWER,
+		ANT,
+		COW,
+
+		//manual
+		SPEED,
+		SIZE,
+		ARMOR,
+		HEALTH,
+		ABILITY,
+		SMALL,
+		MID,
+		BIG,
+		SLOW,
+		NORMAL,
+		FAST,
+
 	};
 
 	wstring translate(TR_TEXT id) const;

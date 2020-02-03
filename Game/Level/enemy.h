@@ -279,9 +279,32 @@ protected:
 class EnemiesFactory
 {
 public:
+
+	struct EnemyInfo
+	{
+		enum ABILITY_TYPE
+		{
+			NONE,
+			RAGE,
+			SPAWN,
+			TELEPORT,
+			SHELL_NEAR,
+			HEAL_NEAR,
+			SHUTDOWN_TOWER,
+			STRONG,
+			DOWN_TOWER,
+			SELF_HEAL,
+		};
+
+		EnemyStats stats;
+		Vector2i size;
+		ABILITY_TYPE abilityType;
+		RESOURCES::TEXTURE_TYPE texture_id;
+	};
+
 	static Enemy *createEnemy(ENEMY_TYPES type, const Vector2f &startPos);
 	static vector<Wave> generateEnemies(unsigned int n);
-	static Vector2i enemySize(ENEMY_TYPES type);
+	static EnemyInfo getEnemyInfo(ENEMY_TYPES type);
 private:
 	static Wave createWave(float protection, float time, const map<ENEMY_TYPES, int>& enemies);
 };
