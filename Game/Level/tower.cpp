@@ -452,7 +452,8 @@ void RocketTower::moveProjectile(Projectile *projectile)
 
 void RocketTower::projectileAction(Enemy *enemy)
 {
-	enemy->startBurn();
+	if(level() == ABILITY_LEVEL)
+		enemy->startBurn();
 	const Vector2f epicenter = enemy->enemyCenter();
 	const vector <Enemy*> enemies = Engine::Instance().level()->getAllEnemies();
 	for(Enemy* levelEnemy : enemies)
@@ -465,7 +466,8 @@ void RocketTower::projectileAction(Enemy *enemy)
 			const float actualDamage = r/m_zeroGround * m_stats.damage;
 			levelEnemy->hit(actualDamage);
 			checkKill(levelEnemy);
-			levelEnemy->startBurn();
+			if(level() == ABILITY_LEVEL)
+				levelEnemy->startBurn();
 		}
 	}
 	ProjectilesTower::projectileAction(enemy);
@@ -626,6 +628,22 @@ ImprovedTower::ImprovedTower(const Vector2f &pos)
 	projectileInfo.explosionFrameCount = 16;
 }
 
+void ImprovedTower::createdProjectile(Projectile *projectile)
+{
+	float angle = projectile->angle();
+	for (int i = 0; i < 7; ++i)
+	{
+		angle += 45;
+		Projectile *extraProjectile = new Projectile(projectileInfo.texture_id,
+												projectile->pos(),
+												projectileInfo.size,
+												projectileInfo.frameCount);
+		extraProjectile->setAngle(angle);
+		extraProjectile->target = projectile->target;
+		m_projectiles.push_back(extraProjectile);
+	}
+}
+
 ProjectilesTower::ProjectilesTower(const RESOURCES::TEXTURE_TYPE &texture_id,
 								   const Vector2f &pos,
 								   const TowerStats &stats)
@@ -664,6 +682,11 @@ void ProjectilesTower::moveProjectile(Projectile *projectile)
 Vector2f ProjectilesTower::shootPos() const
 {
 	return getCenter();
+}
+
+void ProjectilesTower::createdProjectile(Projectile *projectile)
+{
+
 }
 
 void ProjectilesTower::draw(RenderTarget * const target)
@@ -709,6 +732,7 @@ void ProjectilesTower::shoot(Enemy *target)
 											projectileInfo.frameCount);
 	projectile->setAngle(angle);
 	projectile->target = target;
+	createdProjectile(projectile);
 	m_projectiles.push_back(projectile);
 	Tower::shoot(target);
 }

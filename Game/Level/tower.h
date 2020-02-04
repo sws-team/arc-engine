@@ -137,6 +137,7 @@ protected:
 	virtual void projectileAction(Enemy *enemy);
 	virtual void moveProjectile(Projectile *projectile);
 	virtual Vector2f shootPos() const;
+	virtual void createdProjectile(Projectile *projectile);
 
 	struct ProjectileInfo
 	{
@@ -149,8 +150,8 @@ protected:
 	};
 	ProjectileInfo projectileInfo;
 
-private:
 	vector<Projectile*> m_projectiles;
+private:
 	Timer moveTimer;
 };
 
@@ -252,6 +253,8 @@ class ImprovedTower : public ProjectilesTower
 public:
 	ImprovedTower(const Vector2f &pos);
 	const static TowerStats STATS;
+protected:
+	void createdProjectile(Projectile *projectile) override;
 };
 
 #endif // TOWER_H
