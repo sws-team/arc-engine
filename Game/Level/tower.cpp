@@ -452,6 +452,7 @@ void RocketTower::moveProjectile(Projectile *projectile)
 
 void RocketTower::projectileAction(Enemy *enemy)
 {
+	enemy->startBurn();
 	const Vector2f epicenter = enemy->enemyCenter();
 	const vector <Enemy*> enemies = Engine::Instance().level()->getAllEnemies();
 	for(Enemy* levelEnemy : enemies)
@@ -464,6 +465,7 @@ void RocketTower::projectileAction(Enemy *enemy)
 			const float actualDamage = r/m_zeroGround * m_stats.damage;
 			levelEnemy->hit(actualDamage);
 			checkKill(levelEnemy);
+			levelEnemy->startBurn();
 		}
 	}
 	ProjectilesTower::projectileAction(enemy);

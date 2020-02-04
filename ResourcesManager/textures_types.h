@@ -68,6 +68,7 @@ enum TEXTURE_TYPE
 	EXPLOSION,
 	DRAIN,
 	REGRESS,
+	BURN,
 
 	//map icons
 	MAP_ICON_MISSION_1,

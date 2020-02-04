@@ -45,6 +45,8 @@ public:
 
 	virtual void init();
 
+	void resetTimers();
+
 protected:
 	virtual void stateChanged() = 0;
 
@@ -93,7 +95,7 @@ class TowersRegress : public MapEffect
 	//down atk sp or dmg
 public:
 	TowersRegress();
-	constexpr static float REGRESS_VALUE = 0.2f;
+	constexpr static float REGRESS_VALUE = 0.3f;
 
 	void draw(RenderTarget *const target) override;
 	void update() override;

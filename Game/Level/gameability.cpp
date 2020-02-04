@@ -200,7 +200,7 @@ void VenomAbility::checkDuration()
 }
 
 IncreaseTowerDamageAbility::IncreaseTowerDamageAbility()
-	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 20000)
+	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 35000)
 	,target(nullptr)
 {
 
@@ -232,7 +232,7 @@ void IncreaseTowerDamageAbility::checkDuration()
 }
 
 IncreaseTowerAttackSpeedAbility::IncreaseTowerAttackSpeedAbility()
-	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 20000)
+	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 40000)
 	,target(nullptr)
 {
 
@@ -264,7 +264,7 @@ void IncreaseTowerAttackSpeedAbility::checkDuration()
 }
 
 StopAbility::StopAbility()
-	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 50000)
+	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 60000)
 {
 
 }

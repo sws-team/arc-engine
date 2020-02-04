@@ -10,6 +10,7 @@
 #include "Game/Level/projectile.h"
 #include "Game/Collisions/collisions.h"
 #include "Game/gamepanel.h"
+#include "ResourcesManager/resourcesmanager.h"
 
 Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const Vector2f &startPos,
@@ -27,6 +28,7 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 	,ability(nullptr)
 	,m_stopped(false)
 	,m_visible(true)
+	,m_burned(false)
 {
 
 	m_size.x = GlobalVariables::MAP_CELL_SIZE * cellSize.x;
@@ -34,7 +36,8 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 
 	m_spritePos = Vector2f(0, 0);
 
-	const float road = 4 * GlobalVariables::Instance().mapTileSize().x - GlobalVariables::Instance().mapTileSize().x * cellSize.x;
+	const float road = 4 * GlobalVariables::Instance().mapTileSize().x -
+			GlobalVariables::Instance().mapTileSize().x * cellSize.x;
 	if (road != 0.f)
 	{
 		m_spritePos.x = rand() % static_cast<int>(road);
@@ -45,10 +48,13 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 	m_data = m_stats;
 	lifeBar = new LifeBar();
 	lifeBar->init(Vector2i(getSize().x, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
+
+	burnAnimation = new GameObject(RESOURCES::BURN, startPos, Vector2i(32, 32), 4);
 }
 
 Enemy::~Enemy()
 {
+	delete burnAnimation;
 	delete lifeBar;
 	if (ability != nullptr)
 		delete ability;
@@ -199,7 +205,23 @@ void Enemy::update()
 		if (freezeTimer.check(freezeDuration))
 			isFreezed = false;
 	}
+	if (m_burned)
+	{
+		if (burnTimer.check(BURN_DURATION))
+			m_burned = false;
+	}
 	setPos(m_pos + m_spritePos);
+	if (m_burned)
+	{
+		const int x = this->size.x/GlobalVariables::MAP_CELL_SIZE - 1;
+		const int y = this->size.y/GlobalVariables::MAP_CELL_SIZE - 1;
+		const Vector2f posOffset = Vector2f(GlobalVariables::Instance().mapTileSize().x/2 * x,
+											GlobalVariables::Instance().mapTileSize().y/2 * y);
+		burnAnimation->setPos(this->pos() + posOffset);
+		if (burnAttack.check(BURN_ATTACK_SPEED))
+			hit(BURN_DAMAGE);
+		burnAnimation->update();
+	}
 	GameObject::update();
 }
 
@@ -213,6 +235,8 @@ void Enemy::draw(RenderTarget * const target)
 
 	if (ability != nullptr)
 		ability->draw(target);
+	if (m_burned)
+		burnAnimation->draw(target);
 }
 
 void Enemy::hit(float damage)
@@ -292,6 +316,12 @@ void Enemy::moveEnemy(const Vector2f &d)
 {
 	m_pos += d;
 	update();
+}
+
+void Enemy::startBurn()
+{
+	m_burned = true;
+	burnTimer.reset();
 }
 
 bool Enemy::isVisible() const

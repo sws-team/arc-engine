@@ -141,6 +141,7 @@ void Level::update()
 		checkEnemyMove();
 		for(Enemy* enemy : enemies)
 			enemy->update();
+		checkAlive();
 		showAnimations();
 	}
 	for(LevelObject *object : objects)
@@ -267,8 +268,7 @@ void Level::clear()
 void Level::calculateCollisions()
 {
 	for(Tower *tower : towers)
-		tower->collide(enemies);
-	checkAlive();
+		tower->collide(enemies);	
 }
 
 void Level::checkDeadZone()
@@ -783,6 +783,11 @@ Level::LEVEL_STATE Level::getState() const
 void Level::ready()
 {
 	m_state = PLAYING;
+
+	towersRegress->resetTimers();
+	smoke->resetTimers();
+	moneyDrain->resetTimers();
+	mapExplosion->resetTimers();
 
 	towersRegress->setEnabled(gameMap->regress.enabled);
 	smoke->setEnabled(gameMap->smoke.enabled);

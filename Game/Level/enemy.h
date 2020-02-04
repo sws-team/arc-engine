@@ -53,6 +53,8 @@ public:
 	bool isVisible() const;
 	void setVisible(bool visible);
 
+	void startBurn();
+
 private:
 	EnemyStats m_stats;
 	EnemyStats m_data;
@@ -92,6 +94,15 @@ private:
 	EnemyAbility *ability;
 	bool m_stopped;
 	bool m_visible;
+
+
+	bool m_burned;
+	Timer burnTimer;
+	constexpr static float BURN_DURATION = 5000;
+	constexpr static float BURN_ATTACK_SPEED = 400;
+	constexpr static float BURN_DAMAGE = 20;
+	Timer burnAttack;
+	GameObject *burnAnimation;
 };
 
 class EnemyAbility : public GameDrawable
@@ -224,7 +235,7 @@ public:
 	DownTowerAbility();
 	~DownTowerAbility();
 
-	constexpr static float DOWNGRADE_VALUE = 0.3f;
+	constexpr static float DOWNGRADE_VALUE = 0.5f;
 	constexpr static float TOWER_DOWNGRADED_DURATION = 9000;
 protected:
 	void effect(bool isActive) override;

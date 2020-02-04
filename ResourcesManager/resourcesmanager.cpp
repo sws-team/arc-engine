@@ -80,6 +80,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::EXPLOSION, "images/Weapons/Effects/explosion.png");
 	addTexture(RESOURCES::DRAIN, "images/Weapons/Effects/drain.png");
 	addTexture(RESOURCES::REGRESS, "images/Weapons/Effects/regress.png");
+	addTexture(RESOURCES::BURN, "images/Weapons/Effects/burn.png");
 
 	//map icons
 	addTexture(RESOURCES::MAP_ICON_MISSION_1, "images/maps_icons/mission2.png");

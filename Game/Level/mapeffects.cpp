@@ -106,6 +106,11 @@ void MapEffect::setEnabled(bool enabled)
 
 void MapEffect::init()
 {
+
+}
+
+void MapEffect::resetTimers()
+{
 	stepTimer.reset();
 }
 
