@@ -387,6 +387,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		stats.damage = 10.f;
 		size.x = 1;
 		size.y = 1;
+		abilityType = EnemyInfo::STRONG;
 		break;
 	case SMALL_FAST:
 		texture_id = RESOURCES::ENEMY_TRICYCLE;
@@ -411,12 +412,14 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		stats.damage = 15.f;
 		size.x = 1;
 		size.y = 1;
+		abilityType = EnemyInfo::SELF_HEAL;
 		break;
 	case DOWN_TOWER_ENEMY:
 		texture_id = RESOURCES::ENEMY_DOWN_TOWER;
 		stats.health = 250.f;
 		stats.speed = 55.f;
 		stats.damage = 15.f;
+		abilityType = EnemyInfo::DOWN_TOWER;
 		size.x = 1;
 		size.y = 1;
 		break;
@@ -436,6 +439,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		stats.damage = 35.f;
 		size.x = 2;
 		size.y = 2;
+		abilityType = EnemyInfo::STRONG;
 		break;
 	case SPIDER:
 		texture_id = RESOURCES::ENEMY_SPIDER;
@@ -444,6 +448,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		stats.damage = 30.f;
 		size.x = 2;
 		size.y = 2;
+		abilityType = EnemyInfo::SHUTDOWN_TOWER;
 		break;
 	case MID_FAST:
 		texture_id = RESOURCES::ENEMY_HELICOPTER;
@@ -458,6 +463,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		stats.health = 400.f;
 		stats.speed = 55.f;
 		stats.damage = 20.f;
+		abilityType = EnemyInfo::HEAL_NEAR;
 		size.x = 2;
 		size.y = 2;
 		break;
@@ -468,6 +474,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		stats.damage = 20.f;
 		size.x = 2;
 		size.y = 2;
+		abilityType = EnemyInfo::SHELL_NEAR;
 		break;
 	case TELEPORT_ENEMY:
 		texture_id = RESOURCES::ENEMY_TELEPORT;
@@ -476,6 +483,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		stats.damage = 20.f;
 		size.x = 2;
 		size.y = 2;
+		abilityType = EnemyInfo::TELEPORT;
 		break;
 		//big
 	case BIG_SLOW:
@@ -494,6 +502,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		stats.damage = 60.f;
 		size.x = 4;
 		size.y = 4;
+		abilityType = EnemyInfo::RAGE;
 		break;
 	case SPAWN_ENEMY:
 		texture_id = RESOURCES::ENEMY_COW;
@@ -502,6 +511,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		stats.damage = 40.f;
 		size.x = 4;
 		size.y = 4;
+		abilityType = EnemyInfo::SPAWN;
 		break;
 	default:
 		break;
@@ -761,16 +771,26 @@ void TowerEffectAbility::use()
 		owner->frameCount = 1;
 
 		Tower *target = nullptr;
+		const Vector2f center = owner->enemyCenter();
 		const vector<Tower*> towers = Engine::Instance().level()->getAllTowers();
 		float weight = 0;
 		for(Tower* tower : towers)
 		{
 			if (tower->type() == POWER)
 				continue;
+			if (tower->isInvulnerable())
+				continue;
 			if (!tower->isActive())
 				continue;
 			if (tower->isDowngraded())
 				continue;
+			const Vector2f towerCenter = tower->getCenter();
+			const float a = fabs(center.x - towerCenter.x);
+			const float b = fabs(center.y - towerCenter.y);
+			const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
+			if (r > GlobalVariables::Instance().tileSize().x * TOWER_EFFECT_CELLS)
+				continue;
+
 			const float currentWeight = Engine::Instance().panel()->getTowerSellCost(tower);
 			if (currentWeight > weight)
 			{

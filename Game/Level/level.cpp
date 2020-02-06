@@ -118,7 +118,10 @@ void Level::update()
 			{
 				PowerTower *powerTower = static_cast<PowerTower*>(tower);
 				if (powerTower->hasEnergy())
+				{
 					money += powerTower->gain();
+					powerTower->updateGain();
+				}
 			}
 			else
 				tower->action();
@@ -263,6 +266,11 @@ void Level::clear()
 	for(Animation *animation : effects)
 		delete animation;
 	effects.clear();
+
+	smoke->clear();
+	mapExplosion->clear();
+	moneyDrain->clear();
+	towersRegress->clear();
 }
 
 void Level::calculateCollisions()
@@ -755,10 +763,6 @@ unsigned int Level::getCurrentWave() const
 void Level::test()
 {
 //	changeState(LEVEL_STATE::LOSE);
-//	spawn(DOWN_TOWER_ENEMY);
-//	spawn(MID_MEDIUM);
-//	spawn(TELEPORT_ENEMY);
-	//	spawn(REPAIR_ENEMY);
 }
 
 void Level::plus()

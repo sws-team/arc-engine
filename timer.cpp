@@ -15,7 +15,7 @@ void Timer::reset()
 bool Timer::check(float msec)
 {
 	const Int64 currentTime = clock.getElapsedTime().asMilliseconds();
-	const Int64 cur = _abs64(currentTime - lastTimer);// Время прошедшее с предыдущего раза
+	const Int64 cur = std::abs(currentTime - lastTimer);// Время прошедшее с предыдущего раза
 
 	if (cur > msec)
 	{

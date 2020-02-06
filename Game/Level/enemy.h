@@ -216,6 +216,7 @@ private:
 	void getBack();
 	float reflection;
 	constexpr static float REFLECTION_MODIFIER = 0.5f;
+	constexpr static int TOWER_EFFECT_CELLS = 10;
 };
 
 class ShutdownTowerAbility : public TowerEffectAbility

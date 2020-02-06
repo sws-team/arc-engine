@@ -337,8 +337,15 @@ StateWindow* Engine::createState(const Engine::GAME_STATE &state)
 
 bool Engine::loadMap(const String &fileName)
 {
+#ifdef OS_WIN
 	FILE* file = nullptr;
 	errno_t err = _wfopen_s(&file, fileName.toWideString().c_str(), L"rb");
+#else
+	char *charStr = wstringToChar(fileName.toWideString());
+	FILE *file = fopen(charStr, "rb");
+	int err = 1;
+	delete charStr;
+#endif
 	if( file != nullptr && err )
 		return false;
 
@@ -631,8 +638,16 @@ bool Engine::loadTiles(const String &fileName)
 {
 	tileProperties.clear();
 
+#ifdef OS_WIN
 	FILE* file = nullptr;
 	errno_t err = _wfopen_s(&file, fileName.toWideString().c_str(), L"rb");
+#else
+	char *charStr = wstringToChar(fileName.toWideString());
+	FILE *file = fopen(charStr, "rb");
+	int err = 1;
+	delete charStr;
+#endif
+
 	if( file != nullptr && err )
 		return false;
 
@@ -692,6 +707,25 @@ bool Engine::loadTiles(const String &fileName)
 	fclose(file);
 	return true;
 }
+#ifndef OS_WIN
+char *Engine::wstringToChar(const wstring &wStr) const
+{
+	const wchar_t *input = wStr.c_str();
+
+	// Count required buffer size (plus one for null-terminator).
+	size_t size = (wcslen(input) + 1) * sizeof(wchar_t);
+	char *buffer = new char[size];
+
+	#ifdef __STDC_LIB_EXT1__
+		// wcstombs_s is only guaranteed to be available if __STDC_LIB_EXT1__ is defined
+		size_t convertedSize;
+		std::wcstombs_s(&convertedSize, buffer, size, input, size);
+	#else
+		std::wcstombs(buffer, input, size);
+	#endif
+		return buffer;
+}
+#endif
 
 void Engine::loadMaps(const String &path)
 {
@@ -702,7 +736,13 @@ void Engine::loadMaps(const String &path)
 		return;
 	}
 	tinydir_dir dir;
+#ifdef OS_WIN
 	const int result = tinydir_open(&dir, path.toWideString().c_str());
+#else
+	char *charStr = wstringToChar(path.toWideString());
+	const int result = tinydir_open(&dir, charStr);
+	delete charStr;
+#endif
 	while (dir.has_next)
 	{
 		tinydir_file file;
@@ -715,10 +755,17 @@ void Engine::loadMaps(const String &path)
 	tinydir_close(&dir);
 }
 
+
 bool Engine::checkMaps(const String &path) const
 {
 	tinydir_dir dir;
+#ifdef OS_WIN
 	const int result = tinydir_open(&dir, path.toWideString().c_str());
+#else
+	char *charStr = wstringToChar(path.toWideString());
+	const int result = tinydir_open(&dir, charStr);
+	delete charStr;
+#endif
 	int count = 0;
 	while (dir.has_next)
 	{

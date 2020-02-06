@@ -63,6 +63,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::CLOSE_BACKGROUND, "images/close.png");
 	addTexture(RESOURCES::INTRO_BACKGROUND, "images/logo.png");
 
+	//effects
 	addTexture(RESOURCES::BASE_EXPLOSION_EFFECT, "images/Weapons/Effects/base_explosion.png");
 	addTexture(RESOURCES::FREEZE_EXPLOSION_EFFECT, "images/Weapons/Effects/freeze_explosion.png");
 	addTexture(RESOURCES::ROCKET_EXPLOSION_EFFECT, "images/Weapons/Effects/rocket_explosion.png");
@@ -81,6 +82,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::DRAIN, "images/Weapons/Effects/drain.png");
 	addTexture(RESOURCES::REGRESS, "images/Weapons/Effects/regress.png");
 	addTexture(RESOURCES::BURN, "images/Weapons/Effects/burn.png");
+	addTexture(RESOURCES::BLAST, "images/Weapons/Effects/blast.png");
 
 	//map icons
 	addTexture(RESOURCES::MAP_ICON_MISSION_1, "images/maps_icons/mission2.png");

@@ -36,6 +36,9 @@ class MapEffect : public GameDrawable
 {
 public:
 	MapEffect();
+
+	virtual void clear();
+
 	void update() override;
 
 	void setTime(float time);
@@ -116,6 +119,7 @@ public:
 	void update() override;
 
 	void init() override;
+	void clear() override;
 protected:
 	void stateChanged() override;
 private:

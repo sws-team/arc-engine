@@ -27,14 +27,18 @@ GlobalVariables::GlobalVariables()
 
 Vector2i GlobalVariables::getScreenResolution() const
 {
-    const int screenW =
+	const int screenW =
 #ifdef OS_WIN
             GetSystemMetrics(SM_CXSCREEN);
+#else
+		1920;
 #endif
-    const int screenH =
+	const int screenH =
 #ifdef OS_WIN
             GetSystemMetrics(SM_CYSCREEN);
-#endif
+#else
+			1080;
+		#endif
     return Vector2i(screenW, screenH);
 }
 

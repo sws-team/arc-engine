@@ -95,6 +95,10 @@ public:
 	float actualAttackSpeed() const;
 
 	static constexpr int ABILITY_LEVEL = 4;
+	void setInvulnerable(bool invulnerable);
+
+	bool isInvulnerable() const;
+
 protected:
 	TowerStats m_stats;
 	Timer actionTimer;
@@ -110,6 +114,7 @@ private:
 	bool m_downgraded;
 	bool m_blinded;
 	bool m_regressed;
+	bool m_invulnerable;
 };
 
 class ProjectilesTower : public Tower
@@ -159,9 +164,10 @@ class BaseTower : public ProjectilesTower
 {
 public:
 	BaseTower(const Vector2f &pos);
+
 	const static TowerStats STATS;
 	void projectileAction(Enemy *enemy) override;
-
+	void upgrade() override;
 private:
 };
 
@@ -169,6 +175,7 @@ class PowerTower : public Tower
 {
 public:
 	PowerTower(const Vector2f &pos);
+	~PowerTower() override;
 	const static TowerStats STATS;
 
 	void draw(RenderTarget *const target) final;
@@ -177,6 +184,7 @@ public:
 	void setHighlighted(bool isHighlighted);
 
 	float gain() const;
+	void updateGain();
 
 	void upgrade() override;
 
@@ -191,6 +199,15 @@ private:
 
 	RectangleShape powerRect;
 	void upgradePowerRect();
+
+	int gainCount;
+	constexpr static int MAX_GAIN = 5;
+	void activateBlast();
+	float zeroGround;
+	constexpr static int ZERO_GROUND = 6;
+	constexpr static float BLAST_DAMAGE = 250;
+	class LifeBar* abilityProgress;
+	static const Vector2i BLAST_SIZE;
 };
 
 class RocketTower : public ProjectilesTower
@@ -203,7 +220,7 @@ public:
 	void projectileAction(Enemy *enemy) override;
 private:
 	const static int ZERO_GROUND;
-	float m_zeroGround;
+	float zeroGround;
 };
 
 class FreezeTower : public ProjectilesTower

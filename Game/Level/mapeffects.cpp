@@ -75,6 +75,12 @@ MapEffect::MapEffect()
 	stepTimer.reset();
 }
 
+void MapEffect::clear()
+{
+	m_enabled = false;
+	m_state = READY;
+}
+
 void MapEffect::update()
 {
 	if (!m_enabled)
@@ -155,6 +161,8 @@ vector<Tower *> MapEffect::getRandomTowers(int count, const vector<Tower *> &tow
 	for (unsigned int i = 0; i < towersCount; ++i)
 	{
 		const int n = rand() % towers.size();
+		if (towers.at(n)->isInvulnerable())
+			continue;
 		if (numbers.count(n) == 0)
 		{
 			numbers.insert(n);
@@ -353,8 +361,7 @@ Smoke::Smoke()
 
 Smoke::~Smoke()
 {
-	for(GameObject *cloud : clouds)
-		delete cloud;
+	this->clear();
 }
 
 void Smoke::draw(RenderTarget * const target)
@@ -375,10 +382,16 @@ void Smoke::update()
 
 void Smoke::init()
 {
-	for (int i = 0; i < m_count; ++i)
+	for (unsigned int i = 0; i < m_count; ++i)
 		clouds.push_back(new GameObject(RESOURCES::SMOKE, Vector2f(0,0), Vector2i(256, 256), 4));
 
 	MapEffect::init();
+}
+
+void Smoke::clear()
+{
+	for(GameObject *cloud : clouds)
+		delete cloud;
 }
 
 void Smoke::stateChanged()

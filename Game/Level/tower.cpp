@@ -9,6 +9,7 @@
 #include "Game/Audio/soundcontroller.h"
 #include "mapeffects.h"
 #include "settings.h"
+#include "lifebar.h"
 
 const float Tower::LEVEL_GAIN = 0.25f;
 const float Tower::TOWER_SCAlE = 1.f/3.f;
@@ -25,6 +26,7 @@ Tower::Tower(const RESOURCES::TEXTURE_TYPE &texture_id, const Vector2f &pos, con
 	,m_downgraded(false)
 	,m_blinded(false)
 	,m_regressed(false)
+	,m_invulnerable(false)
 {
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
 }
@@ -150,9 +152,19 @@ Enemy *Tower::findNearestEnemy(const vector<Enemy *> &exclude)
 	return target;
 }
 
+bool Tower::isInvulnerable() const
+{
+	return m_invulnerable;
+}
+
+void Tower::setInvulnerable(bool invulnerable)
+{
+	m_invulnerable = invulnerable;
+}
+
 bool Tower::isRegressed() const
 {
-    return m_regressed;
+	return m_regressed;
 }
 
 void Tower::setRegressed(bool regressed)
@@ -316,11 +328,11 @@ const float PowerTower::ENERGY_GAIN = 10;
 const int PowerTower::COST_OFFSET = 10;
 											//		dmg	atk_speed	r	pr_speed	cost
 const TowerStats PowerTower::STATS = TowerStats		(0,		5000,	6,		0,		60);
-const TowerStats BaseTower::STATS = TowerStats		(5,		450,	4,		20,		50);
-const TowerStats FreezeTower::STATS = TowerStats	(5,		350,	5,		10,		100);
+const TowerStats BaseTower::STATS = TowerStats		(8,		450,	4,		20,		50);
+const TowerStats FreezeTower::STATS = TowerStats	(6,		350,	5,		10,		100);
 const TowerStats RocketTower::STATS = TowerStats	(40,	5000,	12,		5,		150);
 const TowerStats LaserTower::STATS = TowerStats		(5,		135,	6,		0,		200);
-const TowerStats ImprovedTower::STATS = TowerStats	(10,	250,	7,		40,		250);
+const TowerStats ImprovedTower::STATS = TowerStats	(11,	250,	7,		40,		250);
 
 BaseTower::BaseTower(const Vector2f &pos)
 	: ProjectilesTower(RESOURCES::TOWER_BASE, pos, STATS)
@@ -337,16 +349,27 @@ BaseTower::BaseTower(const Vector2f &pos)
 void BaseTower::projectileAction(Enemy *enemy)
 {
 	ProjectilesTower::projectileAction(enemy);
-	const float penetration = 0.001f * powf(10, level());
+	const float penetration = 0.00001f * powf(10, level());
 	enemy->protect(penetration, false);
 }
 
+void BaseTower::upgrade()
+{
+	ProjectilesTower::upgrade();
+	if (level() == ABILITY_LEVEL)
+		this->setInvulnerable(true);
+}
+
 const Color PowerTower::POWER_TOWER_AREA_COLOR = Color(23, 200, 124, 100);
+const Vector2i PowerTower::BLAST_SIZE = Vector2i(256, 256);
 
 PowerTower::PowerTower(const Vector2f &pos)
 	: Tower(RESOURCES::TOWER_POWER, pos, STATS)
 	,m_isHighlighted(false)
+	,gainCount(false)
+	,abilityProgress(nullptr)
 {
+	zeroGround = GlobalVariables::Instance().mapTileSize().x * ZERO_GROUND;
 	powerRect.setSize(Vector2f(STATS.radius * GlobalVariables::Instance().mapTileSize().x,
 							   STATS.radius * GlobalVariables::Instance().mapTileSize().y));
 	powerRect.setFillColor(POWER_TOWER_AREA_COLOR);
@@ -354,11 +377,19 @@ PowerTower::PowerTower(const Vector2f &pos)
 	m_gain = ENERGY_GAIN;
 }
 
+PowerTower::~PowerTower()
+{
+	if (abilityProgress != nullptr)
+		delete abilityProgress;
+}
+
 void PowerTower::draw(RenderTarget * const target)
 {
 	if (m_isHighlighted)
 		target->draw(powerRect);
 	Tower::draw(target);
+	if (abilityProgress != nullptr)
+		abilityProgress->draw(target);
 }
 
 bool PowerTower::hasEnergy()
@@ -376,9 +407,25 @@ float PowerTower::gain() const
 	return m_gain;
 }
 
+void PowerTower::updateGain()
+{
+	gainCount++;
+	if (gainCount == MAX_GAIN)
+	{
+		gainCount = 0;
+		if (level() == ABILITY_LEVEL)
+			activateBlast();
+	}
+	if (abilityProgress != nullptr)
+	{
+		const float rate = static_cast<float>(gainCount) / MAX_GAIN;
+		abilityProgress->setValue(rate);
+	}
+}
+
 void PowerTower::upgrade()
 {
-	m_gain *= LEVEL_GAIN;
+	m_gain *= 1 + LEVEL_GAIN;
 	Tower::upgrade();
 	switch (level())
 	{
@@ -395,6 +442,18 @@ void PowerTower::upgrade()
 		break;
 	}
 	upgradePowerRect();
+	if (level() == ABILITY_LEVEL)
+	{
+		abilityProgress = new LifeBar();
+		abilityProgress->init(Vector2i(this->sprite.getGlobalBounds().width,
+							  LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y),
+							  Color::Cyan);
+		abilityProgress->setPos(Vector2f(this->sprite.getGlobalBounds().left,
+										 this->sprite.getGlobalBounds().top +
+										 this->sprite.getGlobalBounds().height -
+										 LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y));
+		abilityProgress->setValue(0);
+	}
 }
 
 FloatRect PowerTower::getValidArea() const
@@ -412,13 +471,34 @@ void PowerTower::upgradePowerRect()
 								   GlobalVariables::Instance().tileSize().y * level()));
 }
 
+void PowerTower::activateBlast()
+{
+	const Vector2f pos = Vector2f(BLAST_SIZE.x/2 * Settings::Instance().getScaleFactor().x - GlobalVariables::Instance().mapTileSize().x,
+								  BLAST_SIZE.y/2 * Settings::Instance().getScaleFactor().y - GlobalVariables::Instance().mapTileSize().y);
+	Engine::Instance().level()->addAnimation(RESOURCES::BLAST, this->pos() - pos, BLAST_SIZE, 25, 4, 0);
+	const Vector2f center = this->getCenter();
+	const vector <Enemy*> enemies = Engine::Instance().level()->getAllEnemies();
+	for(Enemy* enemy : enemies)
+	{
+		const float a = fabs(center.x - enemy->enemyCenter().x);
+		const float b = fabs(center.y - enemy->enemyCenter().y);
+		const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
+		if (r <= zeroGround)
+		{
+			const float actualDamage = r/zeroGround * BLAST_DAMAGE;
+			enemy->hit(actualDamage);
+			checkKill(enemy);
+		}
+	}
+}
+
 
 const int RocketTower::ZERO_GROUND = 3;
 
 RocketTower::RocketTower(const Vector2f &pos)
 	: ProjectilesTower(RESOURCES::TOWER_ROCKET, pos, STATS)
 {
-	m_zeroGround = GlobalVariables::Instance().tileSize().x * ZERO_GROUND;
+	zeroGround = GlobalVariables::Instance().tileSize().x * ZERO_GROUND;
 	m_shotSound = "sounds/towers/rocket_shot.ogg";
 
 	projectileInfo.size = Vector2i(32, 16);
@@ -461,9 +541,9 @@ void RocketTower::projectileAction(Enemy *enemy)
 		const float a = fabs(epicenter.x - levelEnemy->enemyCenter().x);
 		const float b = fabs(epicenter.y - levelEnemy->enemyCenter().y);
 		const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
-		if (r <= m_zeroGround)
+		if (r <= zeroGround)
 		{
-			const float actualDamage = r/m_zeroGround * m_stats.damage;
+			const float actualDamage = r/zeroGround * m_stats.damage;
 			levelEnemy->hit(actualDamage);
 			checkKill(levelEnemy);
 			if(level() == ABILITY_LEVEL)
@@ -568,6 +648,8 @@ void LaserTower::updateLaserTarget(LaserTower::LaserTarget *laserTarget, float d
 		if (!laserTarget->currentTarget->isAlive())
 			laserTarget->currentTarget = nullptr;
 	}
+	const int alpha = rand() % 255;
+	laserTarget->lineTarget.color.a = alpha;
 }
 
 void LaserTower::drawLaserTarget(RenderTarget * const target,
@@ -584,12 +666,8 @@ void LaserTower::update()
 {
 	Tower::update();
 	updateLaserTarget(&mainTarget, 1.f);
-	float damageModifier = 0.8f;
-	for(LaserTarget& laserTarget : targets)
-	{
-		updateLaserTarget(&laserTarget, damageModifier);
-		damageModifier -= 0.2f;
-	}
+	for(LaserTarget& laserTarget : targets)	
+		updateLaserTarget(&laserTarget, 0.5);
 
 	for (auto it = targets.begin(); it != targets.end();)
 	{
@@ -630,17 +708,20 @@ ImprovedTower::ImprovedTower(const Vector2f &pos)
 
 void ImprovedTower::createdProjectile(Projectile *projectile)
 {
-	float angle = projectile->angle();
-	for (int i = 0; i < 7; ++i)
+	if (level() == ABILITY_LEVEL)
 	{
-		angle += 45;
-		Projectile *extraProjectile = new Projectile(projectileInfo.texture_id,
-												projectile->pos(),
-												projectileInfo.size,
-												projectileInfo.frameCount);
-		extraProjectile->setAngle(angle);
-		extraProjectile->target = projectile->target;
-		m_projectiles.push_back(extraProjectile);
+		float angle = projectile->angle();
+		for (int i = 0; i < 7; ++i)
+		{
+			angle += 45;
+			Projectile *extraProjectile = new Projectile(projectileInfo.texture_id,
+													projectile->pos(),
+													projectileInfo.size,
+													projectileInfo.frameCount);
+			extraProjectile->setAngle(angle);
+			extraProjectile->target = projectile->target;
+			m_projectiles.push_back(extraProjectile);
+		}
 	}
 }
 

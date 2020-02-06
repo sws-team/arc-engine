@@ -8,8 +8,6 @@ CONFIG += c++17
 CONFIG -= app_bundle
 CONFIG -= qt
 DESTDIR = TowerDefence
-
-CONFIG += c++17
 QMAKE_CXXFLAGS += -std=c++17
 
 include(../build_environment.pri)

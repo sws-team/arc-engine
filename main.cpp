@@ -51,8 +51,10 @@ int main(int argc, char *argv[])
 	Engine::Instance().load();
 
 	if (!Engine::Instance().checkMaps("maps"))
-	{
+	{		
+#ifdef OS_WIN
 		MessageBoxA(NULL, "Checksum error", "Fatal Error!", MB_OK | MB_ICONERROR);
+#endif
 		return EXIT_FAILURE;
 	}
 

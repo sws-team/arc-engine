@@ -120,6 +120,9 @@ private:
 
 	map<int, Tile::TileProperties> tileProperties;
 	Texture tilesetImage;
+#ifndef OS_WIN
+	char *wstringToChar(const wstring& wStr) const;
+#endif
 };
 
 #endif // ENGINE_H
