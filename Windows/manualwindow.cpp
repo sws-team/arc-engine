@@ -162,6 +162,7 @@ void ManualWindow::updatePos()
 	infoRect.setOutlineThickness(1);
 	infoRect.setOutlineColor(Color::Black);
 	infoRect.setPosition(ICON_X_OFFSET * 3 + RECT_WIDTH, ICON_Y_OFFSET * 2);
+
 	next.setPosition(Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
 							  infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET + ICON_WIDTH, 0));
 
@@ -186,13 +187,16 @@ void ManualWindow::updatePos()
 
 		element.icon.setPosition(pos + Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
-		element.nameText.setScale(scaleFactor);
-
-		element.descriptionText.setScale(scaleFactor);
-		element.descriptionText.setPosition(Vector2f(infoRect.getGlobalBounds().left,
+		element.object->setPos(Vector2f(infoRect.getGlobalBounds().left,
 													 infoRect.getGlobalBounds().top) +
 											Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
+
+		element.descriptionText.setScale(scaleFactor);
+		element.descriptionText.setPosition(element.object->pos() +
+											Vector2f(element.object->getSize().x + ICON_X_OFFSET, 0));
+
+		element.nameText.setScale(scaleFactor);
 		element.nameText.setPosition(pos + Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET) +
 									 Vector2f(ICON_WIDTH + ICON_X_OFFSET, 0));
 
