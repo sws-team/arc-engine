@@ -527,15 +527,14 @@ void Level::checkEnemyMove()
 	{
 		if (enemy->isStopped())
 			continue;
-		if (enemy->moveStep())
-		{
-			if (endFRect.contains(enemy->enemyPos()))
-				continue;
+		enemy->moveEnemy();
 
-			const Vector2i cell = Engine::Instance().camera()->posToCellMap(enemy->enemyPos());
-			const int direction = getTileDirectionByCell(cell);
+		if (endFRect.contains(enemy->enemyPos()))
+			continue;
+		const Vector2i cell = Engine::Instance().camera()->posToCellMap(enemy->enemyPos());
+		const int direction = getTileDirectionByCell(cell);
+		if (direction != 0)
 			enemy->moveNext(direction);
-		}
 	}
 }
 
@@ -767,16 +766,6 @@ unsigned int Level::getCurrentWave() const
 void Level::test()
 {
 //	changeState(LEVEL_STATE::LOSE);
-}
-
-void Level::plus()
-{
-
-}
-
-void Level::minus()
-{
-
 }
 
 Abilities *Level::getAbilities()

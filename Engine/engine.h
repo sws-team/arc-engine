@@ -90,6 +90,12 @@ public:
 	constexpr static float MSEC = 1000;
 
 	LevelObject *createObject(OBJECTS::OBJECT_TYPES type, const Vector2f &pos);
+
+	float gameSpeed() const;
+	void setNormalSpeed();
+	void setFastSpeed();
+	void setExtraFastSpeed();
+
 private:
 	Engine();
 	Engine(const Engine& root) = delete;
@@ -123,6 +129,8 @@ private:
 #ifndef OS_WIN
 	char *wstringToChar(const wstring& wStr) const;
 #endif
+	float m_gameSpeed;
+	void setSpeed(float speed);
 };
 
 #endif // ENGINE_H

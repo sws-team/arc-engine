@@ -44,6 +44,7 @@ Engine::Engine() :
   ,m_panel(nullptr)
   ,m_instructions(nullptr)
   ,m_mission(0)
+  ,m_gameSpeed(1)
 {
 	p_window = nullptr;
 	m_state = INTRO;
@@ -220,6 +221,26 @@ LevelObject *Engine::createObject(OBJECTS::OBJECT_TYPES type, const Vector2f& po
 	}
 
 	return object;
+}
+
+float Engine::gameSpeed() const
+{
+	return m_gameSpeed;
+}
+
+void Engine::setNormalSpeed()
+{
+	setSpeed(1.f);
+}
+
+void Engine::setFastSpeed()
+{
+	setSpeed(0.5f);
+}
+
+void Engine::setExtraFastSpeed()
+{
+	setSpeed(0.1f);
 }
 
 Camera *Engine::camera() const
@@ -707,6 +728,13 @@ bool Engine::loadTiles(const String &fileName)
 	fclose(file);
 	return true;
 }
+
+void Engine::setSpeed(float speed)
+{
+	m_gameSpeed = speed;
+	watch(m_gameSpeed);
+}
+
 #ifndef OS_WIN
 char *Engine::wstringToChar(const wstring &wStr) const
 {

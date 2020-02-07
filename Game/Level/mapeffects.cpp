@@ -392,6 +392,7 @@ void Smoke::clear()
 {
 	for(GameObject *cloud : clouds)
 		delete cloud;
+	clouds.clear();
 }
 
 void Smoke::stateChanged()

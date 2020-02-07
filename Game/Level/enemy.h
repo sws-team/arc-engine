@@ -28,7 +28,8 @@ public:
 	EnemyStats getData() const;
 	EnemyStats getPureStats() const;
 
-	bool moveStep();
+	void moveEnemy();
+
 	void moveNext(int direction);
 
 	void update() override;	
@@ -65,10 +66,8 @@ private:
 	void drawLifeBar(RenderTarget *target);
 
 	//move
-	int moveCounter;
-	Vector2f currentStep;
+	Timer moveTimer;
 	int currentDirection;
-	Vector2f targetPos;
 
 	enum SPRITE_DIRECTION
 	{
@@ -83,8 +82,7 @@ private:
 	int freezeDuration;
 	float freezeK;
 	bool isFreezed;
-	bool startFreeze;
-	void moveEnemy(const Vector2f& d);
+
 	Vector2f m_size;
 
 	Vector2f m_spritePos;//enemy pos in rect
@@ -103,6 +101,9 @@ private:
 	constexpr static float BURN_DAMAGE = 20;
 	Timer burnAttack;
 	GameObject *burnAnimation;
+
+	Vector2f actualMoveStep() const;
+	Vector2f moveStep;
 };
 
 class EnemyAbility : public GameDrawable

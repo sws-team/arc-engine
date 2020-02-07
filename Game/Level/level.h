@@ -83,8 +83,6 @@ public:
 
 	//delete
 	void test();
-	void plus();
-	void minus();
 
 	Abilities *getAbilities();
 

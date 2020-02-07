@@ -21,15 +21,15 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 						  GlobalVariables::MAP_CELL_SIZE * cellSize.y),
 				 4)
 	,m_stats(stats)
-	,moveCounter(0)
 	,spriteDirection(DEFAULT_DOWN)
 	,isFreezed(false)
-	,startFreeze(false)
 	,ability(nullptr)
 	,m_stopped(false)
 	,m_visible(true)
 	,m_burned(false)
 {
+	moveStep = Vector2f(Settings::Instance().getScaleFactor().x * 1.f,
+						Settings::Instance().getScaleFactor().y * 1.f);
 
 	m_size.x = GlobalVariables::MAP_CELL_SIZE * cellSize.x;
 	m_size.y = GlobalVariables::MAP_CELL_SIZE * cellSize.y;
@@ -75,39 +75,46 @@ EnemyStats Enemy::getPureStats() const
 	return m_stats;
 }
 
-bool Enemy::moveStep()
+void Enemy::moveEnemy()
 {
-	moveCounter++;
-	moveEnemy(currentStep);
-	if (moveCounter >= m_data.speed)
+	if (!moveTimer.check(m_data.speed))
+		return;
+
+	Vector2f offset;
+	offset.x = 0;
+	offset.y = 0;
+	switch (currentDirection)
 	{
-		setPos(targetPos);
-		return true;
+	case Map::STAY:
+		break;
+	case Map::UP:
+		offset.y -= actualMoveStep().y;
+		break;
+	case Map::DOWN:
+		offset.y += actualMoveStep().y;
+		break;
+	case Map::LEFT:
+		offset.x -= actualMoveStep().x;
+		break;
+	case Map::RIGHT:
+		offset.x += actualMoveStep().x;
+		break;
+	case Map::NO_MOVE:
+		return;
 	}
-	return false;
+	m_pos += offset;
+	setPos(m_pos + m_spritePos);
+	offset.x *= 1.f/Engine::Instance().gameSpeed();
+	offset.y *= 1.f/Engine::Instance().gameSpeed();
+	update();
 }
 
 void Enemy::moveNext(int direction)
 {
-	if (isFreezed && !startFreeze)
-	{
-		startFreeze = true;
-		m_data.speed += freezeK;
-		freezeTimer.clock.restart();
-	}
-	else if (!isFreezed && startFreeze)
-	{
-		startFreeze = false;
-		m_data.speed -= freezeK;
-	}
+	if (direction == 0)
+		return;
 
-	targetPos = m_pos;
-
-	moveCounter = 0;
 	currentDirection = direction;
-
-	currentStep.x = 0;
-	currentStep.y = 0;
 
 	SPRITE_DIRECTION newDirection = DEFAULT_DOWN;
 	switch (currentDirection)
@@ -115,29 +122,20 @@ void Enemy::moveNext(int direction)
 	case Map::STAY:
 		break;
 	case Map::UP:
-		targetPos.y -= GlobalVariables::Instance().mapTileSize().y;
-		currentStep.y = -GlobalVariables::Instance().mapTileSize().y / m_data.speed;
 		newDirection = SPRITE_DIRECTION::SPRITE_UP;
 		break;
 	case Map::DOWN:
-		targetPos.y += GlobalVariables::Instance().mapTileSize().y;
-		currentStep.y = GlobalVariables::Instance().mapTileSize().y / m_data.speed;
 		newDirection = SPRITE_DIRECTION::DEFAULT_DOWN;
 		break;
 	case Map::LEFT:
-		targetPos.x -= GlobalVariables::Instance().mapTileSize().x;
-		currentStep.x = -GlobalVariables::Instance().mapTileSize().x / m_data.speed;
 		newDirection = SPRITE_DIRECTION::SPRITE_LEFT;
 		break;
 	case Map::RIGHT:
-		targetPos.x += GlobalVariables::Instance().mapTileSize().x;
-		currentStep.x = GlobalVariables::Instance().mapTileSize().x / m_data.speed;
 		newDirection = SPRITE_DIRECTION::SPRITE_RIGHT;
 		break;
 	case Map::NO_MOVE:
 		return;
 	}
-
 	if (newDirection != spriteDirection)
 	{
 		float angle = 0;
@@ -200,7 +198,7 @@ void Enemy::moveNext(int direction)
 
 void Enemy::update()
 {
-	if (startFreeze)
+	if (isFreezed)
 	{
 		if (freezeTimer.check(freezeDuration))
 			isFreezed = false;
@@ -210,7 +208,6 @@ void Enemy::update()
 		if (burnTimer.check(BURN_DURATION))
 			m_burned = false;
 	}
-	setPos(m_pos + m_spritePos);
 	if (m_burned)
 	{
 		const int x = this->size.x/GlobalVariables::MAP_CELL_SIZE - 1;
@@ -257,13 +254,13 @@ void Enemy::useAbility()
 
 void Enemy::freeze(float k, int duration)
 {
-	if (isFreezed || startFreeze)
+	if (isFreezed)
 	{
+		freezeK = max(freezeK, k);
 		freezeDuration = max(freezeDuration, duration);
 		return;
 	}
-
-	startFreeze = false;
+	freezeTimer.clock.restart();
 	freezeDuration = duration;
 	freezeK = k;
 	isFreezed = true;
@@ -312,10 +309,12 @@ void Enemy::drawLifeBar(RenderTarget *target)
 	lifeBar->draw(target);
 }
 
-void Enemy::moveEnemy(const Vector2f &d)
+Vector2f Enemy::actualMoveStep() const
 {
-	m_pos += d;
-	update();
+	if (isFreezed)
+		return Vector2f(moveStep.x * freezeK,
+						moveStep.y * freezeK);
+	return moveStep;
 }
 
 void Enemy::startBurn()
@@ -375,7 +374,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case SCORPION:
 		texture_id = RESOURCES::ENEMY_SCORPION;
 		stats.health = 125.f;
-		stats.speed = 60.f;
+		stats.speed = 9.f;
 		stats.damage = 10.f;
 		size.x = 1;
 		size.y = 1;
@@ -400,7 +399,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case SMALL_NEXT:
 		texture_id = RESOURCES::ENEMY_ANT;
 		stats.health = 50.f;
-		stats.speed = 55.f;
+		stats.speed = 100.f;
 		stats.damage = 5.f;
 		size.x = 1;
 		size.y = 1;
@@ -516,6 +515,10 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	default:
 		break;
 	}
+
+//	stats.speed = 100.f - stats.speed;
+//	stats.speed /= 5;
+
 	EnemyInfo info;
 	info.texture_id = texture_id;
 	info.size = size;
@@ -561,8 +564,7 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 		break;
 	}
 
-	EnemyStats stats = info.stats;
-	stats.speed = 100.f - stats.speed;
+	const EnemyStats stats = info.stats;
 	Enemy *enemy = new Enemy(info.texture_id, startPos, stats, info.size);
 	enemy->setAbility(ability);
 	if (ability != nullptr)
@@ -689,10 +691,6 @@ void TeleportAbility::use()
 		{
 			if (Engine::Instance().level()->getEndRect().contains(owner->enemyPos()))
 				continue;
-			while(!owner->moveStep())
-			{
-
-			}
 			const Vector2i cell = Engine::Instance().camera()->posToCellMap(owner->enemyPos());
 			const int direction = Engine::Instance().level()->getTileDirectionByCell(cell);
 			owner->moveNext(direction);

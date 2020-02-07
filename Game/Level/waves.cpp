@@ -144,7 +144,6 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 	case 3:
 	{
 		//small next,spider
-
 		ADD_ENEMY(SCORPION, 5);
 		ADD_ENEMY(SPIDER, 1);
 		ADD_ENEMY(SMALL_NEXT, 10);

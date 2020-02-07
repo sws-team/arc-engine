@@ -568,9 +568,8 @@ FreezeTower::FreezeTower(const Vector2f &pos)
 void FreezeTower::projectileAction(Enemy *enemy)
 {
 	ProjectilesTower::projectileAction(enemy);
-	const float freezeOffset = level() * 10;
 	const float durationOffset = level() * 1000;
-	const float freezeValue = BASE_FREEZE_VALUE + freezeOffset;
+	const float freezeValue = BASE_FREEZE_VALUE;
 	const float freezeDuration = 2000 + durationOffset;
 	enemy->freeze(freezeValue, freezeDuration);
 
@@ -757,7 +756,8 @@ void ProjectilesTower::moveProjectile(Projectile *projectile)
 	const float y2 = y1 + m_stats.projectileSpeed * sinf(projectile->angle() * M_PI/180);
 	const float x2 = x1 + m_stats.projectileSpeed * cosf(projectile->angle() * M_PI/180);
 
-	projectile->move(x2-x1, y2-y1);
+	const Vector2f offset = Vector2f(x2-x1, y2-y1);
+	projectile->move(offset);
 }
 
 Vector2f ProjectilesTower::shootPos() const

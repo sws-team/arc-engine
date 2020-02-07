@@ -52,7 +52,7 @@ public:
 
 	void activate() override;
 
-	static constexpr float FREEZE_ABILITY_K = 35.f;
+	static constexpr float FREEZE_ABILITY_K = 0.3f;
 	static constexpr int FREEZE_ABILITY_DURATION = 5000;
 
 };

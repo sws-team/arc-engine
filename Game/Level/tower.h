@@ -232,7 +232,7 @@ public:
 	void projectileAction(Enemy *enemy) override;
 private:
 	static constexpr int ABILITY_FREEZE_CELLS = 2;
-	static constexpr float BASE_FREEZE_VALUE = 35.f;
+	static constexpr float BASE_FREEZE_VALUE = 0.5f;
 };
 
 class LaserTower : public Tower

@@ -136,11 +136,14 @@ void Controller::eventFilter(Event *event)
 		case Keyboard::R:
 			Engine::Instance().level()->test();
 			break;
-		case Keyboard::P:
-			Engine::Instance().level()->plus();
+		case Keyboard::I:
+			Engine::Instance().setNormalSpeed();
 			break;
 		case Keyboard::O:
-			Engine::Instance().level()->minus();
+			Engine::Instance().setFastSpeed();
+			break;
+		case Keyboard::P:
+			Engine::Instance().setExtraFastSpeed();
 			break;
 		case Keyboard::Delete:
 			Engine::Instance().level()->sellTower(Engine::Instance().level()->selectedTower());
