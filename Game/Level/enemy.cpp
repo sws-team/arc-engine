@@ -374,7 +374,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case SCORPION:
 		texture_id = RESOURCES::ENEMY_SCORPION;
 		stats.health = 125.f;
-		stats.speed = 9.f;
+		stats.speed = 50.f;
 		stats.damage = 10.f;
 		size.x = 1;
 		size.y = 1;
@@ -382,7 +382,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case SMALL_MEDIUM:
 		texture_id = RESOURCES::ENEMY_CAR;
 		stats.health = 175.f;
-		stats.speed = 70.f;
+		stats.speed = 30.f;
 		stats.damage = 10.f;
 		size.x = 1;
 		size.y = 1;
@@ -391,7 +391,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case SMALL_FAST:
 		texture_id = RESOURCES::ENEMY_TRICYCLE;
 		stats.health = 100.f;
-		stats.speed = 90.f;
+		stats.speed = 15.f;
 		stats.damage = 5.f;
 		size.x = 1;
 		size.y = 1;
@@ -399,7 +399,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case SMALL_NEXT:
 		texture_id = RESOURCES::ENEMY_ANT;
 		stats.health = 50.f;
-		stats.speed = 100.f;
+		stats.speed = 45.f;
 		stats.damage = 5.f;
 		size.x = 1;
 		size.y = 1;
@@ -407,7 +407,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case SELFHEAL_ENEMY:
 		texture_id = RESOURCES::ENEMY_CAR;
 		stats.health = 225.f;
-		stats.speed = 65.f;
+		stats.speed = 40.f;
 		stats.damage = 15.f;
 		size.x = 1;
 		size.y = 1;
@@ -416,7 +416,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case DOWN_TOWER_ENEMY:
 		texture_id = RESOURCES::ENEMY_DOWN_TOWER;
 		stats.health = 250.f;
-		stats.speed = 55.f;
+		stats.speed = 40.f;
 		stats.damage = 15.f;
 		abilityType = EnemyInfo::DOWN_TOWER;
 		size.x = 1;
@@ -425,7 +425,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case ANOTHER_ENEMY:
 		texture_id = RESOURCES::ENEMY_PLANE;
 		stats.health = 200.f;
-		stats.speed = 75.f;
+		stats.speed = 35.f;
 		stats.damage = 15.f;
 		size.x = 1;
 		size.y = 1;
@@ -434,7 +434,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case MID_SLOW:
 		texture_id = RESOURCES::ENEMY_TANK;
 		stats.health = 500.f;
-		stats.speed = 45.f;
+		stats.speed = 55.f;
 		stats.damage = 35.f;
 		size.x = 2;
 		size.y = 2;
@@ -443,7 +443,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case SPIDER:
 		texture_id = RESOURCES::ENEMY_SPIDER;
 		stats.health = 350.f;
-		stats.speed = 40.f;
+		stats.speed = 55.f;
 		stats.damage = 30.f;
 		size.x = 2;
 		size.y = 2;
@@ -452,7 +452,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case MID_FAST:
 		texture_id = RESOURCES::ENEMY_HELICOPTER;
 		stats.health = 300.f;
-		stats.speed = 70.f;
+		stats.speed = 20.f;
 		stats.damage = 20.f;
 		size.x = 2;
 		size.y = 2;
@@ -460,7 +460,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case REPAIR_ENEMY:
 		texture_id = RESOURCES::ENEMY_REPAIR;
 		stats.health = 400.f;
-		stats.speed = 55.f;
+		stats.speed = 45.f;
 		stats.damage = 20.f;
 		abilityType = EnemyInfo::HEAL_NEAR;
 		size.x = 2;
@@ -478,7 +478,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case TELEPORT_ENEMY:
 		texture_id = RESOURCES::ENEMY_TELEPORT;
 		stats.health = 300.f;
-		stats.speed = 75.0f;
+		stats.speed = 35.0f;
 		stats.damage = 20.f;
 		size.x = 2;
 		size.y = 2;
@@ -488,7 +488,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case BIG_SLOW:
 		texture_id = RESOURCES::ENEMY_AIRCARRIER;
 		stats.health = 2000.f;
-		stats.speed = 30.f;
+		stats.speed = 75.f;
 		stats.damage = 75.f;
 		stats.reflection = 0.5f;
 		size.x = 4;
@@ -497,7 +497,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case BIG_MEDIUM:
 		texture_id = RESOURCES::ENEMY_BIG_TANK;
 		stats.health = 900.f;
-		stats.speed = 35.f;
+		stats.speed = 55.f;
 		stats.damage = 60.f;
 		size.x = 4;
 		size.y = 4;
@@ -506,7 +506,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	case SPAWN_ENEMY:
 		texture_id = RESOURCES::ENEMY_COW;
 		stats.health = 750.f;
-		stats.speed = 40.f;
+		stats.speed = 50.f;
 		stats.damage = 40.f;
 		size.x = 4;
 		size.y = 4;
@@ -515,10 +515,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	default:
 		break;
 	}
-
-//	stats.speed = 100.f - stats.speed;
-//	stats.speed /= 5;
-
+	stats.speed /= 2;
 	EnemyInfo info;
 	info.texture_id = texture_id;
 	info.size = size;

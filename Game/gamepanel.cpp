@@ -1100,8 +1100,7 @@ void GamePanel::setMapSize(const Vector2f& size)
 
 	const float minimap_scale_x = Settings::Instance().getScaleFactor().x * 344.f / Settings::Instance().getResolution().x;
 	const float minimap_scale_y = Settings::Instance().getScaleFactor().y * 213.f / Settings::Instance().getResolution().y;
-	miniMapSprite.scale(minimap_scale_x, minimap_scale_y);
-	miniMapSprite.scale(1920.f/size.x, 1088.f/size.y);
+	miniMapSprite.setScale(minimap_scale_x * 1920.f/size.x, minimap_scale_y* 1088.f/size.y);
 }
 
 float GamePanel::getBottomValue() const
