@@ -45,7 +45,6 @@ GameWindow::GameWindow()
 	addItem(Language::Instance().translate(Language::EXIT_TO_MENU));
 	addItem(Language::Instance().translate(Language::EXIT_FROM_GAME));
 
-
 	Vector2f pos = Vector2f(0, 0);
 	menuImg.setPosition(pos);
 

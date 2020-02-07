@@ -242,10 +242,6 @@ GamePanel::GamePanel() :
 	drainRect.setOutlineThickness(2);
 	drainRect.setOutlineColor(Color::Transparent);
 
-	const float minimap_scale_x = scaleFactor.x * 344.f / Settings::Instance().getResolution().x;
-	const float minimap_scale_y = scaleFactor.y * 213.f / Settings::Instance().getResolution().y;
-	miniMapSprite.scale(minimap_scale_x, minimap_scale_y);
-
 	//set pos
 	//	pos.x = target->getView().getCenter().x - target->getView().getSize().x/2;
 	//	pos.y = target->getView().getCenter().y + target->getView().getSize().y/2;
@@ -1095,9 +1091,17 @@ void GamePanel::setProgressMax(int progressMax)
 void GamePanel::init()
 {
 	rTexture.setView(*Engine::Instance().camera()->getMiniMapView());
-	rTexture.create(static_cast<unsigned int>(Settings::Instance().getResolution().x),
-					static_cast<unsigned int>(Settings::Instance().getResolution().y));
+}
 
+void GamePanel::setMapSize(const Vector2f& size)
+{
+	rTexture.create(static_cast<unsigned int>(size.x),
+					static_cast<unsigned int>(size.y));
+
+	const float minimap_scale_x = Settings::Instance().getScaleFactor().x * 344.f / Settings::Instance().getResolution().x;
+	const float minimap_scale_y = Settings::Instance().getScaleFactor().y * 213.f / Settings::Instance().getResolution().y;
+	miniMapSprite.scale(minimap_scale_x, minimap_scale_y);
+	miniMapSprite.scale(1920.f/size.x, 1088.f/size.y);
 }
 
 float GamePanel::getBottomValue() const

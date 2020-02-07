@@ -33,6 +33,7 @@ public:
 	void setProgressMax(int progressMax);
 
 	void init();
+	void setMapSize(const Vector2f &size);
 
 	void updateInfo();
 

@@ -161,6 +161,9 @@ void Level::startMission(const unsigned int n)
 	m_state = WAIT_READY;
 	waves = EnemiesFactory::generateEnemies(n);
 	gameMap = Engine::Instance().getMap(n);
+	Engine::Instance().panel()->setMapSize(Vector2f(gameMap->width * GlobalVariables::MAP_CELL_SIZE,
+													gameMap->height * GlobalVariables::MAP_CELL_SIZE));
+
 	Engine::Instance().panel()->setProgressMax(currentProgress());
 	life = gameMap->life;
 	Engine::Instance().panel()->setLifeMax(life);
@@ -187,13 +190,14 @@ void Level::startMission(const unsigned int n)
 	endRect.setSize(Vector2f(gameMap->endRect.width * Settings::Instance().getScaleFactor().x,
 							 gameMap->endRect.height* Settings::Instance().getScaleFactor().y));
 
-	const Vector2f deadZoneSize = Vector2f(gameMap->width * GlobalVariables::Instance().mapTileSize().x,
-										   gameMap->height * GlobalVariables::Instance().mapTileSize().y);
 	const Vector2f minPos = Vector2f(-DEAD_ZONE_SIZE * Settings::Instance().getScaleFactor().x,
 									 -DEAD_ZONE_SIZE * Settings::Instance().getScaleFactor().y);
 	deadZone.setPosition(minPos);
-	deadZone.setSize(Vector2f(deadZoneSize.x + fabs(minPos.x) * 2,
-							  deadZoneSize.y + fabs(minPos.y) * 2));
+
+	const Vector2f mapPixelSize = Vector2f(gameMap->width * GlobalVariables::Instance().mapTileSize().x,
+										   gameMap->height * GlobalVariables::Instance().mapTileSize().y);
+	deadZone.setSize(Vector2f(mapPixelSize.x + fabs(minPos.x) * 2,
+							  mapPixelSize.y + fabs(minPos.y) * 2));
 
 
 	smoke->setTime(gameMap->smoke.time);
@@ -767,6 +771,7 @@ void Level::test()
 
 void Level::plus()
 {
+
 }
 
 void Level::minus()
