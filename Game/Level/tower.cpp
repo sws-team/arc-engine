@@ -588,6 +588,8 @@ void FreezeTower::projectileAction(Enemy *enemy)
 	}
 }
 
+const Vector2i LaserTower::LASER_SIZE = Vector2i(16, 16);
+
 LaserTower::LaserTower(const Vector2f &pos)
 	: Tower(RESOURCES::TOWER_LASER, pos, STATS)
 {
@@ -596,15 +598,22 @@ LaserTower::LaserTower(const Vector2f &pos)
 	lineTower.color = Color::Cyan;
 	mainTarget.lineTarget.color = Color::Cyan;
 	mainTarget.currentTarget = nullptr;
-	mainTarget.laser.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::LASER_PROJECTILE));
+	mainTarget.laser = new GameObject(RESOURCES::LASER_PROJECTILE, Vector2f(0,0), LASER_SIZE, 3);
+//	mainTarget.laser.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::LASER_PROJECTILE));
 	m_shotSound = "sounds/towers/laser_shot.ogg";
+}
+
+LaserTower::~LaserTower()
+{
+	clearLasers();
 }
 
 void LaserTower::shoot(Enemy *target)
 {
 	if (level() == ABILITY_LEVEL && target != nullptr)
 	{
-		targets.clear();
+		clearLasers();
+
 		vector<Enemy*> exclude;
 		exclude.push_back(target);
 		while(true)
@@ -620,7 +629,7 @@ void LaserTower::shoot(Enemy *target)
 			LaserTarget laserTarget;
 			laserTarget.lineTarget.color = Color::Cyan;
 			laserTarget.currentTarget = enemy;
-			laserTarget.laser.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::LASER_PROJECTILE));
+			laserTarget.laser = new GameObject(RESOURCES::LASER_PROJECTILE, Vector2f(0,0), Vector2i(16, 16), 3);
 			targets.push_back(laserTarget);
 		}
 	}
@@ -636,9 +645,9 @@ void LaserTower::updateLaserTarget(LaserTower::LaserTarget *laserTarget, float d
 		return;
 
 	laserTarget->lineTarget = laserTarget->currentTarget->getCenter();
-	laserTarget->laser.setPosition(laserTarget->lineTarget.position -
-								  Vector2f(laserTarget->laser.getGlobalBounds().width/2,
-										   laserTarget->laser.getGlobalBounds().height/2));
+	laserTarget->laser->setPos(laserTarget->lineTarget.position -
+								  Vector2f(LASER_SIZE.x/2 * Settings::Instance().getScaleFactor().x,
+										   LASER_SIZE.y/2 * Settings::Instance().getScaleFactor().y));
 
 	if(laserTarget->damageTimer.check(actualAttackSpeed()))
 	{
@@ -649,6 +658,7 @@ void LaserTower::updateLaserTarget(LaserTower::LaserTarget *laserTarget, float d
 	}
 	const int alpha = rand() % 255;
 	laserTarget->lineTarget.color.a = alpha;
+	laserTarget->laser->update();
 }
 
 void LaserTower::drawLaserTarget(RenderTarget * const target,
@@ -658,7 +668,14 @@ void LaserTower::drawLaserTarget(RenderTarget * const target,
 		return;
 	Vertex line[] = { lineTower, laserTarget->lineTarget };
 	target->draw(line, 2, Lines);
-	target->draw(laserTarget->laser);
+	laserTarget->laser->draw(target);
+}
+
+void LaserTower::clearLasers()
+{
+	for(const LaserTarget& laserTarget : targets)
+		delete laserTarget.laser;
+	targets.clear();
 }
 
 void LaserTower::update()

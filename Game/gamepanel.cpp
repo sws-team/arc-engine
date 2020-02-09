@@ -336,7 +336,6 @@ void GamePanel::update()
 		{
 			waitBlink = !waitBlink;
 			readyText.setFillColor(waitBlink?Color::Black:Color::Red);
-			Engine::Instance().level()->blinkStartEnd(waitBlink);
 		}
 	}
 	if (m_drain)

@@ -14,7 +14,8 @@ enum SHADER_TYPES
 {
 	UNDEFINED,
 
-	WAVE,
+	MOVING,
+	WAVE
 };
 }
 

@@ -481,8 +481,11 @@ bool Engine::loadMap(const String &fileName)
 			layer.opacity *= opacity;
 		}
 
-		if (string(layerElement->Attribute("name")) == string("directions"))
+		const string layerName = string(layerElement->Attribute("name"));
+		if (layerName == string("directions"))
 			gameMap->directionsLayer = layersCount;
+		else if (layerName == string("moving"))
+			gameMap->movingLayer = layersCount;
 
 		layersCount++;
 

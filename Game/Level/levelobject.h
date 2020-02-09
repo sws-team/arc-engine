@@ -32,6 +32,8 @@ private:
 	void addShader(OBJECTS::SHADER_TYPES type);
 	Timer timer;
 	Shader* createShader(OBJECTS::SHADER_TYPES type);
+
+	Clock iTime;
 };
 
 #endif // LEVELOBJECT_H

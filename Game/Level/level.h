@@ -6,6 +6,7 @@
 #include "Game/leveldef.h"
 #include "ResourcesManager/textures_types.h"
 
+class GameObject;
 class LevelObject;
 class Enemy;
 class GamePanel;
@@ -98,8 +99,6 @@ public:
 
 	Tower *selectedTower() const;
 
-	void blinkStartEnd(bool state);
-
 	void activateBombAbility();
 	void activateFreezeBombAbility();
 	void activateVenomAbility();
@@ -184,8 +183,8 @@ private:
 	Tower *m_selectedTower;
 	void setSelectedTower(Tower* tower);
 
-	Sprite startSprite;
-	Sprite endSprite;
+	GameObject *startObject;
+	GameObject *endObject;
 
 	void updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos);
 	void updateUpgrade();

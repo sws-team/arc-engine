@@ -239,6 +239,8 @@ class LaserTower : public Tower
 {
 public:
 	LaserTower(const Vector2f &pos);
+	~LaserTower() override;
+
 	const static TowerStats STATS;
 
 	void draw(RenderTarget *const target) final;
@@ -252,7 +254,7 @@ private:
 	struct LaserTarget
 	{
 		Vertex lineTarget;
-		Sprite laser;
+		GameObject *laser;
 		Enemy *currentTarget;
 		Timer damageTimer;
 	};
@@ -263,6 +265,8 @@ private:
 	void updateLaserTarget(LaserTarget *laserTarget, float damageModifier);
 	void drawLaserTarget(RenderTarget * const target,
 						 LaserTarget *laserTarget);
+	static const Vector2i LASER_SIZE;
+	void clearLasers();
 };
 
 class ImprovedTower : public ProjectilesTower

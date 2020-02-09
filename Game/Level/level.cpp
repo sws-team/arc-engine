@@ -71,11 +71,9 @@ Level::Level() :
 	upgradeCostText.setCharacterSize(fieldIconsCharacterSize);
 	upgradeCostText.setScale(Settings::Instance().getScaleFactor());
 
-	startSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::START_TEXTURE));
-	startSprite.setScale(Settings::Instance().getScaleFactor());
 
-	endSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::END_TEXTURE));
-	endSprite.setScale(Settings::Instance().getScaleFactor());
+	startObject = new GameObject(RESOURCES::DIRECTION_TEXTURE, Vector2f(0,0), Vector2i(64, 64), 3);
+	endObject = new GameObject(RESOURCES::DIRECTION_TEXTURE, Vector2f(0,0), Vector2i(64, 64), 3);
 
 	updateCurrentTower();
 }
@@ -99,8 +97,8 @@ void Level::draw(RenderTarget *const target)
 	target->draw(endRect);
 	if(m_state == Level::WAIT_READY)
 	{
-		target->draw(startSprite);
-		target->draw(endSprite);
+		startObject->draw(target);
+		endObject->draw(target);
 	}
 	Engine::Instance().window()->setView(Engine::Instance().window()->getDefaultView());
 	Engine::Instance().panel()->draw(target);
@@ -146,6 +144,11 @@ void Level::update()
 			enemy->update();
 		checkAlive();
 		showAnimations();
+	}
+	if(m_state == Level::WAIT_READY)
+	{
+		startObject->update();
+		endObject->update();
 	}
 	for(LevelObject *object : objects)
 		object->update();
@@ -417,12 +420,6 @@ Tower *Level::selectedTower() const
 	return m_selectedTower;
 }
 
-void Level::blinkStartEnd(bool state)
-{
-	startSprite.setColor(state?Color::Yellow:Color::Red);
-	endSprite.setColor(state?Color::Yellow:Color::Red);
-}
-
 void Level::activateBombAbility()
 {
 	Engine::Instance().panel()->setCurrentIcon(ACTION_STATE::ABILITY_BOMB);
@@ -646,13 +643,17 @@ void Level::setSelectedTower(Tower *tower)
 
 void Level::updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos)
 {
-	const int centerX = Settings::Instance().getResolution().x/2;
-	const int centerY = Settings::Instance().getResolution().y/2;
+	const Vector2f mapSize = Vector2f(gameMap->width * GlobalVariables::Instance().mapTileSize().x,
+									  gameMap->height * GlobalVariables::Instance().mapTileSize().y);
+	const int centerX = mapSize.x/2;
+	const int centerY = mapSize.y/2;
 
 	const float x0 = 0;
-	const float x1 = Settings::Instance().getResolution().x;
+	const float x1 = mapSize.x;
 	const float y0 = 0;
-	const float y1 = Settings::Instance().getResolution().y;
+	const float y1 = mapSize.y;
+	startObject->sprite.setRotation(0);
+	endObject->sprite.setRotation(0);
 
 	Vector2f resultStartPos = Vector2f(startPos.x * Settings::Instance().getScaleFactor().x,
 									   startPos.y * Settings::Instance().getScaleFactor().y);
@@ -673,6 +674,9 @@ void Level::updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos)
 			resultStartPos.x += GlobalVariables::Instance().tileSize().x;
 		}
 		resultStartPos.y += GlobalVariables::Instance().mapTileSize().y;
+
+		startObject->sprite.setRotation(-90);
+		resultStartPos.y += GlobalVariables::Instance().tileSize().y;
 	}
 	else if (startPos.y <= y0 || startPos.y >= y1)
 	{
@@ -689,6 +693,7 @@ void Level::updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos)
 		}
 		resultStartPos.x += GlobalVariables::Instance().mapTileSize().x;
 	}
+
 	//end
 	if (endPos.x <= x0 || endPos.x >= x1)
 	{
@@ -704,6 +709,9 @@ void Level::updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos)
 			resultEndPos.x -= GlobalVariables::Instance().mapTileSize().x + GlobalVariables::Instance().tileSize().x;
 		}
 		resultEndPos.y += GlobalVariables::Instance().mapTileSize().y;
+
+		endObject->sprite.setRotation(-90);
+		resultEndPos.y += GlobalVariables::Instance().tileSize().y;
 	}
 	else if (endPos.y <= y0 || endPos.y >= y1)
 	{
@@ -720,8 +728,8 @@ void Level::updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos)
 		}
 		resultEndPos.x += GlobalVariables::Instance().mapTileSize().x;
 	}
-	startSprite.setPosition(resultStartPos);
-	endSprite.setPosition(resultEndPos);
+	startObject->setPos(resultStartPos);
+	endObject->setPos(resultEndPos);
 }
 
 void Level::updateUpgrade()
@@ -782,15 +790,15 @@ void Level::ready()
 {
 	m_state = PLAYING;
 
-	towersRegress->resetTimers();
-	smoke->resetTimers();
-	moneyDrain->resetTimers();
-	mapExplosion->resetTimers();
-
 	towersRegress->setEnabled(gameMap->regress.enabled);
 	smoke->setEnabled(gameMap->smoke.enabled);
 	moneyDrain->setEnabled(gameMap->moneyDrain.enabled);
 	mapExplosion->setEnabled(gameMap->explosions.enabled);
+
+	towersRegress->resetTimers();
+	smoke->resetTimers();
+	moneyDrain->resetTimers();
+	mapExplosion->resetTimers();
 }
 
 int Level::currentProgress() const
@@ -836,8 +844,13 @@ void Level::drawLevel(RenderTarget * const target)
 	{
 		if (!gameMap->layers[layer].visibility)
 			continue;
-		for (size_t tile = 0; tile < gameMap->layers[layer].tiles.size(); tile++)
+		Shader *shader = nullptr;
+		if (layer == gameMap->movingLayer)
+			shader = shadersFactory->getShader(OBJECTS::MOVING);
+
+		for (unsigned int tile = 0; tile < gameMap->layers[layer].tiles.size(); tile++)
 			target->draw(gameMap->layers[layer].tiles[tile].sprite);
+
 		for(LevelObject *object : objects)
 		{
 			if (object->layer() == layer)

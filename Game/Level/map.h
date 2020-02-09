@@ -30,6 +30,7 @@ public:
 		width(0)
 	  ,height(0)
 	  ,directionsLayer(3)
+	  ,movingLayer(-1)
 	{
 
 	}
@@ -55,6 +56,7 @@ public:
 	float money;
 	float life;
 	int directionsLayer;
+	int movingLayer;
 
 	struct MapDanger
 	{

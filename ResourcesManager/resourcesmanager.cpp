@@ -29,8 +29,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::PANEL_CURSOR, "images/ui/Panel/panel_cursor.png");
 	addTexture(RESOURCES::MONEY_ICON, "images/ui/money.png");
 	addTexture(RESOURCES::LIFE_ICON, "images/ui/money.png");
-	addTexture(RESOURCES::START_TEXTURE, "images/ui/start.png");
-	addTexture(RESOURCES::END_TEXTURE, "images/ui/end.png");
+	addTexture(RESOURCES::DIRECTION_TEXTURE, "images/ui/direction.png");
 	addTexture(RESOURCES::FOCUS_ICON, "images/ui/focus.png");
 	addTexture(RESOURCES::LOCKED_ICON, "images/ui/locked.png");
 	addTexture(RESOURCES::INSTRUCTIONS_TEXTURE, "images/ui/instructions.png");
@@ -83,6 +82,7 @@ void ResourcesManager::loadTextures()
 	addTexture(RESOURCES::REGRESS, "images/Weapons/Effects/regress.png");
 	addTexture(RESOURCES::BURN, "images/Weapons/Effects/burn.png");
 	addTexture(RESOURCES::BLAST, "images/Weapons/Effects/blast.png");
+	addTexture(RESOURCES::WATER, "images/maps_objects/water.png");
 
 	//map icons
 	addTexture(RESOURCES::MAP_ICON_MISSION_1, "images/maps_icons/mission2.png");
