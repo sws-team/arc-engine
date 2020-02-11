@@ -188,22 +188,33 @@ void Camera::checkBorders()
 								view->getCenter().y - view->getSize().y/2);
 
 	if (topLeft.x < 0)
+	{
 		view->setCenter(view->getSize().x/2, view->getCenter().y);
+		return;
+	}
 	if (topLeft.y < 0)
+	{
 		view->setCenter(view->getCenter().x, view->getSize().y/2);
-
+		return;
+	}
 
 	const Vector2f bottomRight = Vector2f(view->getCenter().x + view->getSize().x/2,
 										  view->getCenter().y + view->getSize().y/2);
 
 	const float maxX = Engine::Instance().cursor()->getMaxCell().x * GlobalVariables::Instance().tileSize().x;
 	if (bottomRight.x > maxX)
+	{
 		view->setCenter(maxX - view->getSize().x/2, view->getCenter().y);
+		return;
+	}
 
-	const float maxY = (Engine::Instance().cursor()->getMaxCell().y + Engine::Instance().panel()->cellsCount() - 1)
+	const float maxY = (Engine::Instance().cursor()->getMaxCell().y + Engine::Instance().panel()->cellsCount())
 			* GlobalVariables::Instance().tileSize().y;
 	if (bottomRight.y > maxY)
-		view->setCenter(view->getCenter().x, maxY - view->getSize().y/2);
+	{
+		view->setCenter(view->getCenter().x, maxY - GlobalVariables::Instance().mapTileSize().y - view->getSize().y/2);
+		return;
+	}
 }
 
 void Camera::setCenter(const Vector2f &pos)
