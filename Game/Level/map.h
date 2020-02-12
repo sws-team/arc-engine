@@ -31,6 +31,7 @@ public:
 	  ,height(0)
 	  ,directionsLayer(3)
 	  ,movingLayer(-1)
+	  ,waterLayer(-1)
 	{
 
 	}
@@ -57,6 +58,7 @@ public:
 	float life;
 	int directionsLayer;
 	int movingLayer;
+	int waterLayer;
 
 	struct MapDanger
 	{

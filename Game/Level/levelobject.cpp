@@ -1,6 +1,7 @@
 #include "levelobject.h"
 #include "Engine/engine.h"
 #include "ResourcesManager/resourcesmanager.h"
+#include "settings.h"
 
 LevelObject::LevelObject(const RESOURCES::TEXTURE_TYPE &texture_id,
 						 const Vector2f &startPos,
@@ -48,19 +49,17 @@ void ShadersFactory::update()
 //	mapShader.setParameter("iMouse",
 //						   Vector2f(static_cast<float>(Mouse::getPosition().x)/Settings::Instance().getResolution().x,
 //									static_cast<float>(Mouse::getPosition().y)/Settings::Instance().getResolution().y));
-
-
-
 	if (timer.check(300))
 	{
 		int a = rand() % 2;
 		int b = rand() % 2;
 		Shader *movingShader = shaders.at(OBJECTS::MOVING);
-		movingShader->setParameter("wave_amplitude", Vector2f(a, b));
-		movingShader->setParameter("wave_phase", timer.clock.getElapsedTime().asMilliseconds());
+		movingShader->setUniform("wave_amplitude", Vector2f(a, b));
+		movingShader->setUniform("wave_phase", timer.clock.getElapsedTime().asMilliseconds());
 	}
+
 	Shader *waveShader = shaders.at(OBJECTS::WAVE);
-	waveShader->setParameter("time", iTime.getElapsedTime().asSeconds());
+	waveShader->setUniform("time", iTime.getElapsedTime().asSeconds());
 }
 
 void ShadersFactory::addShader(OBJECTS::SHADER_TYPES type)
@@ -78,7 +77,7 @@ Shader* ShadersFactory::createShader(OBJECTS::SHADER_TYPES type)
 	case OBJECTS::MOVING:
 	{
 		shader = new Shader();
-		if (!shader->loadFromFile("shaders/wave.vs", Shader::Vertex))
+		if (!shader->loadFromFile("shaders/moving.vs", Shader::Vertex))
 		{
 			err() << "Failed to load shader" << std::endl;
 			delete shader;
@@ -89,20 +88,16 @@ Shader* ShadersFactory::createShader(OBJECTS::SHADER_TYPES type)
 	case OBJECTS::WAVE:
 	{
 		shader = new Shader();
-		if (!shader->loadFromFile("shaders/heat_shader.vs", "shaders/heat_shader.fs"))
+		if (!shader->loadFromFile("shaders/wave.fs", Shader::Fragment))
 		{
 			err() << "Failed to load shader" << std::endl;
 			delete shader;
 			shader = nullptr;
 			break;
 		}
-		shader->setParameter("currentTexture", Shader::CurrentTexture);
-		shader->setParameter("distortionMapTexture", ResourcesManager::Instance().getTexture(RESOURCES::WATER));
-
-		float distortionFactor = .04f;
-		float riseFactor = 1.6f;
-		shader->setParameter("distortionFactor", distortionFactor);
-		shader->setParameter("riseFactor", riseFactor);
+		shader->setUniform("currentTexture", Shader::CurrentTexture);
+		shader->setUniform("resolution", Vector2f(Settings::Instance().getResolution().x,
+												   Settings::Instance().getResolution().y));
 	}
 		break;
 	default:

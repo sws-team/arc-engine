@@ -70,7 +70,6 @@ enum TEXTURE_TYPE
 	REGRESS,
 	BURN,
 	BLAST,
-	WATER,
 
 	//map icons
 	MAP_ICON_MISSION_1,
@@ -109,7 +108,6 @@ enum TEXTURE_TYPE
 
 	//objects
 	OBJECT_TREE,
-	OBJECT_RIVER,
 };
 }
 

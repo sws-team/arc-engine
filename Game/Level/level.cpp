@@ -233,9 +233,9 @@ void Level::startMission(const unsigned int n)
 		if (object != nullptr)
 		{
 			object->setLayer(mapObject.layer);
-			Shader *shader = shadersFactory->getShader(mapObject.shader_type);
-			if (shader != nullptr)
-				object->setShader(shader);
+//			Shader *shader = shadersFactory->getShader(mapObject.shader_type);
+//			if (shader != nullptr)
+//				object->setShader(shader);
 			objects.push_back(object);
 		}
 	}
@@ -773,6 +773,8 @@ unsigned int Level::getCurrentWave() const
 
 void Level::test()
 {
+	Shader *shader  = shadersFactory->getShader(OBJECTS::WAVE);
+	shader->setParameter("time", 888);
 //	changeState(LEVEL_STATE::LOSE);
 }
 
@@ -847,9 +849,11 @@ void Level::drawLevel(RenderTarget * const target)
 		Shader *shader = nullptr;
 		if (layer == gameMap->movingLayer)
 			shader = shadersFactory->getShader(OBJECTS::MOVING);
+		else if (layer == gameMap->waterLayer)
+			shader = shadersFactory->getShader(OBJECTS::WAVE);
 
 		for (unsigned int tile = 0; tile < gameMap->layers[layer].tiles.size(); tile++)
-			target->draw(gameMap->layers[layer].tiles[tile].sprite);
+			target->draw(gameMap->layers[layer].tiles[tile].sprite, shader);
 
 		for(LevelObject *object : objects)
 		{

@@ -213,9 +213,9 @@ LevelObject *Engine::createObject(OBJECTS::OBJECT_TYPES type, const Vector2f& po
 	case OBJECTS::TREE:
 		object = new LevelObject(RESOURCES::OBJECT_TREE, pos, Vector2i(64, 64), 4);
 		break;
-	case OBJECTS::RIVER:
-		object = new LevelObject(RESOURCES::OBJECT_RIVER, pos, Vector2i(480, 1088), 1);
-		break;
+//	case OBJECTS::RIVER:
+//		object = new LevelObject(RESOURCES::OBJECT_RIVER, pos, Vector2i(480, 1088), 1);
+//		break;
 	default:
 		break;
 	}
@@ -486,6 +486,8 @@ bool Engine::loadMap(const String &fileName)
 			gameMap->directionsLayer = layersCount;
 		else if (layerName == string("moving"))
 			gameMap->movingLayer = layersCount;
+		else if (layerName == string("water"))
+			gameMap->waterLayer = layersCount;
 
 		layersCount++;
 
