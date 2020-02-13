@@ -76,6 +76,7 @@ void GameWindow::init()
 	unsigned int missionNumber = Engine::Instance().getMission();
 	Engine::Instance().controller()->setPauseFunc(bind(&GameWindow::pause, this));
 	Engine::Instance().level()->startMission(missionNumber);
+	TimersManager::Instance().setPaused(false);
 }
 
 void GameWindow::paint(RenderWindow *window)
