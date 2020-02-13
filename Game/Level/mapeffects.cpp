@@ -51,7 +51,7 @@ void Shake::update()
 
 void Shake::start()
 {
-	dangerTimer.clock.restart();
+	dangerTimer.reset();
 	isActive = true;
 	state = true;
 	count = 0;
@@ -193,7 +193,7 @@ void MapExplosion::draw(RenderTarget * const target)
 
 void MapExplosion::update()
 {
-	float opacity = 255 * stepTimer.clock.getElapsedTime().asMilliseconds()/m_interval;
+	float opacity = 255 * stepTimer.getElapsedMilliseconds()/m_interval;
 
 	if (m_state == PREPARE_ACTIVE)
 		opacity = min(opacity, 255.f);

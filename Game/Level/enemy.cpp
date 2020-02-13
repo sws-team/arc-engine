@@ -260,7 +260,7 @@ void Enemy::freeze(float k, int duration)
 		freezeDuration = max(freezeDuration, duration);
 		return;
 	}
-	freezeTimer.clock.restart();
+	freezeTimer.reset();
 	freezeDuration = duration;
 	freezeK = k;
 	isFreezed = true;

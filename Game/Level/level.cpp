@@ -224,6 +224,8 @@ void Level::startMission(const unsigned int n)
 	moneyDrain->init();
 	towersRegress->init();
 
+	abilities->reset();
+
 	for(const Map::MapObject& mapObject : gameMap->objects)
 	{
 		Vector2f startPos = mapObject.pos;
@@ -233,9 +235,9 @@ void Level::startMission(const unsigned int n)
 		if (object != nullptr)
 		{
 			object->setLayer(mapObject.layer);
-//			Shader *shader = shadersFactory->getShader(mapObject.shader_type);
-//			if (shader != nullptr)
-//				object->setShader(shader);
+			Shader *shader = shadersFactory->getShader(mapObject.shader_type);
+			if (shader != nullptr)
+				object->setShader(shader);
 			objects.push_back(object);
 		}
 	}

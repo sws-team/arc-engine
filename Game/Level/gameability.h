@@ -17,6 +17,7 @@ public:
 	void setUp();
 	virtual void activate();
 	virtual void checkDuration();
+	void reset();
 
 	void checkReady();
 
@@ -125,6 +126,7 @@ public:
 
 	void draw(RenderTarget *const target) override;
 	void update() override;
+	void reset();
 
 	VenomAbility *venomAbility;
 	BombAbility *bombAbility;

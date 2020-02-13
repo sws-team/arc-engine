@@ -196,9 +196,15 @@ void GameWindow::back()
 void GameWindow::pause()
 {
 	if (m_state == PAUSED)
+	{
 		setState(PLAYING);
+		TimersManager::Instance().setPaused(false);
+	}
 	else if (m_state == PLAYING)	
-		setState(PAUSED);	
+	{
+		setState(PAUSED);
+		TimersManager::Instance().setPaused(true);
+	}
 }
 
 void GameWindow::accept()

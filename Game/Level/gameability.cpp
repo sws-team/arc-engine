@@ -48,6 +48,12 @@ void GameAbility::checkDuration()
 
 }
 
+void GameAbility::reset()
+{
+	m_isReady = true;
+	cooldownTimer.reset();
+}
+
 void GameAbility::checkReady()
 {
 	if (cooldownTimer.check(m_time))
@@ -56,7 +62,7 @@ void GameAbility::checkReady()
 
 int GameAbility::timeLeft() const
 {
-	const float t = m_time/1000 - cooldownTimer.clock.getElapsedTime().asSeconds();
+	const float t = m_time/Engine::MSEC - cooldownTimer.getElapsedMilliseconds()/Engine::MSEC;
 //	if (t < 0)
 //		return 0;
 	return static_cast<int>(ceil(t));
@@ -104,6 +110,16 @@ void Abilities::update()
 	stopAblity->checkReady();
 
 	Engine::Instance().panel()->updateAbilitiesDuration();
+}
+
+void Abilities::reset()
+{
+	bombAbility->reset();
+	freezeBombAbility->reset();
+	venomAbility->reset();
+	increaseTowerAttackSpeedAbility->reset();
+	increaseTowerDamageAbility->reset();
+	stopAblity->reset();
 }
 
 BombAbility::BombAbility()

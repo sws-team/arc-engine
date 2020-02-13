@@ -55,7 +55,7 @@ void ShadersFactory::update()
 		int b = rand() % 2;
 		Shader *movingShader = shaders.at(OBJECTS::MOVING);
 		movingShader->setUniform("wave_amplitude", Vector2f(a, b));
-		movingShader->setUniform("wave_phase", timer.clock.getElapsedTime().asMilliseconds());
+		movingShader->setUniform("wave_phase", timer.getElapsedMilliseconds());
 	}
 
 	Shader *waveShader = shaders.at(OBJECTS::WAVE);
