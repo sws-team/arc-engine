@@ -1,5 +1,7 @@
 #include "widget.h"
 
+const Color Widget::HOVERED_COLOR = Color(32, 32, 32, 96);
+
 Widget::Widget():
 	m_pos(Vector2f(0,0))
   ,m_size(Vector2i(32, 32))

@@ -35,6 +35,8 @@ private:
 
 	Color m_colorActive;
 	Color m_colorInactive;
+
+	int getCurrentTriangle(const Vector2f& pos);
 };
 
 #endif // VALUESCALE_H

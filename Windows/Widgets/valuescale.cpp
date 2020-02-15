@@ -19,20 +19,24 @@ void ValueScale::event(Event *event)
 {
 	if (event->type == Event::MouseButtonReleased)
 	{
-		const Vector2f localPos = Vector2f(event->mouseButton.x - m_pos.x, event->mouseButton.y - m_pos.y);
-		if (localPos.y < m_size.y || localPos.y > 0)
-			return;
-
-		for (int i = triangles.size() - 1; i >= 0 ; --i)
+		int i = getCurrentTriangle(Vector2f(event->mouseMove.x, event->mouseMove.y));
+		if (i != -1)
 		{
-			const int x = m_size.x - m_size.x / m_scales * i;
-			if (localPos.x > 0 && localPos.x < x)
-			{
-				currentTriangle = i;
-				break;
-			}
+			currentTriangle = i;
+			updateValue();
 		}
+	}
+	else if (event->type == Event::MouseMoved)
+	{
 		updateValue();
+		int i = getCurrentTriangle(Vector2f(event->mouseMove.x, event->mouseMove.y));
+		if (i != -1)
+		{
+			Color color = triangles[i].getFillColor();
+			color.a = 128;
+			color.r = 255;
+			triangles[i].setFillColor(color);
+		}
 	}
 	else if (event->type == Event::KeyPressed)
 	{
@@ -136,6 +140,22 @@ void ValueScale::updateValue()
 		else
 			triangles[i].setFillColor(m_colorActive);
 	}
+}
+
+int ValueScale::getCurrentTriangle(const Vector2f &pos)
+{
+	const Vector2f localPos = Vector2f(pos.x - m_pos.x,
+									   pos.y - m_pos.y);
+	if (localPos.y < m_size.y || localPos.y > 0)
+		return -1;
+
+	for (int i = triangles.size() - 1; i >= 0 ; --i)
+	{
+		const int x = m_size.x - m_size.x / m_scales * i;
+		if (localPos.x > 0 && localPos.x < x)
+			return i;
+	}
+	return -1;
 }
 
 void ValueScale::setColorInactive(const Color &colorInactive)

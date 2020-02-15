@@ -14,7 +14,6 @@
 const map<String, Vector2i> SettingsWindow::resolutionsMap = {
 	{"1920x1080", Vector2i(1920, 1080)},
 	{"1360x768", Vector2i(1360, 768)},
-	{"1280x1024", Vector2i(1280, 1024)},
 	{"1024x768", Vector2i(1024, 768)},
 	{"1280x720", Vector2i(1280, 720)},
 	{"1600x900", Vector2i(1600, 900)}
@@ -46,7 +45,8 @@ SettingsWindow::SettingsWindow()
 	const float SCALE_WIDTH = 200 * Settings::Instance().getScaleFactor().x;
 	const float SCALE_HEIGHT = 40 * Settings::Instance().getScaleFactor().y;
 	const int defaultAudioLevel = 30;
-	const Vector2f chooseListButtonSize = Vector2f(96 * Settings::Instance().getScaleFactor().x, 32 * Settings::Instance().getScaleFactor().y);
+	const Vector2f chooseListButtonSize = Vector2f(120 * Settings::Instance().getScaleFactor().x,
+												   32 * Settings::Instance().getScaleFactor().y);
 	const Vector2f checkBoxSize = Vector2f(32 * Settings::Instance().getScaleFactor().x, 32 * Settings::Instance().getScaleFactor().y);
 	const unsigned int chooseListCharacterSize = 24;
 
@@ -251,8 +251,11 @@ SettingsWindow::SettingsWindow()
 
 	//buttons
 	const float buttonOffset = border + 50 * Settings::Instance().getScaleFactor().y;
-	const Vector2f buttonSize = Vector2f(128 * Settings::Instance().getScaleFactor().x, 32 * Settings::Instance().getScaleFactor().y);
+	const Vector2f buttonSize = Vector2f(150 * Settings::Instance().getScaleFactor().x,
+										 32 * Settings::Instance().getScaleFactor().y);
 	const Vector2f bottomRight = settingsRect.getPosition() + settingsSize;
+	const float buttonsCharacterSize = 40;
+
 	button_accept = new Button();
 	button_accept->setSize(buttonSize);
 	button_accept->setFillColor(buttonFillColor);
@@ -260,7 +263,7 @@ SettingsWindow::SettingsWindow()
 	button_accept->setTextColor(buttonTextColor);
 	button_accept->setCallback(bind(&SettingsWindow::accept, this));
 	button_accept->setText(Language::Instance().translate(Language::ACCEPT));
-	button_accept->setTextCharacterSize(characterSize);
+	button_accept->setTextCharacterSize(buttonsCharacterSize);
 	button_accept->setScale(Settings::Instance().getScaleFactor());
 	button_accept->setPos(bottomRight - Vector2f(buttonSize.x, -buttonOffset));
 
@@ -273,7 +276,7 @@ SettingsWindow::SettingsWindow()
 	button_cancel->setCallback(bind(&SettingsWindow::back, this));
 	button_cancel->setText(Language::Instance().translate(Language::CANCEL));
 	button_cancel->setScale(Settings::Instance().getScaleFactor());
-	button_cancel->setTextCharacterSize(characterSize);
+	button_cancel->setTextCharacterSize(buttonsCharacterSize);
 	button_cancel->setPos(bottomLeft + Vector2f(0, buttonOffset));
 
 	cbx_fullscreen->setChecked(Settings::Instance().getFullscreen());
@@ -353,7 +356,8 @@ void SettingsWindow::eventFilter(Event *event)
 		updateFocus();
 	}
 	else if (event->type == Event::MouseButtonPressed ||
-			 event->type == Event::MouseButtonReleased)
+			 event->type == Event::MouseButtonReleased ||
+			 event->type == Event::MouseMoved)
 	{
 		soundScale->event(event);
 		musicScale->event(event);

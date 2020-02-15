@@ -24,6 +24,8 @@ public:
 protected:
 	Vector2f m_pos;
 	Vector2f m_size;
+
+	static const Color HOVERED_COLOR;
 };
 
 #endif // WIDGET_H

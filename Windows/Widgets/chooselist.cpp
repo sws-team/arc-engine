@@ -2,14 +2,15 @@
 #include "globalvariables.h"
 
 ChooseList::ChooseList() :
-	current(0)
+	Widget()
+  ,current(0)
   ,m_characterSize(24)
   ,m_textColor(Color::Black)
   ,m_fillColor(Color::Red)
   ,m_borderColor(Color::Green)
   ,m_currentColor(Color::Blue)
 {
-
+	currentRect.setFillColor(Color::Transparent);
 }
 
 void ChooseList::draw(RenderTarget *target)
@@ -19,6 +20,7 @@ void ChooseList::draw(RenderTarget *target)
 		target->draw(chooseValue.rect);
 		target->draw(chooseValue.text);
 	}
+	target->draw(currentRect);
 }
 
 void ChooseList::event(Event *event)
@@ -31,6 +33,19 @@ void ChooseList::event(Event *event)
 			{
 				current = i;
 				update();
+				break;
+			}
+		}
+	}
+	else if (event->type == Event::MouseMoved)
+	{
+		currentRect.setFillColor(Color::Transparent);
+		for(const ChooseValue& chooseValue : rects)
+		{
+			if (chooseValue.rect.getGlobalBounds().contains(event->mouseMove.x, event->mouseMove.y))
+			{
+				currentRect.setPosition(chooseValue.rect.getPosition());
+				currentRect.setFillColor(Widget::HOVERED_COLOR);
 				break;
 			}
 		}
@@ -67,12 +82,14 @@ void ChooseList::event(Event *event)
 
 void ChooseList::update()
 {
+	currentRect.setSize(m_size);
 	float x = m_pos.x;
 	for (size_t i = 0; i < rects.size(); ++i)
 	{
 		rects[i].rect.setSize(m_size);
 		rects[i].rect.setPosition(x, m_pos.y);
-		rects[i].text.setPosition(x, m_pos.y);
+		rects[i].text.setPosition(x + rects[i].rect.getSize().x/2 - rects[i].text.getGlobalBounds().width/2,
+								  m_pos.y);
 
 		if(i == current)
 			rects[i].rect.setOutlineColor(m_currentColor);

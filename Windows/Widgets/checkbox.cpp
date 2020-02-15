@@ -7,6 +7,7 @@ CheckBox::CheckBox() :
 	rect.setOutlineThickness(2);
 	rect.setOutlineColor(Color::Black);
 	rect.setFillColor(Color::Transparent);
+	currentRect.setFillColor(Color::Transparent);
 
 	circle.setOutlineThickness(2);
 	circle.setOutlineColor(Color::Black);
@@ -18,6 +19,7 @@ void CheckBox::draw(RenderTarget *target)
 	target->draw(rect);
 	if (m_isChecked)
 		target->draw(circle);
+	target->draw(currentRect);
 }
 
 void CheckBox::event(Event *event)
@@ -29,6 +31,12 @@ void CheckBox::event(Event *event)
 			m_isChecked = !m_isChecked;
 			update();
 		}
+	}
+	else if (event->type == Event::MouseMoved)
+	{
+		currentRect.setFillColor(Color::Transparent);
+		if (rect.getGlobalBounds().contains(event->mouseMove.x, event->mouseMove.y))
+			currentRect.setFillColor(Widget::HOVERED_COLOR);
 	}
 	else if (event->type == Event::KeyPressed)
 	{
@@ -51,7 +59,9 @@ void CheckBox::event(Event *event)
 void CheckBox::update()
 {
 	rect.setPosition(m_pos);
+	currentRect.setPosition(m_pos);
 	rect.setSize(m_size);
+	currentRect.setSize(m_size);
 
 	const float radius = m_size.x/3;
 	circle.setPosition(m_pos.x + radius/2, m_pos.y + radius/2);

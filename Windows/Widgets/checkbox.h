@@ -23,6 +23,7 @@ private:
 	CircleShape circle;
 
 	bool m_isChecked;
+	RectangleShape currentRect;
 };
 
 #endif // CHECKBOX_H

@@ -11,6 +11,7 @@ Button::Button()
 	m_text.setFont(GlobalVariables::Instance().font());
 	m_text.setCharacterSize(30);
 	m_text.setFillColor(Color::Black);
+	currentRect.setFillColor(Color::Transparent);
 }
 
 void Button::draw(RenderTarget *target)
@@ -18,6 +19,7 @@ void Button::draw(RenderTarget *target)
 	target->draw(rect);
 	if (!m_text.getString().isEmpty())
 		target->draw(m_text);
+	target->draw(currentRect);
 }
 
 void Button::event(Event *event)
@@ -26,6 +28,12 @@ void Button::event(Event *event)
 	{
 		if (rect.getGlobalBounds().contains(event->mouseButton.x, event->mouseButton.y))
 			m_callback();
+	}
+	else if (event->type == Event::MouseMoved)
+	{
+		currentRect.setFillColor(Color::Transparent);
+		if (rect.getGlobalBounds().contains(event->mouseMove.x, event->mouseMove.y))
+			currentRect.setFillColor(Widget::HOVERED_COLOR);
 	}
 	else if (event->type == Event::KeyPressed)
 	{
@@ -42,9 +50,12 @@ void Button::event(Event *event)
 void Button::update()
 {
 	rect.setPosition(m_pos);
+	currentRect.setPosition(m_pos);
 	rect.setSize(m_size);
+	currentRect.setSize(m_size);
 
-	m_text.setPosition(m_pos);
+	m_text.setPosition(m_pos.x + m_size.x/2 - m_text.getGlobalBounds().width/2,
+					   m_pos.y - m_text.getGlobalBounds().height/2);
 }
 
 void Button::setCallback(function<void ()> callback)

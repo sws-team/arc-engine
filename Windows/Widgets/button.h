@@ -27,6 +27,7 @@ private:
 	RectangleShape rect;
 	Text m_text;
 	function<void()> m_callback;
+	RectangleShape currentRect;
 };
 
 #endif // BUTTON_H

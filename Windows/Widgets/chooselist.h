@@ -45,6 +45,8 @@ private:
 	Color m_fillColor;
 	Color m_borderColor;
 	Color m_currentColor;
+
+	RectangleShape currentRect;
 };
 
 #endif // CHOOSELIST_H
