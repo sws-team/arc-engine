@@ -40,6 +40,21 @@ private:
 	static const Color DISABLED_COLOR;
 	static const Color CURRENT_COLOR;
 	static const Color CURRENT_BORDER_COLOR;
+
+
+	RectangleShape difficultRect;
+	RectangleShape currentDifficultRect;
+	RectangleShape choosedDifficultRect;
+
+	RectangleShape easyRect;
+	RectangleShape normalRect;
+	RectangleShape hardRect;
+
+	Text easyText;
+	Text normalText;
+	Text hardText;
+
+	void initDifficults();
 };
 
 #endif // CHOOSEMISSIONWINDOW_H

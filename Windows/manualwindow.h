@@ -82,6 +82,8 @@ private:
 
 	void nextPage();
 	void previousPage();
+
+	static const Color SELECTED_COLOR;
 };
 
 #endif // MANUALWINDOW_H

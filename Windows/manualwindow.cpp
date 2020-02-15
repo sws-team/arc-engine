@@ -6,6 +6,8 @@
 #include "Game/Level/enemy.h"
 #include "Game/leveldef.h"
 
+const Color ManualWindow::SELECTED_COLOR = Color(45, 45, 45, 96);
+
 ManualWindow::ManualWindow()
 	: StateWindow()
 	,current(0)
@@ -102,11 +104,11 @@ void ManualWindow::eventFilter(Event *event)
 		}
 		next.setColor(Color::White);
 		if (next.getGlobalBounds().contains(pos))
-			next.setColor(Color::Red);
+			next.setColor(SELECTED_COLOR);
 
 		previous.setColor(Color::White);
 		if (previous.getGlobalBounds().contains(pos))
-			previous.setColor(Color::Red);
+			previous.setColor(SELECTED_COLOR);
 
 		updateCurrentInfo();
 	}
@@ -151,7 +153,7 @@ void ManualWindow::updatePos()
 	const float ICON_Y_OFFSET = 32 * Settings::Instance().getScaleFactor().y;
 	const float ICON_X_OFFSET = 32 * Settings::Instance().getScaleFactor().x;
 
-	currentRect.setFillColor(Color(45, 45, 45, 128));
+	currentRect.setFillColor(SELECTED_COLOR);
 	currentRect.setSize(Vector2f(RECT_WIDTH, RECT_HEIGHT));
 	currentRect.setOutlineThickness(1);
 	currentRect.setOutlineColor(Color::Black);
@@ -516,7 +518,7 @@ void ManualWindow::Element::update()
 		if (enemyInfo.stats.speed < 30)
 			description += Language::Instance().translate(Language::SLOW);
 		else if (enemyInfo.stats.speed < 65)
-			description += Language::Instance().translate(Language::NORMAL);
+			description += Language::Instance().translate(Language::NORMAL_SPEED);
 		else
 			description += Language::Instance().translate(Language::FAST);
 		description += endline;

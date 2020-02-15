@@ -4,6 +4,7 @@
 #include "Engine/engine.h"
 #include "ResourcesManager/resourcesmanager.h"
 #include "controller.h"
+#include "Translations/language.h"
 
 const Color ChooseMissionWindow::DISABLED_COLOR = Color(0,34,52, 128);
 const Color ChooseMissionWindow::CURRENT_COLOR = Color(0,85,130, 128);
@@ -19,16 +20,62 @@ ChooseMissionWindow::ChooseMissionWindow()
 	chooseRect.setFillColor(Color::Transparent);
 	currentMission = 0;
 
+	initDifficults();
+
 	const float rectSizeX = 160 * Settings::Instance().getScaleFactor().x;
 	const float rectSizeY = 160 * Settings::Instance().getScaleFactor().y;
-	const float offset = rectSizeY + Settings::Instance().getScaleFactor().y * 20;
+	const float offsetX = Settings::Instance().getScaleFactor().x * 20;
 	const float iconSizeX = 32 * Settings::Instance().getScaleFactor().x;
 	const float iconSizeY = 32 * Settings::Instance().getScaleFactor().y;
+	const float topOffset = Settings::Instance().getScaleFactor().y * 45;
 
 	chooseRect.setSize(Vector2f(rectSizeX, rectSizeY + iconSizeY));
 	const float left = Settings::Instance().getResolution().x * 0.3f;
 	float x = left;
-	float y = Settings::Instance().getResolution().y * 0.1f;
+	float y = topOffset;
+
+	const float difficultHeight = 60;
+	const Vector2f difficultSize = Vector2f(rectSizeX * COLUMN_COUNT + offsetX * (COLUMN_COUNT - 1),
+											difficultHeight);
+	difficultRect.setPosition(x, y);
+	difficultRect.setSize(difficultSize);
+
+	const Vector2f difficultRectSize = Vector2f(200 * Settings::Instance().getScaleFactor().x,
+												30 * Settings::Instance().getScaleFactor().y);
+	const float difficultOffsetX = (difficultSize.x - 3 * difficultRectSize.x)/4;
+	const float difficultOffsetY = (difficultSize.y - difficultRectSize.y)/2;
+
+	y += difficultOffsetY;
+
+	currentDifficultRect.setSize(difficultRectSize);
+	choosedDifficultRect.setSize(difficultRectSize);
+
+	easyRect.setPosition(x + difficultOffsetX, y);
+	easyRect.setSize(difficultRectSize);
+	easyText.setPosition(easyRect.getPosition().x + difficultRectSize.x/2 - easyText.getGlobalBounds().width/2,
+						 easyRect.getPosition().y - difficultRectSize.y/2);
+
+	normalRect.setPosition(x + difficultOffsetX * 2 + difficultRectSize.x, y);
+	normalRect.setSize(difficultRectSize);
+	normalText.setPosition(normalRect.getPosition().x + difficultRectSize.x/2 - normalText.getGlobalBounds().width/2,
+						   normalRect.getPosition().y - difficultRectSize.y/2);
+
+	hardRect.setPosition(x + difficultOffsetX * 3 + difficultRectSize.x * 2, y);
+	hardRect.setSize(difficultRectSize);
+	hardText.setPosition(hardRect.getPosition().x + difficultRectSize.x/2 - hardText.getGlobalBounds().width/2,
+						 hardRect.getPosition().y - difficultRectSize.y/2);
+
+	if (Settings::Instance().difficult() == 1)
+		choosedDifficultRect.setPosition(normalRect.getPosition());
+	else if (Settings::Instance().difficult() == 2)
+		choosedDifficultRect.setPosition(easyRect.getPosition());
+	else
+		choosedDifficultRect.setPosition(hardRect.getPosition());
+
+	y += difficultHeight;
+	y += difficultOffsetY;
+	y += topOffset;
+
 	const unsigned int maxCompletedLevel = Engine::Instance().maxCompletedLevel();
 
 	RESOURCES::TEXTURE_TYPE textureType = RESOURCES::MAP_ICON_MISSION_1;
@@ -87,7 +134,8 @@ ChooseMissionWindow::ChooseMissionWindow()
 		}
 
 		missions.push_back(mission);
-		x += offset;
+		x += rectSizeX;
+		x += offsetX;
 	}
 	updateRect();
 }
@@ -114,6 +162,20 @@ void ChooseMissionWindow::paint(RenderWindow *window)
 		window->draw(mission.highlight);
 	}
 	window->draw(chooseRect);
+	window->draw(difficultRect);
+	window->draw(currentDifficultRect);
+
+	window->draw(easyRect);
+	window->draw(normalRect);
+	window->draw(hardRect);
+
+	window->draw(choosedDifficultRect);
+
+	window->draw(easyText);
+	window->draw(normalText);
+	window->draw(hardText);
+
+	window->draw(currentDifficultRect);
 }
 
 void ChooseMissionWindow::eventFilter(Event *event)
@@ -125,21 +187,54 @@ void ChooseMissionWindow::eventFilter(Event *event)
 //			   << mission.getGlobalBounds().left << " "
 //				  << mission.getGlobalBounds().width << " "
 //				  << mission.getGlobalBounds().height << " " << endl<<endl;
+		const Vector2f pos = Vector2f(event->mouseButton.x, event->mouseButton.y);
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
-			if (missions.at(mission).highlight.getGlobalBounds().contains(event->mouseButton.x, event->mouseButton.y))
+			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
 			{
 				if (missions.at(mission).enabled)
 					accept(mission);
 			}
+		if (easyRect.getGlobalBounds().contains(pos))
+		{
+			choosedDifficultRect.setPosition(easyRect.getPosition());
+			Settings::Instance().setEasyDifficult();
+		}
+		if (normalRect.getGlobalBounds().contains(pos))
+		{
+			choosedDifficultRect.setPosition(normalRect.getPosition());
+			Settings::Instance().setNormalDifficult();
+		}
+		if (hardRect.getGlobalBounds().contains(pos))
+		{
+			Settings::Instance().setHardDifficult();
+			choosedDifficultRect.setPosition(hardRect.getPosition());
+		}
 	}
 	else if (event->type == Event::MouseMoved)
 	{
+		const Vector2f pos = Vector2f(event->mouseMove.x, event->mouseMove.y);
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 		{
-			if (missions.at(mission).highlight.getGlobalBounds().contains(event->mouseMove.x, event->mouseMove.y))
+			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
 				currentMission = mission;
 		}
 		updateRect();
+		currentDifficultRect.setFillColor(Color::Transparent);
+		if (easyRect.getGlobalBounds().contains(pos))
+		{
+			currentDifficultRect.setFillColor(DISABLED_COLOR);
+			currentDifficultRect.setPosition(easyRect.getPosition());
+		}
+		if (normalRect.getGlobalBounds().contains(pos))
+		{
+			currentDifficultRect.setFillColor(DISABLED_COLOR);
+			currentDifficultRect.setPosition(normalRect.getPosition());
+		}
+		if (hardRect.getGlobalBounds().contains(pos))
+		{
+			currentDifficultRect.setFillColor(DISABLED_COLOR);
+			currentDifficultRect.setPosition(hardRect.getPosition());
+		}
 	}
 	else if (event->type == Event::KeyPressed)
 	{
@@ -240,4 +335,57 @@ unsigned int ChooseMissionWindow::getRating(unsigned int n) const
 		if (mission.number == n)
 			return mission.stars;
 	return 0;
+}
+
+void ChooseMissionWindow::initDifficults()
+{
+	const Color difficultRectFillColor = Color(16, 32, 64, 128);
+	const Color difficultRectBorderColor = Color(64, 32, 16, 192);
+	const Color choosedRectBorderColor = Color(32, 128, 16, 192);
+	const float difficultCharatersSize = 40;
+	const float thickness = 3 * Settings::Instance().getScaleFactor().x;
+
+	choosedDifficultRect.setOutlineThickness(thickness);
+	choosedDifficultRect.setOutlineColor(choosedRectBorderColor);
+	choosedDifficultRect.setFillColor(Color::Transparent);
+
+	difficultRect.setOutlineThickness(thickness);
+	difficultRect.setFillColor(CURRENT_COLOR);
+	difficultRect.setOutlineColor(CURRENT_COLOR);
+
+	easyRect.setOutlineThickness(thickness);
+	easyRect.setFillColor(difficultRectFillColor);
+	easyRect.setOutlineColor(difficultRectBorderColor);
+
+	normalRect.setOutlineThickness(thickness);
+	normalRect.setFillColor(difficultRectFillColor);
+	normalRect.setOutlineColor(difficultRectBorderColor);
+
+	hardRect.setOutlineThickness(thickness);
+	hardRect.setFillColor(difficultRectFillColor);
+	hardRect.setOutlineColor(difficultRectBorderColor);
+
+	easyText.setFont(GlobalVariables::Instance().font());
+	easyText.setCharacterSize(difficultCharatersSize);
+	easyText.setScale(Settings::Instance().getScaleFactor());
+	easyText.setString(Language::Instance().translate(Language::EASY));
+	easyText.setFillColor(Color::White);
+	easyText.setOutlineColor(Color::Black);
+	easyText.setOutlineThickness(thickness);
+
+	normalText.setFont(GlobalVariables::Instance().font());
+	normalText.setCharacterSize(difficultCharatersSize);
+	normalText.setScale(Settings::Instance().getScaleFactor());
+	normalText.setString(Language::Instance().translate(Language::NORMAL));
+	normalText.setFillColor(Color::White);
+	normalText.setOutlineColor(Color::Black);
+	normalText.setOutlineThickness(thickness);
+
+	hardText.setFont(GlobalVariables::Instance().font());
+	hardText.setCharacterSize(difficultCharatersSize);
+	hardText.setScale(Settings::Instance().getScaleFactor());
+	hardText.setString(Language::Instance().translate(Language::HARD));
+	hardText.setFillColor(Color::White);
+	hardText.setOutlineColor(Color::Black);
+	hardText.setOutlineThickness(thickness);
 }

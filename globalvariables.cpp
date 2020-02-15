@@ -63,6 +63,7 @@ void GlobalVariables::saveGameSettings()
            << Settings::Instance().getResolution().y << endl
            << Settings::Instance().getSoundLevel() << endl
            << Settings::Instance().getMusicLevel() << endl
+		   << Settings::Instance().difficult() << endl
                  ;
 	myfile.close();
 }
@@ -74,6 +75,7 @@ void GlobalVariables::loadGameSettings()
     int height = Settings::Instance().getResolution().y;
     int soundLevel = 100;
     int musicLevel = 50;
+	float difficult = 1.f;
 
     ifstream myfile;
 	myfile.open(settingsFilePath);
@@ -84,12 +86,14 @@ void GlobalVariables::loadGameSettings()
                 >> height
                 >> soundLevel
                 >> musicLevel
+				>> difficult
                 ;
     }
     Settings::Instance().setFullscreen(fullscreen);
     Settings::Instance().setResolution(Vector2i(width, height));
     Settings::Instance().setSoundLevel(soundLevel);
     Settings::Instance().setMusicLevel(musicLevel);
+	Settings::Instance().setDifficult(difficult);
     myfile.close();
 }
 

@@ -116,9 +116,13 @@ public:
 		MID,
 		BIG,
 		SLOW,
-		NORMAL,
+		NORMAL_SPEED,
 		FAST,
 
+		//difficult
+		EASY,
+		NORMAL,
+		HARD,
 	};
 
 	wstring translate(TR_TEXT id) const;

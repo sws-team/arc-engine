@@ -117,7 +117,8 @@ void Level::update()
 				PowerTower *powerTower = static_cast<PowerTower*>(tower);
 				if (powerTower->hasEnergy())
 				{
-					money += powerTower->gain();
+					const float gain = powerTower->gain() * Settings::Instance().difficult();
+					money += gain;
 					powerTower->updateGain();
 				}
 			}
@@ -171,7 +172,7 @@ void Level::startMission(const unsigned int n)
 	life = gameMap->life;
 	Engine::Instance().panel()->setLifeMax(life);
 
-	money = gameMap->money;
+	money = gameMap->money * Settings::Instance().difficult();
 	Engine::Instance().panel()->updatePanel();
 
 	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
@@ -322,7 +323,8 @@ void Level::checkEnd()
 		Enemy *enemy = *it;
 		if (endFRect.contains(enemy->enemyPos()))
 		{
-			hitPlayer(enemy->getData().damage);
+			float damage = enemy->getData().damage / Settings::Instance().difficult();
+			hitPlayer(damage);
 			delete enemy;
 			it = enemies.erase(it);
 		}
@@ -775,8 +777,6 @@ unsigned int Level::getCurrentWave() const
 
 void Level::test()
 {
-	Shader *shader  = shadersFactory->getShader(OBJECTS::WAVE);
-	shader->setParameter("time", 888);
 //	changeState(LEVEL_STATE::LOSE);
 }
 

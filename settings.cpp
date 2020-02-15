@@ -15,6 +15,7 @@ Settings::Settings():
   ,musicLevel(100)
   ,fullscreen(true)
   ,mainWindow(nullptr)
+  ,m_difficult(1)
 {
 	resolution = defaultResolution;
 }
@@ -97,5 +98,30 @@ Vector2i Settings::getResolution() const
 void Settings::setResolution(const Vector2i &value)
 {
 	resolution = value;
+}
+
+void Settings::setEasyDifficult()
+{
+	m_difficult = 2;
+}
+
+void Settings::setNormalDifficult()
+{
+	m_difficult = 1;
+}
+
+void Settings::setHardDifficult()
+{
+	m_difficult = 0.5;
+}
+
+void Settings::setDifficult(float value)
+{
+	m_difficult = value;
+}
+
+float Settings::difficult() const
+{
+	return m_difficult;
 }
 

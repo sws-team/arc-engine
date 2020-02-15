@@ -120,8 +120,13 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(MID, L"Средний"));
 	lang.insert(pair<TR_TEXT, wstring>(BIG, L"Крупный"));
 	lang.insert(pair<TR_TEXT, wstring>(SLOW, L"Медленный"));
-	lang.insert(pair<TR_TEXT, wstring>(NORMAL, L"Нормальная"));
+	lang.insert(pair<TR_TEXT, wstring>(NORMAL_SPEED, L"Нормальная"));
 	lang.insert(pair<TR_TEXT, wstring>(FAST, L"Быстрая"));
+
+	//difficult
+	lang.insert(pair<TR_TEXT, wstring>(EASY, L"Легко"));
+	lang.insert(pair<TR_TEXT, wstring>(NORMAL, L"Нормально"));
+	lang.insert(pair<TR_TEXT, wstring>(HARD, L"Трудно"));
 
 	langs.insert(pair<string, map<TR_TEXT, wstring> >(rus, lang));
 }
@@ -221,6 +226,12 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(ANT, L"Муравей"));
 	lang.insert(pair<TR_TEXT, wstring>(COW, L"Корова"));
 
+	//difficult
+
+	lang.insert(pair<TR_TEXT, wstring>(EASY, L"Easy"));
+	lang.insert(pair<TR_TEXT, wstring>(NORMAL, L"Normal"));
+	lang.insert(pair<TR_TEXT, wstring>(HARD, L"Hard"));
+
 	langs.insert(pair<string, map<TR_TEXT, wstring> >(eng, lang));
 }
 
@@ -318,6 +329,12 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(DOWN_TOWER, L"Ухудшение башни"));
 	lang.insert(pair<TR_TEXT, wstring>(ANT, L"Муравей"));
 	lang.insert(pair<TR_TEXT, wstring>(COW, L"Корова"));
+
+	//difficult
+
+	lang.insert(pair<TR_TEXT, wstring>(EASY, L"Easy"));
+	lang.insert(pair<TR_TEXT, wstring>(NORMAL, L"Normal"));
+	lang.insert(pair<TR_TEXT, wstring>(HARD, L"Hard"));
 
 	langs.insert(pair<string, map<TR_TEXT, wstring> >(fr, lang));
 }

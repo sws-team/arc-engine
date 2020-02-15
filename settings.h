@@ -32,6 +32,14 @@ public:
 	void updateWindow();
 
 	static const Vector2i defaultResolution;
+
+	void setEasyDifficult();
+	void setNormalDifficult();
+	void setHardDifficult();
+
+	void setDifficult(float value);
+	float difficult() const;
+
 private:
     Settings();
     Settings(Settings const&) = delete;
@@ -43,6 +51,7 @@ private:
     bool fullscreen;
 
 	RenderWindow *mainWindow;
+	float m_difficult;
 };
 
 #endif // SETTINGS_H
