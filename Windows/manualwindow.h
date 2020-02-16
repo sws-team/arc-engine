@@ -79,6 +79,9 @@ private:
 
 	Sprite next;
 	Sprite previous;
+	Sprite close;
+	Sprite credits;
+	Text toolTip;
 
 	void nextPage();
 	void previousPage();

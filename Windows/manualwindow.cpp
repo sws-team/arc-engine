@@ -19,6 +19,17 @@ ManualWindow::ManualWindow()
 	next.setScale(Settings::Instance().getScaleFactor());
 	previous.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PREVIOUS));
 	previous.setScale(Settings::Instance().getScaleFactor());
+	close.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::EXIT));
+	close.setScale(Settings::Instance().getScaleFactor());
+	credits.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::CREDITS));
+	credits.setScale(Settings::Instance().getScaleFactor());
+
+	toolTip.setFont(GlobalVariables::Instance().font());
+	toolTip.setScale(Settings::Instance().getScaleFactor());
+	toolTip.setCharacterSize(40);
+	toolTip.setOutlineThickness(1.f);
+	toolTip.setFillColor(Color::Red);
+	toolTip.setOutlineColor(Color::Blue);
 
 	addElements();
 	updatePos();
@@ -74,6 +85,9 @@ void ManualWindow::paint(RenderWindow *window)
 	}
 	window->draw(previous);
 	window->draw(next);
+	window->draw(credits);
+	window->draw(close);
+	window->draw(toolTip);
 }
 
 void ManualWindow::eventFilter(Event *event)
@@ -86,6 +100,10 @@ void ManualWindow::eventFilter(Event *event)
 			nextPage();
 		if (previous.getGlobalBounds().contains(pos))
 			previousPage();
+		if (credits.getGlobalBounds().contains(pos))
+			return Engine::Instance().setState(Engine::ABOUT);
+		if (close.getGlobalBounds().contains(pos))
+			back();
 	}
 	else if (event->type == Event::MouseMoved)
 	{
@@ -102,13 +120,35 @@ void ManualWindow::eventFilter(Event *event)
 				break;
 			}
 		}
+		toolTip.setString(String());
+
 		next.setColor(Color::White);
 		if (next.getGlobalBounds().contains(pos))
+		{
 			next.setColor(SELECTED_COLOR);
+			toolTip.setString(Language::Instance().translate(Language::NEXT));
+		}
 
 		previous.setColor(Color::White);
 		if (previous.getGlobalBounds().contains(pos))
+		{
 			previous.setColor(SELECTED_COLOR);
+			toolTip.setString(Language::Instance().translate(Language::PREVIOUS));
+		}
+
+		credits.setColor(Color::White);
+		if (credits.getGlobalBounds().contains(pos))
+		{
+			credits.setColor(SELECTED_COLOR);
+			toolTip.setString(Language::Instance().translate(Language::CREDITS));
+		}
+
+		close.setColor(Color::White);
+		if (close.getGlobalBounds().contains(pos))
+		{
+			close.setColor(SELECTED_COLOR);
+			toolTip.setString(Language::Instance().translate(Language::BACK));
+		}
 
 		updateCurrentInfo();
 	}
@@ -150,8 +190,8 @@ void ManualWindow::updatePos()
 	const float ICON_WIDTH = GlobalVariables::Instance().tileSize().x;
 	const float RECT_WIDTH = 512 * Settings::Instance().getScaleFactor().x;
 	const float RECT_HEIGHT = 128 * Settings::Instance().getScaleFactor().y;
-	const float ICON_Y_OFFSET = 32 * Settings::Instance().getScaleFactor().y;
 	const float ICON_X_OFFSET = 32 * Settings::Instance().getScaleFactor().x;
+	const float ICON_Y_OFFSET = 32 * Settings::Instance().getScaleFactor().y;
 
 	currentRect.setFillColor(SELECTED_COLOR);
 	currentRect.setSize(Vector2f(RECT_WIDTH, RECT_HEIGHT));
@@ -165,11 +205,20 @@ void ManualWindow::updatePos()
 	infoRect.setOutlineColor(Color::Black);
 	infoRect.setPosition(ICON_X_OFFSET * 3 + RECT_WIDTH, ICON_Y_OFFSET * 2);
 
+	previous.setPosition(Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
+							  infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET, 0));
+
 	next.setPosition(Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
 							  infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET + ICON_WIDTH, 0));
 
-	previous.setPosition(Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
-							  infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET, 0));
+	credits.setPosition(Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
+							   infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET + ICON_WIDTH*2, 0));
+
+	close.setPosition(Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
+							   infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET + ICON_WIDTH*3, 0));
+
+	toolTip.setPosition(Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
+								 infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
 
 	const  Vector2f scaleFactor = Settings::Instance().getScaleFactor();
@@ -249,7 +298,7 @@ void ManualWindow::addElements()
 							   Language::ABILITY_FREEZE_BOMB,
 							   Language::Instance().translate(Language::FREEZE_BOMB_ABILITY_DESCRIPTION)));
 
-	elements.push_back(Element(RESOURCES::ABILITY_CARPET_BOMBING,
+	elements.push_back(Element(RESOURCES::ABILITY_ACID,
 							   Language::ABILITY_VENOM,
 							   Language::Instance().translate(Language::VENOM_ABILITY_DESCRIPTION)));
 

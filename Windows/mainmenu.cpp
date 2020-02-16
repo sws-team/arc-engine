@@ -13,14 +13,13 @@ MainMenu::MainMenu()
 	currentMenu = static_cast<MENUS>(CAMPAIGN);
 
 	setPos(Vector2f(120 * Settings::Instance().getScaleFactor().x,
-					500 * Settings::Instance().getScaleFactor().y));
+					640 * Settings::Instance().getScaleFactor().y));
 	setColor(Color(64,224,208, 100));
 	setCurrentColor(Color(64,224,208));
 
 	addItem(Language::Instance().translate(Language::CAMPAIGN));
 	addItem(Language::Instance().translate(Language::OPTIONS));
 	addItem(Language::Instance().translate(Language::MANUAL));
-	addItem(Language::Instance().translate(Language::CREDITS));
 	addItem(Language::Instance().translate(Language::EXIT));
 }
 
@@ -41,9 +40,6 @@ void MainMenu::accept()
 		break;
 	case MANUAL:
 		Engine::Instance().setState(Engine::MANUAL);
-		break;
-	case CREDITS:
-		Engine::Instance().setState(Engine::ABOUT);
 		break;
 	case EXIT:
 		Engine::Instance().setState(Engine::CLOSING);

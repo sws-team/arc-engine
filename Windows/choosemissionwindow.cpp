@@ -49,6 +49,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 	currentDifficultRect.setSize(difficultRectSize);
 	choosedDifficultRect.setSize(difficultRectSize);
+	currentDifficultRect.setFillColor(Color::Transparent);
 
 	easyRect.setPosition(x + difficultOffsetX, y);
 	easyRect.setSize(difficultRectSize);

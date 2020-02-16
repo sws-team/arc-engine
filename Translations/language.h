@@ -16,7 +16,6 @@ public:
 		CAMPAIGN,
 		OPTIONS,
 		MANUAL,
-		CREDITS,
 		EXIT,
 
 		//settings
@@ -118,6 +117,10 @@ public:
 		SLOW,
 		NORMAL_SPEED,
 		FAST,
+		NEXT,
+		PREVIOUS,
+		CREDITS,
+		BACK,
 
 		//difficult
 		EASY,

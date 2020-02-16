@@ -24,7 +24,6 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(CAMPAIGN, L"Кампания"));
 	lang.insert(pair<TR_TEXT, wstring>(OPTIONS, L"Опции"));
 	lang.insert(pair<TR_TEXT, wstring>(MANUAL, L"Справочник"));
-	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"Авторы"));
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Выход"));
 
 	//settings
@@ -121,7 +120,11 @@ void Language::loadRus()
 	lang.insert(pair<TR_TEXT, wstring>(BIG, L"Крупный"));
 	lang.insert(pair<TR_TEXT, wstring>(SLOW, L"Медленный"));
 	lang.insert(pair<TR_TEXT, wstring>(NORMAL_SPEED, L"Нормальная"));
-	lang.insert(pair<TR_TEXT, wstring>(FAST, L"Быстрая"));
+	lang.insert(pair<TR_TEXT, wstring>(FAST, L"Быстрая"));	
+	lang.insert(pair<TR_TEXT, wstring>(NEXT, L"Вперед"));
+	lang.insert(pair<TR_TEXT, wstring>(PREVIOUS, L"Назад"));
+	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"Авторы"));
+	lang.insert(pair<TR_TEXT, wstring>(BACK, L"Вернуться"));
 
 	//difficult
 	lang.insert(pair<TR_TEXT, wstring>(EASY, L"Легко"));
@@ -140,7 +143,6 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(CAMPAIGN, L"Play"));
 	lang.insert(pair<TR_TEXT, wstring>(OPTIONS, L"Options"));
 	lang.insert(pair<TR_TEXT, wstring>(MANUAL, L"Manual"));
-	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"Credits"));
 	lang.insert(pair<TR_TEXT, wstring>(EXIT, L"Exit"));
 
 	//settings
@@ -226,8 +228,24 @@ void Language::loadEng()
 	lang.insert(pair<TR_TEXT, wstring>(ANT, L"Муравей"));
 	lang.insert(pair<TR_TEXT, wstring>(COW, L"Корова"));
 
-	//difficult
+	//manual
+	lang.insert(pair<TR_TEXT, wstring>(SPEED, L"Speed"));
+	lang.insert(pair<TR_TEXT, wstring>(SIZE, L"Size"));
+	lang.insert(pair<TR_TEXT, wstring>(ARMOR, L"Armour"));
+	lang.insert(pair<TR_TEXT, wstring>(HEALTH, L"Health"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY, L"Abilities"));
+	lang.insert(pair<TR_TEXT, wstring>(SMALL, L"Small"));
+	lang.insert(pair<TR_TEXT, wstring>(MID, L"Mid"));
+	lang.insert(pair<TR_TEXT, wstring>(BIG, L"Big"));
+	lang.insert(pair<TR_TEXT, wstring>(SLOW, L"Slow"));
+	lang.insert(pair<TR_TEXT, wstring>(NORMAL_SPEED, L"Normal"));
+	lang.insert(pair<TR_TEXT, wstring>(FAST, L"Fast"));
+	lang.insert(pair<TR_TEXT, wstring>(NEXT, L"Next"));
+	lang.insert(pair<TR_TEXT, wstring>(PREVIOUS, L"Previous"));
+	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"Credits"));
+	lang.insert(pair<TR_TEXT, wstring>(BACK, L"Back"));
 
+	//difficult
 	lang.insert(pair<TR_TEXT, wstring>(EASY, L"Easy"));
 	lang.insert(pair<TR_TEXT, wstring>(NORMAL, L"Normal"));
 	lang.insert(pair<TR_TEXT, wstring>(HARD, L"Hard"));
@@ -330,8 +348,24 @@ void Language::loadFr()
 	lang.insert(pair<TR_TEXT, wstring>(ANT, L"Муравей"));
 	lang.insert(pair<TR_TEXT, wstring>(COW, L"Корова"));
 
-	//difficult
+	//manual
+	lang.insert(pair<TR_TEXT, wstring>(SPEED, L"Скорость"));
+	lang.insert(pair<TR_TEXT, wstring>(SIZE, L"Размер"));
+	lang.insert(pair<TR_TEXT, wstring>(ARMOR, L"Броня"));
+	lang.insert(pair<TR_TEXT, wstring>(HEALTH, L"Здоровье"));
+	lang.insert(pair<TR_TEXT, wstring>(ABILITY, L"Особые способности"));
+	lang.insert(pair<TR_TEXT, wstring>(SMALL, L"Мелкий"));
+	lang.insert(pair<TR_TEXT, wstring>(MID, L"Средний"));
+	lang.insert(pair<TR_TEXT, wstring>(BIG, L"Крупный"));
+	lang.insert(pair<TR_TEXT, wstring>(SLOW, L"Медленный"));
+	lang.insert(pair<TR_TEXT, wstring>(NORMAL_SPEED, L"Нормальная"));
+	lang.insert(pair<TR_TEXT, wstring>(FAST, L"Быстрая"));
+	lang.insert(pair<TR_TEXT, wstring>(NEXT, L"Вперед"));
+	lang.insert(pair<TR_TEXT, wstring>(PREVIOUS, L"Назад"));
+	lang.insert(pair<TR_TEXT, wstring>(CREDITS, L"Авторы"));
+	lang.insert(pair<TR_TEXT, wstring>(BACK, L"Вернуться"));
 
+	//difficult
 	lang.insert(pair<TR_TEXT, wstring>(EASY, L"Easy"));
 	lang.insert(pair<TR_TEXT, wstring>(NORMAL, L"Normal"));
 	lang.insert(pair<TR_TEXT, wstring>(HARD, L"Hard"));

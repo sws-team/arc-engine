@@ -55,7 +55,7 @@ GameWindow::GameWindow()
 
 	for(Text& menuText : menus)
 	{
-		menuText.setCharacterSize(30);
+		menuText.setCharacterSize(40);
 		menuText.setScale(Settings::Instance().getScaleFactor());
 		menuText.setPosition(pos);
 		pos.y += menuText.getGlobalBounds().height + offsetY;

@@ -80,6 +80,7 @@ void TimersManager::setPaused(bool isPaused)
 			timer->unpause();
 	}
 }
+
 TimersManager::TimersManager()
 {
 
