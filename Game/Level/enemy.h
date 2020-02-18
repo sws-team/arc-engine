@@ -56,6 +56,8 @@ public:
 
 	void startBurn();
 
+	static constexpr float ENEMY_SCALE = 3.f;
+
 private:
 	EnemyStats m_stats;
 	EnemyStats m_data;

@@ -10,6 +10,10 @@
 #include <map>
 #include <list>
 #include <functional>
+#include <cmath>
+#include <algorithm>
+#include <stdlib.h>
+#include <limits.h>
 
 using namespace std;
 using namespace sf;

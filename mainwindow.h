@@ -14,6 +14,9 @@ public:
 private:
 	StateWindow *currentState;
 	Engine::GAME_STATE state;
+	void drawFPS();
+
+	Clock clock;
 };
 
 

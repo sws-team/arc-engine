@@ -79,6 +79,9 @@ void Controller::eventFilter(Event *event)
 		case Keyboard::Escape:
 			pauseFunc();
 			break;
+		case Keyboard::F3:
+			GlobalVariables::Instance().switchFPS();
+			break;
 		case Keyboard::Q:
 			Engine::Instance().cursor()->swap();
 			break;

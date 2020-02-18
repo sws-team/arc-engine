@@ -3,6 +3,7 @@
 #include "Engine/engine.h"
 #include "statewindow.h"
 #include <SFML/Window/Cursor.hpp>
+#include "settings.h"
 
 MainWindow::MainWindow()
 	: RenderWindow ()
@@ -55,12 +56,28 @@ int MainWindow::exec()
 		while (pollEvent(event))
 			currentState->eventFilter(&event);
 		currentState->update();
-		clear(Color::Black);
-		currentState->paint(this);
-		display();
 #ifdef STEAM_API
 		SteamAPI_RunCallbacks();
 #endif
+		clear(Color::Black);
+		currentState->paint(this);
+		if (GlobalVariables::Instance().isEnabledFPS())
+			drawFPS();
+
+		display();
 	}
-    return EXIT_SUCCESS;
+	return EXIT_SUCCESS;
+}
+
+void MainWindow::drawFPS()
+{
+	Text fps;
+	fps.setFont(GlobalVariables::Instance().font());
+	fps.setCharacterSize(50);
+	fps.setFillColor(Color::Yellow);
+	const float currentTime = clock.restart().asSeconds();
+	const float fpsValue = 1.f / currentTime;
+	fps.setString(to_string(static_cast<int>(floor(fpsValue))));
+	fps.setPosition(Settings::Instance().getResolution().x - fps.getGlobalBounds().width, 0);
+	draw(fps);
 }

@@ -12,8 +12,6 @@
 #include "Game/Level/gameability.h"
 #include "Level/instructions.h"
 
-#include <stdlib.h>
-
 const String GamePanel::endline = "\n";
 
 GamePanel::GamePanel() :

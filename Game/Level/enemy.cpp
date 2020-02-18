@@ -17,8 +17,8 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const EnemyStats& stats,
 			 const Vector2i &cellSize)
 	: GameObject(texture_id, startPos,
-				 Vector2i(GlobalVariables::MAP_CELL_SIZE * cellSize.x,
-						  GlobalVariables::MAP_CELL_SIZE * cellSize.y),
+				 Vector2i(GlobalVariables::MAP_CELL_SIZE * cellSize.x * ENEMY_SCALE,
+						  GlobalVariables::MAP_CELL_SIZE * cellSize.y * ENEMY_SCALE),
 				 4)
 	,m_stats(stats)
 	,spriteDirection(DEFAULT_DOWN)
@@ -31,8 +31,10 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 	moveStep = Vector2f(Settings::Instance().getScaleFactor().x * 1.f,
 						Settings::Instance().getScaleFactor().y * 1.f);
 
-	m_size.x = GlobalVariables::MAP_CELL_SIZE * cellSize.x;
-	m_size.y = GlobalVariables::MAP_CELL_SIZE * cellSize.y;
+	m_size.x = GlobalVariables::MAP_CELL_SIZE * cellSize.x * ENEMY_SCALE;
+	m_size.y = GlobalVariables::MAP_CELL_SIZE * cellSize.y * ENEMY_SCALE;
+
+	sprite.scale(1.f/ENEMY_SCALE, 1.f/ENEMY_SCALE);
 
 	m_spritePos = Vector2f(0, 0);
 
@@ -47,9 +49,15 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 
 	m_data = m_stats;
 	lifeBar = new LifeBar();
-	lifeBar->init(Vector2i(getSize().x, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
+	lifeBar->init(Vector2i(getSize().x/ENEMY_SCALE,
+						   LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y),
+				  Color::Red);
 
 	burnAnimation = new GameObject(RESOURCES::BURN, startPos, Vector2i(32, 32), 4);
+	if (texture_id == RESOURCES::ENEMY_SPIDER)
+	{
+		frameCount = 8;
+	}
 }
 
 Enemy::~Enemy()
@@ -753,10 +761,10 @@ void TowerEffectAbility::use()
 		reflection = owner->getData().reflection;
 		owner->setReflection(reflection + REFLECTION_MODIFIER);
 		owner->setStopped(true);
-		Engine::Instance().level()->addAnimation(info.enemyTextureId, owner->pos(),
-												 info.animationSize,
-												 200, 4, 1);
-		m_interval = 800;
+
+		owner->row = 1;
+		owner->frameCount = 8;
+		m_interval = owner->animationSpeed * owner->frameCount;
 		m_state = SHOOT;
 	}
 		break;
@@ -846,6 +854,10 @@ void TowerEffectAbility::use()
 		owner->setReflection(reflection - REFLECTION_MODIFIER);
 		m_state = FINISHED;
 		m_interval = info.duration;
+
+		owner->row = 0;
+		owner->frameCount = 8;
+		owner->update();
 	}
 		break;
 	case FINISHED:
@@ -862,13 +874,10 @@ void TowerEffectAbility::use()
 
 void TowerEffectAbility::getBack()
 {
-	owner->row = 0;
-	owner->frameCount = 4;
+	owner->row = 2;
+	owner->frameCount = 8;
 	owner->update();
-	Engine::Instance().level()->addAnimation(info.enemyTextureId, owner->pos(),
-											 info.animationSize,
-											 200, 4, 2);
-	m_interval = 200 * 4;
+	m_interval = owner->animationSpeed * owner->frameCount;
 	m_state = WAIT;
 }
 
@@ -876,7 +885,8 @@ void TowerEffectAbility::getBack()
 ShutdownTowerAbility::ShutdownTowerAbility()
 {
 	info.enemyTextureId = RESOURCES::ENEMY_SPIDER;
-	info.animationSize = Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE);
+	info.animationSize = Vector2i(GlobalVariables::CELL_SIZE * Enemy::ENEMY_SCALE,
+								  GlobalVariables::CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = RESOURCES::WEB;
 	info.projectileSize = Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE);
 	info.duration = TOWER_DISABLED_DURATION;
@@ -897,7 +907,8 @@ void ShutdownTowerAbility::effect(bool isActive)
 DownTowerAbility::DownTowerAbility()
 {
 	info.enemyTextureId = RESOURCES::ENEMY_DOWN_TOWER;
-	info.animationSize = Vector2i(GlobalVariables::MAP_CELL_SIZE, GlobalVariables::MAP_CELL_SIZE);
+	info.animationSize = Vector2i(GlobalVariables::MAP_CELL_SIZE * Enemy::ENEMY_SCALE,
+								  GlobalVariables::MAP_CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = RESOURCES::DOWNGRADE_PROJECTILE;
 	info.projectileSize = Vector2i(200, 16);
 	info.duration = TOWER_DOWNGRADED_DURATION;

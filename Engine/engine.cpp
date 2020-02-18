@@ -359,15 +359,13 @@ StateWindow* Engine::createState(const Engine::GAME_STATE &state)
 bool Engine::loadMap(const String &fileName)
 {
 #ifdef OS_WIN
-	FILE* file = nullptr;
-	errno_t err = _wfopen_s(&file, fileName.toWideString().c_str(), L"rb");
+	FILE* file = _wfopen(fileName.toWideString().c_str(), L"rb");
 #else
 	char *charStr = wstringToChar(fileName.toWideString());
 	FILE *file = fopen(charStr, "rb");
-	int err = 1;
 	delete charStr;
 #endif
-	if( file != nullptr && err )
+	if(file == nullptr)
 		return false;
 
 	TiXmlDocument doc;
@@ -665,16 +663,14 @@ bool Engine::loadTiles(const String &fileName)
 	tileProperties.clear();
 
 #ifdef OS_WIN
-	FILE* file = nullptr;
-	errno_t err = _wfopen_s(&file, fileName.toWideString().c_str(), L"rb");
+	FILE* file = _wfopen(fileName.toWideString().c_str(), L"rb");
 #else
 	char *charStr = wstringToChar(fileName.toWideString());
 	FILE *file = fopen(charStr, "rb");
 	int err = 1;
 	delete charStr;
 #endif
-
-	if( file != nullptr && err )
+	if(file == nullptr)
 		return false;
 
 	TiXmlDocument doc;

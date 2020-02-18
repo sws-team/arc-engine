@@ -17,6 +17,15 @@ MainMenu::MainMenu()
 	setColor(Color(64,224,208, 100));
 	setCurrentColor(Color(64,224,208));
 
+	gameName.setFont(GlobalVariables::Instance().font());
+	gameName.setString("Game Name");
+	gameName.setFillColor(Color::Cyan);
+	gameName.setOutlineColor(Color::Black);
+	gameName.setOutlineThickness(5);
+	gameName.setCharacterSize(150);
+	gameName.setPosition(Settings::Instance().getResolution().x/2 - gameName.getGlobalBounds().width/2,
+						 gameName.getGlobalBounds().height/2);
+
 	addItem(Language::Instance().translate(Language::CAMPAIGN));
 	addItem(Language::Instance().translate(Language::OPTIONS));
 	addItem(Language::Instance().translate(Language::MANUAL));
@@ -51,4 +60,10 @@ void MainMenu::closeEvent()
 {
 	currentMenu = EXIT;
 	accept();
+}
+
+void MainMenu::paint(RenderWindow *window)
+{
+	Menu::paint(window);
+	window->draw(gameName);
 }

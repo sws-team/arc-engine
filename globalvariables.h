@@ -39,6 +39,9 @@ public:
 	constexpr static const int CELL_SIZE = 64;
 	constexpr static const int MAP_CELL_SIZE = 32;
 
+	void switchFPS();
+	bool isEnabledFPS() const;
+
 private:
 	GlobalVariables();
 	GlobalVariables(const GlobalVariables& root) = delete;
@@ -49,6 +52,7 @@ private:
     Vector2i getScreenResolution() const;
 //	ControlSettings m_controls;
 //	void createDefaultControls();
+	bool m_fps;
 };
 
 #endif // GLOBALVARIABLES_H

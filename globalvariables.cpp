@@ -18,7 +18,8 @@ GlobalVariables &GlobalVariables::Instance()
     return singleton;
 }
 
-GlobalVariables::GlobalVariables()
+GlobalVariables::GlobalVariables() :
+	m_fps(false)
 {
     Settings::Instance().setResolution(getScreenResolution());
 
@@ -52,6 +53,16 @@ Vector2f GlobalVariables::mapTileSize() const
 {
 	return Vector2f(Settings::Instance().getScaleFactor().x * MAP_CELL_SIZE,
 					Settings::Instance().getScaleFactor().y * MAP_CELL_SIZE);
+}
+
+void GlobalVariables::switchFPS()
+{
+	m_fps = !m_fps;
+}
+
+bool GlobalVariables::isEnabledFPS() const
+{
+	return m_fps;
 }
 
 void GlobalVariables::saveGameSettings()

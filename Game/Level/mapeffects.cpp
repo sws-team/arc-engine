@@ -155,7 +155,7 @@ vector<Tower *> MapEffect::getRandomTowers(int count, const vector<Tower *> &tow
 	const int offset = rand() % interval - actualCount;
 	const int resultCount = count + offset;
 
-	const unsigned int towersCount = min(static_cast<unsigned int>(resultCount), towers.size());
+	const unsigned int towersCount = min(static_cast<size_t>(resultCount), towers.size());
 	set<int> numbers;
 	vector<Tower *> resultTowers;
 	for (unsigned int i = 0; i < towersCount; ++i)

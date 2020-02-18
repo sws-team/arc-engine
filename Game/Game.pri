@@ -13,4 +13,4 @@ SOURCES += \
 
 include($$PWD/Audio/Audio.pri)
 include($$PWD/collisions/collisions.pri)
-include($$PWD/Level/Level.pri)
+include($$PWD/Level/level.pri)

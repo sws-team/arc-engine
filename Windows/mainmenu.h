@@ -11,6 +11,8 @@ public:
 	void init() override;
 	void accept() override;
 	void closeEvent() override;
+	void paint(RenderWindow *window) override;
+
 private:
 	enum MENUS
 	{
@@ -19,6 +21,7 @@ private:
 		MANUAL,
 		EXIT
 	};
+	Text gameName;
 };
 
 #endif // MAINMENU_H
