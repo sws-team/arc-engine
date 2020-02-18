@@ -12,5 +12,5 @@ SOURCES += \
     $$PWD/gamepanel.cpp
 
 include($$PWD/Audio/Audio.pri)
-include($$PWD/collisions/collisions.pri)
+include($$PWD/Collisions/collisions.pri)
 include($$PWD/Level/level.pri)
