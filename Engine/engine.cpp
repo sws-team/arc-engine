@@ -516,27 +516,30 @@ bool Engine::loadMap(const String &fileName)
 
 		while (tileElement)
 		{
-			int tileGID = atoi(tileElement->Attribute("gid"));
-			int subRectToUse = tileGID - firstTileID;
-			// Устанавливаем TextureRect каждого тайла
-			if (subRectToUse >= 0 && !subRects.empty())
+			const char* gidStr = tileElement->Attribute("gid");
+			if (gidStr != nullptr)
 			{
-				Sprite sprite;
-				sprite.setTexture(tilesetImage);
-				sprite.setTextureRect(subRects[subRectToUse]);
-				sprite.setPosition(x * GlobalVariables::MAP_CELL_SIZE * Settings::Instance().getScaleFactor().x,
-								   y * GlobalVariables::MAP_CELL_SIZE * Settings::Instance().getScaleFactor().y);
-				sprite.setColor(sf::Color(255, 255, 255, layer.opacity));
-				sprite.scale(Settings::Instance().getScaleFactor());
+				const int tileGID = atoi(gidStr);
+				const int subRectToUse = tileGID - firstTileID;
+				if (subRectToUse >= 0 && !subRects.empty())
+				{
+					Sprite sprite;
+					sprite.setTexture(tilesetImage);
+					sprite.setTextureRect(subRects[subRectToUse]);
+					sprite.setPosition(x * GlobalVariables::MAP_CELL_SIZE * Settings::Instance().getScaleFactor().x,
+									   y * GlobalVariables::MAP_CELL_SIZE * Settings::Instance().getScaleFactor().y);
+					sprite.setColor(sf::Color(255, 255, 255, layer.opacity));
+					sprite.scale(Settings::Instance().getScaleFactor());
 
-				Tile tile;
-				tile.sprite = sprite;
-				tile.id = tileGID;
-				tile.cell = Vector2i(x, y);
-				layer.tiles.push_back(tile);
+					Tile tile;
+					tile.sprite = sprite;
+					tile.id = tileGID;
+					tile.cell = Vector2i(x, y);
+					layer.tiles.push_back(tile);
 
-//				if (gameMap->tileSprites.find(tileGID) == gameMap->tileSprites.end())
-//					gameMap->tileSprites.insert(pair<int, Sprite>(tileGID, sprite));
+	//				if (gameMap->tileSprites.find(tileGID) == gameMap->tileSprites.end())
+	//					gameMap->tileSprites.insert(pair<int, Sprite>(tileGID, sprite));
+				}
 			}
 
 			tileElement = tileElement->NextSiblingElement("tile");
@@ -563,13 +566,11 @@ bool Engine::loadMap(const String &fileName)
 		objectGroupElement = mapElement->FirstChildElement("objectgroup");
 		while (objectGroupElement)
 		{
-			//  контейнер <object>
 			TiXmlElement *objectElement;
 			objectElement = objectGroupElement->FirstChildElement("object");
 
 			while (objectElement)
 			{
-				// получаем все данные - тип, имя, позиция, и тд
 				string objectType;
 				if (objectElement->Attribute("type") != nullptr)
 				{
@@ -609,7 +610,6 @@ bool Engine::loadMap(const String &fileName)
 					gameMap->endRect.height = height;
 				}
 
-				// "переменные" объекта
 				TiXmlElement *properties;
 				properties = objectElement->FirstChildElement("properties");
 				if (properties != nullptr)
@@ -650,8 +650,8 @@ bool Engine::loadMap(const String &fileName)
 			objectGroupElement = objectGroupElement->NextSiblingElement("objectgroup");
 		}
 	}
-	else
-		cout << "No object layers found..." << endl;
+//	else
+//		cout << "No object layers found..." << endl;
 
 	maps.push_back(gameMap);
 	fclose(file);
@@ -677,8 +677,10 @@ bool Engine::loadTiles(const String &fileName)
 	if (!doc.LoadFile(file))
 	{
 		std::cout << "Loading map failed." << std::endl;
+		fclose(file);
 		return false;
 	}
+	fclose(file);
 
 	TiXmlElement *tilesetElement = doc.FirstChildElement("tileset");
 //	int firstTileID = atoi(tilesetElement->Attribute("firstgid"));
@@ -718,15 +720,13 @@ bool Engine::loadTiles(const String &fileName)
 	Image img;
 	if (!img.loadFromFile(imagePath))
 	{
-		std::cout << "Failed to load tile sheet." << std::endl;
-		//FIXME memory leak
+		cout << "Failed to load tile sheet." << endl;
 		return false;
 	}
 
 	img.createMaskFromColor(sf::Color(255, 255, 255));//для маски цвета.сейчас нет маски
 	tilesetImage.loadFromImage(img);
-	tilesetImage.setSmooth(false);//сглаживание
-	fclose(file);
+	tilesetImage.setSmooth(false);
 	return true;
 }
 
