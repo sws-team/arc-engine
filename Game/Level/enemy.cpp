@@ -15,7 +15,9 @@
 Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const Vector2f &startPos,
 			 const EnemyStats& stats,
-			 const Vector2i &cellSize)
+			 const Vector2i &cellSize,
+			 const float frameCount,
+			 const float animationSpeed)
 	: GameObject(texture_id, startPos,
 				 Vector2i(GlobalVariables::MAP_CELL_SIZE * cellSize.x * ENEMY_SCALE,
 						  GlobalVariables::MAP_CELL_SIZE * cellSize.y * ENEMY_SCALE),
@@ -49,15 +51,13 @@ Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 
 	m_data = m_stats;
 	lifeBar = new LifeBar();
-	lifeBar->init(Vector2i(getSize().x/ENEMY_SCALE,
+	lifeBar->init(Vector2i(getEnemySize().x,
 						   LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y),
 				  Color::Red);
 
 	burnAnimation = new GameObject(RESOURCES::BURN, startPos, Vector2i(32, 32), 4);
-	if (texture_id == RESOURCES::ENEMY_SPIDER)
-	{
-		frameCount = 8;
-	}
+	this->frameCount = frameCount;
+	this->animationSpeed = animationSpeed;
 }
 
 Enemy::~Enemy()
@@ -331,6 +331,18 @@ void Enemy::startBurn()
 	burnTimer.reset();
 }
 
+Vector2f Enemy::getEnemySize() const
+{
+	const Vector2f dsize = getSize();
+	return Vector2f(dsize.x / ENEMY_SCALE,
+					dsize.y / ENEMY_SCALE);
+}
+
+FloatRect Enemy::enemyRect() const
+{
+	return FloatRect(pos(), getEnemySize());
+}
+
 bool Enemy::isVisible() const
 {
 	return m_visible;
@@ -372,6 +384,8 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	stats.damage = 0.f;
 	stats.reflection = 0.f;
 
+	float animationSpeed = 200;
+	float frameCount = 4;
 	Vector2i size;
 	size.x = 1;
 	size.y = 1;
@@ -455,6 +469,8 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		stats.damage = 30.f;
 		size.x = 2;
 		size.y = 2;
+		animationSpeed = 100;
+		frameCount = 5;
 		abilityType = EnemyInfo::SHUTDOWN_TOWER;
 		break;
 	case MID_FAST:
@@ -529,6 +545,8 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	info.size = size;
 	info.stats = stats;
 	info.abilityType = abilityType;
+	info.animationSpeed = animationSpeed;
+	info.frameCount = frameCount;
 	return info;
 }
 Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
@@ -570,7 +588,11 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
 	}
 
 	const EnemyStats stats = info.stats;
-	Enemy *enemy = new Enemy(info.texture_id, startPos, stats, info.size);
+	Enemy *enemy = new Enemy(info.texture_id,
+							 startPos,
+							 stats, info.size,
+							 info.frameCount,
+							 info.animationSpeed);
 	enemy->setAbility(ability);
 	if (ability != nullptr)
 		ability->setOwner(enemy);
@@ -763,7 +785,7 @@ void TowerEffectAbility::use()
 		owner->setStopped(true);
 
 		owner->row = 1;
-		owner->frameCount = 8;
+		owner->frameCount = 5;
 		m_interval = owner->animationSpeed * owner->frameCount;
 		m_state = SHOOT;
 	}
@@ -856,7 +878,7 @@ void TowerEffectAbility::use()
 		m_interval = info.duration;
 
 		owner->row = 0;
-		owner->frameCount = 8;
+		owner->frameCount = 5;
 		owner->update();
 	}
 		break;
@@ -875,7 +897,7 @@ void TowerEffectAbility::use()
 void TowerEffectAbility::getBack()
 {
 	owner->row = 2;
-	owner->frameCount = 8;
+	owner->frameCount = 5;
 	owner->update();
 	m_interval = owner->animationSpeed * owner->frameCount;
 	m_state = WAIT;

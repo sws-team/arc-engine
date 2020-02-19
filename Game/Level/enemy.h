@@ -20,7 +20,9 @@ public:
 	Enemy(const RESOURCES::TEXTURE_TYPE& texture_id,
 		  const Vector2f& startPos,
 		  const EnemyStats &stats,
-		  const Vector2i &cellSize);
+		  const Vector2i &cellSize,
+		  const float frameCount,
+		  const float animationSpeed);
 	~Enemy() override;
 
 	void setAbility(EnemyAbility *ability);
@@ -57,6 +59,10 @@ public:
 	void startBurn();
 
 	static constexpr float ENEMY_SCALE = 3.f;
+
+	Vector2f getEnemySize() const;
+
+	FloatRect enemyRect() const;
 
 private:
 	EnemyStats m_stats;
@@ -315,6 +321,8 @@ public:
 		Vector2i size;
 		ABILITY_TYPE abilityType;
 		RESOURCES::TEXTURE_TYPE texture_id;
+		float animationSpeed;
+		float frameCount;
 	};
 
 	static Enemy *createEnemy(ENEMY_TYPES type, const Vector2f &startPos);

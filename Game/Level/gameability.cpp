@@ -142,7 +142,7 @@ void BombAbility::activate()
 
 	for(Enemy *enemy : Engine::Instance().level()->getAllEnemies())
 	{
-		if (enemy->gameRect().intersects(abilityRect))
+		if (enemy->enemyRect().intersects(abilityRect))
 			enemy->hit(BOMB_ABILITY_DAMAGE);
 	}
 
@@ -167,7 +167,7 @@ void FreezeBombAbility::activate()
 				 200, 6, 0);
 	Engine::Instance().panel()->updatePanel();
 	for(Enemy *enemy : Engine::Instance().level()->getAllEnemies())
-		if (enemy->gameRect().intersects(abilityRect))
+		if (enemy->enemyRect().intersects(abilityRect))
 			enemy->freeze(FREEZE_ABILITY_K, FREEZE_ABILITY_DURATION);
 	GameAbility::finish();
 }
@@ -207,7 +207,7 @@ void VenomAbility::checkDuration()
 		count++;
 		for(Enemy *enemy : Engine::Instance().level()->getAllEnemies())
 		{
-			if (enemy->gameRect().intersects(object->gameRect()))
+			if (enemy->enemyRect().intersects(object->gameRect()))
 				enemy->hit(VenomAbility::VENOM_DAMAGE);			
 		}
 	}

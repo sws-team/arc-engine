@@ -137,7 +137,7 @@ Enemy *Tower::findNearestEnemy(const vector<Enemy *> &exclude)
 	{
 		if (find(exclude.begin(), exclude.end(), enemy) != exclude.end())
 			continue;
-		if (TowersFactory::isIntersects(enemy->gameRect(), aPos,
+		if (TowersFactory::isIntersects(enemy->enemyRect(), aPos,
 										actualRadius() * GlobalVariables::Instance().mapTileSize().x))
 		{
 			const float x = fabs(enemy->enemyCenter().x - this->getCenter().x);
@@ -859,7 +859,7 @@ void ProjectilesTower::projectileAction(Enemy *enemy)
 {
 	enemy->hit(actualDamage());
 	checkKill(enemy);
-	const Vector2f size = enemy->getSize();
+	const Vector2f size = enemy->getEnemySize();
 
 	int maxX = size.x/2;
 	if (size.x > projectileInfo.explosionSize.x)
@@ -873,7 +873,8 @@ void ProjectilesTower::projectileAction(Enemy *enemy)
 
 	Engine::Instance().level()->addAnimation(projectileInfo.explosion_texture_id,
 											 enemy->enemyCenter() + offset -
-											 Vector2f(projectileInfo.explosionSize.x/2, projectileInfo.explosionSize.y/2),
+											 Vector2f(projectileInfo.explosionSize.x/2,
+													  projectileInfo.explosionSize.y/2),
 											 projectileInfo.explosionSize,
 											 50, projectileInfo.explosionFrameCount, 0);
 }
