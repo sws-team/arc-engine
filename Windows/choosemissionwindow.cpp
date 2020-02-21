@@ -5,6 +5,7 @@
 #include "ResourcesManager/resourcesmanager.h"
 #include "controller.h"
 #include "Translations/language.h"
+#include "Game/Audio/soundcontroller.h"
 
 const Color ChooseMissionWindow::DISABLED_COLOR = Color(0,34,52, 128);
 const Color ChooseMissionWindow::CURRENT_COLOR = Color(0,85,130, 128);
@@ -12,6 +13,7 @@ const Color ChooseMissionWindow::CURRENT_BORDER_COLOR = Color(0,51,78, 150);
 
 ChooseMissionWindow::ChooseMissionWindow()
 	: StateWindow()
+	,hovered(-1)
 {
 	setBackground(RESOURCES::ABOUT_BACKGROUND);
 
@@ -193,31 +195,41 @@ void ChooseMissionWindow::eventFilter(Event *event)
 			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
 			{
 				if (missions.at(mission).enabled)
+				{
+					SoundController::Instance().playOnce(CLICK_SOUND_FILE);
 					accept(mission);
+				}
 			}
 		if (easyRect.getGlobalBounds().contains(pos))
 		{
 			choosedDifficultRect.setPosition(easyRect.getPosition());
+			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
 			Settings::Instance().setEasyDifficult();
 		}
 		if (normalRect.getGlobalBounds().contains(pos))
 		{
 			choosedDifficultRect.setPosition(normalRect.getPosition());
+			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
 			Settings::Instance().setNormalDifficult();
 		}
 		if (hardRect.getGlobalBounds().contains(pos))
 		{
-			Settings::Instance().setHardDifficult();
 			choosedDifficultRect.setPosition(hardRect.getPosition());
+			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
+			Settings::Instance().setHardDifficult();
 		}
 	}
 	else if (event->type == Event::MouseMoved)
 	{
+		int hoverId = -1;
 		const Vector2f pos = Vector2f(event->mouseMove.x, event->mouseMove.y);
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 		{
 			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
+			{
 				currentMission = mission;
+				hoverId = mission;
+			}
 		}
 		updateRect();
 		currentDifficultRect.setFillColor(Color::Transparent);
@@ -225,16 +237,24 @@ void ChooseMissionWindow::eventFilter(Event *event)
 		{
 			currentDifficultRect.setFillColor(DISABLED_COLOR);
 			currentDifficultRect.setPosition(easyRect.getPosition());
+			hoverId = missions.size() + 1;
 		}
 		if (normalRect.getGlobalBounds().contains(pos))
 		{
 			currentDifficultRect.setFillColor(DISABLED_COLOR);
 			currentDifficultRect.setPosition(normalRect.getPosition());
+			hoverId = missions.size() + 2;
 		}
 		if (hardRect.getGlobalBounds().contains(pos))
 		{
 			currentDifficultRect.setFillColor(DISABLED_COLOR);
 			currentDifficultRect.setPosition(hardRect.getPosition());
+			hoverId = missions.size() + 3;
+		}
+		if (hoverId != -1 && hovered != hoverId)
+		{
+			hovered = hoverId;
+			SoundController::Instance().playOnce(BUTTON_HOVER_SOUND_FILE);
 		}
 	}
 	else if (event->type == Event::KeyPressed)

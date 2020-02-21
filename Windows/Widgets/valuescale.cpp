@@ -1,4 +1,5 @@
 #include "valuescale.h"
+#include "Game/Audio/soundcontroller.h"
 
 ValueScale::ValueScale():
   m_scales(10)
@@ -19,10 +20,11 @@ void ValueScale::event(Event *event)
 {
 	if (event->type == Event::MouseButtonReleased)
 	{
-		int i = getCurrentTriangle(Vector2f(event->mouseMove.x, event->mouseMove.y));
+		int i = getCurrentTriangle(Vector2f(event->mouseButton.x, event->mouseButton.y));
 		if (i != -1)
 		{
 			currentTriangle = i;
+			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
 			updateValue();
 		}
 	}
@@ -98,7 +100,7 @@ void ValueScale::setMaxValue(float max)
 
 float ValueScale::value() const
 {
-	return currentTriangle * m_max/m_scales - m_min;
+	return m_max - m_max * (currentTriangle * m_scales/m_max - m_min);
 }
 
 void ValueScale::setValue(float value)

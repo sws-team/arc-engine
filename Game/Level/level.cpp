@@ -488,6 +488,7 @@ void Level::sellTower(Tower *tower)
 	if (tower->type() == POWER)
 		m_powerTowersCount--;
 	delete tower;
+	SoundController::Instance().playOnce(SELL_SOUND_FILE);
 	Engine::Instance().panel()->updatePanel();
 }
 
@@ -600,6 +601,17 @@ void Level::hitPlayer(float damage)
 void Level::changeState(Level::LEVEL_STATE state)
 {
 	m_state = state;
+	switch (m_state)
+	{
+	case WIN:
+		SoundController::Instance().playOnce(WIN_SOUND_FILE);
+		break;
+	case LOSE:
+
+		break;
+	default:
+		break;
+	}
 }
 
 void Level::updateRadius()
@@ -1130,6 +1142,7 @@ void Level::choose(const Vector2i &cell, bool inPanel)
 			Tower *tower = TowersFactory::createTower(type, pos);
 			if (tower == nullptr)
 				return;
+			SoundController::Instance().playOnce(SETUP_SOUND_FILE);
 			towers.push_back(tower);
 			money -= cost;
 			if (type == POWER)

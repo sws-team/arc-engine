@@ -1,5 +1,6 @@
 #include "soundcontroller.h"
 #include "settings.h"
+#include "Engine/engine.h"
 
 SoundController::SoundController()
 {
@@ -26,7 +27,10 @@ SoundController::~SoundController()
 
 void SoundController::startBackgroundSound(const string &fileName)
 {
-	return;
+//	return;
+	if (currentBackground == fileName)
+		return;
+	currentBackground = fileName;
     endBackgroundSound();
 	const bool ok = music->openFromFile(fileName);
 	if (!ok)
@@ -42,15 +46,35 @@ void SoundController::endBackgroundSound()
 
 void SoundController::playOnce(const string &fileName)
 {
-	return;
+	play(fileName, false);
+}
+
+void SoundController::playLooped(const string &fileName)
+{
+	play(fileName, true);
+}
+
+void SoundController::stop(const string &fileName)
+{
+	auto it = sounds.find(fileName);
+	if (it != sounds.end())
+		sounds[fileName].sound->stop();
+}
+
+void SoundController::play(const string &fileName, bool loop)
+{
+	//	return;
+	if(fileName.empty())
+		return;
 	auto it = sounds.find(fileName);
 	if (it == sounds.end())
 	{
 		SFX sfx;
 		sfx.buffer = new SoundBuffer;
 		sfx.sound = new Sound(*sfx.buffer);
+		sfx.sound->setLoop(loop);
 		sfx.buffer->loadFromFile(fileName);
-		sfx.sound->setVolume(Settings::Instance().getSoundLevel() * 0.3f);
+		sfx.sound->setVolume(Settings::Instance().getSoundLevel());
 		sfx.sound->play();
 		sounds.insert(pair<string, SFX>(fileName, sfx));
 		return;
@@ -61,5 +85,27 @@ void SoundController::playOnce(const string &fileName)
 void SoundController::updateVolume()
 {
 	music->setVolume(Settings::Instance().getMusicLevel());
+	for(const pair<string, SFX>& sfx : sounds)
+		sfx.second.sound->setVolume(Settings::Instance().getSoundLevel());
+}
+
+void SoundController::pauseMusic()
+{
+	music->pause();
+	for(const pair<string, SFX>& sfx : sounds)
+	{
+		if (sfx.second.sound->getStatus() == SoundSource::Playing)
+			sfx.second.sound->pause();
+	}
+}
+
+void SoundController::unpauseMusic()
+{
+	music->play();
+	for(const pair<string, SFX>& sfx : sounds)
+	{
+		if (sfx.second.sound->getStatus() == SoundSource::Paused)
+			sfx.second.sound->play();
+	}
 }
 

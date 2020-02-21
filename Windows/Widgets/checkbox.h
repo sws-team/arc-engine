@@ -24,6 +24,7 @@ private:
 
 	bool m_isChecked;
 	RectangleShape currentRect;
+	bool hovered;
 };
 
 #endif // CHECKBOX_H

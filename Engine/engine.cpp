@@ -733,7 +733,6 @@ bool Engine::loadTiles(const String &fileName)
 void Engine::setSpeed(float speed)
 {
 	m_gameSpeed = speed;
-	watch(m_gameSpeed);
 }
 
 #ifndef OS_WIN

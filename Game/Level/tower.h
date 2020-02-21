@@ -205,7 +205,6 @@ private:
 	void activateBlast();
 	float zeroGround;
 	constexpr static int ZERO_GROUND = 6;
-	constexpr static float BLAST_DAMAGE = 250;
 	class LifeBar* abilityProgress;
 	static const Vector2i BLAST_SIZE;
 };

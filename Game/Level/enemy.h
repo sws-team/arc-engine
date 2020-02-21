@@ -206,6 +206,7 @@ protected:
 		RESOURCES::TEXTURE_TYPE pojectileTextureId;
 		Vector2i projectileSize;
 		float duration;
+		string catchSound;
 	};
 	AbilityInfo info;
 private:

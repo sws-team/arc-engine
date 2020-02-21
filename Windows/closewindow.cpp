@@ -1,11 +1,17 @@
 #include "closewindow.h"
 #include "Engine/engine.h"
+#include "Game/Audio/soundcontroller.h"
 
 CloseWindow::CloseWindow()
 	: StateWindow()
 {
 	setBackground(RESOURCES::CLOSE_BACKGROUND);
 	opacity = 255;
+}
+
+void CloseWindow::init()
+{
+	SoundController::Instance().endBackgroundSound();
 }
 
 void CloseWindow::paint(RenderWindow *window)

@@ -200,11 +200,13 @@ void GameWindow::pause()
 	{
 		setState(PLAYING);
 		TimersManager::Instance().setPaused(false);
+		SoundController::Instance().unpauseMusic();
 	}
 	else if (m_state == PLAYING)	
 	{
 		setState(PAUSED);
 		TimersManager::Instance().setPaused(true);
+		SoundController::Instance().pauseMusic();
 	}
 }
 

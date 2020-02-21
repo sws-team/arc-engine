@@ -11,6 +11,7 @@
 #include "Game/Collisions/collisions.h"
 #include "Game/gamepanel.h"
 #include "ResourcesManager/resourcesmanager.h"
+#include "Game/Audio/soundcontroller.h"
 
 Enemy::Enemy(const RESOURCES::TEXTURE_TYPE &texture_id,
 			 const Vector2f &startPos,
@@ -865,6 +866,7 @@ void TowerEffectAbility::use()
 		{
 			delete projectile;
 			projectile = nullptr;
+			SoundController::Instance().playOnce(info.catchSound);
 			getBack();
 			effect(true);
 		}
@@ -903,7 +905,6 @@ void TowerEffectAbility::getBack()
 	m_state = WAIT;
 }
 
-
 ShutdownTowerAbility::ShutdownTowerAbility()
 {
 	info.enemyTextureId = RESOURCES::ENEMY_SPIDER;
@@ -912,6 +913,7 @@ ShutdownTowerAbility::ShutdownTowerAbility()
 	info.pojectileTextureId = RESOURCES::WEB;
 	info.projectileSize = Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE);
 	info.duration = TOWER_DISABLED_DURATION;
+	info.catchSound = CATCH_SOUND_FILE;
 }
 
 ShutdownTowerAbility::~ShutdownTowerAbility()
@@ -934,6 +936,7 @@ DownTowerAbility::DownTowerAbility()
 	info.pojectileTextureId = RESOURCES::DOWNGRADE_PROJECTILE;
 	info.projectileSize = Vector2i(200, 16);
 	info.duration = TOWER_DOWNGRADED_DURATION;
+	info.catchSound = CATCH_SOUND_FILE;
 }
 
 DownTowerAbility::~DownTowerAbility()

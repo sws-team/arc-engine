@@ -85,7 +85,7 @@ void GlobalVariables::loadGameSettings()
     int width = Settings::Instance().getResolution().x;
     int height = Settings::Instance().getResolution().y;
     int soundLevel = 100;
-    int musicLevel = 50;
+	int musicLevel = 50;
 	float difficult = 1.f;
 
     ifstream myfile;

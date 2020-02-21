@@ -15,7 +15,7 @@ public:
 	void update() override;
 private:
 	Timer timer;
-	Uint8 opacity;
+	int opacity;
 
 	void finish();
 };

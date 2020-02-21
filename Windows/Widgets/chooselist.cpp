@@ -1,5 +1,6 @@
 #include "chooselist.h"
 #include "globalvariables.h"
+#include "Game/Audio/soundcontroller.h"
 
 ChooseList::ChooseList() :
 	Widget()
@@ -9,6 +10,7 @@ ChooseList::ChooseList() :
   ,m_fillColor(Color::Red)
   ,m_borderColor(Color::Green)
   ,m_currentColor(Color::Blue)
+  ,hovered(-1)
 {
 	currentRect.setFillColor(Color::Transparent);
 }
@@ -40,14 +42,22 @@ void ChooseList::event(Event *event)
 	else if (event->type == Event::MouseMoved)
 	{
 		currentRect.setFillColor(Color::Transparent);
-		for(const ChooseValue& chooseValue : rects)
+		int hoverId = -1;
+		for (unsigned int i = 0; i < rects.size(); ++i)
 		{
+			const ChooseValue chooseValue = rects.at(i);
 			if (chooseValue.rect.getGlobalBounds().contains(event->mouseMove.x, event->mouseMove.y))
 			{
 				currentRect.setPosition(chooseValue.rect.getPosition());
 				currentRect.setFillColor(Widget::HOVERED_COLOR);
+				hoverId = i;
 				break;
 			}
+		}
+		if (hoverId != -1 && hovered != hoverId)
+		{
+			hovered = hoverId;
+			SoundController::Instance().playOnce(BUTTON_HOVER_SOUND_FILE);
 		}
 	}
 	else if (event->type == Event::KeyPressed)

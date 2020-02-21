@@ -1,6 +1,7 @@
 #include "introwindow.h"
 #include "Engine/engine.h"
 #include "controller.h"
+#include "Game/Audio/soundcontroller.h"
 
 IntroWindow::IntroWindow()
 	: StateWindow()
@@ -11,7 +12,7 @@ IntroWindow::IntroWindow()
 
 void IntroWindow::init()
 {
-
+	SoundController::Instance().playOnce(INTRO_SOUND_FILE);
 }
 
 void IntroWindow::paint(RenderWindow *window)
@@ -37,7 +38,9 @@ void IntroWindow::update()
 {
 	if (timer.check(10))
 	{
-		opacity -= 1;
+		opacity -= 2;
+		if (opacity < 0)
+			opacity = 0;
 		background.setColor(Color(255,255,255, opacity));
 	}
 	if (opacity == 0)
@@ -46,5 +49,6 @@ void IntroWindow::update()
 
 void IntroWindow::finish()
 {
+	SoundController::Instance().stop(INTRO_SOUND_FILE);
 	Engine::Instance().setState(Engine::MAIN_MENU);
 }

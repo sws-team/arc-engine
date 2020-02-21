@@ -28,6 +28,7 @@ private:
 	Text m_text;
 	function<void()> m_callback;
 	RectangleShape currentRect;
+	bool hovered;
 };
 
 #endif // BUTTON_H

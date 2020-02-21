@@ -47,6 +47,7 @@ private:
 	Color m_currentColor;
 
 	RectangleShape currentRect;
+	bool hovered;
 };
 
 #endif // CHOOSELIST_H

@@ -79,6 +79,7 @@ void Tower::upgrade()
 	Engine::Instance().level()->addAnimation(RESOURCES::UPGRADE, this->pos(),
 											 Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE),
 											 250, 4, 0);
+	SoundController::Instance().playOnce(UPGRADE_SOUND_FILE);
 }
 
 void Tower::hitEnemy(Enemy *enemy)
@@ -485,7 +486,19 @@ void PowerTower::activateBlast()
 		const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
 		if (r <= zeroGround)
 		{
-			const float actualDamage = r/zeroGround * BLAST_DAMAGE;
+			float modifier = 0.1f;
+			switch (enemy->size.x)
+			{
+			case 96:
+				modifier *= 5;
+				break;
+			case 192:
+				modifier *= 2;
+				break;
+			default:
+				break;
+			}
+			const float actualDamage = enemy->getPureStats().health * modifier;
 			enemy->hit(actualDamage);
 			checkKill(enemy);
 		}

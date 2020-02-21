@@ -1,8 +1,10 @@
 #include "button.h"
 #include "globalvariables.h"
 #include "controller.h"
+#include "Game/Audio/soundcontroller.h"
 
-Button::Button()
+Button::Button() :
+	hovered(false)
 {
 	rect.setOutlineThickness(2);
 	rect.setOutlineColor(Color::Black);
@@ -27,13 +29,26 @@ void Button::event(Event *event)
 	if (event->type == Event::MouseButtonReleased)
 	{
 		if (rect.getGlobalBounds().contains(event->mouseButton.x, event->mouseButton.y))
+		{
+			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
 			m_callback();
+		}
 	}
 	else if (event->type == Event::MouseMoved)
 	{
+		bool hover = false;
 		currentRect.setFillColor(Color::Transparent);
 		if (rect.getGlobalBounds().contains(event->mouseMove.x, event->mouseMove.y))
+		{
+			hover = true;
 			currentRect.setFillColor(Widget::HOVERED_COLOR);
+		}
+		if (hover && !hovered)
+		{
+			hovered = true;
+			SoundController::Instance().playOnce(BUTTON_HOVER_SOUND_FILE);
+		}
+		hovered = hover;
 	}
 	else if (event->type == Event::KeyPressed)
 	{

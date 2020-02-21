@@ -11,6 +11,7 @@
 #include "Translations/language.h"
 #include "Game/Level/gameability.h"
 #include "Level/instructions.h"
+#include "Game/Audio/soundcontroller.h"
 
 const String GamePanel::endline = "\n";
 
@@ -240,10 +241,6 @@ GamePanel::GamePanel() :
 	drainRect.setOutlineThickness(2);
 	drainRect.setOutlineColor(Color::Transparent);
 
-	//set pos
-	//	pos.x = target->getView().getCenter().x - target->getView().getSize().x/2;
-	//	pos.y = target->getView().getCenter().y + target->getView().getSize().y/2;
-
 	progress->setPos(Vector2f(progressWidth, PROGRESS_OFFSET * scaleFactor.y));
 	updatePos();
 }
@@ -352,6 +349,8 @@ void GamePanel::updatePanel()
 {
 	const int money = static_cast<int>(Engine::Instance().level()->getMoneyCount());
 	moneyCountText.setString(String(to_string(money)));
+	drainRect.setSize(Vector2f(moneyCountText.getGlobalBounds().width,
+							   moneyCountText.getGlobalBounds().height*2));
 
 	const float progressValue = static_cast<float>(Engine::Instance().level()->currentProgress()) / m_progressMax;
 	progress->setValue(progressValue);
@@ -454,8 +453,8 @@ Vector2f GamePanel::updatePos()
 	secondRow.x += iconSize.x;
 	life->setPos(secondRow);
 
-	drainRect.setPosition(moneyCountText.getGlobalBounds().left, moneyCountText.getGlobalBounds().top);
-	drainRect.setSize(Vector2f(moneyCountText.getGlobalBounds().width, moneyCountText.getGlobalBounds().height));
+	drainRect.setPosition(moneyCountText.getGlobalBounds().left,
+						  moneyCountText.getGlobalBounds().top);
 
 	//towers
 	towerBaseSprite.setPosition(pos);
@@ -857,6 +856,10 @@ void GamePanel::setDrain(bool drain)
 {
 	m_drain = drain;
 	drainBlinkTimer.reset();
+	if (drain)
+		SoundController::Instance().playLooped(WARNING_SOUND_FILE);
+	else
+		SoundController::Instance().stop(WARNING_SOUND_FILE);
 }
 
 void GamePanel::setCurrentIcon(const ACTION_STATE &state)

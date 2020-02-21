@@ -12,9 +12,14 @@ public:
     void startBackgroundSound(const string& fileName);
     void endBackgroundSound();
 
-    void playOnce(const string& fileName);
+	void playOnce(const string& fileName);
+	void playLooped(const string& fileName);
+	void stop(const string& fileName);
 
     void updateVolume();
+
+	void pauseMusic();
+	void unpauseMusic();
 
 private:
     SoundController();
@@ -29,6 +34,9 @@ private:
 		Sound *sound;
 	};
 	map<string, SFX> sounds;
+	string currentBackground;
+
+	void play(const string& fileName, bool loop);
 };
 
 #endif // SOUNDCONTROLLER_H

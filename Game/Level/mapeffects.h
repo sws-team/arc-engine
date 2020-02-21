@@ -84,8 +84,6 @@ public:
 
 	void draw(RenderTarget *const target) override;
 	void update() override;
-
-	void init() override;
 protected:
 	void stateChanged() override;
 

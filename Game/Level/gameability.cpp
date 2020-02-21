@@ -7,6 +7,7 @@
 #include "Game/Level/enemy.h"
 #include "Game/Level/tower.h"
 #include "globalvariables.h"
+#include "Game/Audio/soundcontroller.h"
 
 GameAbility::GameAbility(const Vector2i &areaSize,
 						 const Vector2i &offset,
@@ -130,6 +131,7 @@ BombAbility::BombAbility()
 
 void BombAbility::activate()
 {
+	SoundController::Instance().playOnce(BOMB_SOUND_FILE);
 	GameAbility::activate();
 	const FloatRect abilityRect = Engine::Instance().cursor()->getAbilityRect();
 	Engine::Instance().level()->addAnimation(RESOURCES::BOMB_EXPLOSION,
@@ -287,6 +289,7 @@ StopAbility::StopAbility()
 
 void StopAbility::activate()
 {
+	SoundController::Instance().playOnce(STOP_SOUND_FILE);
 	GameAbility::activate();
 	abilityTimer.reset();
 }

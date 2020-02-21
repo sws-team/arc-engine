@@ -55,6 +55,8 @@ private:
 	Text hardText;
 
 	void initDifficults();
+
+	int hovered;
 };
 
 #endif // CHOOSEMISSIONWINDOW_H

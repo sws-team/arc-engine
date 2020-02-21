@@ -9,7 +9,7 @@ class CloseWindow : public StateWindow
 public:
 	CloseWindow();
 
-//	void init() override;
+	void init() override;
 	void paint(RenderWindow *window) override;
 //	void eventFilter(Event* event) override;
 	void update() override;

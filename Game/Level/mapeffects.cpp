@@ -8,6 +8,7 @@
 #include "gamecursor.h"
 #include "globalvariables.h"
 #include "Game/gamepanel.h"
+#include "Game/Audio/soundcontroller.h"
 
 const int Shake::MAX_SHAKE_COUNT = 9;
 const int Shake::MAX_SHAKE_OFFSET = 10;
@@ -211,17 +212,13 @@ void MapExplosion::update()
 	MapEffect::update();
 }
 
-void MapExplosion::init()
-{
-	MapEffect::init();
-}
-
 void MapExplosion::stateChanged()
 {
 	switch (m_state)
 	{
 	case PREPARE_ACTIVE:
 	{
+		SoundController::Instance().playLooped(TARGET_LOCK_SOUND_FILE);
 		m_interval = m_duration;
 		vector<Tower *> towers = getRandomTowers(m_count, Engine::Instance().level()->getAllTowers());
 		for (unsigned int i = 0; i < towers.size(); ++i)
@@ -243,6 +240,7 @@ void MapExplosion::stateChanged()
 		break;
 	case AFTER_ACTIVE:
 	{
+		SoundController::Instance().stop(TARGET_LOCK_SOUND_FILE);
 		m_interval = 1000;
 		for(const CircleShape &shape : targets)
 		{
@@ -250,6 +248,7 @@ void MapExplosion::stateChanged()
 						 Vector2f(shape.getGlobalBounds().left - GlobalVariables::Instance().mapTileSize().x/2,
 								  shape.getGlobalBounds().top - GlobalVariables::Instance().mapTileSize().y/2),
 						 Vector2i(64, 64), 80, 12, 0);
+			SoundController::Instance().playOnce(TOWER_EXPLOSION_SOUND_FILE);
 		}
 	}
 		break;

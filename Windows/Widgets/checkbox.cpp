@@ -1,8 +1,10 @@
 ﻿#include "checkbox.h"
 #include "controller.h"
+#include "Game/Audio/soundcontroller.h"
 
 CheckBox::CheckBox() :
 	m_isChecked(false)
+  ,hovered(false)
 {
 	rect.setOutlineThickness(2);
 	rect.setOutlineColor(Color::Black);
@@ -29,14 +31,25 @@ void CheckBox::event(Event *event)
 		if (rect.getGlobalBounds().contains(event->mouseButton.x, event->mouseButton.y))
 		{
 			m_isChecked = !m_isChecked;
+			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
 			update();
 		}
 	}
 	else if (event->type == Event::MouseMoved)
 	{
+		bool hover = false;
 		currentRect.setFillColor(Color::Transparent);
 		if (rect.getGlobalBounds().contains(event->mouseMove.x, event->mouseMove.y))
+		{
+			hover = true;
 			currentRect.setFillColor(Widget::HOVERED_COLOR);
+		}
+		if (hover && !hovered)
+		{
+			hovered = true;
+			SoundController::Instance().playOnce(BUTTON_HOVER_SOUND_FILE);
+		}
+		hovered = hover;
 	}
 	else if (event->type == Event::KeyPressed)
 	{
