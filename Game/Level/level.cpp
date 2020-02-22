@@ -329,7 +329,7 @@ void Level::checkEnd()
 		else
 			++it;
 	}
-	if (waves.size() == currentWave && enemies.empty())
+	if (isFinalWave() && enemies.empty())
 		changeState(WIN);	
 }
 
@@ -499,10 +499,9 @@ void Level::checkRespawn()
 {
 	if (abilities->stopAblity->isActive())
 		return;
-	if (waves.size() == currentWave)
-		return;
-
 	Wave wave = waves.at(currentWave);
+	if (wave.spawnEnemies.empty())
+		return;
 	const int respawnOffset = static_cast<int>(wave.respawnTime * 0.15);
 	const int timeOffset = rand() % (respawnOffset + 1) - respawnOffset/2;
 	const int resultTime = timeOffset + wave.respawnTime;
@@ -608,9 +607,11 @@ void Level::changeState(Level::LEVEL_STATE state)
 	switch (m_state)
 	{
 	case WIN:
+		SoundController::Instance().endBackgroundSound();
 		SoundController::Instance().playOnce(WIN_SOUND_FILE);
 		break;
 	case LOSE:
+		SoundController::Instance().endBackgroundSound();
 
 		break;
 	default:
