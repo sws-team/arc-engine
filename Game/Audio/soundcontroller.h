@@ -21,6 +21,9 @@ public:
 	void pauseMusic();
 	void unpauseMusic();
 
+	void setMusicLooped(bool loop);
+	bool isMusicFinished() const;
+
 private:
     SoundController();
     SoundController(const SoundController& root);

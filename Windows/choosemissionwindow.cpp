@@ -254,7 +254,7 @@ void ChooseMissionWindow::eventFilter(Event *event)
 		if (hoverId != -1 && hovered != hoverId)
 		{
 			hovered = hoverId;
-			SoundController::Instance().playOnce(BUTTON_HOVER_SOUND_FILE);
+			SoundController::Instance().playOnce(HOVER_SOUND_FILE);
 		}
 	}
 	else if (event->type == Event::KeyPressed)

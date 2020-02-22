@@ -47,7 +47,7 @@ void CheckBox::event(Event *event)
 		if (hover && !hovered)
 		{
 			hovered = true;
-			SoundController::Instance().playOnce(BUTTON_HOVER_SOUND_FILE);
+			SoundController::Instance().playOnce(HOVER_SOUND_FILE);
 		}
 		hovered = hover;
 	}

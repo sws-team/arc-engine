@@ -109,3 +109,13 @@ void SoundController::unpauseMusic()
 	}
 }
 
+void SoundController::setMusicLooped(bool loop)
+{
+	music->setLoop(loop);
+}
+
+bool SoundController::isMusicFinished() const
+{
+	return music->getStatus() == Sound::Stopped;
+}
+

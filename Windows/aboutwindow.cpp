@@ -35,7 +35,7 @@ AboutWindow::AboutWindow()
 
 void AboutWindow::init()
 {
-	SoundController::Instance().startBackgroundSound(ABOUT_SOUND_FILE);
+	SoundController::Instance().startBackgroundSound(CREDITS_SOUND_FILE);
 }
 
 void AboutWindow::paint(RenderWindow *window)
@@ -52,6 +52,7 @@ void AboutWindow::paint(RenderWindow *window)
 
 void AboutWindow::back()
 {
+	SoundController::Instance().startBackgroundSound(MENU_SOUND_FILE);
 	Engine::Instance().setState(Engine::MANUAL);
 }
 

@@ -10,9 +10,13 @@
 #include "ResourcesManager/resourcesmanager.h"
 #include "Translations/language.h"
 
+#include <algorithm>
+
 GameWindow::GameWindow()
 	: Menu()
+	,isFinal(false)
 {
+	currentTrack = 0;
 	tick = 0;
 	lastTime = 0;
 
@@ -75,6 +79,9 @@ void GameWindow::init()
 {
 	unsigned int missionNumber = Engine::Instance().getMission();
 	Engine::Instance().controller()->setPauseFunc(bind(&GameWindow::pause, this));
+	SoundController::Instance().setMusicLooped(false);
+	fillTracks(TRACKS_FILES);
+	nextTrack();
 	Engine::Instance().level()->startMission(missionNumber);
 	TimersManager::Instance().setPaused(false);
 }
@@ -160,6 +167,16 @@ void GameWindow::update()
 {	
 	if (m_state != PLAYING)
 		return;
+	if (!isFinal && Engine::Instance().level()->isFinalWave())
+	{
+		SoundController::Instance().endBackgroundSound();
+		fillTracks(FINAL_TRACKS_FILES);
+		isFinal = true;
+	}
+	if (SoundController::Instance().isMusicFinished())
+	{
+		nextTrack();
+	}
 	Engine::Instance().cursor()->update();
 	Engine::Instance().level()->update();
 	Engine::Instance().panel()->update();
@@ -215,13 +232,13 @@ void GameWindow::accept()
 	switch (currentMenu)
 	{
 	case CONTINUE_GAME:
-		setState(PLAYING);
+		pause();
 		break;
 	case RESET_MISSION:
 	{
 		Engine::Instance().level()->clear();
 		init();
-		setState(PLAYING);
+		pause();
 	}
 		break;
 	case EXIT_FROM_MISSION:
@@ -292,5 +309,22 @@ void GameWindow::updateTextPos()
 {
 	text.setPosition(Settings::Instance().getResolution().x/2 - text.getGlobalBounds().width/2,
 					 Settings::Instance().getResolution().y/2 - text.getGlobalBounds().height/2);
+}
+
+void GameWindow::nextTrack()
+{
+	currentTrack++;
+	if (currentTrack >= tracks.size())
+		currentTrack = 0;
+	const string trackName = tracks.at(currentTrack);
+	SoundController::Instance().startBackgroundSound(trackName);
+}
+
+void GameWindow::fillTracks(const vector<string> &trackList)
+{
+	tracks.clear();
+	currentTrack = 0;
+	tracks = trackList;
+	random_shuffle(tracks.begin(), tracks.end());
 }
 

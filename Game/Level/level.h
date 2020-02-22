@@ -108,6 +108,8 @@ public:
 	void upgradeTower(Tower *tower);
 	void sellTower(Tower *tower);
 
+	bool isFinalWave() const;
+
 private:
 	void choose(const Vector2i& cell, bool inPanel);
 	void calculateCollisions();

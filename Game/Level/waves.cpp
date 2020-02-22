@@ -55,7 +55,15 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 1:
 	{
-		ADD_ENEMY(SPIDER, 10);
+		ADD_ENEMY(SCORPION, 2);
+		waves.push_back(createWave(0.f, 5750, enemies));
+		enemies.clear();
+
+		ADD_ENEMY(SPIDER, 2);
+		waves.push_back(createWave(0.f, 5750, enemies));
+		enemies.clear();
+
+		ADD_ENEMY(SMALL_MEDIUM, 2);
 		waves.push_back(createWave(0.f, 5750, enemies));
 		enemies.clear();
 		break;

@@ -129,7 +129,7 @@ void ManualWindow::eventFilter(Event *event)
 				break;
 			if (elements.at(i).rect.getGlobalBounds().contains(pos))
 			{
-				SoundController::Instance().playOnce(BUTTON_HOVER_SOUND_FILE);
+				SoundController::Instance().playOnce(HOVER_SOUND_FILE);
 				current = i - startValue;
 				break;
 			}
@@ -141,7 +141,7 @@ void ManualWindow::eventFilter(Event *event)
 		{
 			next.setColor(SELECTED_COLOR);
 			toolTip.setString(Language::Instance().translate(Language::NEXT));
-			SoundController::Instance().playOnce(BUTTON_HOVER_SOUND_FILE);
+			SoundController::Instance().playOnce(HOVER_SOUND_FILE);
 		}
 
 		previous.setColor(Color::White);
@@ -149,7 +149,7 @@ void ManualWindow::eventFilter(Event *event)
 		{
 			previous.setColor(SELECTED_COLOR);
 			toolTip.setString(Language::Instance().translate(Language::PREVIOUS));
-			SoundController::Instance().playOnce(BUTTON_HOVER_SOUND_FILE);
+			SoundController::Instance().playOnce(HOVER_SOUND_FILE);
 		}
 
 		credits.setColor(Color::White);
@@ -157,7 +157,7 @@ void ManualWindow::eventFilter(Event *event)
 		{
 			credits.setColor(SELECTED_COLOR);
 			toolTip.setString(Language::Instance().translate(Language::CREDITS));
-			SoundController::Instance().playOnce(BUTTON_HOVER_SOUND_FILE);
+			SoundController::Instance().playOnce(HOVER_SOUND_FILE);
 		}
 
 		close.setColor(Color::White);
@@ -165,7 +165,7 @@ void ManualWindow::eventFilter(Event *event)
 		{
 			close.setColor(SELECTED_COLOR);
 			toolTip.setString(Language::Instance().translate(Language::BACK));
-			SoundController::Instance().playOnce(BUTTON_HOVER_SOUND_FILE);
+			SoundController::Instance().playOnce(HOVER_SOUND_FILE);
 		}
 
 		updateCurrentInfo();

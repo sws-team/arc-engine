@@ -52,7 +52,7 @@ void Menu::eventFilter(Event *event)
 		if (current != -1 && current != currentMenu)
 		{
 			currentMenu = current;
-			SoundController::Instance().playOnce(BUTTON_HOVER_SOUND_FILE);
+			SoundController::Instance().playOnce(HOVER_SOUND_FILE);
 			updateColor();
 		}
 	}

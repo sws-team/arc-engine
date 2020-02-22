@@ -175,8 +175,6 @@ void Level::startMission(const unsigned int n)
 	money = gameMap->money * Settings::Instance().difficult();
 	Engine::Instance().panel()->updatePanel();
 
-	SoundController::Instance().startBackgroundSound("sounds/map1.ogg");
-
 	Engine::Instance().cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
 	Engine::Instance().panel()->initMission(n);
 	updateStartEndPos(gameMap->spawnPos, Vector2f(gameMap->endRect.left, gameMap->endRect.top));
@@ -331,7 +329,7 @@ void Level::checkEnd()
 		else
 			++it;
 	}
-	if (currentWave == waves.size() && enemies.empty())
+	if (waves.size() == currentWave && enemies.empty())
 		changeState(WIN);	
 }
 
@@ -492,11 +490,16 @@ void Level::sellTower(Tower *tower)
 	Engine::Instance().panel()->updatePanel();
 }
 
+bool Level::isFinalWave() const
+{
+	return waves.size() - 1 == currentWave;
+}
+
 void Level::checkRespawn()
 {
 	if (abilities->stopAblity->isActive())
 		return;
-	if (currentWave == waves.size())
+	if (waves.size() == currentWave)
 		return;
 
 	Wave wave = waves.at(currentWave);
@@ -514,7 +517,8 @@ void Level::checkRespawn()
 	}
 	if (wave.spawnEnemies.empty())
 	{
-		currentWave++;
+		if(!isFinalWave())
+			currentWave++;
 		Engine::Instance().panel()->updateWaveText();
 	}
 }

@@ -50,6 +50,11 @@ private:
 	Int64 lastTime;
 	Int64 tick;
 	void updateTextPos();
+	void nextTrack();
+	int currentTrack;
+	vector<string> tracks;
+	void fillTracks(const vector<string>& trackList);
+	bool isFinal;
 };
 
 #endif // GAMEWINDOW_H
