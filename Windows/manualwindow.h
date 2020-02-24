@@ -2,11 +2,11 @@
 #define MANUALWINDOW_H
 
 #include "statewindow.h"
-#include "ResourcesManager/textures_types.h"
-#include "Translations/language.h"
+#include "enginedef.h"
+#include "gameobject.h"
 
-#include "Game/Level/enemy.h"
-#include "Game/Level/tower.h"
+#include "Game/enemy.h"
+#include "Game/tower.h"
 
 class ManualWindow : public StateWindow
 {
@@ -32,20 +32,20 @@ private:
 			E_Enemy
 		};
 
-		Element(RESOURCES::TEXTURE_TYPE texture,
-				Language::TR_TEXT name,
+		Element(TextureType texture,
+				TranslationType name,
 				const EnemiesFactory::EnemyInfo& info);
 
-		Element(RESOURCES::TEXTURE_TYPE texture,
-				Language::TR_TEXT name,
+		Element(TextureType texture,
+				TranslationType name,
 				const String& description);
 
-		Element(RESOURCES::TEXTURE_TYPE texture,
-				Language::TR_TEXT name,
+		Element(TextureType texture,
+				TranslationType name,
 				TOWER_TYPES towerType);
 
-		RESOURCES::TEXTURE_TYPE texture;
-		Language::TR_TEXT name;
+		TextureType texture;
+		TranslationType name;
 		ElementType type;
 
 		EnemiesFactory::EnemyInfo enemyInfo;

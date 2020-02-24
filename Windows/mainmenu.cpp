@@ -1,40 +1,38 @@
 #include "mainmenu.h"
-#include "Game/Audio/soundcontroller.h"
-#include "Engine/engine.h"
-#include "Translations/language.h"
-#include "globalvariables.h"
-#include "settings.h"
+#include "engine.h"
+#include "managers.h"
+#include "gamemanagers.h"
+#include "gamestatemanager.h"
 
 MainMenu::MainMenu()
 	: Menu()
-
 {
-	setBackground(RESOURCES::MENU_BACKGROUND);
+	setBackground(GAME_TEXTURE::MENU_BACKGROUND);
 	currentMenu = static_cast<MENUS>(CAMPAIGN);
 
-	setPos(Vector2f(120 * Settings::Instance().getScaleFactor().x,
-					640 * Settings::Instance().getScaleFactor().y));
+	setPos(Vector2f(120 * Engine::Instance().settingsManager()->getScaleFactor().x,
+					640 * Engine::Instance().settingsManager()->getScaleFactor().y));
 	setColor(Color(64,224,208, 100));
 	setCurrentColor(Color(64,224,208));
 
-	gameName.setFont(GlobalVariables::Instance().font());
+	gameName.setFont(Engine::Instance().fontManager()->font());
 	gameName.setString("Game Name");
 	gameName.setFillColor(Color::Cyan);
 	gameName.setOutlineColor(Color::Black);
 	gameName.setOutlineThickness(5);
 	gameName.setCharacterSize(150);
-	gameName.setPosition(Settings::Instance().getResolution().x/2 - gameName.getGlobalBounds().width/2,
+	gameName.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 - gameName.getGlobalBounds().width/2,
 						 gameName.getGlobalBounds().height/2);
 
-	addItem(Language::Instance().translate(Language::CAMPAIGN));
-	addItem(Language::Instance().translate(Language::OPTIONS));
-	addItem(Language::Instance().translate(Language::MANUAL));
-	addItem(Language::Instance().translate(Language::EXIT));
+	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAMPAIGN));
+	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::OPTIONS));
+	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::MANUAL));
+	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::EXIT));
 }
 
 void MainMenu::init()
 {
-	SoundController::Instance().startBackgroundSound(MENU_SOUND_FILE);
+	Engine::Instance().soundManager()->startBackgroundSound(GAME_MUSIC::MENU);
 }
 
 void MainMenu::accept()
@@ -42,16 +40,16 @@ void MainMenu::accept()
 	switch (currentMenu)
 	{
 	case CAMPAIGN:
-		Engine::Instance().setState(Engine::CHOOSE_MISSION);
+		Engine::Instance().stateManager()->setState(GameStateManager::CHOOSE_MISSION);
 		break;
 	case OPTIONS:
-		Engine::Instance().setState(Engine::OPTIONS);
+		Engine::Instance().stateManager()->setState(StateManager::SETTINGS);
 		break;
 	case MANUAL:
-		Engine::Instance().setState(Engine::MANUAL);
+		Engine::Instance().stateManager()->setState(GameStateManager::MANUAL);
 		break;
 	case EXIT:
-		Engine::Instance().setState(Engine::CLOSING);
+		Engine::Instance().stateManager()->setState(GameStateManager::CLOSING);
 		break;
 	}
 }

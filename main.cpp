@@ -1,15 +1,14 @@
 #include "mainwindow.h"
-#include "globalvariables.h"
-#include "settings.h"
-#include "Translations/language.h"
+#include "engine.h"
+#include "managers.h"
+#include "gameoptions.h"
+#include "gamestatemanager.h"
+#include "gamemanagers.h"
 
 #ifdef OS_WIN
 #include "windows.h"
 #endif
 
-#ifdef CRASH_REPORTER
-#include "CrashHandler.h"
-#endif
 #ifdef STEAM_API
 #include "steam_api.h"
 #endif
@@ -28,7 +27,6 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 #endif
-
 	std::srand(std::time(nullptr));
     String path = String(argv[0]);
 	const String appName = String("TowerDefence_") + String(APP_VERSION)
@@ -36,32 +34,40 @@ int main(int argc, char *argv[])
 			+ String(".exe")
 #endif
 	;
-//	std::cout << path.toAnsiString() << std::endl << appName.toAnsiString() << std::endl;
 	path.replace(appName, String());
-//	std::cout << path.toAnsiString() << std::endl;
 
-    GlobalVariables::Instance().setApplicationPath(path);
-	GlobalVariables::Instance().loadGameSettings();
+	Engine::Instance();
 
-#ifdef CRASH_REPORTER
-    Breakpad::CrashHandler::Init("desktop");
-#endif
+	GameManagers::loadTextures();
+	GameManagers::loadTranslations();
+	GameManagers::loadSounds();
+	GameManagers::loadMusic();
 
-	Language::Instance().load();
-	Engine::Instance().load();
+	Engine::Instance().translationsManager()->setCurrentLanguage("rus");
+	Engine::Instance().globalVariables()->setApplicationPath(path);
+	Engine::Instance().globalVariables()->loadGameSettings();
 
-	if (!Engine::Instance().checkMaps("maps"))
-	{		
+	Engine::Instance().setStateManager(new GameStateManager);
+	Engine::Instance().setOptions(new GameOptions);
+	Engine::Instance().options<GameOptions>()->load();
+
+
+	if (!Engine::Instance().options<GameOptions>()->checkMaps("maps"))
+	{
 #ifdef OS_WIN
 		MessageBoxA(NULL, "Checksum error", "Fatal Error!", MB_OK | MB_ICONERROR);
 #endif
 		return EXIT_FAILURE;
 	}
 
+	Engine::Instance().globalVariables()->setAppName("TowerDefence");
+
 	MainWindow w;
-	Settings::Instance().setMainWindow(&w);
-	Settings::Instance().updateWindow();
+	Engine::Instance().options<GameOptions>()->setMainWindow(&w);
+	Engine::Instance().options<GameOptions>()->updateWindow();
+
 	const int result = w.exec();
+	Engine::Instance().clearInstance();
 #ifdef STEAM_API
 	SteamAPI_Shutdown();
 #endif

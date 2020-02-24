@@ -2,7 +2,6 @@
 #define CONTROLLER_H
 
 #include "stdheader.h"
-#include "controlsettings.h"
 #include "timer.h"
 
 class Level;

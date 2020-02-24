@@ -1,11 +1,11 @@
 #include "manualwindow.h"
-#include "settings.h"
-#include "ResourcesManager/resourcesmanager.h"
-#include "globalvariables.h"
-#include "Game/Level/tower.h"
-#include "Game/Level/enemy.h"
+#include "Game/tower.h"
+#include "Game/enemy.h"
+#include "managers.h"
 #include "Game/leveldef.h"
-#include "Game/Audio/soundcontroller.h"
+#include "gamemanagers.h"
+#include "gamestatemanager.h"
+#include "gameoptions.h"
 
 const Color ManualWindow::SELECTED_COLOR = Color(45, 45, 45, 96);
 
@@ -14,19 +14,19 @@ ManualWindow::ManualWindow()
 	,current(0)
 	,page(0)
 {	
-	setBackground(RESOURCES::ABOUT_BACKGROUND);
+	setBackground(GAME_TEXTURE::MANUAL_BACKGROUND);
 
-	next.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::NEXT));
-	next.setScale(Settings::Instance().getScaleFactor());
-	previous.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PREVIOUS));
-	previous.setScale(Settings::Instance().getScaleFactor());
-	close.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::EXIT));
-	close.setScale(Settings::Instance().getScaleFactor());
-	credits.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::CREDITS));
-	credits.setScale(Settings::Instance().getScaleFactor());
+	next.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::NEXT));
+	next.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	previous.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::PREVIOUS));
+	previous.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	close.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::EXIT));
+	close.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	credits.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::CREDITS));
+	credits.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
-	toolTip.setFont(GlobalVariables::Instance().font());
-	toolTip.setScale(Settings::Instance().getScaleFactor());
+	toolTip.setFont(Engine::Instance().fontManager()->font());
+	toolTip.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	toolTip.setCharacterSize(40);
 	toolTip.setOutlineThickness(1.f);
 	toolTip.setFillColor(Color::Red);
@@ -45,7 +45,7 @@ ManualWindow::~ManualWindow()
 
 void ManualWindow::back()
 {
-	Engine::Instance().setState(Engine::MAIN_MENU);
+	Engine::Instance().stateManager()->setState(GameStateManager::MENU);
 }
 
 void ManualWindow::update()
@@ -99,22 +99,22 @@ void ManualWindow::eventFilter(Event *event)
 
 		if (next.getGlobalBounds().contains(pos))
 		{
-			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
+			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
 			nextPage();
 		}
 		if (previous.getGlobalBounds().contains(pos))
 		{
-			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
+			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
 			previousPage();
 		}
 		if (credits.getGlobalBounds().contains(pos))
 		{
-			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
-			return Engine::Instance().setState(Engine::ABOUT);
+			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
+			return Engine::Instance().stateManager()->setState(StateManager::ABOUT);
 		}
 		if (close.getGlobalBounds().contains(pos))
 		{
-			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
+			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
 			back();
 		}
 	}
@@ -129,7 +129,7 @@ void ManualWindow::eventFilter(Event *event)
 				break;
 			if (elements.at(i).rect.getGlobalBounds().contains(pos))
 			{
-				SoundController::Instance().playOnce(HOVER_SOUND_FILE);
+				Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 				current = i - startValue;
 				break;
 			}
@@ -140,32 +140,32 @@ void ManualWindow::eventFilter(Event *event)
 		if (next.getGlobalBounds().contains(pos))
 		{
 			next.setColor(SELECTED_COLOR);
-			toolTip.setString(Language::Instance().translate(Language::NEXT));
-			SoundController::Instance().playOnce(HOVER_SOUND_FILE);
+			toolTip.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::NEXT));
+			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 		}
 
 		previous.setColor(Color::White);
 		if (previous.getGlobalBounds().contains(pos))
 		{
 			previous.setColor(SELECTED_COLOR);
-			toolTip.setString(Language::Instance().translate(Language::PREVIOUS));
-			SoundController::Instance().playOnce(HOVER_SOUND_FILE);
+			toolTip.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::PREVIOUS));
+			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 		}
 
 		credits.setColor(Color::White);
 		if (credits.getGlobalBounds().contains(pos))
 		{
 			credits.setColor(SELECTED_COLOR);
-			toolTip.setString(Language::Instance().translate(Language::CREDITS));
-			SoundController::Instance().playOnce(HOVER_SOUND_FILE);
+			toolTip.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CREDITS));
+			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 		}
 
 		close.setColor(Color::White);
 		if (close.getGlobalBounds().contains(pos))
 		{
 			close.setColor(SELECTED_COLOR);
-			toolTip.setString(Language::Instance().translate(Language::BACK));
-			SoundController::Instance().playOnce(HOVER_SOUND_FILE);
+			toolTip.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BACK));
+			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 		}
 
 		updateCurrentInfo();
@@ -205,11 +205,12 @@ void ManualWindow::eventFilter(Event *event)
 
 void ManualWindow::updatePos()
 {
-	const float ICON_WIDTH = GlobalVariables::Instance().tileSize().x;
-	const float RECT_WIDTH = 512 * Settings::Instance().getScaleFactor().x;
-	const float RECT_HEIGHT = 128 * Settings::Instance().getScaleFactor().y;
-	const float ICON_X_OFFSET = 32 * Settings::Instance().getScaleFactor().x;
-	const float ICON_Y_OFFSET = 32 * Settings::Instance().getScaleFactor().y;
+
+	const float ICON_WIDTH = Engine::Instance().options<GameOptions>()->tileSize().x;
+	const float RECT_WIDTH = 512 * Engine::Instance().settingsManager()->getScaleFactor().x;
+	const float RECT_HEIGHT = 128 * Engine::Instance().settingsManager()->getScaleFactor().y;
+	const float ICON_X_OFFSET = 32 * Engine::Instance().settingsManager()->getScaleFactor().x;
+	const float ICON_Y_OFFSET = 32 * Engine::Instance().settingsManager()->getScaleFactor().y;
 
 	currentRect.setFillColor(SELECTED_COLOR);
 	currentRect.setSize(Vector2f(RECT_WIDTH, RECT_HEIGHT));
@@ -239,7 +240,7 @@ void ManualWindow::updatePos()
 								 infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
 
-	const  Vector2f scaleFactor = Settings::Instance().getScaleFactor();
+	const  Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 	Vector2f pos = Vector2f(ICON_X_OFFSET * 2, ICON_Y_OFFSET * 2);
 
 	int count = 0;
@@ -284,117 +285,117 @@ void ManualWindow::updatePos()
 void ManualWindow::addElements()
 {
 	//towers
-	elements.push_back(Element(RESOURCES::TOWER_BASE,
-							   Language::TOWER_BASE,
+	elements.push_back(Element(GAME_TEXTURE::TOWER_BASE,
+							   GAME_TRANSLATION::TOWER_BASE,
 							   BASE));
 
-	elements.push_back(Element(RESOURCES::TOWER_POWER,
-							   Language::TOWER_POWER,
+	elements.push_back(Element(GAME_TEXTURE::TOWER_POWER,
+							   GAME_TRANSLATION::TOWER_POWER,
 							   POWER));
 
-	elements.push_back(Element(RESOURCES::TOWER_LASER,
-							   Language::TOWER_LASER,
+	elements.push_back(Element(GAME_TEXTURE::TOWER_LASER,
+							   GAME_TRANSLATION::TOWER_LASER,
 							   LASER));
 
-	elements.push_back(Element(RESOURCES::TOWER_FREEZE,
-							   Language::TOWER_FREEZE,
+	elements.push_back(Element(GAME_TEXTURE::TOWER_FREEZE,
+							   GAME_TRANSLATION::TOWER_FREEZE,
 							   FREEZE));
 
-	elements.push_back(Element(RESOURCES::TOWER_ROCKET,
-							   Language::TOWER_ROCKET,
+	elements.push_back(Element(GAME_TEXTURE::TOWER_ROCKET,
+							   GAME_TRANSLATION::TOWER_ROCKET,
 							   ROCKET));
 
-	elements.push_back(Element(RESOURCES::TOWER_IMPROVED,
-							   Language::TOWER_IMPROVED,
+	elements.push_back(Element(GAME_TEXTURE::TOWER_IMPROVED,
+							   GAME_TRANSLATION::TOWER_IMPROVED,
 							   IMPROVED));
 	//abilities
-	elements.push_back(Element(RESOURCES::ABILITY_BOMB,
-							   Language::ABILITY_BOMB,
-							   Language::Instance().translate(Language::BOMB_ABILITY_DESCRIPTION)));
+	elements.push_back(Element(GAME_TEXTURE::ABILITY_BOMB,
+							   GAME_TRANSLATION::ABILITY_BOMB,
+							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BOMB_ABILITY_DESCRIPTION)));
 
-	elements.push_back(Element(RESOURCES::ABILITY_FREEZE_BOMB,
-							   Language::ABILITY_FREEZE_BOMB,
-							   Language::Instance().translate(Language::FREEZE_BOMB_ABILITY_DESCRIPTION)));
+	elements.push_back(Element(GAME_TEXTURE::ABILITY_FREEZE_BOMB,
+							   GAME_TRANSLATION::ABILITY_FREEZE_BOMB,
+							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION)));
 
-	elements.push_back(Element(RESOURCES::ABILITY_ACID,
-							   Language::ABILITY_VENOM,
-							   Language::Instance().translate(Language::VENOM_ABILITY_DESCRIPTION)));
+	elements.push_back(Element(GAME_TEXTURE::ABILITY_ACID,
+							   GAME_TRANSLATION::ABILITY_VENOM,
+							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::VENOM_ABILITY_DESCRIPTION)));
 
-	elements.push_back(Element(RESOURCES::ABILITY_INCREASE_TOWER_DAMAGE,
-							   Language::ABILITY_INCREASE_TOWER_DAMAGE,
-							   Language::Instance().translate(Language::INC_DMG_ABILITY_DESCRIPTION)));
+	elements.push_back(Element(GAME_TEXTURE::ABILITY_INCREASE_TOWER_DAMAGE,
+							   GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE,
+							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION)));
 
-	elements.push_back(Element(RESOURCES::ABILITY_INCREASE_TOWER_ATTACK_SPEED,
-							   Language::ABILITY_INCREASE_TOWER_ATTACK_SPEED,
-							   Language::Instance().translate(Language::INC_AS_ABILITY_DESCRIPTION)));
+	elements.push_back(Element(GAME_TEXTURE::ABILITY_INCREASE_TOWER_ATTACK_SPEED,
+							   GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED,
+							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION)));
 
-	elements.push_back(Element(RESOURCES::ABILITY_TIME_STOP,
-							   Language::ABILITY_STOP,
-							   Language::Instance().translate(Language::STOP_ABILITY_DESCRIPTION)));
+	elements.push_back(Element(GAME_TEXTURE::ABILITY_TIME_STOP,
+							   GAME_TRANSLATION::ABILITY_STOP,
+							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION)));
 
 	//enemies
-	elements.push_back(Element(RESOURCES::ENEMY_SCORPION,
-							   Language::SCORPION,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_SCORPION,
+							   GAME_TRANSLATION::SCORPION,
 							   EnemiesFactory::getEnemyInfo(SCORPION)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_CAR,
-							   Language::CAR,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_CAR,
+							   GAME_TRANSLATION::CAR,
 							   EnemiesFactory::getEnemyInfo(SMALL_MEDIUM)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_TRICYCLE,
-							   Language::TRICYCLE,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_TRICYCLE,
+							   GAME_TRANSLATION::TRICYCLE,
 							   EnemiesFactory::getEnemyInfo(SMALL_FAST)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_TANK,
-							   Language::TANK,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_TANK,
+							   GAME_TRANSLATION::TANK,
 							   EnemiesFactory::getEnemyInfo(MID_SLOW)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_SPIDER,
-							   Language::SPIDER,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_SPIDER,
+							   GAME_TRANSLATION::SPIDER,
 							   EnemiesFactory::getEnemyInfo(SPIDER)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_HELICOPTER,
-							   Language::HELICOPTER,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_HELICOPTER,
+							   GAME_TRANSLATION::HELICOPTER,
 							   EnemiesFactory::getEnemyInfo(MID_FAST)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_AIRCARRIER,
-							   Language::AIRCARRIER,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_AIRCARRIER,
+							   GAME_TRANSLATION::AIRCARRIER,
 							   EnemiesFactory::getEnemyInfo(BIG_SLOW)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_BIG_TANK,
-							   Language::BIG_TANK,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_BIG_TANK,
+							   GAME_TRANSLATION::BIG_TANK,
 							   EnemiesFactory::getEnemyInfo(BIG_MEDIUM)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_PLANE,
-							   Language::PLANE,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_PLANE,
+							   GAME_TRANSLATION::PLANE,
 							   EnemiesFactory::getEnemyInfo(ANOTHER_ENEMY)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_REPAIR,
-							   Language::REPAIR,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_REPAIR,
+							   GAME_TRANSLATION::REPAIR,
 							   EnemiesFactory::getEnemyInfo(REPAIR_ENEMY)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_SHELL,
-							   Language::SHELL,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_SHELL,
+							   GAME_TRANSLATION::SHELL,
 							   EnemiesFactory::getEnemyInfo(SHELL_ENEMY)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_TELEPORT,
-							   Language::TELEPORT,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_TELEPORT,
+							   GAME_TRANSLATION::TELEPORT,
 							   EnemiesFactory::getEnemyInfo(TELEPORT_ENEMY)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_SELF_HEAL,
-							   Language::SELF_HEAL,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_SELF_HEAL,
+							   GAME_TRANSLATION::SELF_HEAL,
 							   EnemiesFactory::getEnemyInfo(SELFHEAL_ENEMY)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_DOWN_TOWER,
-							   Language::DOWN_TOWER,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_DOWN_TOWER,
+							   GAME_TRANSLATION::DOWN_TOWER,
 							   EnemiesFactory::getEnemyInfo(DOWN_TOWER_ENEMY)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_ANT,
-							   Language::ANT,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_ANT,
+							   GAME_TRANSLATION::ANT,
 							   EnemiesFactory::getEnemyInfo(SMALL_NEXT)));
 
-	elements.push_back(Element(RESOURCES::ENEMY_COW,
-							   Language::COW,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_COW,
+							   GAME_TRANSLATION::COW,
 							   EnemiesFactory::getEnemyInfo(SPAWN_ENEMY)));
 }
 
@@ -429,8 +430,8 @@ void ManualWindow::previousPage()
 	updateCurrentInfo();
 }
 
-ManualWindow::Element::Element(RESOURCES::TEXTURE_TYPE texture,
-							   Language::TR_TEXT name,
+ManualWindow::Element::Element(TextureType texture,
+							   TranslationType name,
 							   const EnemiesFactory::EnemyInfo& info)
 	: 	texture(texture)
 	,name(name)
@@ -440,8 +441,8 @@ ManualWindow::Element::Element(RESOURCES::TEXTURE_TYPE texture,
 
 }
 
-ManualWindow::Element::Element(RESOURCES::TEXTURE_TYPE texture,
-							   Language::TR_TEXT name,
+ManualWindow::Element::Element(TextureType texture,
+							   TranslationType name,
 							   const String &description)
 	: 	texture(texture)
 	,name(name)
@@ -451,8 +452,8 @@ ManualWindow::Element::Element(RESOURCES::TEXTURE_TYPE texture,
 
 }
 
-ManualWindow::Element::Element(RESOURCES::TEXTURE_TYPE texture,
-							   Language::TR_TEXT name,
+ManualWindow::Element::Element(TextureType texture,
+							   TranslationType name,
 							   TOWER_TYPES towerType)
 	: 	texture(texture)
 	,name(name)
@@ -466,11 +467,11 @@ void ManualWindow::Element::init()
 {
 	rect.setFillColor(Color(34, 53, 200, 100));
 
-	nameText.setFont(GlobalVariables::Instance().font());
+	nameText.setFont(Engine::Instance().fontManager()->font());
 	nameText.setFillColor(Color::Red);
 	nameText.setCharacterSize(36);
 
-	descriptionText.setFont(GlobalVariables::Instance().font());
+	descriptionText.setFont(Engine::Instance().fontManager()->font());
 	descriptionText.setFillColor(Color::Red);
 	descriptionText.setCharacterSize(36);
 }
@@ -480,9 +481,9 @@ void ManualWindow::Element::update()
 	int frameCount = 1;
 	Vector2i frameSize;
 	//texture
-	icon.setTexture(ResourcesManager::Instance().getTexture(texture));
+	icon.setTexture(Engine::Instance().texturesManager()->getTexture(texture));
 	//name
-	nameText.setString(Language::Instance().translate(name));
+	nameText.setString(Engine::Instance().translationsManager()->translate(name));
 	//description
 	String description;
 	const String separator = ": ";
@@ -498,44 +499,44 @@ void ManualWindow::Element::update()
 		{
 		case BASE:
 		{
-			description = Language::Instance().translate(Language::TOWER_BASE);
+			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_BASE);
 			description += endline;
-			description += Language::Instance().translate(Language::BASE_TOWER_DESCRIPTION);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION);
 		}
 			break;
 		case POWER:
 		{
-			description = Language::Instance().translate(Language::TOWER_POWER);
+			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_POWER);
 			description += endline;
-			description += Language::Instance().translate(Language::POWER_TOWER_DESCRIPTION);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION);
 		}
 			break;
 		case ROCKET:
 		{
-			description = Language::Instance().translate(Language::TOWER_ROCKET);
+			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ROCKET);
 			description += endline;
-			description += Language::Instance().translate(Language::ROCKET_TOWER_DESCRIPTION);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION);
 		}
 			break;
 		case FREEZE:
 		{
-			description = Language::Instance().translate(Language::TOWER_FREEZE);
+			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_FREEZE);
 			description += endline;
-			description += Language::Instance().translate(Language::FREEZE_TOWER_DESCRIPTION);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION);
 		}
 			break;
 		case LASER:
 		{
-			description = Language::Instance().translate(Language::TOWER_LASER);
+			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_LASER);
 			description += endline;
-			description += Language::Instance().translate(Language::LASER_TOWER_DESCRIPTION);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION);
 		}
 			break;
 		case IMPROVED:
 		{
-			description = Language::Instance().translate(Language::TOWER_IMPROVED);
+			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_IMPROVED);
 			description += endline;
-			description += Language::Instance().translate(Language::IMPROVED_TOWER_DESCRIPTION);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION);
 		}
 			break;
 		}
@@ -545,24 +546,24 @@ void ManualWindow::Element::update()
 		const TowerStats towerStats = TowersFactory::getTowerStats(towerType);
 		const float dps = towerStats.damage / ((towerStats.attackSpeed) * 0.001f);
 
-		description += Language::Instance().translate(Language::DAMAGE_PER_SECOND) + separator + GlobalVariables::to_string_with_precision(dps, 2);
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND) + separator + GlobalVariables::to_string_with_precision(dps, 2);
 		description += endline;
 
-		description += Language::Instance().translate(Language::RADIUS) + separator +
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::RADIUS) + separator +
 				GlobalVariables::to_string_with_precision(towerStats.radius, 1);
 		description += endline;
 
 		const float cost = towerStats.cost;
 
-		description += Language::Instance().translate(Language::COST);
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COST);
 		description += separator;
 		description += GlobalVariables::to_string_with_precision(cost, 2);
 	}
 		break;
 	case Element::E_Ability:
-	{
-		frameSize = Vector2i(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE);
-		description += Language::Instance().translate(name);
+	{		
+		frameSize = Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
+		description += Engine::Instance().translationsManager()->translate(name);
 		description += endline;
 		description += abilityInfo;
 	}
@@ -570,36 +571,36 @@ void ManualWindow::Element::update()
 	case Element::E_Enemy:
 	{
 		frameCount = 4;
-		frameSize = Vector2i(enemyInfo.size.x * GlobalVariables::CELL_SIZE/2,
-							 enemyInfo.size.y * GlobalVariables::CELL_SIZE/2);
+		frameSize = Vector2i(enemyInfo.size.x * GameOptions::CELL_SIZE/2,
+							 enemyInfo.size.y * GameOptions::CELL_SIZE/2);
 		icon.setTextureRect(IntRect(0, 0, frameSize.x, frameSize.y));
 		if (enemyInfo.size.x == 1)
 			icon.scale(2, 2);
 		else if (enemyInfo.size.x == 4)
 			icon.scale(0.5f, 0.5f);
 
-		description += Language::Instance().translate(name);
+		description += Engine::Instance().translationsManager()->translate(name);
 		description += endline;
 		//speed
-		description += Language::Instance().translate(Language::SPEED) + separator;
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SPEED) + separator;
 		if (enemyInfo.stats.speed < 30)
-			description += Language::Instance().translate(Language::SLOW);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SLOW);
 		else if (enemyInfo.stats.speed < 65)
-			description += Language::Instance().translate(Language::NORMAL_SPEED);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::NORMAL_SPEED);
 		else
-			description += Language::Instance().translate(Language::FAST);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FAST);
 		description += endline;
 		//size
-		description += Language::Instance().translate(Language::SIZE) + separator;
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SIZE) + separator;
 		if (enemyInfo.size.x == 1)
-			description += Language::Instance().translate(Language::SMALL);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SMALL);
 		else if (enemyInfo.size.x == 2)
-			description += Language::Instance().translate(Language::MID);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::MID);
 		else
-			description += Language::Instance().translate(Language::BIG);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BIG);
 		description += endline;
 		//health
-		description += Language::Instance().translate(Language::HEALTH) + separator +
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::HEALTH) + separator +
 				GlobalVariables::to_string_with_precision(enemyInfo.stats.health, 1);
 		description += endline;
 

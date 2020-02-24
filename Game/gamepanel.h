@@ -2,7 +2,7 @@
 #define GAMEPANEL_H
 
 #include "stdheader.h"
-#include "gamedrawable.h"
+#include "gameobject.h"
 #include "leveldef.h"
 
 class Level;

@@ -1,17 +1,16 @@
 #include "gamepanel.h"
-#include "globalvariables.h"
-#include "settings.h"
-#include "Level/level.h"
-#include "ResourcesManager/resourcesmanager.h"
-#include "Engine/engine.h"
-#include "Level/camera.h"
-#include "Level/tower.h"
-#include "Level/lifebar.h"
-#include "Level/gamecursor.h"
-#include "Translations/language.h"
-#include "Game/Level/gameability.h"
-#include "Level/instructions.h"
-#include "Game/Audio/soundcontroller.h"
+#include "level.h"
+#include "camera.h"
+#include "tower.h"
+#include "lifebar.h"
+#include "gamecursor.h"
+#include "gameability.h"
+#include "instructions.h"
+#include "engine.h"
+#include "enginedef.h"
+#include "gamemanagers.h"
+#include "managers.h"
+#include "gameoptions.h"
 
 const String GamePanel::endline = "\n";
 
@@ -25,82 +24,81 @@ GamePanel::GamePanel() :
 	life = new LifeBar();
 	progress = new LifeBar();
 
-	const Vector2f scaleFactor = Settings::Instance().getScaleFactor();
+	const Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 
-	m_sprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_TEXTURE));
+	m_sprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::PANEL_TEXTURE));
 	m_sprite.setScale(scaleFactor);
 
-	info.setFont(GlobalVariables::Instance().font());
+	info.setFont(Engine::Instance().fontManager()->font());
 	info.setFillColor(Color::Black);
 	info.setOutlineColor(Color::Yellow);
 	info.setOutlineThickness(2);
 	info.setCharacterSize(25);
 	info.setScale(scaleFactor);
 
-	moneyCountText.setFont(GlobalVariables::Instance().font());
+	moneyCountText.setFont(Engine::Instance().fontManager()->font());
 	moneyCountText.setFillColor(Color::Black);
 	moneyCountText.setOutlineColor(Color::Yellow);
 	moneyCountText.setOutlineThickness(2);
 	moneyCountText.setCharacterSize(34);
 	moneyCountText.setScale(scaleFactor);
 
-	cursorSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::PANEL_CURSOR));
+	cursorSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::PANEL_CURSOR));
 	cursorSprite.setScale(scaleFactor);
 
-	currentIconRect.setSize(Vector2f(GlobalVariables::CELL_SIZE, GlobalVariables::CELL_SIZE));
+	currentIconRect.setSize(Vector2f(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE));
 	currentIconRect.setFillColor(Color(34,69,160,100));
 	currentIconRect.setScale(scaleFactor);
 
-	abilityBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_BOMB));
+	abilityBombSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ABILITY_BOMB));
 	abilityBombSprite.setScale(scaleFactor);
 
-	abilityFreezeBombSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_FREEZE_BOMB));
+	abilityFreezeBombSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ABILITY_FREEZE_BOMB));
 	abilityFreezeBombSprite.setScale(scaleFactor);
 
-	abilityVenomSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_ACID));
+	abilityVenomSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ABILITY_ACID));
 	abilityVenomSprite.setScale(scaleFactor);
 
-	abilityIncreaseTowerDamageSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_INCREASE_TOWER_DAMAGE));
+	abilityIncreaseTowerDamageSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ABILITY_INCREASE_TOWER_DAMAGE));
 	abilityIncreaseTowerDamageSprite.setScale(scaleFactor);
 
-	abilityIncreaseTowerAttackSpeedSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_INCREASE_TOWER_ATTACK_SPEED));
+	abilityIncreaseTowerAttackSpeedSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ABILITY_INCREASE_TOWER_ATTACK_SPEED));
 	abilityIncreaseTowerAttackSpeedSprite.setScale(scaleFactor);
 
-	abilityStopSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::ABILITY_TIME_STOP));
+	abilityStopSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ABILITY_TIME_STOP));
 	abilityStopSprite.setScale(scaleFactor);
 
-	towerBaseSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_BASE));
+	towerBaseSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_BASE));
 	towerBaseSprite.setScale(scaleFactor);
 	towerBaseSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
-	towerLaserSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_LASER));
+	towerLaserSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_LASER));
 	towerLaserSprite.setScale(scaleFactor);
 	towerLaserSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
-	towerFreezeSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_FREEZE));
+	towerFreezeSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_FREEZE));
 	towerFreezeSprite.setScale(scaleFactor);
 	towerFreezeSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
-	towerRocketSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_ROCKET));
+	towerRocketSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_ROCKET));
 	towerRocketSprite.setScale(scaleFactor);
 	towerRocketSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
-	towerPowerSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_POWER));
+	towerPowerSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_POWER));
 	towerPowerSprite.setScale(scaleFactor);
 	towerPowerSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
-	towerImprovedSprite.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::TOWER_IMPROVED));
+	towerImprovedSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_IMPROVED));
 	towerImprovedSprite.setScale(scaleFactor);
 	towerImprovedSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
-
-	readyText.setFont(GlobalVariables::Instance().font());
+	readyText.setFont(Engine::Instance().fontManager()->font());
 	readyText.setFillColor(Color::Black);
 	readyText.setOutlineColor(Color::Yellow);
 	readyText.setOutlineThickness(2);
 	readyText.setCharacterSize(45);
 	readyText.setScale(scaleFactor);
-	readyText.setString(Language::Instance().translate(Language::START_GAME));
+	readyText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::START_GAME));
 
 	actionsSprites.push_back(&towerBaseSprite);
 	actionsSprites.push_back(&towerFreezeSprite);
@@ -119,42 +117,42 @@ GamePanel::GamePanel() :
 	const Color costTextFillColor = Color::White;
 	const Color costTextOutlineColor = Color::Black;
 
-	towerBaseCostText.setFont(GlobalVariables::Instance().font());
+	towerBaseCostText.setFont(Engine::Instance().fontManager()->font());
 	towerBaseCostText.setFillColor(costTextFillColor);
 	towerBaseCostText.setOutlineColor(costTextOutlineColor);
 	towerBaseCostText.setOutlineThickness(1);
 	towerBaseCostText.setCharacterSize(costTextCharacterSize);
 	towerBaseCostText.setScale(scaleFactor);
 
-	towerFreezeCostText.setFont(GlobalVariables::Instance().font());
+	towerFreezeCostText.setFont(Engine::Instance().fontManager()->font());
 	towerFreezeCostText.setFillColor(costTextFillColor);
 	towerFreezeCostText.setOutlineColor(costTextOutlineColor);
 	towerFreezeCostText.setOutlineThickness(1);
 	towerFreezeCostText.setCharacterSize(costTextCharacterSize);
 	towerFreezeCostText.setScale(scaleFactor);
 
-	towerRocketCostText.setFont(GlobalVariables::Instance().font());
+	towerRocketCostText.setFont(Engine::Instance().fontManager()->font());
 	towerRocketCostText.setFillColor(costTextFillColor);
 	towerRocketCostText.setOutlineColor(costTextOutlineColor);
 	towerRocketCostText.setOutlineThickness(1);
 	towerRocketCostText.setCharacterSize(costTextCharacterSize);
 	towerRocketCostText.setScale(scaleFactor);
 
-	towerLaserCostText.setFont(GlobalVariables::Instance().font());
+	towerLaserCostText.setFont(Engine::Instance().fontManager()->font());
 	towerLaserCostText.setFillColor(costTextFillColor);
 	towerLaserCostText.setOutlineColor(costTextOutlineColor);
 	towerLaserCostText.setOutlineThickness(1);
 	towerLaserCostText.setCharacterSize(costTextCharacterSize);
 	towerLaserCostText.setScale(scaleFactor);
 
-	towerPowerCostText.setFont(GlobalVariables::Instance().font());
+	towerPowerCostText.setFont(Engine::Instance().fontManager()->font());
 	towerPowerCostText.setFillColor(costTextFillColor);
 	towerPowerCostText.setOutlineColor(costTextOutlineColor);
 	towerPowerCostText.setOutlineThickness(1);
 	towerPowerCostText.setCharacterSize(costTextCharacterSize);
 	towerPowerCostText.setScale(scaleFactor);
 
-	towerImprovedCostText.setFont(GlobalVariables::Instance().font());
+	towerImprovedCostText.setFont(Engine::Instance().fontManager()->font());
 	towerImprovedCostText.setFillColor(costTextFillColor);
 	towerImprovedCostText.setOutlineColor(costTextOutlineColor);
 	towerImprovedCostText.setOutlineThickness(1);
@@ -162,48 +160,47 @@ GamePanel::GamePanel() :
 	towerImprovedCostText.setScale(scaleFactor);
 
 	const float durationTextCharacterSize = 40;
-	abilityBombDurationText.setFont(GlobalVariables::Instance().font());
+	abilityBombDurationText.setFont(Engine::Instance().fontManager()->font());
 	abilityBombDurationText.setFillColor(costTextFillColor);
 	abilityBombDurationText.setOutlineColor(costTextOutlineColor);
 	abilityBombDurationText.setOutlineThickness(1);
 	abilityBombDurationText.setCharacterSize(durationTextCharacterSize);
 	abilityBombDurationText.setScale(scaleFactor);
 
-	abilityFreezeBombDurationText.setFont(GlobalVariables::Instance().font());
+	abilityFreezeBombDurationText.setFont(Engine::Instance().fontManager()->font());
 	abilityFreezeBombDurationText.setFillColor(costTextFillColor);
 	abilityFreezeBombDurationText.setOutlineColor(costTextOutlineColor);
 	abilityFreezeBombDurationText.setOutlineThickness(1);
 	abilityFreezeBombDurationText.setCharacterSize(durationTextCharacterSize);
 	abilityFreezeBombDurationText.setScale(scaleFactor);
 
-	abilityVenomDurationText.setFont(GlobalVariables::Instance().font());
+	abilityVenomDurationText.setFont(Engine::Instance().fontManager()->font());
 	abilityVenomDurationText.setFillColor(costTextFillColor);
 	abilityVenomDurationText.setOutlineColor(costTextOutlineColor);
 	abilityVenomDurationText.setOutlineThickness(1);
 	abilityVenomDurationText.setCharacterSize(durationTextCharacterSize);
 	abilityVenomDurationText.setScale(scaleFactor);
 
-	abilityIncreaseTowerDamageDurationText.setFont(GlobalVariables::Instance().font());
+	abilityIncreaseTowerDamageDurationText.setFont(Engine::Instance().fontManager()->font());
 	abilityIncreaseTowerDamageDurationText.setFillColor(costTextFillColor);
 	abilityIncreaseTowerDamageDurationText.setOutlineColor(costTextOutlineColor);
 	abilityIncreaseTowerDamageDurationText.setOutlineThickness(1);
 	abilityIncreaseTowerDamageDurationText.setCharacterSize(durationTextCharacterSize);
 	abilityIncreaseTowerDamageDurationText.setScale(scaleFactor);
 
-	abilityIncreaseTowerAttackSpeedDurationText.setFont(GlobalVariables::Instance().font());
+	abilityIncreaseTowerAttackSpeedDurationText.setFont(Engine::Instance().fontManager()->font());
 	abilityIncreaseTowerAttackSpeedDurationText.setFillColor(costTextFillColor);
 	abilityIncreaseTowerAttackSpeedDurationText.setOutlineColor(costTextOutlineColor);
 	abilityIncreaseTowerAttackSpeedDurationText.setOutlineThickness(1);
 	abilityIncreaseTowerAttackSpeedDurationText.setCharacterSize(durationTextCharacterSize);
 	abilityIncreaseTowerAttackSpeedDurationText.setScale(scaleFactor);
 
-	abilityStopDurationText.setFont(GlobalVariables::Instance().font());
+	abilityStopDurationText.setFont(Engine::Instance().fontManager()->font());
 	abilityStopDurationText.setFillColor(costTextFillColor);
 	abilityStopDurationText.setOutlineColor(costTextOutlineColor);
 	abilityStopDurationText.setOutlineThickness(1);
 	abilityStopDurationText.setCharacterSize(durationTextCharacterSize);
 	abilityStopDurationText.setScale(scaleFactor);
-
 
 	towerBaseCostText.setString(GlobalVariables::to_string_with_precision(BaseTower::STATS.cost, 0));
 	towerFreezeCostText.setString(GlobalVariables::to_string_with_precision(FreezeTower::STATS.cost, 0));
@@ -219,13 +216,13 @@ GamePanel::GamePanel() :
 	abilityIncreaseTowerAttackSpeedDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
 	abilityStopDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
 
-	moneyIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::MONEY_ICON));
+	moneyIcon.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::MONEY_ICON));
 	moneyIcon.setScale(scaleFactor);
 
-	lifeIcon.setTexture(ResourcesManager::Instance().getTexture(RESOURCES::LIFE_ICON));
+	lifeIcon.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::LIFE_ICON));
 	lifeIcon.setScale(scaleFactor);
 
-	waveText.setFont(GlobalVariables::Instance().font());
+	waveText.setFont(Engine::Instance().fontManager()->font());
 	waveText.setFillColor(Color::Magenta);
 	waveText.setOutlineThickness(2);
 	waveText.setOutlineColor(Color::Yellow);
@@ -233,8 +230,8 @@ GamePanel::GamePanel() :
 	waveText.setScale(scaleFactor);
 
 	m_bottomValue = 0;
-	const int progressWidth = Settings::Instance().getResolution().x * PROGRESS_WIDTH;
-	progress->init(Vector2i(progressWidth, LifeBar::LIFE_BAR_HEIGHT * Settings::Instance().getScaleFactor().y), Color::Red);
+	const int progressWidth = Engine::Instance().settingsManager()->getResolution().x * PROGRESS_WIDTH;
+	progress->init(Vector2i(progressWidth, LifeBar::LIFE_BAR_HEIGHT * Engine::Instance().settingsManager()->getScaleFactor().y), Color::Red);
 	life->init(Vector2i(722 * scaleFactor.x, 37 * scaleFactor.y), Color::Cyan);
 
 	drainRect.setFillColor(Color::Transparent);
@@ -254,13 +251,13 @@ void GamePanel::draw(RenderTarget * const target)
 {
 	//draw minimap
 	rTexture.clear(Color::Transparent);
-	Engine::Instance().level()->drawLevel(&rTexture);
+	Engine::Instance().options<GameOptions>()->level()->drawLevel(&rTexture);
 	rTexture.display();
 	miniMapSprite.setTexture(rTexture.getTexture());
 
 	//draw
-	if(Engine::Instance().level()->getState() == Level::WAIT_READY &&
-			!Engine::Instance().instructions()->isActive())
+	if(Engine::Instance().options<GameOptions>()->level()->getState() == Level::WAIT_READY &&
+			!Engine::Instance().options<GameOptions>()->instructions()->isActive())
 		target->draw(readyText);		
 
 	target->draw(miniMapSprite);
@@ -289,7 +286,7 @@ void GamePanel::draw(RenderTarget * const target)
 	target->draw(towerPowerCostText);
 	target->draw(towerImprovedCostText);
 
-	Abilities *abilities = Engine::Instance().level()->getAbilities();
+	Abilities *abilities = Engine::Instance().options<GameOptions>()->level()->getAbilities();
 	if (!abilities->bombAbility->isReady())
 		target->draw(abilityBombDurationText);
 	if (!abilities->freezeBombAbility->isReady())
@@ -313,7 +310,7 @@ void GamePanel::draw(RenderTarget * const target)
 	if (m_drain)
 		target->draw(drainRect);
 
-	if (Engine::Instance().cursor()->inPanel())
+	if (Engine::Instance().options<GameOptions>()->cursor()->inPanel())
 	{
 		if (currentCursorPos != PANEL_POS_ID)
 		{
@@ -325,7 +322,7 @@ void GamePanel::draw(RenderTarget * const target)
 
 void GamePanel::update()
 {	
-	if(Engine::Instance().level()->getState() == Level::WAIT_READY)
+	if(Engine::Instance().options<GameOptions>()->level()->getState() == Level::WAIT_READY)
 	{
 		if (blinkTimer.check(BLINK_TIME))
 		{
@@ -347,19 +344,19 @@ void GamePanel::update()
 
 void GamePanel::updatePanel()
 {
-	const int money = static_cast<int>(Engine::Instance().level()->getMoneyCount());
+	const int money = static_cast<int>(Engine::Instance().options<GameOptions>()->level()->getMoneyCount());
 	moneyCountText.setString(String(to_string(money)));
 	drainRect.setSize(Vector2f(moneyCountText.getGlobalBounds().width,
 							   moneyCountText.getGlobalBounds().height*2));
 
-	const float progressValue = static_cast<float>(Engine::Instance().level()->currentProgress()) / m_progressMax;
+	const float progressValue = static_cast<float>(Engine::Instance().options<GameOptions>()->level()->currentProgress()) / m_progressMax;
 	progress->setValue(progressValue);
-	const float lifeValue = static_cast<float>(Engine::Instance().level()->getLifeCount()) / m_lifeMax;
+	const float lifeValue = static_cast<float>(Engine::Instance().options<GameOptions>()->level()->getLifeCount()) / m_lifeMax;
 	life->setValue(lifeValue);
 
 	towerPowerCostText.setString(
 				GlobalVariables::to_string_with_precision(
-					PowerTower::STATS.cost + Engine::Instance().level()->getPowerTowersCount() * PowerTower::COST_OFFSET, 0));
+					PowerTower::STATS.cost + Engine::Instance().options<GameOptions>()->level()->getPowerTowersCount() * PowerTower::COST_OFFSET, 0));
 
 	updateCursor();
 	updateInfo();
@@ -367,7 +364,7 @@ void GamePanel::updatePanel()
 
 int GamePanel::cellsCount() const
 {
-	return static_cast<int>(-1 + m_sprite.getGlobalBounds().height / GlobalVariables::Instance().tileSize().y);
+	return static_cast<int>(-1 + m_sprite.getGlobalBounds().height / Engine::Instance().options<GameOptions>()->tileSize().y);
 }
 
 ACTION_STATE GamePanel::getCurrentIcon() const
@@ -423,8 +420,8 @@ TOWER_TYPES GamePanel::currentTower() const
 
 Vector2f GamePanel::updatePos()
 {
-	const Vector2f nullPos = Vector2f(0, Settings::Instance().getResolution().y - m_sprite.getGlobalBounds().height);
-	const Vector2f scaleFactor = Settings::Instance().getScaleFactor();
+	const Vector2f nullPos = Vector2f(0, Engine::Instance().settingsManager()->getResolution().y - m_sprite.getGlobalBounds().height);
+	const Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 	const Vector2f iconSize = Vector2f(ICON_SIZE * scaleFactor.x, ICON_SIZE * scaleFactor.y);
 
 	const float top_offset = 40 * scaleFactor.x;
@@ -516,8 +513,8 @@ Vector2f GamePanel::updatePos()
 	pos.x += icon_offset;
 	pos.y = nullPos.y + 43 * scaleFactor.y;
 
-	readyText.setPosition(Vector2f(Settings::Instance().getResolution().x/2 - readyText.getGlobalBounds().width/2,
-								   Settings::Instance().getResolution().y/2 + readyText.getGlobalBounds().height/2));
+	readyText.setPosition(Vector2f(Engine::Instance().settingsManager()->getResolution().x/2 - readyText.getGlobalBounds().width/2,
+								   Engine::Instance().settingsManager()->getResolution().y/2 + readyText.getGlobalBounds().height/2));
 	waveText.setPosition(progress->pos());
 
 	towerBaseCostText.setPosition(towerBaseSprite.getPosition());
@@ -551,8 +548,8 @@ int GamePanel::getProgressMax() const
 
 void GamePanel::updateWaveText()
 {
-	waveText.setString(Language::Instance().translate(Language::WAVE) +
-				" #" + to_string(Engine::Instance().level()->getCurrentWave() + 1));
+	waveText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::WAVE) +
+				" #" + to_string(Engine::Instance().options<GameOptions>()->level()->getCurrentWave() + 1));
 }
 
 float GamePanel::getTowerUpgradeCost(Tower *tower) const
@@ -562,7 +559,7 @@ float GamePanel::getTowerUpgradeCost(Tower *tower) const
 
 	const TOWER_TYPES type = tower->type();
 	float cost = type == TOWER_TYPES::POWER ?
-				TowersFactory::getTowerStats(type).cost + Engine::Instance().level()->getPowerTowersCount() * PowerTower::COST_OFFSET :
+				TowersFactory::getTowerStats(type).cost + Engine::Instance().options<GameOptions>()->level()->getPowerTowersCount() * PowerTower::COST_OFFSET :
 				TowersFactory::getTowerStats(type).cost;
 
 	switch (tower->level())
@@ -583,7 +580,7 @@ float GamePanel::getTowerSellCost(Tower *tower) const
 {
 	const TOWER_TYPES type = tower->type();
 	float cost = type == TOWER_TYPES::POWER ?
-				tower->data().cost + (Engine::Instance().level()->getPowerTowersCount() - 1) * PowerTower::COST_OFFSET :
+				tower->data().cost + (Engine::Instance().options<GameOptions>()->level()->getPowerTowersCount() - 1) * PowerTower::COST_OFFSET :
 				tower->data().cost;
 	cost /= 2;
 	return cost;
@@ -591,7 +588,7 @@ float GamePanel::getTowerSellCost(Tower *tower) const
 
 void GamePanel::updateAbilitiesDuration()
 {
-	Abilities *abilities = Engine::Instance().level()->getAbilities();
+	Abilities *abilities = Engine::Instance().options<GameOptions>()->level()->getAbilities();
 
 	abilityBombDurationText.setString(to_string(abilities->bombAbility->timeLeft()));
 	abilityFreezeBombDurationText.setString(to_string(abilities->freezeBombAbility->timeLeft()));
@@ -603,76 +600,76 @@ void GamePanel::updateAbilitiesDuration()
 
 void GamePanel::updateEnableTowers()
 {
-	const float money = Engine::Instance().level()->getMoneyCount();
+	const float money = Engine::Instance().options<GameOptions>()->level()->getMoneyCount();
 
 	float cost = TowersFactory::getTowerStats(TOWER_TYPES::BASE).cost;
 	if (money < cost)
-		towerBaseSprite.setColor(GlobalVariables::GrayColor);
+		towerBaseSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerBaseSprite.setColor(Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::LASER).cost;
 	if (money < cost || !iconsAvaliable.isLaserEnabled)
-		towerLaserSprite.setColor(GlobalVariables::GrayColor);
+		towerLaserSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerLaserSprite.setColor(Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::FREEZE).cost;
 	if (money < cost || !iconsAvaliable.isFreezeEnabled)
-		towerFreezeSprite.setColor(GlobalVariables::GrayColor);
+		towerFreezeSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerFreezeSprite.setColor(Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::ROCKET).cost;
 	if (money < cost || !iconsAvaliable.isRocketEnabled)
-		towerRocketSprite.setColor(GlobalVariables::GrayColor);
+		towerRocketSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerRocketSprite.setColor(Color::White);
 
-	cost = TowersFactory::getTowerStats(TOWER_TYPES::POWER).cost + Engine::Instance().level()->getPowerTowersCount() * PowerTower::COST_OFFSET;
+	cost = TowersFactory::getTowerStats(TOWER_TYPES::POWER).cost + Engine::Instance().options<GameOptions>()->level()->getPowerTowersCount() * PowerTower::COST_OFFSET;
 	if (money < cost)
-		towerPowerSprite.setColor(GlobalVariables::GrayColor);
+		towerPowerSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerPowerSprite.setColor(Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::IMPROVED).cost;
 	if (money < cost || !iconsAvaliable.isImprovedEnabled)
-		towerImprovedSprite.setColor(GlobalVariables::GrayColor);
+		towerImprovedSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerImprovedSprite.setColor(Color::White);
 }
 
 void GamePanel::updateEnableAbilities()
 {
-	Abilities *abilities = Engine::Instance().level()->getAbilities();
+	Abilities *abilities = Engine::Instance().options<GameOptions>()->level()->getAbilities();
 
 	if (!abilities->bombAbility->isReady() || !iconsAvaliable.isAbilityBombEnabled)
-		abilityBombSprite.setColor(GlobalVariables::GrayColor);
+		abilityBombSprite.setColor(EngineDefs::GrayColor);
 	else
 		abilityBombSprite.setColor(Color::White);
 
 	if (!abilities->freezeBombAbility->isReady() || !iconsAvaliable.isAbilityFreezeBombEnabled)
-		abilityFreezeBombSprite.setColor(GlobalVariables::GrayColor);
+		abilityFreezeBombSprite.setColor(EngineDefs::GrayColor);
 	else
 		abilityFreezeBombSprite.setColor(Color::White);
 
 	if (!abilities->venomAbility->isReady() || !iconsAvaliable.isAbilityVenomEnabled)
-		abilityVenomSprite.setColor(GlobalVariables::GrayColor);
+		abilityVenomSprite.setColor(EngineDefs::GrayColor);
 	else
 		abilityVenomSprite.setColor(Color::White);
 
 	if (!abilities->increaseTowerDamageAbility->isReady() || !iconsAvaliable.isAbilityIncreaseTowerDamageEnabled)
-		abilityIncreaseTowerDamageSprite.setColor(GlobalVariables::GrayColor);
+		abilityIncreaseTowerDamageSprite.setColor(EngineDefs::GrayColor);
 	else
 		abilityIncreaseTowerDamageSprite.setColor(Color::White);
 
 	if (!abilities->increaseTowerAttackSpeedAbility->isReady() || !iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled)
-		abilityIncreaseTowerAttackSpeedSprite.setColor(GlobalVariables::GrayColor);
+		abilityIncreaseTowerAttackSpeedSprite.setColor(EngineDefs::GrayColor);
 	else
 		abilityIncreaseTowerAttackSpeedSprite.setColor(Color::White);
 
 	if (!abilities->stopAblity->isReady() || !iconsAvaliable.isAbilityStopEnabled)
-		abilityStopSprite.setColor(GlobalVariables::GrayColor);
+		abilityStopSprite.setColor(EngineDefs::GrayColor);
 	else
 		abilityStopSprite.setColor(Color::White);
 }
@@ -684,44 +681,44 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 	{
 	case BASE:
 	{
-		str = Language::Instance().translate(Language::TOWER_BASE);
+		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_BASE);
 		str += endline;
-		str += Language::Instance().translate(Language::BASE_TOWER_DESCRIPTION);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION);
 	}
 		break;
 	case POWER:
 	{
-		str = Language::Instance().translate(Language::TOWER_POWER);
+		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_POWER);
 		str += endline;
-		str += Language::Instance().translate(Language::POWER_TOWER_DESCRIPTION);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION);
 	}
 		break;
 	case ROCKET:
 	{
-		str = Language::Instance().translate(Language::TOWER_ROCKET);
+		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ROCKET);
 		str += endline;
-		str += Language::Instance().translate(Language::ROCKET_TOWER_DESCRIPTION);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION);
 	}
 		break;
 	case FREEZE:
 	{
-		str = Language::Instance().translate(Language::TOWER_FREEZE);
+		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_FREEZE);
 		str += endline;
-		str += Language::Instance().translate(Language::FREEZE_TOWER_DESCRIPTION);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION);
 	}
 		break;
 	case LASER:
 	{
-		str = Language::Instance().translate(Language::TOWER_LASER);
+		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_LASER);
 		str += endline;
-		str += Language::Instance().translate(Language::LASER_TOWER_DESCRIPTION);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION);
 	}
 		break;
 	case IMPROVED:
 	{
-		str = Language::Instance().translate(Language::TOWER_IMPROVED);
+		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_IMPROVED);
 		str += endline;
-		str += Language::Instance().translate(Language::IMPROVED_TOWER_DESCRIPTION);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION);
 	}
 		break;
 	}
@@ -730,34 +727,34 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 
 	const String separator = ": ";
 	if (tower != nullptr)
-		str += Language::Instance().translate(Language::LEVEL) + separator + to_string(tower->level()) + endline;
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LEVEL) + separator + to_string(tower->level()) + endline;
 
 	const TowerStats towerStats = tower == nullptr ? TowersFactory::getTowerStats(type) : tower->data();
 	const float dps = towerStats.damage / ((tower == nullptr ? towerStats.attackSpeed : tower->actualAttackSpeed()) * 0.001f);
 
-	str += Language::Instance().translate(Language::DAMAGE_PER_SECOND) + separator + GlobalVariables::to_string_with_precision(dps, 2);
+	str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND) + separator + GlobalVariables::to_string_with_precision(dps, 2);
 	str += endline;
 
-	str += Language::Instance().translate(Language::RADIUS) + separator +
+	str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::RADIUS) + separator +
 			GlobalVariables::to_string_with_precision(tower == nullptr ? towerStats.radius : tower->actualRadius(), 1);
 	str += endline;
 
 	if (tower == nullptr)
 	{
 		const float cost = type == TOWER_TYPES::POWER ?
-					towerStats.cost + Engine::Instance().level()->getPowerTowersCount() * PowerTower::COST_OFFSET :
+					towerStats.cost + Engine::Instance().options<GameOptions>()->level()->getPowerTowersCount() * PowerTower::COST_OFFSET :
 					towerStats.cost;
 
-		str += Language::Instance().translate(Language::COST);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COST);
 		str += separator;
 		str += GlobalVariables::to_string_with_precision(cost, 2);
 	}
 	else
 	{
-		str += Language::Instance().translate(Language::KILLS) + separator + to_string(tower->kills());
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::KILLS) + separator + to_string(tower->kills());
 		str += endline;
 		const float cost = getTowerSellCost(tower);
-		str += Language::Instance().translate(Language::SELL_COST);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SELL_COST);
 		str += separator;
 		str += GlobalVariables::to_string_with_precision(cost, 2);
 	}
@@ -766,11 +763,11 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 
 void GamePanel::updateCursor()
 {
-//	m_sprite.setColor(Engine::Instance().cursor()->inPanel()?Color::Red:Color::Green);
+//	m_sprite.setColor(Engine::Instance().options<GameOptions>()->cursor()->inPanel()?Color::Red:Color::Green);
 
-	if (!Engine::Instance().cursor()->inPanel())
+	if (!Engine::Instance().options<GameOptions>()->cursor()->inPanel())
 		return;
-	const Vector2f pos = Engine::Instance().cursor()->windowScreenPos();
+	const Vector2f pos = Engine::Instance().options<GameOptions>()->cursor()->windowScreenPos();
 
 	for (unsigned int i = 0; i < actionsSprites.size(); ++i)
 	{
@@ -857,9 +854,9 @@ void GamePanel::setDrain(bool drain)
 	m_drain = drain;
 	drainBlinkTimer.reset();
 	if (drain)
-		SoundController::Instance().playLooped(WARNING_SOUND_FILE);
+		Engine::Instance().soundManager()->playLooped(GAME_SOUND::WARNING);
 	else
-		SoundController::Instance().stop(WARNING_SOUND_FILE);
+		Engine::Instance().soundManager()->stop(GAME_SOUND::WARNING);
 }
 
 void GamePanel::setCurrentIcon(const ACTION_STATE &state)
@@ -906,11 +903,11 @@ bool GamePanel::clickOnMiniMap(const Vector2f &pos)
 		k.x = rectPos.x/miniMapSprite.getGlobalBounds().width;
 		k.y = rectPos.y/miniMapSprite.getGlobalBounds().height;
 		Vector2f center;
-		center.x = Engine::Instance().cursor()->getMaxCell().x * GlobalVariables::Instance().tileSize().x;
-		center.y = Engine::Instance().cursor()->getMaxCell().y * GlobalVariables::Instance().tileSize().y;
+		center.x = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().x * Engine::Instance().options<GameOptions>()->tileSize().x;
+		center.y = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().y * Engine::Instance().options<GameOptions>()->tileSize().y;
 		center.x *= k.x;
 		center.y *= k.y;
-		Engine::Instance().camera()->setCenter(center);
+		Engine::Instance().options<GameOptions>()->camera()->setCenter(center);
 		return true;
 	}
 	return false;
@@ -919,7 +916,7 @@ bool GamePanel::clickOnMiniMap(const Vector2f &pos)
 void GamePanel::updateInfo()
 {
 	String str;
-	if (Engine::Instance().cursor()->inPanel())
+	if (Engine::Instance().options<GameOptions>()->cursor()->inPanel())
 	{
 		const ACTION_STATE state = getCurrentIcon();
 		switch (state)
@@ -932,44 +929,44 @@ void GamePanel::updateInfo()
 			break;
 		case ABILITY_BOMB:
 		{
-			str = Language::Instance().translate(Language::ABILITY_BOMB);
+			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_BOMB);
 			str += endline;
-			str += Language::Instance().translate(Language::BOMB_ABILITY_DESCRIPTION);
+			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BOMB_ABILITY_DESCRIPTION);
 		}
 			break;
 		case ABILITY_FREEZE_BOMB:
 		{
-			str = Language::Instance().translate(Language::ABILITY_FREEZE_BOMB);
+			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_FREEZE_BOMB);
 			str += endline;
-			str += Language::Instance().translate(Language::FREEZE_BOMB_ABILITY_DESCRIPTION);
+			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION);
 		}
 			break;
 		case ABILITY_VENOM:
 		{
-			str = Language::Instance().translate(Language::ABILITY_VENOM);
+			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_VENOM);
 			str += endline;
-			str += Language::Instance().translate(Language::VENOM_ABILITY_DESCRIPTION);
+			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::VENOM_ABILITY_DESCRIPTION);
 		}
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
 		{
-			str = Language::Instance().translate(Language::ABILITY_INCREASE_TOWER_ATTACK_SPEED);
+			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED);
 			str += endline;
-			str += Language::Instance().translate(Language::INC_AS_ABILITY_DESCRIPTION);
+			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION);
 		}
 			break;
 		case ABILITY_INCREASE_TOWER_DAMAGE:
 		{
-			str = Language::Instance().translate(Language::ABILITY_INCREASE_TOWER_DAMAGE);
+			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE);
 			str += endline;
-			str += Language::Instance().translate(Language::INC_DMG_ABILITY_DESCRIPTION);
+			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION);
 		}
 			break;
 		case ABILITY_STOP:
 		{
-			str = Language::Instance().translate(Language::ABILITY_STOP);
+			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_STOP);
 			str += endline;
-			str += Language::Instance().translate(Language::STOP_ABILITY_DESCRIPTION);
+			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION);
 		}
 			break;
 		default:
@@ -978,11 +975,11 @@ void GamePanel::updateInfo()
 	}
 	else
 	{
-		Tower* tower = Engine::Instance().level()->getTowerAtPos(Engine::Instance().cursor()->pos());
+		Tower* tower = Engine::Instance().options<GameOptions>()->level()->getTowerAtPos(Engine::Instance().options<GameOptions>()->cursor()->pos());
 		if (tower != nullptr)
 			str = towerInfo(tower->type(), tower);
-		Engine::Instance().cursor()->setHighlight(
-					Engine::Instance().level()->selectedTower() != tower && tower != nullptr);
+		Engine::Instance().options<GameOptions>()->cursor()->setHighlight(
+					Engine::Instance().options<GameOptions>()->level()->selectedTower() != tower && tower != nullptr);
 	}
 	info.setString(str);
 }
@@ -1047,7 +1044,7 @@ void GamePanel::initMission(unsigned int n)
 FloatRect GamePanel::getTowersRect() const
 {
 	const Vector2f pos = Vector2f(towerBaseSprite.getGlobalBounds().left, towerBaseSprite.getGlobalBounds().top);
-	const float icons_space = ICONS_SPACE * Settings::Instance().getScaleFactor().x;
+	const float icons_space = ICONS_SPACE * Engine::Instance().settingsManager()->getScaleFactor().x;
 	Vector2f size;
 	size.x = towerBaseSprite.getGlobalBounds().width * 6;
 	size.x += icons_space * 5;
@@ -1058,7 +1055,7 @@ FloatRect GamePanel::getTowersRect() const
 FloatRect GamePanel::getAbilitiesRect() const
 {
 	const Vector2f pos = Vector2f(abilityBombSprite.getGlobalBounds().left, abilityBombSprite.getGlobalBounds().top);
-	const float icons_space = ICONS_SPACE * Settings::Instance().getScaleFactor().x;
+	const float icons_space = ICONS_SPACE * Engine::Instance().settingsManager()->getScaleFactor().x;
 	Vector2f size;
 	size.x = abilityBombSprite.getGlobalBounds().width * 6;
 	size.x += icons_space * 5;
@@ -1079,8 +1076,8 @@ FloatRect GamePanel::getHealthRect() const
 FloatRect GamePanel::getProgressRect() const
 {
 	return FloatRect(progress->pos().x, progress->pos().y,
-					 Settings::Instance().getResolution().x * PROGRESS_WIDTH,
-					 PROGRESS_OFFSET * Settings::Instance().getScaleFactor().y);
+					 Engine::Instance().settingsManager()->getResolution().x * PROGRESS_WIDTH,
+					 PROGRESS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
 }
 
 void GamePanel::setProgressMax(int progressMax)
@@ -1090,7 +1087,7 @@ void GamePanel::setProgressMax(int progressMax)
 
 void GamePanel::init()
 {
-	rTexture.setView(*Engine::Instance().camera()->getMiniMapView());
+	rTexture.setView(*Engine::Instance().options<GameOptions>()->camera()->getMiniMapView());
 }
 
 void GamePanel::setMapSize(const Vector2f& size)
@@ -1098,8 +1095,8 @@ void GamePanel::setMapSize(const Vector2f& size)
 	rTexture.create(static_cast<unsigned int>(size.x),
 					static_cast<unsigned int>(size.y));
 
-	const float minimap_scale_x = Settings::Instance().getScaleFactor().x * 344.f / Settings::Instance().getResolution().x;
-	const float minimap_scale_y = Settings::Instance().getScaleFactor().y * 213.f / Settings::Instance().getResolution().y;
+	const float minimap_scale_x = Engine::Instance().settingsManager()->getScaleFactor().x * 344.f / Engine::Instance().settingsManager()->getResolution().x;
+	const float minimap_scale_y = Engine::Instance().settingsManager()->getScaleFactor().y * 213.f / Engine::Instance().settingsManager()->getResolution().y;
 	miniMapSprite.setScale(minimap_scale_x * 1920.f/size.x, minimap_scale_y* 1088.f/size.y);
 }
 
@@ -1107,7 +1104,7 @@ float GamePanel::getBottomValue() const
 {
 	const Vector2i pixelPos = Vector2i(0, m_bottomValue);
 	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
-				pixelPos, *Engine::Instance().camera()->getView());
+				pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView());
 
 	return pos.y;
 }

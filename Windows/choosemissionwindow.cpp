@@ -1,11 +1,11 @@
 #include "choosemissionwindow.h"
-#include "settings.h"
-#include "globalvariables.h"
-#include "Engine/engine.h"
-#include "ResourcesManager/resourcesmanager.h"
 #include "controller.h"
-#include "Translations/language.h"
-#include "Game/Audio/soundcontroller.h"
+#include "engine.h"
+#include "enginedef.h"
+#include "managers.h"
+#include "gamemanagers.h"
+#include "gameoptions.h"
+#include "gamestatemanager.h"
 
 const Color ChooseMissionWindow::DISABLED_COLOR = Color(0,34,52, 128);
 const Color ChooseMissionWindow::CURRENT_COLOR = Color(0,85,130, 128);
@@ -15,7 +15,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 	: StateWindow()
 	,hovered(-1)
 {
-	setBackground(RESOURCES::ABOUT_BACKGROUND);
+	setBackground(TexturesManager::ABOUT_BACKGROUND);
 
 	chooseRect.setOutlineThickness(5);
 	chooseRect.setOutlineColor(CURRENT_BORDER_COLOR);
@@ -24,15 +24,15 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 	initDifficults();
 
-	const float rectSizeX = 160 * Settings::Instance().getScaleFactor().x;
-	const float rectSizeY = 160 * Settings::Instance().getScaleFactor().y;
-	const float offsetX = Settings::Instance().getScaleFactor().x * 20;
-	const float iconSizeX = 32 * Settings::Instance().getScaleFactor().x;
-	const float iconSizeY = 32 * Settings::Instance().getScaleFactor().y;
-	const float topOffset = Settings::Instance().getScaleFactor().y * 45;
+	const float rectSizeX = 160 * Engine::Instance().settingsManager()->getScaleFactor().x;
+	const float rectSizeY = 160 * Engine::Instance().settingsManager()->getScaleFactor().y;
+	const float offsetX = Engine::Instance().settingsManager()->getScaleFactor().x * 20;
+	const float iconSizeX = 32 * Engine::Instance().settingsManager()->getScaleFactor().x;
+	const float iconSizeY = 32 * Engine::Instance().settingsManager()->getScaleFactor().y;
+	const float topOffset = Engine::Instance().settingsManager()->getScaleFactor().y * 45;
 
 	chooseRect.setSize(Vector2f(rectSizeX, rectSizeY + iconSizeY));
-	const float left = Settings::Instance().getResolution().x * 0.3f;
+	const float left = Engine::Instance().settingsManager()->getResolution().x * 0.3f;
 	float x = left;
 	float y = topOffset;
 
@@ -42,8 +42,8 @@ ChooseMissionWindow::ChooseMissionWindow()
 	difficultRect.setPosition(x, y);
 	difficultRect.setSize(difficultSize);
 
-	const Vector2f difficultRectSize = Vector2f(200 * Settings::Instance().getScaleFactor().x,
-												30 * Settings::Instance().getScaleFactor().y);
+	const Vector2f difficultRectSize = Vector2f(200 * Engine::Instance().settingsManager()->getScaleFactor().x,
+												30 * Engine::Instance().settingsManager()->getScaleFactor().y);
 	const float difficultOffsetX = (difficultSize.x - 3 * difficultRectSize.x)/4;
 	const float difficultOffsetY = (difficultSize.y - difficultRectSize.y)/2;
 
@@ -68,9 +68,9 @@ ChooseMissionWindow::ChooseMissionWindow()
 	hardText.setPosition(hardRect.getPosition().x + difficultRectSize.x/2 - hardText.getGlobalBounds().width/2,
 						 hardRect.getPosition().y - difficultRectSize.y/2);
 
-	if (Settings::Instance().difficult() == 1)
+	if (Engine::Instance().options<GameOptions>()->difficult() == 1)
 		choosedDifficultRect.setPosition(normalRect.getPosition());
-	else if (Settings::Instance().difficult() == 2)
+	else if (Engine::Instance().options<GameOptions>()->difficult() == 2)
 		choosedDifficultRect.setPosition(easyRect.getPosition());
 	else
 		choosedDifficultRect.setPosition(hardRect.getPosition());
@@ -79,10 +79,10 @@ ChooseMissionWindow::ChooseMissionWindow()
 	y += difficultOffsetY;
 	y += topOffset;
 
-	const unsigned int maxCompletedLevel = Engine::Instance().maxCompletedLevel();
+	const unsigned int maxCompletedLevel = Engine::Instance().options<GameOptions>()->maxCompletedLevel();
 
-	RESOURCES::TEXTURE_TYPE textureType = RESOURCES::MAP_ICON_MISSION_1;
-	for (unsigned int i = 0; i < Engine::Instance().missionsCount(); ++i)
+	TextureType textureType = GAME_TEXTURE::MAP_ICON_MISSION_1;
+	for (unsigned int i = 0; i < Engine::Instance().options<GameOptions>()->missionsCount(); ++i)
 	{
 		if (i % COLUMN_COUNT == 0 && i != 0)
 		{
@@ -95,9 +95,9 @@ ChooseMissionWindow::ChooseMissionWindow()
 		mission.rect.setSize(Vector2f(rectSizeX, rectSizeY));
 		mission.highlight.setPosition(x, y);
 		mission.highlight.setSize(Vector2f(rectSizeX, rectSizeY + iconSizeY));
-		mission.numberText.setFont(GlobalVariables::Instance().font());
+		mission.numberText.setFont(Engine::Instance().fontManager()->font());
 		mission.numberText.setCharacterSize(60);
-		mission.numberText.setScale(Settings::Instance().getScaleFactor());
+		mission.numberText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 		mission.numberText.setString(to_string(i + 1));
 		mission.numberText.setPosition(x, y);
 		mission.numberText.setFillColor(Color::White);
@@ -109,15 +109,15 @@ ChooseMissionWindow::ChooseMissionWindow()
 		if (mission.enabled)
 		{
 			mission.highlight.setFillColor(Color::Transparent);
-			mission.rect.setTexture(&ResourcesManager::Instance().getTexture(textureType));
+			mission.rect.setTexture(&Engine::Instance().texturesManager()->getTexture(textureType));
 		}
 		else
 		{
-			mission.rect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::LOCKED_ICON));
+			mission.rect.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::LOCKED_ICON));
 			mission.highlight.setFillColor(DISABLED_COLOR);
 		}
 
-		textureType = static_cast<RESOURCES::TEXTURE_TYPE>(static_cast<int>(textureType) + 1);
+		textureType = static_cast<TextureType>(static_cast<int>(textureType) + 1);
 
 		unsigned int rating = getRating(i);
 		float posX = x;
@@ -128,9 +128,9 @@ ChooseMissionWindow::ChooseMissionWindow()
 			starRect.setSize(Vector2f(iconSizeX, iconSizeY));
 			starRect.setPosition(posX, y + rectSizeY);
 			if (j >= rating)
-				starRect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::EMPTY_STAR_TEXTURE));
+				starRect.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::EMPTY_STAR_TEXTURE));
 			else
-				starRect.setTexture(&ResourcesManager::Instance().getTexture(RESOURCES::STAR_TEXTURE));
+				starRect.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::STAR_TEXTURE));
 
 			mission.stars.push_back(starRect);
 			posX += iconSizeX;
@@ -150,7 +150,7 @@ ChooseMissionWindow::~ChooseMissionWindow()
 
 void ChooseMissionWindow::back()
 {
-	Engine::Instance().setState(Engine::MAIN_MENU);
+	Engine::Instance().stateManager()->setState(GameStateManager::MENU);
 }
 
 void ChooseMissionWindow::paint(RenderWindow *window)
@@ -196,27 +196,27 @@ void ChooseMissionWindow::eventFilter(Event *event)
 			{
 				if (missions.at(mission).enabled)
 				{
-					SoundController::Instance().playOnce(CLICK_SOUND_FILE);
+					Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
 					accept(mission);
 				}
 			}
 		if (easyRect.getGlobalBounds().contains(pos))
 		{
 			choosedDifficultRect.setPosition(easyRect.getPosition());
-			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
-			Settings::Instance().setEasyDifficult();
+			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
+			Engine::Instance().options<GameOptions>()->setEasyDifficult();
 		}
 		if (normalRect.getGlobalBounds().contains(pos))
 		{
 			choosedDifficultRect.setPosition(normalRect.getPosition());
-			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
-			Settings::Instance().setNormalDifficult();
+			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
+			Engine::Instance().options<GameOptions>()->setNormalDifficult();
 		}
 		if (hardRect.getGlobalBounds().contains(pos))
 		{
 			choosedDifficultRect.setPosition(hardRect.getPosition());
-			SoundController::Instance().playOnce(CLICK_SOUND_FILE);
-			Settings::Instance().setHardDifficult();
+			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
+			Engine::Instance().options<GameOptions>()->setHardDifficult();
 		}
 	}
 	else if (event->type == Event::MouseMoved)
@@ -254,7 +254,7 @@ void ChooseMissionWindow::eventFilter(Event *event)
 		if (hoverId != -1 && hovered != hoverId)
 		{
 			hovered = hoverId;
-			SoundController::Instance().playOnce(HOVER_SOUND_FILE);
+			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 		}
 	}
 	else if (event->type == Event::KeyPressed)
@@ -327,8 +327,8 @@ void ChooseMissionWindow::eventFilter(Event *event)
 
 void ChooseMissionWindow::accept(unsigned int num)
 {
-	Engine::Instance().setMission(num);
-	Engine::Instance().setState(Engine::IN_GAME);
+	Engine::Instance().options<GameOptions>()->setMission(num);
+	Engine::Instance().stateManager()->setState(GameStateManager::IN_GAME);
 }
 
 void ChooseMissionWindow::updateRect()
@@ -352,7 +352,7 @@ void ChooseMissionWindow::updateRect()
 
 unsigned int ChooseMissionWindow::getRating(unsigned int n) const
 {
-	for(const Engine::CompletedMission& mission : Engine::Instance().getCompletedMissions())
+	for(const GameOptions::CompletedMission& mission : Engine::Instance().options<GameOptions>()->getCompletedMissions())
 		if (mission.number == n)
 			return mission.stars;
 	return 0;
@@ -364,7 +364,7 @@ void ChooseMissionWindow::initDifficults()
 	const Color difficultRectBorderColor = Color(64, 32, 16, 192);
 	const Color choosedRectBorderColor = Color(32, 128, 16, 192);
 	const float difficultCharatersSize = 40;
-	const float thickness = 3 * Settings::Instance().getScaleFactor().x;
+	const float thickness = 3 * Engine::Instance().settingsManager()->getScaleFactor().x;
 
 	choosedDifficultRect.setOutlineThickness(thickness);
 	choosedDifficultRect.setOutlineColor(choosedRectBorderColor);
@@ -386,26 +386,26 @@ void ChooseMissionWindow::initDifficults()
 	hardRect.setFillColor(difficultRectFillColor);
 	hardRect.setOutlineColor(difficultRectBorderColor);
 
-	easyText.setFont(GlobalVariables::Instance().font());
+	easyText.setFont(Engine::Instance().fontManager()->font());
 	easyText.setCharacterSize(difficultCharatersSize);
-	easyText.setScale(Settings::Instance().getScaleFactor());
-	easyText.setString(Language::Instance().translate(Language::EASY));
+	easyText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	easyText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::EASY));
 	easyText.setFillColor(Color::White);
 	easyText.setOutlineColor(Color::Black);
 	easyText.setOutlineThickness(thickness);
 
-	normalText.setFont(GlobalVariables::Instance().font());
+	normalText.setFont(Engine::Instance().fontManager()->font());
 	normalText.setCharacterSize(difficultCharatersSize);
-	normalText.setScale(Settings::Instance().getScaleFactor());
-	normalText.setString(Language::Instance().translate(Language::NORMAL));
+	normalText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	normalText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::NORMAL));
 	normalText.setFillColor(Color::White);
 	normalText.setOutlineColor(Color::Black);
 	normalText.setOutlineThickness(thickness);
 
-	hardText.setFont(GlobalVariables::Instance().font());
+	hardText.setFont(Engine::Instance().fontManager()->font());
 	hardText.setCharacterSize(difficultCharatersSize);
-	hardText.setScale(Settings::Instance().getScaleFactor());
-	hardText.setString(Language::Instance().translate(Language::HARD));
+	hardText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	hardText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::HARD));
 	hardText.setFillColor(Color::White);
 	hardText.setOutlineColor(Color::Black);
 	hardText.setOutlineThickness(thickness);

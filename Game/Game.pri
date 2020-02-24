@@ -1,16 +1,33 @@
 HEADERS += \
+    $$PWD/camera.h \
+    $$PWD/enemy.h \
+    $$PWD/gameability.h \
+    $$PWD/gamecursor.h \
+    $$PWD/instructions.h \
+    $$PWD/level.h \
+    $$PWD/levelobject.h \
+    $$PWD/map.h \
+    $$PWD/lifebar.h \
+    $$PWD/mapeffects.h \
+    $$PWD/objects_types.h \
+    $$PWD/projectile.h \
+    $$PWD/tower.h \
     $$PWD/achievements.h \
-    $$PWD/animation.h \
-    $$PWD/gameobject.h \
-    $$PWD/gamedrawable.h \
     $$PWD/gamepanel.h \
     $$PWD/leveldef.h
 
 SOURCES += \
-    $$PWD/animation.cpp \
-    $$PWD/gameobject.cpp \
-    $$PWD/gamepanel.cpp
+    $$PWD/camera.cpp \
+    $$PWD/enemy.cpp \
+    $$PWD/gameability.cpp \
+    $$PWD/gamecursor.cpp \
+    $$PWD/instructions.cpp \
+    $$PWD/level.cpp \
+    $$PWD/levelobject.cpp \
+    $$PWD/lifebar.cpp \
+    $$PWD/mapeffects.cpp \
+    $$PWD/projectile.cpp \
+    $$PWD/tower.cpp \
+    $$PWD/gamepanel.cpp \
+    $$PWD/waves.cpp
 
-include($$PWD/Audio/Audio.pri)
-include($$PWD/Collisions/collisions.pri)
-include($$PWD/Level/level.pri)

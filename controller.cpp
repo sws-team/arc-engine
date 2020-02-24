@@ -1,11 +1,12 @@
 #include "controller.h"
-#include "Game/Level/level.h"
-#include "Game/Level/camera.h"
-#include "Game/Level/gamecursor.h"
+#include "Game/level.h"
+#include "Game/camera.h"
+#include "Game/gamecursor.h"
 #include "Game/gamepanel.h"
-#include "globalvariables.h"
-#include "Engine/engine.h"
-#include "Game/Level/instructions.h"
+#include "engine.h"
+#include "Game/instructions.h"
+#include "managers.h"
+#include "gameoptions.h"
 
 Controller::Controller()
 {
@@ -23,29 +24,29 @@ void Controller::eventFilter(Event *event)
 	{
 		if (event->mouseButton.button == Mouse::Left)
 		{
-			if (Engine::Instance().instructions()->isActive())
+			if (Engine::Instance().options<GameOptions>()->instructions()->isActive())
 			{
-				Engine::Instance().instructions()->next();
+				Engine::Instance().options<GameOptions>()->instructions()->next();
 				return;
 			}
 
-			if (Engine::Instance().panel()->clickOnMiniMap(Vector2f(event->mouseButton.x, event->mouseButton.y)))
+			if (Engine::Instance().options<GameOptions>()->panel()->clickOnMiniMap(Vector2f(event->mouseButton.x, event->mouseButton.y)))
 				return;
 
 			const Vector2i pixelPos = Vector2i(1, 1) + Vector2i(event->mouseButton.x, event->mouseButton.y);//Mouse::getPosition(*Engine::Instance().window());
 			const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
-						pixelPos, *Engine::Instance().camera()->getView());
-			Engine::Instance().panel()->resetPanelIcon();
-			Engine::Instance().level()->chooseByPos(pos);
+						pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView());
+			Engine::Instance().options<GameOptions>()->panel()->resetPanelIcon();
+			Engine::Instance().options<GameOptions>()->level()->chooseByPos(pos);
 		}
 		else if (event->mouseButton.button == Mouse::Right)
 		{
-			if (Engine::Instance().instructions()->isActive())
+			if (Engine::Instance().options<GameOptions>()->instructions()->isActive())
 			{
-				Engine::Instance().instructions()->skip();
+				Engine::Instance().options<GameOptions>()->instructions()->skip();
 				return;
 			}
-			Engine::Instance().level()->clearCursor();
+			Engine::Instance().options<GameOptions>()->level()->clearCursor();
 		}
 	}
 		break;
@@ -55,101 +56,101 @@ void Controller::eventFilter(Event *event)
 		{
 		case Keyboard::Space:
 		{
-			if (Engine::Instance().instructions()->isActive())
+			if (Engine::Instance().options<GameOptions>()->instructions()->isActive())
 			{
-				Engine::Instance().instructions()->skip();
+				Engine::Instance().options<GameOptions>()->instructions()->skip();
 				return;
 			}
-			Engine::Instance().level()->ready();
+			Engine::Instance().options<GameOptions>()->level()->ready();
 		}
 			break;
 		case Keyboard::Return:
 		{
-			if (Engine::Instance().instructions()->isActive())
+			if (Engine::Instance().options<GameOptions>()->instructions()->isActive())
 			{
-				Engine::Instance().instructions()->next();
+				Engine::Instance().options<GameOptions>()->instructions()->next();
 				return;
 			}
-			Engine::Instance().level()->chooseCurrent();
+			Engine::Instance().options<GameOptions>()->level()->chooseCurrent();
 		}
 			break;
 		case Keyboard::BackSpace:
-			Engine::Instance().camera()->resetView();
+			Engine::Instance().options<GameOptions>()->camera()->resetView();
 			break;
 		case Keyboard::Escape:
 			pauseFunc();
 			break;
 		case Keyboard::F3:
-			GlobalVariables::Instance().switchFPS();
+			Engine::Instance().globalVariables()->switchFPS();
 			break;
 		case Keyboard::Q:
-			Engine::Instance().cursor()->swap();
+			Engine::Instance().options<GameOptions>()->cursor()->swap();
 			break;
 		case Keyboard::F:
-			Engine::Instance().level()->upgradeTower(Engine::Instance().level()->selectedTower());
+			Engine::Instance().options<GameOptions>()->level()->upgradeTower(Engine::Instance().options<GameOptions>()->level()->selectedTower());
 			break;
 		case Keyboard::Add:
-			Engine::Instance().camera()->zoomIn();
+			Engine::Instance().options<GameOptions>()->camera()->zoomIn();
 			break;
 		case Keyboard::Subtract:
-			Engine::Instance().camera()->zoomOut();
+			Engine::Instance().options<GameOptions>()->camera()->zoomOut();
 			break;
 		case Keyboard::Left:
-			Engine::Instance().cursor()->moveLeft();
+			Engine::Instance().options<GameOptions>()->cursor()->moveLeft();
 			break;
 		case Keyboard::Right:
-			Engine::Instance().cursor()->moveRight();
+			Engine::Instance().options<GameOptions>()->cursor()->moveRight();
 			break;
 		case Keyboard::Up:
-			Engine::Instance().cursor()->moveUp();
+			Engine::Instance().options<GameOptions>()->cursor()->moveUp();
 			break;
 		case Keyboard::Down:
-			Engine::Instance().cursor()->moveDown();
+			Engine::Instance().options<GameOptions>()->cursor()->moveDown();
 			break;
 		case Keyboard::A:
-			Engine::Instance().camera()->moveLeftByCell();
+			Engine::Instance().options<GameOptions>()->camera()->moveLeftByCell();
 			break;
 		case Keyboard::D:
-			Engine::Instance().camera()->moveRightByCell();
+			Engine::Instance().options<GameOptions>()->camera()->moveRightByCell();
 			break;
 		case Keyboard::W:
-			Engine::Instance().camera()->moveUpByCell();
+			Engine::Instance().options<GameOptions>()->camera()->moveUpByCell();
 			break;
 		case Keyboard::S:
-			Engine::Instance().camera()->moveDownByCell();
+			Engine::Instance().options<GameOptions>()->camera()->moveDownByCell();
 			break;
 		case Keyboard::Z:
-			Engine::Instance().level()->activateBombAbility();
+			Engine::Instance().options<GameOptions>()->level()->activateBombAbility();
 			break;
 		case Keyboard::X:
-			Engine::Instance().level()->activateFreezeBombAbility();
+			Engine::Instance().options<GameOptions>()->level()->activateFreezeBombAbility();
 			break;
 		case Keyboard::C:
-			Engine::Instance().level()->activateVenomAbility();
+			Engine::Instance().options<GameOptions>()->level()->activateVenomAbility();
 			break;
 		case Keyboard::V:
-			Engine::Instance().level()->activateIncreaseTowerDamageAbility();
+			Engine::Instance().options<GameOptions>()->level()->activateIncreaseTowerDamageAbility();
 			break;
 		case Keyboard::B:
-			Engine::Instance().level()->activateIncreaseTowerAttackSpeedAbility();
+			Engine::Instance().options<GameOptions>()->level()->activateIncreaseTowerAttackSpeedAbility();
 			break;
 		case Keyboard::N:
-			Engine::Instance().level()->activateStopAbility();
+			Engine::Instance().options<GameOptions>()->level()->activateStopAbility();
 			break;
 		case Keyboard::R:
-			Engine::Instance().level()->test();
+			Engine::Instance().options<GameOptions>()->level()->test();
 			break;
 		case Keyboard::I:
-			Engine::Instance().setNormalSpeed();
+			Engine::Instance().options<GameOptions>()->setNormalSpeed();
 			break;
 		case Keyboard::O:
-			Engine::Instance().setFastSpeed();
+			Engine::Instance().options<GameOptions>()->setFastSpeed();
 			break;
 		case Keyboard::P:
-			Engine::Instance().setExtraFastSpeed();
+			Engine::Instance().options<GameOptions>()->setExtraFastSpeed();
 			break;
 		case Keyboard::Delete:
-			Engine::Instance().level()->sellTower(Engine::Instance().level()->selectedTower());
+			Engine::Instance().options<GameOptions>()->level()->sellTower(Engine::Instance().options<GameOptions>()->level()->selectedTower());
 			break;
 #ifdef STEAM_API
 		case Keyboard::F12:
@@ -164,9 +165,9 @@ void Controller::eventFilter(Event *event)
 	case Event::MouseWheelScrolled:
 	{
 		if (event->mouseWheelScroll.delta < 0)
-			Engine::Instance().camera()->zoomOut();
+			Engine::Instance().options<GameOptions>()->camera()->zoomOut();
 		else
-			Engine::Instance().camera()->zoomIn();
+			Engine::Instance().options<GameOptions>()->camera()->zoomIn();
 	}
 		break;
 	default:
@@ -179,37 +180,37 @@ void Controller::joystickKeyEvent(const bool timeoutKey, const bool timeoutMove)
 	const int joystickId = currentJoystickId();
 	if (timeoutKey)
 	{
-		if (Engine::Instance().instructions()->isActive())
+		if (Engine::Instance().options<GameOptions>()->instructions()->isActive())
 		{
 			if (Joystick::isButtonPressed(joystickId, KEY_START))
-				Engine::Instance().instructions()->skip();
+				Engine::Instance().options<GameOptions>()->instructions()->skip();
 			else if (Joystick::isButtonPressed(joystickId, KEY_CHOOSE))
-				Engine::Instance().instructions()->next();
+				Engine::Instance().options<GameOptions>()->instructions()->next();
 			return;
 		}
 		if (Joystick::isButtonPressed(joystickId, KEY_START))
-			Engine::Instance().level()->ready();
+			Engine::Instance().options<GameOptions>()->level()->ready();
 		if (Joystick::isButtonPressed(joystickId, KEY_CHOOSE))
-			Engine::Instance().level()->chooseCurrent();
+			Engine::Instance().options<GameOptions>()->level()->chooseCurrent();
 		if (Joystick::isButtonPressed(joystickId, KEY_ESCAPE))
 			pauseFunc();
 		if (Joystick::isButtonPressed(joystickId, 4))
-			Engine::Instance().cursor()->swap();
+			Engine::Instance().options<GameOptions>()->cursor()->swap();
 		if (Joystick::isButtonPressed(joystickId, 5))
-			Engine::Instance().level()->clearCursor();
+			Engine::Instance().options<GameOptions>()->level()->clearCursor();
 	}
 	if (timeoutMove)
 	{
 		const float joystick1X = Joystick::getAxisPosition(joystickId, Joystick::X);
 		const float joystick1Y = Joystick::getAxisPosition(joystickId, Joystick::Y);
 		if (joystick1X > 50)
-			Engine::Instance().cursor()->moveRight();
+			Engine::Instance().options<GameOptions>()->cursor()->moveRight();
 		else if (joystick1X < -50)
-			Engine::Instance().cursor()->moveLeft();
+			Engine::Instance().options<GameOptions>()->cursor()->moveLeft();
 		if (joystick1Y > 50)
-			Engine::Instance().cursor()->moveDown();
+			Engine::Instance().options<GameOptions>()->cursor()->moveDown();
 		else if (joystick1Y < -50)
-			Engine::Instance().cursor()->moveUp();
+			Engine::Instance().options<GameOptions>()->cursor()->moveUp();
 	}
 }
 

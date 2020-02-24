@@ -1,0 +1,225 @@
+#include "camera.h"
+#include "gamecursor.h"
+#include "engine.h"
+#include "gamepanel.h"
+#include "managers.h"
+#include "enginedef.h"
+#include "gameoptions.h"
+
+Camera::Camera()
+	: view(nullptr)
+{
+
+}
+
+void Camera::init()
+{
+	const FloatRect gameRect = FloatRect(0, 0,
+										 Engine::Instance().settingsManager()->getResolution().x,
+										 Engine::Instance().settingsManager()->getResolution().y);
+    view = new View(gameRect);
+	minimap = new View(gameRect);
+
+	resetZoom();
+	view->zoom(GameOptions::GAME_SCALE);
+	view->setCenter(Vector2f(gameRect.width * GameOptions::GAME_SCALE/2,
+							 gameRect.height * GameOptions::GAME_SCALE/2));
+
+	minimap->setCenter(Vector2f(150 * Engine::Instance().settingsManager()->getScaleFactor().x,
+								150 * Engine::Instance().settingsManager()->getScaleFactor().y));
+}
+
+void Camera::destroy()
+{
+	Engine::Instance().window()->setView(Engine::Instance().window()->getDefaultView());
+	delete view;
+	delete minimap;
+	view = nullptr;
+}
+
+void Camera::moveUp(float offset)
+{
+	view->move(0.f, -offset);
+	minimap->move(0.f, -offset);
+
+	checkBorders();
+}
+
+void Camera::moveDown(float offset)
+{
+	view->move(0.f, offset);
+	minimap->move(0.f, offset);
+
+	checkBorders();
+}
+
+void Camera::moveLeft(float offset)
+{
+	view->move(-offset, 0.f);
+	minimap->move(-offset, 0.f);
+
+	checkBorders();
+}
+
+void Camera::moveRight(float offset)
+{
+	view->move(offset, 0.f);
+	minimap->move(offset, 0.f);
+
+	checkBorders();
+}
+
+void Camera::moveUpByCell()
+{
+	moveUp(Engine::Instance().options<GameOptions>()->tileSize().y);
+}
+
+void Camera::moveDownByCell()
+{
+	moveDown(Engine::Instance().options<GameOptions>()->tileSize().y);
+}
+
+void Camera::moveLeftByCell()
+{
+	moveLeft(Engine::Instance().options<GameOptions>()->tileSize().x);
+}
+
+void Camera::moveRightByCell()
+{
+	moveRight(Engine::Instance().options<GameOptions>()->tileSize().x);
+}
+
+View *Camera::getView()
+{
+	return view;
+}
+
+View *Camera::getMiniMapView()
+{
+	return minimap;
+}
+
+void Camera::zoomIn()
+{
+	if (zoomRatio > MAX_ZOOM)
+		return;
+	view->zoom(ZOOM_STEP);
+	zoomRatio++;
+}
+
+void Camera::zoomOut()
+{
+	if (zoomRatio <= 0)
+		return;
+	view->zoom(1/ZOOM_STEP);
+	zoomRatio--;
+
+	checkBorders();
+}
+
+void Camera::resetZoom()
+{
+	view->setSize(Engine::Instance().settingsManager()->getResolution().x, Engine::Instance().settingsManager()->getResolution().y);
+	minimap->setSize(Engine::Instance().settingsManager()->getScaleFactor().x, Engine::Instance().settingsManager()->getScaleFactor().y);
+	minimap->zoom(MINIMAP_ZOOM);
+	zoomRatio = 0;
+}
+
+int Camera::viewTopCell() const
+{
+	return static_cast<int>(round((view->getCenter().y - view->getSize().y/2)/Engine::Instance().options<GameOptions>()->tileSize().y));
+}
+
+int Camera::viewLeftCell() const
+{
+	return static_cast<int>(round((view->getCenter().x - view->getSize().x/2)/Engine::Instance().options<GameOptions>()->tileSize().x));
+}
+
+int Camera::viewRightCell() const
+{
+	return static_cast<int>(floor((view->getCenter().x + view->getSize().x/2)/Engine::Instance().options<GameOptions>()->tileSize().x));
+}
+
+int Camera::viewBottomCell() const
+{
+	return static_cast<int>(floor((view->getCenter().y + view->getSize().y/2)/Engine::Instance().options<GameOptions>()->tileSize().y));
+}
+
+Vector2i Camera::viewCenter() const
+{
+	return Vector2i(static_cast<int>(view->getCenter().x/Engine::Instance().options<GameOptions>()->tileSize().x),
+					static_cast<int>(view->getCenter().y/Engine::Instance().options<GameOptions>()->tileSize().y));
+}
+
+Vector2i Camera::posToCellMap(const Vector2f& pos) const
+{
+	return Vector2i(floor(pos.x / Engine::Instance().options<GameOptions>()->mapTileSize().x),
+					floor(pos.y / Engine::Instance().options<GameOptions>()->mapTileSize().y));
+}
+
+Vector2f Camera::cellToPosMap(const Vector2i &cell) const
+{
+	return Vector2f(cell.x * Engine::Instance().options<GameOptions>()->mapTileSize().x,
+					cell.y * Engine::Instance().options<GameOptions>()->mapTileSize().y);
+}
+
+Vector2i Camera::posToCell(const Vector2f &pos) const
+{
+	return Vector2i(floor(pos.x / Engine::Instance().options<GameOptions>()->tileSize().x),
+					floor(pos.y / Engine::Instance().options<GameOptions>()->tileSize().y));
+}
+
+Vector2f Camera::cellToPos(const Vector2i &cell) const
+{
+	return Vector2f(cell.x * Engine::Instance().options<GameOptions>()->tileSize().x,
+					cell.y * Engine::Instance().options<GameOptions>()->tileSize().y);
+}
+
+void Camera::resetView()
+{
+	resetZoom();
+	view->setCenter(Engine::Instance().settingsManager()->getResolution().x/2, Engine::Instance().settingsManager()->getResolution().y/2);
+}
+
+void Camera::checkBorders()
+{
+//	return;
+
+	const Vector2f topLeft = Vector2f(view->getCenter().x - view->getSize().x/2,
+								view->getCenter().y - view->getSize().y/2);
+
+	if (topLeft.x < 0)
+	{
+		view->setCenter(view->getSize().x/2, view->getCenter().y);
+		return;
+	}
+	if (topLeft.y < 0)
+	{
+		view->setCenter(view->getCenter().x, view->getSize().y/2);
+		return;
+	}
+
+	const Vector2f bottomRight = Vector2f(view->getCenter().x + view->getSize().x/2,
+										  view->getCenter().y + view->getSize().y/2);
+
+	const float maxX = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().x * Engine::Instance().options<GameOptions>()->tileSize().x;
+	if (bottomRight.x > maxX)
+	{
+		view->setCenter(maxX - view->getSize().x/2, view->getCenter().y);
+		return;
+	}
+
+	const float maxY = (Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().y + Engine::Instance().options<GameOptions>()->panel()->cellsCount())
+			* Engine::Instance().options<GameOptions>()->tileSize().y;
+	if (bottomRight.y > maxY)
+	{
+		view->setCenter(view->getCenter().x, maxY - Engine::Instance().options<GameOptions>()->mapTileSize().y - view->getSize().y/2);
+		return;
+	}
+}
+
+void Camera::setCenter(const Vector2f &pos)
+{
+	view->setCenter(pos);
+	checkBorders();
+}
