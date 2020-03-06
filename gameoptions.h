@@ -14,6 +14,8 @@ class Map;
 class Controller;
 class Instructions;
 
+class GameOverlayActivated_t;
+
 class GameOptions : public Options
 {
 public:
@@ -28,14 +30,14 @@ public:
 	Controller *controller();
 	Instructions *instructions();
 
-	Vector2f tileSize() const;
-	Vector2f mapTileSize() const;
+	sf::Vector2f tileSize() const;
+	sf::Vector2f mapTileSize() const;
 	constexpr static const int CELL_SIZE = 64;
 	constexpr static const int MAP_CELL_SIZE = 32;
 	constexpr static float GAME_SCALE = 0.8f;
 
-	void loadMaps(const String &path);
-	bool checkMaps(const String &path) const;
+	void loadMaps(const sf::String &path);
+	bool checkMaps(const sf::String &path) const;
 
 	unsigned int missionsCount() const;
 	unsigned int getMission() const;
@@ -56,12 +58,12 @@ public:
 			return number == other.number;
 		}
 	};
-	vector<CompletedMission> getCompletedMissions() const;
+	std::vector<CompletedMission> getCompletedMissions() const;
 	unsigned int maxCompletedLevel() const;
 
-	map<int, Tile::TileProperties> getTileProperties() const;
+	std::map<int, Tile::TileProperties> getTileProperties() const;
 
-	LevelObject *createObject(OBJECTS::OBJECT_TYPES type, const Vector2f &pos);
+	LevelObject *createObject(OBJECTS::OBJECT_TYPES type, const sf::Vector2f &pos);
 
 	float gameSpeed() const;
 	void setNormalSpeed();
@@ -78,6 +80,9 @@ public:
 
 	void updateWindow() override;
 
+	void loadAchievements();
+	void globalCallbacks() override;
+
 private:
 	Camera *m_camera;
 	GameCursor *m_cursor;
@@ -86,16 +91,16 @@ private:
 	Controller *m_controller;
 	Instructions *m_instructions;
 
-	vector<CompletedMission> m_save;
-	vector<Map*> maps;
+	std::vector<CompletedMission> m_save;
+	std::vector<Map*> maps;
 	unsigned int m_mission;
 
 	Map *findMapByNumber(unsigned int num);
-	bool loadMap(const String &fileName);
-	bool loadTiles(const String& fileName);
+	bool loadMap(const sf::String &fileName);
+	bool loadTiles(const sf::String& fileName);
 
-	map<int, Tile::TileProperties> tileProperties;
-	Texture tilesetImage;
+	std::map<int, Tile::TileProperties> tileProperties;
+	sf::Texture tilesetImage;
 	float m_gameSpeed;
 	void setSpeed(float speed);
 	float m_difficult;

@@ -25,7 +25,7 @@ enum ENEMY_TYPES
 	UNKNOWN,
 
 	SCORPION,//scorpion
-	SMALL_MEDIUM,//car
+	CAR,
 	SMALL_FAST,//tricycle
 	SMALL_NEXT,
 	SELFHEAL_ENEMY,
@@ -46,7 +46,7 @@ enum ENEMY_TYPES
 
 struct Wave
 {
-	vector<ENEMY_TYPES> spawnEnemies;
+	std::vector<ENEMY_TYPES> spawnEnemies;
 	float protection;
 	float respawnTime;
 };

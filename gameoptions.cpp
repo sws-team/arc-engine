@@ -12,12 +12,18 @@
 #include "Game/instructions.h"
 #include "controller.h"
 #include "Game/levelobject.h"
+#include "Game/achievements.h"
 #include "enginedef.h"
 #include "gamemanagers.h"
+#include "gameachievements.h"
 
 #include "json/json.h"
 #include <tinyxml.h>
 #include <tinydir.h>
+
+#ifdef STEAM_API
+#include "steam_api.h"
+#endif
 
 GameOptions::GameOptions() :
 	m_camera(nullptr)
@@ -31,16 +37,11 @@ GameOptions::GameOptions() :
   ,m_difficult(1)
 {
 	reset();
-#ifdef STEAM_API
-	SteamUserStats()->RequestCurrentStats();
-//	SteamUtils()->GetAppID();
-	//	ISteamUserStats *stats = SteamUserStats();
-#endif
 }
 
 Map *GameOptions::findMapByNumber(unsigned int num)
 {
-	const string mapName = "mission" + to_string(num);
+	const std::string mapName = "mission" + std::to_string(num);
 	for(Map *currentMap : maps)
 	{
 		if (currentMap->name == mapName)
@@ -48,20 +49,6 @@ Map *GameOptions::findMapByNumber(unsigned int num)
 	}
 	return nullptr;
 }
-
-#ifdef STEAM_API
-void GameOptions::OnGameOverlayActivated(GameOverlayActivated_t *pCallback)
-{
-	if (pCallback->m_bActive)
-	{
-		//pause
-	}
-	else
-	{
-		//unpause
-	}
-}
-#endif
 
 unsigned int GameOptions::getMission() const
 {
@@ -80,7 +67,7 @@ Map *GameOptions::getMap(unsigned int mission)
 
 void GameOptions::save()
 {
-	ofstream stream(EngineDefs::saveFileName, std::ofstream::out);
+	std::ofstream stream(EngineDefs::saveFileName, std::ofstream::out);
 
 	Json::Value obj;
 	for(const CompletedMission& save : m_save)
@@ -95,8 +82,8 @@ void GameOptions::save()
 	Json::StyledWriter styled;
 
 //	const string str = fast.write(obj);
-	const string str = styled.write(obj);
-	const string encodedStr = GlobalVariables::encode(str);
+	const std::string str = styled.write(obj);
+	const std::string encodedStr = GlobalVariables::encode(str);
 	stream << encodedStr;
 	stream.close();
 
@@ -106,15 +93,15 @@ void GameOptions::save()
 
 void GameOptions::load()
 {
-	ifstream stream(EngineDefs::saveFileName, std::ifstream::in);
-	string str((std::istreambuf_iterator<char>(stream)), (std::istreambuf_iterator<char>()));
-	const string decodedStr = GlobalVariables::decode(str);
+	std::ifstream stream(EngineDefs::saveFileName, std::ifstream::in);
+	std::string str((std::istreambuf_iterator<char>(stream)), (std::istreambuf_iterator<char>()));
+	const std::string decodedStr = GlobalVariables::decode(str);
 
 	Json::Reader reader;
 	Json::Value obj;
 	if (!reader.parse(decodedStr, obj))
 	{
-		cout << "Can't read saves: "<< EngineDefs::saveFileName << endl;
+		std::cout << "Can't read saves: "<< EngineDefs::saveFileName << std::endl;
 		return;
 	}
 	m_save.clear();
@@ -140,7 +127,7 @@ void GameOptions::setMissionFinished(unsigned int n, unsigned int rating)
 		m_save[n].stars = rating;
 }
 
-vector<GameOptions::CompletedMission> GameOptions::getCompletedMissions() const
+std::vector<GameOptions::CompletedMission> GameOptions::getCompletedMissions() const
 {
 	return m_save;
 }
@@ -156,19 +143,19 @@ unsigned int GameOptions::maxCompletedLevel() const
 	return max;
 }
 
-map<int, Tile::TileProperties> GameOptions::getTileProperties() const
+std::map<int, Tile::TileProperties> GameOptions::getTileProperties() const
 {
 	return tileProperties;
 }
 
-LevelObject *GameOptions::createObject(OBJECTS::OBJECT_TYPES type, const Vector2f& pos)
+LevelObject *GameOptions::createObject(OBJECTS::OBJECT_TYPES type, const sf::Vector2f& pos)
 {
 	LevelObject *object = nullptr;
 
 	switch (type)
 	{
 	case OBJECTS::TREE:
-		object = new LevelObject(GAME_TEXTURE::OBJECT_TREE, pos, Vector2i(64, 64), 4);
+		object = new LevelObject(GAME_TEXTURE::OBJECT_TREE, pos, sf::Vector2i(64, 64), 4);
 		break;
 //	case OBJECTS::RIVER:
 //		object = new LevelObject(RESOURCES::OBJECT_RIVER, pos, Vector2i(480, 1088), 1);
@@ -230,15 +217,15 @@ Instructions *GameOptions::instructions()
 	return m_instructions;
 }
 
-Vector2f GameOptions::tileSize() const
+sf::Vector2f GameOptions::tileSize() const
 {
-	return Vector2f(Engine::Instance().settingsManager()->getScaleFactor().x * CELL_SIZE,
+	return sf::Vector2f(Engine::Instance().settingsManager()->getScaleFactor().x * CELL_SIZE,
 					Engine::Instance().settingsManager()->getScaleFactor().y * CELL_SIZE);
 }
 
-Vector2f GameOptions::mapTileSize() const
+sf::Vector2f GameOptions::mapTileSize() const
 {
-	return Vector2f(Engine::Instance().settingsManager()->getScaleFactor().x * MAP_CELL_SIZE,
+	return sf::Vector2f(Engine::Instance().settingsManager()->getScaleFactor().x * MAP_CELL_SIZE,
 					Engine::Instance().settingsManager()->getScaleFactor().y * MAP_CELL_SIZE);
 }
 void GameOptions::reset()
@@ -269,7 +256,7 @@ unsigned int GameOptions::missionsCount() const
 	return maps.size();
 }
 
-bool GameOptions::loadMap(const String &fileName)
+bool GameOptions::loadMap(const sf::String &fileName)
 {
 #ifdef OS_WIN
 	FILE* file = _wfopen(fileName.toWideString().c_str(), L"rb");
@@ -303,8 +290,8 @@ bool GameOptions::loadMap(const String &fileName)
 		TiXmlElement *prop = propertiesElement->FirstChildElement("property");
 		while (prop)
 		{
-			const string propertyName = prop->Attribute("name");
-			const string propertyValue = prop->Attribute("value");
+			const std::string propertyName = prop->Attribute("name");
+			const std::string propertyValue = prop->Attribute("value");
 
 			if (propertyName == "name")
 				gameMap->name = propertyValue;
@@ -362,7 +349,7 @@ bool GameOptions::loadMap(const String &fileName)
 	const int rows = tilesetImage.getSize().y / MAP_CELL_SIZE;
 
 	// вектор из прямоугольников изображений (TextureRect)
-	vector<sf::Rect<int>> subRects;
+	std::vector<sf::Rect<int>> subRects;
 	for (int y = 0; y < rows; y++)
 		for (int x = 0; x < columns; x++)
 		{
@@ -392,12 +379,12 @@ bool GameOptions::loadMap(const String &fileName)
 			layer.opacity *= opacity;
 		}
 
-		const string layerName = string(layerElement->Attribute("name"));
-		if (layerName == string("directions"))
+		const std::string layerName = std::string(layerElement->Attribute("name"));
+		if (layerName == std::string("directions"))
 			gameMap->directionsLayer = layersCount;
-		else if (layerName == string("moving"))
+		else if (layerName == std::string("moving"))
 			gameMap->movingLayer = layersCount;
-		else if (layerName == string("water"))
+		else if (layerName == std::string("water"))
 			gameMap->waterLayer = layersCount;
 
 		layersCount++;
@@ -436,7 +423,7 @@ bool GameOptions::loadMap(const String &fileName)
 				const int subRectToUse = tileGID - firstTileID;
 				if (subRectToUse >= 0 && !subRects.empty())
 				{
-					Sprite sprite;
+					sf::Sprite sprite;
 					sprite.setTexture(tilesetImage);
 					sprite.setTextureRect(subRects[subRectToUse]);
 					sprite.setPosition(x * MAP_CELL_SIZE * Engine::Instance().settingsManager()->getScaleFactor().x,
@@ -447,7 +434,7 @@ bool GameOptions::loadMap(const String &fileName)
 					Tile tile;
 					tile.sprite = sprite;
 					tile.id = tileGID;
-					tile.cell = Vector2i(x, y);
+					tile.cell = sf::Vector2i(x, y);
 					layer.tiles.push_back(tile);
 
 	//				if (gameMap->tileSprites.find(tileGID) == gameMap->tileSprites.end())
@@ -484,12 +471,12 @@ bool GameOptions::loadMap(const String &fileName)
 
 			while (objectElement)
 			{
-				string objectType;
+				std::string objectType;
 				if (objectElement->Attribute("type") != nullptr)
 				{
 					objectType = objectElement->Attribute("type");
 				}
-				string objectName;
+				std::string objectName;
 				if (objectElement->Attribute("name") != nullptr)
 				{
 					objectName = objectElement->Attribute("name");
@@ -531,14 +518,14 @@ bool GameOptions::loadMap(const String &fileName)
 					if (prop != nullptr)
 					{
 						Map::MapObject object;
-						object.pos = Vector2f(x, y);
+						object.pos = sf::Vector2f(x, y);
 						object.type = OBJECTS::UNKNOWN;
 						object.layer = -1;
 						object.shader_type = OBJECTS::UNDEFINED;
 						while (prop)
 						{
-							const string propertyName = prop->Attribute("name");
-							const string propertyValue = prop->Attribute("value");
+							const std::string propertyName = prop->Attribute("name");
+							const std::string propertyValue = prop->Attribute("value");
 
 							if (propertyName == "direction" && objectName == "spawn")
 								gameMap->spawnDirection = static_cast<Map::MOVE_DIRECTIONS>(atoi(propertyValue.c_str()));
@@ -571,7 +558,7 @@ bool GameOptions::loadMap(const String &fileName)
 	return true;
 }
 
-bool GameOptions::loadTiles(const String &fileName)
+bool GameOptions::loadTiles(const sf::String &fileName)
 {
 	tileProperties.clear();
 
@@ -610,8 +597,8 @@ bool GameOptions::loadTiles(const String &fileName)
 
 			while (prop)
 			{
-				const string propertyName = prop->Attribute("name");
-				const string propertyValue = prop->Attribute("value");
+				const std::string propertyName = prop->Attribute("name");
+				const std::string propertyValue = prop->Attribute("value");
 				if (propertyName == "direction")
 					tileProperty.direction = stoi(propertyValue);
 				if (propertyName == "alternate_direction1")
@@ -622,18 +609,18 @@ bool GameOptions::loadTiles(const String &fileName)
 				prop = prop->NextSiblingElement("property");
 			}
 		}
-		tileProperties.insert(make_pair(tileId, tileProperty));
+		tileProperties.insert(std::make_pair(tileId, tileProperty));
 		tilePropertiesElement = tilePropertiesElement->NextSiblingElement("tile");
 	}
 
 
 	// source - путь до картинки в контейнере image
 	TiXmlElement *image = tilesetElement->FirstChildElement("image");
-	const string imagePath = string(image->Attribute("source"));
-	Image img;
+	const std::string imagePath = std::string(image->Attribute("source"));
+	sf::Image img;
 	if (!img.loadFromFile(imagePath))
 	{
-		cout << "Failed to load tile sheet." << endl;
+		std::cout << "Failed to load tile sheet." << std::endl;
 		return false;
 	}
 
@@ -668,7 +655,7 @@ char *GameOptions::wstringToChar(const wstring &wStr) const
 }
 #endif
 
-void GameOptions::loadMaps(const String &path)
+void GameOptions::loadMaps(const sf::String &path)
 {
 	maps.clear();
 	if (!loadTiles("tiles.tsx"))
@@ -697,7 +684,7 @@ void GameOptions::loadMaps(const String &path)
 }
 
 
-bool GameOptions::checkMaps(const String &path) const
+bool GameOptions::checkMaps(const sf::String &path) const
 {
 	tinydir_dir dir;
 #ifdef OS_WIN
@@ -714,10 +701,10 @@ bool GameOptions::checkMaps(const String &path) const
 		tinydir_readfile(&dir, &file);
 		if (!file.is_dir)
 		{
-			ifstream stream(String(file.path).toAnsiString());
-			const string src = string((std::istreambuf_iterator<char>(stream)),
+			std::ifstream stream(sf::String(file.path).toAnsiString());
+			const std::string src = std::string((std::istreambuf_iterator<char>(stream)),
 									  std::istreambuf_iterator<char>());
-			const string checksum = picosha2::hash256_hex_string(src);
+			const std::string checksum = picosha2::hash256_hex_string(src);
 			stream.close();
 //			cout << checksum << endl << count << endl << MISSIONS_CHECKSUM[count] << endl << endl;
 //			if (checksum != MISSIONS_CHECKSUM[count])
@@ -762,4 +749,20 @@ void GameOptions::updateWindow()
 {
 	Options::updateWindow();
 	loadMaps("maps");
+}
+
+void GameOptions::loadAchievements()
+{
+	GameAchievements::Instance().addAchievement(ACHIEVEMENT_COMPLETE_ALL_LEVELS, std::string("COMPLETE_ALL_LEVELS"));
+//	const static string COMPLETE_ALL_LEVELS_WITH_5_STARS_STR = "complete_all_levels_with_5_stars";
+//	const static string COMPLETE_LEVEL_WITHOUT_DAMAGE_STR = "complete_level_without_damage";
+//	const static string KILL_5_WITH_ONE_BOMB_STR = "kill_5_with_one_bomb";
+	//	const static string FREEZE_5_WITH_ONE_BOMB_STRs = "freeze_5_with_one_bomb";
+}
+
+void GameOptions::globalCallbacks()
+{
+#ifdef STEAM_API
+	SteamAPI_RunCallbacks();
+#endif
 }

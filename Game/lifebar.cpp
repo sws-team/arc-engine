@@ -7,36 +7,36 @@ LifeBar::LifeBar()
 
 }
 
-void LifeBar::init(const Vector2i &size, const Color& color)
+void LifeBar::init(const sf::Vector2i &size, const sf::Color& color)
 {
 	fullSize = size;
-	currentValue.setSize(Vector2f(fullSize.x, fullSize.y));
+	currentValue.setSize(sf::Vector2f(fullSize.x, fullSize.y));
 	currentValue.setFillColor(color);
 
 	fullValue.setSize(currentValue.getSize());
-	fullValue.setOutlineColor(Color::White);
-	fullValue.setFillColor(Color::Transparent);
+	fullValue.setOutlineColor(sf::Color::White);
+	fullValue.setFillColor(sf::Color::Transparent);
 	fullValue.setOutlineThickness(1 * Engine::Instance().settingsManager()->getScaleFactor().y);
 }
 
-void LifeBar::draw(RenderTarget *target)
+void LifeBar::draw(sf::RenderTarget *target)
 {
 	target->draw(currentValue);
 	target->draw(fullValue);
 }
 
-void LifeBar::setPos(const Vector2f &pos)
+void LifeBar::setPos(const sf::Vector2f &pos)
 {
 	fullValue.setPosition(pos);
 	currentValue.setPosition(pos);
 }
 
-Vector2f LifeBar::pos() const
+sf::Vector2f LifeBar::pos() const
 {
 	return fullValue.getPosition();
 }
 
 void LifeBar::setValue(float rate)
 {
-	currentValue.setSize(Vector2f(rate * fullSize.x,  fullSize.y));
+	currentValue.setSize(sf::Vector2f(rate * fullSize.x,  fullSize.y));
 }

@@ -7,19 +7,19 @@
 #include "gameoptions.h"
 #include "gamestatemanager.h"
 
-const Color ChooseMissionWindow::DISABLED_COLOR = Color(0,34,52, 128);
-const Color ChooseMissionWindow::CURRENT_COLOR = Color(0,85,130, 128);
-const Color ChooseMissionWindow::CURRENT_BORDER_COLOR = Color(0,51,78, 150);
+const sf::Color ChooseMissionWindow::DISABLED_COLOR = sf::Color(0,34,52, 128);
+const sf::Color ChooseMissionWindow::CURRENT_COLOR = sf::Color(0,85,130, 128);
+const sf::Color ChooseMissionWindow::CURRENT_BORDER_COLOR = sf::Color(0,51,78, 150);
 
 ChooseMissionWindow::ChooseMissionWindow()
 	: StateWindow()
 	,hovered(-1)
 {
-	setBackground(TexturesManager::ABOUT_BACKGROUND);
+	setBackground(GAME_TEXTURE::MISSON_BACKGROUND);
 
 	chooseRect.setOutlineThickness(5);
 	chooseRect.setOutlineColor(CURRENT_BORDER_COLOR);
-	chooseRect.setFillColor(Color::Transparent);
+	chooseRect.setFillColor(sf::Color::Transparent);
 	currentMission = 0;
 
 	initDifficults();
@@ -31,18 +31,18 @@ ChooseMissionWindow::ChooseMissionWindow()
 	const float iconSizeY = 32 * Engine::Instance().settingsManager()->getScaleFactor().y;
 	const float topOffset = Engine::Instance().settingsManager()->getScaleFactor().y * 45;
 
-	chooseRect.setSize(Vector2f(rectSizeX, rectSizeY + iconSizeY));
+	chooseRect.setSize(sf::Vector2f(rectSizeX, rectSizeY + iconSizeY));
 	const float left = Engine::Instance().settingsManager()->getResolution().x * 0.3f;
 	float x = left;
 	float y = topOffset;
 
 	const float difficultHeight = 60;
-	const Vector2f difficultSize = Vector2f(rectSizeX * COLUMN_COUNT + offsetX * (COLUMN_COUNT - 1),
+	const sf::Vector2f difficultSize = sf::Vector2f(rectSizeX * COLUMN_COUNT + offsetX * (COLUMN_COUNT - 1),
 											difficultHeight);
 	difficultRect.setPosition(x, y);
 	difficultRect.setSize(difficultSize);
 
-	const Vector2f difficultRectSize = Vector2f(200 * Engine::Instance().settingsManager()->getScaleFactor().x,
+	const sf::Vector2f difficultRectSize = sf::Vector2f(200 * Engine::Instance().settingsManager()->getScaleFactor().x,
 												30 * Engine::Instance().settingsManager()->getScaleFactor().y);
 	const float difficultOffsetX = (difficultSize.x - 3 * difficultRectSize.x)/4;
 	const float difficultOffsetY = (difficultSize.y - difficultRectSize.y)/2;
@@ -51,7 +51,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 	currentDifficultRect.setSize(difficultRectSize);
 	choosedDifficultRect.setSize(difficultRectSize);
-	currentDifficultRect.setFillColor(Color::Transparent);
+	currentDifficultRect.setFillColor(sf::Color::Transparent);
 
 	easyRect.setPosition(x + difficultOffsetX, y);
 	easyRect.setSize(difficultRectSize);
@@ -92,23 +92,23 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 		MissionView mission;
 		mission.rect.setPosition(x, y);
-		mission.rect.setSize(Vector2f(rectSizeX, rectSizeY));
+		mission.rect.setSize(sf::Vector2f(rectSizeX, rectSizeY));
 		mission.highlight.setPosition(x, y);
-		mission.highlight.setSize(Vector2f(rectSizeX, rectSizeY + iconSizeY));
+		mission.highlight.setSize(sf::Vector2f(rectSizeX, rectSizeY + iconSizeY));
 		mission.numberText.setFont(Engine::Instance().fontManager()->font());
 		mission.numberText.setCharacterSize(60);
 		mission.numberText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
-		mission.numberText.setString(to_string(i + 1));
+		mission.numberText.setString(std::to_string(i + 1));
 		mission.numberText.setPosition(x, y);
-		mission.numberText.setFillColor(Color::White);
-		mission.numberText.setOutlineColor(Color::Black);
+		mission.numberText.setFillColor(sf::Color::White);
+		mission.numberText.setOutlineColor(sf::Color::Black);
 		mission.numberText.setOutlineThickness(3);
 		mission.enabled = false;
 		if (i <= maxCompletedLevel + 1)
 			mission.enabled = true;
 		if (mission.enabled)
 		{
-			mission.highlight.setFillColor(Color::Transparent);
+			mission.highlight.setFillColor(sf::Color::Transparent);
 			mission.rect.setTexture(&Engine::Instance().texturesManager()->getTexture(textureType));
 		}
 		else
@@ -123,9 +123,9 @@ ChooseMissionWindow::ChooseMissionWindow()
 		float posX = x;
 		for (unsigned int j = 0; j < STARS_COUNT; ++j)
 		{
-			RectangleShape starRect;
-			starRect.setFillColor(Color::White);
-			starRect.setSize(Vector2f(iconSizeX, iconSizeY));
+			sf::RectangleShape starRect;
+			starRect.setFillColor(sf::Color::White);
+			starRect.setSize(sf::Vector2f(iconSizeX, iconSizeY));
 			starRect.setPosition(posX, y + rectSizeY);
 			if (j >= rating)
 				starRect.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::EMPTY_STAR_TEXTURE));
@@ -153,12 +153,12 @@ void ChooseMissionWindow::back()
 	Engine::Instance().stateManager()->setState(GameStateManager::MENU);
 }
 
-void ChooseMissionWindow::paint(RenderWindow *window)
+void ChooseMissionWindow::paint(sf::RenderWindow *window)
 {
 	drawBackground(window);
 	for (const MissionView& mission : missions)
 	{
-		for(const RectangleShape& rect : mission.stars)
+		for(const sf::RectangleShape& rect : mission.stars)
 			window->draw(rect);
 		window->draw(mission.rect);
 		window->draw(mission.numberText);
@@ -181,16 +181,16 @@ void ChooseMissionWindow::paint(RenderWindow *window)
 	window->draw(currentDifficultRect);
 }
 
-void ChooseMissionWindow::eventFilter(Event *event)
+void ChooseMissionWindow::eventFilter(sf::Event *event)
 {
-	if (event->type == Event::MouseButtonPressed)
+	if (event->type == sf::Event::MouseButtonPressed)
 	{
 //		cout <<event->mouseButton.x << " "  << event->mouseButton.y << endl
 //			<< mission.getGlobalBounds().top << " "
 //			   << mission.getGlobalBounds().left << " "
 //				  << mission.getGlobalBounds().width << " "
 //				  << mission.getGlobalBounds().height << " " << endl<<endl;
-		const Vector2f pos = Vector2f(event->mouseButton.x, event->mouseButton.y);
+		const sf::Vector2f pos = sf::Vector2f(event->mouseButton.x, event->mouseButton.y);
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
 			{
@@ -219,10 +219,10 @@ void ChooseMissionWindow::eventFilter(Event *event)
 			Engine::Instance().options<GameOptions>()->setHardDifficult();
 		}
 	}
-	else if (event->type == Event::MouseMoved)
+	else if (event->type == sf::Event::MouseMoved)
 	{
 		int hoverId = -1;
-		const Vector2f pos = Vector2f(event->mouseMove.x, event->mouseMove.y);
+		const sf::Vector2f pos = sf::Vector2f(event->mouseMove.x, event->mouseMove.y);
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 		{
 			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
@@ -232,7 +232,7 @@ void ChooseMissionWindow::eventFilter(Event *event)
 			}
 		}
 		updateRect();
-		currentDifficultRect.setFillColor(Color::Transparent);
+		currentDifficultRect.setFillColor(sf::Color::Transparent);
 		if (easyRect.getGlobalBounds().contains(pos))
 		{
 			currentDifficultRect.setFillColor(DISABLED_COLOR);
@@ -257,23 +257,23 @@ void ChooseMissionWindow::eventFilter(Event *event)
 			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 		}
 	}
-	else if (event->type == Event::KeyPressed)
+	else if (event->type == sf::Event::KeyPressed)
 	{
 		switch (event->key.code)
 		{
-		case Keyboard::Left:
+		case sf::Keyboard::Left:
 			currentMission--;
 			break;
-		case Keyboard::Right:
+		case sf::Keyboard::Right:
 			currentMission++;
 			break;
-		case Keyboard::Up:
+		case sf::Keyboard::Up:
 			currentMission -= COLUMN_COUNT;
 			break;
-		case Keyboard::Down:
+		case sf::Keyboard::Down:
 			currentMission += COLUMN_COUNT;
 			break;
-		case Keyboard::Return:
+		case sf::Keyboard::Return:
 			if (missions.at(currentMission).enabled)
 			{
 				accept(currentMission);
@@ -289,7 +289,7 @@ void ChooseMissionWindow::eventFilter(Event *event)
 			currentMission = missions.size() - 1;
 		updateRect();
 	}
-	else if (event->type == Event::JoystickButtonPressed)
+	else if (event->type == sf::Event::JoystickButtonPressed)
 	{
 		if (event->joystickButton.button == Controller::KEY_START)
 		{
@@ -300,16 +300,16 @@ void ChooseMissionWindow::eventFilter(Event *event)
 			}
 		}
 	}
-	else if (event->type == Event::JoystickMoved)
+	else if (event->type == sf::Event::JoystickMoved)
 	{
-		if (event->joystickMove.axis == Joystick::X)
+		if (event->joystickMove.axis == sf::Joystick::X)
 		{
 			if (event->joystickMove.position > 50)
 				currentMission++;
 			else if (event->joystickMove.position < -50)
 				currentMission--;
 		}
-		else if (event->joystickMove.axis == Joystick::Y)
+		else if (event->joystickMove.axis == sf::Joystick::Y)
 		{
 			if (event->joystickMove.position > 50)
 				currentMission += COLUMN_COUNT;
@@ -343,7 +343,7 @@ void ChooseMissionWindow::updateRect()
 		else
 		{
 			if (missions.at(mission).enabled)
-				missions[mission].highlight.setFillColor(Color::Transparent);
+				missions[mission].highlight.setFillColor(sf::Color::Transparent);
 			else
 				missions[mission].highlight.setFillColor(DISABLED_COLOR);
 		}
@@ -360,15 +360,15 @@ unsigned int ChooseMissionWindow::getRating(unsigned int n) const
 
 void ChooseMissionWindow::initDifficults()
 {
-	const Color difficultRectFillColor = Color(16, 32, 64, 128);
-	const Color difficultRectBorderColor = Color(64, 32, 16, 192);
-	const Color choosedRectBorderColor = Color(32, 128, 16, 192);
+	const sf::Color difficultRectFillColor = sf::Color(16, 32, 64, 128);
+	const sf::Color difficultRectBorderColor = sf::Color(64, 32, 16, 192);
+	const sf::Color choosedRectBorderColor = sf::Color(32, 128, 16, 192);
 	const float difficultCharatersSize = 40;
 	const float thickness = 3 * Engine::Instance().settingsManager()->getScaleFactor().x;
 
 	choosedDifficultRect.setOutlineThickness(thickness);
 	choosedDifficultRect.setOutlineColor(choosedRectBorderColor);
-	choosedDifficultRect.setFillColor(Color::Transparent);
+	choosedDifficultRect.setFillColor(sf::Color::Transparent);
 
 	difficultRect.setOutlineThickness(thickness);
 	difficultRect.setFillColor(CURRENT_COLOR);
@@ -390,23 +390,23 @@ void ChooseMissionWindow::initDifficults()
 	easyText.setCharacterSize(difficultCharatersSize);
 	easyText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	easyText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::EASY));
-	easyText.setFillColor(Color::White);
-	easyText.setOutlineColor(Color::Black);
+	easyText.setFillColor(sf::Color::White);
+	easyText.setOutlineColor(sf::Color::Black);
 	easyText.setOutlineThickness(thickness);
 
 	normalText.setFont(Engine::Instance().fontManager()->font());
 	normalText.setCharacterSize(difficultCharatersSize);
 	normalText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	normalText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::NORMAL));
-	normalText.setFillColor(Color::White);
-	normalText.setOutlineColor(Color::Black);
+	normalText.setFillColor(sf::Color::White);
+	normalText.setOutlineColor(sf::Color::Black);
 	normalText.setOutlineThickness(thickness);
 
 	hardText.setFont(Engine::Instance().fontManager()->font());
 	hardText.setCharacterSize(difficultCharatersSize);
 	hardText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	hardText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::HARD));
-	hardText.setFillColor(Color::White);
-	hardText.setOutlineColor(Color::Black);
+	hardText.setFillColor(sf::Color::White);
+	hardText.setOutlineColor(sf::Color::Black);
 	hardText.setOutlineThickness(thickness);
 }

@@ -4,25 +4,41 @@
 #include "gamemanagers.h"
 #include "gamestatemanager.h"
 
+#ifdef STEAM_API
+#include "steam_api.h"
+#endif
+
 MainMenu::MainMenu()
 	: Menu()
 {
 	setBackground(GAME_TEXTURE::MENU_BACKGROUND);
 	currentMenu = static_cast<MENUS>(CAMPAIGN);
 
-	setPos(Vector2f(120 * Engine::Instance().settingsManager()->getScaleFactor().x,
+	setPos(sf::Vector2f(120 * Engine::Instance().settingsManager()->getScaleFactor().x,
 					640 * Engine::Instance().settingsManager()->getScaleFactor().y));
-	setColor(Color(64,224,208, 100));
-	setCurrentColor(Color(64,224,208));
+	setColor(sf::Color(64,224,208, 100));
+	setCurrentColor(sf::Color(64,224,208));
 
 	gameName.setFont(Engine::Instance().fontManager()->font());
 	gameName.setString("Game Name");
-	gameName.setFillColor(Color::Cyan);
-	gameName.setOutlineColor(Color::Black);
+	gameName.setFillColor(sf::Color::Cyan);
+	gameName.setOutlineColor(sf::Color::Black);
 	gameName.setOutlineThickness(5);
 	gameName.setCharacterSize(150);
+	gameName.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	gameName.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 - gameName.getGlobalBounds().width/2,
 						 gameName.getGlobalBounds().height/2);
+
+	const char *name = SteamFriends()->GetPersonaName();
+	playerName.setFont(Engine::Instance().fontManager()->font());
+	playerName.setString(name);
+	playerName.setFillColor(sf::Color::Cyan);
+	playerName.setOutlineColor(sf::Color::Black);
+	playerName.setOutlineThickness(5);
+	playerName.setCharacterSize(50);
+	playerName.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	playerName.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 - playerName.getGlobalBounds().width/2,
+						 playerName.getGlobalBounds().height/2);
 
 	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAMPAIGN));
 	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::OPTIONS));
@@ -60,8 +76,9 @@ void MainMenu::closeEvent()
 	accept();
 }
 
-void MainMenu::paint(RenderWindow *window)
+void MainMenu::paint(sf::RenderWindow *window)
 {
 	Menu::paint(window);
 	window->draw(gameName);
+	window->draw(playerName);
 }

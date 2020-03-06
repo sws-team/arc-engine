@@ -8,28 +8,28 @@
 #include "gamemanagers.h"
 #include "gameoptions.h"
 
-const Color GameCursor::TOWER_AREA_COLOR = Color(40,98,131, 100);
-const Color GameCursor::INACTIVE_TOWER_AREA_COLOR = Color(213,84,66, 100);
+const sf::Color GameCursor::TOWER_AREA_COLOR = sf::Color(40,98,131, 100);
+const sf::Color GameCursor::INACTIVE_TOWER_AREA_COLOR = sf::Color(213,84,66, 100);
 
 GameCursor::GameCursor()
 	: GameObject(GAME_TEXTURE::CURSOR_TEXTURE,
-				 Vector2f(0,0),
-				 Vector2i(GameOptions::CELL_SIZE,
+				 sf::Vector2f(0,0),
+				 sf::Vector2i(GameOptions::CELL_SIZE,
 						  GameOptions::CELL_SIZE),
 				 2)
 	,m_inPanel(false)
 	,m_highlight(false)
 {
-	m_cell = Vector2i(0, 0);
-	m_maxCell = Vector2i(30, 17);
+	m_cell = sf::Vector2i(0, 0);
+	m_maxCell = sf::Vector2i(30, 17);
 }
 
 void GameCursor::setMaxCells(int maxWidth, int maxHeight)
 {
-	setMaxCells(Vector2i(maxWidth, maxHeight));
+	setMaxCells(sf::Vector2i(maxWidth, maxHeight));
 }
 
-void GameCursor::setMaxCells(const Vector2i &maxCell)
+void GameCursor::setMaxCells(const sf::Vector2i &maxCell)
 {
 	m_maxCell = maxCell;
 }
@@ -98,18 +98,18 @@ void GameCursor::moveDown()
 	moveDownCursor();
 }
 
-Vector2i GameCursor::cell() const
+sf::Vector2i GameCursor::cell() const
 {
 	return m_cell;
 }
 
-Vector2f GameCursor::pixelPos() const
+sf::Vector2f GameCursor::pixelPos() const
 {
-	return Vector2f(m_cell.x * Engine::Instance().options<GameOptions>()->tileSize().x,
+	return sf::Vector2f(m_cell.x * Engine::Instance().options<GameOptions>()->tileSize().x,
 					m_cell.y * Engine::Instance().options<GameOptions>()->tileSize().y);
 }
 
-void GameCursor::draw(RenderTarget * const target)
+void GameCursor::draw(sf::RenderTarget * const target)
 {
 	switch (m_state)
 	{
@@ -142,8 +142,8 @@ void GameCursor::activateAbility(int x, int y, int hotX, int hotY)
 	abilityHotsPot.x = hotX;
 	abilityHotsPot.y = hotY;
 
-	abilityRect.setFillColor(Color(255, 0, 0, 100));
-	abilityRect.setSize(Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x * x,
+	abilityRect.setFillColor(sf::Color(255, 0, 0, 100));
+	abilityRect.setSize(sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x * x,
 								 Engine::Instance().options<GameOptions>()->tileSize().y * y));
 	m_state = ABILITY;
 }
@@ -151,10 +151,10 @@ void GameCursor::activateAbility(int x, int y, int hotX, int hotY)
 void GameCursor::deactivate()
 {
 	m_state = NORMAL;
-	abilityRect.setFillColor(Color(200, 200, 200, 100));
+	abilityRect.setFillColor(sf::Color(200, 200, 200, 100));
 	abilityHotsPot.x = 0;
 	abilityHotsPot.y = 0;
-	abilityRect.setSize(Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x,
+	abilityRect.setSize(sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x,
 								 Engine::Instance().options<GameOptions>()->tileSize().y));
 }
 
@@ -164,7 +164,7 @@ void GameCursor::activateTower(float radius, TOWER_TYPES type)
 	abilityHotsPot.y = 0;
 
 	if (type == POWER)
-		towerRect.setSize(Vector2f(radius, radius));
+		towerRect.setSize(sf::Vector2f(radius, radius));
 	else
 		towerRadius.setRadius(radius);
 
@@ -196,13 +196,13 @@ void GameCursor::activateTower(float radius, TOWER_TYPES type)
 	towerSprite.setTexture(Engine::Instance().texturesManager()->getTexture(textureType));
 	towerSprite.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	towerSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
-	towerSprite.setColor(Color(255, 255, 255, 128));
+	towerSprite.setColor(sf::Color(255, 255, 255, 128));
 	m_state = TOWER;
 
 	updateCell();
 }
 
-FloatRect GameCursor::getAbilityRect() const
+sf::FloatRect GameCursor::getAbilityRect() const
 {
 	return abilityRect.getGlobalBounds();
 }
@@ -226,9 +226,9 @@ TOWER_TYPES GameCursor::getTowerType() const
 
 void GameCursor::initCell()
 {
-	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
-	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView());
-	const Vector2i newCell = Engine::Instance().options<GameOptions>()->camera()->posToCell(pos);
+	const sf::Vector2i pixelPos = sf::Mouse::getPosition(*Engine::Instance().window());
+	const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView());
+	const sf::Vector2i newCell = Engine::Instance().options<GameOptions>()->camera()->posToCell(pos);
 	if (newCell != m_cell)
 	{
 		m_cell = newCell;
@@ -242,29 +242,29 @@ void GameCursor::updatePanel()
 	Engine::Instance().options<GameOptions>()->panel()->updateCursor();
 }
 
-Vector2f GameCursor::windowCursorPos() const
+sf::Vector2f GameCursor::windowCursorPos() const
 {
-	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
-	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView());
+	const sf::Vector2i pixelPos = sf::Mouse::getPosition(*Engine::Instance().window());
+	const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView());
 	return pos;
 }
 
-Vector2f GameCursor::windowScreenPos() const
+sf::Vector2f GameCursor::windowScreenPos() const
 {
-	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
-	const Vector2f pos = Vector2f(pixelPos.x, pixelPos.y);
+	const sf::Vector2i pixelPos = sf::Mouse::getPosition(*Engine::Instance().window());
+	const sf::Vector2f pos = sf::Vector2f(pixelPos.x, pixelPos.y);
 	return pos;
 }
 
 void GameCursor::updateCell()
 {
-	const Vector2f pos = Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x * m_cell.x,
+	const sf::Vector2f pos = sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x * m_cell.x,
 								  Engine::Instance().options<GameOptions>()->tileSize().y * m_cell.y) -
-			Vector2f(abilityHotsPot.x * Engine::Instance().options<GameOptions>()->mapTileSize().x,
+			sf::Vector2f(abilityHotsPot.x * Engine::Instance().options<GameOptions>()->mapTileSize().x,
 					 abilityHotsPot.y * Engine::Instance().options<GameOptions>()->mapTileSize().y);
 	if (m_state == TOWER)
 	{
-		const bool canCreate = Engine::Instance().options<GameOptions>()->level()->canAddTower(Vector2i(m_cell.x * 2, m_cell.y * 2), towerType);
+		const bool canCreate = Engine::Instance().options<GameOptions>()->level()->canAddTower(sf::Vector2i(m_cell.x * 2, m_cell.y * 2), towerType);
 		towerRadius.setFillColor(canCreate ? TOWER_AREA_COLOR : INACTIVE_TOWER_AREA_COLOR);
 		towerRect.setFillColor(canCreate ? PowerTower::POWER_TOWER_AREA_COLOR : INACTIVE_TOWER_AREA_COLOR);
 	}
@@ -281,19 +281,19 @@ void GameCursor::updateCell()
 
 void GameCursor::updateMousePos()
 {
-	const Vector2f pos = Engine::Instance().options<GameOptions>()->camera()->cellToPos(m_cell)
-			+ Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x/2,Engine::Instance().options<GameOptions>()->tileSize().y/2);
+	const sf::Vector2f pos = Engine::Instance().options<GameOptions>()->camera()->cellToPos(m_cell)
+			+ sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x/2,Engine::Instance().options<GameOptions>()->tileSize().y/2);
 
-	const Vector2i coords = Engine::Instance().window()->mapCoordsToPixel(pos, *Engine::Instance().options<GameOptions>()->camera()->getView());
-	Mouse::setPosition(coords, *Engine::Instance().window());
+	const sf::Vector2i coords = Engine::Instance().window()->mapCoordsToPixel(pos, *Engine::Instance().options<GameOptions>()->camera()->getView());
+	sf::Mouse::setPosition(coords, *Engine::Instance().window());
 }
 
 void GameCursor::checkBorders()
 {
-	const Vector2i pixelPos = Mouse::getPosition(*Engine::Instance().window());
-	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
-				pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView()) + Vector2f(1, 1);
-	const Vector2i cell = Vector2i(pos.x/Engine::Instance().options<GameOptions>()->tileSize().x,
+	const sf::Vector2i pixelPos = sf::Mouse::getPosition(*Engine::Instance().window());
+	const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
+				pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView()) + sf::Vector2f(1, 1);
+	const sf::Vector2i cell = sf::Vector2i(pos.x/Engine::Instance().options<GameOptions>()->tileSize().x,
 								   pos.y/Engine::Instance().options<GameOptions>()->tileSize().y);
 
 	if (cell.x == Engine::Instance().options<GameOptions>()->camera()->viewLeftCell() && !m_inPanel)
@@ -368,7 +368,7 @@ void GameCursor::setHighlight(bool highlight)
 	m_highlight = highlight;
 }
 
-Vector2i GameCursor::getMaxCell() const
+sf::Vector2i GameCursor::getMaxCell() const
 {
 	return m_maxCell;
 }

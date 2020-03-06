@@ -9,29 +9,29 @@
 Instructions::Instructions() :
   m_state(START)
 {
-	shadowRect.setSize(Vector2f(Engine::Instance().settingsManager()->getResolution().x, Engine::Instance().settingsManager()->getResolution().y));
-	Color color = EngineDefs::GrayColor;
+	shadowRect.setSize(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x, Engine::Instance().settingsManager()->getResolution().y));
+	sf::Color color = EngineDefs::GrayColor;
 	color.a = 150;
 	shadowRect.setFillColor(color);
 
 	textSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::INSTRUCTIONS_TEXTURE));
 	textSprite.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
-	targetRect.setFillColor(Color::Transparent);
+	targetRect.setFillColor(sf::Color::Transparent);
 	targetRect.setOutlineThickness(3);
-	targetRect.setOutlineColor(Color::Blue);
+	targetRect.setOutlineColor(sf::Color::Blue);
 
 	text.setFont(Engine::Instance().fontManager()->font());
 	text.setCharacterSize(25);
-	text.setFillColor(Color::Red);
-	text.setOutlineColor(Color::Black);
+	text.setFillColor(sf::Color::Red);
+	text.setOutlineColor(sf::Color::Black);
 	text.setOutlineThickness(2);
 	text.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
 	changeState(START);
 }
 
-void Instructions::draw(RenderTarget * const target)
+void Instructions::draw(sf::RenderTarget * const target)
 {
 	if (m_state == FINISHED)
 		return;
@@ -65,15 +65,15 @@ void Instructions::skip()
 
 void Instructions::changeState(Instructions::STATES state)
 {
-	FloatRect rect;
-	String textStr;
+	sf::FloatRect rect;
+	sf::String textStr;
 	switch (state)
 	{
 	case START:
 	{
 		textSprite.setPosition(INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
 							 INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
-		rect = FloatRect();
+		rect = sf::FloatRect();
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_WELCOME);
 	}
 		break;
@@ -126,6 +126,6 @@ void Instructions::changeState(Instructions::STATES state)
 	text.setPosition(textSprite.getPosition().x,
 					 textSprite.getPosition().y);
 	targetRect.setPosition(rect.left, rect.top);
-	targetRect.setSize(Vector2f(rect.width, rect.height));
+	targetRect.setSize(sf::Vector2f(rect.width, rect.height));
 	m_state = state;
 }

@@ -12,8 +12,8 @@ public:
 	void back() override;
 
 protected:
-	void paint(RenderWindow *window) override;
-	void eventFilter(Event *event) override;
+	void paint(sf::RenderWindow *window) override;
+	void eventFilter(sf::Event *event) override;
 
 private:
 	void accept(unsigned int num);
@@ -21,38 +21,38 @@ private:
 	constexpr static int STARS_COUNT = 5;
 	struct MissionView
 	{
-		Text numberText;
-		RectangleShape rect;
-		RectangleShape highlight;
+		sf::Text numberText;
+		sf::RectangleShape rect;
+		sf::RectangleShape highlight;
 		bool completed;
 		int activeStars;
-		vector<RectangleShape> stars; //5
+		std::vector<sf::RectangleShape> stars; //5
 		bool enabled;
 	};
-	vector<MissionView> missions;
-	RectangleShape chooseRect;
+	std::vector<MissionView> missions;
+	sf::RectangleShape chooseRect;
 	int currentMission;
 	void updateRect();
 
 	constexpr static int COLUMN_COUNT = 5;
 	unsigned int getRating(unsigned int n) const;
 
-	static const Color DISABLED_COLOR;
-	static const Color CURRENT_COLOR;
-	static const Color CURRENT_BORDER_COLOR;
+	static const sf::Color DISABLED_COLOR;
+	static const sf::Color CURRENT_COLOR;
+	static const sf::Color CURRENT_BORDER_COLOR;
 
 
-	RectangleShape difficultRect;
-	RectangleShape currentDifficultRect;
-	RectangleShape choosedDifficultRect;
+	sf::RectangleShape difficultRect;
+	sf::RectangleShape currentDifficultRect;
+	sf::RectangleShape choosedDifficultRect;
 
-	RectangleShape easyRect;
-	RectangleShape normalRect;
-	RectangleShape hardRect;
+	sf::RectangleShape easyRect;
+	sf::RectangleShape normalRect;
+	sf::RectangleShape hardRect;
 
-	Text easyText;
-	Text normalText;
-	Text hardText;
+	sf::Text easyText;
+	sf::Text normalText;
+	sf::Text hardText;
 
 	void initDifficults();
 

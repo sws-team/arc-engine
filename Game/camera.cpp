@@ -14,18 +14,18 @@ Camera::Camera()
 
 void Camera::init()
 {
-	const FloatRect gameRect = FloatRect(0, 0,
+	const sf::FloatRect gameRect = sf::FloatRect(0, 0,
 										 Engine::Instance().settingsManager()->getResolution().x,
 										 Engine::Instance().settingsManager()->getResolution().y);
-    view = new View(gameRect);
-	minimap = new View(gameRect);
+	view = new sf::View(gameRect);
+	minimap = new sf::View(gameRect);
 
 	resetZoom();
 	view->zoom(GameOptions::GAME_SCALE);
-	view->setCenter(Vector2f(gameRect.width * GameOptions::GAME_SCALE/2,
+	view->setCenter(sf::Vector2f(gameRect.width * GameOptions::GAME_SCALE/2,
 							 gameRect.height * GameOptions::GAME_SCALE/2));
 
-	minimap->setCenter(Vector2f(150 * Engine::Instance().settingsManager()->getScaleFactor().x,
+	minimap->setCenter(sf::Vector2f(150 * Engine::Instance().settingsManager()->getScaleFactor().x,
 								150 * Engine::Instance().settingsManager()->getScaleFactor().y));
 }
 
@@ -89,12 +89,12 @@ void Camera::moveRightByCell()
 	moveRight(Engine::Instance().options<GameOptions>()->tileSize().x);
 }
 
-View *Camera::getView()
+sf::View *Camera::getView()
 {
 	return view;
 }
 
-View *Camera::getMiniMapView()
+sf::View *Camera::getMiniMapView()
 {
 	return minimap;
 }
@@ -145,33 +145,33 @@ int Camera::viewBottomCell() const
 	return static_cast<int>(floor((view->getCenter().y + view->getSize().y/2)/Engine::Instance().options<GameOptions>()->tileSize().y));
 }
 
-Vector2i Camera::viewCenter() const
+sf::Vector2i Camera::viewCenter() const
 {
-	return Vector2i(static_cast<int>(view->getCenter().x/Engine::Instance().options<GameOptions>()->tileSize().x),
+	return sf::Vector2i(static_cast<int>(view->getCenter().x/Engine::Instance().options<GameOptions>()->tileSize().x),
 					static_cast<int>(view->getCenter().y/Engine::Instance().options<GameOptions>()->tileSize().y));
 }
 
-Vector2i Camera::posToCellMap(const Vector2f& pos) const
+sf::Vector2i Camera::posToCellMap(const sf::Vector2f& pos) const
 {
-	return Vector2i(floor(pos.x / Engine::Instance().options<GameOptions>()->mapTileSize().x),
+	return sf::Vector2i(floor(pos.x / Engine::Instance().options<GameOptions>()->mapTileSize().x),
 					floor(pos.y / Engine::Instance().options<GameOptions>()->mapTileSize().y));
 }
 
-Vector2f Camera::cellToPosMap(const Vector2i &cell) const
+sf::Vector2f Camera::cellToPosMap(const sf::Vector2i &cell) const
 {
-	return Vector2f(cell.x * Engine::Instance().options<GameOptions>()->mapTileSize().x,
+	return sf::Vector2f(cell.x * Engine::Instance().options<GameOptions>()->mapTileSize().x,
 					cell.y * Engine::Instance().options<GameOptions>()->mapTileSize().y);
 }
 
-Vector2i Camera::posToCell(const Vector2f &pos) const
+sf::Vector2i Camera::posToCell(const sf::Vector2f &pos) const
 {
-	return Vector2i(floor(pos.x / Engine::Instance().options<GameOptions>()->tileSize().x),
+	return sf::Vector2i(floor(pos.x / Engine::Instance().options<GameOptions>()->tileSize().x),
 					floor(pos.y / Engine::Instance().options<GameOptions>()->tileSize().y));
 }
 
-Vector2f Camera::cellToPos(const Vector2i &cell) const
+sf::Vector2f Camera::cellToPos(const sf::Vector2i &cell) const
 {
-	return Vector2f(cell.x * Engine::Instance().options<GameOptions>()->tileSize().x,
+	return sf::Vector2f(cell.x * Engine::Instance().options<GameOptions>()->tileSize().x,
 					cell.y * Engine::Instance().options<GameOptions>()->tileSize().y);
 }
 
@@ -185,7 +185,7 @@ void Camera::checkBorders()
 {
 //	return;
 
-	const Vector2f topLeft = Vector2f(view->getCenter().x - view->getSize().x/2,
+	const sf::Vector2f topLeft = sf::Vector2f(view->getCenter().x - view->getSize().x/2,
 								view->getCenter().y - view->getSize().y/2);
 
 	if (topLeft.x < 0)
@@ -199,7 +199,7 @@ void Camera::checkBorders()
 		return;
 	}
 
-	const Vector2f bottomRight = Vector2f(view->getCenter().x + view->getSize().x/2,
+	const sf::Vector2f bottomRight = sf::Vector2f(view->getCenter().x + view->getSize().x/2,
 										  view->getCenter().y + view->getSize().y/2);
 
 	const float maxX = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().x * Engine::Instance().options<GameOptions>()->tileSize().x;
@@ -218,7 +218,7 @@ void Camera::checkBorders()
 	}
 }
 
-void Camera::setCenter(const Vector2f &pos)
+void Camera::setCenter(const sf::Vector2f &pos)
 {
 	view->setCenter(pos);
 	checkBorders();

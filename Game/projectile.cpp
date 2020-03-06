@@ -1,8 +1,8 @@
 #include "projectile.h"
 
 Projectile::Projectile(const TextureType& texture_id,
-					   const Vector2f &pos,
-					   const Vector2i &frameSize,
+					   const sf::Vector2f &pos,
+					   const sf::Vector2i &frameSize,
 					   int frameCount):
 	GameObject(texture_id, pos, frameSize, frameCount)
 {

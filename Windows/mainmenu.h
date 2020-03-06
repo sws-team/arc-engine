@@ -11,7 +11,7 @@ public:
 	void init() override;
 	void accept() override;
 	void closeEvent() override;
-	void paint(RenderWindow *window) override;
+	void paint(sf::RenderWindow *window) override;
 
 private:
 	enum MENUS
@@ -21,7 +21,8 @@ private:
 		MANUAL,
 		EXIT
 	};
-	Text gameName;
+	sf::Text gameName;
+	sf::Text playerName;
 };
 
 #endif // MAINMENU_H

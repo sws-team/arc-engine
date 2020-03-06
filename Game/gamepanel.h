@@ -15,7 +15,7 @@ public:
 	GamePanel();
 	~GamePanel() override;
 
-	void draw(RenderTarget *const target) override;
+	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 
 	void updatePanel();
@@ -33,17 +33,17 @@ public:
 	void setProgressMax(int progressMax);
 
 	void init();
-	void setMapSize(const Vector2f &size);
+	void setMapSize(const sf::Vector2f &size);
 
 	void updateInfo();
 
 	void initMission(unsigned int n);
 
-	FloatRect getTowersRect() const;
-	FloatRect getAbilitiesRect() const;
-	FloatRect getMoneyRect() const;
-	FloatRect getHealthRect() const;
-	FloatRect getProgressRect() const;
+	sf::FloatRect getTowersRect() const;
+	sf::FloatRect getAbilitiesRect() const;
+	sf::FloatRect getMoneyRect() const;
+	sf::FloatRect getHealthRect() const;
+	sf::FloatRect getProgressRect() const;
 
 	void updateCursor();
 
@@ -69,47 +69,47 @@ public:
 
 	void resetPanelIcon();
 
-	bool clickOnMiniMap(const Vector2f& pos);
+	bool clickOnMiniMap(const sf::Vector2f& pos);
 
 private:
-	Sprite m_sprite;
-	RenderTexture rTexture;
-	Text moneyCountText;
+	sf::Sprite m_sprite;
+	sf::RenderTexture rTexture;
+	sf::Text moneyCountText;
 
-	Sprite abilityBombSprite;
-	Sprite abilityFreezeBombSprite;
-	Sprite abilityVenomSprite;
-	Sprite abilityIncreaseTowerDamageSprite;
-	Sprite abilityIncreaseTowerAttackSpeedSprite;
-	Sprite abilityStopSprite;
+	sf::Sprite abilityBombSprite;
+	sf::Sprite abilityFreezeBombSprite;
+	sf::Sprite abilityVenomSprite;
+	sf::Sprite abilityIncreaseTowerDamageSprite;
+	sf::Sprite abilityIncreaseTowerAttackSpeedSprite;
+	sf::Sprite abilityStopSprite;
 
-	Sprite towerBaseSprite;
-	Sprite towerLaserSprite;
-	Sprite towerFreezeSprite;
-	Sprite towerRocketSprite;
-	Sprite towerPowerSprite;
-	Sprite towerImprovedSprite;
+	sf::Sprite towerBaseSprite;
+	sf::Sprite towerLaserSprite;
+	sf::Sprite towerFreezeSprite;
+	sf::Sprite towerRocketSprite;
+	sf::Sprite towerPowerSprite;
+	sf::Sprite towerImprovedSprite;
 
-	Sprite moneyIcon;
-	Sprite lifeIcon;
+	sf::Sprite moneyIcon;
+	sf::Sprite lifeIcon;
 
-	Text towerBaseCostText;
-	Text towerFreezeCostText;
-	Text towerRocketCostText;
-	Text towerLaserCostText;
-	Text towerPowerCostText;
-	Text towerImprovedCostText;
+	sf::Text towerBaseCostText;
+	sf::Text towerFreezeCostText;
+	sf::Text towerRocketCostText;
+	sf::Text towerLaserCostText;
+	sf::Text towerPowerCostText;
+	sf::Text towerImprovedCostText;
 
-	Text abilityBombDurationText;
-	Text abilityFreezeBombDurationText;
-	Text abilityVenomDurationText;
-	Text abilityIncreaseTowerDamageDurationText;
-	Text abilityIncreaseTowerAttackSpeedDurationText;
-	Text abilityStopDurationText;
+	sf::Text abilityBombDurationText;
+	sf::Text abilityFreezeBombDurationText;
+	sf::Text abilityVenomDurationText;
+	sf::Text abilityIncreaseTowerDamageDurationText;
+	sf::Text abilityIncreaseTowerAttackSpeedDurationText;
+	sf::Text abilityStopDurationText;
 
-	Text info;
+	sf::Text info;
 
-	Vector2f updatePos();
+	sf::Vector2f updatePos();
 
 	int m_bottomValue;
 	bool m_isPanelActive;
@@ -137,25 +137,25 @@ private:
 	void updateEnableTowers();
 	void updateEnableAbilities();
 
-	String towerInfo(TOWER_TYPES type, Tower *tower);
+	sf::String towerInfo(TOWER_TYPES type, Tower *tower);
 
-	Sprite cursorSprite;
-	RectangleShape currentIconRect;
+	sf::Sprite cursorSprite;
+	sf::RectangleShape currentIconRect;
 
-	vector<Sprite*> actionsSprites;
+	std::vector<sf::Sprite*> actionsSprites;
 	constexpr static float ICONS_SPACE = 24;
 	constexpr static float PROGRESS_OFFSET = 20;
 	constexpr static float PROGRESS_WIDTH = 0.3f;
 
-	Text readyText;
+	sf::Text readyText;
 	bool waitBlink;
 	Timer blinkTimer;
 	constexpr static int BLINK_TIME = 500;
 
 	unsigned int currentCursorPos;
 	void updateCurrentCursor();
-	static const String endline;
-	Text waveText;
+	static const sf::String endline;
+	sf::Text waveText;
 
 	LifeBar *life;
 
@@ -163,9 +163,9 @@ private:
 
 	bool m_drain;
 	Timer drainBlinkTimer;
-	RectangleShape drainRect;
+	sf::RectangleShape drainRect;
 	bool drainState;
-	Sprite miniMapSprite;
+	sf::Sprite miniMapSprite;
 
 	static constexpr unsigned int PANEL_POS_ID = 128;
 };

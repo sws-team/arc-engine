@@ -5,10 +5,14 @@
 #include "gameobject.h"
 #include "Game/leveldef.h"
 
+#ifdef STEAM_API
+#include "steam_api.h"
+#endif
+
 class LevelObject;
 class Enemy;
 class GamePanel;
-class Tile;
+struct Tile;
 class Tower;
 class Animation;
 class Abilities;
@@ -25,28 +29,28 @@ public:
 	Level();
 	~Level() override;
 
-	void draw(RenderTarget * const target) override;
+	void draw(sf::RenderTarget * const target) override;
 	void update() override;
 
 	void startMission(const unsigned int n);
 	void clear();
 
-	void drawLevel(RenderTarget * const target);
+	void drawLevel(sf::RenderTarget * const target);
 
-	void spawn(const Vector2f &pos, ENEMY_TYPES type, float protection, int moveDirection);
-	Tile getTileByPos(const Vector2f& pos, unsigned int layer = 0);
-	Tile getTileByCell(const Vector2i& cell, unsigned int layer = 0) const;
+	void spawn(const sf::Vector2f &pos, ENEMY_TYPES type, float protection, int moveDirection);
+	Tile getTileByPos(const sf::Vector2f& pos, unsigned int layer = 0);
+	Tile getTileByCell(const sf::Vector2i& cell, unsigned int layer = 0) const;
 
-	void chooseByPos(const Vector2f& pos);
+	void chooseByPos(const sf::Vector2f& pos);
 	void chooseCurrent();
 
-	int getTileDirectionByCell(const Vector2i &cell) const;
+	int getTileDirectionByCell(const sf::Vector2i &cell) const;
 
 	float getMoneyCount() const;
 	float getLifeCount() const;
-	Tower *getTowerAtPos(const Vector2f& pos) const;
+	Tower *getTowerAtPos(const sf::Vector2f& pos) const;
 
-	bool canAddTower(const Vector2i& cell, TOWER_TYPES towerType) const;
+	bool canAddTower(const sf::Vector2i& cell, TOWER_TYPES towerType) const;
 
 	void highlightPowerTowersRadius(bool active);
 
@@ -63,11 +67,11 @@ public:
 
 	int currentProgress() const;
 
-	vector<Enemy *> getAllEnemies() const;
+	std::vector<Enemy *> getAllEnemies() const;
 
 	void addAnimation(const TextureType& texture_id,
-					  const Vector2f &pos,
-					  const Vector2i &size,
+					  const sf::Vector2f &pos,
+					  const sf::Vector2i &size,
 					  int duration,
 					  int frameCount,
 					  int row);
@@ -75,8 +79,8 @@ public:
 	unsigned int getPowerTowersCount() const;
 
 	void clearCursor();
-	vector<Tower *> getAllTowers() const;
-	FloatRect getEndRect() const;
+	std::vector<Tower *> getAllTowers() const;
+	sf::FloatRect getEndRect() const;
 
 	unsigned int getCurrentWave() const;
 
@@ -109,17 +113,17 @@ public:
 	bool isFinalWave() const;
 
 private:
-	void choose(const Vector2i& cell, bool inPanel);
+	void choose(const sf::Vector2i& cell, bool inPanel);
 	void calculateCollisions();
 	void checkDeadZone();
 	void checkEnd();
 	void checkRespawn();
 	void checkEnemyMove();
 
-	RectangleShape deadZone;
+	sf::RectangleShape deadZone;
 
 	class Map *gameMap;
-	vector<Enemy*> enemies;
+	std::vector<Enemy*> enemies;
 
 
 	ACTION_STATE m_actionState;
@@ -130,9 +134,9 @@ private:
 
 	void hitPlayer(float damage);
 
-	vector<Tower*> towers;
+	std::vector<Tower*> towers;
 
-	vector<Wave> waves;
+	std::vector<Wave> waves;
 	unsigned int currentWave;
 
 	Timer spawnTimer;
@@ -152,19 +156,19 @@ private:
 
 	Timer timerRegenEnergy;
 
-	vector<Animation*> effects;
+	std::vector<Animation*> effects;
 
 
 	Shake *shake;
 
 
-	CircleShape currentTowerRadius;
-	RectangleShape currentTowerRect;
+	sf::CircleShape currentTowerRadius;
+	sf::RectangleShape currentTowerRect;
 	void updateRadius();
 	unsigned int m_powerTowersCount;
 
-	RectangleShape spawnRect;
-	RectangleShape endRect;
+	sf::RectangleShape spawnRect;
+	sf::RectangleShape endRect;
 	constexpr static float DEAD_ZONE_SIZE = 300;
 	void showAnimations();
 
@@ -175,22 +179,26 @@ private:
 	TowersRegress *towersRegress;
 
 
-	Sprite sellSprite;
-	Sprite upgradeSprite;
-	Text sellCostText;
-	Text upgradeCostText;
-	ACTION_STATE isFieldButtons(const Vector2f& pos) const;
+	sf::Sprite sellSprite;
+	sf::Sprite upgradeSprite;
+	sf::Text sellCostText;
+	sf::Text upgradeCostText;
+	ACTION_STATE isFieldButtons(const sf::Vector2f& pos) const;
 	Tower *m_selectedTower;
 	void setSelectedTower(Tower* tower);
 
 	GameObject *startObject;
 	GameObject *endObject;
 
-	void updateStartEndPos(const Vector2f &startPos, const Vector2f &endPos);
+	void updateStartEndPos(const sf::Vector2f &startPos, const sf::Vector2f &endPos);
 	void updateUpgrade();
 
-	vector<LevelObject*> objects;
+	std::vector<LevelObject*> objects;
 	ShadersFactory *shadersFactory;
+
+#ifdef STEAM_API
+	STEAM_CALLBACK(Level, OnGameOverlayActivated, GameOverlayActivated_t);
+#endif
 };
 
 #endif // LEVEL_H

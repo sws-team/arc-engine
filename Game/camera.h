@@ -22,8 +22,8 @@ public:
     void moveLeftByCell();
     void moveRightByCell();
 
-	View *getView();
-	View *getMiniMapView();
+	sf::View *getView();
+	sf::View *getMiniMapView();
 
 	void zoomIn();
 	void zoomOut();
@@ -33,19 +33,19 @@ public:
 	int viewLeftCell() const;
 	int viewRightCell() const;
 	int viewBottomCell() const;
-	Vector2i viewCenter() const;
+	sf::Vector2i viewCenter() const;
 
-	Vector2i posToCellMap(const Vector2f &pos) const;
-	Vector2f cellToPosMap(const Vector2i &cell) const;
+	sf::Vector2i posToCellMap(const sf::Vector2f &pos) const;
+	sf::Vector2f cellToPosMap(const sf::Vector2i &cell) const;
 
-	Vector2i posToCell(const Vector2f &pos) const;
-	Vector2f cellToPos(const Vector2i &cell) const;
+	sf::Vector2i posToCell(const sf::Vector2f &pos) const;
+	sf::Vector2f cellToPos(const sf::Vector2i &cell) const;
 
 	void resetView();
 
 	void checkBorders();
 
-	void setCenter(const Vector2f& pos);
+	void setCenter(const sf::Vector2f& pos);
 
 private:
     constexpr static float CAMERA_OFFSET = 4.f;
@@ -53,8 +53,8 @@ private:
 	constexpr static float MINIMAP_ZOOM = 0.1f;
 	constexpr static float ZOOM_STEP = 0.95f;
 
-	View *view;
-    View *minimap;
+	sf::View *view;
+	sf::View *minimap;
 
 	int zoomRatio;
 };

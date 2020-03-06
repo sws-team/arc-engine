@@ -38,9 +38,9 @@ class Tower;
 class TowersFactory
 {
 public:
-	static Tower *createTower(TOWER_TYPES type, const Vector2f& pos);
+	static Tower *createTower(TOWER_TYPES type, const sf::Vector2f& pos);
 	static TowerStats getTowerStats(TOWER_TYPES type);
-	static bool isIntersects(const FloatRect& rect, const Vector2f& center, float radius);
+	static bool isIntersects(const sf::FloatRect& rect, const sf::Vector2f& center, float radius);
 	constexpr static float UPGRADE_TO_2_COST_MODIFIER = 0.5f;
 	constexpr static float UPGRADE_TO_3_COST_MODIFIER = 0.75f;
 };
@@ -49,21 +49,19 @@ class Tower : public GameObject
 {
 public:
 	Tower(const TextureType &texture_id,
-		  const Vector2f &pos,
+		  const sf::Vector2f &pos,
 		  const TowerStats& stats);
 
 	//GameObject
 	virtual void update() override;
-	virtual void draw(RenderTarget *const target) override;
+	virtual void draw(sf::RenderTarget *const target) override;
 
 	//Tower
 	void action();
 	virtual void shoot(Enemy* target);
-	virtual void collide(const vector<Enemy*>& enemies);
+	virtual void collide(const std::vector<Enemy*>& enemies);
 	virtual void upgrade();
 	TowerStats data() const;
-
-	void hitEnemy(Enemy* enemy);
 
 	TOWER_TYPES type() const;
 	void setType(const TOWER_TYPES &type);
@@ -105,7 +103,7 @@ protected:
 	Timer actionTimer;
 	SoundType m_shotSound;
 	void checkKill(Enemy *enemy);
-	Enemy *findNearestEnemy(const vector<Enemy*>& exclude);
+	Enemy *findNearestEnemy(const std::vector<Enemy*>& exclude);
 
 private:
 	TOWER_TYPES m_type;
@@ -122,19 +120,19 @@ class ProjectilesTower : public Tower
 {
 public:
 	ProjectilesTower(const TextureType &texture_id,
-					 const Vector2f &pos,
+					 const sf::Vector2f &pos,
 					 const TowerStats& stats);
 
 	//GameObject
-	void draw(RenderTarget *const target) final;
+	void draw(sf::RenderTarget *const target) final;
 	void update() final;
 
 	//Tower
 	void shoot(Enemy *target) final;
-	void collide(const vector<Enemy*>& enemies) final;
+	void collide(const std::vector<Enemy*>& enemies) final;
 
 	//ProjectilesTower
-	vector<Projectile*> projectiles() const;
+	std::vector<Projectile*> projectiles() const;
 	void removeProjectile(Projectile *projectile);
 
 	void checkEnemy(Enemy *enemy);
@@ -142,21 +140,21 @@ public:
 protected:
 	virtual void projectileAction(Enemy *enemy);
 	virtual void moveProjectile(Projectile *projectile);
-	virtual Vector2f shootPos() const;
+	virtual sf::Vector2f shootPos() const;
 	virtual void createdProjectile(Projectile *projectile);
 
 	struct ProjectileInfo
 	{
 		TextureType texture_id;
-		Vector2i size;
+		sf::Vector2i size;
 		int frameCount;
 		TextureType explosion_texture_id;
-		Vector2i explosionSize;
+		sf::Vector2i explosionSize;
 		int explosionFrameCount;
 	};
 	ProjectileInfo projectileInfo;
 
-	vector<Projectile*> m_projectiles;
+	std::vector<Projectile*> m_projectiles;
 private:
 	Timer moveTimer;
 };
@@ -164,7 +162,7 @@ private:
 class BaseTower : public ProjectilesTower
 {
 public:
-	BaseTower(const Vector2f &pos);
+	BaseTower(const sf::Vector2f &pos);
 
 	const static TowerStats STATS;
 	void projectileAction(Enemy *enemy) override;
@@ -175,11 +173,11 @@ private:
 class PowerTower : public Tower
 {
 public:
-	PowerTower(const Vector2f &pos);
+	PowerTower(const sf::Vector2f &pos);
 	~PowerTower() override;
 	const static TowerStats STATS;
 
-	void draw(RenderTarget *const target) final;
+	void draw(sf::RenderTarget *const target) final;
 
 	bool hasEnergy();
 	void setHighlighted(bool isHighlighted);
@@ -189,16 +187,16 @@ public:
 
 	void upgrade() override;
 
-	FloatRect getValidArea() const;
+	sf::FloatRect getValidArea() const;
 
 	static const int COST_OFFSET;
-	static const Color POWER_TOWER_AREA_COLOR;
+	static const sf::Color POWER_TOWER_AREA_COLOR;
 private:
 	static const float ENERGY_GAIN;
 	bool m_isHighlighted;
 	float m_gain;
 
-	RectangleShape powerRect;
+	sf::RectangleShape powerRect;
 	void upgradePowerRect();
 
 	int gainCount;
@@ -207,13 +205,13 @@ private:
 	float zeroGround;
 	constexpr static int ZERO_GROUND = 6;
 	class LifeBar* abilityProgress;
-	static const Vector2i BLAST_SIZE;
+	static const sf::Vector2i BLAST_SIZE;
 };
 
 class RocketTower : public ProjectilesTower
 {
 public:
-	RocketTower(const Vector2f &pos);
+	RocketTower(const sf::Vector2f &pos);
 
 	const static TowerStats STATS;
 	void moveProjectile(Projectile *projectile) override;
@@ -226,7 +224,7 @@ private:
 class FreezeTower : public ProjectilesTower
 {
 public:
-	FreezeTower(const Vector2f &pos);
+	FreezeTower(const sf::Vector2f &pos);
 	const static TowerStats STATS;
 
 	void projectileAction(Enemy *enemy) override;
@@ -238,41 +236,41 @@ private:
 class LaserTower : public Tower
 {
 public:
-	LaserTower(const Vector2f &pos);
+	LaserTower(const sf::Vector2f &pos);
 	~LaserTower() override;
 
 	const static TowerStats STATS;
 
-	void draw(RenderTarget *const target) final;
+	void draw(sf::RenderTarget *const target) final;
 	void update() final;
 
 	void shoot(Enemy *target) final;
 
 private:	
-	Vertex lineTower;
+	sf::Vertex lineTower;
 
 	struct LaserTarget
 	{
-		Vertex lineTarget;
+		sf::Vertex lineTarget;
 		GameObject *laser;
 		Enemy *currentTarget;
 		Timer damageTimer;
 	};
-	vector<LaserTarget> targets;
+	std::vector<LaserTarget> targets;
 	LaserTarget mainTarget;
 	static constexpr int MAX_EXTRA_TARGETS = 4;
 
 	void updateLaserTarget(LaserTarget *laserTarget, float damageModifier);
-	void drawLaserTarget(RenderTarget * const target,
+	void drawLaserTarget(sf::RenderTarget * const target,
 						 LaserTarget *laserTarget);
-	static const Vector2i LASER_SIZE;
+	static const sf::Vector2i LASER_SIZE;
 	void clearLasers();
 };
 
 class ImprovedTower : public ProjectilesTower
 {
 public:
-	ImprovedTower(const Vector2f &pos);
+	ImprovedTower(const sf::Vector2f &pos);
 	const static TowerStats STATS;
 protected:
 	void createdProjectile(Projectile *projectile) override;

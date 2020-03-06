@@ -15,13 +15,13 @@ const int Shake::SHAKE_TIME = 50;
 
 Shake::Shake()
 {
-	dangerRect.setSize(Vector2f(Engine::Instance().settingsManager()->getResolution()));
-	dangerRect.setFillColor(Color(255,0,0,96));
+	dangerRect.setSize(sf::Vector2f(Engine::Instance().settingsManager()->getResolution()));
+	dangerRect.setFillColor(sf::Color(255,0,0,96));
 	isActive = false;
 	dangerRect.setPosition(0,0);
 }
 
-void Shake::draw(RenderTarget * const target)
+void Shake::draw(sf::RenderTarget * const target)
 {
 	if (isActive && state)
 		target->draw(dangerRect);
@@ -148,16 +148,16 @@ void MapEffect::setState(MapEffect::STATES state)
 	stepTimer.reset();
 }
 
-vector<Tower *> MapEffect::getRandomTowers(int count, const vector<Tower *> &towers)
+std::vector<Tower *> MapEffect::getRandomTowers(int count, const std::vector<Tower *> &towers)
 {
 	const int actualCount = ceil(count * 0.2f);
 	const int interval = actualCount * 2 + 1;
 	const int offset = rand() % interval - actualCount;
 	const int resultCount = count + offset;
 
-	const unsigned int towersCount = min(static_cast<size_t>(resultCount), towers.size());
-	set<int> numbers;
-	vector<Tower *> resultTowers;
+	const unsigned int towersCount = std::min(static_cast<size_t>(resultCount), towers.size());
+	std::set<int> numbers;
+	std::vector<Tower *> resultTowers;
 	for (unsigned int i = 0; i < towersCount; ++i)
 	{
 		const int n = rand() % towers.size();
@@ -180,11 +180,11 @@ MapExplosion::MapExplosion()
 
 }
 
-void MapExplosion::draw(RenderTarget * const target)
+void MapExplosion::draw(sf::RenderTarget * const target)
 {
 	if (m_state == ACTIVE || m_state == PREPARE_ACTIVE)
 	{
-		for(const CircleShape &shape : targets)
+		for(const sf::CircleShape &shape : targets)
 		{
 			target->draw(shape);
 		}
@@ -196,17 +196,17 @@ void MapExplosion::update()
 	float opacity = 255 * stepTimer.getElapsedMilliseconds()/m_interval;
 
 	if (m_state == PREPARE_ACTIVE)
-		opacity = min(opacity, 255.f);
+		opacity = std::min(opacity, 255.f);
 	else if (m_state == ACTIVE)
 	{
 		opacity = 255 - opacity;
-		opacity = max(opacity, 1.f);
+		opacity = std::max(opacity, 1.f);
 	}
 	else
 		opacity = 0;
 
-	for(CircleShape &shape : targets)
-		shape.setFillColor(Color(255, 15, 15, opacity));
+	for(sf::CircleShape &shape : targets)
+		shape.setFillColor(sf::Color(255, 15, 15, opacity));
 
 	MapEffect::update();
 }
@@ -219,14 +219,14 @@ void MapExplosion::stateChanged()
 	{
 		Engine::Instance().soundManager()->playLooped(GAME_SOUND::TARGET_LOCK);
 		m_interval = m_duration;
-		vector<Tower *> towers = getRandomTowers(m_count, Engine::Instance().options<GameOptions>()->level()->getAllTowers());
+		std::vector<Tower *> towers = getRandomTowers(m_count, Engine::Instance().options<GameOptions>()->level()->getAllTowers());
 		for (unsigned int i = 0; i < towers.size(); ++i)
 		{
-			CircleShape circle;
-			circle.setFillColor(Color(255, 15, 15, 0));
+			sf::CircleShape circle;
+			circle.setFillColor(sf::Color(255, 15, 15, 0));
 			circle.setRadius(Engine::Instance().options<GameOptions>()->mapTileSize().x/2);
 			circle.setPosition(towers.at(i)->pos() +
-							   Vector2f(Engine::Instance().options<GameOptions>()->mapTileSize().x/2,
+							   sf::Vector2f(Engine::Instance().options<GameOptions>()->mapTileSize().x/2,
 										Engine::Instance().options<GameOptions>()->mapTileSize().y/2));
 			targets.push_back(circle);
 		}
@@ -241,20 +241,20 @@ void MapExplosion::stateChanged()
 	{
 		Engine::Instance().soundManager()->stop(GAME_SOUND::TARGET_LOCK);
 		m_interval = 1000;
-		for(const CircleShape &shape : targets)
+		for(const sf::CircleShape &shape : targets)
 		{
 			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::EXPLOSION,
-						 Vector2f(shape.getGlobalBounds().left - Engine::Instance().options<GameOptions>()->mapTileSize().x/2,
+						 sf::Vector2f(shape.getGlobalBounds().left - Engine::Instance().options<GameOptions>()->mapTileSize().x/2,
 								  shape.getGlobalBounds().top - Engine::Instance().options<GameOptions>()->mapTileSize().y/2),
-						 Vector2i(64, 64), 80, 12, 0);
+						 sf::Vector2i(64, 64), 80, 12, 0);
 			Engine::Instance().soundManager()->playOnce(GAME_SOUND::TOWER_EXPLOSION);
 		}
 	}
 		break;
 	case READY:
 	{
-		const vector<Tower *> towers = Engine::Instance().options<GameOptions>()->level()->getAllTowers();
-		for(const CircleShape &shape : targets)
+		const std::vector<Tower *> towers = Engine::Instance().options<GameOptions>()->level()->getAllTowers();
+		for(const sf::CircleShape &shape : targets)
 		{
 			for(Tower* tower : towers)
 			{
@@ -280,7 +280,7 @@ TowersRegress::TowersRegress()
 
 }
 
-void TowersRegress::draw(RenderTarget * const target)
+void TowersRegress::draw(sf::RenderTarget * const target)
 {
 	if (m_state == ACTIVE)
 	{
@@ -306,18 +306,18 @@ void TowersRegress::stateChanged()
 	case PREPARE_ACTIVE:
 	{
 		m_interval = 800 * 4;
-		const vector<Tower *> towers = getRandomTowers(m_count, Engine::Instance().options<GameOptions>()->level()->getAllTowers());
+		const std::vector<Tower *> towers = getRandomTowers(m_count, Engine::Instance().options<GameOptions>()->level()->getAllTowers());
 		for (unsigned int i = 0; i < towers.size(); ++i)
 		{
 			towers.at(i)->setRegressed(true);
-			objects.push_back(new GameObject(GAME_TEXTURE::REGRESS, towers.at(i)->pos(), Vector2i(64, 64), 4));
+			objects.push_back(new GameObject(GAME_TEXTURE::REGRESS, towers.at(i)->pos(), sf::Vector2i(64, 64), 4));
 			if (objects.size() == m_count)
 				break;
 		}
 		for(GameObject *object : objects)
 		{
 			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::REGRESS, object->pos(),
-													 Vector2i(64, 64), 800, 4, 1);
+													 sf::Vector2i(64, 64), 800, 4, 1);
 		}
 	}
 		break;
@@ -332,7 +332,7 @@ void TowersRegress::stateChanged()
 		for(GameObject *object : objects)
 		{
 			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::REGRESS, object->pos(),
-													 Vector2i(64, 64), 800, 4, 2);
+													 sf::Vector2i(64, 64), 800, 4, 2);
 		}
 	}
 		break;
@@ -362,7 +362,7 @@ Smoke::~Smoke()
 	this->clear();
 }
 
-void Smoke::draw(RenderTarget * const target)
+void Smoke::draw(sf::RenderTarget * const target)
 {
 	if (m_state == ACTIVE)
 	{
@@ -381,7 +381,7 @@ void Smoke::update()
 void Smoke::init()
 {
 	for (unsigned int i = 0; i < m_count; ++i)
-		clouds.push_back(new GameObject(GAME_TEXTURE::SMOKE, Vector2f(0,0), Vector2i(256, 256), 4));
+		clouds.push_back(new GameObject(GAME_TEXTURE::SMOKE, sf::Vector2f(0,0), sf::Vector2i(256, 256), 4));
 
 	MapEffect::init();
 }
@@ -400,16 +400,16 @@ void Smoke::stateChanged()
 	case PREPARE_ACTIVE:
 	{
 		m_interval = 800;
-		const Vector2i maxCells = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell();
+		const sf::Vector2i maxCells = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell();
 		for(GameObject *cloud : clouds)
 		{
 			const int x = rand() % maxCells.x;
 			const int y = rand() % maxCells.y;
-			cloud->setPos(Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x * x,
+			cloud->setPos(sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x * x,
 								   Engine::Instance().options<GameOptions>()->tileSize().y * y));
 
 			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::SMOKE, cloud->pos(),
-													 Vector2i(256, 256), 800, 4, 1);
+													 sf::Vector2i(256, 256), 800, 4, 1);
 		}
 //		{
 //			cloud->currentFrame = 0;
@@ -434,7 +434,7 @@ void Smoke::stateChanged()
 		for(GameObject *cloud : clouds)
 
 			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::SMOKE, cloud->pos(),
-													 Vector2i(256, 256), 800, 4, 2);
+													 sf::Vector2i(256, 256), 800, 4, 2);
 //		{
 //			cloud->currentFrame = 0;
 //			cloud->row = 2;
@@ -452,7 +452,7 @@ void Smoke::stateChanged()
 
 void Smoke::smokeTowers(bool on)
 {
-	const vector<Tower *> towers = Engine::Instance().options<GameOptions>()->level()->getAllTowers();
+	const std::vector<Tower *> towers = Engine::Instance().options<GameOptions>()->level()->getAllTowers();
 	for(Tower* tower : towers)
 	{
 		for(GameObject *cloud : clouds)
@@ -476,7 +476,7 @@ MoneyDrain::~MoneyDrain()
 
 }
 
-void MoneyDrain::draw(RenderTarget * const target)
+void MoneyDrain::draw(sf::RenderTarget * const target)
 {
 	if (m_state == ACTIVE)
 	{
@@ -497,7 +497,7 @@ void MoneyDrain::update()
 	}
 }
 
-void MoneyDrain::explosion(const FloatRect &rect)
+void MoneyDrain::explosion(const sf::FloatRect &rect)
 {
 	for (auto it = drains.begin(); it != drains.end();)
 	{
@@ -522,24 +522,24 @@ void MoneyDrain::stateChanged()
 	{
 		m_interval = 800 * 4;
 
-		vector<Tower*> powerTowers;
+		std::vector<Tower*> powerTowers;
 		for(Tower* tower : Engine::Instance().options<GameOptions>()->level()->getAllTowers())
 		{
 			if (tower->type() == POWER)
 				powerTowers.push_back(tower);
 		}
-		const vector<Tower *> towers = getRandomTowers(m_count, powerTowers);
+		const std::vector<Tower *> towers = getRandomTowers(m_count, powerTowers);
 		for (unsigned int i = 0; i < towers.size(); ++i)
 		{
 			if (towers.at(i)->type() == POWER)
-				drains.push_back(new GameObject(GAME_TEXTURE::DRAIN, towers.at(i)->pos(), Vector2i(64, 64), 4));
+				drains.push_back(new GameObject(GAME_TEXTURE::DRAIN, towers.at(i)->pos(), sf::Vector2i(64, 64), 4));
 			if (drains.size() == m_count)
 				break;
 		}
 		for(GameObject *drain : drains)
 		{
 			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::DRAIN, drain->pos(),
-													 Vector2i(64, 64), 800, 4, 1);
+													 sf::Vector2i(64, 64), 800, 4, 1);
 		}
 	}
 		break;

@@ -9,7 +9,7 @@ class Instructions : public GameDrawable
 public:
 	Instructions();
 
-	void draw(RenderTarget *const target) override;
+	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 
 	bool isActive() const;
@@ -17,7 +17,7 @@ public:
 	void skip();
 
 private:
-	RectangleShape shadowRect;
+	sf::RectangleShape shadowRect;
 
 	enum STATES
 	{
@@ -34,9 +34,9 @@ private:
 	STATES m_state;
 	void changeState(STATES state);
 
-	Sprite textSprite;
-	Text text;
-	RectangleShape targetRect;
+	sf::Sprite textSprite;
+	sf::Text text;
+	sf::RectangleShape targetRect;
 
 	constexpr static int INSTRUCTIONS_OFFSET = 350;
 };

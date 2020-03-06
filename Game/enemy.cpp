@@ -14,13 +14,13 @@
 #include "collisions.h"
 
 Enemy::Enemy(const TextureType &texture_id,
-			 const Vector2f &startPos,
+			 const sf::Vector2f &startPos,
 			 const EnemyStats& stats,
-			 const Vector2i &cellSize,
+			 const sf::Vector2i &cellSize,
 			 const float frameCount,
 			 const float animationSpeed)
 	: GameObject(texture_id, startPos,
-				 Vector2i(GameOptions::MAP_CELL_SIZE * cellSize.x * ENEMY_SCALE,
+				 sf::Vector2i(GameOptions::MAP_CELL_SIZE * cellSize.x * ENEMY_SCALE,
 						  GameOptions::MAP_CELL_SIZE * cellSize.y * ENEMY_SCALE),
 				 4)
 	,m_stats(stats)
@@ -31,7 +31,7 @@ Enemy::Enemy(const TextureType &texture_id,
 	,m_visible(true)
 	,m_burned(false)
 {
-	moveStep = Vector2f(Engine::Instance().settingsManager()->getScaleFactor().x * 1.f,
+	moveStep = sf::Vector2f(Engine::Instance().settingsManager()->getScaleFactor().x * 1.f,
 						Engine::Instance().settingsManager()->getScaleFactor().y * 1.f);
 
 	m_size.x = GameOptions::MAP_CELL_SIZE * cellSize.x * ENEMY_SCALE;
@@ -39,7 +39,7 @@ Enemy::Enemy(const TextureType &texture_id,
 
 	sprite.scale(1.f/ENEMY_SCALE, 1.f/ENEMY_SCALE);
 
-	m_spritePos = Vector2f(0, 0);
+	m_spritePos = sf::Vector2f(0, 0);
 
 	const float road = 4 * Engine::Instance().options<GameOptions>()->mapTileSize().x -
 			Engine::Instance().options<GameOptions>()->mapTileSize().x * cellSize.x;
@@ -52,11 +52,11 @@ Enemy::Enemy(const TextureType &texture_id,
 
 	m_data = m_stats;
 	lifeBar = new LifeBar();
-	lifeBar->init(Vector2i(getEnemySize().x,
+	lifeBar->init(sf::Vector2i(getEnemySize().x,
 						   LifeBar::LIFE_BAR_HEIGHT * Engine::Instance().settingsManager()->getScaleFactor().y),
-				  Color::Red);
+				  sf::Color::Red);
 
-	burnAnimation = new GameObject(GAME_TEXTURE::BURN, startPos, Vector2i(32, 32), 4);
+	burnAnimation = new GameObject(GAME_TEXTURE::BURN, startPos, sf::Vector2i(32, 32), 4);
 	this->frameCount = frameCount;
 	this->animationSpeed = animationSpeed;
 }
@@ -89,7 +89,7 @@ void Enemy::moveEnemy()
 	if (!moveTimer.check(m_data.speed))
 		return;
 
-	Vector2f offset;
+	sf::Vector2f offset;
 	offset.x = 0;
 	offset.y = 0;
 	switch (currentDirection)
@@ -148,7 +148,7 @@ void Enemy::moveNext(int direction)
 	if (newDirection != spriteDirection)
 	{
 		float angle = 0;
-		Vector2f origin;
+		sf::Vector2f origin;
 		origin.x = 0;
 		origin.y = 0;
 		switch (newDirection)
@@ -221,7 +221,7 @@ void Enemy::update()
 	{
 		const int x = this->size.x/GameOptions::MAP_CELL_SIZE - 1;
 		const int y = this->size.y/GameOptions::MAP_CELL_SIZE - 1;
-		const Vector2f posOffset = Vector2f(Engine::Instance().options<GameOptions>()->mapTileSize().x/2 * x,
+		const sf::Vector2f posOffset = sf::Vector2f(Engine::Instance().options<GameOptions>()->mapTileSize().x/2 * x,
 											Engine::Instance().options<GameOptions>()->mapTileSize().y/2 * y);
 		burnAnimation->setPos(this->pos() + posOffset);
 		if (burnAttack.check(BURN_ATTACK_SPEED))
@@ -231,7 +231,7 @@ void Enemy::update()
 	GameObject::update();
 }
 
-void Enemy::draw(RenderTarget * const target)
+void Enemy::draw(sf::RenderTarget * const target)
 {
 	if (!m_visible)
 		return;
@@ -265,8 +265,8 @@ void Enemy::freeze(float k, int duration)
 {
 	if (isFreezed)
 	{
-		freezeK = max(freezeK, k);
-		freezeDuration = max(freezeDuration, duration);
+		freezeK = fmax(freezeK, k);
+		freezeDuration = fmax(freezeDuration, duration);
 		return;
 	}
 	freezeTimer.reset();
@@ -281,9 +281,9 @@ void Enemy::heal(float health)
 	if (m_data.health > m_stats.health)
 		m_data.health = m_stats.health;
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::HEAL_EFFECT,
-											 this->getCenter() - Vector2f(GameOptions::MAP_CELL_SIZE/2,
+											 this->getCenter() - sf::Vector2f(GameOptions::MAP_CELL_SIZE/2,
 																		  GameOptions::MAP_CELL_SIZE/2),
-											 Vector2i(GameOptions::MAP_CELL_SIZE,
+											 sf::Vector2i(GameOptions::MAP_CELL_SIZE,
 													  GameOptions::MAP_CELL_SIZE),
 											 50, 8, 0);
 }
@@ -297,7 +297,7 @@ void Enemy::protect(float shell, bool show)
 		m_data.reflection = 0.f;
 	if (show)
 		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::SHELL_EFFECT, this->pos(),
-											 Vector2i(GameOptions::MAP_CELL_SIZE, GameOptions::MAP_CELL_SIZE),
+											 sf::Vector2i(GameOptions::MAP_CELL_SIZE, GameOptions::MAP_CELL_SIZE),
 												 50, 4, 0);
 }
 
@@ -306,22 +306,22 @@ void Enemy::setReflection(const float reflection)
 	m_data.reflection = reflection;
 }
 
-void Enemy::drawLifeBar(RenderTarget *target)
+void Enemy::drawLifeBar(sf::RenderTarget *target)
 {
 	if (m_data.health <= 0)
 		return;
 
 	const float healthRate = m_data.health / m_stats.health;
-	lifeBar->setPos(Vector2f(sprite.getGlobalBounds().left,
-							 sprite.getGlobalBounds().top) - Vector2f(0, (LIFEBAR_OFFSET + LifeBar::LIFE_BAR_HEIGHT) * Engine::Instance().settingsManager()->getScaleFactor().y));
+	lifeBar->setPos(sf::Vector2f(sprite.getGlobalBounds().left,
+							 sprite.getGlobalBounds().top) - sf::Vector2f(0, (LIFEBAR_OFFSET + LifeBar::LIFE_BAR_HEIGHT) * Engine::Instance().settingsManager()->getScaleFactor().y));
 	lifeBar->setValue(healthRate);
 	lifeBar->draw(target);
 }
 
-Vector2f Enemy::actualMoveStep() const
+sf::Vector2f Enemy::actualMoveStep() const
 {
 	if (isFreezed)
-		return Vector2f(moveStep.x * freezeK,
+		return sf::Vector2f(moveStep.x * freezeK,
 						moveStep.y * freezeK);
 	return moveStep;
 }
@@ -332,16 +332,16 @@ void Enemy::startBurn()
 	burnTimer.reset();
 }
 
-Vector2f Enemy::getEnemySize() const
+sf::Vector2f Enemy::getEnemySize() const
 {
-	const Vector2f dsize = getSize();
-	return Vector2f(dsize.x / ENEMY_SCALE,
+	const sf::Vector2f dsize = getSize();
+	return sf::Vector2f(dsize.x / ENEMY_SCALE,
 					dsize.y / ENEMY_SCALE);
 }
 
-FloatRect Enemy::enemyRect() const
+sf::FloatRect Enemy::enemyRect() const
 {
-	return FloatRect(pos(), getEnemySize());
+	return sf::FloatRect(pos(), getEnemySize());
 }
 
 bool Enemy::isVisible() const
@@ -364,14 +364,14 @@ void Enemy::setStopped(bool stopped)
 	m_stopped = stopped;
 }
 
-Vector2f Enemy::enemyPos() const
+sf::Vector2f Enemy::enemyPos() const
 {
-	return m_pos + Vector2f(1, 1);
+	return m_pos + sf::Vector2f(1, 1);
 }
 
-Vector2f Enemy::enemyCenter() const
+sf::Vector2f Enemy::enemyCenter() const
 {
-	return Vector2f(sprite.getGlobalBounds().left + sprite.getGlobalBounds().width/2,
+	return sf::Vector2f(sprite.getGlobalBounds().left + sprite.getGlobalBounds().width/2,
 					sprite.getGlobalBounds().top + sprite.getGlobalBounds().height/2);
 }
 
@@ -387,7 +387,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 
 	float animationSpeed = 200;
 	float frameCount = 4;
-	Vector2i size;
+	sf::Vector2i size;
 	size.x = 1;
 	size.y = 1;
 	TextureType texture_id;
@@ -402,13 +402,14 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		size.x = 1;
 		size.y = 1;
 		break;
-	case SMALL_MEDIUM:
+	case CAR:
 		texture_id = GAME_TEXTURE::ENEMY_CAR;
 		stats.health = 175.f;
 		stats.speed = 30.f;
 		stats.damage = 10.f;
 		size.x = 1;
 		size.y = 1;
+		animationSpeed = 50;
 		abilityType = EnemyInfo::STRONG;
 		break;
 	case SMALL_FAST:
@@ -442,6 +443,8 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		stats.speed = 40.f;
 		stats.damage = 15.f;
 		abilityType = EnemyInfo::DOWN_TOWER;
+		animationSpeed = 100;
+		frameCount = 5;
 		size.x = 1;
 		size.y = 1;
 		break;
@@ -550,7 +553,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	info.frameCount = frameCount;
 	return info;
 }
-Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const Vector2f &startPos)
+Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const sf::Vector2f &startPos)
 {
 	const EnemyInfo info = getEnemyInfo(type);
 
@@ -608,7 +611,7 @@ EnemyAbility::EnemyAbility(float msec)
 	m_abilityInterval = m_interval + rand() % offset - offset/2 ;
 }
 
-void EnemyAbility::draw(RenderTarget * const target)
+void EnemyAbility::draw(sf::RenderTarget * const target)
 {
 
 }
@@ -634,8 +637,8 @@ AreaAbility::AreaAbility(float msec)
 
 bool AreaAbility::inArea(Enemy *enemy) const
 {
-	const Vector2f center = owner->enemyCenter();
-	const Vector2f enemyCenter = enemy->enemyCenter();
+	const sf::Vector2f center = owner->enemyCenter();
+	const sf::Vector2f enemyCenter = enemy->enemyCenter();
 	if (center.x < enemyCenter.x  + area &&
 			center.x > enemyCenter.x - area &&
 			center.y < enemyCenter.y  + area &&
@@ -652,7 +655,7 @@ HealNearAbility::HealNearAbility()
 
 void HealNearAbility::use()
 {
-	const vector<Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
+	const std::vector<Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
 	for(Enemy *enemy : enemies)
 	{
 		if (enemy == owner)
@@ -670,7 +673,7 @@ ShellNearAbility::ShellNearAbility()
 
 void ShellNearAbility::use()
 {
-	const vector<Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
+	const std::vector<Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
 	for(Enemy *enemy : enemies)
 	{
 		if (inArea(enemy))
@@ -706,7 +709,7 @@ void TeleportAbility::use()
 		owner->setVisible(false);
 		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::ENEMY_TELEPORT,
 												 owner->pos(),
-												 Vector2i(GameOptions::CELL_SIZE,
+												 sf::Vector2i(GameOptions::CELL_SIZE,
 														  GameOptions::CELL_SIZE),
 												 200, 4, TELEPORT_DISAPPEAR_ROW);
 		m_state = DISAPPEAR;
@@ -719,7 +722,7 @@ void TeleportAbility::use()
 		{
 			if (Engine::Instance().options<GameOptions>()->level()->getEndRect().contains(owner->enemyPos()))
 				continue;
-			const Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(owner->enemyPos());
+			const sf::Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(owner->enemyPos());
 			const int direction = Engine::Instance().options<GameOptions>()->level()->getTileDirectionByCell(cell);
 			owner->moveNext(direction);
 		}
@@ -731,7 +734,7 @@ void TeleportAbility::use()
 	{
 		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::ENEMY_TELEPORT,
 												 owner->pos(),
-												 Vector2i(GameOptions::CELL_SIZE,
+												 sf::Vector2i(GameOptions::CELL_SIZE,
 														  GameOptions::CELL_SIZE),
 												 200, 4, TELEPORT_APPEAR_ROW);
 		m_state = FINISH;
@@ -762,7 +765,7 @@ TowerEffectAbility::TowerEffectAbility()
 
 }
 
-void TowerEffectAbility::draw(RenderTarget * const target)
+void TowerEffectAbility::draw(sf::RenderTarget * const target)
 {
 	if (projectile != nullptr)
 		projectile->draw(target);
@@ -797,8 +800,8 @@ void TowerEffectAbility::use()
 		owner->frameCount = 1;
 
 		Tower *target = nullptr;
-		const Vector2f center = owner->enemyCenter();
-		const vector<Tower*> towers = Engine::Instance().options<GameOptions>()->level()->getAllTowers();
+		const sf::Vector2f center = owner->enemyCenter();
+		const std::vector<Tower*> towers = Engine::Instance().options<GameOptions>()->level()->getAllTowers();
 		float weight = 0;
 		for(Tower* tower : towers)
 		{
@@ -810,7 +813,7 @@ void TowerEffectAbility::use()
 				continue;
 			if (tower->isDowngraded())
 				continue;
-			const Vector2f towerCenter = tower->getCenter();
+			const sf::Vector2f towerCenter = tower->getCenter();
 			const float a = fabs(center.x - towerCenter.x);
 			const float b = fabs(center.y - towerCenter.y);
 			const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
@@ -829,7 +832,7 @@ void TowerEffectAbility::use()
 			getBack();
 			return;
 		}
-		const Vector2f aPos = owner->enemyCenter();
+		const sf::Vector2f aPos = owner->enemyCenter();
 		const float a = aPos.x - target->getCenter().x;
 		const float b = aPos.y - target->getCenter().y;
 		const float tg = ( b / a );
@@ -908,10 +911,10 @@ void TowerEffectAbility::getBack()
 ShutdownTowerAbility::ShutdownTowerAbility()
 {
 	info.enemyTextureId = GAME_TEXTURE::ENEMY_SPIDER;
-	info.animationSize = Vector2i(GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE,
+	info.animationSize = sf::Vector2i(GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE,
 								  GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::WEB;
-	info.projectileSize = Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
+	info.projectileSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
 	info.duration = TOWER_DISABLED_DURATION;
 	info.catchSound = GAME_SOUND::CATCH;
 }
@@ -931,10 +934,10 @@ void ShutdownTowerAbility::effect(bool isActive)
 DownTowerAbility::DownTowerAbility()
 {
 	info.enemyTextureId = GAME_TEXTURE::ENEMY_DOWN_TOWER;
-	info.animationSize = Vector2i(GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE,
+	info.animationSize = sf::Vector2i(GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE,
 								  GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::DOWNGRADE_PROJECTILE;
-	info.projectileSize = Vector2i(200, 16);
+	info.projectileSize = sf::Vector2i(200, 16);
 	info.duration = TOWER_DOWNGRADED_DURATION;
 	info.catchSound = GAME_SOUND::CATCH;
 }
@@ -967,7 +970,7 @@ void SpawnEnemy::use()
 		owner->setStopped(true);
 		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::ENEMY_COW,
 												 owner->pos(),
-												 Vector2i(GameOptions::CELL_SIZE * 2,
+												 sf::Vector2i(GameOptions::CELL_SIZE * 2,
 														  GameOptions::CELL_SIZE * 2),
 												 200, 4, ACTIVATE_SPAWN_ROW);
 		m_interval = 800;
@@ -978,7 +981,7 @@ void SpawnEnemy::use()
 		break;
 	case SPAWN:
 	{
-		const Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(owner->enemyPos());
+		const sf::Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(owner->enemyPos());
 		const int direction = Engine::Instance().options<GameOptions>()->level()->getTileDirectionByCell(cell);
 
 		Engine::Instance().options<GameOptions>()->level()->spawn(owner->pos(), SMALL_NEXT, 0.1f, direction);
@@ -994,7 +997,7 @@ void SpawnEnemy::use()
 		{
 			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::ENEMY_COW,
 													 owner->pos(),
-													 Vector2i(GameOptions::CELL_SIZE * 2,
+													 sf::Vector2i(GameOptions::CELL_SIZE * 2,
 															  GameOptions::CELL_SIZE * 2),
 													 200, 4, DEACTIVATE_SPAWN_ROW);
 			m_interval = 800;

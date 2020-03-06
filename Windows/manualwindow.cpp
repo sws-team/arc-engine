@@ -7,7 +7,7 @@
 #include "gamestatemanager.h"
 #include "gameoptions.h"
 
-const Color ManualWindow::SELECTED_COLOR = Color(45, 45, 45, 96);
+const sf::Color ManualWindow::SELECTED_COLOR = sf::Color(45, 45, 45, 96);
 
 ManualWindow::ManualWindow()
 	: StateWindow()
@@ -29,8 +29,8 @@ ManualWindow::ManualWindow()
 	toolTip.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	toolTip.setCharacterSize(40);
 	toolTip.setOutlineThickness(1.f);
-	toolTip.setFillColor(Color::Red);
-	toolTip.setOutlineColor(Color::Blue);
+	toolTip.setFillColor(sf::Color::Red);
+	toolTip.setOutlineColor(sf::Color::Blue);
 
 	addElements();
 	updatePos();
@@ -59,7 +59,7 @@ void ManualWindow::update()
 	StateWindow::update();
 }
 
-void ManualWindow::paint(RenderWindow *window)
+void ManualWindow::paint(sf::RenderWindow *window)
 {
 	drawBackground(window);
 	window->draw(infoRect);
@@ -91,11 +91,11 @@ void ManualWindow::paint(RenderWindow *window)
 	window->draw(toolTip);
 }
 
-void ManualWindow::eventFilter(Event *event)
+void ManualWindow::eventFilter(sf::Event *event)
 {
-	if (event->type == Event::MouseButtonPressed)
+	if (event->type == sf::Event::MouseButtonPressed)
 	{
-		const Vector2f pos = Vector2f(event->mouseButton.x, event->mouseButton.y);
+		const sf::Vector2f pos = sf::Vector2f(event->mouseButton.x, event->mouseButton.y);
 
 		if (next.getGlobalBounds().contains(pos))
 		{
@@ -118,10 +118,10 @@ void ManualWindow::eventFilter(Event *event)
 			back();
 		}
 	}
-	else if (event->type == Event::MouseMoved)
+	else if (event->type == sf::Event::MouseMoved)
 	{
 		current = -1;
-		const Vector2f pos = Vector2f(event->mouseMove.x, event->mouseMove.y);
+		const sf::Vector2f pos = sf::Vector2f(event->mouseMove.x, event->mouseMove.y);
 		const int startValue = MAX_ELEMENTS_COUNT * page;
 		for (unsigned int i = startValue; i < startValue + MAX_ELEMENTS_COUNT; ++i)
 		{
@@ -134,9 +134,9 @@ void ManualWindow::eventFilter(Event *event)
 				break;
 			}
 		}
-		toolTip.setString(String());
+		toolTip.setString(sf::String());
 
-		next.setColor(Color::White);
+		next.setColor(sf::Color::White);
 		if (next.getGlobalBounds().contains(pos))
 		{
 			next.setColor(SELECTED_COLOR);
@@ -144,7 +144,7 @@ void ManualWindow::eventFilter(Event *event)
 			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 		}
 
-		previous.setColor(Color::White);
+		previous.setColor(sf::Color::White);
 		if (previous.getGlobalBounds().contains(pos))
 		{
 			previous.setColor(SELECTED_COLOR);
@@ -152,7 +152,7 @@ void ManualWindow::eventFilter(Event *event)
 			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 		}
 
-		credits.setColor(Color::White);
+		credits.setColor(sf::Color::White);
 		if (credits.getGlobalBounds().contains(pos))
 		{
 			credits.setColor(SELECTED_COLOR);
@@ -160,7 +160,7 @@ void ManualWindow::eventFilter(Event *event)
 			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 		}
 
-		close.setColor(Color::White);
+		close.setColor(sf::Color::White);
 		if (close.getGlobalBounds().contains(pos))
 		{
 			close.setColor(SELECTED_COLOR);
@@ -170,11 +170,11 @@ void ManualWindow::eventFilter(Event *event)
 
 		updateCurrentInfo();
 	}
-	else if (event->type == Event::KeyPressed)
+	else if (event->type == sf::Event::KeyPressed)
 	{
 		switch (event->key.code)
 		{
-		case Keyboard::Up:
+		case sf::Keyboard::Up:
 		{
 			current--;
 			if (current < 0)
@@ -182,7 +182,7 @@ void ManualWindow::eventFilter(Event *event)
 			updateCurrentInfo();
 		}
 			break;
-		case Keyboard::Down:
+		case sf::Keyboard::Down:
 		{
 			current++;
 			if (current == MAX_ELEMENTS_COUNT)
@@ -190,10 +190,10 @@ void ManualWindow::eventFilter(Event *event)
 			updateCurrentInfo();
 		}
 			break;
-		case Keyboard::Right:
+		case sf::Keyboard::Right:
 			nextPage();
 			break;
-		case Keyboard::Left:
+		case sf::Keyboard::Left:
 			previousPage();
 			break;
 		default:
@@ -213,35 +213,35 @@ void ManualWindow::updatePos()
 	const float ICON_Y_OFFSET = 32 * Engine::Instance().settingsManager()->getScaleFactor().y;
 
 	currentRect.setFillColor(SELECTED_COLOR);
-	currentRect.setSize(Vector2f(RECT_WIDTH, RECT_HEIGHT));
+	currentRect.setSize(sf::Vector2f(RECT_WIDTH, RECT_HEIGHT));
 	currentRect.setOutlineThickness(1);
-	currentRect.setOutlineColor(Color::Black);
+	currentRect.setOutlineColor(sf::Color::Black);
 
-	infoRect.setFillColor(Color(45, 45, 45, 128));
-	infoRect.setSize(Vector2f(RECT_WIDTH * 2,
+	infoRect.setFillColor(sf::Color(45, 45, 45, 128));
+	infoRect.setSize(sf::Vector2f(RECT_WIDTH * 2,
 							  RECT_HEIGHT * MAX_ELEMENTS_COUNT + ICON_Y_OFFSET * (MAX_ELEMENTS_COUNT - 1)));
 	infoRect.setOutlineThickness(1);
-	infoRect.setOutlineColor(Color::Black);
+	infoRect.setOutlineColor(sf::Color::Black);
 	infoRect.setPosition(ICON_X_OFFSET * 3 + RECT_WIDTH, ICON_Y_OFFSET * 2);
 
-	previous.setPosition(Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
-							  infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET, 0));
+	previous.setPosition(sf::Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
+							  infoRect.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET, 0));
 
-	next.setPosition(Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
-							  infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET + ICON_WIDTH, 0));
+	next.setPosition(sf::Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
+							  infoRect.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET + ICON_WIDTH, 0));
 
-	credits.setPosition(Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
-							   infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET + ICON_WIDTH*2, 0));
+	credits.setPosition(sf::Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
+							   infoRect.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET + ICON_WIDTH*2, 0));
 
-	close.setPosition(Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
-							   infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET + ICON_WIDTH*3, 0));
+	close.setPosition(sf::Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
+							   infoRect.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET + ICON_WIDTH*3, 0));
 
-	toolTip.setPosition(Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
-								 infoRect.getGlobalBounds().top) + Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
+	toolTip.setPosition(sf::Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
+								 infoRect.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
 
-	const  Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
-	Vector2f pos = Vector2f(ICON_X_OFFSET * 2, ICON_Y_OFFSET * 2);
+	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
+	sf::Vector2f pos = sf::Vector2f(ICON_X_OFFSET * 2, ICON_Y_OFFSET * 2);
 
 	int count = 0;
 	for (unsigned int i = 0; i < elements.size(); ++i)
@@ -253,29 +253,29 @@ void ManualWindow::updatePos()
 		element.update();
 
 		element.rect.setPosition(pos);
-		element.rect.setSize(Vector2f(RECT_WIDTH, RECT_HEIGHT));
+		element.rect.setSize(sf::Vector2f(RECT_WIDTH, RECT_HEIGHT));
 
-		element.icon.setPosition(pos + Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
+		element.icon.setPosition(pos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
-		element.object->setPos(Vector2f(infoRect.getGlobalBounds().left,
+		element.object->setPos(sf::Vector2f(infoRect.getGlobalBounds().left,
 													 infoRect.getGlobalBounds().top) +
-											Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
+											sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
 
 		element.descriptionText.setScale(scaleFactor);
 		element.descriptionText.setPosition(element.object->pos() +
-											Vector2f(element.object->getSize().x + ICON_X_OFFSET, 0));
+											sf::Vector2f(element.object->getSize().x + ICON_X_OFFSET, 0));
 
 		element.nameText.setScale(scaleFactor);
-		element.nameText.setPosition(pos + Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET) +
-									 Vector2f(ICON_WIDTH + ICON_X_OFFSET, 0));
+		element.nameText.setPosition(pos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET) +
+									 sf::Vector2f(ICON_WIDTH + ICON_X_OFFSET, 0));
 
 		pos.y += ICON_Y_OFFSET + RECT_HEIGHT;
 
 		count++;
 		if (count == MAX_ELEMENTS_COUNT)
 		{
-			pos = Vector2f(ICON_X_OFFSET * 2, ICON_Y_OFFSET * 2);
+			pos = sf::Vector2f(ICON_X_OFFSET * 2, ICON_Y_OFFSET * 2);
 			count = 0;
 		}
 	}
@@ -340,7 +340,7 @@ void ManualWindow::addElements()
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_CAR,
 							   GAME_TRANSLATION::CAR,
-							   EnemiesFactory::getEnemyInfo(SMALL_MEDIUM)));
+							   EnemiesFactory::getEnemyInfo(CAR)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TRICYCLE,
 							   GAME_TRANSLATION::TRICYCLE,
@@ -443,7 +443,7 @@ ManualWindow::Element::Element(TextureType texture,
 
 ManualWindow::Element::Element(TextureType texture,
 							   TranslationType name,
-							   const String &description)
+							   const sf::String &description)
 	: 	texture(texture)
 	,name(name)
 	,type(E_Ability)
@@ -465,34 +465,34 @@ ManualWindow::Element::Element(TextureType texture,
 
 void ManualWindow::Element::init()
 {
-	rect.setFillColor(Color(34, 53, 200, 100));
+	rect.setFillColor(sf::Color(34, 53, 200, 100));
 
 	nameText.setFont(Engine::Instance().fontManager()->font());
-	nameText.setFillColor(Color::Red);
+	nameText.setFillColor(sf::Color::Red);
 	nameText.setCharacterSize(36);
 
 	descriptionText.setFont(Engine::Instance().fontManager()->font());
-	descriptionText.setFillColor(Color::Red);
+	descriptionText.setFillColor(sf::Color::Red);
 	descriptionText.setCharacterSize(36);
 }
 
 void ManualWindow::Element::update()
 {
 	int frameCount = 1;
-	Vector2i frameSize;
+	sf::Vector2i frameSize;
 	//texture
 	icon.setTexture(Engine::Instance().texturesManager()->getTexture(texture));
 	//name
 	nameText.setString(Engine::Instance().translationsManager()->translate(name));
 	//description
-	String description;
-	const String separator = ": ";
-	const String endline = "\n";
+	sf::String description;
+	const sf::String separator = ": ";
+	const sf::String endline = "\n";
 	switch (type)
 	{
 	case Element::E_Tower:
 	{
-		frameSize = Vector2i(192, 192);
+		frameSize = sf::Vector2i(192, 192);
 		icon.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 		switch (towerType)
@@ -562,7 +562,7 @@ void ManualWindow::Element::update()
 		break;
 	case Element::E_Ability:
 	{		
-		frameSize = Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
+		frameSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
 		description += Engine::Instance().translationsManager()->translate(name);
 		description += endline;
 		description += abilityInfo;
@@ -571,9 +571,9 @@ void ManualWindow::Element::update()
 	case Element::E_Enemy:
 	{
 		frameCount = 4;
-		frameSize = Vector2i(enemyInfo.size.x * GameOptions::CELL_SIZE/2,
+		frameSize = sf::Vector2i(enemyInfo.size.x * GameOptions::CELL_SIZE/2,
 							 enemyInfo.size.y * GameOptions::CELL_SIZE/2);
-		icon.setTextureRect(IntRect(0, 0, frameSize.x, frameSize.y));
+		icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
 		if (enemyInfo.size.x == 1)
 			icon.scale(2, 2);
 		else if (enemyInfo.size.x == 4)
@@ -614,7 +614,7 @@ void ManualWindow::Element::update()
 		break;
 	}
 
-	object = new GameObject(texture, Vector2f(0,0), frameSize, frameCount);
+	object = new GameObject(texture, sf::Vector2f(0,0), frameSize, frameCount);
 
 	descriptionText.setString(description);
 }

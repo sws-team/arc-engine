@@ -11,8 +11,8 @@ public:
 	~GameWindow() override;
 
 	void init() override;
-	void paint(RenderWindow *window) override;
-	void eventFilter(Event* event) override;
+	void paint(sf::RenderWindow *window) override;
+	void eventFilter(sf::Event* event) override;
 	void update() override;
 	void back() override;
 	void pause();
@@ -22,8 +22,8 @@ protected:
 	void closeEvent() override;
 
 private:
-	Sprite menuImg;
-	Sprite windowSprite;
+	sf::Sprite menuImg;
+	sf::Sprite windowSprite;
 
 	enum GAME_MENU
 	{
@@ -45,15 +45,15 @@ private:
 
 	void finish();
 
-	Text text;
-	Clock clock;
-	Int64 lastTime;
-	Int64 tick;
+	sf::Text text;
+	sf::Clock clock;
+	sf::Int64 lastTime;
+	sf::Int64 tick;
 	void updateTextPos();
 	void nextTrack();
 	int currentTrack;
-	vector<MusicType> tracks;
-	void fillTracks(const vector<MusicType> &trackList);
+	std::vector<MusicType> tracks;
+	void fillTracks(const std::vector<MusicType> &trackList);
 	bool isFinal;
 };
 

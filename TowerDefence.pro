@@ -4,11 +4,11 @@ error( "set up git" )
 }
 
 TEMPLATE = app
-CONFIG += c++17
+CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 DESTDIR = TowerDefence
-QMAKE_CXXFLAGS += -std=c++17
+#QMAKE_CXXFLAGS += -std=c++17
 
 include(../build_environment.pri)
 include($$PWD/3rdPartyIncludes.pri)
@@ -36,11 +36,13 @@ DEFINES += APP_VERSION=\\\"$${NORMAL_VERSION}\\\"
 win32: DEFINES += OS_WIN
 unix: DEFINES += OS_UNIX
 
-#DEFINES += STEAM_API
+DEFINES += STEAM_API
 
-TARGET = TowerDefence_$${VERSION}
+TARGET = TowerDefence
 
-include($$PWD/../Engine/Engine.pri)
+include($$PWD/../Engine/Engine/Engine.pri)
+include($$PWD/../Engine/ResourcesLib/ResourcesLib.pri)
+include($$PWD/../Engine/GameAchievements/GameAchievements.pri)
 
 include($$PWD/Windows/Windows.pri)
 include($$PWD/Game/Game.pri)

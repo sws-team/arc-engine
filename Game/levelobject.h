@@ -8,8 +8,8 @@ class LevelObject : public GameObject
 {
 public:
 	LevelObject(const TextureType& texture_id,
-			   const Vector2f& startPos,
-			   const Vector2i& frameSize,
+			   const sf::Vector2f& startPos,
+			   const sf::Vector2i& frameSize,
 			   const int fCount = 3);
 
 
@@ -25,15 +25,15 @@ class ShadersFactory
 public:
 	ShadersFactory();
 
-	Shader *getShader(const OBJECTS::SHADER_TYPES type);
+	sf::Shader *getShader(const OBJECTS::SHADER_TYPES type);
 	void update();
 private:
-	map<OBJECTS::SHADER_TYPES, Shader*> shaders;
+	std::map<OBJECTS::SHADER_TYPES, sf::Shader*> shaders;
 	void addShader(OBJECTS::SHADER_TYPES type);
 	Timer timer;
-	Shader* createShader(OBJECTS::SHADER_TYPES type);
+	sf::Shader* createShader(OBJECTS::SHADER_TYPES type);
 
-	Clock iTime;
+	sf::Clock iTime;
 };
 
 #endif // LEVELOBJECT_H

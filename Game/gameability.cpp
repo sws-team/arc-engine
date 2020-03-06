@@ -10,8 +10,8 @@
 #include "gameoptions.h"
 #include "gamemanagers.h"
 
-GameAbility::GameAbility(const Vector2i &areaSize,
-						 const Vector2i &offset,
+GameAbility::GameAbility(const sf::Vector2i &areaSize,
+						 const sf::Vector2i &offset,
 						 const float time) :
 	m_isActive(false)
   ,m_isReady(true)
@@ -30,7 +30,7 @@ bool GameAbility::isReady()
 
 void GameAbility::setUp()
 {
-	m_rotated = Keyboard::isKeyPressed(Keyboard::LShift);
+	m_rotated = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift);
 	if (m_rotated)
 		Engine::Instance().options<GameOptions>()->cursor()->activateAbility(m_areaSize.y, m_areaSize.x, m_offset.y, m_offset.x);
 	else
@@ -91,7 +91,7 @@ Abilities::Abilities()
 	stopAblity = new StopAbility();
 }
 
-void Abilities::draw(RenderTarget * const target)
+void Abilities::draw(sf::RenderTarget * const target)
 {
 	if (venomAbility->isActive())
 		venomAbility->object->draw(target);
@@ -125,7 +125,7 @@ void Abilities::reset()
 }
 
 BombAbility::BombAbility()
-	: GameAbility(Vector2i(3, 3), Vector2i(2, 2), 15000)
+	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), 15000)
 {
 
 }
@@ -134,10 +134,10 @@ void BombAbility::activate()
 {
 	Engine::Instance().soundManager()->playOnce(GAME_SOUND::BOMB);
 	GameAbility::activate();
-	const FloatRect abilityRect = Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect();
+	const sf::FloatRect abilityRect = Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect();
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::BOMB_EXPLOSION,
-				 Vector2f(abilityRect.left, abilityRect.top),
-				 Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
+				 sf::Vector2f(abilityRect.left, abilityRect.top),
+				 sf::Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
 						  m_areaSize.y * GameOptions::CELL_SIZE),
 				 200, 12, 0);
 
@@ -154,7 +154,7 @@ void BombAbility::activate()
 }
 
 FreezeBombAbility::FreezeBombAbility()
-	: GameAbility(Vector2i(3, 3), Vector2i(2, 2), 10000)
+	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), 10000)
 {
 
 }
@@ -162,10 +162,10 @@ FreezeBombAbility::FreezeBombAbility()
 void FreezeBombAbility::activate()
 {	
 	GameAbility::activate();
-	const FloatRect abilityRect = Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect();
+	const sf::FloatRect abilityRect = Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect();
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::FREEZE_BOMB_EXPLOSION,
-				 Vector2f(abilityRect.left, abilityRect.top),
-				 Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
+				 sf::Vector2f(abilityRect.left, abilityRect.top),
+				 sf::Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
 						  m_areaSize.y * GameOptions::CELL_SIZE),
 				 200, 6, 0);
 	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
@@ -176,7 +176,7 @@ void FreezeBombAbility::activate()
 }
 
 VenomAbility::VenomAbility()
-	: GameAbility(Vector2i(10, 3), Vector2i(7, 2), 30000)
+	: GameAbility(sf::Vector2i(10, 3), sf::Vector2i(7, 2), 30000)
 	,object(nullptr)
 	,count(0)
 {
@@ -185,15 +185,15 @@ VenomAbility::VenomAbility()
 
 void VenomAbility::activate()
 {
-	const Vector2i size = m_rotated ? Vector2i(m_areaSize.y * GameOptions::CELL_SIZE,
+	const sf::Vector2i size = m_rotated ? sf::Vector2i(m_areaSize.y * GameOptions::CELL_SIZE,
 											   m_areaSize.x * GameOptions::CELL_SIZE) :
-									  Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
+									  sf::Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
 											   m_areaSize.y * GameOptions::CELL_SIZE);
 
-	object = new GameObject(GAME_TEXTURE::VENOM_EFFECT, Vector2f(0, 0), size, 1);
+	object = new GameObject(GAME_TEXTURE::VENOM_EFFECT, sf::Vector2f(0, 0), size, 1);
 	GameAbility::activate();
 //	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
-	const Vector2f pos = Vector2f(Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect().left,
+	const sf::Vector2f pos = sf::Vector2f(Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect().left,
 								  Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect().top);
 
 	object->setPos(pos);
@@ -219,7 +219,7 @@ void VenomAbility::checkDuration()
 }
 
 IncreaseTowerDamageAbility::IncreaseTowerDamageAbility()
-	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 35000)
+	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), 35000)
 	,target(nullptr)
 {
 
@@ -251,7 +251,7 @@ void IncreaseTowerDamageAbility::checkDuration()
 }
 
 IncreaseTowerAttackSpeedAbility::IncreaseTowerAttackSpeedAbility()
-	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 40000)
+	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), 40000)
 	,target(nullptr)
 {
 
@@ -283,7 +283,7 @@ void IncreaseTowerAttackSpeedAbility::checkDuration()
 }
 
 StopAbility::StopAbility()
-	: GameAbility(Vector2i(1, 1), Vector2i(0, 0), 60000)
+	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), 60000)
 {
 
 }

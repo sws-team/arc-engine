@@ -1,8 +1,8 @@
 #include "enemy.h"
 
-#define ADD_ENEMY(x, y) enemies.insert(make_pair<ENEMY_TYPES, int>(x, y));
+#define ADD_ENEMY(x, y) enemies.insert(std::make_pair<ENEMY_TYPES, int>(x, y));
 
-Wave EnemiesFactory::createWave(float protection, float time, const map<ENEMY_TYPES, int> &enemies)
+Wave EnemiesFactory::createWave(float protection, float time, const std::map<ENEMY_TYPES, int> &enemies)
 {
 	Wave wave;
 	wave.protection = protection;
@@ -15,10 +15,10 @@ Wave EnemiesFactory::createWave(float protection, float time, const map<ENEMY_TY
 	return wave;
 }
 
-vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
+std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 {
-	vector<Wave> waves;
-	map<ENEMY_TYPES, int> enemies;
+	std::vector<Wave> waves;
+	std::map<ENEMY_TYPES, int> enemies;
 	switch (n)
 	{
 	case 0:
@@ -29,25 +29,25 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 20);
-		ADD_ENEMY(SMALL_MEDIUM, 5);
+		ADD_ENEMY(CAR, 5);
 		ADD_ENEMY(SMALL_FAST, 1);
 		waves.push_back(createWave(0.f, 2250, enemies));
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 30);
-		ADD_ENEMY(SMALL_MEDIUM, 20);
+		ADD_ENEMY(CAR, 20);
 		ADD_ENEMY(SMALL_FAST, 10);
 		waves.push_back(createWave(0.0f, 1250, enemies));
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 45);
-		ADD_ENEMY(SMALL_MEDIUM, 25);
+		ADD_ENEMY(CAR, 25);
 		ADD_ENEMY(SMALL_FAST, 15);
 		waves.push_back(createWave(0.1f, 750, enemies));
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 100);
-		ADD_ENEMY(SMALL_MEDIUM, 40);
+		ADD_ENEMY(CAR, 40);
 		ADD_ENEMY(SMALL_FAST, 25);
 		waves.push_back(createWave(0.1f, 350, enemies));
 		enemies.clear();
@@ -55,17 +55,22 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 1:
 	{
+		ADD_ENEMY(DOWN_TOWER_ENEMY, 5);
+		waves.push_back(createWave(0.f, 2000, enemies));
+		enemies.clear();
+
 		ADD_ENEMY(SCORPION, 2);
-		waves.push_back(createWave(0.f, 5750, enemies));
+		waves.push_back(createWave(0.f, 2000, enemies));
 		enemies.clear();
 
-		ADD_ENEMY(SPIDER, 2);
-		waves.push_back(createWave(0.f, 5750, enemies));
+		ADD_ENEMY(CAR, 2);
+		waves.push_back(createWave(0.f, 2000, enemies));
 		enemies.clear();
 
-		ADD_ENEMY(SMALL_MEDIUM, 2);
-		waves.push_back(createWave(0.f, 5750, enemies));
-		enemies.clear();
+//		ADD_ENEMY(SPIDER, 2);
+//		waves.push_back(createWave(0.f, 2000, enemies));
+//		enemies.clear();
+
 		break;
 
 
@@ -77,14 +82,14 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 30);
-		ADD_ENEMY(SMALL_MEDIUM, 1);
+		ADD_ENEMY(CAR, 1);
 		ADD_ENEMY(SMALL_FAST, 3);
 		ADD_ENEMY(SELFHEAL_ENEMY, 5);
 		waves.push_back(createWave(0.f, 1500, enemies));
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 30);
-		ADD_ENEMY(SMALL_MEDIUM, 5);
+		ADD_ENEMY(CAR, 5);
 		ADD_ENEMY(SELFHEAL_ENEMY, 5);
 		ADD_ENEMY(MID_SLOW, 1);
 		ADD_ENEMY(SMALL_FAST, 5);
@@ -94,7 +99,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(SCORPION, 40);
 		ADD_ENEMY(SELFHEAL_ENEMY, 10);
 		ADD_ENEMY(MID_SLOW, 5);
-		ADD_ENEMY(SMALL_MEDIUM, 10);
+		ADD_ENEMY(CAR, 10);
 		ADD_ENEMY(SMALL_FAST, 15);
 		waves.push_back(createWave(0.1f, 750, enemies));
 		enemies.clear();
@@ -102,7 +107,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(SCORPION, 50);
 		ADD_ENEMY(SELFHEAL_ENEMY, 15);
 		ADD_ENEMY(MID_SLOW, 2);
-		ADD_ENEMY(SMALL_MEDIUM, 15);
+		ADD_ENEMY(CAR, 15);
 		ADD_ENEMY(SMALL_FAST, 20);
 		waves.push_back(createWave(0.1f, 350, enemies));
 		enemies.clear();
@@ -117,7 +122,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 30);
-		ADD_ENEMY(SMALL_MEDIUM, 1);
+		ADD_ENEMY(CAR, 1);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SMALL_FAST, 3);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 2);
@@ -126,7 +131,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 50);
-		ADD_ENEMY(SMALL_MEDIUM, 5);
+		ADD_ENEMY(CAR, 5);
 		ADD_ENEMY(ANOTHER_ENEMY, 10);
 		ADD_ENEMY(SELFHEAL_ENEMY, 3);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 3);
@@ -140,7 +145,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(MID_SLOW, 5);
 		ADD_ENEMY(ANOTHER_ENEMY, 15);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 10);
-		ADD_ENEMY(SMALL_MEDIUM, 10);
+		ADD_ENEMY(CAR, 10);
 		ADD_ENEMY(SMALL_FAST, 15);
 		waves.push_back(createWave(0.2f, 550, enemies));
 		enemies.clear();
@@ -148,7 +153,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(SCORPION, 75);
 		ADD_ENEMY(SELFHEAL_ENEMY, 15);
 		ADD_ENEMY(MID_SLOW, 3);
-		ADD_ENEMY(SMALL_MEDIUM, 15);
+		ADD_ENEMY(CAR, 15);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 15);
 		ADD_ENEMY(ANOTHER_ENEMY, 20);
 		ADD_ENEMY(SMALL_FAST, 20);
@@ -166,7 +171,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 20);
-		ADD_ENEMY(SMALL_MEDIUM, 1);
+		ADD_ENEMY(CAR, 1);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SMALL_NEXT, 30);
 		ADD_ENEMY(SMALL_FAST, 3);
@@ -177,7 +182,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 30);
-		ADD_ENEMY(SMALL_MEDIUM, 5);
+		ADD_ENEMY(CAR, 5);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SELFHEAL_ENEMY, 3);
 		ADD_ENEMY(SPIDER, 5);
@@ -193,7 +198,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(MID_SLOW, 10);
 		ADD_ENEMY(ANOTHER_ENEMY, 10);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 10);
-		ADD_ENEMY(SMALL_MEDIUM, 10);
+		ADD_ENEMY(CAR, 10);
 		ADD_ENEMY(SMALL_NEXT, 100);
 		ADD_ENEMY(SPIDER, 10);
 		ADD_ENEMY(SMALL_FAST, 15);
@@ -203,7 +208,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(SCORPION, 50);
 		ADD_ENEMY(SELFHEAL_ENEMY, 15);
 		ADD_ENEMY(MID_SLOW, 5);
-		ADD_ENEMY(SMALL_MEDIUM, 15);
+		ADD_ENEMY(CAR, 15);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 15);
 		ADD_ENEMY(SMALL_NEXT, 150);
 		ADD_ENEMY(SPIDER, 15);
@@ -222,7 +227,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 20);
-		ADD_ENEMY(SMALL_MEDIUM, 1);
+		ADD_ENEMY(CAR, 1);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SMALL_NEXT, 30);
 		ADD_ENEMY(SMALL_FAST, 3);
@@ -235,7 +240,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 30);
-		ADD_ENEMY(SMALL_MEDIUM, 5);
+		ADD_ENEMY(CAR, 5);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SELFHEAL_ENEMY, 3);
 		ADD_ENEMY(SPIDER, 5);
@@ -253,7 +258,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(MID_SLOW, 15);
 		ADD_ENEMY(ANOTHER_ENEMY, 10);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 10);
-		ADD_ENEMY(SMALL_MEDIUM, 10);
+		ADD_ENEMY(CAR, 10);
 		ADD_ENEMY(SMALL_NEXT, 100);
 		ADD_ENEMY(MID_FAST, 5);
 		ADD_ENEMY(REPAIR_ENEMY, 10);
@@ -265,7 +270,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(SCORPION, 50);
 		ADD_ENEMY(SELFHEAL_ENEMY, 15);
 		ADD_ENEMY(MID_SLOW, 5);
-		ADD_ENEMY(SMALL_MEDIUM, 15);
+		ADD_ENEMY(CAR, 15);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 15);
 		ADD_ENEMY(SMALL_NEXT, 150);
 		ADD_ENEMY(MID_FAST, 10);
@@ -286,7 +291,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 20);
-		ADD_ENEMY(SMALL_MEDIUM, 1);
+		ADD_ENEMY(CAR, 1);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SMALL_NEXT, 30);
 		ADD_ENEMY(SMALL_FAST, 3);
@@ -300,7 +305,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 30);
-		ADD_ENEMY(SMALL_MEDIUM, 5);
+		ADD_ENEMY(CAR, 5);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SELFHEAL_ENEMY, 3);
 		ADD_ENEMY(SPIDER, 5);
@@ -319,7 +324,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(MID_SLOW, 10);
 		ADD_ENEMY(ANOTHER_ENEMY, 10);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 10);
-		ADD_ENEMY(SMALL_MEDIUM, 10);
+		ADD_ENEMY(CAR, 10);
 		ADD_ENEMY(SMALL_NEXT, 100);
 		ADD_ENEMY(SHELL_ENEMY, 10);
 		ADD_ENEMY(MID_FAST, 5);
@@ -332,7 +337,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(SCORPION, 50);
 		ADD_ENEMY(SELFHEAL_ENEMY, 15);
 		ADD_ENEMY(MID_SLOW, 15);
-		ADD_ENEMY(SMALL_MEDIUM, 15);
+		ADD_ENEMY(CAR, 15);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 15);
 		ADD_ENEMY(SMALL_NEXT, 150);
 		ADD_ENEMY(MID_FAST, 10);
@@ -354,7 +359,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 20);
-		ADD_ENEMY(SMALL_MEDIUM, 1);
+		ADD_ENEMY(CAR, 1);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SMALL_NEXT, 30);
 		ADD_ENEMY(SMALL_FAST, 3);
@@ -369,7 +374,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 30);
-		ADD_ENEMY(SMALL_MEDIUM, 5);
+		ADD_ENEMY(CAR, 5);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SELFHEAL_ENEMY, 3);
 		ADD_ENEMY(SPIDER, 5);
@@ -389,7 +394,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(MID_SLOW, 10);
 		ADD_ENEMY(ANOTHER_ENEMY, 10);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 10);
-		ADD_ENEMY(SMALL_MEDIUM, 10);
+		ADD_ENEMY(CAR, 10);
 		ADD_ENEMY(SMALL_NEXT, 100);
 		ADD_ENEMY(SHELL_ENEMY, 10);
 		ADD_ENEMY(MID_FAST, 10);
@@ -403,7 +408,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(SCORPION, 50);
 		ADD_ENEMY(SELFHEAL_ENEMY, 15);
 		ADD_ENEMY(MID_SLOW, 15);
-		ADD_ENEMY(SMALL_MEDIUM, 15);
+		ADD_ENEMY(CAR, 15);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 15);
 		ADD_ENEMY(SMALL_NEXT, 150);
 		ADD_ENEMY(MID_FAST, 15);
@@ -425,7 +430,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 20);
-		ADD_ENEMY(SMALL_MEDIUM, 1);
+		ADD_ENEMY(CAR, 1);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SMALL_NEXT, 30);
 		ADD_ENEMY(SMALL_FAST, 3);
@@ -440,7 +445,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 30);
-		ADD_ENEMY(SMALL_MEDIUM, 5);
+		ADD_ENEMY(CAR, 5);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SELFHEAL_ENEMY, 3);
 		ADD_ENEMY(SPIDER, 5);
@@ -461,7 +466,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(MID_SLOW, 10);
 		ADD_ENEMY(ANOTHER_ENEMY, 10);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 10);
-		ADD_ENEMY(SMALL_MEDIUM, 10);
+		ADD_ENEMY(CAR, 10);
 		ADD_ENEMY(SMALL_NEXT, 100);
 		ADD_ENEMY(SHELL_ENEMY, 10);
 		ADD_ENEMY(MID_FAST, 10);
@@ -476,7 +481,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(SCORPION, 50);
 		ADD_ENEMY(SELFHEAL_ENEMY, 15);
 		ADD_ENEMY(MID_SLOW, 15);
-		ADD_ENEMY(SMALL_MEDIUM, 15);
+		ADD_ENEMY(CAR, 15);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 15);
 		ADD_ENEMY(SMALL_NEXT, 150);
 		ADD_ENEMY(MID_FAST, 15);
@@ -499,7 +504,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 20);
-		ADD_ENEMY(SMALL_MEDIUM, 1);
+		ADD_ENEMY(CAR, 1);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SMALL_NEXT, 30);
 		ADD_ENEMY(SMALL_FAST, 3);
@@ -515,7 +520,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 30);
-		ADD_ENEMY(SMALL_MEDIUM, 5);
+		ADD_ENEMY(CAR, 5);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SELFHEAL_ENEMY, 3);
 		ADD_ENEMY(SPIDER, 5);
@@ -537,7 +542,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(MID_SLOW, 10);
 		ADD_ENEMY(ANOTHER_ENEMY, 10);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 10);
-		ADD_ENEMY(SMALL_MEDIUM, 10);
+		ADD_ENEMY(CAR, 10);
 		ADD_ENEMY(SMALL_NEXT, 100);
 		ADD_ENEMY(SHELL_ENEMY, 10);
 		ADD_ENEMY(MID_FAST, 10);
@@ -553,7 +558,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(SCORPION, 50);
 		ADD_ENEMY(SELFHEAL_ENEMY, 15);
 		ADD_ENEMY(MID_SLOW, 15);
-		ADD_ENEMY(SMALL_MEDIUM, 15);
+		ADD_ENEMY(CAR, 15);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 15);
 		ADD_ENEMY(SMALL_NEXT, 150);
 		ADD_ENEMY(MID_FAST, 15);
@@ -577,7 +582,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 20);
-		ADD_ENEMY(SMALL_MEDIUM, 1);
+		ADD_ENEMY(CAR, 1);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SMALL_NEXT, 30);
 		ADD_ENEMY(SMALL_FAST, 3);
@@ -594,7 +599,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		enemies.clear();
 
 		ADD_ENEMY(SCORPION, 30);
-		ADD_ENEMY(SMALL_MEDIUM, 5);
+		ADD_ENEMY(CAR, 5);
 		ADD_ENEMY(ANOTHER_ENEMY, 5);
 		ADD_ENEMY(SELFHEAL_ENEMY, 3);
 		ADD_ENEMY(SPIDER, 5);
@@ -617,7 +622,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(MID_SLOW, 10);
 		ADD_ENEMY(ANOTHER_ENEMY, 10);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 10);
-		ADD_ENEMY(SMALL_MEDIUM, 10);
+		ADD_ENEMY(CAR, 10);
 		ADD_ENEMY(SMALL_NEXT, 100);
 		ADD_ENEMY(SHELL_ENEMY, 10);
 		ADD_ENEMY(MID_FAST, 10);
@@ -634,7 +639,7 @@ vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(SCORPION, 50);
 		ADD_ENEMY(SELFHEAL_ENEMY, 15);
 		ADD_ENEMY(MID_SLOW, 15);
-		ADD_ENEMY(SMALL_MEDIUM, 15);
+		ADD_ENEMY(CAR, 15);
 		ADD_ENEMY(DOWN_TOWER_ENEMY, 15);
 		ADD_ENEMY(SMALL_NEXT, 150);
 		ADD_ENEMY(MID_FAST, 15);

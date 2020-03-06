@@ -3,8 +3,8 @@
 #include "managers.h"
 
 LevelObject::LevelObject(const TextureType &texture_id,
-						 const Vector2f &startPos,
-						 const Vector2i &frameSize,
+						 const sf::Vector2f &startPos,
+						 const sf::Vector2i &frameSize,
 						 const int fCount)
 	: GameObject(texture_id, startPos, frameSize, fCount)
 	,m_layer(-1)
@@ -34,7 +34,7 @@ ShadersFactory::ShadersFactory()
 //	mapShader.setParameter("texture", sf::Shader::CurrentTexture);
 }
 
-Shader *ShadersFactory::getShader(const OBJECTS::SHADER_TYPES type)
+sf::Shader *ShadersFactory::getShader(const OBJECTS::SHADER_TYPES type)
 {
 //	if (find(shaders.begin(), shaders.end(), type) != shaders.end())
 	if (shaders.count(type))
@@ -52,33 +52,33 @@ void ShadersFactory::update()
 	{
 		int a = rand() % 2;
 		int b = rand() % 2;
-		Shader *movingShader = shaders.at(OBJECTS::MOVING);
-		movingShader->setUniform("wave_amplitude", Vector2f(a, b));
+		sf::Shader *movingShader = shaders.at(OBJECTS::MOVING);
+		movingShader->setUniform("wave_amplitude", sf::Vector2f(a, b));
 		movingShader->setUniform("wave_phase", timer.getElapsedMilliseconds());
 	}
 
-	Shader *waveShader = shaders.at(OBJECTS::WAVE);
+	sf::Shader *waveShader = shaders.at(OBJECTS::WAVE);
 	waveShader->setUniform("time", iTime.getElapsedTime().asSeconds());
 }
 
 void ShadersFactory::addShader(OBJECTS::SHADER_TYPES type)
 {
-	Shader *shader = createShader(type);
-	shaders.insert(pair<OBJECTS::SHADER_TYPES, Shader*>(type, shader));
+	sf::Shader *shader = createShader(type);
+	shaders.insert(std::pair<OBJECTS::SHADER_TYPES, sf::Shader*>(type, shader));
 }
 
-Shader* ShadersFactory::createShader(OBJECTS::SHADER_TYPES type)
+sf::Shader* ShadersFactory::createShader(OBJECTS::SHADER_TYPES type)
 {
-	Shader *shader = nullptr;
+	sf::Shader *shader = nullptr;
 
 	switch (type)
 	{
 	case OBJECTS::MOVING:
 	{
-		shader = new Shader();
-		if (!shader->loadFromFile("shaders/moving.vs", Shader::Vertex))
+		shader = new sf::Shader();
+		if (!shader->loadFromFile("shaders/moving.vs", sf::Shader::Vertex))
 		{
-			err() << "Failed to load shader" << std::endl;
+			sf::err() << "Failed to load shader" << std::endl;
 			delete shader;
 			shader = nullptr;
 		}
@@ -86,16 +86,16 @@ Shader* ShadersFactory::createShader(OBJECTS::SHADER_TYPES type)
 		break;
 	case OBJECTS::WAVE:
 	{
-		shader = new Shader();
-		if (!shader->loadFromFile("shaders/wave.fs", Shader::Fragment))
+		shader = new sf::Shader();
+		if (!shader->loadFromFile("shaders/wave.fs", sf::Shader::Fragment))
 		{
-			err() << "Failed to load shader" << std::endl;
+			sf::err() << "Failed to load shader" << std::endl;
 			delete shader;
 			shader = nullptr;
 			break;
 		}
-		shader->setUniform("currentTexture", Shader::CurrentTexture);
-		shader->setUniform("resolution", Vector2f(Engine::Instance().settingsManager()->getResolution().x,
+		shader->setUniform("currentTexture", sf::Shader::CurrentTexture);
+		shader->setUniform("resolution", sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x,
 												   Engine::Instance().settingsManager()->getResolution().y));
 	}
 		break;

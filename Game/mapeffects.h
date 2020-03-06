@@ -11,14 +11,14 @@ class Shake : public GameDrawable
 {
 public:
 	Shake();
-	void draw(RenderTarget *const target) override;
+	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 
 	void start();
 	void deactivate();
 
 private:
-	RectangleShape dangerRect;
+	sf::RectangleShape dangerRect;
 	Timer dangerTimer;
 	bool isActive;
 	bool state;
@@ -69,7 +69,7 @@ protected:
 	STATES m_state;
 	void setState(STATES state);
 
-	static vector<Tower *> getRandomTowers(int count, const vector<Tower*>& towers);
+	static std::vector<Tower *> getRandomTowers(int count, const std::vector<Tower*>& towers);
 
 private:
 	void step();
@@ -81,13 +81,13 @@ class MapExplosion : public MapEffect
 public:
 	MapExplosion();
 
-	void draw(RenderTarget *const target) override;
+	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 protected:
 	void stateChanged() override;
 
 private:
-	vector<CircleShape> targets;
+	std::vector<sf::CircleShape> targets;
 };
 
 class TowersRegress : public MapEffect
@@ -97,12 +97,12 @@ public:
 	TowersRegress();
 	constexpr static float REGRESS_VALUE = 0.3f;
 
-	void draw(RenderTarget *const target) override;
+	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 protected:
 	void stateChanged() override;
 private:
-	vector<GameObject *> objects;
+	std::vector<GameObject *> objects;
 };
 
 class Smoke : public MapEffect
@@ -112,7 +112,7 @@ public:
 	Smoke();
 	~Smoke();
 
-	void draw(RenderTarget *const target) override;
+	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 
 	void init() override;
@@ -120,7 +120,7 @@ public:
 protected:
 	void stateChanged() override;
 private:
-	vector<GameObject *> clouds;
+	std::vector<GameObject *> clouds;
 	void smokeTowers(bool on);
 };
 
@@ -130,16 +130,16 @@ public:
 	MoneyDrain();
 	~MoneyDrain();
 
-	void draw(RenderTarget *const target) override;
+	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 
-	void explosion(const FloatRect& rect);
+	void explosion(const sf::FloatRect& rect);
 
 protected:
 	void stateChanged() override;
 
 private:
-	vector<GameObject *> drains;
+	std::vector<GameObject *> drains;
 	Timer drainTimer;
 };
 

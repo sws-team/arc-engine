@@ -11,9 +11,9 @@ class Controller
 public:
 	Controller();
 
-	void eventFilter(Event* event);
+	void eventFilter(sf::Event* event);
 
-	void setPauseFunc(const function<void ()> &value);
+	void setPauseFunc(const std::function<void ()> &value);
 	enum GAMEPAD_KEYS
 	{
 		KEY_START,
@@ -24,7 +24,7 @@ public:
 
 private:
 	void joystickKeyEvent(const bool timeoutKey, const bool timeoutMove);
-	function<void()> pauseFunc;
+	std::function<void()> pauseFunc;
 #ifdef STEAM_API
 	class ISteamScreenshots *p_screenShoots;
 #endif

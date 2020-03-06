@@ -20,18 +20,18 @@ public:
 	};
 
 	void setMaxCells(int maxWidth, int maxHeight);
-	void setMaxCells(const Vector2i &maxCell);
+	void setMaxCells(const sf::Vector2i &maxCell);
 
 	void moveLeft();
 	void moveRight();
 	void moveUp();
 	void moveDown();
 
-    Vector2i cell() const;
-    Vector2f pixelPos() const;
+	sf::Vector2i cell() const;
+	sf::Vector2f pixelPos() const;
 
 
-	void draw(RenderTarget *const target) override;
+	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 
 	void activateAbility(int x, int y, int hotX, int hotY);
@@ -39,7 +39,7 @@ public:
 
 	void activateTower(float radius, TOWER_TYPES type);
 
-	FloatRect getAbilityRect() const;
+	sf::FloatRect getAbilityRect() const;
 
 	void swap();
 	bool inPanel() const;
@@ -50,19 +50,19 @@ public:
 
 	void updatePanel();
 
-	Vector2f windowCursorPos() const;
-	Vector2f windowScreenPos() const;
+	sf::Vector2f windowCursorPos() const;
+	sf::Vector2f windowScreenPos() const;
 
-	static const Color TOWER_AREA_COLOR;
-	static const Color INACTIVE_TOWER_AREA_COLOR;
+	static const sf::Color TOWER_AREA_COLOR;
+	static const sf::Color INACTIVE_TOWER_AREA_COLOR;
 
 	void setHighlight(bool highlight);
 
-	Vector2i getMaxCell() const;
+	sf::Vector2i getMaxCell() const;
 
 private:
-	Vector2i m_cell;
-	Vector2i m_maxCell;
+	sf::Vector2i m_cell;
+	sf::Vector2i m_maxCell;
 
 	bool canMove(MOVE_DIRECTIONS direction);
 	void updateCell();
@@ -75,16 +75,16 @@ private:
 	};
 	CURSOR_STATES m_state;
 
-	RectangleShape abilityRect;
+	sf::RectangleShape abilityRect;
 
-	Vector2i abilityHotsPot;
+	sf::Vector2i abilityHotsPot;
 
 	bool m_inPanel;
 
 
-	CircleShape towerRadius;
-	RectangleShape towerRect;
-	Sprite towerSprite;
+	sf::CircleShape towerRadius;
+	sf::RectangleShape towerRect;
+	sf::Sprite towerSprite;
 	TOWER_TYPES towerType;
 
 	void updateMousePos();

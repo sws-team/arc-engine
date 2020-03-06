@@ -6,8 +6,8 @@
 struct Tile
 {
 	int id;
-	Vector2i cell;
-	Sprite sprite;
+	sf::Vector2i cell;
+	sf::Sprite sprite;
 
 	struct TileProperties
 	{

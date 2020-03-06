@@ -11,6 +11,7 @@
 #include "enginedef.h"
 
 #include <algorithm>
+#include <random>
 
 GameWindow::GameWindow()
 	: Menu()
@@ -23,8 +24,8 @@ GameWindow::GameWindow()
 	Engine::Instance().options<GameOptions>()->camera()->init();
 	currentMenu = static_cast<GAME_MENU>(CONTINUE_GAME);
 
-	setColor(Color(64,224,208, 100));
-	setCurrentColor(Color(64,224,208));
+	setColor(sf::Color(64,224,208, 100));
+	setCurrentColor(sf::Color(64,224,208));
 
 	m_state = PLAYING;
 
@@ -34,9 +35,9 @@ GameWindow::GameWindow()
 	windowSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::WINDOW_TEXTURE));
 	windowSprite.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
-	text.setFillColor(Color::Magenta);
+	text.setFillColor(sf::Color::Magenta);
 	text.setOutlineThickness(5);
-	text.setOutlineColor(Color::Yellow);	
+	text.setOutlineColor(sf::Color::Yellow);
 	text.setFont(Engine::Instance().fontManager()->font());
 	text.setCharacterSize(100);
 	text.setScale(Engine::Instance().settingsManager()->getScaleFactor());
@@ -48,7 +49,7 @@ GameWindow::GameWindow()
 	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::EXIT_TO_MENU));
 	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::EXIT_FROM_GAME));
 
-	Vector2f pos = Vector2f(0, 0);
+	sf::Vector2f pos = sf::Vector2f(0, 0);
 	menuImg.setPosition(pos);
 
 	const float offsetY = 20.f * Engine::Instance().settingsManager()->getScaleFactor().y;
@@ -56,7 +57,7 @@ GameWindow::GameWindow()
 	pos.x += Engine::Instance().options<GameOptions>()->tileSize().x;
 	pos.y += Engine::Instance().settingsManager()->getResolution().y/2;
 
-	for(Text& menuText : menus)
+	for(sf::Text& menuText : menus)
 	{
 		menuText.setCharacterSize(40);
 		menuText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
@@ -77,7 +78,7 @@ GameWindow::~GameWindow()
 void GameWindow::init()
 {
 	unsigned int missionNumber = Engine::Instance().options<GameOptions>()->getMission();
-	Engine::Instance().options<GameOptions>()->controller()->setPauseFunc(bind(&GameWindow::pause, this));
+	Engine::Instance().options<GameOptions>()->controller()->setPauseFunc(std::bind(&GameWindow::pause, this));
 	Engine::Instance().soundManager()->endBackgroundSound();
 	Engine::Instance().soundManager()->setMusicLooped(false);
 	fillTracks(GAME_MUSIC::TRACKS_FILES);
@@ -86,7 +87,7 @@ void GameWindow::init()
 	TimersManager::Instance().setPaused(false);
 }
 
-void GameWindow::paint(RenderWindow *window)
+void GameWindow::paint(sf::RenderWindow *window)
 {
 	Engine::Instance().options<GameOptions>()->level()->draw(window);
 	switch (m_state)
@@ -107,7 +108,7 @@ void GameWindow::paint(RenderWindow *window)
 	}
 }
 
-void GameWindow::eventFilter(Event *event)
+void GameWindow::eventFilter(sf::Event *event)
 {
 	switch (m_state)
 	{
@@ -115,16 +116,16 @@ void GameWindow::eventFilter(Event *event)
 	{
 		switch (event->type)
 		{
-		case Event::LostFocus:
+		case sf::Event::LostFocus:
 			pause();
 			break;
 //		case Event::GainedFocus:
 //			pause();
 //			break;
-		case Event::Closed:
+		case sf::Event::Closed:
 			Engine::Instance().stateManager()->setState(StateManager::EXIT);
 			break;
-		case Event::MouseMoved:
+		case sf::Event::MouseMoved:
 			Engine::Instance().options<GameOptions>()->cursor()->updatePanel();
 			if (!Engine::Instance().options<GameOptions>()->cursor()->inPanel())
 				Engine::Instance().options<GameOptions>()->cursor()->initCell();
@@ -138,14 +139,14 @@ void GameWindow::eventFilter(Event *event)
 		break;
 	case PAUSED:
 	{
-		if (event->type == Event::KeyPressed)
-			if (event->key.code == Keyboard::Escape)
+		if (event->type == sf::Event::KeyPressed)
+			if (event->key.code == sf::Keyboard::Escape)
 			{
 				pause();
 				return;
 			}
 
-		if (event->type == Event::JoystickButtonPressed)
+		if (event->type == sf::Event::JoystickButtonPressed)
 			if (event->joystickButton.button == Controller::KEY_ESCAPE)
 			{
 				pause();
@@ -156,8 +157,8 @@ void GameWindow::eventFilter(Event *event)
 		break;
 	case FINISHED:
 	case GAME_OVER:
-		if (event->type == Event::KeyPressed
-				|| event->type == Event::JoystickButtonPressed)
+		if (event->type == sf::Event::KeyPressed
+				|| event->type == sf::Event::JoystickButtonPressed)
 			finish();
 		break;
 	}
@@ -320,11 +321,13 @@ void GameWindow::nextTrack()
 	Engine::Instance().soundManager()->startBackgroundSound(trackType);
 }
 
-void GameWindow::fillTracks(const vector<MusicType> &trackList)
+void GameWindow::fillTracks(const std::vector<MusicType> &trackList)
 {
 	tracks.clear();
 	currentTrack = 0;
 	tracks = trackList;
-	random_shuffle(tracks.begin(), tracks.end());
+	std::random_device rd;
+	std::mt19937 g(rd());
+	shuffle(tracks.begin(), tracks.end(), g);
 }
 

@@ -12,7 +12,7 @@
 #include "managers.h"
 #include "gameoptions.h"
 
-const String GamePanel::endline = "\n";
+const sf::String GamePanel::endline = "\n";
 
 GamePanel::GamePanel() :
 	GameDrawable()
@@ -24,21 +24,21 @@ GamePanel::GamePanel() :
 	life = new LifeBar();
 	progress = new LifeBar();
 
-	const Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
+	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 
 	m_sprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::PANEL_TEXTURE));
 	m_sprite.setScale(scaleFactor);
 
 	info.setFont(Engine::Instance().fontManager()->font());
-	info.setFillColor(Color::Black);
-	info.setOutlineColor(Color::Yellow);
+	info.setFillColor(sf::Color::Black);
+	info.setOutlineColor(sf::Color::Yellow);
 	info.setOutlineThickness(2);
 	info.setCharacterSize(25);
 	info.setScale(scaleFactor);
 
 	moneyCountText.setFont(Engine::Instance().fontManager()->font());
-	moneyCountText.setFillColor(Color::Black);
-	moneyCountText.setOutlineColor(Color::Yellow);
+	moneyCountText.setFillColor(sf::Color::Black);
+	moneyCountText.setOutlineColor(sf::Color::Yellow);
 	moneyCountText.setOutlineThickness(2);
 	moneyCountText.setCharacterSize(34);
 	moneyCountText.setScale(scaleFactor);
@@ -46,8 +46,8 @@ GamePanel::GamePanel() :
 	cursorSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::PANEL_CURSOR));
 	cursorSprite.setScale(scaleFactor);
 
-	currentIconRect.setSize(Vector2f(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE));
-	currentIconRect.setFillColor(Color(34,69,160,100));
+	currentIconRect.setSize(sf::Vector2f(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE));
+	currentIconRect.setFillColor(sf::Color(34,69,160,100));
 	currentIconRect.setScale(scaleFactor);
 
 	abilityBombSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ABILITY_BOMB));
@@ -93,8 +93,8 @@ GamePanel::GamePanel() :
 	towerImprovedSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	readyText.setFont(Engine::Instance().fontManager()->font());
-	readyText.setFillColor(Color::Black);
-	readyText.setOutlineColor(Color::Yellow);
+	readyText.setFillColor(sf::Color::Black);
+	readyText.setOutlineColor(sf::Color::Yellow);
 	readyText.setOutlineThickness(2);
 	readyText.setCharacterSize(45);
 	readyText.setScale(scaleFactor);
@@ -113,9 +113,9 @@ GamePanel::GamePanel() :
 	actionsSprites.push_back(&abilityIncreaseTowerAttackSpeedSprite);
 	actionsSprites.push_back(&abilityStopSprite);
 
-	const float costTextCharacterSize = 20;
-	const Color costTextFillColor = Color::White;
-	const Color costTextOutlineColor = Color::Black;
+	const unsigned int costTextCharacterSize = 20;
+	const sf::Color costTextFillColor = sf::Color::White;
+	const sf::Color costTextOutlineColor = sf::Color::Black;
 
 	towerBaseCostText.setFont(Engine::Instance().fontManager()->font());
 	towerBaseCostText.setFillColor(costTextFillColor);
@@ -159,7 +159,7 @@ GamePanel::GamePanel() :
 	towerImprovedCostText.setCharacterSize(costTextCharacterSize);
 	towerImprovedCostText.setScale(scaleFactor);
 
-	const float durationTextCharacterSize = 40;
+	const unsigned int durationTextCharacterSize = 40;
 	abilityBombDurationText.setFont(Engine::Instance().fontManager()->font());
 	abilityBombDurationText.setFillColor(costTextFillColor);
 	abilityBombDurationText.setOutlineColor(costTextOutlineColor);
@@ -223,22 +223,23 @@ GamePanel::GamePanel() :
 	lifeIcon.setScale(scaleFactor);
 
 	waveText.setFont(Engine::Instance().fontManager()->font());
-	waveText.setFillColor(Color::Magenta);
+	waveText.setFillColor(sf::Color::Magenta);
 	waveText.setOutlineThickness(2);
-	waveText.setOutlineColor(Color::Yellow);
+	waveText.setOutlineColor(sf::Color::Yellow);
 	waveText.setCharacterSize(25);
 	waveText.setScale(scaleFactor);
 
 	m_bottomValue = 0;
 	const int progressWidth = Engine::Instance().settingsManager()->getResolution().x * PROGRESS_WIDTH;
-	progress->init(Vector2i(progressWidth, LifeBar::LIFE_BAR_HEIGHT * Engine::Instance().settingsManager()->getScaleFactor().y), Color::Red);
-	life->init(Vector2i(722 * scaleFactor.x, 37 * scaleFactor.y), Color::Cyan);
+	progress->init(sf::Vector2i(progressWidth,
+								LifeBar::LIFE_BAR_HEIGHT * Engine::Instance().settingsManager()->getScaleFactor().y), sf::Color::Red);
+	life->init(sf::Vector2i(722 * scaleFactor.x, 37 * scaleFactor.y), sf::Color::Cyan);
 
-	drainRect.setFillColor(Color::Transparent);
+	drainRect.setFillColor(sf::Color::Transparent);
 	drainRect.setOutlineThickness(2);
-	drainRect.setOutlineColor(Color::Transparent);
+	drainRect.setOutlineColor(sf::Color::Transparent);
 
-	progress->setPos(Vector2f(progressWidth, PROGRESS_OFFSET * scaleFactor.y));
+	progress->setPos(sf::Vector2f(progressWidth, PROGRESS_OFFSET * scaleFactor.y));
 	updatePos();
 }
 
@@ -247,10 +248,10 @@ GamePanel::~GamePanel()
 
 }
 
-void GamePanel::draw(RenderTarget * const target)
+void GamePanel::draw(sf::RenderTarget * const target)
 {
 	//draw minimap
-	rTexture.clear(Color::Transparent);
+	rTexture.clear(sf::Color::Transparent);
 	Engine::Instance().options<GameOptions>()->level()->drawLevel(&rTexture);
 	rTexture.display();
 	miniMapSprite.setTexture(rTexture.getTexture());
@@ -327,7 +328,7 @@ void GamePanel::update()
 		if (blinkTimer.check(BLINK_TIME))
 		{
 			waitBlink = !waitBlink;
-			readyText.setFillColor(waitBlink?Color::Black:Color::Red);
+			readyText.setFillColor(waitBlink ? sf::Color::Black : sf::Color::Red);
 		}
 	}
 	if (m_drain)
@@ -335,7 +336,7 @@ void GamePanel::update()
 		if (drainBlinkTimer.check(100))
 		{
 			drainState = !drainState;
-			drainRect.setOutlineColor(drainState ? Color::Red : Color::Transparent);
+			drainRect.setOutlineColor(drainState ? sf::Color::Red : sf::Color::Transparent);
 		}
 	}
 	updateEnableTowers();
@@ -345,8 +346,8 @@ void GamePanel::update()
 void GamePanel::updatePanel()
 {
 	const int money = static_cast<int>(Engine::Instance().options<GameOptions>()->level()->getMoneyCount());
-	moneyCountText.setString(String(to_string(money)));
-	drainRect.setSize(Vector2f(moneyCountText.getGlobalBounds().width,
+	moneyCountText.setString(sf::String(std::to_string(money)));
+	drainRect.setSize(sf::Vector2f(moneyCountText.getGlobalBounds().width,
 							   moneyCountText.getGlobalBounds().height*2));
 
 	const float progressValue = static_cast<float>(Engine::Instance().options<GameOptions>()->level()->currentProgress()) / m_progressMax;
@@ -418,11 +419,11 @@ TOWER_TYPES GamePanel::currentTower() const
 	return POWER;
 }
 
-Vector2f GamePanel::updatePos()
+sf::Vector2f GamePanel::updatePos()
 {
-	const Vector2f nullPos = Vector2f(0, Engine::Instance().settingsManager()->getResolution().y - m_sprite.getGlobalBounds().height);
-	const Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
-	const Vector2f iconSize = Vector2f(ICON_SIZE * scaleFactor.x, ICON_SIZE * scaleFactor.y);
+	const sf::Vector2f nullPos = sf::Vector2f(0, Engine::Instance().settingsManager()->getResolution().y - m_sprite.getGlobalBounds().height);
+	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
+	const sf::Vector2f iconSize = sf::Vector2f(ICON_SIZE * scaleFactor.x, ICON_SIZE * scaleFactor.y);
 
 	const float top_offset = 40 * scaleFactor.x;
 	const float left_offset = 40 * scaleFactor.x;
@@ -432,7 +433,7 @@ Vector2f GamePanel::updatePos()
 
 	m_bottomValue = nullPos.y + PANEL_OFFSET * scaleFactor.y;
 
-	Vector2f pos = Vector2f(ceil(nullPos.x), ceil(nullPos.y));
+	sf::Vector2f pos = sf::Vector2f(ceil(nullPos.x), ceil(nullPos.y));
 	m_sprite.setPosition(pos);
 
 	pos.y += panel_offset;
@@ -440,7 +441,7 @@ Vector2f GamePanel::updatePos()
 	pos.x += left_offset;
 	pos.y += top_offset;
 
-	Vector2f secondRow = Vector2f(pos.x, pos.y + iconSize.y + icon_offset);
+	sf::Vector2f secondRow = sf::Vector2f(pos.x, pos.y + iconSize.y + icon_offset);
 	moneyIcon.setPosition(secondRow);
 	secondRow.x += iconSize.x;
 	moneyCountText.setPosition(secondRow);
@@ -513,7 +514,7 @@ Vector2f GamePanel::updatePos()
 	pos.x += icon_offset;
 	pos.y = nullPos.y + 43 * scaleFactor.y;
 
-	readyText.setPosition(Vector2f(Engine::Instance().settingsManager()->getResolution().x/2 - readyText.getGlobalBounds().width/2,
+	readyText.setPosition(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x/2 - readyText.getGlobalBounds().width/2,
 								   Engine::Instance().settingsManager()->getResolution().y/2 + readyText.getGlobalBounds().height/2));
 	waveText.setPosition(progress->pos());
 
@@ -549,7 +550,7 @@ int GamePanel::getProgressMax() const
 void GamePanel::updateWaveText()
 {
 	waveText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::WAVE) +
-				" #" + to_string(Engine::Instance().options<GameOptions>()->level()->getCurrentWave() + 1));
+				L" #" + std::to_wstring(Engine::Instance().options<GameOptions>()->level()->getCurrentWave() + 1));
 }
 
 float GamePanel::getTowerUpgradeCost(Tower *tower) const
@@ -590,12 +591,12 @@ void GamePanel::updateAbilitiesDuration()
 {
 	Abilities *abilities = Engine::Instance().options<GameOptions>()->level()->getAbilities();
 
-	abilityBombDurationText.setString(to_string(abilities->bombAbility->timeLeft()));
-	abilityFreezeBombDurationText.setString(to_string(abilities->freezeBombAbility->timeLeft()));
-	abilityVenomDurationText.setString(to_string(abilities->venomAbility->timeLeft()));
-	abilityIncreaseTowerDamageDurationText.setString(to_string(abilities->increaseTowerDamageAbility->timeLeft()));
-	abilityIncreaseTowerAttackSpeedDurationText.setString(to_string(abilities->increaseTowerAttackSpeedAbility->timeLeft()));
-	abilityStopDurationText.setString(to_string(abilities->stopAblity->timeLeft()));
+	abilityBombDurationText.setString(std::to_string(abilities->bombAbility->timeLeft()));
+	abilityFreezeBombDurationText.setString(std::to_string(abilities->freezeBombAbility->timeLeft()));
+	abilityVenomDurationText.setString(std::to_string(abilities->venomAbility->timeLeft()));
+	abilityIncreaseTowerDamageDurationText.setString(std::to_string(abilities->increaseTowerDamageAbility->timeLeft()));
+	abilityIncreaseTowerAttackSpeedDurationText.setString(std::to_string(abilities->increaseTowerAttackSpeedAbility->timeLeft()));
+	abilityStopDurationText.setString(std::to_string(abilities->stopAblity->timeLeft()));
 }
 
 void GamePanel::updateEnableTowers()
@@ -606,37 +607,37 @@ void GamePanel::updateEnableTowers()
 	if (money < cost)
 		towerBaseSprite.setColor(EngineDefs::GrayColor);
 	else
-		towerBaseSprite.setColor(Color::White);
+		towerBaseSprite.setColor(sf::Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::LASER).cost;
 	if (money < cost || !iconsAvaliable.isLaserEnabled)
 		towerLaserSprite.setColor(EngineDefs::GrayColor);
 	else
-		towerLaserSprite.setColor(Color::White);
+		towerLaserSprite.setColor(sf::Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::FREEZE).cost;
 	if (money < cost || !iconsAvaliable.isFreezeEnabled)
 		towerFreezeSprite.setColor(EngineDefs::GrayColor);
 	else
-		towerFreezeSprite.setColor(Color::White);
+		towerFreezeSprite.setColor(sf::Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::ROCKET).cost;
 	if (money < cost || !iconsAvaliable.isRocketEnabled)
 		towerRocketSprite.setColor(EngineDefs::GrayColor);
 	else
-		towerRocketSprite.setColor(Color::White);
+		towerRocketSprite.setColor(sf::Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::POWER).cost + Engine::Instance().options<GameOptions>()->level()->getPowerTowersCount() * PowerTower::COST_OFFSET;
 	if (money < cost)
 		towerPowerSprite.setColor(EngineDefs::GrayColor);
 	else
-		towerPowerSprite.setColor(Color::White);
+		towerPowerSprite.setColor(sf::Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::IMPROVED).cost;
 	if (money < cost || !iconsAvaliable.isImprovedEnabled)
 		towerImprovedSprite.setColor(EngineDefs::GrayColor);
 	else
-		towerImprovedSprite.setColor(Color::White);
+		towerImprovedSprite.setColor(sf::Color::White);
 }
 
 void GamePanel::updateEnableAbilities()
@@ -646,37 +647,37 @@ void GamePanel::updateEnableAbilities()
 	if (!abilities->bombAbility->isReady() || !iconsAvaliable.isAbilityBombEnabled)
 		abilityBombSprite.setColor(EngineDefs::GrayColor);
 	else
-		abilityBombSprite.setColor(Color::White);
+		abilityBombSprite.setColor(sf::Color::White);
 
 	if (!abilities->freezeBombAbility->isReady() || !iconsAvaliable.isAbilityFreezeBombEnabled)
 		abilityFreezeBombSprite.setColor(EngineDefs::GrayColor);
 	else
-		abilityFreezeBombSprite.setColor(Color::White);
+		abilityFreezeBombSprite.setColor(sf::Color::White);
 
 	if (!abilities->venomAbility->isReady() || !iconsAvaliable.isAbilityVenomEnabled)
 		abilityVenomSprite.setColor(EngineDefs::GrayColor);
 	else
-		abilityVenomSprite.setColor(Color::White);
+		abilityVenomSprite.setColor(sf::Color::White);
 
 	if (!abilities->increaseTowerDamageAbility->isReady() || !iconsAvaliable.isAbilityIncreaseTowerDamageEnabled)
 		abilityIncreaseTowerDamageSprite.setColor(EngineDefs::GrayColor);
 	else
-		abilityIncreaseTowerDamageSprite.setColor(Color::White);
+		abilityIncreaseTowerDamageSprite.setColor(sf::Color::White);
 
 	if (!abilities->increaseTowerAttackSpeedAbility->isReady() || !iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled)
 		abilityIncreaseTowerAttackSpeedSprite.setColor(EngineDefs::GrayColor);
 	else
-		abilityIncreaseTowerAttackSpeedSprite.setColor(Color::White);
+		abilityIncreaseTowerAttackSpeedSprite.setColor(sf::Color::White);
 
 	if (!abilities->stopAblity->isReady() || !iconsAvaliable.isAbilityStopEnabled)
 		abilityStopSprite.setColor(EngineDefs::GrayColor);
 	else
-		abilityStopSprite.setColor(Color::White);
+		abilityStopSprite.setColor(sf::Color::White);
 }
 
-String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
+sf::String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 {
-	String str;
+	sf::String str;
 	switch (type)
 	{
 	case BASE:
@@ -725,9 +726,9 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 
 	str += endline;
 
-	const String separator = ": ";
+	const sf::String separator = ": ";
 	if (tower != nullptr)
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LEVEL) + separator + to_string(tower->level()) + endline;
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LEVEL) + separator + std::to_string(tower->level()) + endline;
 
 	const TowerStats towerStats = tower == nullptr ? TowersFactory::getTowerStats(type) : tower->data();
 	const float dps = towerStats.damage / ((tower == nullptr ? towerStats.attackSpeed : tower->actualAttackSpeed()) * 0.001f);
@@ -751,7 +752,8 @@ String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 	}
 	else
 	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::KILLS) + separator + to_string(tower->kills());
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::KILLS) + separator +
+				std::to_string(tower->kills());
 		str += endline;
 		const float cost = getTowerSellCost(tower);
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SELL_COST);
@@ -767,11 +769,11 @@ void GamePanel::updateCursor()
 
 	if (!Engine::Instance().options<GameOptions>()->cursor()->inPanel())
 		return;
-	const Vector2f pos = Engine::Instance().options<GameOptions>()->cursor()->windowScreenPos();
+	const sf::Vector2f pos = Engine::Instance().options<GameOptions>()->cursor()->windowScreenPos();
 
 	for (unsigned int i = 0; i < actionsSprites.size(); ++i)
 	{
-		Sprite *sprite = actionsSprites.at(i);
+		sf::Sprite *sprite = actionsSprites.at(i);
 		if (sprite->getGlobalBounds().contains(pos))
 		{
 			currentCursorPos = i;
@@ -892,17 +894,17 @@ void GamePanel::resetPanelIcon()
 	updateCursor();
 }
 
-bool GamePanel::clickOnMiniMap(const Vector2f &pos)
+bool GamePanel::clickOnMiniMap(const sf::Vector2f &pos)
 {
 	if (miniMapSprite.getGlobalBounds().contains(pos))
 	{
-		Vector2f rectPos;
+		sf::Vector2f rectPos;
 		rectPos.x = pos.x - miniMapSprite.getGlobalBounds().left;
 		rectPos.y = pos.y - miniMapSprite.getGlobalBounds().top;
-		Vector2f k;
+		sf::Vector2f k;
 		k.x = rectPos.x/miniMapSprite.getGlobalBounds().width;
 		k.y = rectPos.y/miniMapSprite.getGlobalBounds().height;
-		Vector2f center;
+		sf::Vector2f center;
 		center.x = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().x * Engine::Instance().options<GameOptions>()->tileSize().x;
 		center.y = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().y * Engine::Instance().options<GameOptions>()->tileSize().y;
 		center.x *= k.x;
@@ -915,7 +917,7 @@ bool GamePanel::clickOnMiniMap(const Vector2f &pos)
 
 void GamePanel::updateInfo()
 {
-	String str;
+	sf::String str;
 	if (Engine::Instance().options<GameOptions>()->cursor()->inPanel())
 	{
 		const ACTION_STATE state = getCurrentIcon();
@@ -1041,41 +1043,41 @@ void GamePanel::initMission(unsigned int n)
 	}
 }
 
-FloatRect GamePanel::getTowersRect() const
+sf::FloatRect GamePanel::getTowersRect() const
 {
-	const Vector2f pos = Vector2f(towerBaseSprite.getGlobalBounds().left, towerBaseSprite.getGlobalBounds().top);
+	const sf::Vector2f pos = sf::Vector2f(towerBaseSprite.getGlobalBounds().left, towerBaseSprite.getGlobalBounds().top);
 	const float icons_space = ICONS_SPACE * Engine::Instance().settingsManager()->getScaleFactor().x;
-	Vector2f size;
+	sf::Vector2f size;
 	size.x = towerBaseSprite.getGlobalBounds().width * 6;
 	size.x += icons_space * 5;
 	size.y = towerBaseSprite.getGlobalBounds().height;
-	return FloatRect(pos, size);
+	return sf::FloatRect(pos, size);
 }
 
-FloatRect GamePanel::getAbilitiesRect() const
+sf::FloatRect GamePanel::getAbilitiesRect() const
 {
-	const Vector2f pos = Vector2f(abilityBombSprite.getGlobalBounds().left, abilityBombSprite.getGlobalBounds().top);
+	const sf::Vector2f pos = sf::Vector2f(abilityBombSprite.getGlobalBounds().left, abilityBombSprite.getGlobalBounds().top);
 	const float icons_space = ICONS_SPACE * Engine::Instance().settingsManager()->getScaleFactor().x;
-	Vector2f size;
+	sf::Vector2f size;
 	size.x = abilityBombSprite.getGlobalBounds().width * 6;
 	size.x += icons_space * 5;
 	size.y = abilityBombSprite.getGlobalBounds().height;
-	return FloatRect(pos, size);
+	return sf::FloatRect(pos, size);
 }
 
-FloatRect GamePanel::getMoneyRect() const
+sf::FloatRect GamePanel::getMoneyRect() const
 {
 	return moneyCountText.getGlobalBounds();
 }
 
-FloatRect GamePanel::getHealthRect() const
+sf::FloatRect GamePanel::getHealthRect() const
 {
 	return life->fullValue.getGlobalBounds();
 }
 
-FloatRect GamePanel::getProgressRect() const
+sf::FloatRect GamePanel::getProgressRect() const
 {
-	return FloatRect(progress->pos().x, progress->pos().y,
+	return sf::FloatRect(progress->pos().x, progress->pos().y,
 					 Engine::Instance().settingsManager()->getResolution().x * PROGRESS_WIDTH,
 					 PROGRESS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
 }
@@ -1090,7 +1092,7 @@ void GamePanel::init()
 	rTexture.setView(*Engine::Instance().options<GameOptions>()->camera()->getMiniMapView());
 }
 
-void GamePanel::setMapSize(const Vector2f& size)
+void GamePanel::setMapSize(const sf::Vector2f& size)
 {
 	rTexture.create(static_cast<unsigned int>(size.x),
 					static_cast<unsigned int>(size.y));
@@ -1102,8 +1104,8 @@ void GamePanel::setMapSize(const Vector2f& size)
 
 float GamePanel::getBottomValue() const
 {
-	const Vector2i pixelPos = Vector2i(0, m_bottomValue);
-	const Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
+	const sf::Vector2i pixelPos = sf::Vector2i(0, m_bottomValue);
+	const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
 				pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView());
 
 	return pos.y;

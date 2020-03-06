@@ -9,6 +9,7 @@ enum TEXTURE_ID
 {
 	UNKNOWN_TEXTURE = TexturesManager::USER_TEXTURE_ID,
 	MANUAL_BACKGROUND,
+	MISSON_BACKGROUND,
 
 	//ui
 	PANEL_TEXTURE,
@@ -291,10 +292,15 @@ class GameManagers
 public:
 	GameManagers();
 
-	static void loadTextures();
+	static void loadResources();
+	static void addTexture(TextureType type, const std::string& data);
+	static void addSound(SoundType type, const std::string& data);
+	static void addMusic(MusicType type, const std::string& data);
+
+	static void loadTranslations();
+
 	static void loadSounds();
 	static void loadMusic();
-	static void loadTranslations();
 };
 
 #endif // GAMEMANAGERS_H

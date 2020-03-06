@@ -8,10 +8,10 @@ class Projectile : public GameObject
 {
 public:
 	Projectile(const TextureType &texture_id,
-			   const Vector2f &pos,
-			   const Vector2i &frameSize,
+			   const sf::Vector2f &pos,
+			   const sf::Vector2i &frameSize,
 			   int frameCount);
-	constexpr static Int64 PROJECTILE_GAME_SPEED = 10;
+	constexpr static sf::Int64 PROJECTILE_GAME_SPEED = 10;
 
 	class Enemy *target;
 	void setAngle(float angle);

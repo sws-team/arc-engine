@@ -19,9 +19,9 @@ class Enemy : public GameObject
 {
 public:
 	Enemy(const TextureType& texture_id,
-		  const Vector2f& startPos,
+		  const sf::Vector2f& startPos,
 		  const EnemyStats &stats,
-		  const Vector2i &cellSize,
+		  const sf::Vector2i &cellSize,
 		  const float frameCount,
 		  const float animationSpeed);
 	~Enemy() override;
@@ -36,7 +36,7 @@ public:
 	void moveNext(int direction);
 
 	void update() override;	
-	void draw(RenderTarget *const target) override;
+	void draw(sf::RenderTarget *const target) override;
 
 	void hit(float damage);
 
@@ -48,8 +48,8 @@ public:
 	void protect(float shell, bool show = true);
 	void setReflection(const float reflection);
 
-	Vector2f enemyPos() const;
-	Vector2f enemyCenter() const;
+	sf::Vector2f enemyPos() const;
+	sf::Vector2f enemyCenter() const;
 
 	void setStopped(bool stopped);
 	bool isStopped() const;
@@ -61,9 +61,9 @@ public:
 
 	static constexpr float ENEMY_SCALE = 3.f;
 
-	Vector2f getEnemySize() const;
+	sf::Vector2f getEnemySize() const;
 
-	FloatRect enemyRect() const;
+	sf::FloatRect enemyRect() const;
 
 private:
 	EnemyStats m_stats;
@@ -72,7 +72,7 @@ private:
 	constexpr static int RIGHT_ANGLE = 90;
 
 	class LifeBar *lifeBar;
-	void drawLifeBar(RenderTarget *target);
+	void drawLifeBar(sf::RenderTarget *target);
 
 	//move
 	Timer moveTimer;
@@ -92,10 +92,10 @@ private:
 	float freezeK;
 	bool isFreezed;
 
-	Vector2f m_size;
+	sf::Vector2f m_size;
 
-	Vector2f m_spritePos;//enemy pos in rect
-	Vector2f m_pos;//global pos
+	sf::Vector2f m_spritePos;//enemy pos in rect
+	sf::Vector2f m_pos;//global pos
 
 	constexpr static float LIFEBAR_OFFSET = 4;
 	EnemyAbility *ability;
@@ -111,15 +111,15 @@ private:
 	Timer burnAttack;
 	GameObject *burnAnimation;
 
-	Vector2f actualMoveStep() const;
-	Vector2f moveStep;
+	sf::Vector2f actualMoveStep() const;
+	sf::Vector2f moveStep;
 };
 
 class EnemyAbility : public GameDrawable
 {
 public:
 	EnemyAbility(float msec);
-	virtual void draw(RenderTarget *const target) override;
+	virtual void draw(sf::RenderTarget *const target) override;
 	void update() override;
 
 	void setOwner(Enemy *owner);
@@ -193,7 +193,7 @@ class TowerEffectAbility : public EnemyAbility
 {
 public:
 	TowerEffectAbility();
-	void draw(RenderTarget *const target) override;
+	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 protected:
 	virtual void effect(bool isActive) = 0;
@@ -203,9 +203,9 @@ protected:
 	struct AbilityInfo
 	{
 		TextureType enemyTextureId;
-		Vector2i animationSize;
+		sf::Vector2i animationSize;
 		TextureType pojectileTextureId;
-		Vector2i projectileSize;
+		sf::Vector2i projectileSize;
 		float duration;
 		SoundType catchSound;
 	};
@@ -320,18 +320,18 @@ public:
 		};
 
 		EnemyStats stats;
-		Vector2i size;
+		sf::Vector2i size;
 		ABILITY_TYPE abilityType;
 		TextureType texture_id;
 		float animationSpeed;
 		float frameCount;
 	};
 
-	static Enemy *createEnemy(ENEMY_TYPES type, const Vector2f &startPos);
-	static vector<Wave> generateEnemies(unsigned int n);
+	static Enemy *createEnemy(ENEMY_TYPES type, const sf::Vector2f &startPos);
+	static std::vector<Wave> generateEnemies(unsigned int n);
 	static EnemyInfo getEnemyInfo(ENEMY_TYPES type);
 private:
-	static Wave createWave(float protection, float time, const map<ENEMY_TYPES, int>& enemies);
+	static Wave createWave(float protection, float time, const std::map<ENEMY_TYPES, int>& enemies);
 };
 
 #endif // ENEMY_H

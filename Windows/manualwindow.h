@@ -18,8 +18,8 @@ public:
 	void update() override;
 
 protected:
-	void paint(RenderWindow *window) override;
-	void eventFilter(Event *event) override;
+	void paint(sf::RenderWindow *window) override;
+	void eventFilter(sf::Event *event) override;
 
 private:
 
@@ -38,7 +38,7 @@ private:
 
 		Element(TextureType texture,
 				TranslationType name,
-				const String& description);
+				const sf::String& description);
 
 		Element(TextureType texture,
 				TranslationType name,
@@ -50,43 +50,43 @@ private:
 
 		EnemiesFactory::EnemyInfo enemyInfo;
 		TOWER_TYPES towerType;
-		String abilityInfo;
+		sf::String abilityInfo;
 
-		RectangleShape rect;
-		Sprite icon;
+		sf::RectangleShape rect;
+		sf::Sprite icon;
 		GameObject *object;
-		Text nameText;
-		Text descriptionText;
+		sf::Text nameText;
+		sf::Text descriptionText;
 
 		void init();
 		void update();
 	};
 
-	vector<Element> elements;
+	std::vector<Element> elements;
 
 	void updatePos();
 
 	void addElements();
 
-	RectangleShape currentRect;
+	sf::RectangleShape currentRect;
 	int current;
 	void updateCurrentInfo();
-	RectangleShape infoRect;
+	sf::RectangleShape infoRect;
 
 	int page;
 	static constexpr unsigned int MAX_ELEMENTS_COUNT = 6;
 	int maxPages;
 
-	Sprite next;
-	Sprite previous;
-	Sprite close;
-	Sprite credits;
-	Text toolTip;
+	sf::Sprite next;
+	sf::Sprite previous;
+	sf::Sprite close;
+	sf::Sprite credits;
+	sf::Text toolTip;
 
 	void nextPage();
 	void previousPage();
 
-	static const Color SELECTED_COLOR;
+	static const sf::Color SELECTED_COLOR;
 };
 
 #endif // MANUALWINDOW_H

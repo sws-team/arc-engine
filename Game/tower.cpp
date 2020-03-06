@@ -13,9 +13,9 @@
 const float Tower::LEVEL_GAIN = 0.25f;
 const float Tower::TOWER_SCAlE = 1.f/3.f;
 
-Tower::Tower(const TextureType &texture_id, const Vector2f &pos, const TowerStats &stats)
+Tower::Tower(const TextureType &texture_id, const sf::Vector2f &pos, const TowerStats &stats)
 	: GameObject(texture_id, pos,
-				 Vector2i(GameOptions::CELL_SIZE/TOWER_SCAlE,
+				 sf::Vector2i(GameOptions::CELL_SIZE/TOWER_SCAlE,
 						  GameOptions::CELL_SIZE/TOWER_SCAlE),
 				 1)
 	,m_stats(stats)
@@ -35,7 +35,7 @@ void Tower::update()
 	GameObject::update();
 }
 
-void Tower::draw(RenderTarget * const target)
+void Tower::draw(sf::RenderTarget * const target)
 {
 	GameObject::draw(target);
 }
@@ -52,7 +52,7 @@ void Tower::action()
 		return;
 
 	//finding target
-	Enemy *target = findNearestEnemy(vector<Enemy*>());
+	Enemy *target = findNearestEnemy(std::vector<Enemy*>());
 	shoot(target);
 }
 
@@ -61,7 +61,7 @@ void Tower::shoot(Enemy *target)
 	Engine::Instance().soundManager()->playOnce(m_shotSound);
 }
 
-void Tower::collide(const vector<Enemy *> &enemies)
+void Tower::collide(const std::vector<Enemy *> &enemies)
 {
 
 }
@@ -76,14 +76,9 @@ void Tower::upgrade()
 	m_stats.attackSpeed *= 1 - Tower::LEVEL_GAIN;
 
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::UPGRADE, this->pos(),
-											 Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE),
+											 sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE),
 											 250, 4, 0);
 	Engine::Instance().soundManager()->playOnce(GAME_SOUND::UPGRADE);
-}
-
-void Tower::hitEnemy(Enemy *enemy)
-{
-
 }
 
 TOWER_TYPES Tower::type() const
@@ -127,12 +122,12 @@ void Tower::checkKill(Enemy *enemy)
 		m_kills++;
 }
 
-Enemy *Tower::findNearestEnemy(const vector<Enemy *> &exclude)
+Enemy *Tower::findNearestEnemy(const std::vector<Enemy *> &exclude)
 {
 	Enemy *target = nullptr;
 	float min = INT_MAX;
-	const Vector2f aPos = getCenter();
-	const vector <Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
+	const sf::Vector2f aPos = getCenter();
+	const std::vector <Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
 	for(Enemy *enemy : enemies)
 	{
 		if (find(exclude.begin(), exclude.end(), enemy) != exclude.end())
@@ -192,7 +187,7 @@ void Tower::setDowngrade(bool isDowngrade)
 	m_downgraded = isDowngrade;
 	if (isDowngrade)
 		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::DOWN_EFFECT, this->pos(),
-											 Vector2i(GameOptions::CELL_SIZE,
+											 sf::Vector2i(GameOptions::CELL_SIZE,
 													  GameOptions::CELL_SIZE),
 											 DownTowerAbility::TOWER_DOWNGRADED_DURATION/4, 4, 0);
 }
@@ -227,7 +222,7 @@ void Tower::setActive(bool isActive)
 	m_isActive = isActive;
 	if (!isActive)
 		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::WEB, this->pos(),
-											 Vector2i(GameOptions::CELL_SIZE,
+											 sf::Vector2i(GameOptions::CELL_SIZE,
 													  GameOptions::CELL_SIZE),
 											 ShutdownTowerAbility::TOWER_DISABLED_DURATION/4, 4, 0);
 }
@@ -242,7 +237,7 @@ TowerStats Tower::data() const
 	return m_stats;
 }
 
-Tower *TowersFactory::createTower(TOWER_TYPES type, const Vector2f &pos)
+Tower *TowersFactory::createTower(TOWER_TYPES type, const sf::Vector2f &pos)
 {
 	Tower *tower = nullptr;
 	switch (type)
@@ -290,7 +285,7 @@ TowerStats TowersFactory::getTowerStats(TOWER_TYPES type)
 	return BaseTower::STATS;
 }
 
-bool TowersFactory::isIntersects(const FloatRect &rect, const Vector2f &center, float radius)
+bool TowersFactory::isIntersects(const sf::FloatRect &rect, const sf::Vector2f &center, float radius)
 {
 	float x = fabs(rect.left - center.x);
 	float y = fabs(rect.top - center.y);
@@ -334,14 +329,14 @@ const TowerStats RocketTower::STATS = TowerStats	(40,	5000,	12,		5,		150);
 const TowerStats LaserTower::STATS = TowerStats		(5,		135,	6,		0,		200);
 const TowerStats ImprovedTower::STATS = TowerStats	(11,	250,	7,		40,		250);
 
-BaseTower::BaseTower(const Vector2f &pos)
+BaseTower::BaseTower(const sf::Vector2f &pos)
 	: ProjectilesTower(GAME_TEXTURE::TOWER_BASE, pos, STATS)
 {
-	projectileInfo.size = Vector2i(16, 8);
+	projectileInfo.size = sf::Vector2i(16, 8);
 	projectileInfo.frameCount = 1;
 	projectileInfo.texture_id = GAME_TEXTURE::BASE_PROJECTILE;
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::BASE_EXPLOSION_EFFECT;
-	projectileInfo.explosionSize = Vector2i(12, 12);
+	projectileInfo.explosionSize = sf::Vector2i(12, 12);
 	projectileInfo.explosionFrameCount = 16;
 	m_shotSound = GAME_SOUND::BASE_SHOT;
 }
@@ -360,17 +355,17 @@ void BaseTower::upgrade()
 		this->setInvulnerable(true);
 }
 
-const Color PowerTower::POWER_TOWER_AREA_COLOR = Color(23, 200, 124, 100);
-const Vector2i PowerTower::BLAST_SIZE = Vector2i(256, 256);
+const sf::Color PowerTower::POWER_TOWER_AREA_COLOR = sf::Color(23, 200, 124, 100);
+const sf::Vector2i PowerTower::BLAST_SIZE = sf::Vector2i(256, 256);
 
-PowerTower::PowerTower(const Vector2f &pos)
+PowerTower::PowerTower(const sf::Vector2f &pos)
 	: Tower(GAME_TEXTURE::TOWER_POWER, pos, STATS)
 	,m_isHighlighted(false)
 	,gainCount(false)
 	,abilityProgress(nullptr)
 {
 	zeroGround = Engine::Instance().options<GameOptions>()->mapTileSize().x * ZERO_GROUND;
-	powerRect.setSize(Vector2f(STATS.radius * Engine::Instance().options<GameOptions>()->mapTileSize().x,
+	powerRect.setSize(sf::Vector2f(STATS.radius * Engine::Instance().options<GameOptions>()->mapTileSize().x,
 							   STATS.radius * Engine::Instance().options<GameOptions>()->mapTileSize().y));
 	powerRect.setFillColor(POWER_TOWER_AREA_COLOR);
 	powerRect.setPosition(pos - Engine::Instance().options<GameOptions>()->tileSize());
@@ -383,7 +378,7 @@ PowerTower::~PowerTower()
 		delete abilityProgress;
 }
 
-void PowerTower::draw(RenderTarget * const target)
+void PowerTower::draw(sf::RenderTarget * const target)
 {
 	if (m_isHighlighted)
 		target->draw(powerRect);
@@ -445,10 +440,10 @@ void PowerTower::upgrade()
 	if (level() == ABILITY_LEVEL)
 	{
 		abilityProgress = new LifeBar();
-		abilityProgress->init(Vector2i(this->sprite.getGlobalBounds().width,
+		abilityProgress->init(sf::Vector2i(this->sprite.getGlobalBounds().width,
 							  LifeBar::LIFE_BAR_HEIGHT * Engine::Instance().settingsManager()->getScaleFactor().y),
-							  Color::Cyan);
-		abilityProgress->setPos(Vector2f(this->sprite.getGlobalBounds().left,
+							  sf::Color::Cyan);
+		abilityProgress->setPos(sf::Vector2f(this->sprite.getGlobalBounds().left,
 										 this->sprite.getGlobalBounds().top +
 										 this->sprite.getGlobalBounds().height -
 										 LifeBar::LIFE_BAR_HEIGHT * Engine::Instance().settingsManager()->getScaleFactor().y));
@@ -456,28 +451,28 @@ void PowerTower::upgrade()
 	}
 }
 
-FloatRect PowerTower::getValidArea() const
+sf::FloatRect PowerTower::getValidArea() const
 {
 	return powerRect.getGlobalBounds();
 }
 
 void PowerTower::upgradePowerRect()
 {
-	powerRect.setSize(Vector2f(m_stats.radius * Engine::Instance().options<GameOptions>()->mapTileSize().x,
+	powerRect.setSize(sf::Vector2f(m_stats.radius * Engine::Instance().options<GameOptions>()->mapTileSize().x,
 							   m_stats.radius * Engine::Instance().options<GameOptions>()->mapTileSize().y));
 
 	powerRect.setPosition(this->pos() -
-						  Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x * level(),
+						  sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x * level(),
 								   Engine::Instance().options<GameOptions>()->tileSize().y * level()));
 }
 
 void PowerTower::activateBlast()
 {
-	const Vector2f pos = Vector2f(BLAST_SIZE.x/2 * Engine::Instance().settingsManager()->getScaleFactor().x - Engine::Instance().options<GameOptions>()->mapTileSize().x,
+	const sf::Vector2f pos = sf::Vector2f(BLAST_SIZE.x/2 * Engine::Instance().settingsManager()->getScaleFactor().x - Engine::Instance().options<GameOptions>()->mapTileSize().x,
 								  BLAST_SIZE.y/2 * Engine::Instance().settingsManager()->getScaleFactor().y - Engine::Instance().options<GameOptions>()->mapTileSize().y);
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::BLAST, this->pos() - pos, BLAST_SIZE, 25, 4, 0);
-	const Vector2f center = this->getCenter();
-	const vector <Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
+	const sf::Vector2f center = this->getCenter();
+	const std::vector <Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
 	for(Enemy* enemy : enemies)
 	{
 		const float a = fabs(center.x - enemy->enemyCenter().x);
@@ -507,17 +502,17 @@ void PowerTower::activateBlast()
 
 const int RocketTower::ZERO_GROUND = 3;
 
-RocketTower::RocketTower(const Vector2f &pos)
+RocketTower::RocketTower(const sf::Vector2f &pos)
 	: ProjectilesTower(GAME_TEXTURE::TOWER_ROCKET, pos, STATS)
 {
 	zeroGround = Engine::Instance().options<GameOptions>()->tileSize().x * ZERO_GROUND;
 	m_shotSound = GAME_SOUND::ROCKET_SHOT;
 
-	projectileInfo.size = Vector2i(32, 16);
+	projectileInfo.size = sf::Vector2i(32, 16);
 	projectileInfo.frameCount = 4;
 	projectileInfo.texture_id = GAME_TEXTURE::ROCKET_PROJECTILE;
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::ROCKET_EXPLOSION_EFFECT;
-	projectileInfo.explosionSize = Vector2i(96, 96);
+	projectileInfo.explosionSize = sf::Vector2i(96, 96);
 	projectileInfo.explosionFrameCount = 16;
 }
 
@@ -525,7 +520,7 @@ void RocketTower::moveProjectile(Projectile *projectile)
 {
 	if (projectile->target != nullptr)
 	{
-		const Vector2f aPos = projectile->getCenter();
+		const sf::Vector2f aPos = projectile->getCenter();
 		const float a = aPos.x - projectile->target->getCenter().x;
 		const float b = aPos.y - projectile->target->getCenter().y;
 		const float tg = ( b / a );
@@ -546,8 +541,8 @@ void RocketTower::projectileAction(Enemy *enemy)
 {
 	if(level() == ABILITY_LEVEL)
 		enemy->startBurn();
-	const Vector2f epicenter = enemy->enemyCenter();
-	const vector <Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
+	const sf::Vector2f epicenter = enemy->enemyCenter();
+	const std::vector <Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
 	for(Enemy* levelEnemy : enemies)
 	{
 		const float a = fabs(epicenter.x - levelEnemy->enemyCenter().x);
@@ -565,15 +560,15 @@ void RocketTower::projectileAction(Enemy *enemy)
 	ProjectilesTower::projectileAction(enemy);
 }
 
-FreezeTower::FreezeTower(const Vector2f &pos)
+FreezeTower::FreezeTower(const sf::Vector2f &pos)
 	: ProjectilesTower(GAME_TEXTURE::TOWER_FREEZE, pos, STATS)
 {
 	m_shotSound = GAME_SOUND::FREEZE_SHOT;
-	projectileInfo.size = Vector2i(20, 10);
+	projectileInfo.size = sf::Vector2i(20, 10);
 	projectileInfo.frameCount = 1;
 	projectileInfo.texture_id = GAME_TEXTURE::FREEZE_PROJECTILE;
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::FREEZE_EXPLOSION_EFFECT;
-	projectileInfo.explosionSize = Vector2i(12, 12);
+	projectileInfo.explosionSize = sf::Vector2i(12, 12);
 	projectileInfo.explosionFrameCount = 16;
 }
 
@@ -587,8 +582,8 @@ void FreezeTower::projectileAction(Enemy *enemy)
 
 	if (level() == ABILITY_LEVEL)
 	{
-		const Vector2f epicenter = enemy->enemyCenter();
-		const vector <Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
+		const sf::Vector2f epicenter = enemy->enemyCenter();
+		const std::vector <Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
 		for(Enemy* levelEnemy : enemies)
 		{
 			const float a = fabs(epicenter.x - levelEnemy->enemyCenter().x);
@@ -600,17 +595,17 @@ void FreezeTower::projectileAction(Enemy *enemy)
 	}
 }
 
-const Vector2i LaserTower::LASER_SIZE = Vector2i(16, 16);
+const sf::Vector2i LaserTower::LASER_SIZE = sf::Vector2i(16, 16);
 
-LaserTower::LaserTower(const Vector2f &pos)
+LaserTower::LaserTower(const sf::Vector2f &pos)
 	: Tower(GAME_TEXTURE::TOWER_LASER, pos, STATS)
 {
-	lineTower.position = this->pos() + Vector2f(97 * Engine::Instance().settingsManager()->getScaleFactor().x * TOWER_SCAlE,
+	lineTower.position = this->pos() + sf::Vector2f(97 * Engine::Instance().settingsManager()->getScaleFactor().x * TOWER_SCAlE,
 												24 * Engine::Instance().settingsManager()->getScaleFactor().y * TOWER_SCAlE);
-	lineTower.color = Color::Cyan;
-	mainTarget.lineTarget.color = Color::Cyan;
+	lineTower.color = sf::Color::Cyan;
+	mainTarget.lineTarget.color = sf::Color::Cyan;
 	mainTarget.currentTarget = nullptr;
-	mainTarget.laser = new GameObject(GAME_TEXTURE::LASER_PROJECTILE, Vector2f(0,0), LASER_SIZE, 3);
+	mainTarget.laser = new GameObject(GAME_TEXTURE::LASER_PROJECTILE, sf::Vector2f(0,0), LASER_SIZE, 3);
 //	mainTarget.laser.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::LASER_PROJECTILE));
 	m_shotSound = GAME_SOUND::LASER_SHOT;
 }
@@ -626,7 +621,7 @@ void LaserTower::shoot(Enemy *target)
 	{
 		clearLasers();
 
-		vector<Enemy*> exclude;
+		std::vector<Enemy*> exclude;
 		exclude.push_back(target);
 		while(true)
 		{
@@ -639,9 +634,9 @@ void LaserTower::shoot(Enemy *target)
 			exclude.push_back(enemy);
 
 			LaserTarget laserTarget;
-			laserTarget.lineTarget.color = Color::Cyan;
+			laserTarget.lineTarget.color = sf::Color::Cyan;
 			laserTarget.currentTarget = enemy;
-			laserTarget.laser = new GameObject(GAME_TEXTURE::LASER_PROJECTILE, Vector2f(0,0), Vector2i(16, 16), 3);
+			laserTarget.laser = new GameObject(GAME_TEXTURE::LASER_PROJECTILE, sf::Vector2f(0,0), sf::Vector2i(16, 16), 3);
 			targets.push_back(laserTarget);
 		}
 	}
@@ -658,7 +653,7 @@ void LaserTower::updateLaserTarget(LaserTower::LaserTarget *laserTarget, float d
 
 	laserTarget->lineTarget = laserTarget->currentTarget->getCenter();
 	laserTarget->laser->setPos(laserTarget->lineTarget.position -
-								  Vector2f(LASER_SIZE.x/2 * Engine::Instance().settingsManager()->getScaleFactor().x,
+								  sf::Vector2f(LASER_SIZE.x/2 * Engine::Instance().settingsManager()->getScaleFactor().x,
 										   LASER_SIZE.y/2 * Engine::Instance().settingsManager()->getScaleFactor().y));
 
 	if(laserTarget->damageTimer.check(actualAttackSpeed()))
@@ -673,13 +668,13 @@ void LaserTower::updateLaserTarget(LaserTower::LaserTarget *laserTarget, float d
 	laserTarget->laser->update();
 }
 
-void LaserTower::drawLaserTarget(RenderTarget * const target,
+void LaserTower::drawLaserTarget(sf::RenderTarget * const target,
 								 LaserTower::LaserTarget *laserTarget)
 {
 	if (laserTarget->currentTarget == nullptr)
 		return;
-	Vertex line[] = { lineTower, laserTarget->lineTarget };
-	target->draw(line, 2, Lines);
+	sf::Vertex line[] = { lineTower, laserTarget->lineTarget };
+	target->draw(line, 2, sf::Lines);
 	laserTarget->laser->draw(target);
 }
 
@@ -707,13 +702,13 @@ void LaserTower::update()
 	}
 }
 
-void LaserTower::draw(RenderTarget * const target)
+void LaserTower::draw(sf::RenderTarget * const target)
 {
 	Tower::draw(target);
 
 	drawLaserTarget(target, &mainTarget);
 
-	Vertex lastVertex = mainTarget.lineTarget;
+	sf::Vertex lastVertex = mainTarget.lineTarget;
 	for(LaserTarget& laserTarget : targets)
 	{
 		drawLaserTarget(target, &laserTarget);
@@ -721,16 +716,16 @@ void LaserTower::draw(RenderTarget * const target)
 	}
 }
 
-ImprovedTower::ImprovedTower(const Vector2f &pos)
+ImprovedTower::ImprovedTower(const sf::Vector2f &pos)
 	: ProjectilesTower(GAME_TEXTURE::TOWER_IMPROVED, pos, STATS)
 {
 	m_shotSound = GAME_SOUND::IMPROVED_SHOT;
 
-	projectileInfo.size = Vector2i(40, 16);
+	projectileInfo.size = sf::Vector2i(40, 16);
 	projectileInfo.frameCount = 5;
 	projectileInfo.texture_id = GAME_TEXTURE::IMPROVED_PROJECTILE;
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::IMPROVED_EXPLOSION_EFFECT;
-	projectileInfo.explosionSize = Vector2i(32, 32);
+	projectileInfo.explosionSize = sf::Vector2i(32, 32);
 	projectileInfo.explosionFrameCount = 16;
 }
 
@@ -754,7 +749,7 @@ void ImprovedTower::createdProjectile(Projectile *projectile)
 }
 
 ProjectilesTower::ProjectilesTower(const TextureType &texture_id,
-								   const Vector2f &pos,
+								   const sf::Vector2f &pos,
 								   const TowerStats &stats)
 	: Tower(texture_id, pos, stats)
 {
@@ -785,11 +780,11 @@ void ProjectilesTower::moveProjectile(Projectile *projectile)
 	const float y2 = y1 + m_stats.projectileSpeed * sinf(projectile->angle() * M_PI/180);
 	const float x2 = x1 + m_stats.projectileSpeed * cosf(projectile->angle() * M_PI/180);
 
-	const Vector2f offset = Vector2f(x2-x1, y2-y1);
+	const sf::Vector2f offset = sf::Vector2f(x2-x1, y2-y1);
 	projectile->move(offset);
 }
 
-Vector2f ProjectilesTower::shootPos() const
+sf::Vector2f ProjectilesTower::shootPos() const
 {
 	return getCenter();
 }
@@ -799,7 +794,7 @@ void ProjectilesTower::createdProjectile(Projectile *projectile)
 
 }
 
-void ProjectilesTower::draw(RenderTarget * const target)
+void ProjectilesTower::draw(sf::RenderTarget * const target)
 {
 	Tower::draw(target);
 	for(Projectile *projectile : m_projectiles)
@@ -824,7 +819,7 @@ void ProjectilesTower::shoot(Enemy *target)
 	if (target == nullptr)
 		return;
 
-	const Vector2f aPos = shootPos();
+	const sf::Vector2f aPos = shootPos();
 	const float a = aPos.x - target->enemyCenter().x;
 	const float b = aPos.y - target->enemyCenter().y;
 	const float tg = ( b / a );
@@ -847,7 +842,7 @@ void ProjectilesTower::shoot(Enemy *target)
 	Tower::shoot(target);
 }
 
-void ProjectilesTower::collide(const vector<Enemy *> &enemies)
+void ProjectilesTower::collide(const std::vector<Enemy *> &enemies)
 {
 	for(Enemy* enemy : enemies)
 	{
@@ -862,7 +857,7 @@ void ProjectilesTower::collide(const vector<Enemy *> &enemies)
 	}
 }
 
-vector<Projectile *> ProjectilesTower::projectiles() const
+std::vector<Projectile *> ProjectilesTower::projectiles() const
 {
 	return m_projectiles;
 }
@@ -871,7 +866,7 @@ void ProjectilesTower::projectileAction(Enemy *enemy)
 {
 	enemy->hit(actualDamage());
 	checkKill(enemy);
-	const Vector2f size = enemy->getEnemySize();
+	const sf::Vector2f size = enemy->getEnemySize();
 
 	int maxX = size.x/2;
 	if (size.x > projectileInfo.explosionSize.x)
@@ -881,11 +876,11 @@ void ProjectilesTower::projectileAction(Enemy *enemy)
 	if (size.y > projectileInfo.explosionSize.y)
 		maxY = static_cast<int>(size.y/2 - projectileInfo.explosionSize.y/2);
 
-	const Vector2f offset = Vector2f(rand() % maxX * 2 - maxX, rand() % maxY * 2 - maxY);
+	const sf::Vector2f offset = sf::Vector2f(rand() % maxX * 2 - maxX, rand() % maxY * 2 - maxY);
 
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(projectileInfo.explosion_texture_id,
 											 enemy->enemyCenter() + offset -
-											 Vector2f(projectileInfo.explosionSize.x/2,
+											 sf::Vector2f(projectileInfo.explosionSize.x/2,
 													  projectileInfo.explosionSize.y/2),
 											 projectileInfo.explosionSize,
 											 50, projectileInfo.explosionFrameCount, 0);

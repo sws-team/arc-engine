@@ -9,8 +9,8 @@ class Tower;
 class GameAbility
 {
 public:
-	GameAbility(const Vector2i &areaSize,
-				const Vector2i &offset,
+	GameAbility(const sf::Vector2i &areaSize,
+				const sf::Vector2i &offset,
 				const float time);
 
 	bool isReady();
@@ -29,8 +29,8 @@ protected:
 
 	bool m_isActive;
 	bool m_isReady;
-	Vector2i m_areaSize;
-	Vector2i m_offset;
+	sf::Vector2i m_areaSize;
+	sf::Vector2i m_offset;
 	float m_time;
 	bool m_rotated;
 private:
@@ -124,7 +124,7 @@ class Abilities : public GameDrawable
 public:
 	Abilities();
 
-	void draw(RenderTarget *const target) override;
+	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 	void reset();
 

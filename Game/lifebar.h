@@ -8,19 +8,19 @@ class LifeBar
 public:
 	LifeBar();
 
-	void init(const Vector2i &size, const Color& color);
-	RectangleShape currentValue;
-	RectangleShape fullValue;
+	void init(const sf::Vector2i &size, const sf::Color& color);
+	sf::RectangleShape currentValue;
+	sf::RectangleShape fullValue;
 
-	void draw(RenderTarget *target);
-	void setPos(const Vector2f& pos);
-	Vector2f pos() const;
+	void draw(sf::RenderTarget *target);
+	void setPos(const sf::Vector2f& pos);
+	sf::Vector2f pos() const;
 
 	void setValue(float rate);
 
 	static constexpr float LIFE_BAR_HEIGHT = 5.f;
 private:
-	Vector2i fullSize;
+	sf::Vector2i fullSize;
 };
 
 #endif // LIFEBAR_H

@@ -9,7 +9,7 @@ struct Layer
 {
 	float opacity;//непрозрачность слоя
 	bool visibility;
-	vector<Tile> tiles;//закидываем в вектор тайлы
+	std::vector<Tile> tiles;//закидываем в вектор тайлы
 };
 
 class Map
@@ -44,16 +44,16 @@ public:
 	int width;
     int height;
 
-	vector<Layer> layers;
+	std::vector<Layer> layers;
 
-	vector<MOVE_DIRECTIONS> directions;
-	Vector2f spawnPos;
+	std::vector<MOVE_DIRECTIONS> directions;
+	sf::Vector2f spawnPos;
 	MOVE_DIRECTIONS spawnDirection;
 
-	FloatRect endRect;
+	sf::FloatRect endRect;
 
-	string name;
-	string decription;
+	std::string name;
+	std::string decription;
 	float money;
 	float life;
 	int directionsLayer;
@@ -83,13 +83,13 @@ public:
 
 	struct MapObject
 	{
-		Vector2f pos;
+		sf::Vector2f pos;
 		OBJECTS::OBJECT_TYPES type;
 		OBJECTS::SHADER_TYPES shader_type;
 		int layer;
 	};
 
-	vector<MapObject> objects;
+	std::vector<MapObject> objects;
 };
 
 #endif // MAP_H
