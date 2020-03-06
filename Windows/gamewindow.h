@@ -4,6 +4,10 @@
 #include "Windows/menu.h"
 #include "timer.h"
 
+#ifdef STEAM_API
+#include "steam_api.h"
+#endif
+
 class GameWindow : public Menu
 {
 public:
@@ -55,6 +59,10 @@ private:
 	std::vector<MusicType> tracks;
 	void fillTracks(const std::vector<MusicType> &trackList);
 	bool isFinal;
+
+#ifdef STEAM_API
+	STEAM_CALLBACK(GameWindow, OnGameOverlayActivated, GameOverlayActivated_t);
+#endif
 };
 
 #endif // GAMEWINDOW_H

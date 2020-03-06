@@ -5,10 +5,6 @@
 #include "gameobject.h"
 #include "Game/leveldef.h"
 
-#ifdef STEAM_API
-#include "steam_api.h"
-#endif
-
 class LevelObject;
 class Enemy;
 class GamePanel;
@@ -195,10 +191,6 @@ private:
 
 	std::vector<LevelObject*> objects;
 	ShadersFactory *shadersFactory;
-
-#ifdef STEAM_API
-	STEAM_CALLBACK(Level, OnGameOverlayActivated, GameOverlayActivated_t);
-#endif
 };
 
 #endif // LEVEL_H

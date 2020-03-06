@@ -17,8 +17,14 @@
 #include <iostream>
 #include <fstream>
 
+#ifdef OS_WIN
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,int nShowCmd)
+#endif
+#ifdef OS_LINUX
 int main(int argc, char *argv[])
+#endif
 {
+	setlocale(LC_ALL,"Rus");
 #ifdef STEAM_API
 	if (SteamAPI_RestartAppIfNecessary(1262070))
 		return EXIT_FAILURE;
@@ -30,7 +36,7 @@ int main(int argc, char *argv[])
 	}
 #endif
 	std::srand(std::time(nullptr));
-	sf::String path = sf::String(argv[0]);
+	sf::String path = sf::String("argv[0]");
 	const sf::String appName = sf::String("TowerDefence_") + sf::String(APP_VERSION)
 #ifdef OS_WIN
 			+ sf::String(".exe")
@@ -43,7 +49,9 @@ int main(int argc, char *argv[])
 	GameManagers::loadResources();
 	GameManagers::loadTranslations();
 
-	Engine::Instance().translationsManager()->setCurrentLanguage("rus");
+	const std::string steamLanguage = std::string(SteamUtils()->GetSteamUILanguage());
+	Engine::Instance().translationsManager()->setCurrentLanguage(steamLanguage);
+
 	Engine::Instance().globalVariables()->setApplicationPath(path);
 	Engine::Instance().globalVariables()->loadGameSettings();
 
@@ -53,7 +61,6 @@ int main(int argc, char *argv[])
 //	Engine::Instance().soundManager()->setQuiet(true);
 
 
-//!!! cout << SteamUtils()->GetSteamUILanguage()<<endl;
 
 	if (!Engine::Instance().options<GameOptions>()->checkMaps("maps"))
 	{

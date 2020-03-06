@@ -766,22 +766,6 @@ void Level::updateUpgrade()
 		upgradeSprite.setColor(EngineDefs::GrayColor);
 }
 
-#ifdef STEAM_API
-void Level::OnGameOverlayActivated(GameOverlayActivated_t *pCallback)
-{
-std::cout << "overlay"<<std::endl;
-//	if (pCallback->m_bActive)
-//	{
-//		//pause
-//		cout << "overlay"<<endl;
-//	}
-//	else
-//	{
-//		//unpause
-//		cout << "overlay end"<<endl;
-//	}
-}
-#endif
 unsigned int Level::getPowerTowersCount() const
 {
 	return m_powerTowersCount;

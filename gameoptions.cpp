@@ -754,10 +754,7 @@ void GameOptions::updateWindow()
 void GameOptions::loadAchievements()
 {
 	GameAchievements::Instance().addAchievement(ACHIEVEMENT_COMPLETE_ALL_LEVELS, std::string("COMPLETE_ALL_LEVELS"));
-//	const static string COMPLETE_ALL_LEVELS_WITH_5_STARS_STR = "complete_all_levels_with_5_stars";
-//	const static string COMPLETE_LEVEL_WITHOUT_DAMAGE_STR = "complete_level_without_damage";
-//	const static string KILL_5_WITH_ONE_BOMB_STR = "kill_5_with_one_bomb";
-	//	const static string FREEZE_5_WITH_ONE_BOMB_STRs = "freeze_5_with_one_bomb";
+	GameAchievements::Instance().addAchievement(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_DAMAGE, std::string("COMPLETE_LEVEL_WITHOUT_DAMAGE"));
 }
 
 void GameOptions::globalCallbacks()

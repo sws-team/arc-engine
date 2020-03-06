@@ -331,3 +331,12 @@ void GameWindow::fillTracks(const std::vector<MusicType> &trackList)
 	shuffle(tracks.begin(), tracks.end(), g);
 }
 
+#ifdef STEAM_API
+void GameWindow::OnGameOverlayActivated(GameOverlayActivated_t *pCallback)
+{
+	if (pCallback->m_bActive)
+		pause();
+	else
+		pause();
+}
+#endif
