@@ -1,13 +1,3 @@
-
-#include <iostream>
-#include <SFML/Window/Cursor.hpp>
-#include <SFML/Window.hpp>
-
-
-
-
-
-
 #include "mainwindow.h"
 #include "engine.h"
 #include "managers.h"
@@ -27,58 +17,6 @@
 #include <iostream>
 #include <fstream>
 
-/*
-int main()
-{
-#ifdef STEAM_API
-	if (SteamAPI_RestartAppIfNecessary(1262070))
-		return EXIT_FAILURE;
-
-	if (!SteamAPI_Init())
-	{
-//		MessageBoxA(NULL, "Steam must be running to play this game", "Fatal Error!", MB_OK | MB_ICONERROR);
-		return EXIT_FAILURE;
-	}
-#endif
-	std::srand(std::time(nullptr));
-	sf::String path = sf::String("argv[0]");
-	const sf::String appName = sf::String("TowerDefence_") + sf::String(APP_VERSION)
-#ifdef OS_WIN
-			+ sf::String(".exe")
-#endif
-	;
-	path.replace(appName, sf::String());
-
-
-	Engine::Instance();
-
-
-
-	// Declare and create a new window
-	sf::Window window(sf::VideoMode(800, 600), "SFML window");
-	// Limit the framerate to 60 frames per second (this step is optional)
-	window.setFramerateLimit(60);
-	// The main loop - ends as soon as the window is closed
-	while (window.isOpen())
-	{
-	   // Event processing
-	   sf::Event event;
-	   while (window.pollEvent(event))
-	   {
-		   // Request for closing the window
-		   if (event.type == sf::Event::Closed)
-			   window.close();
-	   }
-	   // Activate the window for OpenGL rendering
-	   window.setActive();
-	   // OpenGL drawing commands go here...
-	   // End the current frame and display its contents on screen
-	   window.display();
-	}
-	return 0;
-}
-*/
-
 int main(int argc, char *argv[])
 {
 #ifdef STEAM_API
@@ -92,7 +30,7 @@ int main(int argc, char *argv[])
 	}
 #endif
 	std::srand(std::time(nullptr));
-	sf::String path = sf::String("argv[0]");
+	sf::String path = sf::String(argv[0]);
 	const sf::String appName = sf::String("TowerDefence_") + sf::String(APP_VERSION)
 #ifdef OS_WIN
 			+ sf::String(".exe")
