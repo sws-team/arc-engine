@@ -309,7 +309,15 @@ enum FILE_ID
 };
 
 }
+namespace GAME_SHADERS {
 
+enum SHADER_ID
+{
+	WAVE,
+	MOVING,
+};
+
+}
 class GameManagers
 {
 public:
@@ -320,6 +328,7 @@ public:
 	static void addSound(SoundType type, const std::string& data);
 	static void addMusic(MusicType type, const std::string& data);
 	static void addFile(FileType type, const std::string& data);
+	static void addShader(ShaderType type, const std::string& data);
 
 	static void loadTranslations();
 

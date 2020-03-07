@@ -3,6 +3,7 @@
 #include "managers.h"
 #include "base64.h"
 #include "gameresource.h"
+#include "Game/levelobject.h"
 
 const std::string GameManagers::resourcesFileName = "resources.dat";
 const std::string GameManagers::checksum = "dd";
@@ -100,6 +101,10 @@ void GameManagers::loadResources()
 		}
 
 	}
+
+	addShader(GAME_SHADERS::WAVE, ShadersFactory::WAVE_SHADER);
+	addShader(GAME_SHADERS::MOVING, ShadersFactory::MOVING_SHADER);
+
 	loadSounds();
 	loadMusic();
 	Engine::Instance().texturesManager()->addTexture(TexturesManager::FOCUS_ICON, "images/ui/focus.png");
@@ -222,6 +227,11 @@ void GameManagers::addMusic(MusicType type, const std::string &data)
 void GameManagers::addFile(FileType type, const std::string &data)
 {
 	Engine::Instance().filesManager()->addFile(type, data.c_str(), data.size());
+}
+
+void GameManagers::addShader(ShaderType type, const std::string &data)
+{
+	Engine::Instance().shadersManager()->addShader(type, data);
 }
 
 void GameManagers::loadSounds()

@@ -50,3 +50,5 @@ include($$PWD/Game/Game.pri)
 contains(DEFINES, STEAM_API) {
 include($$PWD/../3rdParty/SteamAPI.pri)
 }
+
+RC_ICONS = icon.ico

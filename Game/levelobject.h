@@ -27,6 +27,10 @@ public:
 
 	sf::Shader *getShader(const OBJECTS::SHADER_TYPES type);
 	void update();
+
+	static const std::string WAVE_SHADER;
+	static const std::string MOVING_SHADER;
+
 private:
 	std::map<OBJECTS::SHADER_TYPES, sf::Shader*> shaders;
 	void addShader(OBJECTS::SHADER_TYPES type);
@@ -34,6 +38,7 @@ private:
 	sf::Shader* createShader(OBJECTS::SHADER_TYPES type);
 
 	sf::Clock iTime;
+
 };
 
 #endif // LEVELOBJECT_H

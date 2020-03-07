@@ -77,8 +77,6 @@ Map *GameOptions::getMap(unsigned int mission)
 
 void GameOptions::save()
 {
-	std::ofstream stream(EngineDefs::saveFileName, std::ofstream::out);
-
 	Json::Value obj;
 	for(const CompletedMission& save : m_save)
 	{

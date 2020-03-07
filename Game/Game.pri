@@ -21,6 +21,7 @@ SOURCES += \
     $$PWD/enemy.cpp \
     $$PWD/gameability.cpp \
     $$PWD/gamecursor.cpp \
+    $$PWD/gameshaders.cpp \
     $$PWD/instructions.cpp \
     $$PWD/level.cpp \
     $$PWD/levelobject.cpp \

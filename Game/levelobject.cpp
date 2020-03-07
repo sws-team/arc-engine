@@ -1,6 +1,7 @@
 #include "levelobject.h"
 #include "engine.h"
 #include "managers.h"
+#include "gamemanagers.h"
 
 LevelObject::LevelObject(const TextureType &texture_id,
 						 const sf::Vector2f &startPos,
@@ -76,7 +77,8 @@ sf::Shader* ShadersFactory::createShader(OBJECTS::SHADER_TYPES type)
 	case OBJECTS::MOVING:
 	{
 		shader = new sf::Shader();
-		if (!shader->loadFromFile("shaders/moving.vs", sf::Shader::Vertex))
+		if (!shader->loadFromMemory(Engine::Instance().shadersManager()->getData(GAME_SHADERS::MOVING),
+									sf::Shader::Vertex))
 		{
 			sf::err() << "Failed to load shader" << std::endl;
 			delete shader;
@@ -87,7 +89,8 @@ sf::Shader* ShadersFactory::createShader(OBJECTS::SHADER_TYPES type)
 	case OBJECTS::WAVE:
 	{
 		shader = new sf::Shader();
-		if (!shader->loadFromFile("shaders/wave.fs", sf::Shader::Fragment))
+		if (!shader->loadFromMemory(Engine::Instance().shadersManager()->getData(GAME_SHADERS::WAVE),
+									sf::Shader::Fragment))
 		{
 			sf::err() << "Failed to load shader" << std::endl;
 			delete shader;
