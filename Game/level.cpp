@@ -13,7 +13,7 @@
 #include "engine.h"
 #include "gamemanagers.h"
 #include "gameoptions.h"
-#include "gameachievements.h"
+#include "gameplatform.h"
 #include "achievements.h"
 
 Level::Level() :
@@ -349,7 +349,7 @@ void Level::checkAlive()
 
 
 			std::cout << "INCREMENT"<<std::endl;
-			GameAchievements::Instance().incrementValue(STAT_CARS_KILLS);
+			GamePlatform::Instance().incrementValue(STAT_CARS_KILLS);
 
 			delete enemy;
 			money++;
@@ -800,7 +800,7 @@ unsigned int Level::getCurrentWave() const
 
 void Level::test()
 {
-	GameAchievements::Instance().unlock(ACHIEVEMENT_COMPLETE_ALL_LEVELS);
+	GamePlatform::Instance().unlock(ACHIEVEMENT_COMPLETE_ALL_LEVELS);
 }
 
 Abilities *Level::getAbilities()

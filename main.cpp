@@ -4,7 +4,7 @@
 #include "gameoptions.h"
 #include "gamestatemanager.h"
 #include "gamemanagers.h"
-#include "gameachievements.h"
+#include "gameplatform.h"
 
 #ifdef OS_WIN
 #include "windows.h"
@@ -52,12 +52,11 @@ int main(int argc, char *argv[])
 	Engine::Instance().translationsManager()->setCurrentLanguage(steamLanguage);
 
 	Engine::Instance().globalVariables()->setApplicationPath(path);
-	Engine::Instance().globalVariables()->loadGameSettings();
+	Engine::Instance().globalVariables()->loadGameSettings(GamePlatform::Instance().readFile(EngineDefs::settingsFilePath));
 
 	Engine::Instance().setStateManager(new GameStateManager);
 	Engine::Instance().setOptions(new GameOptions);
 	Engine::Instance().options<GameOptions>()->load();
-//	Engine::Instance().soundManager()->setQuiet(true);
 
 	if (!Engine::Instance().options<GameOptions>()->verifyChecksum())
 	{
@@ -69,7 +68,7 @@ int main(int argc, char *argv[])
 
 	Engine::Instance().globalVariables()->setAppName("TowerDefence");
 	Engine::Instance().options<GameOptions>()->loadAchievements();
-	GameAchievements::Instance().requestStats();
+	GamePlatform::Instance().requestStats();
 	Engine::Instance().soundManager()->setQuiet(true);
 
 	MainWindow w;
@@ -77,6 +76,9 @@ int main(int argc, char *argv[])
 	Engine::Instance().getOptions()->updateWindow();
 
 	const int result = w.exec();
+	Engine::Instance().options<GameOptions>()->save();
+	GamePlatform::Instance().saveFile(EngineDefs::settingsFilePath, Engine::Instance().globalVariables()->saveGameSettings());
+
 	Engine::Instance().clearInstance();
 #ifdef STEAM_API
 	SteamAPI_Shutdown();

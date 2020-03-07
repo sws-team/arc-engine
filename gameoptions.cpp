@@ -15,7 +15,7 @@
 #include "Game/achievements.h"
 #include "enginedef.h"
 #include "gamemanagers.h"
-#include "gameachievements.h"
+#include "gameplatform.h"
 #include "gamemanagers.h"
 
 #include "json/json.h"
@@ -94,17 +94,13 @@ void GameOptions::save()
 //	const string str = fast.write(obj);
 	const std::string str = styled.write(obj);
 	const std::string encodedStr = GlobalVariables::encode(str);
-	stream << encodedStr;
-	stream.close();
 
-//	Json::StyledStreamWriter styledStream;
-//	styledStream.write(ostream, obj);
+	GamePlatform::Instance().saveFile(EngineDefs::saveFileName, encodedStr);
 }
 
 void GameOptions::load()
 {
-	std::ifstream stream(EngineDefs::saveFileName, std::ifstream::in);
-	std::string str((std::istreambuf_iterator<char>(stream)), (std::istreambuf_iterator<char>()));
+	std::string str = GamePlatform::Instance().readFile(EngineDefs::saveFileName);
 	const std::string decodedStr = GlobalVariables::decode(str);
 
 	Json::Reader reader;
@@ -706,12 +702,12 @@ void GameOptions::updateWindow()
 
 void GameOptions::loadAchievements()
 {
-	GameAchievements::Instance().addAchievement(ACHIEVEMENT_COMPLETE_ALL_LEVELS, std::string("COMPLETE_ALL_LEVELS"));
-	GameAchievements::Instance().addAchievement(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_DAMAGE, std::string("COMPLETE_LEVEL_WITHOUT_DAMAGE"));
-	GameAchievements::Instance().addAchievement(ACHIEVEMENT_KILL_100_CARS, std::string("KILL_100_CARS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_COMPLETE_ALL_LEVELS, std::string("COMPLETE_ALL_LEVELS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_DAMAGE, std::string("COMPLETE_LEVEL_WITHOUT_DAMAGE"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_CARS, std::string("KILL_100_CARS"));
 
 
-	GameAchievements::Instance().addStat(STAT_CARS_KILLS, std::string("CARS_KILLS"));
+	GamePlatform::Instance().addStat(STAT_CARS_KILLS, std::string("CARS_KILLS"));
 }
 
 void GameOptions::globalCallbacks()
