@@ -24,7 +24,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 int main(int argc, char *argv[])
 #endif
 {
-	setlocale(LC_ALL,"Rus");
 #ifdef STEAM_API
 	if (SteamAPI_RestartAppIfNecessary(1262070))
 		return EXIT_FAILURE;
@@ -60,9 +59,7 @@ int main(int argc, char *argv[])
 	Engine::Instance().options<GameOptions>()->load();
 //	Engine::Instance().soundManager()->setQuiet(true);
 
-
-
-	if (!Engine::Instance().options<GameOptions>()->checkMaps("maps"))
+	if (!Engine::Instance().options<GameOptions>()->verifyChecksum())
 	{
 #ifdef OS_WIN
 //		MessageBoxA(NULL, "Checksum error", "Fatal Error!", MB_OK | MB_ICONERROR);
@@ -73,6 +70,7 @@ int main(int argc, char *argv[])
 	Engine::Instance().globalVariables()->setAppName("TowerDefence");
 	Engine::Instance().options<GameOptions>()->loadAchievements();
 	GameAchievements::Instance().requestStats();
+	Engine::Instance().soundManager()->setQuiet(true);
 
 	MainWindow w;
 	Engine::Instance().options<GameOptions>()->setMainWindow(&w);

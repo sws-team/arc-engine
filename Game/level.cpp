@@ -347,6 +347,10 @@ void Level::checkAlive()
 				if (tower->type() == ROCKET)
 					static_cast<RocketTower*>(tower)->checkEnemy(enemy);
 
+
+			std::cout << "INCREMENT"<<std::endl;
+			GameAchievements::Instance().incrementValue(STAT_CARS_KILLS);
+
 			delete enemy;
 			money++;
 			Engine::Instance().options<GameOptions>()->panel()->updatePanel();

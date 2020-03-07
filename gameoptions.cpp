@@ -16,13 +16,24 @@
 #include "enginedef.h"
 #include "gamemanagers.h"
 #include "gameachievements.h"
+#include "gamemanagers.h"
 
 #include "json/json.h"
 #include <tinyxml.h>
-#include <tinydir.h>
 
 #ifdef STEAM_API
 #include "steam_api.h"
+#endif
+
+#ifdef OS_WIN
+FILE *fmemopen (void *buf, size_t size)
+{
+	FILE *f;
+	f = tmpfile();
+	fwrite(buf, 1, size, f);
+	rewind(f);
+	return f;
+}
 #endif
 
 GameOptions::GameOptions() :
@@ -41,10 +52,9 @@ GameOptions::GameOptions() :
 
 Map *GameOptions::findMapByNumber(unsigned int num)
 {
-	const std::string mapName = "mission" + std::to_string(num);
 	for(Map *currentMap : maps)
 	{
-		if (currentMap->name == mapName)
+		if (currentMap->number == num)
 			return currentMap;
 	}
 	return nullptr;
@@ -226,8 +236,21 @@ sf::Vector2f GameOptions::tileSize() const
 sf::Vector2f GameOptions::mapTileSize() const
 {
 	return sf::Vector2f(Engine::Instance().settingsManager()->getScaleFactor().x * MAP_CELL_SIZE,
-					Engine::Instance().settingsManager()->getScaleFactor().y * MAP_CELL_SIZE);
+						Engine::Instance().settingsManager()->getScaleFactor().y * MAP_CELL_SIZE);
 }
+
+bool GameOptions::verifyChecksum()
+{
+	std::ifstream stream(GameManagers::resourcesFileName);
+	const std::string src = std::string((std::istreambuf_iterator<char>(stream)),
+										std::istreambuf_iterator<char>());
+	const std::string checksum = picosha2::hash256_hex_string(src);
+	stream.close();
+//	if (checksum != GameManagers::checksum)
+//		return false;
+	return true;
+}
+
 void GameOptions::reset()
 {
 	if (m_camera != nullptr)
@@ -256,15 +279,11 @@ unsigned int GameOptions::missionsCount() const
 	return maps.size();
 }
 
-bool GameOptions::loadMap(const sf::String &fileName)
+bool GameOptions::loadMap(int id)
 {
-#ifdef OS_WIN
-	FILE* file = _wfopen(fileName.toWideString().c_str(), L"rb");
-#else
-	char *charStr = wstringToChar(fileName.toWideString());
-	FILE *file = fopen(charStr, "rb");
-	delete charStr;
-#endif
+	const FilesManager::OtherFile oFile = Engine::Instance().filesManager()->getData(id);
+	FILE* file = fmemopen(oFile.data, oFile.size);
+
 	if(file == nullptr)
 		return false;
 
@@ -275,9 +294,7 @@ bool GameOptions::loadMap(const sf::String &fileName)
 		return false;
 	}
 	Map *gameMap = new Map();
-	gameMap->name = fileName.toAnsiString();
-	gameMap->name.erase(fileName.getSize() - 4, 4);
-	gameMap->name.erase(0, 5);
+	gameMap->number = id;
 
 	TiXmlElement *mapElement = doc.FirstChildElement("map");
 
@@ -293,11 +310,7 @@ bool GameOptions::loadMap(const sf::String &fileName)
 			const std::string propertyName = prop->Attribute("name");
 			const std::string propertyValue = prop->Attribute("value");
 
-			if (propertyName == "name")
-				gameMap->name = propertyValue;
-			else if (propertyName == "description")
-				gameMap->decription = propertyValue;
-			else if (propertyName == "life")
+			if (propertyName == "life")
 				gameMap->life = stod(propertyValue);
 			else if (propertyName == "money")
 				gameMap->money = stod(propertyValue);
@@ -558,18 +571,13 @@ bool GameOptions::loadMap(const sf::String &fileName)
 	return true;
 }
 
-bool GameOptions::loadTiles(const sf::String &fileName)
+bool GameOptions::loadTiles()
 {
 	tileProperties.clear();
 
-#ifdef OS_WIN
-	FILE* file = _wfopen(fileName.toWideString().c_str(), L"rb");
-#else
-	char *charStr = wstringToChar(fileName.toWideString());
-	FILE *file = fopen(charStr, "rb");
-	int err = 1;
-	delete charStr;
-#endif
+	const FilesManager::OtherFile oFile = Engine::Instance().filesManager()->getData(GAME_FILES::TILES);
+	FILE* file = fmemopen(oFile.data, oFile.size);
+
 	if(file == nullptr)
 		return false;
 
@@ -635,89 +643,34 @@ void GameOptions::setSpeed(float speed)
 	m_gameSpeed = speed;
 }
 
-#ifndef OS_WIN
-char *GameOptions::wstringToChar(const wstring &wStr) const
-{
-	const wchar_t *input = wStr.c_str();
-
-	// Count required buffer size (plus one for null-terminator).
-	size_t size = (wcslen(input) + 1) * sizeof(wchar_t);
-	char *buffer = new char[size];
-
-	#ifdef __STDC_LIB_EXT1__
-		// wcstombs_s is only guaranteed to be available if __STDC_LIB_EXT1__ is defined
-		size_t convertedSize;
-		std::wcstombs_s(&convertedSize, buffer, size, input, size);
-	#else
-		std::wcstombs(buffer, input, size);
-	#endif
-		return buffer;
-}
-#endif
-
-void GameOptions::loadMaps(const sf::String &path)
+void GameOptions::loadMaps()
 {
 	maps.clear();
-	if (!loadTiles("tiles.tsx"))
+	if (!loadTiles())
 	{
 		std::cout << "Loading tileset failed." << std::endl;
 		return;
 	}
-	tinydir_dir dir;
-#ifdef OS_WIN
-	const int result = tinydir_open(&dir, path.toWideString().c_str());
-#else
-	char *charStr = wstringToChar(path.toWideString());
-	const int result = tinydir_open(&dir, charStr);
-	delete charStr;
-#endif
-	while (dir.has_next)
-	{
-		tinydir_file file;
-		tinydir_readfile(&dir, &file);
-		if (!file.is_dir)
-			loadMap(file.path);
 
-		tinydir_next(&dir);
-	}
-	tinydir_close(&dir);
-}
-
-
-bool GameOptions::checkMaps(const sf::String &path) const
-{
-	tinydir_dir dir;
-#ifdef OS_WIN
-	const int result = tinydir_open(&dir, path.toWideString().c_str());
-#else
-	char *charStr = wstringToChar(path.toWideString());
-	const int result = tinydir_open(&dir, charStr);
-	delete charStr;
-#endif
-	int count = 0;
-	while (dir.has_next)
-	{
-		tinydir_file file;
-		tinydir_readfile(&dir, &file);
-		if (!file.is_dir)
-		{
-			std::ifstream stream(sf::String(file.path).toAnsiString());
-			const std::string src = std::string((std::istreambuf_iterator<char>(stream)),
-									  std::istreambuf_iterator<char>());
-			const std::string checksum = picosha2::hash256_hex_string(src);
-			stream.close();
-//			cout << checksum << endl << count << endl << MISSIONS_CHECKSUM[count] << endl << endl;
-//			if (checksum != MISSIONS_CHECKSUM[count])
-//			{
-//				tinydir_close(&dir);
-//				return false;
-//			}
-			count++;
-		}
-		tinydir_next(&dir);
-	}
-	tinydir_close(&dir);
-	return true;
+	const std::list<GAME_FILES::FILE_ID> missions = {
+		GAME_FILES::MISSON_1,
+		GAME_FILES::MISSON_2,
+		GAME_FILES::MISSON_3,
+		GAME_FILES::MISSON_4,
+		GAME_FILES::MISSON_5,
+		GAME_FILES::MISSON_6,
+		GAME_FILES::MISSON_7,
+		GAME_FILES::MISSON_8,
+		GAME_FILES::MISSON_9,
+		GAME_FILES::MISSON_10,
+		GAME_FILES::MISSON_11,
+		GAME_FILES::MISSON_12,
+		GAME_FILES::MISSON_13,
+		GAME_FILES::MISSON_14,
+		GAME_FILES::MISSON_15
+	};
+	for(const GAME_FILES::FILE_ID& mission : missions)
+		loadMap(mission);
 }
 
 void GameOptions::setEasyDifficult()
@@ -748,13 +701,17 @@ float GameOptions::difficult() const
 void GameOptions::updateWindow()
 {
 	Options::updateWindow();
-	loadMaps("maps");
+	loadMaps();
 }
 
 void GameOptions::loadAchievements()
 {
 	GameAchievements::Instance().addAchievement(ACHIEVEMENT_COMPLETE_ALL_LEVELS, std::string("COMPLETE_ALL_LEVELS"));
 	GameAchievements::Instance().addAchievement(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_DAMAGE, std::string("COMPLETE_LEVEL_WITHOUT_DAMAGE"));
+	GameAchievements::Instance().addAchievement(ACHIEVEMENT_KILL_100_CARS, std::string("KILL_100_CARS"));
+
+
+	GameAchievements::Instance().addStat(STAT_CARS_KILLS, std::string("CARS_KILLS"));
 }
 
 void GameOptions::globalCallbacks()

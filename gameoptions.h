@@ -14,8 +14,6 @@ class Map;
 class Controller;
 class Instructions;
 
-class GameOverlayActivated_t;
-
 class GameOptions : public Options
 {
 public:
@@ -36,8 +34,8 @@ public:
 	constexpr static const int MAP_CELL_SIZE = 32;
 	constexpr static float GAME_SCALE = 0.8f;
 
-	void loadMaps(const sf::String &path);
-	bool checkMaps(const sf::String &path) const;
+	bool verifyChecksum();
+	void loadMaps();
 
 	unsigned int missionsCount() const;
 	unsigned int getMission() const;
@@ -96,8 +94,8 @@ private:
 	unsigned int m_mission;
 
 	Map *findMapByNumber(unsigned int num);
-	bool loadMap(const sf::String &fileName);
-	bool loadTiles(const sf::String& fileName);
+	bool loadMap(int id);
+	bool loadTiles();
 
 	std::map<int, Tile::TileProperties> tileProperties;
 	sf::Texture tilesetImage;

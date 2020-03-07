@@ -286,6 +286,29 @@ enum TRANSLATION_ID
 	HARD,
 };
 }
+namespace GAME_FILES {
+
+enum FILE_ID
+{
+	TILES,
+	MISSON_1,
+	MISSON_2,
+	MISSON_3,
+	MISSON_4,
+	MISSON_5,
+	MISSON_6,
+	MISSON_7,
+	MISSON_8,
+	MISSON_9,
+	MISSON_10,
+	MISSON_11,
+	MISSON_12,
+	MISSON_13,
+	MISSON_14,
+	MISSON_15
+};
+
+}
 
 class GameManagers
 {
@@ -296,11 +319,15 @@ public:
 	static void addTexture(TextureType type, const std::string& data);
 	static void addSound(SoundType type, const std::string& data);
 	static void addMusic(MusicType type, const std::string& data);
+	static void addFile(FileType type, const std::string& data);
 
 	static void loadTranslations();
 
 	static void loadSounds();
 	static void loadMusic();
+
+	static const std::string resourcesFileName;
+	static const std::string checksum;
 };
 
 #endif // GAMEMANAGERS_H

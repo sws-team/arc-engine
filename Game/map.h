@@ -40,6 +40,7 @@ public:
 
 	}
 
+	unsigned int number;
 
 	int width;
     int height;
@@ -52,8 +53,6 @@ public:
 
 	sf::FloatRect endRect;
 
-	std::string name;
-	std::string decription;
 	float money;
 	float life;
 	int directionsLayer;

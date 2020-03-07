@@ -4,6 +4,9 @@
 #include "base64.h"
 #include "gameresource.h"
 
+const std::string GameManagers::resourcesFileName = "resources.dat";
+const std::string GameManagers::checksum = "dd";
+
 GameManagers::GameManagers()
 {
 
@@ -11,41 +14,85 @@ GameManagers::GameManagers()
 
 void GameManagers::loadResources()
 {
-	const std::vector<GameResource::Resource> resources = GameResource::Resource::loadResources("resources");
+	const std::vector<GameResource::Resource> resources = GameResource::Resource::loadResources(resourcesFileName);
 	for(const GameResource::Resource &resource : resources)
 	{
+		std::string out;
+		Base64::Decode(resource.data, &out);
+
 		switch (resource.type)
 		{
 		case GameResource::TEXTURE:
 		{
 			if (resource.name == "close")
-				addTexture(TexturesManager::CLOSE_BACKGROUND, resource.data);
+				addTexture(TexturesManager::CLOSE_BACKGROUND, out);
 			else if (resource.name == "about")
-				addTexture(TexturesManager::ABOUT_BACKGROUND, resource.data);
+				addTexture(TexturesManager::ABOUT_BACKGROUND, out);
 			else if (resource.name == "game_menu")
-				addTexture(GAME_TEXTURE::GAME_MENU_TEXTURE, resource.data);
+				addTexture(GAME_TEXTURE::GAME_MENU_TEXTURE, out);
 			else if (resource.name == "logo")
-				addTexture(TexturesManager::INTRO_BACKGROUND, resource.data);
+				addTexture(TexturesManager::INTRO_BACKGROUND, out);
 			else if (resource.name == "menu")
-				addTexture(GAME_TEXTURE::MENU_BACKGROUND, resource.data);
+				addTexture(GAME_TEXTURE::MENU_BACKGROUND, out);
 			else if (resource.name == "mission")
-				addTexture(GAME_TEXTURE::MISSON_BACKGROUND, resource.data);
+				addTexture(GAME_TEXTURE::MISSON_BACKGROUND, out);
 			else if (resource.name == "options")
-				addTexture(TexturesManager::SETTINGS_BACKGROUND, resource.data);
-
+				addTexture(TexturesManager::SETTINGS_BACKGROUND, out);
+			else if (resource.name == "window")
+				addTexture(GAME_TEXTURE::WINDOW_TEXTURE, out);
 			//enemies
 			else if (resource.name == "spider")
-				addTexture(GAME_TEXTURE::ENEMY_SPIDER, resource.data);
+				addTexture(GAME_TEXTURE::ENEMY_SPIDER, out);
+			else if (resource.name == "car")
+				addTexture(GAME_TEXTURE::ENEMY_CAR, out);
+			else if (resource.name == "tricycle")
+				addTexture(GAME_TEXTURE::ENEMY_TRICYCLE, out);
 		}
 			break;
 		case GameResource::SOUND:
 		{
-			if (resource.name == "intro")
-				addSound(SoundManager::INTRO, resource.data);
-			else if (resource.name == "click")
-				addSound(SoundManager::CLICK, resource.data);
-			else if (resource.name == "hover")
-				addSound(SoundManager::HOVER, resource.data);
+//			if (resource.name == "intro")
+//				addSound(SoundManager::INTRO, out);
+//			else if (resource.name == "click")
+//				addSound(SoundManager::CLICK, out);
+//			else if (resource.name == "hover")
+//				addSound(SoundManager::HOVER, out);
+		}
+			break;
+		case GameResource::OTHER:
+		{
+			if (resource.name == "tiles")
+				addFile(GAME_FILES::TILES, out);
+			else if (resource.name == "mission1")
+				addFile(GAME_FILES::MISSON_1, out);
+			else if (resource.name == "mission2")
+				addFile(GAME_FILES::MISSON_2, out);
+			else if (resource.name == "mission3")
+				addFile(GAME_FILES::MISSON_3, out);
+			else if (resource.name == "mission4")
+				addFile(GAME_FILES::MISSON_4, out);
+			else if (resource.name == "mission5")
+				addFile(GAME_FILES::MISSON_5, out);
+			else if (resource.name == "mission6")
+				addFile(GAME_FILES::MISSON_6, out);
+			else if (resource.name == "mission7")
+				addFile(GAME_FILES::MISSON_7, out);
+			else if (resource.name == "mission8")
+				addFile(GAME_FILES::MISSON_8, out);
+			else if (resource.name == "mission9")
+				addFile(GAME_FILES::MISSON_9, out);
+			else if (resource.name == "mission10")
+				addFile(GAME_FILES::MISSON_10, out);
+			else if (resource.name == "mission11")
+				addFile(GAME_FILES::MISSON_11, out);
+			else if (resource.name == "mission12")
+				addFile(GAME_FILES::MISSON_12, out);
+			else if (resource.name == "mission13")
+				addFile(GAME_FILES::MISSON_13, out);
+			else if (resource.name == "mission14")
+				addFile(GAME_FILES::MISSON_14, out);
+			else if (resource.name == "mission15")
+				addFile(GAME_FILES::MISSON_15, out);
 		}
 			break;
 		default:
@@ -63,7 +110,7 @@ void GameManagers::loadResources()
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::EMPTY_STAR_TEXTURE, "images/ui/empty_star.png");
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::SELL_TEXTURE, "images/ui/sell.png");
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::UPGRADE_TEXTURE, "images/ui/upgrade.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::WINDOW_TEXTURE, "images/window.png");
+
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::PANEL_CURSOR, "images/ui/panel_cursor.png");
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MONEY_ICON, "images/ui/money.png");
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::LIFE_ICON, "images/ui/money.png");
@@ -137,8 +184,8 @@ void GameManagers::loadResources()
 
 	//enemies
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_SCORPION, "images/Enemies/scorpion.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_CAR, "images/Enemies/car.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_TRICYCLE, "images/Enemies/tricycle.png");
+//	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_CAR, "images/Enemies/car.png");
+//	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_TRICYCLE, "images/Enemies/tricycle.png");
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_TANK, "images/Enemies/tank.png");
 //	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_SPIDER, "images/Enemies/spider.png");
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_HELICOPTER, "images/Enemies/helicopter.png");
@@ -159,27 +206,30 @@ void GameManagers::loadResources()
 
 void GameManagers::addTexture(TextureType type, const std::string &data)
 {
-	std::string out;
-	Base64::Decode(data, &out);
-	Engine::Instance().texturesManager()->addTexture(type, out.c_str(), out.size());
+	Engine::Instance().texturesManager()->addTexture(type, data.c_str(), data.size());
 }
 
 void GameManagers::addSound(SoundType type, const std::string &data)
 {
-	std::string out;
-	Base64::Decode(data, &out);
-	Engine::Instance().soundManager()->addSound(type, out.c_str(), out.size());
+	Engine::Instance().soundManager()->addSound(type, data.c_str(), data.size());
 }
 
 void GameManagers::addMusic(MusicType type, const std::string &data)
 {
-	std::string out;
-	Base64::Decode(data, &out);
-	Engine::Instance().soundManager()->addMusic(type, out.c_str(), out.size());
+	Engine::Instance().soundManager()->addMusic(type, data.c_str(), data.size());
+}
+
+void GameManagers::addFile(FileType type, const std::string &data)
+{
+	Engine::Instance().filesManager()->addFile(type, data.c_str(), data.size());
 }
 
 void GameManagers::loadSounds()
 {
+	Engine::Instance().soundManager()->addSound(SoundManager::INTRO, "sounds/intro.ogg");
+	Engine::Instance().soundManager()->addSound(SoundManager::CLICK, "sounds/ui/click.ogg");
+	Engine::Instance().soundManager()->addSound(SoundManager::HOVER, "sounds/ui/hover.ogg");
+
 	Engine::Instance().soundManager()->addSound(GAME_SOUND::SELL, "sounds/sell.ogg");
 	Engine::Instance().soundManager()->addSound(GAME_SOUND::TARGET_LOCK, "sounds/target_lock.ogg");
 	Engine::Instance().soundManager()->addSound(GAME_SOUND::TOWER_EXPLOSION, "sounds/tower_explosion.ogg");
