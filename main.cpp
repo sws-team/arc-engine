@@ -36,27 +36,17 @@ int main(int argc, char *argv[])
 #endif
 
 	std::srand(std::time(nullptr));
-	sf::String path = sf::String("argv[0]");
-	const sf::String appName = sf::String("TowerDefence_") + sf::String(APP_VERSION)
-#ifdef OS_WIN
-			+ sf::String(".exe")
-#endif
-	;
-	path.replace(appName, sf::String());
 
 	Engine::Instance();
-
 	GameManagers::loadResources();
 	GameManagers::loadTranslations();
 
 	const std::string steamLanguage = std::string(SteamUtils()->GetSteamUILanguage());
 	Engine::Instance().translationsManager()->setCurrentLanguage(steamLanguage);
-
-	Engine::Instance().globalVariables()->setApplicationPath(path);
 	Engine::Instance().globalVariables()->loadGameSettings(GamePlatform::Instance().readFile(EngineDefs::settingsFilePath));
-
 	Engine::Instance().setStateManager(new GameStateManager);
 	Engine::Instance().setOptions(new GameOptions);
+
 	Engine::Instance().options<GameOptions>()->load();
 
 	if (!Engine::Instance().options<GameOptions>()->verifyChecksum())
@@ -75,14 +65,15 @@ int main(int argc, char *argv[])
 	MainWindow w;
 	Engine::Instance().options<GameOptions>()->setMainWindow(&w);
 	Engine::Instance().getOptions()->updateWindow();
+	w.exec();
 
-	const int result = w.exec();
 	Engine::Instance().options<GameOptions>()->save();
 	GamePlatform::Instance().saveFile(EngineDefs::settingsFilePath, Engine::Instance().globalVariables()->saveGameSettings());
 
 	Engine::Instance().clearInstance();
+
 #ifdef STEAM_API
 	SteamAPI_Shutdown();
 #endif
-	return result;
+	return EXIT_SUCCESS;
 }

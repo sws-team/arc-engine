@@ -41,6 +41,8 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::MISSON_BACKGROUND, out);
 			else if (resource.name == "options")
 				addTexture(TexturesManager::SETTINGS_BACKGROUND, out);
+			else if (resource.name == "manual")
+				addTexture(GAME_TEXTURE::MANUAL_BACKGROUND, out);
 			else if (resource.name == "window")
 				addTexture(GAME_TEXTURE::WINDOW_TEXTURE, out);
 			//enemies
@@ -50,6 +52,194 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::ENEMY_CAR, out);
 			else if (resource.name == "tricycle")
 				addTexture(GAME_TEXTURE::ENEMY_TRICYCLE, out);
+			else if (resource.name == "tank")
+				addTexture(GAME_TEXTURE::ENEMY_TANK, out);
+			else if (resource.name == "tractor")
+				addTexture(GAME_TEXTURE::ENEMY_TRACTOR, out);
+			else if (resource.name == "infantry")
+				addTexture(GAME_TEXTURE::ENEMY_INFANTRY, out);
+			else if (resource.name == "shield")
+				addTexture(GAME_TEXTURE::ENEMY_SHIELD, out);
+			else if (resource.name == "teleport")
+				addTexture(GAME_TEXTURE::ENEMY_TELEPORT, out);
+			else if (resource.name == "big_tank")
+				addTexture(GAME_TEXTURE::ENEMY_BIG_TANK, out);
+			else if (resource.name == "aircarrier")
+				addTexture(GAME_TEXTURE::ENEMY_AIRCARRIER, out);
+			else if (resource.name == "ant")
+				addTexture(GAME_TEXTURE::ENEMY_ANT, out);
+			else if (resource.name == "cow")
+				addTexture(GAME_TEXTURE::ENEMY_COW, out);
+			else if (resource.name == "helicopter")
+				addTexture(GAME_TEXTURE::ENEMY_HELICOPTER, out);
+			else if (resource.name == "plane")
+				addTexture(GAME_TEXTURE::ENEMY_PLANE, out);
+			else if (resource.name == "repair")
+				addTexture(GAME_TEXTURE::ENEMY_REPAIR, out);
+			else if (resource.name == "selfheal")
+				addTexture(GAME_TEXTURE::ENEMY_SELF_HEAL, out);
+			//map icons
+			else if (resource.name == "mission1_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_1, out);
+			else if (resource.name == "mission2_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_2, out);
+			else if (resource.name == "mission3_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_3, out);
+			else if (resource.name == "mission4_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_4, out);
+			else if (resource.name == "mission5_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_5, out);
+			else if (resource.name == "mission6_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_6, out);
+			else if (resource.name == "mission7_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_7, out);
+			else if (resource.name == "mission8_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_8, out);
+			else if (resource.name == "mission9_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_9, out);
+			else if (resource.name == "mission10_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_10, out);
+			else if (resource.name == "mission11_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_11, out);
+			else if (resource.name == "mission12_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_12, out);
+			else if (resource.name == "mission13_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_13, out);
+			else if (resource.name == "mission14_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_14, out);
+			else if (resource.name == "mission15_icon")
+				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_15, out);
+			//towers
+			else if (resource.name == "tower_base")
+				addTexture(GAME_TEXTURE::TOWER_BASE, out);
+			else if (resource.name == "tower_freeze")
+				addTexture(GAME_TEXTURE::TOWER_FREEZE, out);
+			else if (resource.name == "tower_power")
+				addTexture(GAME_TEXTURE::TOWER_POWER, out);
+			else if (resource.name == "tower_rocket")
+				addTexture(GAME_TEXTURE::TOWER_ROCKET, out);
+			else if (resource.name == "tower_laser")
+				addTexture(GAME_TEXTURE::TOWER_LASER, out);
+			else if (resource.name == "tower_improved")
+				addTexture(GAME_TEXTURE::TOWER_IMPROVED, out);
+			//icons
+			else if (resource.name == "ability_bomb_icon")
+				addTexture(GAME_TEXTURE::ABILITY_BOMB, out);
+			else if (resource.name == "ability_freeze_bomb_icon")
+				addTexture(GAME_TEXTURE::ABILITY_FREEZE_BOMB, out);
+			else if (resource.name == "ability_acid_icon")
+				addTexture(GAME_TEXTURE::ABILITY_ACID, out);
+			else if (resource.name == "ability_increase_tower_damage_icon")
+				addTexture(GAME_TEXTURE::ABILITY_INCREASE_TOWER_DAMAGE, out);
+			else if (resource.name == "ability_increase_tower_speed_icon")
+				addTexture(GAME_TEXTURE::ABILITY_INCREASE_TOWER_ATTACK_SPEED, out);
+			else if (resource.name == "ability_stop_icon")
+				addTexture(GAME_TEXTURE::ABILITY_TIME_STOP, out);
+			else if (resource.name == "tower_base_icon")
+				addTexture(GAME_TEXTURE::TOWER_BASE_ICON, out);
+			else if (resource.name == "tower_freeze_icon")
+				addTexture(GAME_TEXTURE::TOWER_FREEZE_ICON, out);
+			else if (resource.name == "tower_power_icon")
+				addTexture(GAME_TEXTURE::TOWER_POWER_ICON, out);
+			else if (resource.name == "tower_rocket_icon")
+				addTexture(GAME_TEXTURE::TOWER_ROCKET_ICON, out);
+			else if (resource.name == "tower_laser_icon")
+				addTexture(GAME_TEXTURE::TOWER_LASER_ICON, out);
+			else if (resource.name == "tower_improved_icon")
+				addTexture(GAME_TEXTURE::TOWER_IMPROVED_ICON, out);
+			//ui
+			else if (resource.name == "focus_icon")
+				addTexture(TexturesManager::FOCUS_ICON, out);
+			else if (resource.name == "credits_icon")
+				addTexture(GAME_TEXTURE::CREDITS, out);
+			else if (resource.name == "cursor")
+				addTexture(TexturesManager::CURSOR, out);
+			else if (resource.name == "icon")
+				addTexture(TexturesManager::ICON, out);
+			else if (resource.name == "direction")
+				addTexture(GAME_TEXTURE::DIRECTION_TEXTURE, out);
+			else if (resource.name == "empty_star")
+				addTexture(GAME_TEXTURE::EMPTY_STAR_TEXTURE, out);
+			else if (resource.name == "exit_icon")
+				addTexture(GAME_TEXTURE::EXIT, out);
+			else if (resource.name == "game_cursor")
+				addTexture(GAME_TEXTURE::CURSOR_TEXTURE, out);
+			else if (resource.name == "instructions")
+				addTexture(GAME_TEXTURE::INSTRUCTIONS_TEXTURE, out);
+			else if (resource.name == "left_icon")
+				addTexture(GAME_TEXTURE::PREVIOUS, out);
+			else if (resource.name == "locked")
+				addTexture(GAME_TEXTURE::LOCKED_ICON, out);
+			else if (resource.name == "money_icon")
+				addTexture(GAME_TEXTURE::MONEY_ICON, out);
+			else if (resource.name == "panel")
+				addTexture(GAME_TEXTURE::PANEL_TEXTURE, out);
+			else if (resource.name == "panel_cursor")
+				addTexture(GAME_TEXTURE::PANEL_CURSOR, out);
+			else if (resource.name == "right_icon")
+				addTexture(GAME_TEXTURE::NEXT, out);
+			else if (resource.name == "sell_icon")
+				addTexture(GAME_TEXTURE::SELL_TEXTURE, out);
+			else if (resource.name == "star")
+				addTexture(GAME_TEXTURE::STAR_TEXTURE, out);
+			else if (resource.name == "upgrade_icon")
+				addTexture(GAME_TEXTURE::UPGRADE_TEXTURE, out);
+			else if (resource.name == "life_icon")
+				addTexture(GAME_TEXTURE::LIFE_ICON, out);
+			//weapons
+			else if (resource.name == "bullet")
+				addTexture(GAME_TEXTURE::BASE_PROJECTILE, out);
+			else if (resource.name == "freeze_bullet")
+				addTexture(GAME_TEXTURE::FREEZE_PROJECTILE, out);
+			else if (resource.name == "improved_bullet")
+				addTexture(GAME_TEXTURE::IMPROVED_PROJECTILE, out);
+			else if (resource.name == "laser_projectile")
+				addTexture(GAME_TEXTURE::LASER_PROJECTILE, out);
+			else if (resource.name == "rocket_projectile")
+				addTexture(GAME_TEXTURE::ROCKET_PROJECTILE, out);
+			else if (resource.name == "electric_projectile")
+				addTexture(GAME_TEXTURE::DOWNGRADE_PROJECTILE, out);
+			//effects
+			else if (resource.name == "base_explosion")
+				addTexture(GAME_TEXTURE::BASE_EXPLOSION_EFFECT, out);
+			else if (resource.name == "blast")
+				addTexture(GAME_TEXTURE::BLAST, out);
+			else if (resource.name == "bomb_explosion")
+				addTexture(GAME_TEXTURE::BOMB_EXPLOSION, out);
+			else if (resource.name == "burn")
+				addTexture(GAME_TEXTURE::BURN, out);
+			else if (resource.name == "down_effect")
+				addTexture(GAME_TEXTURE::DOWN_EFFECT, out);
+			else if (resource.name == "drain")
+				addTexture(GAME_TEXTURE::DRAIN, out);
+			else if (resource.name == "explosion")
+				addTexture(GAME_TEXTURE::EXPLOSION, out);
+			else if (resource.name == "freeze_bomb_explosion")
+				addTexture(GAME_TEXTURE::FREEZE_BOMB_EXPLOSION, out);
+			else if (resource.name == "freeze_explosion")
+				addTexture(GAME_TEXTURE::FREEZE_EXPLOSION_EFFECT, out);
+			else if (resource.name == "heal_effect")
+				addTexture(GAME_TEXTURE::HEAL_EFFECT, out);
+			else if (resource.name == "improved_explosion")
+				addTexture(GAME_TEXTURE::IMPROVED_EXPLOSION_EFFECT, out);
+			else if (resource.name == "regress")
+				addTexture(GAME_TEXTURE::REGRESS, out);
+			else if (resource.name == "rocket_explosion")
+				addTexture(GAME_TEXTURE::ROCKET_EXPLOSION_EFFECT, out);
+			else if (resource.name == "shell_effect")
+				addTexture(GAME_TEXTURE::SHELL_EFFECT, out);
+			else if (resource.name == "smoke_effect")
+				addTexture(GAME_TEXTURE::SMOKE, out);
+			else if (resource.name == "upgrade_effect")
+				addTexture(GAME_TEXTURE::UPGRADE, out);
+			else if (resource.name == "acid")
+				addTexture(GAME_TEXTURE::VENOM_EFFECT, out);
+			else if (resource.name == "web")
+				addTexture(GAME_TEXTURE::WEB, out);
+			//map objects
+			else if (resource.name == "tree")
+				addTexture(GAME_TEXTURE::OBJECT_TREE, out);
+
 		}
 			break;
 		case GameResource::SOUND:
@@ -109,106 +299,6 @@ void GameManagers::loadResources()
 
 	loadSounds();
 	loadMusic();
-	Engine::Instance().texturesManager()->addTexture(TexturesManager::FOCUS_ICON, "images/ui/focus.png");
-
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::PANEL_TEXTURE, "images/ui/panel.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::CURSOR_TEXTURE, "images/ui/game_cursor.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::STAR_TEXTURE, "images/ui/star.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::EMPTY_STAR_TEXTURE, "images/ui/empty_star.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::SELL_TEXTURE, "images/ui/sell.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::UPGRADE_TEXTURE, "images/ui/upgrade.png");
-
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::PANEL_CURSOR, "images/ui/panel_cursor.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MONEY_ICON, "images/ui/money.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::LIFE_ICON, "images/ui/money.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::DIRECTION_TEXTURE, "images/ui/direction.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::LOCKED_ICON, "images/ui/locked.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::INSTRUCTIONS_TEXTURE, "images/ui/instructions.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::NEXT, "images/ui/right.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::PREVIOUS, "images/ui/left.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::EXIT, "images/ui/exit.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::CREDITS, "images/ui/credits.png");
-
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ABILITY_BOMB, "images/ui/Abilities/ability_bomb.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ABILITY_FREEZE_BOMB, "images/ui/Abilities/ability_freeze_bomb.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ABILITY_ACID, "images/ui/Abilities/ability_acid.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ABILITY_INCREASE_TOWER_DAMAGE, "images/ui/Abilities/ability_increase_tower_damage.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ABILITY_INCREASE_TOWER_ATTACK_SPEED, "images/ui/Abilities/ability_increase_tower_speed.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ABILITY_TIME_STOP, "images/ui/Abilities/ability_stop.png");
-
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::TOWER_BASE, "images/ui/Towers/tower_base.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::TOWER_POWER, "images/ui/Towers/tower_power.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::TOWER_ROCKET, "images/ui/Towers/tower_rocket.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::TOWER_FREEZE, "images/ui/Towers/tower_freeze.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::TOWER_LASER, "images/ui/Towers/tower_laser.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::TOWER_IMPROVED, "images/ui/Towers/tower_improved.png");
-
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::BASE_PROJECTILE, "images/Weapons/bullet.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::IMPROVED_PROJECTILE, "images/Weapons/improved_bullet.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::FREEZE_PROJECTILE, "images/Weapons/freeze_bullet.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ROCKET_PROJECTILE, "images/Weapons/rocket.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::LASER_PROJECTILE, "images/Weapons/laser.png");
-
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MANUAL_BACKGROUND, "images/mission.png");
-
-	//effects
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::BASE_EXPLOSION_EFFECT, "images/Effects/base_explosion.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::FREEZE_EXPLOSION_EFFECT, "images/Effects/freeze_explosion.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ROCKET_EXPLOSION_EFFECT, "images/Effects/rocket_explosion.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::IMPROVED_EXPLOSION_EFFECT, "images/Effects/improved_explosion.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::VENOM_EFFECT, "images/Effects/venom.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::BOMB_EXPLOSION, "images/Effects/bomb_explosion.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::FREEZE_BOMB_EXPLOSION, "images/Effects/freeze_bomb_explosion.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::HEAL_EFFECT, "images/Effects/heal.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::SHELL_EFFECT, "images/Effects/shell.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::WEB, "images/Effects/web.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::DOWN_EFFECT, "images/Effects/down.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::DOWNGRADE_PROJECTILE, "images/Weapons/electric.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::UPGRADE, "images/Effects/upgrade.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::SMOKE, "images/Effects/smoke.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::EXPLOSION, "images/Effects/explosion.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::DRAIN, "images/Effects/drain.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::REGRESS, "images/Effects/regress.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::BURN, "images/Effects/burn.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::BLAST, "images/Effects/blast.png");
-
-	//map icons
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_1, "images/maps_icons/mission1.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_2, "images/maps_icons/mission2.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_3, "images/maps_icons/mission3.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_4, "images/maps_icons/mission4.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_5, "images/maps_icons/mission5.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_6, "images/maps_icons/mission6.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_7, "images/maps_icons/mission7.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_8, "images/maps_icons/mission8.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_9, "images/maps_icons/mission9.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_10, "images/maps_icons/mission10.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_11, "images/maps_icons/mission11.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_12, "images/maps_icons/mission12.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_13, "images/maps_icons/mission13.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_14, "images/maps_icons/mission14.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::MAP_ICON_MISSION_15, "images/maps_icons/mission15.png");
-
-	//enemies
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_SCORPION, "images/Enemies/scorpion.png");
-//	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_CAR, "images/Enemies/car.png");
-//	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_TRICYCLE, "images/Enemies/tricycle.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_TANK, "images/Enemies/tank.png");
-//	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_SPIDER, "images/Enemies/spider.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_HELICOPTER, "images/Enemies/helicopter.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_AIRCARRIER, "images/Enemies/aircarrier.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_BIG_TANK, "images/Enemies/big_tank.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_PLANE, "images/Enemies/plane.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_REPAIR, "images/Enemies/repair.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_SHIELD, "images/Enemies/shield.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_TELEPORT, "images/Enemies/teleport.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_SELF_HEAL, "images/Enemies/enemy.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_DOWN_TOWER, "images/Enemies/tractor.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_ANT, "images/Enemies/ant.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_COW, "images/Enemies/cow.png");
-
-	//objects
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::OBJECT_TREE, "images/maps_objects/tree.png");
 }
 
 void GameManagers::addTexture(TextureType type, const std::string &data)

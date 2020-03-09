@@ -395,7 +395,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	{
 	//small
 	case INFANTRY:
-		texture_id = GAME_TEXTURE::ENEMY_SCORPION;
+		texture_id = GAME_TEXTURE::ENEMY_INFANTRY;
 		stats.health = 125.f;
 		stats.speed = 50.f;
 		stats.damage = 10.f;
@@ -438,7 +438,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		abilityType = EnemyInfo::SELF_HEAL;
 		break;
 	case TRACTOR:
-		texture_id = GAME_TEXTURE::ENEMY_DOWN_TOWER;
+		texture_id = GAME_TEXTURE::ENEMY_TRACTOR;
 		stats.health = 250.f;
 		stats.speed = 40.f;
 		stats.damage = 15.f;
@@ -935,7 +935,7 @@ void ShutdownTowerAbility::effect(bool isActive)
 
 DownTowerAbility::DownTowerAbility()
 {
-	info.enemyTextureId = GAME_TEXTURE::ENEMY_DOWN_TOWER;
+	info.enemyTextureId = GAME_TEXTURE::ENEMY_TRACTOR;
 	info.animationSize = sf::Vector2i(GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE,
 								  GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::DOWNGRADE_PROJECTILE;

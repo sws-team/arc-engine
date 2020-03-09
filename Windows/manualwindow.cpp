@@ -334,7 +334,7 @@ void ManualWindow::addElements()
 							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION)));
 
 	//enemies
-	elements.push_back(Element(GAME_TEXTURE::ENEMY_SCORPION,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_INFANTRY,
 							   GAME_TRANSLATION::SCORPION,
 							   EnemiesFactory::getEnemyInfo(INFANTRY)));
 
@@ -386,7 +386,7 @@ void ManualWindow::addElements()
 							   GAME_TRANSLATION::SELF_HEAL,
 							   EnemiesFactory::getEnemyInfo(SELFHEAL_ENEMY)));
 
-	elements.push_back(Element(GAME_TEXTURE::ENEMY_DOWN_TOWER,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_TRACTOR,
 							   GAME_TRANSLATION::DOWN_TOWER,
 							   EnemiesFactory::getEnemyInfo(TRACTOR)));
 
