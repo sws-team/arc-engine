@@ -42,7 +42,7 @@ TARGET = TowerDefence
 
 include($$PWD/../Engine/Engine/Engine.pri)
 include($$PWD/../Engine/ResourcesLib/ResourcesLib.pri)
-include($$PWD/../Engine/GameAchievements/GameAchievements.pri)
+include($$PWD/../Engine/GamePlatform/GamePlatform.pri)
 
 include($$PWD/Windows/Windows.pri)
 include($$PWD/Game/Game.pri)

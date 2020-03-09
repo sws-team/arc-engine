@@ -25,7 +25,9 @@ void GameManagers::loadResources()
 		{
 		case GameResource::TEXTURE:
 		{
-			if (resource.name == "close")
+			if (resource.name == "tiles")
+				addTexture(GAME_TEXTURE::TILES, out);
+			else if (resource.name == "close")
 				addTexture(TexturesManager::CLOSE_BACKGROUND, out);
 			else if (resource.name == "about")
 				addTexture(TexturesManager::ABOUT_BACKGROUND, out);
@@ -198,7 +200,7 @@ void GameManagers::loadResources()
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_BIG_TANK, "images/Enemies/big_tank.png");
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_PLANE, "images/Enemies/plane.png");
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_REPAIR, "images/Enemies/repair.png");
-	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_SHELL, "images/Enemies/shell.png");
+	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_SHIELD, "images/Enemies/shield.png");
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_TELEPORT, "images/Enemies/teleport.png");
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_SELF_HEAL, "images/Enemies/enemy.png");
 	Engine::Instance().texturesManager()->addTexture(GAME_TEXTURE::ENEMY_DOWN_TOWER, "images/Enemies/tractor.png");

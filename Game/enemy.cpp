@@ -394,7 +394,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	switch (type)
 	{
 	//small
-	case SCORPION:
+	case INFANTRY:
 		texture_id = GAME_TEXTURE::ENEMY_SCORPION;
 		stats.health = 125.f;
 		stats.speed = 50.f;
@@ -412,7 +412,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		animationSpeed = 50;
 		abilityType = EnemyInfo::STRONG;
 		break;
-	case SMALL_FAST:
+	case TRICYCLE:
 		texture_id = GAME_TEXTURE::ENEMY_TRICYCLE;
 		stats.health = 100.f;
 		stats.speed = 15.f;
@@ -437,7 +437,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		size.y = 1;
 		abilityType = EnemyInfo::SELF_HEAL;
 		break;
-	case DOWN_TOWER_ENEMY:
+	case TRACTOR:
 		texture_id = GAME_TEXTURE::ENEMY_DOWN_TOWER;
 		stats.health = 250.f;
 		stats.speed = 40.f;
@@ -457,7 +457,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		size.y = 1;
 		break;
 		//mid
-	case MID_SLOW:
+	case TANK:
 		texture_id = GAME_TEXTURE::ENEMY_TANK;
 		stats.health = 500.f;
 		stats.speed = 55.f;
@@ -494,13 +494,15 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		size.x = 2;
 		size.y = 2;
 		break;
-	case SHELL_ENEMY:
-		texture_id = GAME_TEXTURE::ENEMY_SHELL;
+	case SHIELD_ENEMY:
+		texture_id = GAME_TEXTURE::ENEMY_SHIELD;
 		stats.health = 250.f;
 		stats.speed = 50.f;
 		stats.damage = 20.f;
 		size.x = 2;
 		size.y = 2;
+		animationSpeed = 300;
+		frameCount = 9;
 		abilityType = EnemyInfo::SHELL_NEAR;
 		break;
 	case TELEPORT_ENEMY:

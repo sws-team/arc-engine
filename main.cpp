@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 #endif
+
 	std::srand(std::time(nullptr));
 	sf::String path = sf::String("argv[0]");
 	const sf::String appName = sf::String("TowerDefence_") + sf::String(APP_VERSION)

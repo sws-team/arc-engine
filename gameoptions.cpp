@@ -615,18 +615,8 @@ bool GameOptions::loadTiles()
 		tilePropertiesElement = tilePropertiesElement->NextSiblingElement("tile");
 	}
 
-
-	// source - путь до картинки в контейнере image
-	TiXmlElement *image = tilesetElement->FirstChildElement("image");
-	const std::string imagePath = std::string(image->Attribute("source"));
-	sf::Image img;
-	if (!img.loadFromFile(imagePath))
-	{
-		std::cout << "Failed to load tile sheet." << std::endl;
-		return false;
-	}
-
-	img.createMaskFromColor(sf::Color(255, 255, 255));//для маски цвета.сейчас нет маски
+	const sf::Image img = Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TILES).copyToImage();
+//	img.createMaskFromColor(sf::Color(255, 255, 255));//для маски цвета.сейчас нет маски
 	tilesetImage.loadFromImage(img);
 	tilesetImage.setSmooth(false);
 	return true;

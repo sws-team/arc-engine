@@ -24,19 +24,19 @@ enum ENEMY_TYPES
 {
 	UNKNOWN,
 
-	SCORPION,//scorpion
+	INFANTRY,//scorpion
 	CAR,
-	SMALL_FAST,//tricycle
+	TRICYCLE,
 	SMALL_NEXT,
 	SELFHEAL_ENEMY,
-	DOWN_TOWER_ENEMY,
+	TRACTOR,
 	ANOTHER_ENEMY,
 
-	MID_SLOW,//tank
+	TANK,//tank
 	SPIDER,//spider
 	MID_FAST,//helicopter
 	REPAIR_ENEMY,
-	SHELL_ENEMY,
+	SHIELD_ENEMY,
 	TELEPORT_ENEMY,
 
 	BIG_SLOW,//aircarrier

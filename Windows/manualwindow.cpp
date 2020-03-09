@@ -336,7 +336,7 @@ void ManualWindow::addElements()
 	//enemies
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SCORPION,
 							   GAME_TRANSLATION::SCORPION,
-							   EnemiesFactory::getEnemyInfo(SCORPION)));
+							   EnemiesFactory::getEnemyInfo(INFANTRY)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_CAR,
 							   GAME_TRANSLATION::CAR,
@@ -344,11 +344,11 @@ void ManualWindow::addElements()
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TRICYCLE,
 							   GAME_TRANSLATION::TRICYCLE,
-							   EnemiesFactory::getEnemyInfo(SMALL_FAST)));
+							   EnemiesFactory::getEnemyInfo(TRICYCLE)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TANK,
 							   GAME_TRANSLATION::TANK,
-							   EnemiesFactory::getEnemyInfo(MID_SLOW)));
+							   EnemiesFactory::getEnemyInfo(TANK)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SPIDER,
 							   GAME_TRANSLATION::SPIDER,
@@ -374,9 +374,9 @@ void ManualWindow::addElements()
 							   GAME_TRANSLATION::REPAIR,
 							   EnemiesFactory::getEnemyInfo(REPAIR_ENEMY)));
 
-	elements.push_back(Element(GAME_TEXTURE::ENEMY_SHELL,
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_SHIELD,
 							   GAME_TRANSLATION::SHELL,
-							   EnemiesFactory::getEnemyInfo(SHELL_ENEMY)));
+							   EnemiesFactory::getEnemyInfo(SHIELD_ENEMY)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TELEPORT,
 							   GAME_TRANSLATION::TELEPORT,
@@ -388,7 +388,7 @@ void ManualWindow::addElements()
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_DOWN_TOWER,
 							   GAME_TRANSLATION::DOWN_TOWER,
-							   EnemiesFactory::getEnemyInfo(DOWN_TOWER_ENEMY)));
+							   EnemiesFactory::getEnemyInfo(TRACTOR)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_ANT,
 							   GAME_TRANSLATION::ANT,
