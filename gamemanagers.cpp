@@ -242,6 +242,12 @@ void GameManagers::loadResources()
 
 		}
 			break;
+		case GameResource::FONT:
+		{
+			if (resource.name == "default_font")
+				Engine::Instance().fontManager()->addFont(FontManager::DEFAULT_FONT, out.c_str(), out.size());
+		}
+			break;
 		case GameResource::SOUND:
 		{
 //			if (resource.name == "intro")
