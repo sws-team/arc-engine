@@ -516,7 +516,7 @@ void Level::checkRespawn()
 	{
 		const int n = rand() % wave.spawnEnemies.size();
 		ENEMY_TYPES type = wave.spawnEnemies.at(n);
-		wave.spawnEnemies.erase(find(wave.spawnEnemies.begin(), wave.spawnEnemies.end(), type));
+		wave.spawnEnemies.erase(std::find(wave.spawnEnemies.begin(), wave.spawnEnemies.end(), type));
 		waves[currentWave] = wave;
 
 		spawn(spawnRect.getPosition(), type, wave.protection, gameMap->spawnDirection);

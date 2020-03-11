@@ -48,7 +48,7 @@ MainMenu::MainMenu()
 
 void MainMenu::init()
 {
-	Engine::Instance().soundManager()->startBackgroundSound(GAME_MUSIC::MENU);
+	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::MAIN_MENU_MUSIC);
 }
 
 void MainMenu::accept()
