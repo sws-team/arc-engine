@@ -40,7 +40,7 @@ enum ENEMY_TYPES
 	TELEPORT_ENEMY,
 
 	BIG_SLOW,//aircarrier
-	BIG_MEDIUM,//big tank
+	BIG_TANK,//big tank
 	SPAWN_ENEMY,
 };
 

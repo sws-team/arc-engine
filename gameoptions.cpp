@@ -131,6 +131,16 @@ void GameOptions::setMissionFinished(unsigned int n, unsigned int rating)
 		m_save[n].stars = rating;
 }
 
+int GameOptions::missionStars(unsigned int n) const
+{
+	for(const CompletedMission& mission : m_save)
+	{
+		if(mission.number == n)
+			return mission.stars;
+	}
+	return -1;
+}
+
 std::vector<GameOptions::CompletedMission> GameOptions::getCompletedMissions() const
 {
 	return m_save;
@@ -693,9 +703,50 @@ void GameOptions::loadAchievements()
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_COMPLETE_ALL_LEVELS, std::string("COMPLETE_ALL_LEVELS"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_DAMAGE, std::string("COMPLETE_LEVEL_WITHOUT_DAMAGE"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_CARS, std::string("KILL_100_CARS"));
-
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_INFANTRY, std::string("KILL_100_INFANTRY"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_TRICYCLES, std::string("KILL_100_TRICYCLES"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_SEFLHEAL, std::string("KILL_100_SEFLHEAL"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_ANOTHER, std::string("KILL_100_ANOTHER"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_TRACTORS, std::string("KILL_100_TRACTORS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_SMALL, std::string("KILL_100_SMALL"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_50_TANKS, std::string("KILL_50_TANKS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_50_SPIDERS, std::string("KILL_50_SPIDERS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_50_MID, std::string("KILL_50_MID"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_50_SHIELD, std::string("KILL_50_SHIELD"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_50_REPAIRS, std::string("KILL_50_REPAIRS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_50_TELEPORTS, std::string("KILL_50_TELEPORTS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_10_BIGS, std::string("KILL_10_BIGS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_10_BIG_TANK, std::string("KILL_10_BIG_TANK"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_10_SPAWNS, std::string("KILL_10_SPAWNS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_50_BY_TOWER, std::string("KILL_50_BY_BASE_TOWER"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_BY_ACID, std::string("KILL_100_BY_ACID"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_5_BY_SINGLE_BOMB, std::string("KILL_5_BY_SINGLE_BOMB"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_FREEZE_5_BY_SINGLE_BOMB, std::string("FREEZE_5_BY_SINGLE_BOMB"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_DROP_DRAIN, std::string("DROP_DRAIN"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_FULL_UPGRADE_ALL_TOWERS, std::string("FULL_UPGRADE_ALL_TOWERS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_BUILD_100_TOWERS, std::string("BUILD_100_TOWERS"));
 
 	GamePlatform::Instance().addStat(STAT_CARS_KILLS, std::string("CARS_KILLS"));
+	GamePlatform::Instance().addStat(STAT_INFANTRY_KILLS, std::string("INFANTRY_KILLS"));
+	GamePlatform::Instance().addStat(STAT_TRICYCLE_KILLS, std::string("TRICYCLE_KILLS"));
+	GamePlatform::Instance().addStat(STAT_SMALL_KILLS, std::string("SMALL_KILLS"));
+	GamePlatform::Instance().addStat(STAT_ANOTHER_KILLS, std::string("ANOTHER_KILLS"));
+	GamePlatform::Instance().addStat(STAT_SELFHEAL_KILLS2, std::string("SELFHEAL_KILLS2"));
+	GamePlatform::Instance().addStat(STAT_TRACTOR_KILLS, std::string("TRACTOR_KILLS"));
+	GamePlatform::Instance().addStat(STAT_TANK_KILLS, std::string("TANK_KILLS"));
+	GamePlatform::Instance().addStat(STAT_SPIDER_KILLS, std::string("SPIDER_KILLS"));
+	GamePlatform::Instance().addStat(STAT_MID_KILLS, std::string("MID_KILLS"));
+	GamePlatform::Instance().addStat(STAT_REPAIR_KILLS, std::string("REPAIR_KILLS"));
+	GamePlatform::Instance().addStat(STAT_SHIELD_KILLS, std::string("SHIELD_KILLS"));
+	GamePlatform::Instance().addStat(STAT_TELEPORT_KILLS, std::string("TELEPORT_KILLS"));
+	GamePlatform::Instance().addStat(STAT_BIG_KILLS, std::string("BIG_KILLS"));
+	GamePlatform::Instance().addStat(STAT_BIG_TANK_KILLS, std::string("BIG_TANK_KILLS"));
+	GamePlatform::Instance().addStat(STAT_SPAWN_KILLS, std::string("SPAWN_KILLS"));
+	GamePlatform::Instance().addStat(STAT_KILLS_BY_ACID, std::string("KILLS_BY_ACID"));
+	GamePlatform::Instance().addStat(STAT_COMPLETED_LEVELS, std::string("COMPLETED_LEVELS"));
+	GamePlatform::Instance().addStat(STAT_5_STARS_COMPLETED_LEVELS, std::string("5_STARS_COMPLETED_LEVELS"));
+	GamePlatform::Instance().addStat(STAT_TOWER_MAX_KILLS, std::string("TOWER_MAX_KILLS"));
+	GamePlatform::Instance().addStat(STAT_TOWERS_BUILDED, std::string("TOWERS_BUILDED"));
 }
 
 void GameOptions::globalCallbacks()

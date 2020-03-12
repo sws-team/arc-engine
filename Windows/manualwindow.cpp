@@ -364,7 +364,7 @@ void ManualWindow::addElements()
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_BIG_TANK,
 							   GAME_TRANSLATION::BIG_TANK,
-							   EnemiesFactory::getEnemyInfo(BIG_MEDIUM)));
+							   EnemiesFactory::getEnemyInfo(BIG_TANK)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_PLANE,
 							   GAME_TRANSLATION::PLANE,

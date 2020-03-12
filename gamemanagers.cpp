@@ -398,9 +398,6 @@ void GameManagers::loadResources()
 
 	addShader(GAME_SHADERS::WAVE, ShadersFactory::WAVE_SHADER);
 	addShader(GAME_SHADERS::MOVING, ShadersFactory::MOVING_SHADER);
-
-	loadSounds();
-	loadMusic();
 }
 
 void GameManagers::addTexture(TextureType type, const std::string &data)
@@ -426,73 +423,6 @@ void GameManagers::addFile(FileType type, const std::string &data)
 void GameManagers::addShader(ShaderType type, const std::string &data)
 {
 	Engine::Instance().shadersManager()->addShader(type, data);
-}
-
-void GameManagers::loadSounds()
-{
-//	Engine::Instance().soundManager()->addSound(SoundManager::INTRO, "sounds/intro.ogg");
-//	Engine::Instance().soundManager()->addSound(SoundManager::CLICK, "sounds/ui/click.ogg");
-//	Engine::Instance().soundManager()->addSound(SoundManager::HOVER, "sounds/ui/hover.ogg");
-
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::SELL, "sounds/sell.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::TARGET_LOCK, "sounds/target_lock.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::TOWER_EXPLOSION, "sounds/tower_explosion.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::SETUP, "sounds/setup.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::WARNING, "sounds/warning.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::WIN, "sounds/win.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::UPGRADE, "sounds/upgrade.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::INTRO, "sounds/intro.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::GAME_OVER, "sounds/game_over.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::ALARM, "sounds/alarm.ogg");
-
-//	//enemies
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::CATCH, "sounds/enemies/catch.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::WEB_SHOOT, "sounds/enemies/shoot_web.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::ELECTRIC_SHOCK, "sounds/enemies/electric_shock.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::ELECTRIC_SHOOT, "sounds/enemies/electric_shoot.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::STRONG, "sounds/enemies/strong.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::SHIELD, "sounds/enemies/shield.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::TELEPORT, "sounds/enemies/teleport.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::REPAIR, "sounds/enemies/repair.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::HEAL, "sounds/enemies/heal.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::SPAWN_ROAR, "sounds/enemies/roar.ogg");
-//	//abilities
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::ACTIVATE_ABILITY, "sounds/abilities/activate_ability.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::BOMB, "sounds/abilities/bomb.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::FREEZE_BOMB, "sounds/abilities/freeze.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::STOP, "sounds/abilities/stop.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::TOWER_ABILITY, "sounds/abilities/tower_ability.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::ACID, "sounds/abilities/acid.ogg");
-//	//towers
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::FREEZE_SHOT, "sounds/towers/freeze_shot.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::BASE_SHOT, "sounds/towers/base_shot.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::ROCKET_SHOT, "sounds/towers/rocket_shot.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::LASER_SHOT, "sounds/towers/laser_shot.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::IMPROVED_SHOT, "sounds/towers/improved_shot.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::BLAST, "sounds/towers/blast.ogg");
-
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::DRAIN_DROPPPED, "sounds/effects/drain.ogg");
-//	Engine::Instance().soundManager()->addSound(GAME_SOUND::REGRESS, "sounds/effects/regress.ogg");
-}
-
-void GameManagers::loadMusic()
-{
-//	Engine::Instance().soundManager()->addMusic(GAME_MUSIC::TRACK_1, "music/track_1.ogg");
-//	Engine::Instance().soundManager()->addMusic(GAME_MUSIC::TRACK_2, "music/track_2.ogg");
-//	Engine::Instance().soundManager()->addMusic(GAME_MUSIC::TRACK_3, "music/track_3.ogg");
-//	Engine::Instance().soundManager()->addMusic(GAME_MUSIC::TRACK_4, "music/track_4.ogg");
-//	Engine::Instance().soundManager()->addMusic(GAME_MUSIC::TRACK_5, "music/track_5.ogg");
-//	Engine::Instance().soundManager()->addMusic(GAME_MUSIC::TRACK_6, "music/track_6.ogg");
-//	Engine::Instance().soundManager()->addMusic(GAME_MUSIC::TRACK_7, "music/track_7.ogg");
-//	Engine::Instance().soundManager()->addMusic(GAME_MUSIC::TRACK_8, "music/track_8.ogg");
-
-
-//	Engine::Instance().soundManager()->addMusic(GAME_MUSIC::FINAL_1, "music/final_1.ogg");
-//	Engine::Instance().soundManager()->addMusic(GAME_MUSIC::FINAL_2, "music/final_2.ogg");
-//	Engine::Instance().soundManager()->addMusic(GAME_MUSIC::FINAL_3, "music/final_3.ogg");
-
-//	Engine::Instance().soundManager()->addMusic(SoundManager::MAIN_MENU_MUSIC, "music/main.ogg");
-//	Engine::Instance().soundManager()->addMusic(SoundManager::CREDITS_MUSIC, "music/credits.ogg");
 }
 
 void GameManagers::loadTranslations()

@@ -9,6 +9,8 @@
 #include "enginedef.h"
 #include "gameoptions.h"
 #include "gamemanagers.h"
+#include "gameplatform.h"
+#include "achievements.h"
 
 GameAbility::GameAbility(const sf::Vector2i &areaSize,
 						 const sf::Vector2i &offset,
@@ -142,12 +144,17 @@ void BombAbility::activate()
 				 200, 12, 0);
 
 //	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
-
+	unsigned int count = 0;
 	for(Enemy *enemy : Engine::Instance().options<GameOptions>()->level()->getAllEnemies())
-	{
 		if (enemy->enemyRect().intersects(abilityRect))
+		{
 			enemy->hit(BOMB_ABILITY_DAMAGE);
-	}
+			if (!enemy->isAlive())
+				count++;
+		}
+
+	if (count >= 5)
+		GamePlatform::Instance().unlock(ACHIEVEMENT_FREEZE_5_BY_SINGLE_BOMB);
 
 	Engine::Instance().options<GameOptions>()->level()->checkAlive();
 	GameAbility::finish();
@@ -169,9 +176,16 @@ void FreezeBombAbility::activate()
 						  m_areaSize.y * GameOptions::CELL_SIZE),
 				 200, 6, 0);
 	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
+	unsigned int count = 0;
 	for(Enemy *enemy : Engine::Instance().options<GameOptions>()->level()->getAllEnemies())
 		if (enemy->enemyRect().intersects(abilityRect))
+		{
 			enemy->freeze(FREEZE_ABILITY_K, FREEZE_ABILITY_DURATION);
+			count++;
+		}
+	if (count >= 5)
+		GamePlatform::Instance().unlock(ACHIEVEMENT_FREEZE_5_BY_SINGLE_BOMB);
+
 	GameAbility::finish();
 }
 
@@ -211,7 +225,12 @@ void VenomAbility::checkDuration()
 		for(Enemy *enemy : Engine::Instance().options<GameOptions>()->level()->getAllEnemies())
 		{
 			if (enemy->enemyRect().intersects(object->gameRect()))
-				enemy->hit(VenomAbility::VENOM_DAMAGE);			
+			{
+				enemy->hit(VenomAbility::VENOM_DAMAGE);
+
+				if(!enemy->isAlive())
+					GamePlatform::Instance().incrementValue(STAT_KILLS_BY_ACID);
+			}
 		}
 	}
 	if (count >= VENOM_DAMAGE_COUNT)

@@ -143,11 +143,6 @@ void Level::update()
 			enemy->update();
 		checkAlive();
 		showAnimations();
-
-//#ifdef STEAM_API
-//	SteamAPI_RunCallbacks();
-//#endif
-
 	}
 	if(m_state == Level::WAIT_READY)
 	{
@@ -348,8 +343,59 @@ void Level::checkAlive()
 					static_cast<RocketTower*>(tower)->checkEnemy(enemy);
 
 
-			std::cout << "INCREMENT"<<std::endl;
-			GamePlatform::Instance().incrementValue(STAT_CARS_KILLS);
+			switch (enemy->type())
+			{
+			case INFANTRY:
+				GamePlatform::Instance().incrementValue(STAT_INFANTRY_KILLS);
+				break;
+			case CAR:
+				GamePlatform::Instance().incrementValue(STAT_CARS_KILLS);
+				break;
+			case TRICYCLE:
+				GamePlatform::Instance().incrementValue(STAT_TRICYCLE_KILLS);
+				break;
+			case SMALL_NEXT:
+				GamePlatform::Instance().incrementValue(STAT_SMALL_KILLS);
+				break;
+			case SELFHEAL_ENEMY:
+				GamePlatform::Instance().incrementValue(STAT_SELFHEAL_KILLS2);
+				break;
+			case TRACTOR:
+				GamePlatform::Instance().incrementValue(STAT_TRACTOR_KILLS);
+				break;
+			case ANOTHER_ENEMY:
+				GamePlatform::Instance().incrementValue(STAT_ANOTHER_KILLS);
+				break;
+			case TANK:
+				GamePlatform::Instance().incrementValue(STAT_TANK_KILLS);
+				break;
+			case SPIDER:
+				GamePlatform::Instance().incrementValue(STAT_SPIDER_KILLS);
+				break;
+			case MID_FAST:
+				GamePlatform::Instance().incrementValue(STAT_MID_KILLS);
+				break;
+			case REPAIR_ENEMY:
+				GamePlatform::Instance().incrementValue(STAT_REPAIR_KILLS);
+				break;
+			case SHIELD_ENEMY:
+				GamePlatform::Instance().incrementValue(STAT_SHIELD_KILLS);
+				break;
+			case TELEPORT_ENEMY:
+				GamePlatform::Instance().incrementValue(STAT_TELEPORT_KILLS);
+				break;
+			case BIG_SLOW:
+				GamePlatform::Instance().incrementValue(STAT_BIG_KILLS);
+				break;
+			case BIG_TANK:
+				GamePlatform::Instance().incrementValue(STAT_BIG_TANK_KILLS);
+				break;
+			case SPAWN_ENEMY:
+				GamePlatform::Instance().incrementValue(STAT_SPAWN_KILLS);
+				break;
+			default:
+				break;
+			}
 
 			delete enemy;
 			money++;
@@ -479,6 +525,14 @@ void Level::upgradeTower(Tower *tower)
 		money -= cost;
 		tower->upgrade();
 	}
+
+	if (tower->level() == Tower::ABILITY_LEVEL)
+	{
+		fullyUpgradedTowers.insert(tower->type());
+		if (fullyUpgradedTowers.size() == 6)//towers count = 6
+			GamePlatform::Instance().unlock(ACHIEVEMENT_FULL_UPGRADE_ALL_TOWERS);
+	}
+
 	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
 }
 
@@ -1153,6 +1207,7 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 			Tower *tower = TowersFactory::createTower(type, pos);
 			if (tower == nullptr)
 				return;
+			GamePlatform::Instance().incrementValue(STAT_TOWERS_BUILDED);
 			Engine::Instance().soundManager()->playOnce(GAME_SOUND::SETUP);
 			towers.push_back(tower);
 			money -= cost;

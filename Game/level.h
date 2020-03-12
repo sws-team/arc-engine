@@ -191,6 +191,8 @@ private:
 
 	std::vector<LevelObject*> objects;
 	ShadersFactory *shadersFactory;
+
+	std::set<TOWER_TYPES> fullyUpgradedTowers;
 };
 
 #endif // LEVEL_H

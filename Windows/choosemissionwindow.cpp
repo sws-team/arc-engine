@@ -165,20 +165,23 @@ void ChooseMissionWindow::paint(sf::RenderWindow *window)
 		window->draw(mission.highlight);
 	}
 	window->draw(chooseRect);
+#ifdef WITH_DIFFICULT
 	window->draw(difficultRect);
 	window->draw(currentDifficultRect);
+#endif
 
 	window->draw(easyRect);
 	window->draw(normalRect);
 	window->draw(hardRect);
-
+#ifdef WITH_DIFFICULT
 	window->draw(choosedDifficultRect);
-
+#endif
 	window->draw(easyText);
 	window->draw(normalText);
 	window->draw(hardText);
-
+#ifdef WITH_DIFFICULT
 	window->draw(currentDifficultRect);
+#endif
 }
 
 void ChooseMissionWindow::eventFilter(sf::Event *event)

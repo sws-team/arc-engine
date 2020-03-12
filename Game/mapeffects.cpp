@@ -8,6 +8,8 @@
 #include "engine.h"
 #include "gameoptions.h"
 #include "gamemanagers.h"
+#include "gameplatform.h"
+#include "achievements.h"
 
 const int Shake::MAX_SHAKE_COUNT = 9;
 const int Shake::MAX_SHAKE_OFFSET = 10;
@@ -503,7 +505,8 @@ void MoneyDrain::explosion(const sf::FloatRect &rect)
 	{
 		GameObject *drain = *it;
 		if (drain->sprite.getGlobalBounds().intersects(rect))
-		{
+		{			
+			GamePlatform::Instance().unlock(ACHIEVEMENT_DROP_DRAIN);
 			delete drain;
 			it = drains.erase(it);
 		}

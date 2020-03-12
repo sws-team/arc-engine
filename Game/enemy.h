@@ -65,7 +65,11 @@ public:
 
 	sf::FloatRect enemyRect() const;
 
+	ENEMY_TYPES type() const;
+	void setType(const ENEMY_TYPES &type);
+
 private:
+	ENEMY_TYPES m_type;
 	EnemyStats m_stats;
 	EnemyStats m_data;
 

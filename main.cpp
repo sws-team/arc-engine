@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 	Engine::Instance().globalVariables()->setAppName("TowerDefence");
 	Engine::Instance().options<GameOptions>()->loadAchievements();
 	GamePlatform::Instance().requestStats();
-//	Engine::Instance().soundManager()->setQuiet(true);
+	Engine::Instance().soundManager()->setQuiet(true);
 
 	MainWindow w;
 	Engine::Instance().options<GameOptions>()->setMainWindow(&w);

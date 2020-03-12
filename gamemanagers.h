@@ -359,9 +359,6 @@ public:
 
 	static void loadTranslations();
 
-	static void loadSounds();
-	static void loadMusic();
-
 	static const std::string resourcesFileName;
 	static const std::string checksum;
 };

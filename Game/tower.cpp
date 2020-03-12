@@ -9,6 +9,8 @@
 #include "managers.h"
 #include "gamemanagers.h"
 #include "collisions.h"
+#include "gameplatform.h"
+#include "achievements.h"
 
 const float Tower::LEVEL_GAIN = 0.25f;
 const float Tower::TOWER_SCAlE = 1.f/3.f;
@@ -119,7 +121,10 @@ int Tower::level() const
 void Tower::checkKill(Enemy *enemy)
 {
 	if (!enemy->isAlive())
-		m_kills++;
+	{
+		m_kills++;				
+		GamePlatform::Instance().incrementValue(STAT_TOWER_MAX_KILLS);
+	}
 }
 
 Enemy *Tower::findNearestEnemy(const std::vector<Enemy *> &exclude)

@@ -23,6 +23,7 @@ Enemy::Enemy(const TextureType &texture_id,
 				 sf::Vector2i(GameOptions::MAP_CELL_SIZE * cellSize.x * ENEMY_SCALE,
 						  GameOptions::MAP_CELL_SIZE * cellSize.y * ENEMY_SCALE),
 				 4)
+	,m_type(UNKNOWN)
 	,m_stats(stats)
 	,spriteDirection(DEFAULT_DOWN)
 	,isFreezed(false)
@@ -344,6 +345,16 @@ sf::FloatRect Enemy::enemyRect() const
 	return sf::FloatRect(pos(), getEnemySize());
 }
 
+ENEMY_TYPES Enemy::type() const
+{
+	return m_type;
+}
+
+void Enemy::setType(const ENEMY_TYPES &type)
+{
+	m_type = type;
+}
+
 bool Enemy::isVisible() const
 {
 	return m_visible;
@@ -524,7 +535,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		size.x = 4;
 		size.y = 4;
 		break;
-	case BIG_MEDIUM:
+	case BIG_TANK:
 		texture_id = GAME_TEXTURE::ENEMY_BIG_TANK;
 		stats.health = 900.f;
 		stats.speed = 55.f;
@@ -600,6 +611,7 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const sf::Vector2f &startPo
 							 info.frameCount,
 							 info.animationSpeed);
 	enemy->setAbility(ability);
+	enemy->setType(type);
 	if (ability != nullptr)
 		ability->setOwner(enemy);
 	return enemy;

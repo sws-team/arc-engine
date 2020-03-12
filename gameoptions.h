@@ -46,6 +46,7 @@ public:
 	void load();
 
 	void setMissionFinished(unsigned int n, unsigned int rating);
+	int missionStars(unsigned int n) const;
 
 	struct CompletedMission
 	{

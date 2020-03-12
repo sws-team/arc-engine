@@ -9,6 +9,8 @@
 #include "gamestatemanager.h"
 #include "gamemanagers.h"
 #include "enginedef.h"
+#include "gameplatform.h"
+#include "Game/achievements.h"
 
 #include <algorithm>
 #include <random>
@@ -284,9 +286,25 @@ void GameWindow::setState(const GAME_STATE &state)
 
 		text.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CONGRATULATIONS));
 		updateTextPos();
-
-		Engine::Instance().options<GameOptions>()->setMissionFinished(Engine::Instance().options<GameOptions>()->getMission(), stars);
-		Engine::Instance().options<GameOptions>()->save();
+		const unsigned int mission = Engine::Instance().options<GameOptions>()->getMission();
+		const int starsValue = Engine::Instance().options<GameOptions>()->missionStars(mission);
+		if (k == 1.f)
+			GamePlatform::Instance().unlock(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_DAMAGE);
+		if (starsValue == -1)
+		{
+			GamePlatform::Instance().incrementValue(STAT_COMPLETED_LEVELS);
+			Engine::Instance().options<GameOptions>()->setMissionFinished(mission, stars);
+			Engine::Instance().options<GameOptions>()->save();
+		}
+		else
+		{
+			if (stars > starsValue)
+			{
+				if (stars == 5)
+					GamePlatform::Instance().incrementValue(STAT_5_STARS_COMPLETED_LEVELS);				
+				Engine::Instance().options<GameOptions>()->save();
+			}
+		}
 	}
 		break;
 	case GAME_OVER:

@@ -460,7 +460,7 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(REPAIR_ENEMY, 5);
 		ADD_ENEMY(SMALL_NEXT, 50);
 		ADD_ENEMY(TANK, 5);
-		ADD_ENEMY(BIG_MEDIUM, 1);
+		ADD_ENEMY(BIG_TANK, 1);
 		ADD_ENEMY(TRICYCLE, 5);
 		waves.push_back(createWave(0.0f, 1000, enemies));
 		enemies.clear();
@@ -477,7 +477,7 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(REPAIR_ENEMY, 10);
 		ADD_ENEMY(TELEPORT_ENEMY, 10);
 		ADD_ENEMY(SPIDER, 10);
-		ADD_ENEMY(BIG_MEDIUM, 5);
+		ADD_ENEMY(BIG_TANK, 5);
 		ADD_ENEMY(TRICYCLE, 15);
 		waves.push_back(createWave(0.1f, 500, enemies));
 		enemies.clear();
@@ -493,7 +493,7 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(TELEPORT_ENEMY, 15);
 		ADD_ENEMY(REPAIR_ENEMY, 15);
 		ADD_ENEMY(SPIDER, 15);
-		ADD_ENEMY(BIG_MEDIUM, 10);
+		ADD_ENEMY(BIG_TANK, 10);
 		ADD_ENEMY(ANOTHER_ENEMY, 15);
 		ADD_ENEMY(TRICYCLE, 20);
 		waves.push_back(createWave(0.1f, 250, enemies));
@@ -536,7 +536,7 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(REPAIR_ENEMY, 5);
 		ADD_ENEMY(SMALL_NEXT, 50);
 		ADD_ENEMY(TANK, 5);
-		ADD_ENEMY(BIG_MEDIUM, 1);
+		ADD_ENEMY(BIG_TANK, 1);
 		ADD_ENEMY(TRICYCLE, 5);
 		waves.push_back(createWave(0.0f, 1000, enemies));
 		enemies.clear();
@@ -554,7 +554,7 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(REPAIR_ENEMY, 10);
 		ADD_ENEMY(TELEPORT_ENEMY, 10);
 		ADD_ENEMY(SPIDER, 10);
-		ADD_ENEMY(BIG_MEDIUM, 5);
+		ADD_ENEMY(BIG_TANK, 5);
 		ADD_ENEMY(TRICYCLE, 15);
 		waves.push_back(createWave(0.1f, 500, enemies));
 		enemies.clear();
@@ -571,7 +571,7 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(TELEPORT_ENEMY, 15);
 		ADD_ENEMY(REPAIR_ENEMY, 15);
 		ADD_ENEMY(SPIDER, 15);
-		ADD_ENEMY(BIG_MEDIUM, 10);
+		ADD_ENEMY(BIG_TANK, 10);
 		ADD_ENEMY(ANOTHER_ENEMY, 15);
 		ADD_ENEMY(TRICYCLE, 20);
 		waves.push_back(createWave(0.1f, 250, enemies));
@@ -616,7 +616,7 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(REPAIR_ENEMY, 5);
 		ADD_ENEMY(SMALL_NEXT, 50);
 		ADD_ENEMY(TANK, 5);
-		ADD_ENEMY(BIG_MEDIUM, 1);
+		ADD_ENEMY(BIG_TANK, 1);
 		ADD_ENEMY(TRICYCLE, 5);
 		waves.push_back(createWave(0.0f, 1000, enemies));
 		enemies.clear();
@@ -635,7 +635,7 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(REPAIR_ENEMY, 10);
 		ADD_ENEMY(TELEPORT_ENEMY, 10);
 		ADD_ENEMY(SPIDER, 10);
-		ADD_ENEMY(BIG_MEDIUM, 5);
+		ADD_ENEMY(BIG_TANK, 5);
 		ADD_ENEMY(TRICYCLE, 15);
 		waves.push_back(createWave(0.1f, 500, enemies));
 		enemies.clear();
@@ -653,7 +653,7 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(BIG_SLOW, 5);
 		ADD_ENEMY(REPAIR_ENEMY, 15);
 		ADD_ENEMY(SPIDER, 15);
-		ADD_ENEMY(BIG_MEDIUM, 10);
+		ADD_ENEMY(BIG_TANK, 10);
 		ADD_ENEMY(ANOTHER_ENEMY, 15);
 		ADD_ENEMY(TRICYCLE, 20);
 		waves.push_back(createWave(0.1f, 250, enemies));
