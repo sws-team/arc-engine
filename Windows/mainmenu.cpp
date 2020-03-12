@@ -40,7 +40,7 @@ MainMenu::MainMenu()
 	playerName.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 - playerName.getGlobalBounds().width/2,
 						 playerName.getGlobalBounds().height/2);
 
-	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAMPAIGN));
+	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::START));
 	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::OPTIONS));
 	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::MANUAL));
 	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::EXIT));

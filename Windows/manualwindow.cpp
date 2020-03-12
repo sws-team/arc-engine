@@ -502,6 +502,11 @@ void ManualWindow::Element::update()
 			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_BASE);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
+			description += separator;
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BASE_TOWER_ABILITY);
 		}
 			break;
 		case POWER:
@@ -509,6 +514,13 @@ void ManualWindow::Element::update()
 			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_POWER);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_TRAIT);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
+			description += separator;
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_ABILITY);
 		}
 			break;
 		case ROCKET:
@@ -516,6 +528,11 @@ void ManualWindow::Element::update()
 			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ROCKET);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
+			description += separator;
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ROCKET_TOWER_ABILITY);
 		}
 			break;
 		case FREEZE:
@@ -523,6 +540,11 @@ void ManualWindow::Element::update()
 			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_FREEZE);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
+			description += separator;
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_TOWER_ABILITY);
 		}
 			break;
 		case LASER:
@@ -530,6 +552,11 @@ void ManualWindow::Element::update()
 			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_LASER);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
+			description += separator;
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LASER_TOWER_ABILITY);
 		}
 			break;
 		case IMPROVED:
@@ -537,6 +564,11 @@ void ManualWindow::Element::update()
 			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_IMPROVED);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
+			description += separator;
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::IMPROVED_TOWER_ABILITY);
 		}
 			break;
 		}
@@ -605,9 +637,13 @@ void ManualWindow::Element::update()
 		description += endline;
 
 		//armor
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR) + separator +
+				GlobalVariables::to_string_with_precision(enemyInfo.stats.reflection, 1);
+		description += endline;
 
 		//ability
-
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY) + separator;
+		description += endline;
 	}
 		break;
 	default:
