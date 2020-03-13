@@ -168,18 +168,17 @@ void ChooseMissionWindow::paint(sf::RenderWindow *window)
 #ifdef WITH_DIFFICULT
 	window->draw(difficultRect);
 	window->draw(currentDifficultRect);
-#endif
 
 	window->draw(easyRect);
 	window->draw(normalRect);
 	window->draw(hardRect);
-#ifdef WITH_DIFFICULT
+
 	window->draw(choosedDifficultRect);
-#endif
+
 	window->draw(easyText);
 	window->draw(normalText);
 	window->draw(hardText);
-#ifdef WITH_DIFFICULT
+
 	window->draw(currentDifficultRect);
 #endif
 }
@@ -203,6 +202,7 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 					accept(mission);
 				}
 			}
+#ifdef WITH_DIFFICULT
 		if (easyRect.getGlobalBounds().contains(pos))
 		{
 			choosedDifficultRect.setPosition(easyRect.getPosition());
@@ -221,6 +221,7 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
 			Engine::Instance().options<GameOptions>()->setHardDifficult();
 		}
+#endif
 	}
 	else if (event->type == sf::Event::MouseMoved)
 	{
@@ -235,6 +236,7 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 			}
 		}
 		updateRect();
+#ifdef WITH_DIFFICULT
 		currentDifficultRect.setFillColor(sf::Color::Transparent);
 		if (easyRect.getGlobalBounds().contains(pos))
 		{
@@ -259,6 +261,7 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 			hovered = hoverId;
 			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 		}
+#endif
 	}
 	else if (event->type == sf::Event::KeyPressed)
 	{

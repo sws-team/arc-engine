@@ -127,7 +127,7 @@ void Abilities::reset()
 }
 
 BombAbility::BombAbility()
-	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), 15000)
+	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), BOMB_ABILITY_COOLDOWN)
 {
 
 }
@@ -161,7 +161,7 @@ void BombAbility::activate()
 }
 
 FreezeBombAbility::FreezeBombAbility()
-	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), 10000)
+	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), FREEZE_ABILITY_COOLDOWN)
 {
 
 }
@@ -190,7 +190,7 @@ void FreezeBombAbility::activate()
 }
 
 VenomAbility::VenomAbility()
-	: GameAbility(sf::Vector2i(10, 3), sf::Vector2i(7, 2), 30000)
+	: GameAbility(sf::Vector2i(10, 3), sf::Vector2i(7, 2), VENOM_ABLITY_COOLDOWN)
 	,object(nullptr)
 	,count(0)
 {
@@ -238,7 +238,7 @@ void VenomAbility::checkDuration()
 }
 
 IncreaseTowerDamageAbility::IncreaseTowerDamageAbility()
-	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), 35000)
+	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), INCREASE_DAMAGE_ABILITY_COOLDOWN)
 	,target(nullptr)
 {
 
@@ -270,7 +270,7 @@ void IncreaseTowerDamageAbility::checkDuration()
 }
 
 IncreaseTowerAttackSpeedAbility::IncreaseTowerAttackSpeedAbility()
-	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), 40000)
+	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), INCREASE_ATTACK_SPEED_ABILITY_COOLDOWN)
 	,target(nullptr)
 {
 
@@ -302,7 +302,7 @@ void IncreaseTowerAttackSpeedAbility::checkDuration()
 }
 
 StopAbility::StopAbility()
-	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), 60000)
+	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), STOP_ABILITY_COOLDOWN)
 {
 
 }

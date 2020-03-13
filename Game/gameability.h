@@ -44,6 +44,7 @@ public:
 
 	void activate() override;
 	static constexpr float BOMB_ABILITY_DAMAGE = 200;
+	static constexpr float BOMB_ABILITY_COOLDOWN = 15000;
 };
 
 class FreezeBombAbility : public GameAbility
@@ -55,7 +56,7 @@ public:
 
 	static constexpr float FREEZE_ABILITY_K = 0.3f;
 	static constexpr int FREEZE_ABILITY_DURATION = 5000;
-
+	static constexpr int FREEZE_ABILITY_COOLDOWN = 10000;
 };
 
 class VenomAbility : public GameAbility
@@ -69,6 +70,7 @@ public:
 	static constexpr float VENOM_DAMAGE = 15.f;
 	static constexpr int VENOM_DAMAGE_COUNT = 15;
 	static constexpr int VENOM_ATTACK_SPEED = 500;
+	static constexpr int VENOM_ABLITY_COOLDOWN = 30000;
 
 	class GameObject *object;
 private:
@@ -86,6 +88,7 @@ public:
 
 	static constexpr int INCREASE_ATTACK_SPEED_ABILITY_DURATION = 9000;
 	static constexpr int INCREASE_ATTACK_SPEED_ABILITY_VALUE = 5;
+	static constexpr int INCREASE_ATTACK_SPEED_ABILITY_COOLDOWN = 40000;
 private:
 	Timer abilityTimer;
 	Tower *target;
@@ -101,6 +104,7 @@ public:
 
 	static constexpr int INCREASE_DAMAGE_ABILITY_DURATION = 9000;
 	static constexpr int INCREASE_DAMAGE_ABILITY_VALUE = 5;
+	static constexpr int INCREASE_DAMAGE_ABILITY_COOLDOWN = 35000;
 
 private:
 	Timer abilityTimer;
@@ -114,8 +118,9 @@ public:
 
 	void activate() override;
 	void checkDuration() override;
-private:
 	static constexpr int STOP_ABILITY_DURATION = 5000;
+	static constexpr int STOP_ABILITY_COOLDOWN = 60000;
+private:
 	Timer abilityTimer;
 };
 

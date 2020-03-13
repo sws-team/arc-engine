@@ -448,6 +448,32 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MANUAL, L"Справочник"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT, L"Выход"));
 
+	//manual
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR_LIGHT, L"Light"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR_LIGHT, L"Легкая"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR_LIGHT, L"Light"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR_MEDIUM, L"Medium"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR_MEDIUM, L"Средняя"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR_MEDIUM, L"Medium"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR_STRONG, L"Strong"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR_STRONG, L"Крепкая"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR_STRONG, L"Strong"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COOLDOWN_TIME, L"Cooldown time"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COOLDOWN_TIME, L"Время перезарядки"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COOLDOWN_TIME, L"??"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DAMAGE_ATTRIBUTE, L"Damage"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DAMAGE_ATTRIBUTE, L"Урон"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DAMAGE_ATTRIBUTE, L"Damage"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DURATION_ATTRIBUTE, L"Duration"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DURATION_ATTRIBUTE, L"Время действия"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DURATION_ATTRIBUTE, L"Duration"));
+
 	//settings
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::SETTINGS, L"Настройки"));
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::AUDIO, L"Аудио"));

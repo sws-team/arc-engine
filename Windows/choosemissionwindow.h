@@ -3,7 +3,7 @@
 
 #include "statewindow.h"
 
-#define WITH_DIFFICULT
+//#define WITH_DIFFICULT
 
 class ChooseMissionWindow : public StateWindow
 {

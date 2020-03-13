@@ -38,7 +38,7 @@ private:
 
 		Element(TextureType texture,
 				TranslationType name,
-				const sf::String& description);
+				ACTION_STATE type);
 
 		Element(TextureType texture,
 				TranslationType name,
@@ -50,7 +50,7 @@ private:
 
 		EnemiesFactory::EnemyInfo enemyInfo;
 		TOWER_TYPES towerType;
-		sf::String abilityInfo;
+		ACTION_STATE abilityType;
 
 		sf::RectangleShape rect;
 		sf::Sprite icon;

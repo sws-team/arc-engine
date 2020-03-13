@@ -6,6 +6,7 @@
 #include "gamemanagers.h"
 #include "gamestatemanager.h"
 #include "gameoptions.h"
+#include "Game/gameability.h"
 
 const sf::Color ManualWindow::SELECTED_COLOR = sf::Color(45, 45, 45, 96);
 
@@ -311,27 +312,27 @@ void ManualWindow::addElements()
 	//abilities
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_BOMB,
 							   GAME_TRANSLATION::ABILITY_BOMB,
-							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BOMB_ABILITY_DESCRIPTION)));
+							   ACTION_STATE::ABILITY_BOMB));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_FREEZE_BOMB,
 							   GAME_TRANSLATION::ABILITY_FREEZE_BOMB,
-							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION)));
+							   ACTION_STATE::ABILITY_FREEZE_BOMB));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_ACID,
 							   GAME_TRANSLATION::ABILITY_VENOM,
-							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::VENOM_ABILITY_DESCRIPTION)));
+							   ACTION_STATE::ABILITY_VENOM));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_INCREASE_TOWER_DAMAGE,
 							   GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE,
-							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION)));
+							   ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_INCREASE_TOWER_ATTACK_SPEED,
 							   GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED,
-							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION)));
+							   ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_TIME_STOP,
 							   GAME_TRANSLATION::ABILITY_STOP,
-							   Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION)));
+							   ACTION_STATE::ABILITY_STOP));
 
 	//enemies
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_INFANTRY,
@@ -443,11 +444,11 @@ ManualWindow::Element::Element(TextureType texture,
 
 ManualWindow::Element::Element(TextureType texture,
 							   TranslationType name,
-							   const sf::String &description)
+							   ACTION_STATE type)
 	: 	texture(texture)
 	,name(name)
 	,type(E_Ability)
-	,abilityInfo(description)
+	,abilityType(type)
 {
 
 }
@@ -597,7 +598,77 @@ void ManualWindow::Element::update()
 		frameSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
 		description += Engine::Instance().translationsManager()->translate(name);
 		description += endline;
-		description += abilityInfo;
+		switch (abilityType)
+		{
+		case ACTION_STATE::ABILITY_BOMB:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BOMB_ABILITY_DESCRIPTION);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
+			description += separator;
+			description += std::to_string(BombAbility::BOMB_ABILITY_COOLDOWN/EngineDefs::MSEC);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_ATTRIBUTE);
+			description += separator;
+			description += std::to_string(BombAbility::BOMB_ABILITY_DAMAGE);
+			break;
+		case ACTION_STATE::ABILITY_FREEZE_BOMB:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
+			description += separator;
+			description += std::to_string(FreezeBombAbility::FREEZE_ABILITY_COOLDOWN/EngineDefs::MSEC);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
+			description += separator;
+			description += std::to_string(FreezeBombAbility::FREEZE_ABILITY_DURATION/EngineDefs::MSEC);
+			break;
+		case ACTION_STATE::ABILITY_VENOM:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::VENOM_ABILITY_DESCRIPTION);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
+			description += separator;
+			description += std::to_string(VenomAbility::VENOM_ABLITY_COOLDOWN/EngineDefs::MSEC);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_ATTRIBUTE);
+			description += separator;
+			description += std::to_string(VenomAbility::VENOM_DAMAGE_COUNT * VenomAbility::VENOM_DAMAGE);
+			break;
+		case ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
+			description += separator;
+			description += std::to_string(IncreaseTowerDamageAbility::INCREASE_DAMAGE_ABILITY_COOLDOWN/EngineDefs::MSEC);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
+			description += separator;
+			description += std::to_string(IncreaseTowerDamageAbility::INCREASE_DAMAGE_ABILITY_DURATION/EngineDefs::MSEC);
+			break;
+		case ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
+			description += separator;
+			description += std::to_string(IncreaseTowerAttackSpeedAbility::INCREASE_ATTACK_SPEED_ABILITY_COOLDOWN/EngineDefs::MSEC);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
+			description += separator;
+			description += std::to_string(IncreaseTowerAttackSpeedAbility::INCREASE_ATTACK_SPEED_ABILITY_DURATION/EngineDefs::MSEC);
+			break;
+		case ACTION_STATE::ABILITY_STOP:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
+			description += separator;
+			description += std::to_string(StopAbility::STOP_ABILITY_COOLDOWN/EngineDefs::MSEC);
+			description += endline;
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
+			description += separator;
+			description += std::to_string(StopAbility::STOP_ABILITY_DURATION/EngineDefs::MSEC);
+			break;
+		default:
+			break;
+		}
 	}
 		break;
 	case Element::E_Enemy:
@@ -637,8 +708,13 @@ void ManualWindow::Element::update()
 		description += endline;
 
 		//armor
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR) + separator +
-				GlobalVariables::to_string_with_precision(enemyInfo.stats.reflection, 1);
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR) + separator;
+		if (enemyInfo.stats.reflection < 0.1f)
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_LIGHT);
+		else if (enemyInfo.stats.reflection < 0.3f)
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_MEDIUM);
+		else
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_STRONG);
 		description += endline;
 
 		//ability
