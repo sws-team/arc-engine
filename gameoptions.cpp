@@ -361,26 +361,27 @@ bool GameOptions::loadMap(int id)
 	}
 	const int firstTileID = 1;
 
-	// получаем количество столбцов и строк тайлсета
 	const int columns = tilesetImage.getSize().x / MAP_CELL_SIZE;
 	const int rows = tilesetImage.getSize().y / MAP_CELL_SIZE;
 
-	// вектор из прямоугольников изображений (TextureRect)
-	std::vector<sf::Rect<int>> subRects;
+	std::vector<sf::IntRect> subRects;
 	for (int y = 0; y < rows; y++)
 		for (int x = 0; x < columns; x++)
 		{
-			sf::Rect<int> rect;
+			sf::IntRect rect;
 
 			rect.top = y * MAP_CELL_SIZE;
-			rect.height = MAP_CELL_SIZE;
 			rect.left = x * MAP_CELL_SIZE;
+
+			rect.height = MAP_CELL_SIZE;
 			rect.width = MAP_CELL_SIZE;
 
 			subRects.push_back(rect);
 		}
 
 	//tiles
+	const sf::Vector2f tileSize = mapTileSize();
+	const float pixelOffset = 0.5f;
 	int layersCount = 0;
 	TiXmlElement *layerElement = mapElement->FirstChildElement("layer");
 	while (layerElement)
@@ -388,8 +389,8 @@ bool GameOptions::loadMap(int id)
 		Layer layer;
 		layer.visibility = true;
 		layer.opacity = 255.f;
+		layer.vertices.setPrimitiveType(sf::Quads);
 
-		// если присутствует opacity, то задаем прозрачность слоя, иначе он полностью непрозрачен
 		if (layerElement->Attribute("opacity") != nullptr)
 		{
 			const float opacity = strtod(layerElement->Attribute("opacity"), nullptr);
@@ -409,7 +410,6 @@ bool GameOptions::loadMap(int id)
 		if (layerElement->Attribute("visible") != nullptr)
 			layer.visibility = static_cast<bool>(atoi(layerElement->Attribute("visible")));
 
-		//  контейнер <data>
 		TiXmlElement *layerDataElement;
 		layerDataElement = layerElement->FirstChildElement("data");
 
@@ -418,7 +418,6 @@ bool GameOptions::loadMap(int id)
 			std::cout << "Bad map. No layer information found." << std::endl;
 		}
 
-		//  контейнер <tile> - описание тайлов каждого слоя
 		TiXmlElement *tileElement;
 		tileElement = layerDataElement->FirstChildElement("tile");
 
@@ -440,22 +439,44 @@ bool GameOptions::loadMap(int id)
 				const int subRectToUse = tileGID - firstTileID;
 				if (subRectToUse >= 0 && !subRects.empty())
 				{
-					sf::Sprite sprite;
-					sprite.setTexture(tilesetImage);
-					sprite.setTextureRect(subRects[subRectToUse]);
-					sprite.setPosition(x * MAP_CELL_SIZE * Engine::Instance().settingsManager()->getScaleFactor().x,
-									   y * MAP_CELL_SIZE * Engine::Instance().settingsManager()->getScaleFactor().y);
-					sprite.setColor(sf::Color(255, 255, 255, layer.opacity));
-					sprite.scale(Engine::Instance().settingsManager()->getScaleFactor());
+//					sf::Sprite sprite;
+//					sprite.setTexture(tilesetImage);
+//					sprite.setTextureRect(subRects[subRectToUse]);
+
+					const float posX = x * MAP_CELL_SIZE * Engine::Instance().settingsManager()->getScaleFactor().x;
+					const float posY = y * MAP_CELL_SIZE * Engine::Instance().settingsManager()->getScaleFactor().y;
+//					sprite.setPosition(posX, posY);
+
+//					sprite.setColor(sf::Color(255, 255, 255, layer.opacity));
+//					sprite.scale(Engine::Instance().settingsManager()->getScaleFactor());
 
 					Tile tile;
-					tile.sprite = sprite;
+//					tile.sprite = sprite;
+
+					const int verticlesSize = layer.vertices.getVertexCount();
+					layer.vertices.resize(verticlesSize + 4);
+
+					sf::Vertex* quad = &layer.vertices[verticlesSize];
+
+					// define its 4 corners
+					quad[0].position = sf::Vector2f(posX, posY);
+					quad[1].position = sf::Vector2f(posX + tileSize.x, posY);
+					quad[2].position = sf::Vector2f(posX + tileSize.x, posY + tileSize.y);
+					quad[3].position = sf::Vector2f(posX, posY + tileSize.y);
+
+					// define its 4 texture coordinates
+					quad[0].texCoords = sf::Vector2f(subRects[subRectToUse].left + pixelOffset, subRects[subRectToUse].top + pixelOffset);
+					quad[1].texCoords = sf::Vector2f(subRects[subRectToUse].left + subRects[subRectToUse].width - pixelOffset,
+													 subRects[subRectToUse].top + pixelOffset);
+					quad[2].texCoords = sf::Vector2f(subRects[subRectToUse].left + subRects[subRectToUse].width - pixelOffset,
+													 subRects[subRectToUse].top + subRects[subRectToUse].height - pixelOffset);
+					quad[3].texCoords = sf::Vector2f(subRects[subRectToUse].left + pixelOffset,
+													 subRects[subRectToUse].top + subRects[subRectToUse].height - pixelOffset);
+
+
 					tile.id = tileGID;
 					tile.cell = sf::Vector2i(x, y);
 					layer.tiles.push_back(tile);
-
-	//				if (gameMap->tileSprites.find(tileGID) == gameMap->tileSprites.end())
-	//					gameMap->tileSprites.insert(pair<int, Sprite>(tileGID, sprite));
 				}
 			}
 
@@ -588,7 +609,7 @@ bool GameOptions::loadTiles()
 	TiXmlDocument doc;
 	if (!doc.LoadFile(file))
 	{
-		std::cout << "Loading map failed." << std::endl;
+		std::cout << "Loading failed." << std::endl;
 		fclose(file);
 		return false;
 	}
@@ -695,6 +716,7 @@ float GameOptions::difficult() const
 void GameOptions::updateWindow()
 {
 	Options::updateWindow();
+	Engine::Instance().reset();
 	loadMaps();
 }
 

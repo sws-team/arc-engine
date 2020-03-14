@@ -7,9 +7,12 @@
 
 struct Layer
 {
-	float opacity;//непрозрачность слоя
+	float opacity;
 	bool visibility;
-	std::vector<Tile> tiles;//закидываем в вектор тайлы
+
+	std::vector<Tile> tiles;
+
+	sf::VertexArray vertices;
 };
 
 class Map

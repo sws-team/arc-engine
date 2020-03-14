@@ -6,6 +6,8 @@
 #include "enginedef.h"
 #include "gameoptions.h"
 
+
+
 Camera::Camera()
 	: view(nullptr)
 {

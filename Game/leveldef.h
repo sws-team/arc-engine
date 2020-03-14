@@ -24,7 +24,7 @@ enum ENEMY_TYPES
 {
 	UNKNOWN,
 
-	INFANTRY,//scorpion
+	INFANTRY,
 	CAR,
 	TRICYCLE,
 	SMALL_NEXT,

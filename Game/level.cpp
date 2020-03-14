@@ -178,8 +178,9 @@ void Level::startMission(const unsigned int n)
 	Engine::Instance().options<GameOptions>()->panel()->initMission(n);
 	updateStartEndPos(gameMap->spawnPos, sf::Vector2f(gameMap->endRect.left, gameMap->endRect.top));
 
-	if (n != 0)
+	if (n != 0 || !Engine::Instance().options<GameOptions>()->getCompletedMissions().empty())
 		Engine::Instance().options<GameOptions>()->instructions()->skip();
+
 	Engine::Instance().options<GameOptions>()->cursor()->initCell();
 
 	spawnRect.setPosition(gameMap->spawnPos.x * Engine::Instance().settingsManager()->getScaleFactor().x,
@@ -931,8 +932,13 @@ void Level::drawLevel(sf::RenderTarget * const target)
 		else if (layer == gameMap->waterLayer)
 			shader = shadersFactory->getShader(OBJECTS::WAVE);
 
-		for (unsigned int tile = 0; tile < gameMap->layers[layer].tiles.size(); tile++)
-			target->draw(gameMap->layers[layer].tiles[tile].sprite, shader);
+//		for (unsigned int tile = 0; tile < gameMap->layers[layer].tiles.size(); tile++)
+//			target->draw(gameMap->layers[layer].tiles[tile].sprite, shader);
+
+		sf::RenderStates states;
+		states.texture = &Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TILES);
+		states.shader = shader;
+		target->draw(gameMap->layers[layer].vertices, states);
 
 		for(LevelObject *object : objects)
 		{

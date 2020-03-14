@@ -5,6 +5,8 @@
 #include "gameresource.h"
 #include "Game/levelobject.h"
 
+#define LOAD_MAPS
+
 const std::string GameManagers::resourcesFileName = "resources.dat";
 const std::string GameManagers::checksum = "dd";
 
@@ -358,6 +360,7 @@ void GameManagers::loadResources()
 		{
 			if (resource.name == "tiles")
 				addFile(GAME_FILES::TILES, out);
+#ifndef LOAD_MAPS
 			else if (resource.name == "mission1")
 				addFile(GAME_FILES::MISSON_1, out);
 			else if (resource.name == "mission2")
@@ -388,16 +391,37 @@ void GameManagers::loadResources()
 				addFile(GAME_FILES::MISSON_14, out);
 			else if (resource.name == "mission15")
 				addFile(GAME_FILES::MISSON_15, out);
+#endif
 		}
 			break;
 		default:
 			break;
 		}
-
 	}
 
 	addShader(GAME_SHADERS::WAVE, ShadersFactory::WAVE_SHADER);
 	addShader(GAME_SHADERS::MOVING, ShadersFactory::MOVING_SHADER);
+
+#ifdef LOAD_MAPS
+	for (int i = 0; i < 15; ++i)
+	{
+		const int n = i + 1;
+		const std::string fileName = std::string("maps/mission") + std::to_string(n) + std::string(".tmx");
+
+		std::ifstream file;
+		file.open(fileName);
+		if (!file.is_open())
+			return;
+
+		std::string data((std::istreambuf_iterator<char>(file)),
+						 std::istreambuf_iterator<char>());
+
+		file >> data;
+		file.close();
+
+		addFile(n, data);
+	}
+#endif
 }
 
 void GameManagers::addTexture(TextureType type, const std::string &data)
@@ -835,3 +859,4 @@ void GameManagers::loadTranslations()
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("french"), frenchTranslation);
 }
+
