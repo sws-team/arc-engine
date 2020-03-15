@@ -604,6 +604,9 @@ void Level::checkEnemyMove()
 		if (endFRect.contains(enemy->enemyPos()))
 			continue;
 		const sf::Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(enemy->enemyPos());
+		if (cell == enemy->getLastCell())
+			continue;
+		enemy->setLastCell(cell);
 		const int direction = getTileDirectionByCell(cell);
 		if (direction != 0)
 			enemy->moveNext(direction);

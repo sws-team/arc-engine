@@ -31,6 +31,7 @@ Enemy::Enemy(const TextureType &texture_id,
 	,m_stopped(false)
 	,m_visible(true)
 	,m_burned(false)
+	,m_lastCell(sf::Vector2i(0, 0))
 {
 	moveStep = sf::Vector2f(Engine::Instance().settingsManager()->getScaleFactor().x * 1.f,
 						Engine::Instance().settingsManager()->getScaleFactor().y * 1.f);
@@ -325,6 +326,16 @@ sf::Vector2f Enemy::actualMoveStep() const
 		return sf::Vector2f(moveStep.x * freezeK,
 						moveStep.y * freezeK);
 	return moveStep;
+}
+
+sf::Vector2i Enemy::getLastCell() const
+{
+	return m_lastCell;
+}
+
+void Enemy::setLastCell(const sf::Vector2i &lastCell)
+{
+	m_lastCell = lastCell;
 }
 
 void Enemy::startBurn()

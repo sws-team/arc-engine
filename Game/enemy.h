@@ -68,6 +68,9 @@ public:
 	ENEMY_TYPES type() const;
 	void setType(const ENEMY_TYPES &type);
 
+	sf::Vector2i getLastCell() const;
+	void setLastCell(const sf::Vector2i &lastCell);
+
 private:
 	ENEMY_TYPES m_type;
 	EnemyStats m_stats;
@@ -117,6 +120,7 @@ private:
 
 	sf::Vector2f actualMoveStep() const;
 	sf::Vector2f moveStep;
+	sf::Vector2i m_lastCell;
 };
 
 class EnemyAbility : public GameDrawable
