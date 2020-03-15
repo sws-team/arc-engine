@@ -421,7 +421,7 @@ TOWER_TYPES GamePanel::currentTower() const
 
 sf::Vector2f GamePanel::updatePos()
 {
-	const sf::Vector2f nullPos = sf::Vector2f(0, Engine::Instance().settingsManager()->getResolution().y - m_sprite.getGlobalBounds().height);
+	const sf::Vector2f nullPos = sf::Vector2f(0, Engine::Instance().settingsManager()->getInscribedResolution().y - m_sprite.getGlobalBounds().height);
 	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 	const sf::Vector2f iconSize = sf::Vector2f(ICON_SIZE * scaleFactor.x, ICON_SIZE * scaleFactor.y);
 
@@ -514,8 +514,8 @@ sf::Vector2f GamePanel::updatePos()
 	pos.x += icon_offset;
 	pos.y = nullPos.y + 43 * scaleFactor.y;
 
-	readyText.setPosition(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x/2 - readyText.getGlobalBounds().width/2,
-								   Engine::Instance().settingsManager()->getResolution().y/2 + readyText.getGlobalBounds().height/2));
+	readyText.setPosition(sf::Vector2f(Engine::Instance().settingsManager()->getInscribedResolution().x/2 - readyText.getGlobalBounds().width/2,
+								   Engine::Instance().settingsManager()->getInscribedResolution().y/2 + readyText.getGlobalBounds().height/2));
 	waveText.setPosition(progress->pos());
 
 	towerBaseCostText.setPosition(towerBaseSprite.getPosition());
@@ -1097,8 +1097,8 @@ void GamePanel::setMapSize(const sf::Vector2f& size)
 	rTexture.create(static_cast<unsigned int>(size.x),
 					static_cast<unsigned int>(size.y));
 
-	const float minimap_scale_x = Engine::Instance().settingsManager()->getScaleFactor().x * 344.f / Engine::Instance().settingsManager()->getResolution().x;
-	const float minimap_scale_y = Engine::Instance().settingsManager()->getScaleFactor().y * 213.f / Engine::Instance().settingsManager()->getResolution().y;
+	const float minimap_scale_x = Engine::Instance().settingsManager()->getScaleFactor().x * 344.f / Engine::Instance().settingsManager()->getInscribedResolution().x;
+	const float minimap_scale_y = Engine::Instance().settingsManager()->getScaleFactor().y * 213.f / Engine::Instance().settingsManager()->getInscribedResolution().y;
 	miniMapSprite.setScale(minimap_scale_x * 1920.f/size.x, minimap_scale_y* 1088.f/size.y);
 }
 

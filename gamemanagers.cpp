@@ -5,7 +5,7 @@
 #include "gameresource.h"
 #include "Game/levelobject.h"
 
-#define LOAD_MAPS
+//#define LOAD_MAPS
 
 const std::string GameManagers::resourcesFileName = "resources.dat";
 const std::string GameManagers::checksum = "dd";
@@ -499,17 +499,49 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DURATION_ATTRIBUTE, L"Duration"));
 
 	//settings
+	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::SETTINGS, L"Settings"));
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::SETTINGS, L"Настройки"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::SETTINGS, L"Parametres"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::AUDIO, L"Audio"));
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::AUDIO, L"Аудио"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::AUDIO, L"Audio"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::SOUND, L"Sound"));
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::SOUND, L"Звуки"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::SOUND, L"Sons"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::MUSIC, L"Music"));
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::MUSIC, L"Музыка"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::MUSIC, L"Musique"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::VIDEO, L"Video"));
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::VIDEO, L"Видео"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::VIDEO, L"Video"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::FULLSCREEN, L"Fullscreen"));
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::FULLSCREEN, L"Полноэкранный режим"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::FULLSCREEN, L"Plein ecran"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::RESOLUTION, L"Resolution"));
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::RESOLUTION, L"Разрешение"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::RESOLUTION, L"Resolution"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::MISC, L"Misc"));
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::MISC, L"Разное"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::MISC, L"Autres"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::LANGUAGE, L"Language"));
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::LANGUAGE, L"Язык"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::LANGUAGE, L"Langue"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::ACCEPT, L"Accept"));
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::ACCEPT, L"Принять"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::ACCEPT, L"Confirme"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::CANCEL, L"Cancel"));
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::CANCEL, L"Отмена"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::CANCEL, L"Rejet"));
 
 	//panel
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_VENOM, L"Кислота"));
@@ -564,7 +596,7 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Нажмите Ввод чтобы продолжить или Пробел чтобы пропустить"));
 
 	//enemies
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SCORPION, L"Скорпион"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INFANTRY, L"Пехота"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CAR, L"Машина"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TANK, L"Танк"));
@@ -645,18 +677,7 @@ void GameManagers::loadTranslations()
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MANUAL, L"Manual"));
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT, L"Exit"));
 
-	//settings
-	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::SETTINGS, L"Settings"));
-	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::AUDIO, L"Audio"));
-	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::SOUND, L"Sound"));
-	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::MUSIC, L"Music"));
-	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::VIDEO, L"Video"));
-	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::FULLSCREEN, L"Fullscreen"));
-	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::RESOLUTION, L"Resolution"));
-	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::MISC, L"Misc"));
-	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::LANGUAGE, L"Language"));
-	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::ACCEPT, L"Accept"));
-	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::CANCEL, L"Cancel"));
+
 
 	//panel
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_VENOM, L"Venom"));
@@ -711,7 +732,7 @@ void GameManagers::loadTranslations()
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Press Return to continue or Space to skip"));
 
 	//enemies
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SCORPION, L"Башни"));
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INFANTRY, L"Башни"));
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CAR, L"Машина"));
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TANK, L"Танк"));
@@ -753,18 +774,6 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CREDITS, L"Credits"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT, L"Sortir du jeu"));
 
-	//settings
-	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::SETTINGS, L"Parametres"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::AUDIO, L"Audio"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::SOUND, L"Sons"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::MUSIC, L"Musique"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::VIDEO, L"Video"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::FULLSCREEN, L"Plein ecran"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::RESOLUTION, L"Resolution"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::MISC, L"Autres"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::LANGUAGE, L"Langue"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::ACCEPT, L"Confirme"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::CANCEL, L"Rejet"));
 
 	//panel
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_VENOM, L"Acide"));
@@ -819,7 +828,7 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Taper la Touche d'entree pour continuer ou l'Espace pour passer"));
 
 	//enemies
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SCORPION, L"Башни"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INFANTRY, L"Башни"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CAR, L"Машина"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TANK, L"Танк"));
@@ -854,9 +863,28 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BACK, L"Вернуться"));
 
 
-
 	Engine::Instance().translationsManager()->addTranslation(std::string("russian"), russainTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("french"), frenchTranslation);
+}
+
+std::vector<sf::String> GameManagers::creators()
+{
+	std::vector<sf::String> creatorsVec;
+	creatorsVec.push_back(sf::String("Developers:"));
+	creatorsVec.push_back(sf::String("FIO"));
+
+	creatorsVec.push_back(sf::String("Testers:"));
+	creatorsVec.push_back(sf::String("FIO"));
+
+	creatorsVec.push_back(sf::String("Desiner:"));
+	creatorsVec.push_back(sf::String("FIO"));
+
+	creatorsVec.push_back(sf::String("Music:"));
+	creatorsVec.push_back(sf::String("https://opengameart.org"));
+	creatorsVec.push_back(sf::String("http://www.bensound.com/royalty-free-music"));
+	creatorsVec.push_back(sf::String("https://freesound.org/"));
+
+	return creatorsVec;
 }
 

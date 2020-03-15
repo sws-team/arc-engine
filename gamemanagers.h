@@ -273,7 +273,7 @@ enum TRANSLATION_ID
 	INSTRUCTION_SKIP,
 
 	//enemies
-	SCORPION,
+	INFANTRY,
 	CAR,
 	TRICYCLE,
 	TANK,
@@ -375,6 +375,7 @@ public:
 	static void addShader(ShaderType type, const std::string& data);
 
 	static void loadTranslations();
+	static std::vector<sf::String> creators();
 
 	static const std::string resourcesFileName;
 	static const std::string checksum;

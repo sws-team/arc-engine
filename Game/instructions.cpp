@@ -9,7 +9,8 @@
 Instructions::Instructions() :
   m_state(START)
 {
-	shadowRect.setSize(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x, Engine::Instance().settingsManager()->getResolution().y));
+	shadowRect.setSize(sf::Vector2f(Engine::Instance().settingsManager()->getInscribedResolution().x,
+									Engine::Instance().settingsManager()->getInscribedResolution().y));
 	sf::Color color = EngineDefs::GrayColor;
 	color.a = 150;
 	shadowRect.setFillColor(color);

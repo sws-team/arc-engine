@@ -22,7 +22,7 @@ private:
 		EXIT
 	};
 	sf::Text gameName;
-	sf::Text playerName;
+//	sf::Text playerName;
 };
 
 #endif // MAINMENU_H

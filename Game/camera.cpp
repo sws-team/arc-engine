@@ -17,8 +17,8 @@ Camera::Camera()
 void Camera::init()
 {
 	const sf::FloatRect gameRect = sf::FloatRect(0, 0,
-										 Engine::Instance().settingsManager()->getResolution().x,
-										 Engine::Instance().settingsManager()->getResolution().y);
+										 Engine::Instance().settingsManager()->getInscribedResolution().x,
+										 Engine::Instance().settingsManager()->getInscribedResolution().y);
 	view = new sf::View(gameRect);
 	minimap = new sf::View(gameRect);
 
@@ -121,7 +121,8 @@ void Camera::zoomOut()
 
 void Camera::resetZoom()
 {
-	view->setSize(Engine::Instance().settingsManager()->getResolution().x, Engine::Instance().settingsManager()->getResolution().y);
+	view->setSize(Engine::Instance().settingsManager()->getInscribedResolution().x,
+				  Engine::Instance().settingsManager()->getInscribedResolution().y);
 	minimap->setSize(Engine::Instance().settingsManager()->getScaleFactor().x, Engine::Instance().settingsManager()->getScaleFactor().y);
 	minimap->zoom(MINIMAP_ZOOM);
 	zoomRatio = 0;
@@ -180,7 +181,8 @@ sf::Vector2f Camera::cellToPos(const sf::Vector2i &cell) const
 void Camera::resetView()
 {
 	resetZoom();
-	view->setCenter(Engine::Instance().settingsManager()->getResolution().x/2, Engine::Instance().settingsManager()->getResolution().y/2);
+	view->setCenter(Engine::Instance().settingsManager()->getInscribedResolution().x/2,
+					Engine::Instance().settingsManager()->getInscribedResolution().y/2);
 }
 
 void Camera::checkBorders()

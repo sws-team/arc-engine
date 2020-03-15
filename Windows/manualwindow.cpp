@@ -336,7 +336,7 @@ void ManualWindow::addElements()
 
 	//enemies
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_INFANTRY,
-							   GAME_TRANSLATION::SCORPION,
+							   GAME_TRANSLATION::INFANTRY,
 							   EnemiesFactory::getEnemyInfo(INFANTRY)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_CAR,

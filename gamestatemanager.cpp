@@ -1,5 +1,5 @@
 #include "gamestatemanager.h"
-
+#include "gamemanagers.h"
 #include "Windows/manualwindow.h"
 #include "Windows/gamewindow.h"
 #include "Windows/choosemissionwindow.h"
@@ -17,7 +17,10 @@ StateWindow *GameStateManager::createState(const GameState state)
 	if (stateWindow != nullptr)
 	{
 		if (state == StateManager::ABOUT)
+		{
 			static_cast<AboutWindow*>(stateWindow)->setBackState(MANUAL);
+			static_cast<AboutWindow*>(stateWindow)->addStrings(GameManagers::creators());
+		}
 		return stateWindow;
 	}
 	switch (state)
