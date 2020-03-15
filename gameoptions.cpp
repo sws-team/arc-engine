@@ -746,7 +746,10 @@ void GameOptions::loadAchievements()
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_FREEZE_5_BY_SINGLE_BOMB, std::string("FREEZE_5_BY_SINGLE_BOMB"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_DROP_DRAIN, std::string("DROP_DRAIN"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_FULL_UPGRADE_ALL_TOWERS, std::string("FULL_UPGRADE_ALL_TOWERS"));
-	GamePlatform::Instance().addAchievement(ACHIEVEMENT_BUILD_100_TOWERS, std::string("BUILD_100_TOWERS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_BUILD_1000_TOWERS, std::string("BUILD_1000_TOWERS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_ABILITIES, std::string("COMPLETE_LEVEL_WITHOUT_ABILITIES"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_TOWERS, std::string("COMPLETE_LEVEL_WITHOUT_TOWERS"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_GAIN_30000_MONEY, std::string("GAIN_30000_MONEY"));
 
 	GamePlatform::Instance().addStat(STAT_CARS_KILLS, std::string("CARS_KILLS"));
 	GamePlatform::Instance().addStat(STAT_INFANTRY_KILLS, std::string("INFANTRY_KILLS"));

@@ -25,6 +25,8 @@ Level::Level() :
   ,m_state(WAIT_READY)
   ,m_powerTowersCount(0)
   ,m_selectedTower(nullptr)
+  ,abilityActivated(false)
+  ,attackTowerBuilded(false)
 {
 	shake = new Shake();
 	abilities = new Abilities();
@@ -118,6 +120,9 @@ void Level::update()
 					const float gain = powerTower->gain() * Engine::Instance().options<GameOptions>()->difficult();
 					money += gain;
 					powerTower->updateGain();
+
+					if (money >= ECONOMIST_MONEY_VALUE)
+						GamePlatform::Instance().unlock(ACHIEVEMENT_GAIN_30000_MONEY);
 				}
 			}
 			else
@@ -669,8 +674,15 @@ void Level::changeState(Level::LEVEL_STATE state)
 	switch (m_state)
 	{
 	case WIN:
+	{
 		Engine::Instance().soundManager()->endBackgroundSound();
 		Engine::Instance().soundManager()->playOnce(GAME_SOUND::WIN);
+
+		if (!attackTowerBuilded)
+			GamePlatform::Instance().unlock(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_TOWERS);
+		if (!abilityActivated)
+			GamePlatform::Instance().unlock(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_ABILITIES);
+	}
 		break;
 	case LOSE:
 		Engine::Instance().soundManager()->endBackgroundSound();
@@ -1160,6 +1172,7 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 				return;
 
 			Engine::Instance().options<GameOptions>()->cursor()->swap();
+			abilityActivated = true;
 			abilities->stopAblity->activate();
 		}
 			break;
@@ -1219,25 +1232,32 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 			money -= cost;
 			if (type == POWER)
 				m_powerTowersCount++;
+			else
+				attackTowerBuilded = true;
 			Engine::Instance().options<GameOptions>()->panel()->updatePanel();
 		}
 			break;
 		case ABILITY_VENOM:		
+			abilityActivated = true;
 			abilities->venomAbility->activate();		
 			break;
 		case ABILITY_BOMB:
 		{
 			abilities->bombAbility->activate();
+			abilityActivated = true;
 			moneyDrain->explosion(Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect());
 		}
 			break;
 		case ABILITY_FREEZE_BOMB:		
+			abilityActivated = true;
 			abilities->freezeBombAbility->activate();		
 			break;
-		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:		
+		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
+			abilityActivated = true;
 			abilities->increaseTowerAttackSpeedAbility->activate();		
 			break;
 		case ABILITY_INCREASE_TOWER_DAMAGE:
+			abilityActivated = true;
 			abilities->increaseTowerDamageAbility->activate();
 			break;
 		case ABILITY_STOP:

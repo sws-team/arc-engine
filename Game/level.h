@@ -192,7 +192,11 @@ private:
 	std::vector<LevelObject*> objects;
 	ShadersFactory *shadersFactory;
 
+	//variables for achievements
 	std::set<TOWER_TYPES> fullyUpgradedTowers;
+	bool abilityActivated;
+	bool attackTowerBuilded;
+	static constexpr float ECONOMIST_MONEY_VALUE = 30000;
 };
 
 #endif // LEVEL_H
