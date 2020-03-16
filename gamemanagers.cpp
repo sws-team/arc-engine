@@ -871,6 +871,8 @@ void GameManagers::loadTranslations()
 std::vector<sf::String> GameManagers::creators()
 {
 	std::vector<sf::String> creatorsVec;
+	creatorsVec.push_back(sf::String("TowerDefence") + " " + sf::String("Version: ") + APP_VERSION);
+
 	creatorsVec.push_back(sf::String("Developers:"));
 	creatorsVec.push_back(sf::String("FIO"));
 
