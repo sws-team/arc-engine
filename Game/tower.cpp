@@ -698,6 +698,16 @@ void LaserTower::clearLasers()
 void LaserTower::update()
 {
 	Tower::update();
+
+	if (!isActive())
+	{
+		if (mainTarget.currentTarget != nullptr)
+			mainTarget.currentTarget = nullptr;
+		if (!targets.empty())
+			clearLasers();
+		return;
+	}
+
 	updateLaserTarget(&mainTarget, 1.f);
 	for(LaserTarget* laserTarget : targets)
 		updateLaserTarget(laserTarget, 0.5);

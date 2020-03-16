@@ -97,6 +97,11 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 	case 2://level 3
 	{
 		// SPIDER REPAIR_ENEMY
+		ADD_ENEMY(MID_FAST, 300);
+		waves.push_back(createWave(0.f, 2000, enemies));
+		enemies.clear();
+
+
 		ADD_ENEMY(REPAIR_ENEMY, 3);
 		ADD_ENEMY(INFANTRY, 15);
 		ADD_ENEMY(SPIDER, 1);
@@ -179,6 +184,10 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		break;
 	case 4: //level 5
 	{
+		ADD_ENEMY(SPIDER, 300);
+		waves.push_back(createWave(0.f, 1000, enemies));
+		enemies.clear();
+
 		//SHIELD_ENEMY
 		ADD_ENEMY(CAR, 15);
 		ADD_ENEMY(TRICYCLE, 5);

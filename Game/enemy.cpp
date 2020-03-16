@@ -906,7 +906,11 @@ void TowerEffectAbility::use()
 			projectile = nullptr;
 			Engine::Instance().soundManager()->playOnce(info.catchSound);
 			getBack();
-			effect(true);
+			if (!targetTower->isDowngraded() && targetTower->isActive())
+				effect(true);
+
+			else
+				use();
 		}
 	}
 		break;
