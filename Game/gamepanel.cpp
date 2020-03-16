@@ -421,7 +421,7 @@ TOWER_TYPES GamePanel::currentTower() const
 
 sf::Vector2f GamePanel::updatePos()
 {
-	const sf::Vector2f nullPos = sf::Vector2f(0, Engine::Instance().settingsManager()->getInscribedResolution().y - m_sprite.getGlobalBounds().height);
+	const sf::Vector2f nullPos = sf::Vector2f(0, Engine::Instance().settingsManager()->getResolution().y - m_sprite.getGlobalBounds().height);
 	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 	const sf::Vector2f iconSize = sf::Vector2f(ICON_SIZE * scaleFactor.x, ICON_SIZE * scaleFactor.y);
 
