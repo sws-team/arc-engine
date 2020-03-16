@@ -71,6 +71,8 @@ public:
 	sf::Vector2i getLastCell() const;
 	void setLastCell(const sf::Vector2i &lastCell);
 
+	bool getLastUp() const;
+
 private:
 	ENEMY_TYPES m_type;
 	EnemyStats m_stats;
@@ -117,10 +119,13 @@ private:
 	constexpr static float BURN_DAMAGE = 20;
 	Timer burnAttack;
 	GameObject *burnAnimation;
-
+public:
 	sf::Vector2f actualMoveStep() const;
+private:
 	sf::Vector2f moveStep;
 	sf::Vector2i m_lastCell;
+
+	bool lastUp;
 };
 
 class EnemyAbility : public GameDrawable

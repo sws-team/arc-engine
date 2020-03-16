@@ -603,17 +603,30 @@ void Level::checkEnemyMove()
 	{
 		if (enemy->isStopped())
 			continue;
+
 		enemy->moveEnemy();
 
 		if (endFRect.contains(enemy->enemyPos()))
 			continue;
+
 		const sf::Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(enemy->enemyPos());
+
+		if (enemy->getLastUp())
+		{
+			sf::Vector2f nextPos = enemy->enemyPos();
+			nextPos.y -= enemy->actualMoveStep().y;
+			const sf::Vector2i newCell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(nextPos);
+			const int newDirection = getTileDirectionByCell(newCell);
+			if (newDirection == Map::RIGHT || newDirection == Map::LEFT)
+				continue;
+		}
+
 		if (cell == enemy->getLastCell())
 			continue;
+
 		enemy->setLastCell(cell);
 		const int direction = getTileDirectionByCell(cell);
-		if (direction != 0)
-			enemy->moveNext(direction);
+		enemy->moveNext(direction);
 	}
 }
 

@@ -32,6 +32,7 @@ Enemy::Enemy(const TextureType &texture_id,
 	,m_visible(true)
 	,m_burned(false)
 	,m_lastCell(sf::Vector2i(0, 0))
+	,lastUp(false)
 {
 	moveStep = sf::Vector2f(Engine::Instance().settingsManager()->getScaleFactor().x * 1.f,
 						Engine::Instance().settingsManager()->getScaleFactor().y * 1.f);
@@ -94,6 +95,7 @@ void Enemy::moveEnemy()
 	sf::Vector2f offset;
 	offset.x = 0;
 	offset.y = 0;
+
 	switch (currentDirection)
 	{
 	case Map::STAY:
@@ -125,14 +127,15 @@ void Enemy::moveNext(int direction)
 	if (direction == 0)
 		return;
 
+	lastUp = false;
 	currentDirection = direction;
-
 	SPRITE_DIRECTION newDirection = DEFAULT_DOWN;
 	switch (currentDirection)
 	{
 	case Map::STAY:
 		break;
 	case Map::UP:
+		lastUp = true;
 		newDirection = SPRITE_DIRECTION::SPRITE_UP;
 		break;
 	case Map::DOWN:
@@ -326,6 +329,11 @@ sf::Vector2f Enemy::actualMoveStep() const
 		return sf::Vector2f(moveStep.x * freezeK,
 						moveStep.y * freezeK);
 	return moveStep;
+}
+
+bool Enemy::getLastUp() const
+{
+	return lastUp;
 }
 
 sf::Vector2i Enemy::getLastCell() const
