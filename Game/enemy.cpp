@@ -908,7 +908,6 @@ void TowerEffectAbility::use()
 			getBack();
 			if (!targetTower->isDowngraded() && targetTower->isActive())
 				effect(true);
-
 			else
 				use();
 		}

@@ -552,6 +552,10 @@ void Level::sellTower(Tower *tower)
 	towers.erase( remove( towers.begin(), towers.end(), tower ), towers.end() );
 	if (tower->type() == POWER)
 		m_powerTowersCount--;
+
+	if (!tower->isActive())
+		GamePlatform::Instance().unlock(ACHIEVEMENT_SELL_INACTIVE_TOWER);
+
 	delete tower;
 	Engine::Instance().soundManager()->playOnce(GAME_SOUND::SELL);
 	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
