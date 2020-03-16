@@ -187,6 +187,8 @@ void Controller::eventFilter(sf::Event *event)
 void Controller::joystickKeyEvent(const bool timeoutKey, const bool timeoutMove)
 {
 	const int joystickId = currentJoystickId();
+	if (!sf::Joystick::isConnected(joystickId))
+		return;
 	if (timeoutKey)
 	{
 		if (Engine::Instance().options<GameOptions>()->instructions()->isActive())

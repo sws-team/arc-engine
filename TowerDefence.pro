@@ -52,3 +52,6 @@ include($$PWD/../3rdParty/SteamAPI.pri)
 }
 
 RC_ICONS = icon.ico
+
+
+win32:LIBS += user32.lib

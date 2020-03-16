@@ -718,6 +718,7 @@ void GameOptions::updateWindow()
 	Engine::Instance().reset();
 	Options::updateWindow();
 	loadMaps();
+	sf::Joystick::update();
 }
 
 void GameOptions::loadAchievements()

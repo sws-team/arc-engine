@@ -206,7 +206,6 @@ void ManualWindow::eventFilter(sf::Event *event)
 
 void ManualWindow::updatePos()
 {
-
 	const float ICON_WIDTH = Engine::Instance().options<GameOptions>()->tileSize().x;
 	const float RECT_WIDTH = 512 * Engine::Instance().settingsManager()->getScaleFactor().x;
 	const float RECT_HEIGHT = 128 * Engine::Instance().settingsManager()->getScaleFactor().y;
@@ -674,13 +673,13 @@ void ManualWindow::Element::update()
 	case Element::E_Enemy:
 	{
 		frameCount = 4;
-		frameSize = sf::Vector2i(enemyInfo.size.x * GameOptions::CELL_SIZE/2,
-							 enemyInfo.size.y * GameOptions::CELL_SIZE/2);
+		frameSize = sf::Vector2i(Enemy::ENEMY_SCALE * enemyInfo.size.x * GameOptions::MAP_CELL_SIZE,
+								 Enemy::ENEMY_SCALE * enemyInfo.size.y * GameOptions::MAP_CELL_SIZE);
 		icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
-		if (enemyInfo.size.x == 1)
-			icon.scale(2, 2);
-		else if (enemyInfo.size.x == 4)
-			icon.scale(0.5f, 0.5f);
+
+		const sf::Vector2f k = sf::Vector2f(2.f/static_cast<float>(enemyInfo.size.x),
+											2.f/static_cast<float>(enemyInfo.size.y));
+		icon.scale(k.x/Enemy::ENEMY_SCALE, k.y/Enemy::ENEMY_SCALE);
 
 		description += Engine::Instance().translationsManager()->translate(name);
 		description += endline;
