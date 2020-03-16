@@ -11,6 +11,7 @@
 #include "enginedef.h"
 #include "gameplatform.h"
 #include "Game/achievements.h"
+#include "Game/instructions.h"
 
 #include <algorithm>
 #include <random>
@@ -23,6 +24,7 @@ GameWindow::GameWindow()
 	tick = 0;
 	lastTime = 0;
 
+	Engine::Instance().options<GameOptions>()->instructions()->init();
 	Engine::Instance().options<GameOptions>()->camera()->init();
 	currentMenu = static_cast<GAME_MENU>(CONTINUE_GAME);
 

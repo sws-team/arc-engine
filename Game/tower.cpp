@@ -638,10 +638,10 @@ void LaserTower::shoot(Enemy *target)
 
 			exclude.push_back(enemy);
 
-			LaserTarget laserTarget;
-			laserTarget.lineTarget.color = sf::Color::Cyan;
-			laserTarget.currentTarget = enemy;
-			laserTarget.laser = new GameObject(GAME_TEXTURE::LASER_PROJECTILE, sf::Vector2f(0,0), sf::Vector2i(16, 16), 3);
+			LaserTarget *laserTarget = new LaserTarget;
+			laserTarget->lineTarget.color = sf::Color::Cyan;
+			laserTarget->currentTarget = enemy;
+			laserTarget->laser = new GameObject(GAME_TEXTURE::LASER_PROJECTILE, sf::Vector2f(0,0), LASER_SIZE, 3);
 			targets.push_back(laserTarget);
 		}
 	}
@@ -649,6 +649,11 @@ void LaserTower::shoot(Enemy *target)
 	mainTarget.currentTarget = target;
 	if (target != nullptr)
 		Tower::shoot(target);
+}
+
+LaserTower::LaserTarget::~LaserTarget()
+{
+	delete laser;
 }
 
 void LaserTower::updateLaserTarget(LaserTower::LaserTarget *laserTarget, float damageModifier)
@@ -685,8 +690,8 @@ void LaserTower::drawLaserTarget(sf::RenderTarget * const target,
 
 void LaserTower::clearLasers()
 {
-	for(const LaserTarget& laserTarget : targets)
-		delete laserTarget.laser;
+	for(LaserTarget* laserTarget : targets)
+		delete laserTarget;
 	targets.clear();
 }
 
@@ -694,14 +699,17 @@ void LaserTower::update()
 {
 	Tower::update();
 	updateLaserTarget(&mainTarget, 1.f);
-	for(LaserTarget& laserTarget : targets)	
-		updateLaserTarget(&laserTarget, 0.5);
+	for(LaserTarget* laserTarget : targets)
+		updateLaserTarget(laserTarget, 0.5);
 
 	for (auto it = targets.begin(); it != targets.end();)
 	{
-		LaserTarget& laserTarget = *it;
-		if (laserTarget.currentTarget == nullptr)
+		LaserTarget* laserTarget = *it;
+		if (laserTarget->currentTarget == nullptr)
+		{
+			delete laserTarget;
 			it = targets.erase(it);
+		}
 		else
 			++it;
 	}
@@ -714,10 +722,10 @@ void LaserTower::draw(sf::RenderTarget * const target)
 	drawLaserTarget(target, &mainTarget);
 
 	sf::Vertex lastVertex = mainTarget.lineTarget;
-	for(LaserTarget& laserTarget : targets)
+	for(LaserTarget* laserTarget : targets)
 	{
-		drawLaserTarget(target, &laserTarget);
-		lastVertex = laserTarget.lineTarget;
+		drawLaserTarget(target, laserTarget);
+		lastVertex = laserTarget->lineTarget;
 	}
 }
 

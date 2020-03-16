@@ -9,6 +9,8 @@ class Instructions : public GameDrawable
 public:
 	Instructions();
 
+	void init();
+
 	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 

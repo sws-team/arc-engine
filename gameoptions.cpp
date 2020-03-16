@@ -273,9 +273,9 @@ void GameOptions::reset()
 	m_camera = new Camera();
 	m_cursor = new GameCursor();
 	m_panel = new GamePanel();
-	m_level = new Level();
-	m_controller = new Controller();
 	m_instructions = new Instructions();
+	m_controller = new Controller();
+	m_level = new Level();
 }
 
 unsigned int GameOptions::missionsCount() const
@@ -715,8 +715,8 @@ float GameOptions::difficult() const
 
 void GameOptions::updateWindow()
 {
-	Options::updateWindow();
 	Engine::Instance().reset();
+	Options::updateWindow();
 	loadMaps();
 }
 
@@ -740,7 +740,7 @@ void GameOptions::loadAchievements()
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_10_BIGS, std::string("KILL_10_BIGS"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_10_BIG_TANK, std::string("KILL_10_BIG_TANK"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_10_SPAWNS, std::string("KILL_10_SPAWNS"));
-	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_50_BY_TOWER, std::string("KILL_50_BY_BASE_TOWER"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_50_BY_TOWER, std::string("KILL_50_BY_TOWER"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_BY_ACID, std::string("KILL_100_BY_ACID"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_5_BY_SINGLE_BOMB, std::string("KILL_5_BY_SINGLE_BOMB"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_FREEZE_5_BY_SINGLE_BOMB, std::string("FREEZE_5_BY_SINGLE_BOMB"));

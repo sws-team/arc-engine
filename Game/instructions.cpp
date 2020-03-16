@@ -28,7 +28,10 @@ Instructions::Instructions() :
 	text.setOutlineColor(sf::Color::Black);
 	text.setOutlineThickness(2);
 	text.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+}
 
+void Instructions::init()
+{
 	changeState(START);
 }
 

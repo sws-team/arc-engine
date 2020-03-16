@@ -251,12 +251,13 @@ private:
 
 	struct LaserTarget
 	{
+		~LaserTarget();
 		sf::Vertex lineTarget;
 		GameObject *laser;
 		Enemy *currentTarget;
 		Timer damageTimer;
 	};
-	std::vector<LaserTarget> targets;
+	std::vector<LaserTarget*> targets;
 	LaserTarget mainTarget;
 	static constexpr int MAX_EXTRA_TARGETS = 4;
 

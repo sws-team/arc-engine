@@ -46,9 +46,7 @@ int main(int argc, char *argv[])
 	Engine::Instance().globalVariables()->loadGameSettings(GamePlatform::Instance().readFile(EngineDefs::settingsFilePath));
 	Engine::Instance().setStateManager(new GameStateManager);
 	Engine::Instance().setOptions(new GameOptions);
-
 	Engine::Instance().options<GameOptions>()->load();
-
 	if (!Engine::Instance().options<GameOptions>()->verifyChecksum())
 	{
 #ifdef OS_WIN
