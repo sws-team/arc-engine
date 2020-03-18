@@ -197,6 +197,8 @@ private:
 	bool abilityActivated;
 	bool attackTowerBuilded;
 	static constexpr float ECONOMIST_MONEY_VALUE = 30000;
+
+	sf::RectangleShape smokeRect;
 };
 
 #endif // LEVEL_H

@@ -15,7 +15,8 @@ enum SHADER_TYPES
 	UNDEFINED,
 
 	MOVING,
-	WAVE
+	WAVE,
+	SMOKE,
 };
 }
 

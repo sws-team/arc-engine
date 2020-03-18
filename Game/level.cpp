@@ -72,6 +72,9 @@ Level::Level() :
 	upgradeCostText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
 
+	smokeRect.setPosition(0,0);
+	smokeRect.setFillColor(sf::Color(50, 50, 50, 128));
+
 	startObject = new GameObject(GAME_TEXTURE::DIRECTION_TEXTURE, sf::Vector2f(0,0), sf::Vector2i(64, 64), 3);
 	endObject = new GameObject(GAME_TEXTURE::DIRECTION_TEXTURE, sf::Vector2f(0,0), sf::Vector2i(64, 64), 3);
 
@@ -229,6 +232,10 @@ void Level::startMission(const unsigned int n)
 
 	abilities->reset();
 
+	smokeRect.setSize(sf::Vector2f(
+						  Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().x * Engine::Instance().options<GameOptions>()->tileSize().x,
+						  Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().y * Engine::Instance().options<GameOptions>()->tileSize().y));
+
 	for(const Map::MapObject& mapObject : gameMap->objects)
 	{
 		sf::Vector2f startPos = mapObject.pos;
@@ -348,56 +355,29 @@ void Level::checkAlive()
 				if (tower->type() == ROCKET)
 					static_cast<RocketTower*>(tower)->checkEnemy(enemy);
 
-
 			switch (enemy->type())
 			{
 			case INFANTRY:
-				GamePlatform::Instance().incrementValue(STAT_INFANTRY_KILLS);
-				break;
 			case CAR:
-				GamePlatform::Instance().incrementValue(STAT_CARS_KILLS);
-				break;
 			case TRICYCLE:
-				GamePlatform::Instance().incrementValue(STAT_TRICYCLE_KILLS);
-				break;
 			case SMALL_NEXT:
-				GamePlatform::Instance().incrementValue(STAT_SMALL_KILLS);
-				break;
 			case SELFHEAL_ENEMY:
-				GamePlatform::Instance().incrementValue(STAT_SELFHEAL_KILLS2);
-				break;
 			case TRACTOR:
-				GamePlatform::Instance().incrementValue(STAT_TRACTOR_KILLS);
-				break;
 			case ANOTHER_ENEMY:
-				GamePlatform::Instance().incrementValue(STAT_ANOTHER_KILLS);
-				break;
+				GamePlatform::Instance().incrementValue(STAT_SMALL_KILLS);
+				break;				
 			case TANK:
-				GamePlatform::Instance().incrementValue(STAT_TANK_KILLS);
-				break;
 			case SPIDER:
-				GamePlatform::Instance().incrementValue(STAT_SPIDER_KILLS);
-				break;
 			case MID_FAST:
+			case REPAIR_ENEMY:
+			case SHIELD_ENEMY:
+			case TELEPORT_ENEMY:
 				GamePlatform::Instance().incrementValue(STAT_MID_KILLS);
 				break;
-			case REPAIR_ENEMY:
-				GamePlatform::Instance().incrementValue(STAT_REPAIR_KILLS);
-				break;
-			case SHIELD_ENEMY:
-				GamePlatform::Instance().incrementValue(STAT_SHIELD_KILLS);
-				break;
-			case TELEPORT_ENEMY:
-				GamePlatform::Instance().incrementValue(STAT_TELEPORT_KILLS);
-				break;
 			case BIG_SLOW:
-				GamePlatform::Instance().incrementValue(STAT_BIG_KILLS);
-				break;
 			case BIG_TANK:
-				GamePlatform::Instance().incrementValue(STAT_BIG_TANK_KILLS);
-				break;
 			case SPAWN_ENEMY:
-				GamePlatform::Instance().incrementValue(STAT_SPAWN_KILLS);
+				GamePlatform::Instance().incrementValue(STAT_BIG_KILLS);
 				break;
 			default:
 				break;
@@ -978,6 +958,8 @@ void Level::drawLevel(sf::RenderTarget * const target)
 				object->draw(target);
 		}
 	}
+	if (gameMap->smoke.enabled)
+		target->draw(smokeRect, shadersFactory->getShader(OBJECTS::SMOKE));
 
 	for(LevelObject *object : objects)
 	{

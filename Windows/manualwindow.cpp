@@ -318,7 +318,7 @@ void ManualWindow::addElements()
 							   ACTION_STATE::ABILITY_FREEZE_BOMB));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_ACID,
-							   GAME_TRANSLATION::ABILITY_VENOM,
+							   GAME_TRANSLATION::ABILITY_ACID,
 							   ACTION_STATE::ABILITY_VENOM));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_INCREASE_TOWER_DAMAGE,
@@ -622,7 +622,7 @@ void ManualWindow::Element::update()
 			description += std::to_string(FreezeBombAbility::FREEZE_ABILITY_DURATION/EngineDefs::MSEC);
 			break;
 		case ACTION_STATE::ABILITY_VENOM:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::VENOM_ABILITY_DESCRIPTION);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ACID_ABILITY_DESCRIPTION);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
@@ -719,6 +719,42 @@ void ManualWindow::Element::update()
 		//ability
 		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY) + separator;
 		description += endline;
+
+		switch (enemyInfo.abilityType)
+		{
+		case EnemiesFactory::EnemyInfo::NONE:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_NONE);
+			break;
+		case EnemiesFactory::EnemyInfo::RAGE:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_RAGE);
+			break;
+		case EnemiesFactory::EnemyInfo::SPAWN:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN);
+			break;
+		case EnemiesFactory::EnemyInfo::TELEPORT:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_TELEPORT);
+			break;
+		case EnemiesFactory::EnemyInfo::SHELL_NEAR:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SHELL_NEAR);
+			break;
+		case EnemiesFactory::EnemyInfo::HEAL_NEAR:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_HEAL_NEAR);
+			break;
+		case EnemiesFactory::EnemyInfo::SHUTDOWN_TOWER:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER);
+			break;
+		case EnemiesFactory::EnemyInfo::STRONG:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_STRONG);
+			break;
+		case EnemiesFactory::EnemyInfo::DOWN_TOWER:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER);
+			break;
+		case EnemiesFactory::EnemyInfo::SELF_HEAL:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL);
+			break;
+		default:
+			break;
+		}
 	}
 		break;
 	default:

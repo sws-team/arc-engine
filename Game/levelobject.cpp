@@ -27,6 +27,7 @@ ShadersFactory::ShadersFactory()
 {
 	addShader(OBJECTS::MOVING);
 	addShader(OBJECTS::WAVE);
+	addShader(OBJECTS::SMOKE);
 	iTime.restart();
 
 //	mapShader.setParameter("iResolution",
@@ -60,6 +61,9 @@ void ShadersFactory::update()
 
 	sf::Shader *waveShader = shaders.at(OBJECTS::WAVE);
 	waveShader->setUniform("time", iTime.getElapsedTime().asSeconds());
+
+	sf::Shader *smokeShader = shaders.at(OBJECTS::SMOKE);
+	smokeShader->setUniform("time", iTime.getElapsedTime().asSeconds());
 }
 
 void ShadersFactory::addShader(OBJECTS::SHADER_TYPES type)
@@ -100,6 +104,23 @@ sf::Shader* ShadersFactory::createShader(OBJECTS::SHADER_TYPES type)
 		shader->setUniform("currentTexture", sf::Shader::CurrentTexture);
 		shader->setUniform("resolution", sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x,
 												   Engine::Instance().settingsManager()->getResolution().y));
+	}
+		break;
+	case OBJECTS::SMOKE:
+	{
+
+		shader = new sf::Shader();
+		if (!shader->loadFromMemory(Engine::Instance().shadersManager()->getData(GAME_SHADERS::SMOKE),
+									sf::Shader::Fragment))
+		{
+			sf::err() << "Failed to load shader" << std::endl;
+			delete shader;
+			shader = nullptr;
+			break;
+		}
+		shader->setUniform("resolution", sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x,
+												   Engine::Instance().settingsManager()->getResolution().y));
+
 	}
 		break;
 	default:

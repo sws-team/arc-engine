@@ -5,7 +5,7 @@
 #include "gameresource.h"
 #include "Game/levelobject.h"
 
-//#define LOAD_MAPS
+#define LOAD_MAPS
 
 const std::string GameManagers::resourcesFileName = "resources.dat";
 const std::string GameManagers::checksum = "dd";
@@ -401,6 +401,7 @@ void GameManagers::loadResources()
 
 	addShader(GAME_SHADERS::WAVE, ShadersFactory::WAVE_SHADER);
 	addShader(GAME_SHADERS::MOVING, ShadersFactory::MOVING_SHADER);
+	addShader(GAME_SHADERS::SMOKE, ShadersFactory::SMOKE_SHADER);
 
 #ifdef LOAD_MAPS
 	for (int i = 0; i < 15; ++i)
@@ -455,7 +456,6 @@ void GameManagers::loadTranslations()
 	std::map<int, std::wstring> englishTranslation;
 	std::map<int, std::wstring> frenchTranslation;
 
-
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::LANGUAGE_ID, L"Русский"));
 	englishTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::LANGUAGE_ID, L"English"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::LANGUAGE_ID, L"French"));
@@ -469,10 +469,74 @@ void GameManagers::loadTranslations()
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::OPTIONS, L"Options"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::OPTIONS, L"Options"));
 
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MANUAL, L"Manual"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MANUAL, L"Справочник"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MANUAL, L"Manual"));
+
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT, L"Выход"));
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT, L"Exit"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT, L"Sortir du jeu"));
 
 	//manual
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SPEED, L"Speed"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SPEED, L"Скорость"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SPEED, L"Скорость"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SIZE, L"Size"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SIZE, L"Размер"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SIZE, L"Размер"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR, L"Armour"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR, L"Броня"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR, L"Броня"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HEALTH, L"Health"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HEALTH, L"Здоровье"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HEALTH, L"Здоровье"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY, L"Abilities"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY, L"Особые способности"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY, L"Особые способности"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SMALL, L"Small"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SMALL, L"Мелкий"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SMALL, L"Мелкий"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MID, L"Mid"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MID, L"Средний"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MID, L"Средний"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BIG, L"Big"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BIG, L"Крупный"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BIG, L"Крупный"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SLOW, L"Slow"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SLOW, L"Медленный"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SLOW, L"Медленный"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::NORMAL_SPEED, L"Normal"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::NORMAL_SPEED, L"Нормальная"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::NORMAL_SPEED, L"Нормальная"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FAST, L"Fast"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FAST, L"Быстрая"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FAST, L"Быстрая"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::NEXT, L"Next"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::NEXT, L"Вперед"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::NEXT, L"Вперед"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PREVIOUS, L"Previous"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PREVIOUS, L"Назад"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PREVIOUS, L"Назад"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CREDITS, L"Credits"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CREDITS, L"Авторы"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CREDITS, L"Credits"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BACK, L"Back"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BACK, L"Вернуться"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BACK, L"Вернуться"));
 
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR_LIGHT, L"Light"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR_LIGHT, L"Легкая"));
@@ -543,92 +607,132 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::CANCEL, L"Отмена"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(TranslationsManager::CANCEL, L"Rejet"));
 
-	//panel
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_VENOM, L"Кислота"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_BOMB, L"Бомба"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_FREEZE_BOMB, L"Морозная бомба"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Ускорение башни"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE, L"Увеличение урона башни"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_STOP, L"Остановка"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_BASE, L"Обычная башня"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_POWER, L"Энергетическая башня"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_ROCKET, L"Ракетная башня"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_FREEZE, L"Замораживающая башня"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_LASER, L"Лазерная башня"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_IMPROVED, L"Улучшенная башня"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LEVEL, L"Уровень"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DAMAGE_PER_SECOND, L"Урон в секунду"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::RADIUS, L"Радиус"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::KILLS, L"Фраги"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COST, L"Цена"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SELL_COST, L"Цена продажи"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::WAVE, L"Волна"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION, L"Имеет кумулятивный эффект\nпо снижению вражеской брони"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION, L"Замедляет врага"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION, L"Производит ресурсы"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION, L"Взрыв от ракеты наносит урон\nпо площади"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION, L"Атакует непрерывно"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION, L"Наиболее эффективна по всем\nпоказателям"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BOMB_ABILITY_DESCRIPTION, L"Наносит урон мгновенно"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION, L"Замедляет врагов мгновенно"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::VENOM_ABILITY_DESCRIPTION, L"Непрерывно наносит урон\nв области"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION, L"Временно увеличивает урон\nбашни"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION, L"Временно увеличивает скорость\nатаки башни"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Останавливает движение всех\nврагов"));
-
 	//game
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PAUSED, L"Paused"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PAUSED, L"Пауза"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PAUSED, L"Pause"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CONTINUE, L"Continue"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CONTINUE, L"Продолжить"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CONTINUE, L"Continuer"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::RESTART, L"Restart"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::RESTART, L"Рестарт"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::RESTART, L"Recommencer"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT_TO_MENU, L"Exit to menu"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT_TO_MENU, L"Выход в меню"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT_TO_MENU, L"Sortir au menu"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT_FROM_GAME, L"Exit from game"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT_FROM_GAME, L"Выход из игры"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT_FROM_GAME, L"Sortir du jeu"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::GAME_OVER, L"Game Over!"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::GAME_OVER, L"Игра окончена"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::GAME_OVER, L"Tu as perdu, desole"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CONGRATULATIONS, L"Congratulations!"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CONGRATULATIONS, L"Поздравляем"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CONGRATULATIONS, L"Congratulations"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::START_GAME, L"Press Space to start"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::START_GAME, L"Нажмите Пробел чтобы начать"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::START_GAME, L"Tapez l'Espace afin de commencer le jeu"));
 
 	//instructions
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Добро пожаловать!"));
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Welcome!"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Добро пожаловать в игру!"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Welcome!"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_TOWERS, L"Towers"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_TOWERS, L"Башни"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_TOWERS, L"Towers"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_ABILITIES, L"Abilities"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_ABILITIES, L"Способности"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_ABILITIES, L"Abilities"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_MONEY, L"Money"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_MONEY, L"Валюта"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_MONEY, L"Money"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_HEALTH, L"Health"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_HEALTH, L"Здоровье"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_HEALTH, L"Health"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_PROGRESS, L"Progress"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_PROGRESS, L"Прогресс уровня"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_PROGRESS, L"Progress"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Press Return to continue or Space to skip"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Нажмите Ввод чтобы продолжить или Пробел чтобы пропустить"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Taper la Touche d'entree pour continuer ou l'Espace pour passer"));
 
 	//enemies
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INFANTRY, L"Infantry"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INFANTRY, L"Пехота"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CAR, L"Машина"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TANK, L"Танк"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SPIDER, L"Паук"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HELICOPTER, L"Вертолет"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::AIRCARRIER, L"Авианосец"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BIG_TANK, L"Большой танк"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PLANE, L"Самолет"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::REPAIR, L"Скорая"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SHELL, L"Ракушка"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TELEPORT, L"Телепорт"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SELF_HEAL, L"Самолечит"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DOWN_TOWER, L"Ухудшение башни"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ANT, L"Муравей"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COW, L"Корова"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INFANTRY, L"???"));
 
-	//manual
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SPEED, L"Скорость"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SIZE, L"Размер"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR, L"Броня"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HEALTH, L"Здоровье"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY, L"Особые способности"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SMALL, L"Мелкий"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MID, L"Средний"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BIG, L"Крупный"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SLOW, L"Медленный"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::NORMAL_SPEED, L"Нормальная"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FAST, L"Быстрая"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::NEXT, L"Вперед"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PREVIOUS, L"Назад"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CREDITS, L"Авторы"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BACK, L"Вернуться"));
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CAR, L"Машина"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CAR, L"Машина"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CAR, L"Машина"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TANK, L"Танк"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TANK, L"Танк"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TANK, L"Танк"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SPIDER, L"Паук"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SPIDER, L"Мехпаук"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SPIDER, L"Паук"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HELICOPTER, L"Вертолет"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HELICOPTER, L"Вертолет"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HELICOPTER, L"Вертолет"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::AIRCARRIER, L"Авианосец"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::AIRCARRIER, L"Авианосец"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::AIRCARRIER, L"Авианосец"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BIG_TANK, L"Большой танк"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BIG_TANK, L"Большой танк"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BIG_TANK, L"Большой танк"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PLANE, L"Самолет"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PLANE, L"Самолет"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PLANE, L"Самолет"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::REPAIR, L"Скорая"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::REPAIR, L"Скорая"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::REPAIR, L"Скорая"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SHELL, L"Ракушка"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SHELL, L"Ракушка"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SHELL, L"Ракушка"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TELEPORT, L"Телепорт"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TELEPORT, L"Телепорт"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TELEPORT, L"Телепорт"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SELF_HEAL, L"Самолечит"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SELF_HEAL, L"Самолечит"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SELF_HEAL, L"Самолечит"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DOWN_TOWER, L"Ухудшение башни"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DOWN_TOWER, L"Ухудшение башни"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DOWN_TOWER, L"Ухудшение башни"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ANT, L"Муравей"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ANT, L"Муравей"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ANT, L"Муравей"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COW, L"Корова"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COW, L"Корова"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COW, L"Корова"));
 
 	//difficult
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EASY, L"Easy"));
@@ -642,7 +746,6 @@ void GameManagers::loadTranslations()
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HARD, L"Hard"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HARD, L"Трудно"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HARD, L"Hard"));
-
 
 	//towers abilities
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BASE_TOWER_ABILITY, L"Invulnerability"));
@@ -670,198 +773,174 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::IMPROVED_TOWER_ABILITY, L"Shoot on 4 sides"));
 
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::POWER_TOWER_TRAIT, L"Price"));
-	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::POWER_TOWER_TRAIT, L"Цена за постройки увеличивается\n с каждой построенное башней"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::POWER_TOWER_TRAIT, L"Цена за постройки увеличивается\nс каждой построенное башней"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::POWER_TOWER_TRAIT, L"???"));
 
-	//menu
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MANUAL, L"Manual"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT, L"Exit"));
+	//enemies abilities
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_NONE, L"???"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_NONE, L"Отсутствует"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_NONE, L"???"));
 
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_RAGE, L"Rage - "));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_RAGE, L"Ярость - броня увеличивается\nобратно пропорционально здоровью"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_RAGE, L"???"));
 
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"Spawn"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"Может родить новых врагов"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"???"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_TELEPORT, L"Teleport"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_TELEPORT, L"Телепорт"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_TELEPORT, L"Teleport"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_SHELL_NEAR, L"shell"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_SHELL_NEAR, L"Генератор силового поля\nувеличивает броню окружающих"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_SHELL_NEAR, L"???"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_HEAL_NEAR, L"Heal"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_HEAL_NEAR, L"Ремонтное оборудование\nпозволяет восстанавливать некоторое\nколичество здоровья"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_HEAL_NEAR, L"???"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER, L"???"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER, L"Может выпускать паутину из наноботов,\nкоторая временно выводит из строя башню"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER, L"???"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"???"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"Оснащен энергетическим щитом,\nвеличина заряда которого зависит от времени"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"???"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER, L"???"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER, L"Оснащен излучателем направленного действия,\nкоторый может вызывать поломки башен"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER, L"???"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"???"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"Усиленная регенерация\nпозволяет восстанавливать здоровье"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"???"));
 
 	//panel
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_VENOM, L"Venom"));
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_ACID, L"Acid"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_ACID, L"Кислота"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_ACID, L"Acide"));
+
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_BOMB, L"Bomb"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_FREEZE_BOMB, L"Freeze bomb"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Speed up tower"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE, L"Strengthen tower"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_STOP, L"Stop all"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_BASE, L"Tower base"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_POWER, L"Tower power"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_ROCKET, L"Tower rocket"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_FREEZE, L"Tower freeze"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_LASER, L"Tower laser"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_IMPROVED, L"Tower improved"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LEVEL, L"Level"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DAMAGE_PER_SECOND, L"Damage per seconds"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::RADIUS, L"Radius"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::KILLS, L"Kills"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COST, L"Cost"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SELL_COST, L"Sell cost"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::WAVE, L"Wave"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION, L"Has a cumulative effect of reducing enemy armor"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION, L"Slows down the enemy"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION, L"Produces resources"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION, L"Rocket explosion deals area damage"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION, L"Attacks continuously"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION, L"Most effective in all stats"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BOMB_ABILITY_DESCRIPTION, L"Deals damage instantly"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION, L"Slows down enemies instantly"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::VENOM_ABILITY_DESCRIPTION, L"Continuously deals damage in an area."));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION, L"Temporarily increases tower damage"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION, L"Temporarily increases tower attack speed"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Stops the movement of all enemies"));
-
-	//game
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PAUSED, L"Paused"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CONTINUE, L"Continue"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::RESTART, L"Restart"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT_TO_MENU, L"Exit to menu"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT_FROM_GAME, L"Exit from game"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::GAME_OVER, L"Game Over!"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CONGRATULATIONS, L"Congratulations!"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::START_GAME, L"Press Space to start"));
-
-	//instructions
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Welcome!"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_TOWERS, L"Towers"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_ABILITIES, L"Abilities"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_MONEY, L"Money"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_HEALTH, L"Health"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_PROGRESS, L"Progress"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Press Return to continue or Space to skip"));
-
-	//enemies
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INFANTRY, L"Башни"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CAR, L"Машина"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TANK, L"Танк"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SPIDER, L"Паук"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HELICOPTER, L"Вертолет"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::AIRCARRIER, L"Авианосец"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BIG_TANK, L"Большой танк"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PLANE, L"Самолет"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::REPAIR, L"Скорая"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SHELL, L"Ракушка"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TELEPORT, L"Телепорт"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SELF_HEAL, L"Самолечит"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DOWN_TOWER, L"Ухудшение башни"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ANT, L"Муравей"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COW, L"Корова"));
-
-	//manual
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SPEED, L"Speed"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SIZE, L"Size"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR, L"Armour"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HEALTH, L"Health"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY, L"Abilities"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SMALL, L"Small"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MID, L"Mid"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BIG, L"Big"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SLOW, L"Slow"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::NORMAL_SPEED, L"Normal"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FAST, L"Fast"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::NEXT, L"Next"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PREVIOUS, L"Previous"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CREDITS, L"Credits"));
-	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BACK, L"Back"));
-
-
-
-
-	//menu
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MANUAL, L"Manual"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CREDITS, L"Credits"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT, L"Sortir du jeu"));
-
-
-	//panel
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_VENOM, L"Acide"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_BOMB, L"Бомба"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_BOMB, L"Bombe"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_FREEZE_BOMB, L"Freeze bomb"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_FREEZE_BOMB, L"Морозная бомба"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_FREEZE_BOMB, L"Bombe-glace"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Speed up tower"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Ускорение башни"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Tour a vitesse d'attaque augmentee"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE, L"Strengthen tower"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE, L"Увеличение урона башни"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE, L"Tour aux dommages augmentes"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_STOP, L"Stop all"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_STOP, L"Остановка"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY_STOP, L"Stopper"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_BASE, L"Tower base"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_BASE, L"Обычная башня"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_BASE, L"Tour de base"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_POWER, L"Tower power"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_POWER, L"Энергетическая башня"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_POWER, L"Tour de production d'energie"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_ROCKET, L"Tower rocket"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_ROCKET, L"Ракетная башня"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_ROCKET, L"Tour reacteur-fusee"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_FREEZE, L"Tower freeze"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_FREEZE, L"Замораживающая башня"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_FREEZE, L"Tour a obus glacants"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_LASER, L"Tower laser"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_LASER, L"Лазерная башня"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_LASER, L"Tour laser"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_IMPROVED, L"Tower improved"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_IMPROVED, L"Улучшенная башня"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TOWER_IMPROVED, L"Tour de base amelioree"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LEVEL, L"Level"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LEVEL, L"Уровень"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LEVEL, L"Niveau"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DAMAGE_PER_SECOND, L"Damage per seconds"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DAMAGE_PER_SECOND, L"Урон в секунду"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DAMAGE_PER_SECOND, L"Dommages"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::RADIUS, L"Radius"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::RADIUS, L"Радиус"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::RADIUS, L"Rayon"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::KILLS, L"Kills"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::KILLS, L"Фраги"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::KILLS, L"Ennemis tues"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COST, L"Cost"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COST, L"Цена"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COST, L"Prix"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SELL_COST, L"Sell cost"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SELL_COST, L"Цена продажи"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SELL_COST, L"Prix de la vente"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::WAVE, L"Wave"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::WAVE, L"Волна"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::WAVE, L"Vague"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION, L"Has a cumulative effect of reducing enemy armor"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION, L"Имеет кумулятивный эффект\nпо снижению вражеской брони"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION, L"Effet cumulatif de reduire la cuirasse d'un ennemi"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION, L"Slows down the enemy"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION, L"Замедляет врага"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION, L"Ralentissement d'un ennemi"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION, L"Produces resources"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION, L"Производит ресурсы"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION, L"Extraire les ressourses"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION, L"Rocket explosion deals area damage"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION, L"Взрыв от ракеты наносит урон\nпо площади"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION, L"Dommage d'une certaine territoire"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION, L"Attacks continuously"));	
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION, L"Атакует непрерывно"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION, L"Attaquer continuellement"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION, L"Most effective in all stats"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION, L"Наиболее эффективна по всем\nпоказателям"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION, L"Attaquer avec les meilleurs indices"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BOMB_ABILITY_DESCRIPTION, L"Deals damage instantly"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BOMB_ABILITY_DESCRIPTION, L"Наносит урон мгновенно"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BOMB_ABILITY_DESCRIPTION, L"Exploision instantanee"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION, L"Slows down enemies instantly"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION, L"Замедляет врагов мгновенно"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION, L"Ralentissement instantane d'un ennemi"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::VENOM_ABILITY_DESCRIPTION, L"Dommages prolonge d'une certaine territoire"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ACID_ABILITY_DESCRIPTION, L"Continuously deals damage in an area."));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ACID_ABILITY_DESCRIPTION, L"Непрерывно наносит урон\nв области"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ACID_ABILITY_DESCRIPTION, L"Dommages prolonge d'une certaine territoire"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION, L"Temporarily increases tower damage"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION, L"Временно увеличивает урон\nбашни"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION, L"Amelioration temporaire des dommages causes"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION, L"Temporarily increases tower attack speed"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION, L"Временно увеличивает скорость\nатаки башни"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION, L"Acceleration temporaire des tirs"));
+
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Stops the movement of all enemies"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Останавливает движение всех\nврагов"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Stopper tous les ennemis"));
-
-	//game
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PAUSED, L"Pause"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CONTINUE, L"Continuer"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::RESTART, L"Recommencer"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT_TO_MENU, L"Sortir au menu"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::EXIT_FROM_GAME, L"Sortir du jeu"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::GAME_OVER, L"Tu as perdu, desole"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CONGRATULATIONS, L"Congratulations"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::START_GAME, L"Tapez l'Espace afin de commencer le jeu"));
-
-	//instructions
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Welcome!"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_TOWERS, L"Towers"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_ABILITIES, L"Abilities"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_MONEY, L"Money"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_HEALTH, L"Health"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_PROGRESS, L"Progress"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Taper la Touche d'entree pour continuer ou l'Espace pour passer"));
-
-	//enemies
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::INFANTRY, L"Башни"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CAR, L"Машина"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TANK, L"Танк"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SPIDER, L"Паук"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HELICOPTER, L"Вертолет"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::AIRCARRIER, L"Авианосец"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BIG_TANK, L"Большой танк"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PLANE, L"Самолет"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::REPAIR, L"Скорая"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SHELL, L"Ракушка"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::TELEPORT, L"Телепорт"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SELF_HEAL, L"Самолечит"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::DOWN_TOWER, L"Ухудшение башни"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ANT, L"Муравей"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::COW, L"Корова"));
-
-	//manual
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SPEED, L"Скорость"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SIZE, L"Размер"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ARMOR, L"Броня"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::HEALTH, L"Здоровье"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::ABILITY, L"Особые способности"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SMALL, L"Мелкий"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::MID, L"Средний"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BIG, L"Крупный"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::SLOW, L"Медленный"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::NORMAL_SPEED, L"Нормальная"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::FAST, L"Быстрая"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::NEXT, L"Вперед"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::PREVIOUS, L"Назад"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::CREDITS, L"Авторы"));
-	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BACK, L"Вернуться"));
-
 
 	Engine::Instance().translationsManager()->addTranslation(std::string("russian"), russainTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);
@@ -882,10 +961,19 @@ std::vector<sf::String> GameManagers::creators()
 	creatorsVec.push_back(sf::String("Desiner:"));
 	creatorsVec.push_back(sf::String("FIO"));
 
+	creatorsVec.push_back(sf::String("Libraries:"));
+	creatorsVec.push_back(sf::String("SFML (https://www.sfml-dev.org/)"));
+	creatorsVec.push_back(sf::String("jsoncpp (https://github.com/open-source-parsers/jsoncpp)"));
+	creatorsVec.push_back(sf::String("TinyXML (http://www.grinninglizard.com/tinyxml/)"));
+	creatorsVec.push_back(sf::String("Base64 (https://github.com/tkislan/base64)"));
+
 	creatorsVec.push_back(sf::String("Music:"));
 	creatorsVec.push_back(sf::String("https://opengameart.org"));
 	creatorsVec.push_back(sf::String("http://www.bensound.com/royalty-free-music"));
 	creatorsVec.push_back(sf::String("https://freesound.org/"));
+
+	creatorsVec.push_back(sf::String("Shaders:"));
+	creatorsVec.push_back(sf::String("http://glslsandbox.com"));
 
 	return creatorsVec;
 }

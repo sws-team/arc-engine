@@ -79,10 +79,8 @@ ChooseMissionWindow::ChooseMissionWindow()
 	y += difficultOffsetY;
 	y += topOffset;
 
-	unsigned int maxCompletedLevel = Engine::Instance().options<GameOptions>()->maxCompletedLevel();
-	if (maxCompletedLevel != 0)
-		maxCompletedLevel++;
-
+	const unsigned int maxCompletedLevel = Engine::Instance().options<GameOptions>()->maxCompletedLevel();
+	const bool hasCompletedMissions = !Engine::Instance().options<GameOptions>()->getCompletedMissions().empty();
 	TextureType textureType = GAME_TEXTURE::MAP_ICON_MISSION_1;
 	for (unsigned int i = 0; i < Engine::Instance().options<GameOptions>()->missionsCount(); ++i)
 	{
@@ -106,7 +104,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 		mission.numberText.setOutlineColor(sf::Color::Black);
 		mission.numberText.setOutlineThickness(3);
 		mission.enabled = false;
-		if (i <= maxCompletedLevel)
+		if (i <= maxCompletedLevel + 1 && hasCompletedMissions)
 			mission.enabled = true;
 		if (mission.enabled)
 		{

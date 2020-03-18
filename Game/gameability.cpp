@@ -154,7 +154,7 @@ void BombAbility::activate()
 		}
 
 	if (count >= 5)
-		GamePlatform::Instance().unlock(ACHIEVEMENT_FREEZE_5_BY_SINGLE_BOMB);
+		GamePlatform::Instance().unlock(ACHIEVEMENT_KILL_5_BY_SINGLE_BOMB);
 
 	Engine::Instance().options<GameOptions>()->level()->checkAlive();
 	GameAbility::finish();

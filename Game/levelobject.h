@@ -30,6 +30,7 @@ public:
 
 	static const std::string WAVE_SHADER;
 	static const std::string MOVING_SHADER;
+	static const std::string SMOKE_SHADER;
 
 private:
 	std::map<OBJECTS::SHADER_TYPES, sf::Shader*> shaders;

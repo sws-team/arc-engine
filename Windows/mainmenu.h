@@ -12,7 +12,9 @@ public:
 	void accept() override;
 	void closeEvent() override;
 	void paint(sf::RenderWindow *window) override;
-
+#ifndef RELEASE_BUILD
+	void eventFilter(sf::Event* event) override;
+#endif
 private:
 	enum MENUS
 	{
@@ -22,7 +24,10 @@ private:
 		EXIT
 	};
 	sf::Text gameName;
-//	sf::Text playerName;
+#ifndef RELEASE_BUILD
+	sf::Text clearStats;
+	sf::Text clearSaves;
+#endif
 };
 
 #endif // MAINMENU_H

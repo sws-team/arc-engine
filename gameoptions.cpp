@@ -108,7 +108,7 @@ void GameOptions::load()
 		std::cout << "Can't read saves: "<< EngineDefs::saveFileName << std::endl;
 		return;
 	}
-	m_save.clear();
+	clearSaves();
 	for (unsigned int i = 0; i < obj.size(); i++)
 	{
 		const Json::Value& jsonSave = obj[i];
@@ -725,10 +725,10 @@ void GameOptions::loadAchievements()
 {
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_COMPLETE_ALL_LEVELS, std::string("COMPLETE_ALL_LEVELS"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_DAMAGE, std::string("COMPLETE_LEVEL_WITHOUT_DAMAGE"));
-	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_1000_SMALL, std::string("KILL_1000_SMALL"));
-	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_500_MEDIUM, std::string("KILL_500_MEDIUM"));
-	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_BIG, std::string("KILL_100_BIG"));
-	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_50_BY_TOWER, std::string("KILL_50_BY_TOWER"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_SMALL_ENEMIES, std::string("KILL_SMALL_ENEMIES"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_MEDIUM_ENEMIES, std::string("KILL_MEDIUM_ENEMIES"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_BIG_ENEMIES, std::string("KILL_BIG_ENEMIES"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_BY_TOWER, std::string("KILL_100_BY_TOWER"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_100_BY_ACID, std::string("KILL_100_BY_ACID"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_5_BY_SINGLE_BOMB, std::string("KILL_5_BY_SINGLE_BOMB"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_FREEZE_5_BY_SINGLE_BOMB, std::string("FREEZE_5_BY_SINGLE_BOMB"));
@@ -756,4 +756,9 @@ void GameOptions::globalCallbacks()
 #ifdef STEAM_API
 	SteamAPI_RunCallbacks();
 #endif
+}
+
+void GameOptions::clearSaves()
+{
+	m_save.clear();
 }

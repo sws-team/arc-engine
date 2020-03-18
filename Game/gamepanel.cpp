@@ -945,9 +945,9 @@ void GamePanel::updateInfo()
 			break;
 		case ABILITY_VENOM:
 		{
-			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_VENOM);
+			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_ACID);
 			str += endline;
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::VENOM_ABILITY_DESCRIPTION);
+			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ACID_ABILITY_DESCRIPTION);
 		}
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:

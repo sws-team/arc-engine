@@ -82,6 +82,8 @@ public:
 	void loadAchievements();
 	void globalCallbacks() override;
 
+	void clearSaves();
+
 private:
 	Camera *m_camera;
 	GameCursor *m_cursor;
