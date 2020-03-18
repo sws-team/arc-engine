@@ -894,6 +894,10 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::WAVE, L"Волна"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::WAVE, L"Vague"));
 
+	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LIMIT, L"Limit"));
+	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LIMIT, L"Лимит"));
+	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::LIMIT, L"???"));
+
 	englishTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION, L"Has a cumulative effect of reducing enemy armor"));
 	russainTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION, L"Имеет кумулятивный эффект\nпо снижению вражеской брони"));
 	frenchTranslation.insert(std::pair<int, std::wstring>(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION, L"Effet cumulatif de reduire la cuirasse d'un ennemi"));
@@ -962,10 +966,14 @@ std::vector<sf::String> GameManagers::creators()
 	creatorsVec.push_back(sf::String("FIO"));
 
 	creatorsVec.push_back(sf::String("Libraries:"));
-	creatorsVec.push_back(sf::String("SFML (https://www.sfml-dev.org/)"));
-	creatorsVec.push_back(sf::String("jsoncpp (https://github.com/open-source-parsers/jsoncpp)"));
-	creatorsVec.push_back(sf::String("TinyXML (http://www.grinninglizard.com/tinyxml/)"));
-	creatorsVec.push_back(sf::String("Base64 (https://github.com/tkislan/base64)"));
+	creatorsVec.push_back(sf::String("SFML"));
+	creatorsVec.push_back(sf::String("https://www.sfml-dev.org/"));
+	creatorsVec.push_back(sf::String("jsoncpp"));
+	creatorsVec.push_back(sf::String("https://github.com/open-source-parsers/jsoncpp"));
+	creatorsVec.push_back(sf::String("TinyXML"));
+	creatorsVec.push_back(sf::String("http://www.grinninglizard.com/tinyxml/"));
+	creatorsVec.push_back(sf::String("Base64"));
+	creatorsVec.push_back(sf::String("https://github.com/tkislan/base64"));
 
 	creatorsVec.push_back(sf::String("Music:"));
 	creatorsVec.push_back(sf::String("https://opengameart.org"));

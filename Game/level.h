@@ -72,7 +72,6 @@ public:
 					  int frameCount,
 					  int row);
 	void removeAnimation(Animation *animation);
-	unsigned int getPowerTowersCount() const;
 
 	void clearCursor();
 	std::vector<Tower *> getAllTowers() const;
@@ -161,7 +160,6 @@ private:
 	sf::CircleShape currentTowerRadius;
 	sf::RectangleShape currentTowerRect;
 	void updateRadius();
-	unsigned int m_powerTowersCount;
 
 	sf::RectangleShape spawnRect;
 	sf::RectangleShape endRect;

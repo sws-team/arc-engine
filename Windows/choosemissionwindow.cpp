@@ -104,8 +104,14 @@ ChooseMissionWindow::ChooseMissionWindow()
 		mission.numberText.setOutlineColor(sf::Color::Black);
 		mission.numberText.setOutlineThickness(3);
 		mission.enabled = false;
-		if (i <= maxCompletedLevel + 1 && hasCompletedMissions)
+		if (hasCompletedMissions)
+		{
+			if (i <= maxCompletedLevel + 1)
+				mission.enabled = true;
+		}
+		else if (i == 0)
 			mission.enabled = true;
+
 		if (mission.enabled)
 		{
 			mission.highlight.setFillColor(sf::Color::Transparent);

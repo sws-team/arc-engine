@@ -78,7 +78,7 @@ private:
 
 	sf::Sprite abilityBombSprite;
 	sf::Sprite abilityFreezeBombSprite;
-	sf::Sprite abilityVenomSprite;
+	sf::Sprite abilityAcidSprite;
 	sf::Sprite abilityIncreaseTowerDamageSprite;
 	sf::Sprite abilityIncreaseTowerAttackSpeedSprite;
 	sf::Sprite abilityStopSprite;
@@ -92,6 +92,9 @@ private:
 
 	sf::Sprite moneyIcon;
 	sf::Sprite lifeIcon;
+	void initText(sf::Text *text, const unsigned int size,
+				  const sf::Color& fillColor,
+				  const sf::Color& outlineColor);
 
 	sf::Text towerBaseCostText;
 	sf::Text towerFreezeCostText;
@@ -99,13 +102,23 @@ private:
 	sf::Text towerLaserCostText;
 	sf::Text towerPowerCostText;
 	sf::Text towerImprovedCostText;
+	void initCostText(sf::Text *costText);
 
 	sf::Text abilityBombDurationText;
 	sf::Text abilityFreezeBombDurationText;
-	sf::Text abilityVenomDurationText;
+	sf::Text abilityAcidDurationText;
 	sf::Text abilityIncreaseTowerDamageDurationText;
 	sf::Text abilityIncreaseTowerAttackSpeedDurationText;
 	sf::Text abilityStopDurationText;
+	void initDurationText(sf::Text *costText);
+
+	sf::Text towerBaseLimitText;
+	sf::Text towerFreezeLimitText;
+	sf::Text towerRocketLimitText;
+	sf::Text towerLaserLimitText;
+	sf::Text towerPowerLimitText;
+	sf::Text towerImprovedLimitText;
+	void initLimitText(sf::Text *limitText);
 
 	sf::Text info;
 
@@ -127,7 +140,7 @@ private:
 
 		bool isAbilityBombEnabled;
 		bool isAbilityFreezeBombEnabled;
-		bool isAbilityVenomEnabled;
+		bool isAbilityAcidEnabled;
 		bool isAbilityIncreaseTowerDamageEnabled;
 		bool isAbilityIncreaseTowerAttackSpeedEnabled;
 		bool isAbilityStopEnabled;

@@ -56,8 +56,8 @@ GamePanel::GamePanel() :
 	abilityFreezeBombSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ABILITY_FREEZE_BOMB));
 	abilityFreezeBombSprite.setScale(scaleFactor);
 
-	abilityVenomSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ABILITY_ACID));
-	abilityVenomSprite.setScale(scaleFactor);
+	abilityAcidSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ABILITY_ACID));
+	abilityAcidSprite.setScale(scaleFactor);
 
 	abilityIncreaseTowerDamageSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ABILITY_INCREASE_TOWER_DAMAGE));
 	abilityIncreaseTowerDamageSprite.setScale(scaleFactor);
@@ -108,99 +108,24 @@ GamePanel::GamePanel() :
 	actionsSprites.push_back(&towerImprovedSprite);
 	actionsSprites.push_back(&abilityBombSprite);
 	actionsSprites.push_back(&abilityFreezeBombSprite);
-	actionsSprites.push_back(&abilityVenomSprite);
+	actionsSprites.push_back(&abilityAcidSprite);
 	actionsSprites.push_back(&abilityIncreaseTowerDamageSprite);
 	actionsSprites.push_back(&abilityIncreaseTowerAttackSpeedSprite);
 	actionsSprites.push_back(&abilityStopSprite);
 
-	const unsigned int costTextCharacterSize = 20;
-	const sf::Color costTextFillColor = sf::Color::White;
-	const sf::Color costTextOutlineColor = sf::Color::Black;
+	initCostText(&towerBaseCostText);
+	initCostText(&towerFreezeCostText);
+	initCostText(&towerRocketCostText);
+	initCostText(&towerLaserCostText);
+	initCostText(&towerPowerCostText);
+	initCostText(&towerImprovedCostText);
 
-	towerBaseCostText.setFont(Engine::Instance().fontManager()->font());
-	towerBaseCostText.setFillColor(costTextFillColor);
-	towerBaseCostText.setOutlineColor(costTextOutlineColor);
-	towerBaseCostText.setOutlineThickness(1);
-	towerBaseCostText.setCharacterSize(costTextCharacterSize);
-	towerBaseCostText.setScale(scaleFactor);
-
-	towerFreezeCostText.setFont(Engine::Instance().fontManager()->font());
-	towerFreezeCostText.setFillColor(costTextFillColor);
-	towerFreezeCostText.setOutlineColor(costTextOutlineColor);
-	towerFreezeCostText.setOutlineThickness(1);
-	towerFreezeCostText.setCharacterSize(costTextCharacterSize);
-	towerFreezeCostText.setScale(scaleFactor);
-
-	towerRocketCostText.setFont(Engine::Instance().fontManager()->font());
-	towerRocketCostText.setFillColor(costTextFillColor);
-	towerRocketCostText.setOutlineColor(costTextOutlineColor);
-	towerRocketCostText.setOutlineThickness(1);
-	towerRocketCostText.setCharacterSize(costTextCharacterSize);
-	towerRocketCostText.setScale(scaleFactor);
-
-	towerLaserCostText.setFont(Engine::Instance().fontManager()->font());
-	towerLaserCostText.setFillColor(costTextFillColor);
-	towerLaserCostText.setOutlineColor(costTextOutlineColor);
-	towerLaserCostText.setOutlineThickness(1);
-	towerLaserCostText.setCharacterSize(costTextCharacterSize);
-	towerLaserCostText.setScale(scaleFactor);
-
-	towerPowerCostText.setFont(Engine::Instance().fontManager()->font());
-	towerPowerCostText.setFillColor(costTextFillColor);
-	towerPowerCostText.setOutlineColor(costTextOutlineColor);
-	towerPowerCostText.setOutlineThickness(1);
-	towerPowerCostText.setCharacterSize(costTextCharacterSize);
-	towerPowerCostText.setScale(scaleFactor);
-
-	towerImprovedCostText.setFont(Engine::Instance().fontManager()->font());
-	towerImprovedCostText.setFillColor(costTextFillColor);
-	towerImprovedCostText.setOutlineColor(costTextOutlineColor);
-	towerImprovedCostText.setOutlineThickness(1);
-	towerImprovedCostText.setCharacterSize(costTextCharacterSize);
-	towerImprovedCostText.setScale(scaleFactor);
-
-	const unsigned int durationTextCharacterSize = 40;
-	abilityBombDurationText.setFont(Engine::Instance().fontManager()->font());
-	abilityBombDurationText.setFillColor(costTextFillColor);
-	abilityBombDurationText.setOutlineColor(costTextOutlineColor);
-	abilityBombDurationText.setOutlineThickness(1);
-	abilityBombDurationText.setCharacterSize(durationTextCharacterSize);
-	abilityBombDurationText.setScale(scaleFactor);
-
-	abilityFreezeBombDurationText.setFont(Engine::Instance().fontManager()->font());
-	abilityFreezeBombDurationText.setFillColor(costTextFillColor);
-	abilityFreezeBombDurationText.setOutlineColor(costTextOutlineColor);
-	abilityFreezeBombDurationText.setOutlineThickness(1);
-	abilityFreezeBombDurationText.setCharacterSize(durationTextCharacterSize);
-	abilityFreezeBombDurationText.setScale(scaleFactor);
-
-	abilityVenomDurationText.setFont(Engine::Instance().fontManager()->font());
-	abilityVenomDurationText.setFillColor(costTextFillColor);
-	abilityVenomDurationText.setOutlineColor(costTextOutlineColor);
-	abilityVenomDurationText.setOutlineThickness(1);
-	abilityVenomDurationText.setCharacterSize(durationTextCharacterSize);
-	abilityVenomDurationText.setScale(scaleFactor);
-
-	abilityIncreaseTowerDamageDurationText.setFont(Engine::Instance().fontManager()->font());
-	abilityIncreaseTowerDamageDurationText.setFillColor(costTextFillColor);
-	abilityIncreaseTowerDamageDurationText.setOutlineColor(costTextOutlineColor);
-	abilityIncreaseTowerDamageDurationText.setOutlineThickness(1);
-	abilityIncreaseTowerDamageDurationText.setCharacterSize(durationTextCharacterSize);
-	abilityIncreaseTowerDamageDurationText.setScale(scaleFactor);
-
-	abilityIncreaseTowerAttackSpeedDurationText.setFont(Engine::Instance().fontManager()->font());
-	abilityIncreaseTowerAttackSpeedDurationText.setFillColor(costTextFillColor);
-	abilityIncreaseTowerAttackSpeedDurationText.setOutlineColor(costTextOutlineColor);
-	abilityIncreaseTowerAttackSpeedDurationText.setOutlineThickness(1);
-	abilityIncreaseTowerAttackSpeedDurationText.setCharacterSize(durationTextCharacterSize);
-	abilityIncreaseTowerAttackSpeedDurationText.setScale(scaleFactor);
-
-	abilityStopDurationText.setFont(Engine::Instance().fontManager()->font());
-	abilityStopDurationText.setFillColor(costTextFillColor);
-	abilityStopDurationText.setOutlineColor(costTextOutlineColor);
-	abilityStopDurationText.setOutlineThickness(1);
-	abilityStopDurationText.setCharacterSize(durationTextCharacterSize);
-	abilityStopDurationText.setScale(scaleFactor);
+	initDurationText(&abilityBombDurationText);
+	initDurationText(&abilityFreezeBombDurationText);
+	initDurationText(&abilityAcidDurationText);
+	initDurationText(&abilityIncreaseTowerDamageDurationText);
+	initDurationText(&abilityIncreaseTowerDamageDurationText);
+	initDurationText(&abilityStopDurationText);
 
 	towerBaseCostText.setString(GlobalVariables::to_string_with_precision(BaseTower::STATS.cost, 0));
 	towerFreezeCostText.setString(GlobalVariables::to_string_with_precision(FreezeTower::STATS.cost, 0));
@@ -211,10 +136,17 @@ GamePanel::GamePanel() :
 
 	abilityBombDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
 	abilityFreezeBombDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
-	abilityVenomDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
+	abilityAcidDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
 	abilityIncreaseTowerDamageDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
 	abilityIncreaseTowerAttackSpeedDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
 	abilityStopDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
+
+	initLimitText(&towerBaseLimitText);
+	initLimitText(&towerFreezeLimitText);
+	initLimitText(&towerRocketLimitText);
+	initLimitText(&towerLaserLimitText);
+	initLimitText(&towerPowerLimitText);
+	initLimitText(&towerImprovedLimitText);
 
 	moneyIcon.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::MONEY_ICON));
 	moneyIcon.setScale(scaleFactor);
@@ -268,7 +200,7 @@ void GamePanel::draw(sf::RenderTarget * const target)
 
 	target->draw(abilityBombSprite);
 	target->draw(abilityFreezeBombSprite);
-	target->draw(abilityVenomSprite);
+	target->draw(abilityAcidSprite);
 	target->draw(abilityIncreaseTowerDamageSprite);
 	target->draw(abilityIncreaseTowerAttackSpeedSprite);
 	target->draw(abilityStopSprite);
@@ -292,14 +224,27 @@ void GamePanel::draw(sf::RenderTarget * const target)
 		target->draw(abilityBombDurationText);
 	if (!abilities->freezeBombAbility->isReady())
 		target->draw(abilityFreezeBombDurationText);
-	if (!abilities->venomAbility->isReady())
-		target->draw(abilityVenomDurationText);
+	if (!abilities->acidAbility->isReady())
+		target->draw(abilityAcidDurationText);
 	if (!abilities->increaseTowerDamageAbility->isReady())
 		target->draw(abilityIncreaseTowerDamageDurationText);
 	if (!abilities->increaseTowerAttackSpeedAbility->isReady())
 		target->draw(abilityIncreaseTowerAttackSpeedDurationText);
 	if (!abilities->stopAblity->isReady())
 		target->draw(abilityStopDurationText);
+
+	if (!TowersCounter::Instance().canBuildBaseTower())
+		target->draw(towerBaseLimitText);
+	if (!TowersCounter::Instance().canBuildFreezeTower())
+		target->draw(towerFreezeLimitText);
+	if (!TowersCounter::Instance().canBuildRocketTower())
+		target->draw(towerRocketLimitText);
+	if (!TowersCounter::Instance().canBuildLaserTower())
+		target->draw(towerLaserLimitText);
+	if (!TowersCounter::Instance().canBuildPowerTower())
+		target->draw(towerPowerLimitText);
+	if (!TowersCounter::Instance().canBuildImprovedTower())
+		target->draw(towerImprovedLimitText);
 
 	target->draw(moneyIcon);
 	target->draw(lifeIcon);
@@ -357,7 +302,7 @@ void GamePanel::updatePanel()
 
 	towerPowerCostText.setString(
 				GlobalVariables::to_string_with_precision(
-					PowerTower::STATS.cost + Engine::Instance().options<GameOptions>()->level()->getPowerTowersCount() * PowerTower::COST_OFFSET, 0));
+					PowerTower::STATS.cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET, 0));
 
 	updateCursor();
 	updateInfo();
@@ -384,7 +329,7 @@ ACTION_STATE GamePanel::getCurrentIcon() const
 	case 7:
 		return ACTION_STATE::ABILITY_FREEZE_BOMB;
 	case 8:
-		return ACTION_STATE::ABILITY_VENOM;
+		return ACTION_STATE::ABILITY_ACID;
 	case 9:
 		return ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE;
 	case 10:
@@ -489,7 +434,7 @@ sf::Vector2f GamePanel::updatePos()
 	pos.x += iconSize.x;
 	pos.x += icon_offset;
 
-	abilityVenomSprite.setPosition(pos);
+	abilityAcidSprite.setPosition(pos);
 	pos.x += iconSize.x;
 	pos.x += icon_offset;
 
@@ -527,10 +472,19 @@ sf::Vector2f GamePanel::updatePos()
 
 	abilityBombDurationText.setPosition(abilityBombSprite.getPosition());
 	abilityFreezeBombDurationText.setPosition(abilityFreezeBombSprite.getPosition());
-	abilityVenomDurationText.setPosition(abilityVenomSprite.getPosition());
+	abilityAcidDurationText.setPosition(abilityAcidSprite.getPosition());
 	abilityIncreaseTowerDamageDurationText.setPosition(abilityIncreaseTowerDamageSprite.getPosition());
 	abilityIncreaseTowerAttackSpeedDurationText.setPosition(abilityIncreaseTowerAttackSpeedSprite.getPosition());
 	abilityStopDurationText.setPosition(abilityStopSprite.getPosition());
+
+	const sf::Vector2f halfCellY = sf::Vector2f(0, Engine::Instance().options<GameOptions>()->tileSize().y/2.f);
+
+	towerBaseLimitText.setPosition(towerBaseSprite.getPosition() + halfCellY);
+	towerFreezeLimitText.setPosition(towerFreezeSprite.getPosition() + halfCellY);
+	towerRocketLimitText.setPosition(towerRocketSprite.getPosition() + halfCellY);
+	towerLaserLimitText.setPosition(towerLaserSprite.getPosition() + halfCellY);
+	towerPowerLimitText.setPosition(towerPowerSprite.getPosition() + halfCellY);
+	towerImprovedLimitText.setPosition(towerImprovedSprite.getPosition() + halfCellY);
 
 	miniMapSprite.setPosition(pos);
 
@@ -560,7 +514,7 @@ float GamePanel::getTowerUpgradeCost(Tower *tower) const
 
 	const TOWER_TYPES type = tower->type();
 	float cost = type == TOWER_TYPES::POWER ?
-				TowersFactory::getTowerStats(type).cost + Engine::Instance().options<GameOptions>()->level()->getPowerTowersCount() * PowerTower::COST_OFFSET :
+				TowersFactory::getTowerStats(type).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET :
 				TowersFactory::getTowerStats(type).cost;
 
 	switch (tower->level())
@@ -581,7 +535,7 @@ float GamePanel::getTowerSellCost(Tower *tower) const
 {
 	const TOWER_TYPES type = tower->type();
 	float cost = type == TOWER_TYPES::POWER ?
-				tower->data().cost + (Engine::Instance().options<GameOptions>()->level()->getPowerTowersCount() - 1) * PowerTower::COST_OFFSET :
+				tower->data().cost + (TowersCounter::Instance().powerTowerCount - 1) * PowerTower::COST_OFFSET :
 				tower->data().cost;
 	cost /= 2;
 	return cost;
@@ -593,7 +547,7 @@ void GamePanel::updateAbilitiesDuration()
 
 	abilityBombDurationText.setString(std::to_string(abilities->bombAbility->timeLeft()));
 	abilityFreezeBombDurationText.setString(std::to_string(abilities->freezeBombAbility->timeLeft()));
-	abilityVenomDurationText.setString(std::to_string(abilities->venomAbility->timeLeft()));
+	abilityAcidDurationText.setString(std::to_string(abilities->acidAbility->timeLeft()));
 	abilityIncreaseTowerDamageDurationText.setString(std::to_string(abilities->increaseTowerDamageAbility->timeLeft()));
 	abilityIncreaseTowerAttackSpeedDurationText.setString(std::to_string(abilities->increaseTowerAttackSpeedAbility->timeLeft()));
 	abilityStopDurationText.setString(std::to_string(abilities->stopAblity->timeLeft()));
@@ -604,37 +558,37 @@ void GamePanel::updateEnableTowers()
 	const float money = Engine::Instance().options<GameOptions>()->level()->getMoneyCount();
 
 	float cost = TowersFactory::getTowerStats(TOWER_TYPES::BASE).cost;
-	if (money < cost)
+	if (money < cost || !TowersCounter::Instance().canBuildBaseTower())
 		towerBaseSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerBaseSprite.setColor(sf::Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::LASER).cost;
-	if (money < cost || !iconsAvaliable.isLaserEnabled)
+	if (money < cost || !iconsAvaliable.isLaserEnabled || !TowersCounter::Instance().canBuildLaserTower())
 		towerLaserSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerLaserSprite.setColor(sf::Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::FREEZE).cost;
-	if (money < cost || !iconsAvaliable.isFreezeEnabled)
+	if (money < cost || !iconsAvaliable.isFreezeEnabled || !TowersCounter::Instance().canBuildFreezeTower())
 		towerFreezeSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerFreezeSprite.setColor(sf::Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::ROCKET).cost;
-	if (money < cost || !iconsAvaliable.isRocketEnabled)
+	if (money < cost || !iconsAvaliable.isRocketEnabled || !TowersCounter::Instance().canBuildRocketTower())
 		towerRocketSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerRocketSprite.setColor(sf::Color::White);
 
-	cost = TowersFactory::getTowerStats(TOWER_TYPES::POWER).cost + Engine::Instance().options<GameOptions>()->level()->getPowerTowersCount() * PowerTower::COST_OFFSET;
-	if (money < cost)
+	cost = TowersFactory::getTowerStats(TOWER_TYPES::POWER).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET;
+	if (money < cost || !TowersCounter::Instance().canBuildRocketTower())
 		towerPowerSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerPowerSprite.setColor(sf::Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::IMPROVED).cost;
-	if (money < cost || !iconsAvaliable.isImprovedEnabled)
+	if (money < cost || !iconsAvaliable.isImprovedEnabled || !TowersCounter::Instance().canBuildImprovedTower())
 		towerImprovedSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerImprovedSprite.setColor(sf::Color::White);
@@ -654,10 +608,10 @@ void GamePanel::updateEnableAbilities()
 	else
 		abilityFreezeBombSprite.setColor(sf::Color::White);
 
-	if (!abilities->venomAbility->isReady() || !iconsAvaliable.isAbilityVenomEnabled)
-		abilityVenomSprite.setColor(EngineDefs::GrayColor);
+	if (!abilities->acidAbility->isReady() || !iconsAvaliable.isAbilityAcidEnabled)
+		abilityAcidSprite.setColor(EngineDefs::GrayColor);
 	else
-		abilityVenomSprite.setColor(sf::Color::White);
+		abilityAcidSprite.setColor(sf::Color::White);
 
 	if (!abilities->increaseTowerDamageAbility->isReady() || !iconsAvaliable.isAbilityIncreaseTowerDamageEnabled)
 		abilityIncreaseTowerDamageSprite.setColor(EngineDefs::GrayColor);
@@ -743,7 +697,7 @@ sf::String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 	if (tower == nullptr)
 	{
 		const float cost = type == TOWER_TYPES::POWER ?
-					towerStats.cost + Engine::Instance().options<GameOptions>()->level()->getPowerTowersCount() * PowerTower::COST_OFFSET :
+					towerStats.cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET :
 					towerStats.cost;
 
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COST);
@@ -800,16 +754,17 @@ bool GamePanel::isTowerIconActive(TOWER_TYPES type) const
 	switch (type)
 	{
 	case BASE:
+		return TowersCounter::Instance().canBuildBaseTower();
 	case POWER:
-		return true;
+		return TowersCounter::Instance().canBuildPowerTower();
 	case ROCKET:
-		return iconsAvaliable.isRocketEnabled;
+		return iconsAvaliable.isRocketEnabled && TowersCounter::Instance().canBuildRocketTower();
 	case FREEZE:
-		return iconsAvaliable.isFreezeEnabled;
+		return iconsAvaliable.isFreezeEnabled && TowersCounter::Instance().canBuildFreezeTower();
 	case LASER:
-		return iconsAvaliable.isLaserEnabled;
+		return iconsAvaliable.isLaserEnabled && TowersCounter::Instance().canBuildLaserTower();
 	case IMPROVED:
-		return iconsAvaliable.isImprovedEnabled;
+		return iconsAvaliable.isImprovedEnabled && TowersCounter::Instance().canBuildImprovedTower();
 	}
 	return true;
 }
@@ -818,8 +773,8 @@ bool GamePanel::isAbilityIconActive(ACTION_STATE type) const
 {
 	switch (type)
 	{
-	case ABILITY_VENOM:
-		return iconsAvaliable.isAbilityVenomEnabled;
+	case ABILITY_ACID:
+		return iconsAvaliable.isAbilityAcidEnabled;
 	case ABILITY_BOMB:
 		return iconsAvaliable.isAbilityBombEnabled;
 	case ABILITY_FREEZE_BOMB:
@@ -871,7 +826,7 @@ void GamePanel::setCurrentIcon(const ACTION_STATE &state)
 	case ACTION_STATE::ABILITY_FREEZE_BOMB:
 		currentCursorPos = 7;
 		break;
-	case ACTION_STATE::ABILITY_VENOM:
+	case ACTION_STATE::ABILITY_ACID:
 		currentCursorPos = 8;
 		break;
 	case ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE:
@@ -915,6 +870,37 @@ bool GamePanel::clickOnMiniMap(const sf::Vector2f &pos)
 	return false;
 }
 
+void GamePanel::initText(sf::Text *text, const unsigned int size,
+						 const sf::Color &fillColor,
+						 const sf::Color &outlineColor)
+{
+	text->setFont(Engine::Instance().fontManager()->font());
+	text->setFillColor(fillColor);
+	text->setOutlineColor(outlineColor);
+	text->setOutlineThickness(1);
+	text->setCharacterSize(size);
+	text->setScale(Engine::Instance().settingsManager()->getScaleFactor());
+}
+
+void GamePanel::initCostText(sf::Text *costText)
+{
+	const unsigned int costTextCharacterSize = 20;
+	initText(costText, costTextCharacterSize, sf::Color::White, sf::Color::Black);
+}
+
+void GamePanel::initDurationText(sf::Text *costText)
+{
+	const unsigned int durationTextCharacterSize = 40;
+	initText(costText, durationTextCharacterSize, sf::Color::White, sf::Color::Black);
+}
+
+void GamePanel::initLimitText(sf::Text *limitText)
+{
+	constexpr int limitTextCharacterSize = 20;
+	initText(limitText, limitTextCharacterSize, sf::Color::Red, sf::Color::Black);
+	limitText->setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LIMIT));
+}
+
 void GamePanel::updateInfo()
 {
 	sf::String str;
@@ -943,7 +929,7 @@ void GamePanel::updateInfo()
 			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION);
 		}
 			break;
-		case ABILITY_VENOM:
+		case ABILITY_ACID:
 		{
 			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_ACID);
 			str += endline;
@@ -994,7 +980,7 @@ void GamePanel::initMission(unsigned int n)
 	iconsAvaliable.isImprovedEnabled = true;
 	iconsAvaliable.isAbilityBombEnabled = true;
 	iconsAvaliable.isAbilityFreezeBombEnabled = true;
-	iconsAvaliable.isAbilityVenomEnabled = true;
+	iconsAvaliable.isAbilityAcidEnabled = true;
 	iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = true;
 	iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = true;
 	iconsAvaliable.isAbilityStopEnabled = true;
@@ -1007,7 +993,7 @@ void GamePanel::initMission(unsigned int n)
 		iconsAvaliable.isLaserEnabled = false;
 		iconsAvaliable.isImprovedEnabled = false;
 		iconsAvaliable.isAbilityFreezeBombEnabled = false;
-		iconsAvaliable.isAbilityVenomEnabled = false;
+		iconsAvaliable.isAbilityAcidEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
 		iconsAvaliable.isAbilityStopEnabled = false;
@@ -1016,7 +1002,7 @@ void GamePanel::initMission(unsigned int n)
 		iconsAvaliable.isRocketEnabled = false;
 		iconsAvaliable.isLaserEnabled = false;
 		iconsAvaliable.isImprovedEnabled = false;
-		iconsAvaliable.isAbilityVenomEnabled = false;
+		iconsAvaliable.isAbilityAcidEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
 		iconsAvaliable.isAbilityStopEnabled = false;

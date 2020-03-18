@@ -319,7 +319,7 @@ void ManualWindow::addElements()
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_ACID,
 							   GAME_TRANSLATION::ABILITY_ACID,
-							   ACTION_STATE::ABILITY_VENOM));
+							   ACTION_STATE::ABILITY_ACID));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_INCREASE_TOWER_DAMAGE,
 							   GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE,
@@ -621,16 +621,16 @@ void ManualWindow::Element::update()
 			description += separator;
 			description += std::to_string(FreezeBombAbility::FREEZE_ABILITY_DURATION/EngineDefs::MSEC);
 			break;
-		case ACTION_STATE::ABILITY_VENOM:
+		case ACTION_STATE::ABILITY_ACID:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ACID_ABILITY_DESCRIPTION);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(VenomAbility::VENOM_ABLITY_COOLDOWN/EngineDefs::MSEC);
+			description += std::to_string(AcidAbility::VENOM_ABLITY_COOLDOWN/EngineDefs::MSEC);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(VenomAbility::VENOM_DAMAGE_COUNT * VenomAbility::VENOM_DAMAGE);
+			description += std::to_string(AcidAbility::VENOM_DAMAGE_COUNT * AcidAbility::VENOM_DAMAGE);
 			break;
 		case ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION);

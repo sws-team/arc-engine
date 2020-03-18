@@ -32,6 +32,11 @@ Tower::Tower(const TextureType &texture_id, const sf::Vector2f &pos, const Tower
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
 }
 
+Tower::~Tower()
+{
+
+}
+
 void Tower::update()
 {
 	GameObject::update();
@@ -345,6 +350,13 @@ BaseTower::BaseTower(const sf::Vector2f &pos)
 	projectileInfo.explosionSize = sf::Vector2i(12, 12);
 	projectileInfo.explosionFrameCount = 16;
 	m_shotSound = GAME_SOUND::BASE_SHOT;
+
+	TowersCounter::Instance().baseTowerCount++;
+}
+
+BaseTower::~BaseTower()
+{
+	TowersCounter::Instance().baseTowerCount--;
 }
 
 void BaseTower::projectileAction(Enemy *enemy)
@@ -376,12 +388,15 @@ PowerTower::PowerTower(const sf::Vector2f &pos)
 	powerRect.setFillColor(POWER_TOWER_AREA_COLOR);
 	powerRect.setPosition(pos - Engine::Instance().options<GameOptions>()->tileSize());
 	m_gain = ENERGY_GAIN;
+
+	TowersCounter::Instance().powerTowerCount++;
 }
 
 PowerTower::~PowerTower()
 {
 	if (abilityProgress != nullptr)
 		delete abilityProgress;
+	TowersCounter::Instance().powerTowerCount--;
 }
 
 void PowerTower::draw(sf::RenderTarget * const target)
@@ -520,6 +535,12 @@ RocketTower::RocketTower(const sf::Vector2f &pos)
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::ROCKET_EXPLOSION_EFFECT;
 	projectileInfo.explosionSize = sf::Vector2i(96, 96);
 	projectileInfo.explosionFrameCount = 16;
+	TowersCounter::Instance().rocketTowerCount++;
+}
+
+RocketTower::~RocketTower()
+{
+	TowersCounter::Instance().rocketTowerCount--;
 }
 
 void RocketTower::moveProjectile(Projectile *projectile)
@@ -576,6 +597,12 @@ FreezeTower::FreezeTower(const sf::Vector2f &pos)
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::FREEZE_EXPLOSION_EFFECT;
 	projectileInfo.explosionSize = sf::Vector2i(12, 12);
 	projectileInfo.explosionFrameCount = 16;
+	TowersCounter::Instance().freezeTowerCount++;
+}
+
+FreezeTower::~FreezeTower()
+{
+	TowersCounter::Instance().freezeTowerCount--;
 }
 
 void FreezeTower::projectileAction(Enemy *enemy)
@@ -614,11 +641,13 @@ LaserTower::LaserTower(const sf::Vector2f &pos)
 	mainTarget.laser = new GameObject(GAME_TEXTURE::LASER_PROJECTILE, sf::Vector2f(0,0), LASER_SIZE, 3);
 //	mainTarget.laser.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::LASER_PROJECTILE));
 	m_shotSound = GAME_SOUND::LASER_SHOT;
+	TowersCounter::Instance().laserTowerCount++;
 }
 
 LaserTower::~LaserTower()
 {
 	clearLasers();
+	TowersCounter::Instance().laserTowerCount--;
 }
 
 void LaserTower::shoot(Enemy *target)
@@ -751,6 +780,12 @@ ImprovedTower::ImprovedTower(const sf::Vector2f &pos)
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::IMPROVED_EXPLOSION_EFFECT;
 	projectileInfo.explosionSize = sf::Vector2i(32, 32);
 	projectileInfo.explosionFrameCount = 16;
+	TowersCounter::Instance().improvedTowerCount++;
+}
+
+ImprovedTower::~ImprovedTower()
+{
+	TowersCounter::Instance().improvedTowerCount--;
 }
 
 void ImprovedTower::createdProjectile(Projectile *projectile)
@@ -910,3 +945,49 @@ void ProjectilesTower::projectileAction(Enemy *enemy)
 											 50, projectileInfo.explosionFrameCount, 0);
 }
 
+
+TowersCounter &TowersCounter::Instance()
+{
+	static TowersCounter towersCounter;
+	return towersCounter;
+}
+
+void TowersCounter::reset()
+{
+	baseTowerCount = 0;
+	laserTowerCount = 0;
+	powerTowerCount = 0;
+	freezeTowerCount = 0;
+	rocketTowerCount = 0;
+	improvedTowerCount = 0;
+}
+
+bool TowersCounter::canBuildBaseTower() const
+{
+	return baseTowerCount < MAX_BASE_TOWERS;
+}
+
+bool TowersCounter::canBuildFreezeTower() const
+{
+	return freezeTowerCount < MAX_FREEZE_TOWERS;
+}
+
+bool TowersCounter::canBuildRocketTower() const
+{
+	return rocketTowerCount < MAX_ROCKET_TOWERS;
+}
+
+bool TowersCounter::canBuildPowerTower() const
+{
+	return powerTowerCount < MAX_POWER_TOWERS;
+}
+
+bool TowersCounter::canBuildLaserTower() const
+{
+	return laserTowerCount < MAX_LASER_TOWERS;
+}
+
+bool TowersCounter::canBuildImprovedTower() const
+{
+	return improvedTowerCount < MAX_IMPROVED_TOWERS;
+}

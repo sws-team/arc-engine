@@ -23,7 +23,6 @@ Level::Level() :
   ,money(0.f)
   ,currentWave(0)
   ,m_state(WAIT_READY)
-  ,m_powerTowersCount(0)
   ,m_selectedTower(nullptr)
   ,abilityActivated(false)
   ,attackTowerBuilded(false)
@@ -166,7 +165,7 @@ void Level::update()
 }
 
 void Level::startMission(const unsigned int n)
-{
+{	
 	currentWave = 0;
 	Engine::Instance().options<GameOptions>()->panel()->updateWaveText();
 	m_state = WAIT_READY;
@@ -256,7 +255,6 @@ void Level::startMission(const unsigned int n)
 void Level::clear()
 {
 	clearCursor();
-	m_powerTowersCount = 0;
 	shake->deactivate();
 	for(Tower *tower : towers)
 	{
@@ -290,6 +288,7 @@ void Level::clear()
 	mapExplosion->clear();
 	moneyDrain->clear();
 	towersRegress->clear();
+	TowersCounter::Instance().reset();
 }
 
 void Level::calculateCollisions()
@@ -475,7 +474,7 @@ void Level::activateFreezeBombAbility()
 
 void Level::activateVenomAbility()
 {
-	Engine::Instance().options<GameOptions>()->panel()->setCurrentIcon(ACTION_STATE::ABILITY_VENOM);
+	Engine::Instance().options<GameOptions>()->panel()->setCurrentIcon(ACTION_STATE::ABILITY_ACID);
 	choose(sf::Vector2i(0,0), true);
 }
 
@@ -530,8 +529,6 @@ void Level::sellTower(Tower *tower)
 	const float cost = Engine::Instance().options<GameOptions>()->panel()->getTowerSellCost(tower);
 	money += cost;
 	towers.erase( remove( towers.begin(), towers.end(), tower ), towers.end() );
-	if (tower->type() == POWER)
-		m_powerTowersCount--;
 
 	if (!tower->isActive())
 		GamePlatform::Instance().unlock(ACHIEVEMENT_SELL_INACTIVE_TOWER);
@@ -837,11 +834,6 @@ void Level::updateUpgrade()
 		upgradeSprite.setColor(EngineDefs::GrayColor);
 }
 
-unsigned int Level::getPowerTowersCount() const
-{
-	return m_powerTowersCount;
-}
-
 void Level::clearCursor()
 {
 	setSelectedTower(nullptr);
@@ -1098,7 +1090,7 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 		{
 			const TOWER_TYPES type = Engine::Instance().options<GameOptions>()->panel()->currentTower();
 			const float cost = type == TOWER_TYPES::POWER ?
-						TowersFactory::getTowerStats(type).cost + m_powerTowersCount * PowerTower::COST_OFFSET :
+						TowersFactory::getTowerStats(type).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET :
 						TowersFactory::getTowerStats(type).cost;
 			if (money < cost)
 				return;
@@ -1133,14 +1125,14 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 			abilities->increaseTowerDamageAbility->setUp();
 		}
 			break;
-		case ABILITY_VENOM:
+		case ABILITY_ACID:
 		{
-			if (!Engine::Instance().options<GameOptions>()->panel()->isAbilityIconActive(ABILITY_VENOM))
+			if (!Engine::Instance().options<GameOptions>()->panel()->isAbilityIconActive(ABILITY_ACID))
 				return;
-			if (!abilities->venomAbility->isReady())
+			if (!abilities->acidAbility->isReady())
 				return;
 
-			abilities->venomAbility->setUp();
+			abilities->acidAbility->setUp();
 		}
 			break;
 		case ABILITY_BOMB:
@@ -1213,7 +1205,7 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 			const TOWER_TYPES type = Engine::Instance().options<GameOptions>()->cursor()->getTowerType();
 
 			float cost = type == TOWER_TYPES::POWER ?
-						TowersFactory::getTowerStats(type).cost + m_powerTowersCount * 10 :
+						TowersFactory::getTowerStats(type).cost + TowersCounter::Instance().powerTowerCount * 10 :
 						TowersFactory::getTowerStats(type).cost;
 
 			if (cost > money)
@@ -1232,16 +1224,14 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 			Engine::Instance().soundManager()->playOnce(GAME_SOUND::SETUP);
 			towers.push_back(tower);
 			money -= cost;
-			if (type == POWER)
-				m_powerTowersCount++;
-			else
+			if (type != POWER)
 				attackTowerBuilded = true;
 			Engine::Instance().options<GameOptions>()->panel()->updatePanel();
 		}
 			break;
-		case ABILITY_VENOM:		
+		case ABILITY_ACID:
 			abilityActivated = true;
-			abilities->venomAbility->activate();		
+			abilities->acidAbility->activate();
 			break;
 		case ABILITY_BOMB:
 		{

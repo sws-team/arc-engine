@@ -5,6 +5,35 @@
 #include "Game/leveldef.h"
 #include "enginedef.h"
 
+struct TowersCounter
+{
+	static TowersCounter &Instance();
+
+	int baseTowerCount;
+	int freezeTowerCount;
+	int rocketTowerCount;
+	int laserTowerCount;
+	int improvedTowerCount;
+	int powerTowerCount;
+
+	void reset();
+
+	bool canBuildBaseTower() const;
+	bool canBuildFreezeTower() const;
+	bool canBuildRocketTower() const;
+	bool canBuildPowerTower() const;
+	bool canBuildLaserTower() const;
+	bool canBuildImprovedTower() const;
+
+	static constexpr int MAX_BASE_TOWERS = 100;
+	static constexpr int MAX_FREEZE_TOWERS = 15;
+	static constexpr int MAX_ROCKET_TOWERS = 3;
+	static constexpr int MAX_LASER_TOWERS = 4;
+	static constexpr int MAX_IMPROVED_TOWERS = 2;
+	static constexpr int MAX_POWER_TOWERS = 10;
+};
+
+
 struct TowerStats
 {
 	TowerStats()
@@ -51,6 +80,7 @@ public:
 	Tower(const TextureType &texture_id,
 		  const sf::Vector2f &pos,
 		  const TowerStats& stats);
+	virtual ~Tower();
 
 	//GameObject
 	virtual void update() override;
@@ -163,6 +193,7 @@ class BaseTower : public ProjectilesTower
 {
 public:
 	BaseTower(const sf::Vector2f &pos);
+	~BaseTower() override;
 
 	const static TowerStats STATS;
 	void projectileAction(Enemy *enemy) override;
@@ -175,6 +206,7 @@ class PowerTower : public Tower
 public:
 	PowerTower(const sf::Vector2f &pos);
 	~PowerTower() override;
+
 	const static TowerStats STATS;
 
 	void draw(sf::RenderTarget *const target) final;
@@ -212,6 +244,7 @@ class RocketTower : public ProjectilesTower
 {
 public:
 	RocketTower(const sf::Vector2f &pos);
+	~RocketTower() override;
 
 	const static TowerStats STATS;
 	void moveProjectile(Projectile *projectile) override;
@@ -225,6 +258,8 @@ class FreezeTower : public ProjectilesTower
 {
 public:
 	FreezeTower(const sf::Vector2f &pos);
+	~FreezeTower() override;
+
 	const static TowerStats STATS;
 
 	void projectileAction(Enemy *enemy) override;
@@ -272,6 +307,8 @@ class ImprovedTower : public ProjectilesTower
 {
 public:
 	ImprovedTower(const sf::Vector2f &pos);
+	~ImprovedTower() override;
+
 	const static TowerStats STATS;
 protected:
 	void createdProjectile(Projectile *projectile) override;

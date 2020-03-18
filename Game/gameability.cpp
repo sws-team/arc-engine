@@ -86,7 +86,7 @@ Abilities::Abilities()
 	: GameDrawable()
 {
 	bombAbility = new BombAbility();
-	venomAbility = new VenomAbility();
+	acidAbility = new AcidAbility();
 	freezeBombAbility = new FreezeBombAbility();
 	increaseTowerAttackSpeedAbility = new IncreaseTowerAttackSpeedAbility();
 	increaseTowerDamageAbility = new IncreaseTowerDamageAbility();
@@ -95,20 +95,20 @@ Abilities::Abilities()
 
 void Abilities::draw(sf::RenderTarget * const target)
 {
-	if (venomAbility->isActive())
-		venomAbility->object->draw(target);
+	if (acidAbility->isActive())
+		acidAbility->object->draw(target);
 }
 
 void Abilities::update()
 {
-	venomAbility->checkDuration();
+	acidAbility->checkDuration();
 	increaseTowerAttackSpeedAbility->checkDuration();
 	increaseTowerDamageAbility->checkDuration();
 	stopAblity->checkDuration();
 
 	bombAbility->checkReady();
 	freezeBombAbility->checkReady();
-	venomAbility->checkReady();
+	acidAbility->checkReady();
 	increaseTowerAttackSpeedAbility->checkReady();
 	increaseTowerDamageAbility->checkReady();
 	stopAblity->checkReady();
@@ -120,7 +120,7 @@ void Abilities::reset()
 {
 	bombAbility->reset();
 	freezeBombAbility->reset();
-	venomAbility->reset();
+	acidAbility->reset();
 	increaseTowerAttackSpeedAbility->reset();
 	increaseTowerDamageAbility->reset();
 	stopAblity->reset();
@@ -189,7 +189,7 @@ void FreezeBombAbility::activate()
 	GameAbility::finish();
 }
 
-VenomAbility::VenomAbility()
+AcidAbility::AcidAbility()
 	: GameAbility(sf::Vector2i(10, 3), sf::Vector2i(7, 2), VENOM_ABLITY_COOLDOWN)
 	,object(nullptr)
 	,count(0)
@@ -197,7 +197,7 @@ VenomAbility::VenomAbility()
 
 }
 
-void VenomAbility::activate()
+void AcidAbility::activate()
 {
 	const sf::Vector2i size = m_rotated ? sf::Vector2i(m_areaSize.y * GameOptions::CELL_SIZE,
 											   m_areaSize.x * GameOptions::CELL_SIZE) :
@@ -215,7 +215,7 @@ void VenomAbility::activate()
 	count = 0;
 }
 
-void VenomAbility::checkDuration()
+void AcidAbility::checkDuration()
 {
 	if (!m_isActive)
 		return;
@@ -226,7 +226,7 @@ void VenomAbility::checkDuration()
 		{
 			if (enemy->enemyRect().intersects(object->gameRect()))
 			{
-				enemy->hit(VenomAbility::VENOM_DAMAGE);
+				enemy->hit(AcidAbility::VENOM_DAMAGE);
 
 				if(!enemy->isAlive())
 					GamePlatform::Instance().incrementValue(STAT_KILLS_BY_ACID);

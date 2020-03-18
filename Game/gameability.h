@@ -59,10 +59,10 @@ public:
 	static constexpr int FREEZE_ABILITY_COOLDOWN = 10000;
 };
 
-class VenomAbility : public GameAbility
+class AcidAbility : public GameAbility
 {
 public:
-	VenomAbility();
+	AcidAbility();
 
 	void activate() override;
 	void checkDuration() override;
@@ -133,7 +133,7 @@ public:
 	void update() override;
 	void reset();
 
-	VenomAbility *venomAbility;
+	AcidAbility *acidAbility;
 	BombAbility *bombAbility;
 	FreezeBombAbility *freezeBombAbility;
 	IncreaseTowerAttackSpeedAbility *increaseTowerAttackSpeedAbility;
