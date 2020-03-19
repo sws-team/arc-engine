@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	Engine::Instance().globalVariables()->setAppName("TowerDefence");
 	Engine::Instance().options<GameOptions>()->loadAchievements();
 	GamePlatform::Instance().requestStats();
-#ifndef RELEASE_BUILD
+#ifdef TEST_BUILD
 	Engine::Instance().soundManager()->setQuiet(true);
 #endif
 

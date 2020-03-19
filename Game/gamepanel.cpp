@@ -582,7 +582,7 @@ void GamePanel::updateEnableTowers()
 		towerRocketSprite.setColor(sf::Color::White);
 
 	cost = TowersFactory::getTowerStats(TOWER_TYPES::POWER).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET;
-	if (money < cost || !TowersCounter::Instance().canBuildRocketTower())
+	if (money < cost || !TowersCounter::Instance().canBuildPowerTower())
 		towerPowerSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerPowerSprite.setColor(sf::Color::White);

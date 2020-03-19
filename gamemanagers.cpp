@@ -5,8 +5,6 @@
 #include "gameresource.h"
 #include "Game/levelobject.h"
 
-#define LOAD_MAPS
-
 const std::string GameManagers::resourcesFileName = "resources.dat";
 const std::string GameManagers::checksum = "dd";
 

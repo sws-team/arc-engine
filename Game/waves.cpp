@@ -97,50 +97,50 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 	case 2://level 3
 	{
 		// SPIDER REPAIR_ENEMY
-
 		ADD_ENEMY(REPAIR_ENEMY, 3);
 		ADD_ENEMY(INFANTRY, 15);
 		ADD_ENEMY(SPIDER, 1);
-		waves.push_back(createWave(0.f, 1500, enemies));
+		waves.push_back(createWave(0.f, 1750, enemies));
 		enemies.clear();
 
 		ADD_ENEMY(INFANTRY, 10);
-		ADD_ENEMY(CAR, 10);
-		ADD_ENEMY(REPAIR_ENEMY, 5);
+		ADD_ENEMY(CAR, 5);
+		ADD_ENEMY(REPAIR_ENEMY, 2);
 		ADD_ENEMY(TRICYCLE, 5);
-		ADD_ENEMY(SPIDER, 3);
+		ADD_ENEMY(SPIDER, 2);
 		ADD_ENEMY(TRACTOR, 5);
-		waves.push_back(createWave(0.f, 900, enemies));
+		ADD_ENEMY(TANK, 1);
+		waves.push_back(createWave(0.f, 1200, enemies));
 		enemies.clear();
 
 		ADD_ENEMY(INFANTRY, 20);
+		ADD_ENEMY(CAR, 10);
+		ADD_ENEMY(REPAIR_ENEMY, 3);
+		ADD_ENEMY(TRACTOR, 5);
+		ADD_ENEMY(SPIDER, 3);
+		ADD_ENEMY(TANK, 3);
+		ADD_ENEMY(TRICYCLE, 10);
+		waves.push_back(createWave(0.0f, 750, enemies));
+		enemies.clear();
+
+		ADD_ENEMY(INFANTRY, 35);
 		ADD_ENEMY(CAR, 15);
-		ADD_ENEMY(REPAIR_ENEMY, 10);
+		ADD_ENEMY(REPAIR_ENEMY, 4);
 		ADD_ENEMY(TRACTOR, 10);
-		ADD_ENEMY(SPIDER, 10);
+		ADD_ENEMY(SPIDER, 5);
 		ADD_ENEMY(TANK, 5);
 		ADD_ENEMY(TRICYCLE, 15);
 		waves.push_back(createWave(0.0f, 550, enemies));
 		enemies.clear();
 
-		ADD_ENEMY(INFANTRY, 35);
-		ADD_ENEMY(CAR, 20);
-		ADD_ENEMY(REPAIR_ENEMY, 15);
-		ADD_ENEMY(TRACTOR, 15);
-		ADD_ENEMY(SPIDER, 15);
-		ADD_ENEMY(TANK, 10);
-		ADD_ENEMY(TRICYCLE, 20);
-		waves.push_back(createWave(0.2f, 400, enemies));
-		enemies.clear();
-
 		ADD_ENEMY(INFANTRY, 75);
 		ADD_ENEMY(CAR, 20);
-		ADD_ENEMY(REPAIR_ENEMY, 20);
-		ADD_ENEMY(TRACTOR, 15);
-		ADD_ENEMY(SPIDER, 15);
-		ADD_ENEMY(TANK, 20);
-		ADD_ENEMY(TRICYCLE, 20);
-		waves.push_back(createWave(0.2f, 300, enemies));
+		ADD_ENEMY(REPAIR_ENEMY, 5);
+		ADD_ENEMY(TRACTOR, 10);
+		ADD_ENEMY(SPIDER, 10);
+		ADD_ENEMY(TANK, 10);
+		ADD_ENEMY(TRICYCLE, 15);
+		waves.push_back(createWave(0.1f, 350, enemies));
 		enemies.clear();
 	}
 		break;
@@ -184,46 +184,46 @@ std::vector<Wave> EnemiesFactory::generateEnemies(unsigned int n)
 		ADD_ENEMY(CAR, 15);
 		ADD_ENEMY(TRICYCLE, 5);
 		ADD_ENEMY(REPAIR_ENEMY, 1);
-		waves.push_back(createWave(0.f, 1300, enemies));
+		waves.push_back(createWave(0.f, 1500, enemies));
+		enemies.clear();
+
+		ADD_ENEMY(CAR, 15);
+		ADD_ENEMY(TRICYCLE, 2);
+		ADD_ENEMY(SPIDER, 2);
+		ADD_ENEMY(SHIELD_ENEMY, 2);
+		ADD_ENEMY(REPAIR_ENEMY, 2);
+		ADD_ENEMY(TRACTOR, 5);
+		waves.push_back(createWave(0.f, 1250, enemies));
 		enemies.clear();
 
 		ADD_ENEMY(CAR, 10);
-		ADD_ENEMY(TRICYCLE, 3);
 		ADD_ENEMY(SPIDER, 3);
-		ADD_ENEMY(SHIELD_ENEMY, 1);
+		ADD_ENEMY(TRACTOR, 10);
+		ADD_ENEMY(SHIELD_ENEMY, 3);
 		ADD_ENEMY(REPAIR_ENEMY, 3);
-		ADD_ENEMY(TRACTOR, 3);
-		waves.push_back(createWave(0.f, 1000, enemies));
+		ADD_ENEMY(TANK, 3);
+		ADD_ENEMY(TRICYCLE, 30);
+		waves.push_back(createWave(0.0f, 1000, enemies));
 		enemies.clear();
 
-		ADD_ENEMY(CAR, 5);
-		ADD_ENEMY(SPIDER, 5);
-		ADD_ENEMY(TRACTOR, 5);
+		ADD_ENEMY(TANK, 10);
+		ADD_ENEMY(TRACTOR, 10);
+		ADD_ENEMY(CAR, 20);
 		ADD_ENEMY(SHIELD_ENEMY, 3);
-		ADD_ENEMY(REPAIR_ENEMY, 5);
-		ADD_ENEMY(TANK, 5);
-		ADD_ENEMY(TRICYCLE, 5);
-		waves.push_back(createWave(0.0f, 750, enemies));
+		ADD_ENEMY(REPAIR_ENEMY, 3);
+		ADD_ENEMY(SPIDER, 10);
+		ADD_ENEMY(TRICYCLE, 25);
+		waves.push_back(createWave(0.1f, 500, enemies));
 		enemies.clear();
 
 		ADD_ENEMY(TANK, 15);
-		ADD_ENEMY(TRACTOR, 10);
-		ADD_ENEMY(CAR, 10);
-		ADD_ENEMY(SHIELD_ENEMY, 5);
-		ADD_ENEMY(REPAIR_ENEMY, 10);
+		ADD_ENEMY(CAR, 30);
+		ADD_ENEMY(TRACTOR, 20);
+		ADD_ENEMY(SHIELD_ENEMY, 3);
+		ADD_ENEMY(REPAIR_ENEMY, 3);
 		ADD_ENEMY(SPIDER, 10);
-		ADD_ENEMY(TRICYCLE, 15);
+		ADD_ENEMY(TRICYCLE, 25);
 		waves.push_back(createWave(0.1f, 350, enemies));
-		enemies.clear();
-
-		ADD_ENEMY(TANK, 5);
-		ADD_ENEMY(CAR, 15);
-		ADD_ENEMY(TRACTOR, 15);
-		ADD_ENEMY(SHIELD_ENEMY, 10);
-		ADD_ENEMY(REPAIR_ENEMY, 15);
-		ADD_ENEMY(SPIDER, 15);
-		ADD_ENEMY(TRICYCLE, 20);
-		waves.push_back(createWave(0.2f, 200, enemies));
 		enemies.clear();
 	}
 		break;
