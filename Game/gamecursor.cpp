@@ -17,6 +17,7 @@ GameCursor::GameCursor()
 				 sf::Vector2i(GameOptions::CELL_SIZE,
 						  GameOptions::CELL_SIZE),
 				 2)
+	,m_state(NORMAL)
 	,m_inPanel(false)
 	,m_highlight(false)
 {
