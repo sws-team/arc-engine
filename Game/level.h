@@ -106,6 +106,7 @@ public:
 	void sellTower(Tower *tower);
 
 	bool isFinalWave() const;
+	void updateRadius();
 
 private:
 	void choose(const sf::Vector2i& cell, bool inPanel);
@@ -159,7 +160,6 @@ private:
 
 	sf::CircleShape currentTowerRadius;
 	sf::RectangleShape currentTowerRect;
-	void updateRadius();
 
 	sf::RectangleShape spawnRect;
 	sf::RectangleShape endRect;

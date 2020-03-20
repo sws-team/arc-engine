@@ -98,6 +98,7 @@ void Controller::eventFilter(sf::Event *event)
 		case sf::Keyboard::F:
 			Engine::Instance().options<GameOptions>()->level()->upgradeTower(Engine::Instance().options<GameOptions>()->level()->selectedTower());
 			Engine::Instance().options<GameOptions>()->level()->updateCurrentTower();
+			Engine::Instance().options<GameOptions>()->level()->updateRadius();
 			break;
 		case sf::Keyboard::Add:
 			Engine::Instance().options<GameOptions>()->camera()->zoomIn();
