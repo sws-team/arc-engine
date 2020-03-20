@@ -18,7 +18,7 @@
 #include "gameplatform.h"
 #include "gamemanagers.h"
 
-#include "json/json.h"
+#include <json/json.h>
 #include <tinyxml.h>
 
 #ifdef STEAM_API
