@@ -126,6 +126,11 @@ void Abilities::reset()
 	stopAblity->reset();
 }
 
+void Abilities::clear()
+{
+	acidAbility->clear();
+}
+
 BombAbility::BombAbility()
 	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), BOMB_ABILITY_COOLDOWN)
 {
@@ -234,7 +239,14 @@ void AcidAbility::checkDuration()
 		}
 	}
 	if (count >= VENOM_DAMAGE_COUNT)
-		finish();
+		clear();
+}
+
+void AcidAbility::clear()
+{
+	finish();
+	delete object;
+	object = nullptr;
 }
 
 IncreaseTowerDamageAbility::IncreaseTowerDamageAbility()

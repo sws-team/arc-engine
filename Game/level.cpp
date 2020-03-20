@@ -284,6 +284,7 @@ void Level::clear()
 		delete animation;
 	effects.clear();
 
+	abilities->clear();
 	smoke->clear();
 	mapExplosion->clear();
 	moneyDrain->clear();

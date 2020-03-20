@@ -73,6 +73,7 @@ public:
 	static constexpr int VENOM_ABLITY_COOLDOWN = 30000;
 
 	class GameObject *object;
+	void clear();
 private:
 	Timer abilityTimer;
 	int count;
@@ -132,6 +133,7 @@ public:
 	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 	void reset();
+	void clear();
 
 	AcidAbility *acidAbility;
 	BombAbility *bombAbility;
