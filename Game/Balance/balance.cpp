@@ -45,6 +45,25 @@ Balance::Balance() :
   ,drainValue(1.f)
   ,blindValue(0.3f)
   ,regressValue(0.3f)
+  ,selfhealInterval(2.5f)
+  ,selfhealValue(0.1f)
+  ,healInterval(3.f)
+  ,healValue(0.1f)
+  ,shieldInterval(10.f)
+  ,shieldValue(0.1f)
+  ,strongInterval(4.5f)
+  ,strongValue(0.05f)
+  ,teleportInterval(5.f)
+  ,spawnCount(2)
+  ,spawnCountOffset(5)
+  ,spawnInterval(7.f)
+  ,shutdownInterval(5.f)
+  ,shutdownDuration(10.f)
+  ,shutdownCells(10.f)
+  ,downgradeValue(0.5f)
+  ,downgradeCells(10.f)
+  ,downgradeDuration(9.f)
+  ,downgradeInterval(5.f)
 {
 
 }
@@ -101,6 +120,10 @@ void Balance::load()
 	//loadMaps
 	const Json::Value& mapsObject = obj[BalanceDef::MAPS_KEY];
 	loadMaps(mapsObject);
+
+	//load enemies abilities
+	const Json::Value& enemiesAbilitiesObject = obj[BalanceDef::ENEMIES_ABILITIES_KEY];
+	loadEnemiesAbilities(enemiesAbilitiesObject);
 }
 
 void Balance::loadTowers(const Json::Value &jsonTowers)
@@ -274,6 +297,29 @@ void Balance::loadMaps(const Json::Value &jsonMaps)
 
 		mapsStats.insert(std::pair<int, MapStats>(number, stats));
 	}
+}
+
+void Balance::loadEnemiesAbilities(const Json::Value &jsonEnemiesAbilities)
+{
+	selfhealInterval = jsonEnemiesAbilities[BalanceDef::SELFHEAL_INTERVAL_KEY].asFloat();
+	selfhealValue = jsonEnemiesAbilities[BalanceDef::SELFHEAL_VALUE_KEY].asFloat();
+	healInterval = jsonEnemiesAbilities[BalanceDef::HEAL_INTERVAL_KEY].asFloat();
+	healValue = jsonEnemiesAbilities[BalanceDef::HEAL_VALUE_KEY].asFloat();
+	shieldInterval = jsonEnemiesAbilities[BalanceDef::SHIELD_INTERVAL_KEY].asFloat();
+	shieldValue = jsonEnemiesAbilities[BalanceDef::SHIELD_VALUE_KEY].asFloat();
+	strongInterval = jsonEnemiesAbilities[BalanceDef::STRONG_INTERVAL_KEY].asFloat();
+	strongValue = jsonEnemiesAbilities[BalanceDef::STRONG_VALUE_KEY].asFloat();
+	teleportInterval = jsonEnemiesAbilities[BalanceDef::TELEPORT_INTERVAL_KEY].asFloat();
+	spawnCount = jsonEnemiesAbilities[BalanceDef::SPAWN_COUNT_KEY].asInt();
+	spawnCountOffset = jsonEnemiesAbilities[BalanceDef::SPAWN_COUNT_OFFSET_KEY].asInt();
+	spawnInterval = jsonEnemiesAbilities[BalanceDef::SPAWN_INTERVAL_KEY].asFloat();
+	shutdownInterval = jsonEnemiesAbilities[BalanceDef::SHUTDOWN_INTERVAL_KEY].asFloat();
+	shutdownDuration = jsonEnemiesAbilities[BalanceDef::SHUTDOWN_DURATION_KEY].asFloat();
+	shutdownCells = jsonEnemiesAbilities[BalanceDef::SHUTDOWN_CELLS_KEY].asFloat();
+	downgradeValue = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_VALUE_KEY].asFloat();
+	downgradeCells = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_CELLS_KEY].asFloat();
+	downgradeDuration = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_DURATION_KEY].asFloat();
+	downgradeInterval = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_INTERVAL_KEY].asFloat();
 }
 
 TowerStats Balance::getTowerStats(const TOWER_TYPES type) const
@@ -459,6 +505,101 @@ float Balance::getStopDuration() const
 float Balance::getStopCooldown() const
 {
 	return stopCooldown;
+}
+
+float Balance::getSelfhealInterval() const
+{
+	return selfhealInterval;
+}
+
+float Balance::getSelfhealValue() const
+{
+	return selfhealValue;
+}
+
+float Balance::getHealInterval() const
+{
+	return healInterval;
+}
+
+float Balance::getHealValue() const
+{
+	return healValue;
+}
+
+float Balance::getShieldInterval() const
+{
+	return shieldInterval;
+}
+
+float Balance::getShieldValue() const
+{
+	return shieldValue;
+}
+
+float Balance::getStrongInterval() const
+{
+	return strongInterval;
+}
+
+float Balance::getStrongValue() const
+{
+	return strongValue;
+}
+
+float Balance::getTeleportInterval() const
+{
+	return teleportInterval;
+}
+
+int Balance::getSpawnCount() const
+{
+	return spawnCount;
+}
+
+int Balance::getSpawnCountOffset() const
+{
+	return spawnCountOffset;
+}
+
+float Balance::getSpawnInterval() const
+{
+	return spawnInterval;
+}
+
+float Balance::getShutdownInterval() const
+{
+	return shutdownInterval;
+}
+
+float Balance::getShutdownDuration() const
+{
+	return shutdownDuration;
+}
+
+float Balance::getShutdownCells() const
+{
+	return shutdownCells;
+}
+
+float Balance::getDowngradeValue() const
+{
+	return downgradeValue;
+}
+
+float Balance::getDowngradeCells() const
+{
+	return downgradeCells;
+}
+
+float Balance::getDowngradeDuration() const
+{
+	return downgradeDuration;
+}
+
+float Balance::getDowngradeInterval() const
+{
+	return downgradeInterval;
 }
 
 MapStats Balance::getMapStats(int number) const

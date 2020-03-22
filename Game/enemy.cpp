@@ -627,7 +627,7 @@ bool AreaAbility::inArea(Enemy *enemy) const
 }
 
 HealNearAbility::HealNearAbility()
-	: AreaAbility(HEAL_INTERVAL)
+	: AreaAbility(Balance::Instance().getHealInterval())
 {
 
 }
@@ -640,12 +640,12 @@ void HealNearAbility::use()
 		if (enemy == owner)
 			continue;
 		if (inArea(enemy))
-			enemy->heal(enemy->getPureStats().health * 0.1f);
+			enemy->heal(enemy->getPureStats().health * Balance::Instance().getHealValue());
 	}
 }
 
 ShellNearAbility::ShellNearAbility()
-	: AreaAbility(SHELL_INTERVAL)
+	: AreaAbility(Balance::Instance().getShieldInterval())
 {
 
 }
@@ -656,23 +656,23 @@ void ShellNearAbility::use()
 	for(Enemy *enemy : enemies)
 	{
 		if (inArea(enemy))
-			enemy->protect(0.1f);
+			enemy->protect(Balance::Instance().getShieldValue());
 	}
 }
 
 SelfHealAbility::SelfHealAbility()
-	: EnemyAbility(SELF_HEAL_INTERVAL)
+	: EnemyAbility(Balance::Instance().getSelfhealInterval())
 {
 
 }
 
 void SelfHealAbility::use()
 {
-	owner->heal(owner->getPureStats().health * 0.1f);
+	owner->heal(owner->getPureStats().health * Balance::Instance().getSelfhealValue());
 }
 
 TeleportAbility::TeleportAbility()
-	: EnemyAbility(TELEPORT_INTERVAL)
+	: EnemyAbility(Balance::Instance().getTeleportInterval())
 	,m_state(READY)
 {
 
@@ -735,8 +735,8 @@ void TeleportAbility::use()
 
 
 
-TowerEffectAbility::TowerEffectAbility()
-	: EnemyAbility(SHUTDOWN_INTERVAL)
+TowerEffectAbility::TowerEffectAbility(float msec)
+	: EnemyAbility(msec)
 	,targetTower(nullptr)
 	,m_state(READY)
 	,projectile(nullptr)
@@ -796,7 +796,7 @@ void TowerEffectAbility::use()
 			const float a = fabs(center.x - towerCenter.x);
 			const float b = fabs(center.y - towerCenter.y);
 			const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
-			if (r > Engine::Instance().options<GameOptions>()->tileSize().x * TOWER_EFFECT_CELLS)
+			if (r > Engine::Instance().options<GameOptions>()->tileSize().x * info.cells)
 				continue;
 
 			const float currentWeight = Engine::Instance().options<GameOptions>()->panel()->getTowerSellCost(tower);
@@ -891,14 +891,16 @@ void TowerEffectAbility::getBack()
 }
 
 ShutdownTowerAbility::ShutdownTowerAbility()
+	: TowerEffectAbility(Balance::Instance().getShutdownInterval())
 {
 	info.enemyTextureId = GAME_TEXTURE::ENEMY_SPIDER;
 	info.animationSize = sf::Vector2i(GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE,
 								  GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::WEB;
 	info.projectileSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
-	info.duration = TOWER_DISABLED_DURATION;
+	info.duration = Balance::Instance().getShutdownDuration();
 	info.catchSound = GAME_SOUND::CATCH;
+	info.cells = Balance::Instance().getShutdownCells();
 }
 
 ShutdownTowerAbility::~ShutdownTowerAbility()
@@ -914,14 +916,16 @@ void ShutdownTowerAbility::effect(bool isActive)
 }
 
 DownTowerAbility::DownTowerAbility()
+	: TowerEffectAbility(Balance::Instance().getDowngradeInterval())
 {
 	info.enemyTextureId = GAME_TEXTURE::ENEMY_TRACTOR;
 	info.animationSize = sf::Vector2i(GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE,
 								  GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::DOWNGRADE_PROJECTILE;
 	info.projectileSize = sf::Vector2i(200, 16);
-	info.duration = TOWER_DOWNGRADED_DURATION;
+	info.duration = Balance::Instance().getDowngradeDuration();
 	info.catchSound = GAME_SOUND::CATCH;
+	info.cells = Balance::Instance().getDowngradeCells();
 }
 
 DownTowerAbility::~DownTowerAbility()
@@ -937,7 +941,7 @@ void DownTowerAbility::effect(bool isActive)
 }
 
 SpawnEnemy::SpawnEnemy()
-	: EnemyAbility(BEGIN_SPAWN_INTERVAL)
+	: EnemyAbility(Balance::Instance().getSpawnInterval())
 	,m_state(READY)
 {
 
@@ -958,7 +962,7 @@ void SpawnEnemy::use()
 		m_interval = 800;
 		m_state = SPAWN;
 		currentSpawnCount = 0;
-		spawnCount = SPAWN_COUNT + rand() % SPAWN_COUNT_OFFSET;
+		spawnCount = Balance::Instance().getSpawnCount() + rand() % Balance::Instance().getSpawnCountOffset();
 	}
 		break;
 	case SPAWN:
@@ -993,7 +997,7 @@ void SpawnEnemy::use()
 	case FINISHED:
 	{
 		owner->setStopped(false);
-		m_interval = BEGIN_SPAWN_INTERVAL;
+		m_interval = Balance::Instance().getSpawnInterval();
 		m_state = READY;
 	}
 		break;
@@ -1003,14 +1007,14 @@ void SpawnEnemy::use()
 }
 
 StrongAbility::StrongAbility()
-	: EnemyAbility(STRONG_INTERVAL)
+	: EnemyAbility(Balance::Instance().getStrongInterval())
 {
 
 }
 
 void StrongAbility::use()
 {
-	owner->protect(0.05f);
+	owner->protect(Balance::Instance().getStrongValue());
 }
 
 RageAbility::RageAbility()

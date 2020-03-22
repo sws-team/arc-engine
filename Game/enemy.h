@@ -148,7 +148,6 @@ public:
 	HealNearAbility();
 protected:
 	void use() override;
-	constexpr static float HEAL_INTERVAL = 3000;
 };
 
 class ShellNearAbility : public AreaAbility
@@ -157,7 +156,6 @@ public:
 	ShellNearAbility();
 protected:
 	void use() override;
-	constexpr static float SHELL_INTERVAL = 10000;
 };
 
 class SelfHealAbility : public EnemyAbility
@@ -166,7 +164,6 @@ public:
 	SelfHealAbility();
 protected:
 	void use() override;
-	constexpr static float SELF_HEAL_INTERVAL = 2500;
 };
 
 class TeleportAbility : public EnemyAbility
@@ -184,7 +181,6 @@ private:
 		FINISH,
 	};
 	STATES m_state;
-	constexpr static float TELEPORT_INTERVAL = 5000;
 	constexpr static int TELEPORT_DISAPPEAR_ROW = 1;
 	constexpr static int TELEPORT_APPEAR_ROW = 2;
 };
@@ -192,7 +188,7 @@ private:
 class TowerEffectAbility : public EnemyAbility
 {
 public:
-	TowerEffectAbility();
+	TowerEffectAbility(float msec);
 	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 protected:
@@ -208,6 +204,7 @@ protected:
 		sf::Vector2i projectileSize;
 		float duration;
 		SoundType catchSound;
+		float cells;
 	};
 	AbilityInfo info;
 private:
@@ -223,11 +220,9 @@ private:
 	Timer moveTimer;
 	GameObject *projectile;
 	float m_angle;
-	constexpr static float SHUTDOWN_INTERVAL = 5000;
 	void getBack();
 	float reflection;
 	constexpr static float REFLECTION_MODIFIER = 0.5f;
-	constexpr static int TOWER_EFFECT_CELLS = 10;
 };
 
 class ShutdownTowerAbility : public TowerEffectAbility
@@ -236,7 +231,6 @@ public:
 	ShutdownTowerAbility();
 	~ShutdownTowerAbility();
 
-	constexpr static float TOWER_DISABLED_DURATION = 10000;
 protected:
 	void effect(bool isActive) override;
 };
@@ -247,8 +241,6 @@ public:
 	DownTowerAbility();
 	~DownTowerAbility();
 
-	constexpr static float DOWNGRADE_VALUE = 0.5f;
-	constexpr static float TOWER_DOWNGRADED_DURATION = 9000;
 protected:
 	void effect(bool isActive) override;
 };
@@ -268,10 +260,7 @@ private:
 		FINISHED,
 	};
 	STATES m_state;
-	constexpr static float BEGIN_SPAWN_INTERVAL = 7000;
 	constexpr static float SPAWN_INTERVAL = 700;
-	constexpr static int SPAWN_COUNT = 2;
-	constexpr static int SPAWN_COUNT_OFFSET = 5;
 	int currentSpawnCount;
 	int spawnCount;
 	constexpr static float ACTIVATE_SPAWN_ROW = 1;
@@ -285,7 +274,6 @@ public:
 
 protected:
 	void use() override;
-	constexpr static float STRONG_INTERVAL = 4500;
 };
 
 class RageAbility : public EnemyAbility

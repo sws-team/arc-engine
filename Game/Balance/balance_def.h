@@ -13,6 +13,7 @@ const std::string OTHERS_KEY = "others";
 const std::string LIMITS_KEY = "limits";
 const std::string ABILITIES_KEY = "abilities";
 const std::string MAPS_KEY = "maps";
+const std::string ENEMIES_ABILITIES_KEY = "enemies_abilities";
 
 //towers
 const std::string BASE_KEY = "base";
@@ -112,6 +113,28 @@ const std::string MAP_EFFECT_ENABLED_KEY = "map_effect_enabled";
 const std::string MAP_EFFECT_DURATION_KEY = "map_effect_duration";
 const std::string MAP_EFFECT_TIME_KEY = "map_effect_time";
 const std::string MAP_EFFECT_COUNT_KEY = "map_effect_count";
+
+//enemies abilities
+const std::string SELFHEAL_INTERVAL_KEY = "selfheal_interval";
+const std::string SELFHEAL_VALUE_KEY = "selfheal_value";
+const std::string HEAL_INTERVAL_KEY = "heal_interval";
+const std::string HEAL_VALUE_KEY = "heal_value";
+const std::string SHIELD_INTERVAL_KEY = "shield_interval";
+const std::string SHIELD_VALUE_KEY = "shield_value";
+const std::string STRONG_INTERVAL_KEY = "strong_interval";
+const std::string STRONG_VALUE_KEY = "strong_value";
+const std::string TELEPORT_INTERVAL_KEY = "teleport_interval";
+const std::string SPAWN_COUNT_KEY = "spawn_count";
+const std::string SPAWN_COUNT_OFFSET_KEY = "spawn_count_offset";
+const std::string SPAWN_INTERVAL_KEY = "spawn_interval";
+const std::string SHUTDOWN_INTERVAL_KEY = "shutdown_interval";
+const std::string SHUTDOWN_DURATION_KEY = "shutdown_duration";
+const std::string SHUTDOWN_CELLS_KEY = "shutdown_cells";
+const std::string DOWNGRADE_VALUE_KEY = "downgrade_value";
+const std::string DOWNGRADE_CELLS_KEY = "downgrade_cells";
+const std::string DOWNGRADE_DURATION_KEY = "downgrade_durartion";
+const std::string DOWNGRADE_INTERVAL_KEY = "downgrade_interval";
+
 };
 
 #endif // BALANCE_DEF_H

@@ -197,9 +197,9 @@ void Tower::setDowngrade(bool isDowngrade)
 	m_downgraded = isDowngrade;
 	if (isDowngrade)
 		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::DOWN_EFFECT, this->pos(),
-											 sf::Vector2i(GameOptions::CELL_SIZE,
-													  GameOptions::CELL_SIZE),
-											 DownTowerAbility::TOWER_DOWNGRADED_DURATION/4, 4, 0);
+																		 sf::Vector2i(GameOptions::CELL_SIZE,
+																					  GameOptions::CELL_SIZE),
+																		 Balance::Instance().getDowngradeDuration()/4, 4, 0);
 }
 
 bool Tower::isDowngraded() const
@@ -216,7 +216,7 @@ float Tower::actualRadius() const
 
 float Tower::actualDamage() const
 {
-	float damage = m_downgraded ? m_stats.damage * DownTowerAbility::DOWNGRADE_VALUE : m_stats.damage;
+	float damage = m_downgraded ? m_stats.damage * Balance::Instance().getDowngradeValue() : m_stats.damage;
 	damage = m_regressed ? damage * Balance::Instance().getRegressValue() : damage;
 	return damage;
 }
@@ -232,9 +232,9 @@ void Tower::setActive(bool isActive)
 	m_isActive = isActive;
 	if (!isActive)
 		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::WEB, this->pos(),
-											 sf::Vector2i(GameOptions::CELL_SIZE,
-													  GameOptions::CELL_SIZE),
-											 ShutdownTowerAbility::TOWER_DISABLED_DURATION/4, 4, 0);
+																		 sf::Vector2i(GameOptions::CELL_SIZE,
+																					  GameOptions::CELL_SIZE),
+																		 Balance::Instance().getShutdownDuration()/4, 4, 0);
 }
 
 int Tower::kills() const

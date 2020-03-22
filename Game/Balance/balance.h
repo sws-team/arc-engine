@@ -111,6 +111,27 @@ public:
 	float getStopDuration() const;
 	float getStopCooldown() const;
 
+	//enemies abilities
+	float getSelfhealInterval() const;
+	float getSelfhealValue() const;
+	float getHealInterval() const;
+	float getHealValue() const;
+	float getShieldInterval() const;
+	float getShieldValue() const;
+	float getStrongInterval() const;
+	float getStrongValue() const;
+	float getTeleportInterval() const;
+	int getSpawnCount() const;
+	int getSpawnCountOffset() const;
+	float getSpawnInterval() const;
+	float getShutdownInterval() const;
+	float getShutdownDuration() const;
+	float getShutdownCells() const;
+	float getDowngradeValue() const;
+	float getDowngradeCells() const;
+	float getDowngradeDuration() const;
+	float getDowngradeInterval() const;
+
 	//maps
 	MapStats getMapStats(int number) const;
 
@@ -162,7 +183,26 @@ private:
 	float stopCooldown;
 	//maps
 	std::map<int, MapStats> mapsStats;
-
+	//enemies abilities
+	float selfhealInterval;
+	float selfhealValue;
+	float healInterval;
+	float healValue;
+	float shieldInterval;
+	float shieldValue;
+	float strongInterval;
+	float strongValue;
+	float teleportInterval;
+	int spawnCount;
+	int spawnCountOffset;
+	float spawnInterval;
+	float shutdownInterval;
+	float shutdownDuration;
+	float shutdownCells;
+	float downgradeValue;
+	float downgradeCells;
+	float downgradeDuration;
+	float downgradeInterval;
 
 	void loadTowers(const Json::Value& jsonTowers);
 	void loadTower(const TOWER_TYPES type, const Json::Value& jsonTower);
@@ -175,6 +215,7 @@ private:
 	void loadAbilities(const Json::Value& jsonAbilities);
 
 	void loadMaps(const Json::Value& jsonMaps);
+	void loadEnemiesAbilities(const Json::Value& jsonEnemiesAbilities);
 };
 
 #endif // BALANCE_H
