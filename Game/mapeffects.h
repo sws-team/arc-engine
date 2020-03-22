@@ -95,7 +95,6 @@ class TowersRegress : public MapEffect
 	//down atk sp or dmg
 public:
 	TowersRegress();
-	constexpr static float REGRESS_VALUE = 0.3f;
 
 	void draw(sf::RenderTarget *const target) override;
 	void update() override;

@@ -2,16 +2,8 @@
 #define ENEMY_H
 
 #include "gameobject.h"
-#include "Game/leveldef.h"
 #include "enginedef.h"
-
-struct EnemyStats
-{
-	float speed;
-	float health;
-	float damage;
-	float reflection;
-};
+#include "Balance/balance.h"
 
 class EnemyAbility;
 
@@ -110,13 +102,8 @@ private:
 	EnemyAbility *ability;
 	bool m_stopped;
 	bool m_visible;
-
-
 	bool m_burned;
 	Timer burnTimer;
-	constexpr static float BURN_DURATION = 5000;
-	constexpr static float BURN_ATTACK_SPEED = 400;
-	constexpr static float BURN_DAMAGE = 20;
 	Timer burnAttack;
 	GameObject *burnAnimation;
 public:

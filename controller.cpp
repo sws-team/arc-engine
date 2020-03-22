@@ -8,16 +8,9 @@
 #include "managers.h"
 #include "gameoptions.h"
 
-#ifdef STEAM_API
-#include "steam_api.h"
-#endif
-
 Controller::Controller()
 {
-#ifdef STEAM_API
-	p_screenShoots = SteamScreenshots();
-	p_screenShoots->HookScreenshots(true);
-#endif
+
 }
 
 void Controller::eventFilter(sf::Event *event)
@@ -163,11 +156,6 @@ void Controller::eventFilter(sf::Event *event)
 		case sf::Keyboard::Delete:
 			Engine::Instance().options<GameOptions>()->level()->sellTower(Engine::Instance().options<GameOptions>()->level()->selectedTower());
 			break;
-#ifdef STEAM_API
-		case sf::Keyboard::F12:
-			p_screenShoots->TriggerScreenshot();
-			break;
-#endif
 		default:
 			break;
 		}

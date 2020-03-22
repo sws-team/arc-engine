@@ -1,0 +1,468 @@
+#include "balance.h"
+#include "balance_def.h"
+#include "engine.h"
+#include "managers.h"
+#include "gamemanagers.h"
+
+#include <json/json.h>
+
+#define LOAD_BALANCE
+
+TowerStats::TowerStats()
+{
+
+}
+
+TowerStats::TowerStats(float damage,
+					   float attackSpeed,
+					   float radius,
+					   float projectileSpeed,
+					   float cost)
+	: damage(damage)
+	,attackSpeed(attackSpeed)
+	,radius(radius)
+	,projectileSpeed(projectileSpeed)
+	,cost(cost)
+{
+
+}
+
+Balance::Balance() :
+	towerUpgradeGain(0.25f)
+  ,energyGain(10.f)
+  ,powerTowerCostOffset(10.f)
+  ,blastCells(6.f)
+  ,blastCount(5)
+  ,baseTowerPenetration(0.00001f)
+  ,freezeTowerValue(0.5f)
+  ,freezeTowerCells(2)
+  ,freezeTowerDuration(2.f * EngineDefs::MSEC)
+  ,laserTowerMaxExtraTargets(4)
+  ,rocketTowerCells(3)
+  ,burnAttackSpeed(0.4f * EngineDefs::MSEC)
+  ,burnDamage(20.f)
+  ,burnDuration(5.f * EngineDefs::MSEC)
+  ,drainValue(1.f)
+  ,blindValue(0.3f)
+  ,regressValue(0.3f)
+{
+
+}
+
+Balance &Balance::Instance()
+{
+	static Balance instance;
+	return instance;
+}
+
+void Balance::load()
+{
+#ifdef LOAD_BALANCE
+	std::string fileName = "balance.bal";
+	std::ifstream file;
+	file.open(fileName);
+	if (!file.is_open())
+		return;
+
+	const std::string data((std::istreambuf_iterator<char>(file)),
+							std::istreambuf_iterator<char>());
+#else
+	const FilesManager::OtherFile file = Engine::Instance().filesManager()->getData(GAME_FILES::BALANCE);
+	const std::string data = std::string(static_cast<char*>(file.data));
+#endif
+	Json::Reader reader;
+	Json::Value obj;
+	if (!reader.parse(data, obj))
+	{
+		std::cout << "Can't read balance" << std::endl;
+		return;
+	}
+
+	//load towers
+	const Json::Value& towersObject = obj[BalanceDef::TOWERS_KEY];
+	loadTowers(towersObject);
+
+	//load enemies
+	const Json::Value& enemiesObject = obj[BalanceDef::ENEMIES_KEY];
+	loadEnemies(enemiesObject);
+
+	//load limits
+	const Json::Value& limitsObject = obj[BalanceDef::LIMITS_KEY];
+	loadLimits(limitsObject);
+
+	//load others
+	const Json::Value& othersObject = obj[BalanceDef::OTHERS_KEY];
+	loadOthers(othersObject);
+
+	//load abilities
+	const Json::Value& abilitiesObject = obj[BalanceDef::ABILITIES_KEY];
+	loadAbilities(abilitiesObject);
+
+	//loadMaps
+	const Json::Value& mapsObject = obj[BalanceDef::MAPS_KEY];
+	loadMaps(mapsObject);
+}
+
+void Balance::loadTowers(const Json::Value &jsonTowers)
+{
+	towersStats.clear();
+	loadTower(TOWER_TYPES::BASE, jsonTowers[BalanceDef::BASE_KEY]);
+	loadTower(TOWER_TYPES::FREEZE, jsonTowers[BalanceDef::FREEZE_KEY]);
+	loadTower(TOWER_TYPES::POWER, jsonTowers[BalanceDef::POWER_KEY]);
+	loadTower(TOWER_TYPES::ROCKET, jsonTowers[BalanceDef::ROCKET_KEY]);
+	loadTower(TOWER_TYPES::LASER, jsonTowers[BalanceDef::LASER_KEY]);
+	loadTower(TOWER_TYPES::IMPROVED, jsonTowers[BalanceDef::IMPROVED_KEY]);
+}
+
+void Balance::loadTower(const TOWER_TYPES type, const Json::Value &jsonTower)
+{
+	TowerStats stats;
+	stats.damage = jsonTower[BalanceDef::DAMAGE_KEY].asFloat();
+	stats.attackSpeed = jsonTower[BalanceDef::ATTACK_SPEED_KEY].asFloat();
+	stats.radius = jsonTower[BalanceDef::RADIUS_KEY].asFloat();
+	stats.projectileSpeed = jsonTower[BalanceDef::PROJECTILE_SPEED_KEY].asFloat();
+	stats.cost = jsonTower[BalanceDef::COST_KEY].asFloat();
+	towersStats.insert(std::pair<TOWER_TYPES, TowerStats>(type, stats));
+}
+
+void Balance::loadEnemies(const Json::Value &jsonEnemies)
+{
+	enemiesStats.clear();
+	loadEnemy(ENEMY_TYPES::INFANTRY, jsonEnemies[BalanceDef::INFANTRY_KEY]);
+	loadEnemy(ENEMY_TYPES::CAR, jsonEnemies[BalanceDef::CAR_KEY]);
+	loadEnemy(ENEMY_TYPES::TRICYCLE, jsonEnemies[BalanceDef::TRICYCLE_KEY]);
+	loadEnemy(ENEMY_TYPES::SMALL_NEXT, jsonEnemies[BalanceDef::SMALL_KEY]);
+	loadEnemy(ENEMY_TYPES::SELFHEAL_ENEMY, jsonEnemies[BalanceDef::SELFHEAL_KEY]);
+	loadEnemy(ENEMY_TYPES::TRACTOR, jsonEnemies[BalanceDef::TRACTOR_KEY]);
+	loadEnemy(ENEMY_TYPES::ANOTHER_ENEMY, jsonEnemies[BalanceDef::ANOTHER_KEY]);
+	loadEnemy(ENEMY_TYPES::TANK, jsonEnemies[BalanceDef::TANK_KEY]);
+	loadEnemy(ENEMY_TYPES::SPIDER, jsonEnemies[BalanceDef::SPIDER_KEY]);
+	loadEnemy(ENEMY_TYPES::MID_FAST, jsonEnemies[BalanceDef::MID_KEY]);
+	loadEnemy(ENEMY_TYPES::REPAIR_ENEMY, jsonEnemies[BalanceDef::REPAIR_KEY]);
+	loadEnemy(ENEMY_TYPES::SHIELD_ENEMY, jsonEnemies[BalanceDef::SHIELD_KEY]);
+	loadEnemy(ENEMY_TYPES::TELEPORT_ENEMY, jsonEnemies[BalanceDef::TELEPORT_KEY]);
+	loadEnemy(ENEMY_TYPES::BIG_SLOW, jsonEnemies[BalanceDef::BIG_KEY]);
+	loadEnemy(ENEMY_TYPES::BIG_TANK, jsonEnemies[BalanceDef::BIG_TANK_KEY]);
+	loadEnemy(ENEMY_TYPES::SPAWN_ENEMY, jsonEnemies[BalanceDef::SPAWN_KEY]);
+}
+
+void Balance::loadEnemy(const ENEMY_TYPES type, const Json::Value &jsonEnemy)
+{
+	EnemyStats stats;
+	stats.speed = jsonEnemy[BalanceDef::SPEED_KEY].asFloat();
+	stats.health = jsonEnemy[BalanceDef::HEALTH_KEY].asFloat();
+	stats.damage = jsonEnemy[BalanceDef::LOSS_KEY].asFloat();
+	stats.reflection = jsonEnemy[BalanceDef::REFLECTION_KEY].asFloat();
+	enemiesStats.insert(std::pair<ENEMY_TYPES, EnemyStats>(type, stats));
+}
+
+void Balance::loadLimits(const Json::Value &jsonLimits)
+{
+	const int BASE_MAX = jsonLimits[BalanceDef::BASE_LIMIT_KEY].asInt();
+	towerLimits.insert(std::pair<TOWER_TYPES, int>(BASE, BASE_MAX));
+
+	const int FREEZE_MAX = jsonLimits[BalanceDef::FREEZE_LIMIT_KEY].asInt();
+	towerLimits.insert(std::pair<TOWER_TYPES, int>(FREEZE, FREEZE_MAX));
+
+	const int POWER_MAX = jsonLimits[BalanceDef::POWER_LIMIT_KEY].asInt();
+	towerLimits.insert(std::pair<TOWER_TYPES, int>(POWER, POWER_MAX));
+
+	const int ROCKET_MAX = jsonLimits[BalanceDef::ROCKET_LIMIT_KEY].asInt();
+	towerLimits.insert(std::pair<TOWER_TYPES, int>(ROCKET, ROCKET_MAX));
+
+	const int LASER_MAX = jsonLimits[BalanceDef::LASER_LIMIT_KEY].asInt();
+	towerLimits.insert(std::pair<TOWER_TYPES, int>(LASER, LASER_MAX));
+
+	const int IMPROVED_MAX = jsonLimits[BalanceDef::IMPROVED_LIMIT_KEY].asInt();
+	towerLimits.insert(std::pair<TOWER_TYPES, int>(IMPROVED, IMPROVED_MAX));
+}
+
+void Balance::loadOthers(const Json::Value &jsonOthers)
+{
+	towerUpgradeGain = jsonOthers[BalanceDef::UPGRADE_GAIN_KEY].asFloat();
+	energyGain = jsonOthers[BalanceDef::ENERGY_GAIN_KEY].asFloat();
+	powerTowerCostOffset = jsonOthers[BalanceDef::POWER_TOWER_COST_OFFSET_KEY].asFloat();
+	blastCells = jsonOthers[BalanceDef::BLAST_CELLS_KEY].asFloat();
+	blastCount = jsonOthers[BalanceDef::BLAST_COUNT_KEY].asInt();
+	baseTowerPenetration = jsonOthers[BalanceDef::BASE_TOWER_PENETRATION_KEY].asFloat();
+	freezeTowerValue = jsonOthers[BalanceDef::FREEZE_TOWER_VALUE_KEY].asFloat();
+	freezeTowerCells = jsonOthers[BalanceDef::FREEZE_TOWER_CELLS_KEY].asFloat();
+	freezeTowerDuration = jsonOthers[BalanceDef::FREEZE_TOWER_DURATION_KEY].asFloat() * EngineDefs::MSEC;
+	laserTowerMaxExtraTargets = jsonOthers[BalanceDef::LASER_TOWER_MAX_EXTRA_TARGETS_KEY].asInt();
+	rocketTowerCells = jsonOthers[BalanceDef::ROCKET_TOWER_CELLS_KEY].asFloat();
+	burnAttackSpeed = jsonOthers[BalanceDef::BURN_ATTACK_SPEED_KEY].asFloat() * EngineDefs::MSEC;
+	burnDamage = jsonOthers[BalanceDef::BURN_DAMAGE_KEY].asFloat();
+	burnDuration = jsonOthers[BalanceDef::BURN_DURATION_KEY].asFloat() * EngineDefs::MSEC;
+	drainValue = jsonOthers[BalanceDef::DRAIN_VALUE_KEY].asFloat();
+	blindValue = jsonOthers[BalanceDef::BLIND_VALUE_KEY].asFloat();
+	regressValue = jsonOthers[BalanceDef::REGRESS_VALUE_KEY].asFloat();
+}
+
+void Balance::loadAbilities(const Json::Value &jsonAbilities)
+{
+	bombDamage = jsonAbilities[BalanceDef::BOMB_DAMAGE_KEY].asFloat();
+	bombCooldown = jsonAbilities[BalanceDef::BOMB_COOLDOWN_KEY].asFloat();
+	freezeValue = jsonAbilities[BalanceDef::FREEZE_VALUE_KEY].asFloat();
+	freezeDuration = jsonAbilities[BalanceDef::FREEZE_DURATION_KEY].asFloat();
+	freezeCooldown = jsonAbilities[BalanceDef::FREEZE_COOLDOWN_KEY].asFloat();
+	acidDamage = jsonAbilities[BalanceDef::ACID_DAMAGE_KEY].asFloat();
+	acidAttackSpeed = jsonAbilities[BalanceDef::ACID_ATTACK_SPEED_KEY].asFloat();
+	acidCount = jsonAbilities[BalanceDef::ACID_COUNT_KEY].asInt();
+	acidCooldown = jsonAbilities[BalanceDef::ACID_COOLDOWN_KEY].asFloat();
+	increaseAttackSpeedDuration = jsonAbilities[BalanceDef::INCREASE_ATTACK_SPEED_DURATION_KEY].asFloat();
+	increaseAttackSpeedValue = jsonAbilities[BalanceDef::INCREASE_ATTACK_SPEED_VALUE_KEY].asFloat();
+	increaseAttackSpeedCooldown = jsonAbilities[BalanceDef::INCREASE_ATTACK_SPEED_COOLDOWN_KEY].asFloat();
+	increaseDamageDuration = jsonAbilities[BalanceDef::INCREASE_DAMAGE_DURATION_KEY].asFloat();
+	increaseDamageValue = jsonAbilities[BalanceDef::INCREASE_DAMAGE_VALUE_KEY].asFloat();
+	increaseDamageCooldown = jsonAbilities[BalanceDef::INCREASE_DAMAGE_COOLDOWN_KEY].asFloat();
+	stopDuration = jsonAbilities[BalanceDef::STOP_DURATION_KEY].asFloat();
+	stopCooldown = jsonAbilities[BalanceDef::STOP_COOLDOWN_KEY].asFloat();
+}
+
+void Balance::loadMaps(const Json::Value &jsonMaps)
+{
+	mapsStats.clear();
+	for (int number = 1; number <= 15; ++number)
+	{
+		MapStats stats;
+
+		const Json::Value& mapObject = jsonMaps[BalanceDef::MAP_KEY + std::to_string(number)];
+
+		stats.life = mapObject[BalanceDef::MAP_LIFE_KEY].asDouble();
+		stats.money = mapObject[BalanceDef::MAP_MONEY_KEY].asDouble();
+
+		//drain
+		{
+			const Json::Value& drainObject = mapObject[BalanceDef::MAP_DRAIN_KEY];
+			stats.moneyDrain.duration = drainObject[BalanceDef::MAP_EFFECT_DURATION_KEY].asDouble();
+			stats.moneyDrain.time = drainObject[BalanceDef::MAP_EFFECT_TIME_KEY].asDouble();
+			stats.moneyDrain.count = drainObject[BalanceDef::MAP_EFFECT_COUNT_KEY].asInt();
+			stats.moneyDrain.enabled = drainObject[BalanceDef::MAP_EFFECT_ENABLED_KEY].asBool();
+		}
+		//explosions
+		{
+			const Json::Value& explosionsObject = mapObject[BalanceDef::MAP_EXPLOSIONS_KEY];
+			stats.explosions.duration = explosionsObject[BalanceDef::MAP_EFFECT_DURATION_KEY].asDouble();
+			stats.explosions.time = explosionsObject[BalanceDef::MAP_EFFECT_TIME_KEY].asDouble();
+			stats.explosions.count = explosionsObject[BalanceDef::MAP_EFFECT_COUNT_KEY].asInt();
+			stats.explosions.enabled = explosionsObject[BalanceDef::MAP_EFFECT_ENABLED_KEY].asBool();
+		}
+		//regress
+		{
+			const Json::Value& regressObject = mapObject[BalanceDef::MAP_REGRESS_KEY];
+			stats.regress.duration = regressObject[BalanceDef::MAP_EFFECT_DURATION_KEY].asDouble();
+			stats.regress.time = regressObject[BalanceDef::MAP_EFFECT_TIME_KEY].asDouble();
+			stats.regress.count = regressObject[BalanceDef::MAP_EFFECT_COUNT_KEY].asInt();
+			stats.regress.enabled = regressObject[BalanceDef::MAP_EFFECT_ENABLED_KEY].asBool();
+		}
+		//smoke
+		{
+			const Json::Value& smokeObject = mapObject[BalanceDef::MAP_SMOKE_KEY];
+			stats.smoke.duration = smokeObject[BalanceDef::MAP_EFFECT_DURATION_KEY].asDouble();
+			stats.smoke.time = smokeObject[BalanceDef::MAP_EFFECT_TIME_KEY].asDouble();
+			stats.smoke.count = smokeObject[BalanceDef::MAP_EFFECT_COUNT_KEY].asInt();
+			stats.smoke.enabled = smokeObject[BalanceDef::MAP_EFFECT_ENABLED_KEY].asBool();
+		}
+		stats.smoke.time *= EngineDefs::MSEC;
+		stats.smoke.duration *= EngineDefs::MSEC;
+		stats.regress.time *= EngineDefs::MSEC;
+		stats.regress.duration *= EngineDefs::MSEC;
+		stats.moneyDrain.time *= EngineDefs::MSEC;
+		stats.moneyDrain.duration *= EngineDefs::MSEC;
+		stats.explosions.time *= EngineDefs::MSEC;
+		stats.explosions.duration *= EngineDefs::MSEC;
+
+		mapsStats.insert(std::pair<int, MapStats>(number, stats));
+	}
+}
+
+TowerStats Balance::getTowerStats(const TOWER_TYPES type) const
+{
+	return towersStats.at(type);
+}
+
+EnemyStats Balance::getEnemyStats(const ENEMY_TYPES type) const
+{
+	return enemiesStats.at(type);
+}
+
+int Balance::getTowerLimit(const TOWER_TYPES type) const
+{
+	return towerLimits.at(type);
+}
+
+float Balance::getTowerUpgradeGain() const
+{
+	return towerUpgradeGain;
+}
+
+float Balance::getEnergyGain() const
+{
+	return energyGain;
+}
+
+float Balance::getPowerTowerCostOffset() const
+{
+	return powerTowerCostOffset;
+}
+
+float Balance::getBlastCells() const
+{
+	return blastCells;
+}
+
+int Balance::getBlastCount() const
+{
+	return blastCount;
+}
+
+float Balance::getbaseTowerPenetration() const
+{
+	return baseTowerPenetration;
+}
+
+float Balance::getFreezeTowerValue() const
+{
+	return freezeTowerValue;
+}
+
+float Balance::getFreezeTowerCells() const
+{
+	return freezeTowerCells;
+}
+
+float Balance::getFreezeTowerDuration() const
+{
+	return freezeTowerDuration;
+}
+
+int Balance::getLaserTowerMaxExtraTargets() const
+{
+	return laserTowerMaxExtraTargets;
+}
+
+float Balance::getRocketTowerCells() const
+{
+	return rocketTowerCells;
+}
+
+float Balance::getBurnAttackSpeed() const
+{
+	return burnAttackSpeed;
+}
+
+float Balance::getBurnDamage() const
+{
+	return burnDamage;
+}
+
+float Balance::getBurnDuration() const
+{
+	return burnDuration;
+}
+
+float Balance::getDrainValue() const
+{
+	return drainValue;
+}
+
+float Balance::getBlindValue() const
+{
+	return blindValue;
+}
+
+float Balance::getRegressValue() const
+{
+	return regressValue;
+}
+
+float Balance::getBombDamage() const
+{
+	return bombDamage;
+}
+
+float Balance::getBombCooldown() const
+{
+	return bombCooldown;
+}
+
+float Balance::getFreezeValue() const
+{
+	return freezeValue;
+}
+
+float Balance::getFreezeDuration() const
+{
+	return freezeDuration;
+}
+
+float Balance::getFreezeCooldown() const
+{
+	return freezeCooldown;
+}
+
+float Balance::getAcidDamage() const
+{
+	return acidDamage;
+}
+
+float Balance::getAcidAttackSpeed() const
+{
+	return acidAttackSpeed;
+}
+
+int Balance::getAcidCount() const
+{
+	return acidCount;
+}
+
+float Balance::getAcidCooldown() const
+{
+	return acidCooldown;
+}
+
+float Balance::getIncreaseAttackSpeedDuration() const
+{
+	return increaseAttackSpeedDuration;
+}
+
+float Balance::getIncreaseAttackSpeedValue() const
+{
+	return increaseAttackSpeedValue;
+}
+
+float Balance::getIncreaseAttackSpeedCooldown() const
+{
+	return increaseAttackSpeedCooldown;
+}
+
+float Balance::getIncreaseDamageDuration() const
+{
+	return increaseDamageDuration;
+}
+
+float Balance::getIncreaseDamageValue() const
+{
+	return increaseDamageValue;
+}
+
+float Balance::getIncreaseDamageCooldown() const
+{
+	return increaseDamageCooldown;
+}
+
+float Balance::getStopDuration() const
+{
+	return stopDuration;
+}
+
+float Balance::getStopCooldown() const
+{
+	return stopCooldown;
+}
+
+MapStats Balance::getMapStats(int number) const
+{
+	return mapsStats.at(number);
+}
+

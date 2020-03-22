@@ -39,7 +39,6 @@ private:
 	sf::Shader* createShader(OBJECTS::SHADER_TYPES type);
 
 	sf::Clock iTime;
-
 };
 
 #endif // LEVELOBJECT_H

@@ -219,7 +219,7 @@ void Enemy::update()
 	}
 	if (m_burned)
 	{
-		if (burnTimer.check(BURN_DURATION))
+		if (burnTimer.check(Balance::Instance().getBurnDuration()))
 			m_burned = false;
 	}
 	if (m_burned)
@@ -229,8 +229,8 @@ void Enemy::update()
 		const sf::Vector2f posOffset = sf::Vector2f(Engine::Instance().options<GameOptions>()->mapTileSize().x/2 * x,
 											Engine::Instance().options<GameOptions>()->mapTileSize().y/2 * y);
 		burnAnimation->setPos(this->pos() + posOffset);
-		if (burnAttack.check(BURN_ATTACK_SPEED))
-			hit(BURN_DAMAGE);
+		if (burnAttack.check(Balance::Instance().getBurnAttackSpeed()))
+			hit(Balance::Instance().getBurnDamage());
 		burnAnimation->update();
 	}
 	GameObject::update();
@@ -409,11 +409,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 {
 	EnemyInfo::ABILITY_TYPE abilityType = EnemyInfo::NONE;
 
-	EnemyStats stats;
-	stats.speed = 0.f;
-	stats.health = 0.f;
-	stats.damage = 0.f;
-	stats.reflection = 0.f;
+	const EnemyStats stats = Balance::Instance().getEnemyStats(type);
 
 	float animationSpeed = 200;
 	float frameCount = 4;
@@ -426,56 +422,35 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	//small
 	case INFANTRY:
 		texture_id = GAME_TEXTURE::ENEMY_INFANTRY;
-		stats.health = 95.f;
-		stats.speed = 75.f;
-		stats.damage = 7.5f;
 		size.x = 1;
 		size.y = 1;
 		break;
 	case CAR:
 		texture_id = GAME_TEXTURE::ENEMY_CAR;
-		stats.health = 200.f;
-		stats.speed = 30.f;
-		stats.damage = 10.f;
 		size.x = 1;
 		size.y = 1;
-		stats.reflection = 0.1f;
 		animationSpeed = 50;
 		abilityType = EnemyInfo::STRONG;
 		break;
 	case TRICYCLE:
 		texture_id = GAME_TEXTURE::ENEMY_TRICYCLE;
-		stats.health = 150.f;
-		stats.speed = 15.f;
-		stats.damage = 5.f;
 		size.x = 1;
 		size.y = 1;
-		stats.reflection = 0.05f;
 		break;
 	case SMALL_NEXT:
 		texture_id = GAME_TEXTURE::ENEMY_ANT;
-		stats.health = 45.f;
-		stats.speed = 70.f;
-		stats.damage = 5.f;
 		size.x = 1;
 		size.y = 1;
 		break;
 	case SELFHEAL_ENEMY:
 		texture_id = GAME_TEXTURE::ENEMY_SELF_HEAL;
-		stats.health = 225.f;
-		stats.speed = 50.f;
-		stats.damage = 15.f;
 		size.x = 1;
 		size.y = 1;
 		abilityType = EnemyInfo::SELF_HEAL;
 		break;
 	case TRACTOR:
 		texture_id = GAME_TEXTURE::ENEMY_TRACTOR;
-		stats.health = 250.f;
-		stats.speed = 40.f;
-		stats.damage = 15.f;
 		abilityType = EnemyInfo::DOWN_TOWER;
-		stats.reflection = 0.15f;
 		animationSpeed = 100;
 		frameCount = 5;
 		size.x = 1;
@@ -483,72 +458,45 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		break;
 	case ANOTHER_ENEMY:
 		texture_id = GAME_TEXTURE::ENEMY_PLANE;
-		stats.health = 250.f;
-		stats.speed = 35.f;
-		stats.damage = 15.f;
 		size.x = 1;
 		size.y = 1;
-		stats.reflection = 0.55f;
 		break;
 		//mid
 	case TANK:
 		texture_id = GAME_TEXTURE::ENEMY_TANK;
-		stats.health = 650.f;
-		stats.speed = 55.f;
-		stats.damage = 35.f;
 		size.x = 2;
 		size.y = 2;
 		abilityType = EnemyInfo::STRONG;
-		stats.reflection = 0.2f;
 		break;
 	case SPIDER:
 		texture_id = GAME_TEXTURE::ENEMY_SPIDER;
-		stats.health = 400.f;
-		stats.speed = 55.f;
-		stats.damage = 30.f;
 		size.x = 2;
 		size.y = 2;
 		animationSpeed = 100;
 		frameCount = 5;
-		stats.reflection = 0.15f;
 		abilityType = EnemyInfo::SHUTDOWN_TOWER;
 		break;
 	case MID_FAST:
 		texture_id = GAME_TEXTURE::ENEMY_HELICOPTER;
-		stats.health = 400.f;
-		stats.speed = 20.f;
-		stats.damage = 20.f;
 		size.x = 2;
 		size.y = 2;
 		break;
 	case REPAIR_ENEMY:
 		texture_id = GAME_TEXTURE::ENEMY_REPAIR;
-		stats.health = 475.f;
-		stats.speed = 45.f;
-		stats.damage = 20.f;
 		abilityType = EnemyInfo::HEAL_NEAR;
-		stats.reflection = 0.1f;
 		size.x = 2;
 		size.y = 2;
 		break;
 	case SHIELD_ENEMY:
 		texture_id = GAME_TEXTURE::ENEMY_SHIELD;
-		stats.health = 425.f;
-		stats.speed = 50.f;
-		stats.damage = 20.f;
 		size.x = 2;
 		size.y = 2;
 		animationSpeed = 300;
 		frameCount = 9;
-		stats.reflection = 0.21f;
 		abilityType = EnemyInfo::SHELL_NEAR;
 		break;
 	case TELEPORT_ENEMY:
 		texture_id = GAME_TEXTURE::ENEMY_TELEPORT;
-		stats.health = 350.f;
-		stats.speed = 35.0f;
-		stats.damage = 20.f;
-		stats.reflection = 0.1f;
 		size.x = 2;
 		size.y = 2;
 		abilityType = EnemyInfo::TELEPORT;
@@ -556,29 +504,17 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		//big
 	case BIG_SLOW:
 		texture_id = GAME_TEXTURE::ENEMY_AIRCARRIER;
-		stats.health = 2750.f;
-		stats.speed = 75.f;
-		stats.damage = 75.f;
-		stats.reflection = 0.5f;
 		size.x = 4;
 		size.y = 4;
 		break;
 	case BIG_TANK:
 		texture_id = GAME_TEXTURE::ENEMY_BIG_TANK;
-		stats.health = 1450.f;
-		stats.speed = 55.f;
-		stats.damage = 60.f;
-		stats.reflection = 0.3f;
 		size.x = 4;
 		size.y = 4;
 		abilityType = EnemyInfo::RAGE;
 		break;
 	case SPAWN_ENEMY:
 		texture_id = GAME_TEXTURE::ENEMY_COW;
-		stats.health = 1125.f;
-		stats.speed = 50.f;
-		stats.damage = 40.f;
-		stats.reflection = 0.25f;
 		size.x = 4;
 		size.y = 4;
 		abilityType = EnemyInfo::SPAWN;
@@ -586,7 +522,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	default:
 		break;
 	}
-	stats.speed /= 2;
 	EnemyInfo info;
 	info.texture_id = texture_id;
 	info.size = size;

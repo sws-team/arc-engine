@@ -2,8 +2,8 @@
 #define TOWER_H
 
 #include "gameobject.h"
-#include "Game/leveldef.h"
 #include "enginedef.h"
+#include "Balance/balance.h"
 
 struct TowersCounter
 {
@@ -24,40 +24,6 @@ struct TowersCounter
 	bool canBuildPowerTower() const;
 	bool canBuildLaserTower() const;
 	bool canBuildImprovedTower() const;
-
-	static constexpr int MAX_BASE_TOWERS = 100;
-	static constexpr int MAX_FREEZE_TOWERS = 15;
-	static constexpr int MAX_ROCKET_TOWERS = 3;
-	static constexpr int MAX_LASER_TOWERS = 4;
-	static constexpr int MAX_IMPROVED_TOWERS = 2;
-	static constexpr int MAX_POWER_TOWERS = 10;
-};
-
-
-struct TowerStats
-{
-	TowerStats()
-	{
-
-	}
-	TowerStats(float damage,
-			   float attackSpeed,
-			   float radius,
-			   float projectileSpeed,
-			   float cost)
-		: damage(damage)
-		,attackSpeed(attackSpeed)
-		,radius(radius)
-		,projectileSpeed(projectileSpeed)
-		,cost(cost)
-	{
-
-	}
-	float damage;
-	float attackSpeed;
-	float radius;
-	float projectileSpeed;
-	float cost;
 };
 
 class Enemy;
@@ -68,7 +34,6 @@ class TowersFactory
 {
 public:
 	static Tower *createTower(TOWER_TYPES type, const sf::Vector2f& pos);
-	static TowerStats getTowerStats(TOWER_TYPES type);
 	static bool isIntersects(const sf::FloatRect& rect, const sf::Vector2f& center, float radius);
 	constexpr static float UPGRADE_TO_2_COST_MODIFIER = 0.5f;
 	constexpr static float UPGRADE_TO_3_COST_MODIFIER = 0.75f;
@@ -96,7 +61,6 @@ public:
 	TOWER_TYPES type() const;
 	void setType(const TOWER_TYPES &type);
 
-	static const float LEVEL_GAIN;
 	static const float TOWER_SCAlE;
 
 	void increaseAttackSpeed(float value);
@@ -195,7 +159,6 @@ public:
 	BaseTower(const sf::Vector2f &pos);
 	~BaseTower() override;
 
-	const static TowerStats STATS;
 	void projectileAction(Enemy *enemy) override;
 	void upgrade() override;
 private:
@@ -206,8 +169,6 @@ class PowerTower : public Tower
 public:
 	PowerTower(const sf::Vector2f &pos);
 	~PowerTower() override;
-
-	const static TowerStats STATS;
 
 	void draw(sf::RenderTarget *const target) final;
 
@@ -224,7 +185,6 @@ public:
 	static const int COST_OFFSET;
 	static const sf::Color POWER_TOWER_AREA_COLOR;
 private:
-	static const float ENERGY_GAIN;
 	bool m_isHighlighted;
 	float m_gain;
 
@@ -232,10 +192,8 @@ private:
 	void upgradePowerRect();
 
 	int gainCount;
-	constexpr static int MAX_GAIN = 5;
 	void activateBlast();
 	float zeroGround;
-	constexpr static int ZERO_GROUND = 6;
 	class LifeBar* abilityProgress;
 	static const sf::Vector2i BLAST_SIZE;
 };
@@ -246,11 +204,9 @@ public:
 	RocketTower(const sf::Vector2f &pos);
 	~RocketTower() override;
 
-	const static TowerStats STATS;
 	void moveProjectile(Projectile *projectile) override;
 	void projectileAction(Enemy *enemy) override;
 private:
-	const static int ZERO_GROUND;
 	float zeroGround;
 };
 
@@ -260,12 +216,9 @@ public:
 	FreezeTower(const sf::Vector2f &pos);
 	~FreezeTower() override;
 
-	const static TowerStats STATS;
-
 	void projectileAction(Enemy *enemy) override;
 private:
-	static constexpr int ABILITY_FREEZE_CELLS = 2;
-	static constexpr float BASE_FREEZE_VALUE = 0.5f;
+	float zeroGround;
 };
 
 class LaserTower : public Tower
@@ -273,8 +226,6 @@ class LaserTower : public Tower
 public:
 	LaserTower(const sf::Vector2f &pos);
 	~LaserTower() override;
-
-	const static TowerStats STATS;
 
 	void draw(sf::RenderTarget *const target) final;
 	void update() final;
@@ -294,7 +245,6 @@ private:
 	};
 	std::vector<LaserTarget*> targets;
 	LaserTarget mainTarget;
-	static constexpr int MAX_EXTRA_TARGETS = 4;
 
 	void updateLaserTarget(LaserTarget *laserTarget, float damageModifier);
 	void drawLaserTarget(sf::RenderTarget * const target,
@@ -309,7 +259,6 @@ public:
 	ImprovedTower(const sf::Vector2f &pos);
 	~ImprovedTower() override;
 
-	const static TowerStats STATS;
 protected:
 	void createdProjectile(Projectile *projectile) override;
 };

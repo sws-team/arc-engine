@@ -575,7 +575,7 @@ void ManualWindow::Element::update()
 
 		description += endline;
 
-		const TowerStats towerStats = TowersFactory::getTowerStats(towerType);
+		const TowerStats towerStats = Balance::Instance().getTowerStats(towerType);
 		const float dps = towerStats.damage / ((towerStats.attackSpeed) * 0.001f);
 
 		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND) + separator + GlobalVariables::to_string_with_precision(dps, 2);
@@ -604,66 +604,66 @@ void ManualWindow::Element::update()
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(BombAbility::BOMB_ABILITY_COOLDOWN/EngineDefs::MSEC);
+			description += std::to_string(Balance::Instance().getBombCooldown());
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(BombAbility::BOMB_ABILITY_DAMAGE);
+			description += std::to_string(Balance::Instance().getBombDamage());
 			break;
 		case ACTION_STATE::ABILITY_FREEZE_BOMB:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(FreezeBombAbility::FREEZE_ABILITY_COOLDOWN/EngineDefs::MSEC);
+			description += std::to_string(Balance::Instance().getFreezeCooldown());
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(FreezeBombAbility::FREEZE_ABILITY_DURATION/EngineDefs::MSEC);
+			description += std::to_string(Balance::Instance().getFreezeDuration());
 			break;
 		case ACTION_STATE::ABILITY_ACID:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ACID_ABILITY_DESCRIPTION);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(AcidAbility::VENOM_ABLITY_COOLDOWN/EngineDefs::MSEC);
+			description += std::to_string(Balance::Instance().getAcidCooldown());
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(AcidAbility::VENOM_DAMAGE_COUNT * AcidAbility::VENOM_DAMAGE);
+			description += std::to_string(Balance::Instance().getAcidCount() * Balance::Instance().getAcidDamage());
 			break;
 		case ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(IncreaseTowerDamageAbility::INCREASE_DAMAGE_ABILITY_COOLDOWN/EngineDefs::MSEC);
+			description += std::to_string(Balance::Instance().getIncreaseDamageCooldown());
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(IncreaseTowerDamageAbility::INCREASE_DAMAGE_ABILITY_DURATION/EngineDefs::MSEC);
+			description += std::to_string(Balance::Instance().getIncreaseDamageDuration());
 			break;
 		case ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(IncreaseTowerAttackSpeedAbility::INCREASE_ATTACK_SPEED_ABILITY_COOLDOWN/EngineDefs::MSEC);
+			description += std::to_string(Balance::Instance().getIncreaseAttackSpeedCooldown());
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(IncreaseTowerAttackSpeedAbility::INCREASE_ATTACK_SPEED_ABILITY_DURATION/EngineDefs::MSEC);
+			description += std::to_string(Balance::Instance().getIncreaseAttackSpeedDuration());
 			break;
 		case ACTION_STATE::ABILITY_STOP:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(StopAbility::STOP_ABILITY_COOLDOWN/EngineDefs::MSEC);
+			description += std::to_string(Balance::Instance().getStopCooldown());
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(StopAbility::STOP_ABILITY_DURATION/EngineDefs::MSEC);
+			description += std::to_string(Balance::Instance().getStopDuration());
 			break;
 		default:
 			break;

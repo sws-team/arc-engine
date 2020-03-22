@@ -5,6 +5,7 @@
 #include "gamestatemanager.h"
 #include "gamemanagers.h"
 #include "gameplatform.h"
+#include "Game/Balance/balance.h"
 
 #ifdef OS_WIN
 #include "windows.h"
@@ -40,6 +41,7 @@ int main(int argc, char *argv[])
 	Engine::Instance();
 	GameManagers::loadResources();
 	GameManagers::loadTranslations();
+	Balance::Instance().load();
 
 	const std::string steamLanguage = std::string(SteamUtils()->GetSteamUILanguage());
 	Engine::Instance().translationsManager()->setCurrentLanguage(steamLanguage);

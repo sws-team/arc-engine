@@ -141,22 +141,9 @@ private:
 	LEVEL_STATE m_state;
 	void changeState(LEVEL_STATE state);
 
-	static const float FREEZE_ABILITY_K;
-	static const int FREEZE_ABILITY_DURATION;
-
-	static const int INCREASE_DAMAGE_ABILITY_VALUE;
-	static const int INCREASE_DAMAGE_ABILITY_DURATION;
-
-	static const int INCREASE_ATTACK_SPEED_ABILITY_VALUE;
-	static const int INCREASE_ATTACK_SPEED_ABILITY_DURATION;
-
-	Timer timerRegenEnergy;
-
 	std::vector<Animation*> effects;
 
-
 	Shake *shake;
-
 
 	sf::CircleShape currentTowerRadius;
 	sf::RectangleShape currentTowerRect;
@@ -171,7 +158,6 @@ private:
 	Smoke *smoke;
 	MoneyDrain *moneyDrain;
 	TowersRegress *towersRegress;
-
 
 	sf::Sprite sellSprite;
 	sf::Sprite upgradeSprite;
@@ -189,14 +175,13 @@ private:
 
 	std::vector<LevelObject*> objects;
 	ShadersFactory *shadersFactory;
+	sf::RectangleShape smokeRect;
 
 	//variables for achievements
 	std::set<TOWER_TYPES> fullyUpgradedTowers;
 	bool abilityActivated;
 	bool attackTowerBuilded;
 	static constexpr float ECONOMIST_MONEY_VALUE = 30000;
-
-	sf::RectangleShape smokeRect;
 };
 
 #endif // LEVEL_H

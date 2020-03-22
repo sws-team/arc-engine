@@ -25,9 +25,6 @@ public:
 private:
 	void joystickKeyEvent(const bool timeoutKey, const bool timeoutMove);
 	std::function<void()> pauseFunc;
-#ifdef STEAM_API
-	class ISteamScreenshots *p_screenShoots;
-#endif
 };
 
 #endif // CONTROLLER_H

@@ -50,6 +50,8 @@ MainMenu::MainMenu()
 	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::OPTIONS));
 	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::MANUAL));
 	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::EXIT));
+
+	GamePlatform::Instance().setPlatformState("steam_display", "#Status_AtMainMenu");
 }
 
 void MainMenu::init()

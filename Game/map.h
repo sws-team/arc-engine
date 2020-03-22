@@ -4,6 +4,7 @@
 #include "stdheader.h"
 #include "tile.h"
 #include "objects_types.h"
+#include "Game/Balance/balance.h"
 
 struct Layer
 {
@@ -42,7 +43,7 @@ public:
 	{
 
 	}
-
+	MapStats stats;
 	unsigned int number;
 
 	int width;
@@ -56,32 +57,9 @@ public:
 
 	sf::FloatRect endRect;
 
-	float money;
-	float life;
 	int directionsLayer;
 	int movingLayer;
 	int waterLayer;
-
-	struct MapDanger
-	{
-		MapDanger()
-			: enabled(false)
-			,time(10000)
-			,duration(2000)
-			,count(1)
-		{
-
-		}
-		bool enabled;
-		float time;
-		float duration;
-		int count;
-	};
-
-	MapDanger explosions;
-	MapDanger smoke;
-	MapDanger moneyDrain;
-	MapDanger regress;
 
 	struct MapObject
 	{

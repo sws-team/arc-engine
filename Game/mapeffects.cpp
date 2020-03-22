@@ -494,7 +494,7 @@ void MoneyDrain::update()
 	for(GameObject *drain : drains)
 	{
 		if (hasDrain)
-			Engine::Instance().options<GameOptions>()->level()->drainMoney(1);
+			Engine::Instance().options<GameOptions>()->level()->drainMoney(Balance::Instance().getDrainValue());
 		drain->update();
 	}
 }

@@ -165,7 +165,7 @@ void Level::update()
 }
 
 void Level::startMission(const unsigned int n)
-{	
+{
 	currentWave = 0;
 	Engine::Instance().options<GameOptions>()->panel()->updateWaveText();
 	m_state = WAIT_READY;
@@ -175,10 +175,10 @@ void Level::startMission(const unsigned int n)
 													gameMap->height * GameOptions::MAP_CELL_SIZE));
 
 	Engine::Instance().options<GameOptions>()->panel()->setProgressMax(currentProgress());
-	life = gameMap->life;
+	life = gameMap->stats.life;
 	Engine::Instance().options<GameOptions>()->panel()->setLifeMax(life);
 
-	money = gameMap->money * Engine::Instance().options<GameOptions>()->difficult();
+	money = gameMap->stats.money * Engine::Instance().options<GameOptions>()->difficult();
 	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
 
 	Engine::Instance().options<GameOptions>()->cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
@@ -208,21 +208,21 @@ void Level::startMission(const unsigned int n)
 	deadZone.setSize(sf::Vector2f(mapPixelSize.x + fabs(minPos.x) * 2,
 								  mapPixelSize.y + fabs(minPos.y) * 2));
 
-	smoke->setTime(gameMap->smoke.time);
-	smoke->setDuration(gameMap->smoke.duration);
-	smoke->setCount(gameMap->smoke.count);
+	smoke->setTime(gameMap->stats.smoke.time);
+	smoke->setDuration(gameMap->stats.smoke.duration);
+	smoke->setCount(gameMap->stats.smoke.count);
 
-	mapExplosion->setTime(gameMap->explosions.time);
-	mapExplosion->setDuration(gameMap->explosions.duration);
-	mapExplosion->setCount(gameMap->explosions.count);
+	mapExplosion->setTime(gameMap->stats.explosions.time);
+	mapExplosion->setDuration(gameMap->stats.explosions.duration);
+	mapExplosion->setCount(gameMap->stats.explosions.count);
 
-	moneyDrain->setTime(gameMap->moneyDrain.time);
-	moneyDrain->setDuration(gameMap->moneyDrain.duration);
-	moneyDrain->setCount(gameMap->moneyDrain.count);
+	moneyDrain->setTime(gameMap->stats.moneyDrain.time);
+	moneyDrain->setDuration(gameMap->stats.moneyDrain.duration);
+	moneyDrain->setCount(gameMap->stats.moneyDrain.count);
 
-	towersRegress->setTime(gameMap->regress.time);
-	towersRegress->setDuration(gameMap->regress.duration);
-	towersRegress->setCount(gameMap->regress.count);
+	towersRegress->setTime(gameMap->stats.regress.time);
+	towersRegress->setDuration(gameMap->stats.regress.duration);
+	towersRegress->setCount(gameMap->stats.regress.count);
 
 	smoke->init();
 	mapExplosion->init();
@@ -250,6 +250,9 @@ void Level::startMission(const unsigned int n)
 			objects.push_back(object);
 		}
 	}
+
+	GamePlatform::Instance().setPlatformState("lvl", std::to_string(n + 1));
+	GamePlatform::Instance().setPlatformState("steam_display", "#Status");
 }
 
 void Level::clear()
@@ -413,7 +416,7 @@ void Level::drainMoney(float m)
 
 float Level::getStartLife() const
 {
-	return gameMap->life;
+	return gameMap->stats.life;
 }
 
 void Level::updateCurrentTower()
@@ -877,10 +880,10 @@ void Level::ready()
 {
 	m_state = PLAYING;
 
-	towersRegress->setEnabled(gameMap->regress.enabled);
-	smoke->setEnabled(gameMap->smoke.enabled);
-	moneyDrain->setEnabled(gameMap->moneyDrain.enabled);
-	mapExplosion->setEnabled(gameMap->explosions.enabled);
+	towersRegress->setEnabled(gameMap->stats.regress.enabled);
+	smoke->setEnabled(gameMap->stats.smoke.enabled);
+	moneyDrain->setEnabled(gameMap->stats.moneyDrain.enabled);
+	mapExplosion->setEnabled(gameMap->stats.explosions.enabled);
 
 	towersRegress->resetTimers();
 	smoke->resetTimers();
@@ -951,7 +954,7 @@ void Level::drawLevel(sf::RenderTarget * const target)
 				object->draw(target);
 		}
 	}
-	if (gameMap->smoke.enabled)
+	if (gameMap->stats.smoke.enabled)
 		target->draw(smokeRect, shadersFactory->getShader(OBJECTS::SMOKE));
 
 	for(LevelObject *object : objects)
@@ -1091,14 +1094,14 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 		{
 			const TOWER_TYPES type = Engine::Instance().options<GameOptions>()->panel()->currentTower();
 			const float cost = type == TOWER_TYPES::POWER ?
-						TowersFactory::getTowerStats(type).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET :
-						TowersFactory::getTowerStats(type).cost;
+						Balance::Instance().getTowerStats(type).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET :
+						Balance::Instance().getTowerStats(type).cost;
 			if (money < cost)
 				return;
 			if (!Engine::Instance().options<GameOptions>()->panel()->isTowerIconActive(type))
 				return;
 
-			const float radius = TowersFactory::getTowerStats(type).radius * Engine::Instance().options<GameOptions>()->mapTileSize().x;
+			const float radius = Balance::Instance().getTowerStats(type).radius * Engine::Instance().options<GameOptions>()->mapTileSize().x;
 			Engine::Instance().options<GameOptions>()->cursor()->activateTower(radius, type);
 			highlightPowerTowersRadius(type != POWER);
 			Engine::Instance().options<GameOptions>()->cursor()->swap();
@@ -1206,8 +1209,8 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 			const TOWER_TYPES type = Engine::Instance().options<GameOptions>()->cursor()->getTowerType();
 
 			float cost = type == TOWER_TYPES::POWER ?
-						TowersFactory::getTowerStats(type).cost + TowersCounter::Instance().powerTowerCount * 10 :
-						TowersFactory::getTowerStats(type).cost;
+						Balance::Instance().getTowerStats(type).cost + TowersCounter::Instance().powerTowerCount * 10 :
+						Balance::Instance().getTowerStats(type).cost;
 
 			if (cost > money)
 				return;

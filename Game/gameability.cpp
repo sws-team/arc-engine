@@ -19,7 +19,7 @@ GameAbility::GameAbility(const sf::Vector2i &areaSize,
   ,m_isReady(true)
   ,m_areaSize(areaSize)
   ,m_offset(offset)
-  ,m_time(time)
+  ,m_time(time * EngineDefs::MSEC)
   ,m_rotated(false)
 {
 
@@ -132,7 +132,7 @@ void Abilities::clear()
 }
 
 BombAbility::BombAbility()
-	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), BOMB_ABILITY_COOLDOWN)
+	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), Balance::Instance().getBombCooldown())
 {
 
 }
@@ -153,7 +153,7 @@ void BombAbility::activate()
 	for(Enemy *enemy : Engine::Instance().options<GameOptions>()->level()->getAllEnemies())
 		if (enemy->enemyRect().intersects(abilityRect))
 		{
-			enemy->hit(BOMB_ABILITY_DAMAGE);
+			enemy->hit(Balance::Instance().getBombDamage());
 			if (!enemy->isAlive())
 				count++;
 		}
@@ -166,7 +166,7 @@ void BombAbility::activate()
 }
 
 FreezeBombAbility::FreezeBombAbility()
-	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), FREEZE_ABILITY_COOLDOWN)
+	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), Balance::Instance().getFreezeCooldown())
 {
 
 }
@@ -185,7 +185,7 @@ void FreezeBombAbility::activate()
 	for(Enemy *enemy : Engine::Instance().options<GameOptions>()->level()->getAllEnemies())
 		if (enemy->enemyRect().intersects(abilityRect))
 		{
-			enemy->freeze(FREEZE_ABILITY_K, FREEZE_ABILITY_DURATION);
+			enemy->freeze(Balance::Instance().getFreezeValue(), Balance::Instance().getFreezeDuration() * EngineDefs::MSEC);
 			count++;
 		}
 	if (count >= 5)
@@ -195,7 +195,7 @@ void FreezeBombAbility::activate()
 }
 
 AcidAbility::AcidAbility()
-	: GameAbility(sf::Vector2i(10, 3), sf::Vector2i(7, 2), VENOM_ABLITY_COOLDOWN)
+	: GameAbility(sf::Vector2i(10, 3), sf::Vector2i(7, 2), Balance::Instance().getAcidCooldown())
 	,object(nullptr)
 	,count(0)
 {
@@ -224,21 +224,21 @@ void AcidAbility::checkDuration()
 {
 	if (!m_isActive)
 		return;
-	if (abilityTimer.check(VENOM_ATTACK_SPEED))
+	if (abilityTimer.check(Balance::Instance().getAcidAttackSpeed() * EngineDefs::MSEC))
 	{
 		count++;
 		for(Enemy *enemy : Engine::Instance().options<GameOptions>()->level()->getAllEnemies())
 		{
 			if (enemy->enemyRect().intersects(object->gameRect()))
 			{
-				enemy->hit(AcidAbility::VENOM_DAMAGE);
+				enemy->hit(Balance::Instance().getAcidDamage());
 
 				if(!enemy->isAlive())
 					GamePlatform::Instance().incrementValue(STAT_KILLS_BY_ACID);
 			}
 		}
 	}
-	if (count >= VENOM_DAMAGE_COUNT)
+	if (count >= Balance::Instance().getAcidCount())
 		clear();
 }
 
@@ -250,7 +250,7 @@ void AcidAbility::clear()
 }
 
 IncreaseTowerDamageAbility::IncreaseTowerDamageAbility()
-	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), INCREASE_DAMAGE_ABILITY_COOLDOWN)
+	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), Balance::Instance().getIncreaseDamageCooldown())
 	,target(nullptr)
 {
 
@@ -264,7 +264,7 @@ void IncreaseTowerDamageAbility::activate()
 		return;
 	target = tower;
 	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
-	tower->increaseDamage(INCREASE_DAMAGE_ABILITY_VALUE);
+	tower->increaseDamage(Balance::Instance().getIncreaseDamageValue());
 	abilityTimer.reset();
 }
 
@@ -273,16 +273,16 @@ void IncreaseTowerDamageAbility::checkDuration()
 	if (target == nullptr)
 		return;
 
-	if (abilityTimer.check(INCREASE_DAMAGE_ABILITY_DURATION))
+	if (abilityTimer.check(Balance::Instance().getIncreaseDamageDuration() * EngineDefs::MSEC))
 	{
-		target->decreaseDamage(INCREASE_DAMAGE_ABILITY_VALUE);
+		target->decreaseDamage(Balance::Instance().getIncreaseDamageValue());
 		target = nullptr;
 		finish();
 	}
 }
 
 IncreaseTowerAttackSpeedAbility::IncreaseTowerAttackSpeedAbility()
-	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), INCREASE_ATTACK_SPEED_ABILITY_COOLDOWN)
+	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), Balance::Instance().getIncreaseAttackSpeedCooldown())
 	,target(nullptr)
 {
 
@@ -296,7 +296,7 @@ void IncreaseTowerAttackSpeedAbility::activate()
 		return;
 	target = tower;
 	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
-	tower->increaseAttackSpeed(INCREASE_ATTACK_SPEED_ABILITY_VALUE);
+	tower->increaseAttackSpeed(Balance::Instance().getIncreaseAttackSpeedValue());
 	abilityTimer.reset();
 }
 
@@ -305,16 +305,16 @@ void IncreaseTowerAttackSpeedAbility::checkDuration()
 	if (target == nullptr)
 		return;
 
-	if (abilityTimer.check(INCREASE_ATTACK_SPEED_ABILITY_DURATION))
+	if (abilityTimer.check(Balance::Instance().getIncreaseAttackSpeedDuration() * EngineDefs::MSEC))
 	{
-		target->decreaseAttackSpeed(INCREASE_ATTACK_SPEED_ABILITY_VALUE);
+		target->decreaseAttackSpeed(Balance::Instance().getIncreaseAttackSpeedValue());
 		target = nullptr;
 		finish();
 	}
 }
 
 StopAbility::StopAbility()
-	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), STOP_ABILITY_COOLDOWN)
+	: GameAbility(sf::Vector2i(1, 1), sf::Vector2i(0, 0), Balance::Instance().getStopCooldown())
 {
 
 }
@@ -328,6 +328,6 @@ void StopAbility::activate()
 
 void StopAbility::checkDuration()
 {
-	if (abilityTimer.check(STOP_ABILITY_DURATION))
+	if (abilityTimer.check(Balance::Instance().getStopDuration() * EngineDefs::MSEC))
 		finish();
 }

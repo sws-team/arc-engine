@@ -12,7 +12,6 @@
 #include "gameplatform.h"
 #include "achievements.h"
 
-const float Tower::LEVEL_GAIN = 0.25f;
 const float Tower::TOWER_SCAlE = 1.f/3.f;
 
 Tower::Tower(const TextureType &texture_id, const sf::Vector2f &pos, const TowerStats &stats)
@@ -77,10 +76,10 @@ void Tower::upgrade()
 {
 	m_level++;
 
-	m_stats.cost *= 1 + Tower::LEVEL_GAIN;
-	m_stats.damage *= 1 + Tower::LEVEL_GAIN;
-	m_stats.radius *= 1 + Tower::LEVEL_GAIN;
-	m_stats.attackSpeed *= 1 - Tower::LEVEL_GAIN;
+	m_stats.cost *= 1 + Balance::Instance().getTowerUpgradeGain();
+	m_stats.damage *= 1 + Balance::Instance().getTowerUpgradeGain();
+	m_stats.radius *= 1 + Balance::Instance().getTowerUpgradeGain();
+	m_stats.attackSpeed *= 1 - Balance::Instance().getTowerUpgradeGain();
 
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::UPGRADE, this->pos(),
 											 sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE),
@@ -211,20 +210,20 @@ bool Tower::isDowngraded() const
 float Tower::actualRadius() const
 {
 	if (m_blinded)
-		return m_stats.radius/3;
+		return m_stats.radius * Balance::Instance().getBlindValue();
 	return m_stats.radius;
 }
 
 float Tower::actualDamage() const
 {
 	float damage = m_downgraded ? m_stats.damage * DownTowerAbility::DOWNGRADE_VALUE : m_stats.damage;
-	damage = m_regressed ? damage * TowersRegress::REGRESS_VALUE : damage;
+	damage = m_regressed ? damage * Balance::Instance().getRegressValue() : damage;
 	return damage;
 }
 
 float Tower::actualAttackSpeed() const
 {
-	const float attackSpeed = m_regressed ? m_stats.attackSpeed / TowersRegress::REGRESS_VALUE : m_stats.attackSpeed;
+	const float attackSpeed = m_regressed ? m_stats.attackSpeed / Balance::Instance().getRegressValue() : m_stats.attackSpeed;
 	return attackSpeed;
 }
 
@@ -276,26 +275,6 @@ Tower *TowersFactory::createTower(TOWER_TYPES type, const sf::Vector2f &pos)
 	return tower;
 }
 
-TowerStats TowersFactory::getTowerStats(TOWER_TYPES type)
-{
-	switch (type)
-	{
-	case BASE:
-		return BaseTower::STATS;
-	case POWER:
-		return PowerTower::STATS;
-	case ROCKET:
-		return RocketTower::STATS;
-	case FREEZE:
-		return FreezeTower::STATS;
-	case LASER:
-		return LaserTower::STATS;
-	case IMPROVED:
-		return ImprovedTower::STATS;
-	}
-	return BaseTower::STATS;
-}
-
 bool TowersFactory::isIntersects(const sf::FloatRect &rect, const sf::Vector2f &center, float radius)
 {
 	float x = fabs(rect.left - center.x);
@@ -330,18 +309,10 @@ bool TowersFactory::isIntersects(const sf::FloatRect &rect, const sf::Vector2f &
 
 	return false;
 }
-const float PowerTower::ENERGY_GAIN = 10;
 const int PowerTower::COST_OFFSET = 10;
-											//		dmg	atk_speed	r	pr_speed	cost
-const TowerStats PowerTower::STATS = TowerStats		(0,		5000,	6,		0,		60);
-const TowerStats BaseTower::STATS = TowerStats		(8,		450,	4,		20,		50);
-const TowerStats FreezeTower::STATS = TowerStats	(6,		350,	5,		10,		100);
-const TowerStats RocketTower::STATS = TowerStats	(40,	5000,	12,		5,		150);
-const TowerStats LaserTower::STATS = TowerStats		(5,		135,	6,		0,		200);
-const TowerStats ImprovedTower::STATS = TowerStats	(10,	250,	7,		40,		300);
 
 BaseTower::BaseTower(const sf::Vector2f &pos)
-	: ProjectilesTower(GAME_TEXTURE::TOWER_BASE, pos, STATS)
+	: ProjectilesTower(GAME_TEXTURE::TOWER_BASE, pos, Balance::Instance().getTowerStats(BASE))
 {
 	projectileInfo.size = sf::Vector2i(16, 8);
 	projectileInfo.frameCount = 1;
@@ -362,8 +333,8 @@ BaseTower::~BaseTower()
 void BaseTower::projectileAction(Enemy *enemy)
 {
 	ProjectilesTower::projectileAction(enemy);
-	const float penetration = 0.00001f * powf(10, level());
-	enemy->protect(penetration, false);
+	const float penetration = Balance::Instance().getbaseTowerPenetration() * powf(10, level());
+	enemy->protect(-penetration, false);
 }
 
 void BaseTower::upgrade()
@@ -377,17 +348,17 @@ const sf::Color PowerTower::POWER_TOWER_AREA_COLOR = sf::Color(23, 200, 124, 100
 const sf::Vector2i PowerTower::BLAST_SIZE = sf::Vector2i(256, 256);
 
 PowerTower::PowerTower(const sf::Vector2f &pos)
-	: Tower(GAME_TEXTURE::TOWER_POWER, pos, STATS)
+	: Tower(GAME_TEXTURE::TOWER_POWER, pos, Balance::Instance().getTowerStats(POWER))
 	,m_isHighlighted(false)
 	,gainCount(false)
 	,abilityProgress(nullptr)
 {
-	zeroGround = Engine::Instance().options<GameOptions>()->mapTileSize().x * ZERO_GROUND;
-	powerRect.setSize(sf::Vector2f(STATS.radius * Engine::Instance().options<GameOptions>()->mapTileSize().x,
-							   STATS.radius * Engine::Instance().options<GameOptions>()->mapTileSize().y));
+	zeroGround = Engine::Instance().options<GameOptions>()->mapTileSize().x * Balance::Instance().getBlastCells();
+	powerRect.setSize(sf::Vector2f(m_stats.radius * Engine::Instance().options<GameOptions>()->mapTileSize().x,
+							   m_stats.radius * Engine::Instance().options<GameOptions>()->mapTileSize().y));
 	powerRect.setFillColor(POWER_TOWER_AREA_COLOR);
 	powerRect.setPosition(pos - Engine::Instance().options<GameOptions>()->tileSize());
-	m_gain = ENERGY_GAIN;
+	m_gain = Balance::Instance().getEnergyGain();
 
 	TowersCounter::Instance().powerTowerCount++;
 }
@@ -426,7 +397,7 @@ float PowerTower::gain() const
 void PowerTower::updateGain()
 {
 	gainCount++;
-	if (gainCount == MAX_GAIN)
+	if (gainCount == Balance::Instance().getBlastCount())
 	{
 		gainCount = 0;
 		if (level() == ABILITY_LEVEL)
@@ -434,19 +405,19 @@ void PowerTower::updateGain()
 	}
 	if (abilityProgress != nullptr)
 	{
-		const float rate = static_cast<float>(gainCount) / MAX_GAIN;
+		const float rate = static_cast<float>(gainCount) / Balance::Instance().getBlastCount();
 		abilityProgress->setValue(rate);
 	}
 }
 
 void PowerTower::upgrade()
 {
-	m_gain *= 1 + LEVEL_GAIN;
+	m_gain *= 1 + Balance::Instance().getTowerUpgradeGain();
 	Tower::upgrade();
 	switch (level())
 	{
 	case 1:
-		m_stats.radius = STATS.radius;
+		m_stats.radius = m_stats.radius;
 		break;
 	case 2:
 		m_stats.radius = 10;
@@ -505,10 +476,10 @@ void PowerTower::activateBlast()
 			switch (enemy->size.x)
 			{
 			case 96:
-				modifier *= 5;
+				modifier /= 2;
 				break;
 			case 192:
-				modifier *= 2;
+				modifier /= 5;
 				break;
 			default:
 				break;
@@ -520,13 +491,10 @@ void PowerTower::activateBlast()
 	}
 }
 
-
-const int RocketTower::ZERO_GROUND = 3;
-
 RocketTower::RocketTower(const sf::Vector2f &pos)
-	: ProjectilesTower(GAME_TEXTURE::TOWER_ROCKET, pos, STATS)
+	: ProjectilesTower(GAME_TEXTURE::TOWER_ROCKET, pos, Balance::Instance().getTowerStats(ROCKET))
 {
-	zeroGround = Engine::Instance().options<GameOptions>()->tileSize().x * ZERO_GROUND;
+	zeroGround = Engine::Instance().options<GameOptions>()->tileSize().x * Balance::Instance().getRocketTowerCells();
 	m_shotSound = GAME_SOUND::ROCKET_SHOT;
 
 	projectileInfo.size = sf::Vector2i(32, 16);
@@ -588,7 +556,7 @@ void RocketTower::projectileAction(Enemy *enemy)
 }
 
 FreezeTower::FreezeTower(const sf::Vector2f &pos)
-	: ProjectilesTower(GAME_TEXTURE::TOWER_FREEZE, pos, STATS)
+	: ProjectilesTower(GAME_TEXTURE::TOWER_FREEZE, pos, Balance::Instance().getTowerStats(FREEZE))
 {
 	m_shotSound = GAME_SOUND::FREEZE_SHOT;
 	projectileInfo.size = sf::Vector2i(20, 10);
@@ -598,6 +566,7 @@ FreezeTower::FreezeTower(const sf::Vector2f &pos)
 	projectileInfo.explosionSize = sf::Vector2i(12, 12);
 	projectileInfo.explosionFrameCount = 16;
 	TowersCounter::Instance().freezeTowerCount++;
+	zeroGround = Engine::Instance().options<GameOptions>()->tileSize().x * Balance::Instance().getFreezeTowerCells();
 }
 
 FreezeTower::~FreezeTower()
@@ -608,11 +577,9 @@ FreezeTower::~FreezeTower()
 void FreezeTower::projectileAction(Enemy *enemy)
 {
 	ProjectilesTower::projectileAction(enemy);
-	const float durationOffset = level() * 1000;
-	const float freezeValue = BASE_FREEZE_VALUE;
-	const float freezeDuration = 2000 + durationOffset;
+	const float freezeValue = Balance::Instance().getFreezeValue();
+	const float freezeDuration = Balance::Instance().getFreezeTowerDuration() + level() * EngineDefs::MSEC;
 	enemy->freeze(freezeValue, freezeDuration);
-
 	if (level() == ABILITY_LEVEL)
 	{
 		const sf::Vector2f epicenter = enemy->enemyCenter();
@@ -622,8 +589,8 @@ void FreezeTower::projectileAction(Enemy *enemy)
 			const float a = fabs(epicenter.x - levelEnemy->enemyCenter().x);
 			const float b = fabs(epicenter.y - levelEnemy->enemyCenter().y);
 			const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
-			if (r <= Engine::Instance().options<GameOptions>()->tileSize().x * ABILITY_FREEZE_CELLS)
-				levelEnemy->freeze(BASE_FREEZE_VALUE, freezeDuration);
+			if (r <= zeroGround)
+				levelEnemy->freeze(freezeValue, freezeDuration);
 		}
 	}
 }
@@ -631,7 +598,7 @@ void FreezeTower::projectileAction(Enemy *enemy)
 const sf::Vector2i LaserTower::LASER_SIZE = sf::Vector2i(16, 16);
 
 LaserTower::LaserTower(const sf::Vector2f &pos)
-	: Tower(GAME_TEXTURE::TOWER_LASER, pos, STATS)
+	: Tower(GAME_TEXTURE::TOWER_LASER, pos, Balance::Instance().getTowerStats(LASER))
 {
 	lineTower.position = this->pos() + sf::Vector2f(97 * Engine::Instance().settingsManager()->getScaleFactor().x * TOWER_SCAlE,
 												24 * Engine::Instance().settingsManager()->getScaleFactor().y * TOWER_SCAlE);
@@ -663,7 +630,7 @@ void LaserTower::shoot(Enemy *target)
 			Enemy *enemy = findNearestEnemy(exclude);
 			if (enemy == nullptr)
 				break;
-			if (targets.size() == MAX_EXTRA_TARGETS)
+			if (targets.size() == Balance::Instance().getLaserTowerMaxExtraTargets())
 				break;
 
 			exclude.push_back(enemy);
@@ -770,7 +737,7 @@ void LaserTower::draw(sf::RenderTarget * const target)
 }
 
 ImprovedTower::ImprovedTower(const sf::Vector2f &pos)
-	: ProjectilesTower(GAME_TEXTURE::TOWER_IMPROVED, pos, STATS)
+	: ProjectilesTower(GAME_TEXTURE::TOWER_IMPROVED, pos, Balance::Instance().getTowerStats(IMPROVED))
 {
 	m_shotSound = GAME_SOUND::IMPROVED_SHOT;
 
@@ -964,30 +931,30 @@ void TowersCounter::reset()
 
 bool TowersCounter::canBuildBaseTower() const
 {
-	return baseTowerCount < MAX_BASE_TOWERS;
+	return baseTowerCount < Balance::Instance().getTowerLimit(BASE);
 }
 
 bool TowersCounter::canBuildFreezeTower() const
 {
-	return freezeTowerCount < MAX_FREEZE_TOWERS;
+	return freezeTowerCount < Balance::Instance().getTowerLimit(FREEZE);
 }
 
 bool TowersCounter::canBuildRocketTower() const
 {
-	return rocketTowerCount < MAX_ROCKET_TOWERS;
+	return rocketTowerCount < Balance::Instance().getTowerLimit(ROCKET);
 }
 
 bool TowersCounter::canBuildPowerTower() const
 {
-	return powerTowerCount < MAX_POWER_TOWERS;
+	return powerTowerCount < Balance::Instance().getTowerLimit(POWER);
 }
 
 bool TowersCounter::canBuildLaserTower() const
 {
-	return laserTowerCount < MAX_LASER_TOWERS;
+	return laserTowerCount < Balance::Instance().getTowerLimit(LASER);
 }
 
 bool TowersCounter::canBuildImprovedTower() const
 {
-	return improvedTowerCount < MAX_IMPROVED_TOWERS;
+	return improvedTowerCount < Balance::Instance().getTowerLimit(IMPROVED);
 }

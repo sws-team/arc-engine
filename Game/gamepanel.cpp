@@ -127,12 +127,12 @@ GamePanel::GamePanel() :
 	initDurationText(&abilityIncreaseTowerDamageDurationText);
 	initDurationText(&abilityStopDurationText);
 
-	towerBaseCostText.setString(GlobalVariables::to_string_with_precision(BaseTower::STATS.cost, 0));
-	towerFreezeCostText.setString(GlobalVariables::to_string_with_precision(FreezeTower::STATS.cost, 0));
-	towerRocketCostText.setString(GlobalVariables::to_string_with_precision(RocketTower::STATS.cost, 0));
-	towerLaserCostText.setString(GlobalVariables::to_string_with_precision(LaserTower::STATS.cost, 0));
-	towerPowerCostText.setString(GlobalVariables::to_string_with_precision(PowerTower::STATS.cost, 0));
-	towerImprovedCostText.setString(GlobalVariables::to_string_with_precision(ImprovedTower::STATS.cost, 0));
+	towerBaseCostText.setString(GlobalVariables::to_string_with_precision(Balance::Instance().getTowerStats(BASE).cost, 0));
+	towerFreezeCostText.setString(GlobalVariables::to_string_with_precision(Balance::Instance().getTowerStats(FREEZE).cost, 0));
+	towerRocketCostText.setString(GlobalVariables::to_string_with_precision(Balance::Instance().getTowerStats(ROCKET).cost, 0));
+	towerLaserCostText.setString(GlobalVariables::to_string_with_precision(Balance::Instance().getTowerStats(LASER).cost, 0));
+	towerPowerCostText.setString(GlobalVariables::to_string_with_precision(Balance::Instance().getTowerStats(POWER).cost, 0));
+	towerImprovedCostText.setString(GlobalVariables::to_string_with_precision(Balance::Instance().getTowerStats(IMPROVED).cost, 0));
 
 	abilityBombDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
 	abilityFreezeBombDurationText.setString(GlobalVariables::to_string_with_precision(0, 0));
@@ -302,7 +302,7 @@ void GamePanel::updatePanel()
 
 	towerPowerCostText.setString(
 				GlobalVariables::to_string_with_precision(
-					PowerTower::STATS.cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET, 0));
+					Balance::Instance().getTowerStats(POWER).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET, 0));
 
 	updateCursor();
 	updateInfo();
@@ -514,8 +514,8 @@ float GamePanel::getTowerUpgradeCost(Tower *tower) const
 
 	const TOWER_TYPES type = tower->type();
 	float cost = type == TOWER_TYPES::POWER ?
-				TowersFactory::getTowerStats(type).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET :
-				TowersFactory::getTowerStats(type).cost;
+				Balance::Instance().getTowerStats(type).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET :
+				Balance::Instance().getTowerStats(type).cost;
 
 	switch (tower->level())
 	{
@@ -557,37 +557,37 @@ void GamePanel::updateEnableTowers()
 {
 	const float money = Engine::Instance().options<GameOptions>()->level()->getMoneyCount();
 
-	float cost = TowersFactory::getTowerStats(TOWER_TYPES::BASE).cost;
+	float cost = Balance::Instance().getTowerStats(TOWER_TYPES::BASE).cost;
 	if (money < cost || !TowersCounter::Instance().canBuildBaseTower())
 		towerBaseSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerBaseSprite.setColor(sf::Color::White);
 
-	cost = TowersFactory::getTowerStats(TOWER_TYPES::LASER).cost;
+	cost = Balance::Instance().getTowerStats(TOWER_TYPES::LASER).cost;
 	if (money < cost || !iconsAvaliable.isLaserEnabled || !TowersCounter::Instance().canBuildLaserTower())
 		towerLaserSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerLaserSprite.setColor(sf::Color::White);
 
-	cost = TowersFactory::getTowerStats(TOWER_TYPES::FREEZE).cost;
+	cost = Balance::Instance().getTowerStats(TOWER_TYPES::FREEZE).cost;
 	if (money < cost || !iconsAvaliable.isFreezeEnabled || !TowersCounter::Instance().canBuildFreezeTower())
 		towerFreezeSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerFreezeSprite.setColor(sf::Color::White);
 
-	cost = TowersFactory::getTowerStats(TOWER_TYPES::ROCKET).cost;
+	cost = Balance::Instance().getTowerStats(TOWER_TYPES::ROCKET).cost;
 	if (money < cost || !iconsAvaliable.isRocketEnabled || !TowersCounter::Instance().canBuildRocketTower())
 		towerRocketSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerRocketSprite.setColor(sf::Color::White);
 
-	cost = TowersFactory::getTowerStats(TOWER_TYPES::POWER).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET;
+	cost = Balance::Instance().getTowerStats(TOWER_TYPES::POWER).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET;
 	if (money < cost || !TowersCounter::Instance().canBuildPowerTower())
 		towerPowerSprite.setColor(EngineDefs::GrayColor);
 	else
 		towerPowerSprite.setColor(sf::Color::White);
 
-	cost = TowersFactory::getTowerStats(TOWER_TYPES::IMPROVED).cost;
+	cost = Balance::Instance().getTowerStats(TOWER_TYPES::IMPROVED).cost;
 	if (money < cost || !iconsAvaliable.isImprovedEnabled || !TowersCounter::Instance().canBuildImprovedTower())
 		towerImprovedSprite.setColor(EngineDefs::GrayColor);
 	else
@@ -684,7 +684,7 @@ sf::String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 	if (tower != nullptr)
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LEVEL) + separator + std::to_string(tower->level()) + endline;
 
-	const TowerStats towerStats = tower == nullptr ? TowersFactory::getTowerStats(type) : tower->data();
+	const TowerStats towerStats = tower == nullptr ? Balance::Instance().getTowerStats(type) : tower->data();
 	const float dps = towerStats.damage / ((tower == nullptr ? towerStats.attackSpeed : tower->actualAttackSpeed()) * 0.001f);
 
 	str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND) + separator + GlobalVariables::to_string_with_precision(dps, 2);

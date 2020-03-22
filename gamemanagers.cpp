@@ -356,7 +356,9 @@ void GameManagers::loadResources()
 			break;
 		case GameResource::OTHER:
 		{
-			if (resource.name == "tiles")
+			if (resource.name == "balance")
+				addFile(GAME_FILES::BALANCE, out);
+			else if (resource.name == "tiles")
 				addFile(GAME_FILES::TILES, out);
 #ifndef LOAD_MAPS
 			else if (resource.name == "mission1")

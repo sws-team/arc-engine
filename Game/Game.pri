@@ -1,5 +1,4 @@
 HEADERS += \
-    $$PWD/balance.h \
     $$PWD/camera.h \
     $$PWD/enemy.h \
     $$PWD/gameability.h \
@@ -18,7 +17,6 @@ HEADERS += \
     $$PWD/leveldef.h
 
 SOURCES += \
-    $$PWD/balance.cpp \
     $$PWD/camera.cpp \
     $$PWD/enemy.cpp \
     $$PWD/gameability.cpp \
@@ -34,3 +32,4 @@ SOURCES += \
     $$PWD/gamepanel.cpp \
     $$PWD/waves.cpp
 
+include($$PWD/Balance/Balance.pri)
