@@ -134,6 +134,8 @@ public:
 
 	//maps
 	MapStats getMapStats(int number) const;
+	//waves
+	std::vector<Wave> getWave(int number) const;
 
 private:
 	Balance();
@@ -203,6 +205,9 @@ private:
 	float downgradeCells;
 	float downgradeDuration;
 	float downgradeInterval;
+	//waves
+
+	std::vector<std::vector<Wave> > waves;
 
 	void loadTowers(const Json::Value& jsonTowers);
 	void loadTower(const TOWER_TYPES type, const Json::Value& jsonTower);
@@ -216,6 +221,7 @@ private:
 
 	void loadMaps(const Json::Value& jsonMaps);
 	void loadEnemiesAbilities(const Json::Value& jsonEnemiesAbilities);
+	void loadWaves(const Json::Value& jsonWaves);
 };
 
 #endif // BALANCE_H

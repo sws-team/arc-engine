@@ -14,6 +14,7 @@ const std::string LIMITS_KEY = "limits";
 const std::string ABILITIES_KEY = "abilities";
 const std::string MAPS_KEY = "maps";
 const std::string ENEMIES_ABILITIES_KEY = "enemies_abilities";
+const std::string WAVES_KEY = "waves";
 
 //towers
 const std::string BASE_KEY = "base";
@@ -135,6 +136,12 @@ const std::string DOWNGRADE_CELLS_KEY = "downgrade_cells";
 const std::string DOWNGRADE_DURATION_KEY = "downgrade_durartion";
 const std::string DOWNGRADE_INTERVAL_KEY = "downgrade_interval";
 
+//waves
+const std::string PROTECTION_KEY = "protection";
+const std::string RESPAWN_TIME_KEY = "respawn_time";
+const std::string SPAWN_ENEMIES_KEY = "spawn_enemies";
+const std::string ENEMY_TYPE_KEY = "enemy_type";
+const std::string ENEMIES_COUNT_KEY = "enemies_count";
 };
 
 #endif // BALANCE_DEF_H

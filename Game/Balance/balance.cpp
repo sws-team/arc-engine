@@ -124,6 +124,10 @@ void Balance::load()
 	//load enemies abilities
 	const Json::Value& enemiesAbilitiesObject = obj[BalanceDef::ENEMIES_ABILITIES_KEY];
 	loadEnemiesAbilities(enemiesAbilitiesObject);
+
+	//waves
+	const Json::Value& wavesObject = obj[BalanceDef::WAVES_KEY];
+	loadWaves(wavesObject);
 }
 
 void Balance::loadTowers(const Json::Value &jsonTowers)
@@ -301,25 +305,55 @@ void Balance::loadMaps(const Json::Value &jsonMaps)
 
 void Balance::loadEnemiesAbilities(const Json::Value &jsonEnemiesAbilities)
 {
-	selfhealInterval = jsonEnemiesAbilities[BalanceDef::SELFHEAL_INTERVAL_KEY].asFloat();
+	selfhealInterval = jsonEnemiesAbilities[BalanceDef::SELFHEAL_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
 	selfhealValue = jsonEnemiesAbilities[BalanceDef::SELFHEAL_VALUE_KEY].asFloat();
-	healInterval = jsonEnemiesAbilities[BalanceDef::HEAL_INTERVAL_KEY].asFloat();
+	healInterval = jsonEnemiesAbilities[BalanceDef::HEAL_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
 	healValue = jsonEnemiesAbilities[BalanceDef::HEAL_VALUE_KEY].asFloat();
-	shieldInterval = jsonEnemiesAbilities[BalanceDef::SHIELD_INTERVAL_KEY].asFloat();
+	shieldInterval = jsonEnemiesAbilities[BalanceDef::SHIELD_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
 	shieldValue = jsonEnemiesAbilities[BalanceDef::SHIELD_VALUE_KEY].asFloat();
-	strongInterval = jsonEnemiesAbilities[BalanceDef::STRONG_INTERVAL_KEY].asFloat();
+	strongInterval = jsonEnemiesAbilities[BalanceDef::STRONG_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
 	strongValue = jsonEnemiesAbilities[BalanceDef::STRONG_VALUE_KEY].asFloat();
-	teleportInterval = jsonEnemiesAbilities[BalanceDef::TELEPORT_INTERVAL_KEY].asFloat();
+	teleportInterval = jsonEnemiesAbilities[BalanceDef::TELEPORT_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
 	spawnCount = jsonEnemiesAbilities[BalanceDef::SPAWN_COUNT_KEY].asInt();
 	spawnCountOffset = jsonEnemiesAbilities[BalanceDef::SPAWN_COUNT_OFFSET_KEY].asInt();
-	spawnInterval = jsonEnemiesAbilities[BalanceDef::SPAWN_INTERVAL_KEY].asFloat();
-	shutdownInterval = jsonEnemiesAbilities[BalanceDef::SHUTDOWN_INTERVAL_KEY].asFloat();
-	shutdownDuration = jsonEnemiesAbilities[BalanceDef::SHUTDOWN_DURATION_KEY].asFloat();
+	spawnInterval = jsonEnemiesAbilities[BalanceDef::SPAWN_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
+	shutdownInterval = jsonEnemiesAbilities[BalanceDef::SHUTDOWN_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
+	shutdownDuration = jsonEnemiesAbilities[BalanceDef::SHUTDOWN_DURATION_KEY].asFloat() * EngineDefs::MSEC;
 	shutdownCells = jsonEnemiesAbilities[BalanceDef::SHUTDOWN_CELLS_KEY].asFloat();
 	downgradeValue = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_VALUE_KEY].asFloat();
 	downgradeCells = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_CELLS_KEY].asFloat();
-	downgradeDuration = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_DURATION_KEY].asFloat();
-	downgradeInterval = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_INTERVAL_KEY].asFloat();
+	downgradeDuration = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_DURATION_KEY].asFloat() * EngineDefs::MSEC;
+	downgradeInterval = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
+}
+
+void Balance::loadWaves(const Json::Value &jsonWaves)
+{
+	waves.clear();
+	for (unsigned int number = 0; number < jsonWaves.size(); ++number)
+	{
+		const Json::Value &jsonWave = jsonWaves[number];
+		std::vector<Wave> wave_s;
+		for (unsigned int i = 0; i < jsonWave.size(); ++i)
+		{
+			const Json::Value &jsonWaveWave = jsonWave[i];
+
+			Wave w;
+			w.protection = jsonWaveWave[BalanceDef::PROTECTION_KEY].asFloat();
+			w.respawnTime = jsonWaveWave[BalanceDef::RESPAWN_TIME_KEY].asFloat();
+
+			const Json::Value &jsonEnemies = jsonWaveWave[BalanceDef::SPAWN_ENEMIES_KEY];
+			for (unsigned int j = 0; j < jsonEnemies.size(); ++j)
+			{
+				const Json::Value &jsonEnemy = jsonEnemies[j];
+				const ENEMY_TYPES type = static_cast<ENEMY_TYPES>(jsonEnemy[BalanceDef::ENEMY_TYPE_KEY].asInt());
+				const int count = jsonEnemy[BalanceDef::ENEMIES_COUNT_KEY].asInt();
+				for (int k = 0; k < count; ++k)
+					w.spawnEnemies.push_back(type);
+			}
+			wave_s.push_back(w);
+		}
+		waves.push_back(wave_s);
+	}
 }
 
 TowerStats Balance::getTowerStats(const TOWER_TYPES type) const
@@ -605,5 +639,10 @@ float Balance::getDowngradeInterval() const
 MapStats Balance::getMapStats(int number) const
 {
 	return mapsStats.at(number);
+}
+
+std::vector<Wave> Balance::getWave(int number) const
+{
+	return waves.at(number);
 }
 

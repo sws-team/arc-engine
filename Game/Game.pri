@@ -29,7 +29,6 @@ SOURCES += \
     $$PWD/mapeffects.cpp \
     $$PWD/projectile.cpp \
     $$PWD/tower.cpp \
-    $$PWD/gamepanel.cpp \
-    $$PWD/waves.cpp
+    $$PWD/gamepanel.cpp
 
 include($$PWD/Balance/Balance.pri)

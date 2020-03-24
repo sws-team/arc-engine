@@ -169,7 +169,7 @@ void Level::startMission(const unsigned int n)
 	currentWave = 0;
 	Engine::Instance().options<GameOptions>()->panel()->updateWaveText();
 	m_state = WAIT_READY;
-	waves = EnemiesFactory::generateEnemies(n);
+	waves = Balance::Instance().getWave(n);
 	gameMap = Engine::Instance().options<GameOptions>()->getMap(n);
 	Engine::Instance().options<GameOptions>()->panel()->setMapSize(sf::Vector2f(gameMap->width * GameOptions::MAP_CELL_SIZE,
 													gameMap->height * GameOptions::MAP_CELL_SIZE));
@@ -550,6 +550,8 @@ bool Level::isFinalWave() const
 void Level::checkRespawn()
 {
 	if (abilities->stopAblity->isActive())
+		return;
+	if (waves.empty())
 		return;
 	Wave wave = waves.at(currentWave);
 	if (wave.spawnEnemies.empty())

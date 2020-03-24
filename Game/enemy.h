@@ -316,10 +316,7 @@ public:
 	};
 
 	static Enemy *createEnemy(ENEMY_TYPES type, const sf::Vector2f &startPos);
-	static std::vector<Wave> generateEnemies(unsigned int n);
 	static EnemyInfo getEnemyInfo(ENEMY_TYPES type);
-private:
-	static Wave createWave(float protection, float time, const std::map<ENEMY_TYPES, int>& enemies);
 };
 
 #endif // ENEMY_H
