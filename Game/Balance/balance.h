@@ -4,6 +4,22 @@
 #include "stdheader.h"
 #include "Game/leveldef.h"
 
+enum ARMOR_TYPE
+{
+	DEFAULT_ARMOR,
+
+	INFANTRY_LIGHT,
+	INFANTRY_HEAVY,
+
+	VEHICLE_LIGHT,
+	VEHICLE_HEAVY,
+
+	MONSTER_LIGHT,
+	MONSTER_HEAVY
+};
+
+typedef std::map<ARMOR_TYPE, float> TowerArmorDamage;
+
 struct TowerStats
 {
 	TowerStats();
@@ -18,6 +34,7 @@ struct TowerStats
 	float radius;
 	float projectileSpeed;
 	float cost;
+	TowerArmorDamage armorDamage;
 };
 
 struct EnemyStats
@@ -26,6 +43,7 @@ struct EnemyStats
 	float health;
 	float damage;
 	float reflection;
+	ARMOR_TYPE armorType;
 };
 
 struct MapStats

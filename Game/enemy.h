@@ -65,6 +65,8 @@ public:
 
 	bool getLastUp() const;
 
+	ARMOR_TYPE getArmorType() const;
+
 private:
 	ENEMY_TYPES m_type;
 	EnemyStats m_stats;

@@ -11,7 +11,6 @@ DESTDIR = TowerDefence
 #QMAKE_CXXFLAGS += -std=c++17
 
 include(../build_environment.pri)
-include($$PWD/3rdPartyIncludes.pri)
 
 SOURCES += main.cpp \
     gamemanagers.cpp \
@@ -41,6 +40,7 @@ DEFINES += STEAM_API
 TARGET = TowerDefence
 
 include($$PWD/../Engine/Engine/Engine.pri)
+include($$PWD/3rdPartyIncludes.pri)
 include($$PWD/../Engine/ResourcesLib/ResourcesLib.pri)
 include($$PWD/../Engine/GamePlatform/GamePlatform.pri)
 
@@ -54,6 +54,9 @@ include($$PWD/../3rdParty/SteamAPI.pri)
 RC_ICONS = icon.ico
 
 win32:LIBS += user32.lib
+unix: LIBS += -lX11
+
+#DEFINES += TEST_BUILD
 #DEFINES += RELEASE_BUILD
 #DEFINES += LOAD_MAPS
-DEFINES += TEST_BUILD
+#DEFINES += LOAD_BALANCE

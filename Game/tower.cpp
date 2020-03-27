@@ -214,10 +214,13 @@ float Tower::actualRadius() const
 	return m_stats.radius;
 }
 
-float Tower::actualDamage() const
+float Tower::actualDamage(const ARMOR_TYPE armorType) const
 {
-	float damage = m_downgraded ? m_stats.damage * Balance::Instance().getDowngradeValue() : m_stats.damage;
-	damage = m_regressed ? damage * Balance::Instance().getRegressValue() : damage;
+	float damage = m_stats.damage + m_stats.armorDamage.at(armorType);
+	if (m_downgraded)
+		damage *= Balance::Instance().getDowngradeValue();
+	if (m_regressed)
+		damage *= Balance::Instance().getRegressValue();
 	return damage;
 }
 
@@ -665,7 +668,7 @@ void LaserTower::updateLaserTarget(LaserTower::LaserTarget *laserTarget, float d
 
 	if(laserTarget->damageTimer.check(actualAttackSpeed()))
 	{
-		laserTarget->currentTarget->hit(actualDamage() * damageModifier);
+		laserTarget->currentTarget->hit(actualDamage(laserTarget->currentTarget->getArmorType()) * damageModifier);
 		checkKill(laserTarget->currentTarget);
 		if (!laserTarget->currentTarget->isAlive())
 			laserTarget->currentTarget = nullptr;
@@ -890,7 +893,7 @@ std::vector<Projectile *> ProjectilesTower::projectiles() const
 
 void ProjectilesTower::projectileAction(Enemy *enemy)
 {
-	enemy->hit(actualDamage());
+	enemy->hit(actualDamage(enemy->getArmorType()));
 	checkKill(enemy);
 	const sf::Vector2f size = enemy->getEnemySize();
 

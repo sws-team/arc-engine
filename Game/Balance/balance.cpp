@@ -6,8 +6,6 @@
 
 #include <json/json.h>
 
-#define LOAD_BALANCE
-
 TowerStats::TowerStats()
 {
 
@@ -149,6 +147,25 @@ void Balance::loadTower(const TOWER_TYPES type, const Json::Value &jsonTower)
 	stats.radius = jsonTower[BalanceDef::RADIUS_KEY].asFloat();
 	stats.projectileSpeed = jsonTower[BalanceDef::PROJECTILE_SPEED_KEY].asFloat();
 	stats.cost = jsonTower[BalanceDef::COST_KEY].asFloat();
+
+
+	const Json::Value &jsonArmorDamage = jsonTower[BalanceDef::ARMOR_DAMAGE_KEY];
+	const float infantryLightArmor = jsonArmorDamage[BalanceDef::INFANTRY_LIGHT_ARMOR_KEY].asFloat();
+	const float infantryHeavyArmor = jsonArmorDamage[BalanceDef::INFANTRY_HEAVY_ARMOR_KEY].asFloat();
+
+	const float vehicleLightArmor = jsonArmorDamage[BalanceDef::VEHICLE_LIGHT_ARMOR_KEY].asFloat();
+	const float vehicleHeavyArmor = jsonArmorDamage[BalanceDef::VEHICLE_HEAVY_ARMOR_KEY].asFloat();
+
+	const float monsterLightArmor = jsonArmorDamage[BalanceDef::MONSTER_LIGHT_ARMOR_KEY].asFloat();
+	const float monsterHeavyArmor = jsonArmorDamage[BalanceDef::MONSTER_HEAVY_ARMOR_KEY].asFloat();
+
+	stats.armorDamage.insert(std::pair<ARMOR_TYPE, float>(DEFAULT_ARMOR, 0.f));
+	stats.armorDamage.insert(std::pair<ARMOR_TYPE, float>(INFANTRY_LIGHT, infantryLightArmor));
+	stats.armorDamage.insert(std::pair<ARMOR_TYPE, float>(INFANTRY_HEAVY, infantryHeavyArmor));
+	stats.armorDamage.insert(std::pair<ARMOR_TYPE, float>(VEHICLE_LIGHT, vehicleLightArmor));
+	stats.armorDamage.insert(std::pair<ARMOR_TYPE, float>(VEHICLE_HEAVY, vehicleHeavyArmor));
+	stats.armorDamage.insert(std::pair<ARMOR_TYPE, float>(MONSTER_LIGHT, monsterLightArmor));
+	stats.armorDamage.insert(std::pair<ARMOR_TYPE, float>(MONSTER_HEAVY, monsterHeavyArmor));
 	towersStats.insert(std::pair<TOWER_TYPES, TowerStats>(type, stats));
 }
 
@@ -180,6 +197,7 @@ void Balance::loadEnemy(const ENEMY_TYPES type, const Json::Value &jsonEnemy)
 	stats.health = jsonEnemy[BalanceDef::HEALTH_KEY].asFloat();
 	stats.damage = jsonEnemy[BalanceDef::LOSS_KEY].asFloat();
 	stats.reflection = jsonEnemy[BalanceDef::REFLECTION_KEY].asFloat();
+	stats.armorType = static_cast<ARMOR_TYPE>(jsonEnemy[BalanceDef::ARMOR_TYPE_KEY].asInt());
 	enemiesStats.insert(std::pair<ENEMY_TYPES, EnemyStats>(type, stats));
 }
 

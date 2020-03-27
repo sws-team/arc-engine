@@ -84,7 +84,7 @@ public:
 	bool isRegressed() const;
 
 	float actualRadius() const;
-	float actualDamage() const;
+	float actualDamage(const ARMOR_TYPE armorType) const;
 	float actualAttackSpeed() const;
 
 	static constexpr int ABILITY_LEVEL = 4;

@@ -21,7 +21,7 @@
 #ifdef OS_WIN
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,int nShowCmd)
 #endif
-#ifdef OS_LINUX
+#ifdef OS_UNIX
 int main(int argc, char *argv[])
 #endif
 {

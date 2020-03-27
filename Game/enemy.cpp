@@ -336,6 +336,11 @@ bool Enemy::getLastUp() const
 	return lastUp;
 }
 
+ARMOR_TYPE Enemy::getArmorType() const
+{
+	return m_stats.armorType;
+}
+
 sf::Vector2i Enemy::getLastCell() const
 {
 	return m_lastCell;

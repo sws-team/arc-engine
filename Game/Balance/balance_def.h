@@ -30,6 +30,14 @@ const std::string ATTACK_SPEED_KEY = "attackSpeed";
 const std::string RADIUS_KEY = "radius";
 const std::string PROJECTILE_SPEED_KEY = "projectileSpeed";
 const std::string COST_KEY = "cost";
+const std::string DAMAGE_OFFSET_KEY = "damage_offset";
+const std::string ARMOR_DAMAGE_KEY = "armor_damage";
+const std::string INFANTRY_LIGHT_ARMOR_KEY = "infantry_light_armor";
+const std::string INFANTRY_HEAVY_ARMOR_KEY = "infantry_heavy_armor";
+const std::string VEHICLE_LIGHT_ARMOR_KEY = "vehicle_light_armor";
+const std::string VEHICLE_HEAVY_ARMOR_KEY = "vehicle_heavy_armor";
+const std::string MONSTER_LIGHT_ARMOR_KEY = "monster_light_armor";
+const std::string MONSTER_HEAVY_ARMOR_KEY = "monster_heavy_armor";
 
 //enemies
 const std::string INFANTRY_KEY = "infantry";
@@ -54,6 +62,7 @@ const std::string SPEED_KEY = "speed";
 const std::string HEALTH_KEY = "health";
 const std::string LOSS_KEY = "damage";
 const std::string REFLECTION_KEY = "reflection";
+const std::string ARMOR_TYPE_KEY = "armor_type";
 
 //limits
 const std::string BASE_LIMIT_KEY = "base_max";

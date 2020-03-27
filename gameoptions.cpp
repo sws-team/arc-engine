@@ -26,7 +26,7 @@
 #endif
 
 #ifdef OS_WIN
-FILE *fmemopen (void *buf, size_t size)
+FILE *fmemopen(void *buf, size_t size)
 {
 	FILE *f;
 	f = tmpfile();
@@ -286,7 +286,11 @@ unsigned int GameOptions::missionsCount() const
 bool GameOptions::loadMap(int id)
 {
 	const FilesManager::OtherFile oFile = Engine::Instance().filesManager()->getData(id);
-	FILE* file = fmemopen(oFile.data, oFile.size);
+	FILE* file = fmemopen(oFile.data, oFile.size
+					  #ifdef OS_UNIX
+						  ,"r"
+					  #endif
+						  );
 
 	if(file == nullptr)
 		return false;
@@ -603,8 +607,11 @@ bool GameOptions::loadTiles()
 	tileProperties.clear();
 
 	const FilesManager::OtherFile oFile = Engine::Instance().filesManager()->getData(GAME_FILES::TILES);
-	FILE* file = fmemopen(oFile.data, oFile.size);
-
+	FILE* file = fmemopen(oFile.data, oFile.size
+					  #ifdef OS_UNIX
+						  ,"r"
+					  #endif
+						  );
 	if(file == nullptr)
 		return false;
 
