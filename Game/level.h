@@ -108,6 +108,7 @@ public:
 	bool isFinalWave() const;
 	void updateRadius();
 
+	void enemyMove(Enemy *enemy);
 private:
 	void choose(const sf::Vector2i& cell, bool inPanel);
 	void calculateCollisions();

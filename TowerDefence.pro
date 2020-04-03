@@ -56,8 +56,12 @@ RC_ICONS = icon.ico
 win32:LIBS += user32.lib
 unix: LIBS += -lX11
 unix: QMAKE_RPATHDIR += $ORIGIN/libs
-
+macx{
+QMAKE_RPATHDIR += $ORIGIN/frameworks
+QMAKE_LFLAGS += -Wl,-rpath,@executable_path/frameworks
+}
 DEFINES += TEST_BUILD
 #DEFINES += RELEASE_BUILD
 #DEFINES += LOAD_MAPS
 #DEFINES += LOAD_BALANCE
+DEFINES += TEST_WAVES

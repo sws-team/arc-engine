@@ -169,7 +169,24 @@ void Level::startMission(const unsigned int n)
 	currentWave = 0;
 	Engine::Instance().options<GameOptions>()->panel()->updateWaveText();
 	m_state = WAIT_READY;
+#ifdef TEST_WAVES
+	Wave wave;
+	wave.protection = 0.f;
+	wave.respawnTime = 1000;
+	for (int i = 0; i < 1; ++i)
+	{
+		wave.spawnEnemies.push_back(ENEMY_TYPES::TELEPORT_ENEMY);
+//		wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
+//		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
+	}
+	waves.push_back(wave);
+	waves.push_back(wave);
+	waves.push_back(wave);
+	waves.push_back(wave);
+	waves.push_back(wave);
+#else
 	waves = Balance::Instance().getWave(n);
+#endif
 	gameMap = Engine::Instance().options<GameOptions>()->getMap(n);
 	Engine::Instance().options<GameOptions>()->panel()->setMapSize(sf::Vector2f(gameMap->width * GameOptions::MAP_CELL_SIZE,
 													gameMap->height * GameOptions::MAP_CELL_SIZE));
@@ -581,36 +598,40 @@ void Level::checkEnemyMove()
 	if (abilities->stopAblity->isActive())
 		return;
 
-	const sf::FloatRect endFRect = getEndRect();
 	for(Enemy* enemy : enemies)
 	{
 		if (enemy->isStopped())
 			continue;
-
-		enemy->moveEnemy();
-
-		if (endFRect.contains(enemy->enemyPos()))
-			continue;
-
-		const sf::Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(enemy->enemyPos());
-
-		if (enemy->getLastUp())
-		{
-			sf::Vector2f nextPos = enemy->enemyPos();
-			nextPos.y -= enemy->actualMoveStep().y;
-			const sf::Vector2i newCell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(nextPos);
-			const int newDirection = getTileDirectionByCell(newCell);
-			if (newDirection == Map::RIGHT || newDirection == Map::LEFT)
-				continue;
-		}
-
-		if (cell == enemy->getLastCell())
-			continue;
-
-		enemy->setLastCell(cell);
-		const int direction = getTileDirectionByCell(cell);
-		enemy->moveNext(direction);
+		enemyMove(enemy);
 	}
+}
+
+void Level::enemyMove(Enemy *enemy)
+{
+	enemy->moveEnemy();
+
+	const sf::FloatRect endFRect = getEndRect();
+	if (endFRect.contains(enemy->enemyPos()))
+		return;
+
+	const sf::Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(enemy->enemyPos());
+
+	if (enemy->getLastUp())
+	{
+		sf::Vector2f nextPos = enemy->enemyPos();
+		nextPos.y -= enemy->actualMoveStep().y;
+		const sf::Vector2i newCell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(nextPos);
+		const int newDirection = getTileDirectionByCell(newCell);
+		if (newDirection == Map::RIGHT || newDirection == Map::LEFT)
+			return;
+	}
+
+	if (cell == enemy->getLastCell())
+		return;
+
+	enemy->setLastCell(cell);
+	const int direction = getTileDirectionByCell(cell);
+	enemy->moveNext(direction);
 }
 
 Tower *Level::getTowerAtPos(const sf::Vector2f &pos) const

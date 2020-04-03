@@ -33,6 +33,7 @@ Enemy::Enemy(const TextureType &texture_id,
 	,m_burned(false)
 	,m_lastCell(sf::Vector2i(0, 0))
 	,lastUp(false)
+	,m_ignoreMoveTimer(false)
 {
 	moveStep = sf::Vector2f(Engine::Instance().settingsManager()->getScaleFactor().x * 1.f,
 						Engine::Instance().settingsManager()->getScaleFactor().y * 1.f);
@@ -89,8 +90,11 @@ EnemyStats Enemy::getPureStats() const
 
 void Enemy::moveEnemy()
 {
-	if (!moveTimer.check(m_data.speed))
-		return;
+	if (!m_ignoreMoveTimer)
+	{
+		if (!moveTimer.check(m_data.speed))
+			return;
+	}
 
 	sf::Vector2f offset;
 	offset.x = 0;
@@ -327,8 +331,13 @@ sf::Vector2f Enemy::actualMoveStep() const
 {
 	if (isFreezed)
 		return sf::Vector2f(moveStep.x * freezeK,
-						moveStep.y * freezeK);
+							moveStep.y * freezeK);
 	return moveStep;
+}
+
+void Enemy::setIgnoreMoveTimer(bool ignoreMoveTimer)
+{
+	m_ignoreMoveTimer = ignoreMoveTimer;
 }
 
 bool Enemy::getLastUp() const
@@ -504,6 +513,8 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		texture_id = GAME_TEXTURE::ENEMY_TELEPORT;
 		size.x = 2;
 		size.y = 2;
+		frameCount = TeleportAbility::TELEPORT_FRAME_COUNT;
+		animationSpeed = TeleportAbility::TELEPORT_DEFAULT_ANIMATION_SPEED;
 		abilityType = EnemyInfo::TELEPORT;
 		break;
 		//big
@@ -536,6 +547,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	info.frameCount = frameCount;
 	return info;
 }
+
 Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const sf::Vector2f &startPos)
 {
 	const EnemyInfo info = getEnemyInfo(type);
@@ -690,44 +702,40 @@ void TeleportAbility::use()
 	case READY:
 	{
 		owner->setStopped(true);
-		owner->setVisible(false);
-		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::ENEMY_TELEPORT,
-												 owner->pos(),
-												 sf::Vector2i(GameOptions::CELL_SIZE,
-														  GameOptions::CELL_SIZE),
-												 200, 4, TELEPORT_DISAPPEAR_ROW);
+		owner->row = TELEPORT_DISAPPEAR_ROW;
+		owner->animationSpeed = TELEPORT_ANIMATION_SPEED;
+		owner->currentFrame = 0;
 		m_state = DISAPPEAR;
-		m_interval = 250;
+		m_interval = TELEPORT_ANIMATION_SPEED * TELEPORT_FRAME_COUNT - 50;
 	}
 		break;
 	case DISAPPEAR:
 	{
-		for (int i = 0; i < 6; ++i)
-		{
-			if (Engine::Instance().options<GameOptions>()->level()->getEndRect().contains(owner->enemyPos()))
-				continue;
-			const sf::Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(owner->enemyPos());
-			const int direction = Engine::Instance().options<GameOptions>()->level()->getTileDirectionByCell(cell);
-			owner->moveNext(direction);
-		}
+		owner->setVisible(false);
+		owner->setIgnoreMoveTimer(true);
+		const int steps = 200 + rand() % 500;
+		for (int i = 0; i <  steps; ++i)
+			Engine::Instance().options<GameOptions>()->level()->enemyMove(owner);
+		owner->setIgnoreMoveTimer(false);
 		m_state = APPEAR;
-		m_interval = 500;
+		m_interval = 1000;
 	}
 		break;
 	case APPEAR:
-	{
-		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::ENEMY_TELEPORT,
-												 owner->pos(),
-												 sf::Vector2i(GameOptions::CELL_SIZE,
-														  GameOptions::CELL_SIZE),
-												 200, 4, TELEPORT_APPEAR_ROW);
+	{		
+		owner->setVisible(true);
+		owner->row = TELEPORT_APPEAR_ROW;
+		owner->animationSpeed = TELEPORT_ANIMATION_SPEED;
+		owner->currentFrame = 0;
 		m_state = FINISH;
-		m_interval = 200 * 4;
+		m_interval = TELEPORT_ANIMATION_SPEED * TELEPORT_FRAME_COUNT;
 	}
 		break;
 	case FINISH:
 	{
-		owner->setVisible(true);
+		owner->row = 0;
+		owner->currentFrame = 0;
+		owner->animationSpeed = TELEPORT_DEFAULT_ANIMATION_SPEED;
 		owner->setStopped(false);
 		m_state = READY;
 		m_interval = m_abilityInterval;
@@ -774,6 +782,7 @@ void TowerEffectAbility::use()
 
 		owner->row = 1;
 		owner->frameCount = 5;
+		owner->currentFrame = 0;
 		m_interval = owner->animationSpeed * owner->frameCount;
 		m_state = SHOOT;
 	}
@@ -782,6 +791,7 @@ void TowerEffectAbility::use()
 	{
 		owner->row = 3;
 		owner->frameCount = 1;
+		owner->currentFrame = 0;
 
 		Tower *target = nullptr;
 		const sf::Vector2f center = owner->enemyCenter();
@@ -871,6 +881,7 @@ void TowerEffectAbility::use()
 
 		owner->row = 0;
 		owner->frameCount = 5;
+		owner->currentFrame = 0;
 		owner->update();
 	}
 		break;

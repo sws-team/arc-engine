@@ -24,7 +24,6 @@ public:
 	EnemyStats getPureStats() const;
 
 	void moveEnemy();
-
 	void moveNext(int direction);
 
 	void update() override;	
@@ -110,11 +109,14 @@ private:
 	GameObject *burnAnimation;
 public:
 	sf::Vector2f actualMoveStep() const;
+	void setIgnoreMoveTimer(bool ignoreMoveTimer);
+
 private:
 	sf::Vector2f moveStep;
 	sf::Vector2i m_lastCell;
 
 	bool lastUp;
+	bool m_ignoreMoveTimer;
 };
 
 class EnemyAbility : public GameDrawable
@@ -172,6 +174,9 @@ class TeleportAbility : public EnemyAbility
 {
 public:
 	TeleportAbility();
+
+	constexpr static int TELEPORT_DEFAULT_ANIMATION_SPEED = 200;
+	constexpr static int TELEPORT_FRAME_COUNT = 6;
 protected:
 	void use() override;
 private:
@@ -183,6 +188,7 @@ private:
 		FINISH,
 	};
 	STATES m_state;
+	constexpr static int TELEPORT_ANIMATION_SPEED = 100;
 	constexpr static int TELEPORT_DISAPPEAR_ROW = 1;
 	constexpr static int TELEPORT_APPEAR_ROW = 2;
 };
