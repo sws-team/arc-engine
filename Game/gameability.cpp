@@ -143,10 +143,10 @@ void BombAbility::activate()
 	GameAbility::activate();
 	const sf::FloatRect abilityRect = Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect();
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::BOMB_EXPLOSION,
-				 sf::Vector2f(abilityRect.left, abilityRect.top),
-				 sf::Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
-						  m_areaSize.y * GameOptions::CELL_SIZE),
-				 200, 12, 0);
+																	 sf::Vector2f(abilityRect.left, abilityRect.top),
+																	 sf::Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
+																				  m_areaSize.y * GameOptions::CELL_SIZE),
+																	 200, 12, 0);
 
 //	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
 	unsigned int count = 0;

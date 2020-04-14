@@ -390,9 +390,9 @@ void ManualWindow::addElements()
 							   GAME_TRANSLATION::DOWN_TOWER,
 							   EnemiesFactory::getEnemyInfo(TRACTOR)));
 
-	elements.push_back(Element(GAME_TEXTURE::ENEMY_ANT,
-							   GAME_TRANSLATION::ANT,
-							   EnemiesFactory::getEnemyInfo(SMALL_NEXT)));
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_WORM,
+							   GAME_TRANSLATION::WORM,
+							   EnemiesFactory::getEnemyInfo(WORM)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_COW,
 							   GAME_TRANSLATION::COW,

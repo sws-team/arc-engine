@@ -33,7 +33,7 @@ public:
 
 	void drawLevel(sf::RenderTarget * const target);
 
-	void spawn(const sf::Vector2f &pos, ENEMY_TYPES type, float protection, int moveDirection);
+	Enemy *spawn(const sf::Vector2f &pos, ENEMY_TYPES type, float protection, int moveDirection);
 	Tile getTileByPos(const sf::Vector2f& pos, unsigned int layer = 0);
 	Tile getTileByCell(const sf::Vector2i& cell, unsigned int layer = 0) const;
 

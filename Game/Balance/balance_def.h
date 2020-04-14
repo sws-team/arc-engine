@@ -144,6 +144,10 @@ const std::string DOWNGRADE_VALUE_KEY = "downgrade_value";
 const std::string DOWNGRADE_CELLS_KEY = "downgrade_cells";
 const std::string DOWNGRADE_DURATION_KEY = "downgrade_durartion";
 const std::string DOWNGRADE_INTERVAL_KEY = "downgrade_interval";
+const std::string KILL_TOWER_INTERVAL_KEY = "kill_tower_interval";
+const std::string KILL_AREA_TOWERS_INTERVAL_KEY = "kill_area_towers_interval";
+const std::string KILL_TOWER_CELLS_KEY = "kill_tower_cells";
+const std::string KILL_AREA_TOWERS_CELLS_KEY = "kill_area_towers_cells";
 
 //waves
 const std::string PROTECTION_KEY = "protection";

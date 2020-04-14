@@ -166,16 +166,19 @@ void Level::update()
 
 void Level::startMission(const unsigned int n)
 {
+	spawnTimer.reset();
 	currentWave = 0;
 	Engine::Instance().options<GameOptions>()->panel()->updateWaveText();
 	m_state = WAIT_READY;
 #ifdef TEST_WAVES
 	Wave wave;
 	wave.protection = 0.f;
-	wave.respawnTime = 1000;
+	wave.respawnTime = 5000;
 	for (int i = 0; i < 1; ++i)
 	{
-		wave.spawnEnemies.push_back(ENEMY_TYPES::TELEPORT_ENEMY);
+//		wave.spawnEnemies.push_back(ENEMY_TYPES::TANK);
+		wave.spawnEnemies.push_back(ENEMY_TYPES::BIG_TANK);
+
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
 	}
@@ -380,7 +383,7 @@ void Level::checkAlive()
 			case INFANTRY:
 			case CAR:
 			case TRICYCLE:
-			case SMALL_NEXT:
+			case WORM:
 			case SELFHEAL_ENEMY:
 			case TRACTOR:
 			case ANOTHER_ENEMY:
@@ -1022,12 +1025,13 @@ void Level::drawLevel(sf::RenderTarget * const target)
 	}
 }
 
-void Level::spawn(const sf::Vector2f& pos, ENEMY_TYPES type, float protection, int moveDirection)
+Enemy* Level::spawn(const sf::Vector2f& pos, ENEMY_TYPES type, float protection, int moveDirection)
 {
 	Enemy *enemy = EnemiesFactory::createEnemy(type, pos);
 	enemy->protect(protection, false);
 	enemy->moveNext(moveDirection);
 	enemies.push_back(enemy);
+	return enemy;
 }
 
 Tile Level::getTileByPos(const sf::Vector2f &pos, unsigned int layer)

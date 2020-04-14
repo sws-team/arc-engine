@@ -66,6 +66,8 @@ public:
 
 	ARMOR_TYPE getArmorType() const;
 
+	void setFaster(const float modifier);
+
 private:
 	ENEMY_TYPES m_type;
 	EnemyStats m_stats;
@@ -117,6 +119,8 @@ private:
 
 	bool lastUp;
 	bool m_ignoreMoveTimer;
+	float actualSpeed() const;
+	float m_speedModifier;
 };
 
 class EnemyAbility : public GameDrawable
@@ -213,6 +217,7 @@ protected:
 		float duration;
 		SoundType catchSound;
 		float cells;
+		float projectileSpeed;
 	};
 	AbilityInfo info;
 private:
@@ -253,10 +258,32 @@ protected:
 	void effect(bool isActive) override;
 };
 
+class KillTowerAbility : public TowerEffectAbility
+{
+public:
+	KillTowerAbility();
+protected:
+	void effect(bool isActive) override;
+};
+
+class KillAreaTowersAbility : public TowerEffectAbility
+{
+public:
+	KillAreaTowersAbility();
+protected:
+	void effect(bool isActive) override;
+private:
+	std::vector<Tower *> findAreaTowers(Tower *tower);
+	float zeroGround;
+};
+
 class SpawnEnemy : public EnemyAbility
 {
 public:
 	SpawnEnemy();
+
+	constexpr static int DEFAULT_SPAWN_FRAME_COUNT = 4;
+	constexpr static float DEFAULT_ANIMATION_SPEED = 100;
 protected:
 	void use() override;
 private:
@@ -268,11 +295,15 @@ private:
 		FINISHED,
 	};
 	STATES m_state;
-	constexpr static float SPAWN_INTERVAL = 700;
 	int currentSpawnCount;
 	int spawnCount;
-	constexpr static float ACTIVATE_SPAWN_ROW = 1;
-	constexpr static float DEACTIVATE_SPAWN_ROW = 2;
+	constexpr static int ACTIVATE_SPAWN_ROW = 1;
+	constexpr static int PROCESS_SPAWN_ROW = 2;
+	constexpr static int DEACTIVATE_SPAWN_ROW = 3;
+
+	constexpr static int SPAWN_FRAME_COUNT = 2;
+	constexpr static int PRECESS_FRAME_COUNT = 6;
+	constexpr static float SPAWN_ANIMATION_SPEED = 50;
 };
 
 class StrongAbility : public EnemyAbility
@@ -294,11 +325,19 @@ protected:
 	constexpr static float RAGE_INTERVAL = 100;
 };
 
+class FasterAbility : public EnemyAbility
+{
+public:
+	FasterAbility();
+
+protected:
+	void use() override;
+	constexpr static float FASTER_INTERVAL = 100;
+};
 
 class EnemiesFactory
 {
 public:
-
 	struct EnemyInfo
 	{
 		enum ABILITY_TYPE
@@ -313,6 +352,9 @@ public:
 			STRONG,
 			DOWN_TOWER,
 			SELF_HEAL,
+			FASTER,
+			KILL_TOWER,
+			KILL_AREA_TOWERS,
 		};
 
 		EnemyStats stats;

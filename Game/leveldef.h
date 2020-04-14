@@ -27,7 +27,7 @@ enum ENEMY_TYPES
 	INFANTRY,
 	CAR,
 	TRICYCLE,
-	SMALL_NEXT,
+	WORM,
 	SELFHEAL_ENEMY,
 	TRACTOR,
 	ANOTHER_ENEMY,
@@ -42,6 +42,8 @@ enum ENEMY_TYPES
 	BIG_SLOW,//aircarrier
 	BIG_TANK,//big tank
 	SPAWN_ENEMY,
+
+	SPAWN_WORM
 };
 
 struct Wave

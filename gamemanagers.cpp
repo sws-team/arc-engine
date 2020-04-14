@@ -66,8 +66,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::ENEMY_BIG_TANK, out);
 			else if (resource.name == "aircarrier")
 				addTexture(GAME_TEXTURE::ENEMY_AIRCARRIER, out);
-			else if (resource.name == "ant")
-				addTexture(GAME_TEXTURE::ENEMY_ANT, out);
+			else if (resource.name == "worm")
+				addTexture(GAME_TEXTURE::ENEMY_WORM, out);
+			else if (resource.name == "spawn_worm")
+				addTexture(GAME_TEXTURE::ENEMY_SPAWN_WORM, out);
 			else if (resource.name == "cow")
 				addTexture(GAME_TEXTURE::ENEMY_COW, out);
 			else if (resource.name == "helicopter")
@@ -199,6 +201,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::ROCKET_PROJECTILE, out);
 			else if (resource.name == "electric_projectile")
 				addTexture(GAME_TEXTURE::DOWNGRADE_PROJECTILE, out);
+			else if (resource.name == "enemy_rocket")
+				addTexture(GAME_TEXTURE::ENEMY_ROCKET, out);
+			else if (resource.name == "enemy_bullet")
+				addTexture(GAME_TEXTURE::ENEMY_BULLET, out);
 			//effects
 			else if (resource.name == "base_explosion")
 				addTexture(GAME_TEXTURE::BASE_EXPLOSION_EFFECT, out);
@@ -726,9 +732,9 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DOWN_TOWER, L"Ухудшение башни"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DOWN_TOWER, L"Ухудшение башни"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ANT, L"Муравей"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ANT, L"Муравей"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ANT, L"Муравей"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::WORM, L"Larva"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::WORM, L"Личинка"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::WORM, L"???"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::COW, L"Корова"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::COW, L"Корова"));

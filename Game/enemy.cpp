@@ -34,6 +34,7 @@ Enemy::Enemy(const TextureType &texture_id,
 	,m_lastCell(sf::Vector2i(0, 0))
 	,lastUp(false)
 	,m_ignoreMoveTimer(false)
+	,m_speedModifier(1.0)
 {
 	moveStep = sf::Vector2f(Engine::Instance().settingsManager()->getScaleFactor().x * 1.f,
 						Engine::Instance().settingsManager()->getScaleFactor().y * 1.f);
@@ -92,7 +93,7 @@ void Enemy::moveEnemy()
 {
 	if (!m_ignoreMoveTimer)
 	{
-		if (!moveTimer.check(m_data.speed))
+		if (!moveTimer.check(actualSpeed()))
 			return;
 	}
 
@@ -340,6 +341,11 @@ void Enemy::setIgnoreMoveTimer(bool ignoreMoveTimer)
 	m_ignoreMoveTimer = ignoreMoveTimer;
 }
 
+float Enemy::actualSpeed() const
+{
+	return m_data.speed * m_speedModifier;
+}
+
 bool Enemy::getLastUp() const
 {
 	return lastUp;
@@ -348,6 +354,11 @@ bool Enemy::getLastUp() const
 ARMOR_TYPE Enemy::getArmorType() const
 {
 	return m_stats.armorType;
+}
+
+void Enemy::setFaster(const float modifier)
+{
+	m_speedModifier *= modifier;
 }
 
 sf::Vector2i Enemy::getLastCell() const
@@ -435,105 +446,155 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	{
 	//small
 	case INFANTRY:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_INFANTRY;
 		size.x = 1;
 		size.y = 1;
+	}
 		break;
 	case CAR:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_CAR;
 		size.x = 1;
 		size.y = 1;
 		animationSpeed = 50;
 		abilityType = EnemyInfo::STRONG;
+	}
 		break;
 	case TRICYCLE:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_TRICYCLE;
 		size.x = 1;
 		size.y = 1;
+	}
 		break;
-	case SMALL_NEXT:
-		texture_id = GAME_TEXTURE::ENEMY_ANT;
+	case WORM:
+	{
+		texture_id = GAME_TEXTURE::ENEMY_WORM;
 		size.x = 1;
 		size.y = 1;
+		frameCount = 6;
+		animationSpeed = 200;
+	}
 		break;
 	case SELFHEAL_ENEMY:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_SELF_HEAL;
 		size.x = 1;
 		size.y = 1;
 		abilityType = EnemyInfo::SELF_HEAL;
+	}
 		break;
 	case TRACTOR:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_TRACTOR;
 		abilityType = EnemyInfo::DOWN_TOWER;
 		animationSpeed = 100;
 		frameCount = 5;
 		size.x = 1;
 		size.y = 1;
+	}
 		break;
 	case ANOTHER_ENEMY:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_PLANE;
 		size.x = 1;
 		size.y = 1;
+		abilityType = EnemyInfo::FASTER;
+	}
 		break;
 		//mid
 	case TANK:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_TANK;
 		size.x = 2;
 		size.y = 2;
-		abilityType = EnemyInfo::STRONG;
+		abilityType = EnemyInfo::KILL_TOWER;
+	}
 		break;
 	case SPIDER:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_SPIDER;
 		size.x = 2;
 		size.y = 2;
 		animationSpeed = 100;
 		frameCount = 5;
 		abilityType = EnemyInfo::SHUTDOWN_TOWER;
+	}
 		break;
 	case MID_FAST:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_HELICOPTER;
 		size.x = 2;
 		size.y = 2;
+		animationSpeed = 100;
+		abilityType = EnemyInfo::STRONG;
+	}
 		break;
 	case REPAIR_ENEMY:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_REPAIR;
-		abilityType = EnemyInfo::HEAL_NEAR;
 		size.x = 2;
 		size.y = 2;
+		abilityType = EnemyInfo::HEAL_NEAR;
+	}
 		break;
 	case SHIELD_ENEMY:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_SHIELD;
 		size.x = 2;
 		size.y = 2;
 		animationSpeed = 300;
 		frameCount = 9;
 		abilityType = EnemyInfo::SHELL_NEAR;
+	}
 		break;
 	case TELEPORT_ENEMY:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_TELEPORT;
 		size.x = 2;
 		size.y = 2;
 		frameCount = TeleportAbility::TELEPORT_FRAME_COUNT;
 		animationSpeed = TeleportAbility::TELEPORT_DEFAULT_ANIMATION_SPEED;
 		abilityType = EnemyInfo::TELEPORT;
+	}
 		break;
 		//big
 	case BIG_SLOW:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_AIRCARRIER;
 		size.x = 4;
 		size.y = 4;
+		abilityType = EnemyInfo::RAGE;
+	}
 		break;
 	case BIG_TANK:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_BIG_TANK;
 		size.x = 4;
 		size.y = 4;
-		abilityType = EnemyInfo::RAGE;
+		abilityType = EnemyInfo::KILL_AREA_TOWERS;
+	}
 		break;
 	case SPAWN_ENEMY:
+	{
 		texture_id = GAME_TEXTURE::ENEMY_COW;
 		size.x = 4;
 		size.y = 4;
+		animationSpeed = SpawnEnemy::DEFAULT_ANIMATION_SPEED;
+		frameCount = SpawnEnemy::DEFAULT_SPAWN_FRAME_COUNT;
 		abilityType = EnemyInfo::SPAWN;
+	}
+		break;
+	case SPAWN_WORM:
+	{
+		const EnemyInfo wormInfo = getEnemyInfo(WORM);
+		texture_id = GAME_TEXTURE::ENEMY_SPAWN_WORM;
+		size = wormInfo.size;
+		animationSpeed = wormInfo.animationSpeed;
+		frameCount = wormInfo.frameCount;
+		abilityType = wormInfo.abilityType;
+	}
 		break;
 	default:
 		break;
@@ -581,6 +642,15 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const sf::Vector2f &startPo
 		break;
 	case EnemyInfo::SELF_HEAL:
 		ability = new SelfHealAbility();
+		break;
+	case EnemyInfo::FASTER:
+		ability = new FasterAbility();
+		break;
+	case EnemyInfo::KILL_TOWER:
+		ability = new KillTowerAbility();
+		break;
+	case EnemyInfo::KILL_AREA_TOWERS:
+		ability = new KillAreaTowersAbility();
 		break;
 	default:
 		break;
@@ -848,14 +918,13 @@ void TowerEffectAbility::use()
 		break;
 	case MOVE:
 	{
-		const float projectleSpeed = 5;
 		if (moveTimer.check(Projectile::PROJECTILE_GAME_SPEED))
 		{
 			const float x1 = owner->pos().x;
 			const float y1 = owner->pos().y;
 
-			const float y2 = y1 + projectleSpeed * sinf(m_angle * M_PI/180);
-			const float x2 = x1 + projectleSpeed * cosf(m_angle * M_PI/180);
+			const float y2 = y1 + info.projectileSpeed * sinf(m_angle * M_PI/180);
+			const float x2 = x1 + info.projectileSpeed * cosf(m_angle * M_PI/180);
 
 			projectile->move(x2-x1, y2-y1);
 		}
@@ -911,12 +980,13 @@ ShutdownTowerAbility::ShutdownTowerAbility()
 {
 	info.enemyTextureId = GAME_TEXTURE::ENEMY_SPIDER;
 	info.animationSize = sf::Vector2i(GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE,
-								  GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE);
+									  GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::WEB;
 	info.projectileSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
 	info.duration = Balance::Instance().getShutdownDuration();
 	info.catchSound = GAME_SOUND::CATCH;
 	info.cells = Balance::Instance().getShutdownCells();
+	info.projectileSpeed = 10;
 }
 
 ShutdownTowerAbility::~ShutdownTowerAbility()
@@ -936,12 +1006,13 @@ DownTowerAbility::DownTowerAbility()
 {
 	info.enemyTextureId = GAME_TEXTURE::ENEMY_TRACTOR;
 	info.animationSize = sf::Vector2i(GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE,
-								  GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE);
+									  GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::DOWNGRADE_PROJECTILE;
 	info.projectileSize = sf::Vector2i(200, 16);
 	info.duration = Balance::Instance().getDowngradeDuration();
 	info.catchSound = GAME_SOUND::CATCH;
 	info.cells = Balance::Instance().getDowngradeCells();
+	info.projectileSpeed = 5;
 }
 
 DownTowerAbility::~DownTowerAbility()
@@ -954,6 +1025,84 @@ void DownTowerAbility::effect(bool isActive)
 {
 	if (targetTower != nullptr)
 		targetTower->setDowngrade(isActive);
+}
+
+KillTowerAbility::KillTowerAbility()
+	: TowerEffectAbility(Balance::Instance().getKillTowerInterval())
+{
+	info.enemyTextureId = GAME_TEXTURE::ENEMY_TANK;
+	info.animationSize = sf::Vector2i(GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE,
+									  GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE);
+	info.pojectileTextureId = GAME_TEXTURE::ENEMY_ROCKET;
+	info.projectileSize = sf::Vector2i(32, 16);
+	info.duration = 0;
+	info.catchSound = GAME_SOUND::CATCH;
+	info.cells = Balance::Instance().getKillTowerCells();
+	info.projectileSpeed = 15;
+}
+
+void KillTowerAbility::effect(bool isActive)
+{
+	if (!isActive)
+		return;
+	if(targetTower == nullptr)
+		return;
+	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::BOMB_EXPLOSION, targetTower->pos(),
+																	 sf::Vector2i(GameOptions::MAP_CELL_SIZE, GameOptions::MAP_CELL_SIZE),
+																	 200, 12, 0);
+	Engine::Instance().options<GameOptions>()->level()->deleteTower(targetTower);
+	targetTower = nullptr;
+}
+
+KillAreaTowersAbility::KillAreaTowersAbility()
+	: TowerEffectAbility(Balance::Instance().getKillAreaTowersInterval())
+{
+	info.enemyTextureId = GAME_TEXTURE::ENEMY_BIG_TANK;
+	info.animationSize = sf::Vector2i(GameOptions::CELL_SIZE * 2 * Enemy::ENEMY_SCALE,
+									  GameOptions::CELL_SIZE * 2 * Enemy::ENEMY_SCALE);
+	info.pojectileTextureId = GAME_TEXTURE::ENEMY_BULLET;
+	info.projectileSize = sf::Vector2i(56, 24);
+	info.duration = 0;
+	info.catchSound = GAME_SOUND::CATCH;
+	info.cells = Balance::Instance().getKillAreaTowersCells();
+	info.projectileSpeed = 15;
+
+	zeroGround = Engine::Instance().options<GameOptions>()->tileSize().x * Balance::Instance().getFreezeTowerCells();
+}
+
+void KillAreaTowersAbility::effect(bool isActive)
+{
+	if (!isActive)
+		return;
+	if(targetTower == nullptr)
+		return;
+	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::BOMB_EXPLOSION, targetTower->pos(),
+																	 sf::Vector2i(GameOptions::MAP_CELL_SIZE, GameOptions::MAP_CELL_SIZE),
+																	 200, 12, 0);
+	const std::vector<Tower *> towers = findAreaTowers(targetTower);
+	for(Tower* tower : towers)
+		Engine::Instance().options<GameOptions>()->level()->deleteTower(tower);
+	targetTower = nullptr;
+}
+
+std::vector<Tower *> KillAreaTowersAbility::findAreaTowers(Tower *tower)
+{
+	std::vector<Tower *> results;
+	const sf::Vector2f epicenter = tower->getCenter();
+	const std::vector <Tower*> towers = Engine::Instance().options<GameOptions>()->level()->getAllTowers();
+	for(Tower* target : towers)
+	{
+		if (target == tower)
+			continue;
+
+		const float a = fabs(epicenter.x - target->getCenter().x);
+		const float b = fabs(epicenter.y - target->getCenter().y);
+		const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
+		if (r <= zeroGround)
+			results.push_back(target);
+	}
+	results.push_back(tower);
+	return results;
 }
 
 SpawnEnemy::SpawnEnemy()
@@ -970,12 +1119,11 @@ void SpawnEnemy::use()
 	case READY:
 	{
 		owner->setStopped(true);
-		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::ENEMY_COW,
-												 owner->pos(),
-												 sf::Vector2i(GameOptions::CELL_SIZE * 2,
-														  GameOptions::CELL_SIZE * 2),
-												 200, 4, ACTIVATE_SPAWN_ROW);
-		m_interval = 800;
+		owner->row = ACTIVATE_SPAWN_ROW;
+		owner->frameCount = SPAWN_FRAME_COUNT;
+		owner->animationSpeed = SPAWN_ANIMATION_SPEED * owner->frameCount;
+		owner->currentFrame = 0;
+		m_interval = owner->animationSpeed;
 		m_state = SPAWN;
 		currentSpawnCount = 0;
 		spawnCount = Balance::Instance().getSpawnCount() + rand() % Balance::Instance().getSpawnCountOffset();
@@ -983,12 +1131,21 @@ void SpawnEnemy::use()
 		break;
 	case SPAWN:
 	{
+		owner->row = PROCESS_SPAWN_ROW;
+		owner->frameCount = PRECESS_FRAME_COUNT;
+		owner->animationSpeed = 10 * owner->frameCount;
+		owner->currentFrame = 0;
+
 		const sf::Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(owner->enemyPos());
 		const int direction = Engine::Instance().options<GameOptions>()->level()->getTileDirectionByCell(cell);
 
-		Engine::Instance().options<GameOptions>()->level()->spawn(owner->pos(), SMALL_NEXT, 0.1f, direction);
+		Enemy *enemy = Engine::Instance().options<GameOptions>()->level()->spawn(
+					owner->pos(), SPAWN_WORM, 0.1f, direction);
 
-		m_interval = SPAWN_INTERVAL;
+		for (int i = 0; i < 155; ++i)
+			Engine::Instance().options<GameOptions>()->level()->enemyMove(enemy);
+
+		m_interval = owner->animationSpeed;
 		m_state = WAIT_SPAWN;
 		currentSpawnCount++;
 	}
@@ -997,12 +1154,11 @@ void SpawnEnemy::use()
 	{
 		if(currentSpawnCount >= spawnCount)
 		{
-			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::ENEMY_COW,
-													 owner->pos(),
-													 sf::Vector2i(GameOptions::CELL_SIZE * 2,
-															  GameOptions::CELL_SIZE * 2),
-													 200, 4, DEACTIVATE_SPAWN_ROW);
-			m_interval = 800;
+			owner->row = DEACTIVATE_SPAWN_ROW;
+			owner->frameCount = SPAWN_FRAME_COUNT;
+			owner->animationSpeed = SPAWN_ANIMATION_SPEED * owner->frameCount;
+			owner->currentFrame = 0;
+			m_interval = owner->animationSpeed;
 			m_state = FINISHED;
 		}
 		else
@@ -1012,6 +1168,11 @@ void SpawnEnemy::use()
 
 	case FINISHED:
 	{
+		owner->row = 0;
+		owner->frameCount = DEFAULT_SPAWN_FRAME_COUNT;
+		owner->animationSpeed = DEFAULT_ANIMATION_SPEED;
+		owner->currentFrame = 0;
+
 		owner->setStopped(false);
 		m_interval = Balance::Instance().getSpawnInterval();
 		m_state = READY;
@@ -1045,3 +1206,17 @@ void RageAbility::use()
 	const float protect = 1 - k;
 	owner->setReflection(protect);
 }
+
+FasterAbility::FasterAbility()
+	: EnemyAbility(FASTER_INTERVAL)
+{
+
+}
+
+void FasterAbility::use()
+{
+	const float k = owner->getData().health / owner->getPureStats().health;
+	owner->setFaster(k);
+}
+
+
