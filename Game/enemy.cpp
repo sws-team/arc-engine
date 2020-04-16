@@ -358,7 +358,7 @@ ARMOR_TYPE Enemy::getArmorType() const
 
 void Enemy::setFaster(const float modifier)
 {
-	m_speedModifier *= modifier;
+	m_speedModifier = modifier;
 }
 
 sf::Vector2i Enemy::getLastCell() const
@@ -495,15 +495,16 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		size.y = 1;
 	}
 		break;
+		//mid
 	case ANOTHER_ENEMY:
 	{
 		texture_id = GAME_TEXTURE::ENEMY_PLANE;
-		size.x = 1;
-		size.y = 1;
+		size.x = 2;
+		size.y = 2;
+		animationSpeed = FasterAbility::FASTER_ANIMATION_SPEED;
 		abilityType = EnemyInfo::FASTER;
 	}
 		break;
-		//mid
 	case TANK:
 	{
 		texture_id = GAME_TEXTURE::ENEMY_TANK;
@@ -1216,7 +1217,7 @@ FasterAbility::FasterAbility()
 void FasterAbility::use()
 {
 	const float k = owner->getData().health / owner->getPureStats().health;
+	owner->animationSpeed = FASTER_ANIMATION_SPEED + 4 * FASTER_ANIMATION_SPEED * k;
+	watch(k);
 	owner->setFaster(k);
 }
-
-

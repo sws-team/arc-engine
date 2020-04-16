@@ -329,6 +329,7 @@ class FasterAbility : public EnemyAbility
 {
 public:
 	FasterAbility();
+	constexpr static float FASTER_ANIMATION_SPEED = 50;
 
 protected:
 	void use() override;

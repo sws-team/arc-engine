@@ -171,22 +171,24 @@ void Level::startMission(const unsigned int n)
 	Engine::Instance().options<GameOptions>()->panel()->updateWaveText();
 	m_state = WAIT_READY;
 #ifdef TEST_WAVES
+	const int _testWavesCount = 3;
+	const int _testEnemiesCount = 1;
+	const int _testInterval = 10000;
+
 	Wave wave;
 	wave.protection = 0.f;
-	wave.respawnTime = 5000;
-	for (int i = 0; i < 1; ++i)
+	wave.respawnTime = _testInterval;
+	for (int i = 0; i < _testEnemiesCount; ++i)
 	{
-//		wave.spawnEnemies.push_back(ENEMY_TYPES::TANK);
-		wave.spawnEnemies.push_back(ENEMY_TYPES::BIG_TANK);
+//		wave.spawnEnemies.push_back(ENEMY_TYPES::BIG_SLOW);
+		wave.spawnEnemies.push_back(ENEMY_TYPES::ANOTHER_ENEMY);
 
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
 	}
-	waves.push_back(wave);
-	waves.push_back(wave);
-	waves.push_back(wave);
-	waves.push_back(wave);
-	waves.push_back(wave);
+	for (int i = 0; i < _testWavesCount; ++i)
+		waves.push_back(wave);
+
 #else
 	waves = Balance::Instance().getWave(n);
 #endif

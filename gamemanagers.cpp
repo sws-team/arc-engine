@@ -188,6 +188,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::UPGRADE_TEXTURE, out);
 			else if (resource.name == "life_icon")
 				addTexture(GAME_TEXTURE::LIFE_ICON, out);
+			else if (resource.name == "audio_icon")
+				addTexture(TexturesManager::AUDIO_ICON, out);
+			else if (resource.name == "quiet_icon")
+				addTexture(TexturesManager::QUIET_ICON, out);
 			//weapons
 			else if (resource.name == "bullet")
 				addTexture(GAME_TEXTURE::BASE_PROJECTILE, out);
