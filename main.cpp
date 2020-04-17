@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
 	if (!SteamAPI_Init())
 	{
-//		MessageBoxA(NULL, "Steam must be running to play this game", "Fatal Error!", MB_OK | MB_ICONERROR);
+		MessageBoxA(NULL, "Steam must be running to play this game", "Fatal Error!", MB_OK | MB_ICONERROR);
 		return EXIT_FAILURE;
 	}
 #endif
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 	if (!Engine::Instance().options<GameOptions>()->verifyChecksum())
 	{
 #ifdef OS_WIN
-//		MessageBoxA(NULL, "Checksum error", "Fatal Error!", MB_OK | MB_ICONERROR);
+		MessageBoxA(NULL, "Checksum error", "Fatal Error!", MB_OK | MB_ICONERROR);
 #endif
 		return EXIT_FAILURE;
 	}

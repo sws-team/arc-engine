@@ -1218,6 +1218,5 @@ void FasterAbility::use()
 {
 	const float k = owner->getData().health / owner->getPureStats().health;
 	owner->animationSpeed = FASTER_ANIMATION_SPEED + 4 * FASTER_ANIMATION_SPEED * k;
-	watch(k);
 	owner->setFaster(k);
 }

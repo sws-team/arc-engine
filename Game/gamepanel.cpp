@@ -363,18 +363,12 @@ TOWER_TYPES GamePanel::currentTower() const
 	}
 	return POWER;
 }
-//#include <Windows.h>
+
 sf::Vector2f GamePanel::updatePos()
 {
 	const sf::Vector2f nullPos = sf::Vector2f(0,
 											  Engine::Instance().settingsManager()->getResolution().y -
 											  m_sprite.getGlobalBounds().height);
-
-//	std::string str = std::to_string(Engine::Instance().settingsManager()->getResolution().y -
-//									 m_sprite.getGlobalBounds().height) + " - " +
-//			std::to_string(Engine::Instance().settingsManager()->getResolution().y) + " - " +
-//			std::to_string(m_sprite.getGlobalBounds().height);
-//	MessageBoxA(0, str.c_str(), "test", MB_OK);
 
 	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 	const sf::Vector2f iconSize = sf::Vector2f(ICON_SIZE * scaleFactor.x, ICON_SIZE * scaleFactor.y);
