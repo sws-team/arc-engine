@@ -5,8 +5,7 @@
 #include "managers.h"
 #include "enginedef.h"
 #include "gameoptions.h"
-
-
+#include "mainwindow.h"
 
 Camera::Camera()
 	: view(nullptr)
@@ -17,9 +16,12 @@ Camera::Camera()
 void Camera::init()
 {
 	const sf::FloatRect gameRect = sf::FloatRect(0, 0,
-										 Engine::Instance().settingsManager()->getInscribedResolution().x,
-										 Engine::Instance().settingsManager()->getInscribedResolution().y);
+										 Engine::Instance().settingsManager()->getResolution().x,
+										 Engine::Instance().settingsManager()->getResolution().y);
+
+//	view = Engine::Instance().window()->view();
 	view = new sf::View(gameRect);
+	view->setViewport(Engine::Instance().window()->view()->getViewport());
 	minimap = new sf::View(gameRect);
 
 	resetZoom();
@@ -33,7 +35,7 @@ void Camera::init()
 
 void Camera::destroy()
 {
-	Engine::Instance().window()->setView(Engine::Instance().window()->getDefaultView());
+	Engine::Instance().window()->setView(*Engine::Instance().window()->view());
 	delete view;
 	delete minimap;
 	view = nullptr;
@@ -121,9 +123,11 @@ void Camera::zoomOut()
 
 void Camera::resetZoom()
 {
-	view->setSize(Engine::Instance().settingsManager()->getInscribedResolution().x,
-				  Engine::Instance().settingsManager()->getInscribedResolution().y);
-	minimap->setSize(Engine::Instance().settingsManager()->getScaleFactor().x, Engine::Instance().settingsManager()->getScaleFactor().y);
+	view->setSize(Engine::Instance().settingsManager()->getResolution().x,
+				  Engine::Instance().settingsManager()->getResolution().y);
+	view->setViewport(Engine::Instance().window()->view()->getViewport());
+	minimap->setSize(Engine::Instance().settingsManager()->getScaleFactor().x,
+					 Engine::Instance().settingsManager()->getScaleFactor().y);
 	minimap->zoom(MINIMAP_ZOOM);
 	zoomRatio = 0;
 }
@@ -181,8 +185,8 @@ sf::Vector2f Camera::cellToPos(const sf::Vector2i &cell) const
 void Camera::resetView()
 {
 	resetZoom();
-	view->setCenter(Engine::Instance().settingsManager()->getInscribedResolution().x/2,
-					Engine::Instance().settingsManager()->getInscribedResolution().y/2);
+	view->setCenter(Engine::Instance().settingsManager()->getResolution().x/2,
+					Engine::Instance().settingsManager()->getResolution().y/2);
 }
 
 void Camera::checkBorders()

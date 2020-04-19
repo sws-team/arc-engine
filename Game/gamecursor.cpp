@@ -7,6 +7,7 @@
 #include "managers.h"
 #include "gamemanagers.h"
 #include "gameoptions.h"
+#include "mainwindow.h"
 
 const sf::Color GameCursor::TOWER_AREA_COLOR = sf::Color(40,98,131, 100);
 const sf::Color GameCursor::INACTIVE_TOWER_AREA_COLOR = sf::Color(213,84,66, 100);
@@ -169,6 +170,8 @@ void GameCursor::activateTower(float radius, TOWER_TYPES type)
 	else
 		towerRadius.setRadius(radius);
 
+	towerRect.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	towerRadius.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	towerType = type;
 
 	TextureType textureType = GAME_TEXTURE::TOWER_POWER;;
@@ -239,21 +242,15 @@ void GameCursor::initCell()
 
 void GameCursor::updatePanel()
 {
-	m_inPanel = windowCursorPos().y > Engine::Instance().options<GameOptions>()->panel()->getBottomValue();
+	m_inPanel = windowScreenPos().y > Engine::Instance().options<GameOptions>()->panel()->getBottomValue();
 	Engine::Instance().options<GameOptions>()->panel()->updateCursor();
-}
-
-sf::Vector2f GameCursor::windowCursorPos() const
-{
-	const sf::Vector2i pixelPos = sf::Mouse::getPosition(*Engine::Instance().window());
-	const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView());
-	return pos;
 }
 
 sf::Vector2f GameCursor::windowScreenPos() const
 {
 	const sf::Vector2i pixelPos = sf::Mouse::getPosition(*Engine::Instance().window());
-	const sf::Vector2f pos = sf::Vector2f(pixelPos.x, pixelPos.y);
+	const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																		   *Engine::Instance().window()->view());
 	return pos;
 }
 
@@ -272,9 +269,10 @@ void GameCursor::updateCell()
 	setPos(pos);
 	towerSprite.setPosition(pos);
 	abilityRect.setPosition(pos);
-	towerRadius.setPosition(pos);
-	towerRadius.setOrigin(towerRadius.getRadius() - Engine::Instance().options<GameOptions>()->mapTileSize().x,
-						  towerRadius.getRadius() - Engine::Instance().options<GameOptions>()->mapTileSize().y);
+	towerRadius.setPosition(pos);	
+	towerRadius.setOrigin(towerRadius.getRadius() - GameOptions::MAP_CELL_SIZE,
+						  towerRadius.getRadius() - GameOptions::MAP_CELL_SIZE);
+
 	towerRect.setPosition(pos - Engine::Instance().options<GameOptions>()->tileSize());
 
 	Engine::Instance().options<GameOptions>()->panel()->updateInfo();

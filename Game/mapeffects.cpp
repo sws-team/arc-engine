@@ -17,7 +17,7 @@ const int Shake::SHAKE_TIME = 50;
 
 Shake::Shake()
 {
-	dangerRect.setSize(sf::Vector2f(Engine::Instance().settingsManager()->getInscribedResolution()));
+	dangerRect.setSize(sf::Vector2f(Engine::Instance().settingsManager()->getResolution()));
 	dangerRect.setFillColor(sf::Color(255,0,0,96));
 	isActive = false;
 	dangerRect.setPosition(0,0);

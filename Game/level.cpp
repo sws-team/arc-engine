@@ -15,6 +15,7 @@
 #include "gameoptions.h"
 #include "gameplatform.h"
 #include "achievements.h"
+#include "mainwindow.h"
 
 Level::Level() :
 	gameMap(nullptr)
@@ -102,7 +103,8 @@ void Level::draw(sf::RenderTarget *const target)
 		startObject->draw(target);
 		endObject->draw(target);
 	}
-	Engine::Instance().window()->setView(Engine::Instance().window()->getDefaultView());
+//	Engine::Instance().window()->setView(Engine::Instance().window()->getDefaultView());
+	Engine::Instance().window()->setView(*Engine::Instance().window()->view());
 	Engine::Instance().options<GameOptions>()->panel()->draw(target);
 	Engine::Instance().options<GameOptions>()->instructions()->draw(target);
 }
@@ -138,14 +140,15 @@ void Level::update()
 		towersRegress->update();
 		smoke->update();
 		abilities->update();
-		if (playing)
-			checkRespawn();
+
 		for(Enemy* enemy : enemies)
 			enemy->useAbility();
 		calculateCollisions();
 		checkDeadZone();
 		checkEnd();
 		checkEnemyMove();
+		if (playing)
+			checkRespawn();
 		for(Enemy* enemy : enemies)
 			enemy->update();
 		checkAlive();
@@ -735,10 +738,11 @@ void Level::updateRadius()
 	}
 	else
 	{
-		currentTowerRadius.setRadius(m_selectedTower->actualRadius() * Engine::Instance().options<GameOptions>()->mapTileSize().x);
+		currentTowerRadius.setRadius(m_selectedTower->actualRadius() * GameOptions::MAP_CELL_SIZE);
+		currentTowerRadius.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 		currentTowerRadius.setPosition(m_selectedTower->pos());
-		currentTowerRadius.setOrigin(currentTowerRadius.getRadius() - Engine::Instance().options<GameOptions>()->mapTileSize().x,
-						 currentTowerRadius.getRadius() - Engine::Instance().options<GameOptions>()->mapTileSize().y);
+		currentTowerRadius.setOrigin(currentTowerRadius.getRadius() - GameOptions::MAP_CELL_SIZE,
+									 currentTowerRadius.getRadius() - GameOptions::MAP_CELL_SIZE);
 	}
 }
 
@@ -891,7 +895,7 @@ unsigned int Level::getCurrentWave() const
 
 void Level::test()
 {
-	GamePlatform::Instance().unlock(ACHIEVEMENT_COMPLETE_ALL_LEVELS);
+	checkEnemyMove();
 }
 
 Abilities *Level::getAbilities()
@@ -1103,8 +1107,8 @@ float Level::getLifeCount() const
 
 void Level::chooseByPos(const sf::Vector2f &pos)
 {
-	const bool inPanel = pos.y > Engine::Instance().options<GameOptions>()->panel()->getBottomValue();
-	choose(Engine::Instance().options<GameOptions>()->camera()->posToCell(pos), inPanel);
+	choose(Engine::Instance().options<GameOptions>()->camera()->posToCell(pos),
+		   Engine::Instance().options<GameOptions>()->cursor()->inPanel());
 }
 
 void Level::choose(const sf::Vector2i &cell, bool inPanel)
@@ -1130,7 +1134,7 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 			if (!Engine::Instance().options<GameOptions>()->panel()->isTowerIconActive(type))
 				return;
 
-			const float radius = Balance::Instance().getTowerStats(type).radius * Engine::Instance().options<GameOptions>()->mapTileSize().x;
+			const float radius = Balance::Instance().getTowerStats(type).radius * GameOptions::MAP_CELL_SIZE;
 			Engine::Instance().options<GameOptions>()->cursor()->activateTower(radius, type);
 			highlightPowerTowersRadius(type != POWER);
 			Engine::Instance().options<GameOptions>()->cursor()->swap();

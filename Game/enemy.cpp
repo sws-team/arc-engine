@@ -64,6 +64,7 @@ Enemy::Enemy(const TextureType &texture_id,
 	burnAnimation = new GameObject(GAME_TEXTURE::BURN, startPos, sf::Vector2i(32, 32), 4);
 	this->frameCount = frameCount;
 	this->animationSpeed = animationSpeed;
+	setPos(m_pos + m_spritePos);
 }
 
 Enemy::~Enemy()

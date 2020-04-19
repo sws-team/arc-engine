@@ -12,6 +12,7 @@
 #include "gameplatform.h"
 #include "Game/achievements.h"
 #include "Game/instructions.h"
+#include "mainwindow.h"
 
 #include <algorithm>
 #include <random>
@@ -59,7 +60,7 @@ GameWindow::GameWindow()
 	const float offsetY = 20.f * Engine::Instance().settingsManager()->getScaleFactor().y;
 
 	pos.x += Engine::Instance().options<GameOptions>()->tileSize().x;
-	pos.y += Engine::Instance().settingsManager()->getInscribedResolution().y/2;
+	pos.y += Engine::Instance().settingsManager()->getResolution().y/2;
 
 	for(sf::Text& menuText : menus)
 	{
@@ -68,8 +69,8 @@ GameWindow::GameWindow()
 		menuText.setPosition(pos);
 		pos.y += menuText.getGlobalBounds().height + offsetY;
 	}
-	windowSprite.setPosition(Engine::Instance().settingsManager()->getInscribedResolution().x/2 - windowSprite.getGlobalBounds().width/2,
-							 Engine::Instance().settingsManager()->getInscribedResolution().y/2 - windowSprite.getGlobalBounds().height/2);
+	windowSprite.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 - windowSprite.getGlobalBounds().width/2,
+							 Engine::Instance().settingsManager()->getResolution().y/2 - windowSprite.getGlobalBounds().height/2);
 	clock.restart();
 }
 
@@ -329,8 +330,8 @@ void GameWindow::finish()
 
 void GameWindow::updateTextPos()
 {
-	text.setPosition(Engine::Instance().settingsManager()->getInscribedResolution().x/2 - text.getGlobalBounds().width/2,
-					 Engine::Instance().settingsManager()->getInscribedResolution().y/2 - text.getGlobalBounds().height/2);
+	text.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 - text.getGlobalBounds().width/2,
+					 Engine::Instance().settingsManager()->getResolution().y/2 - text.getGlobalBounds().height/2);
 }
 
 void GameWindow::nextTrack()

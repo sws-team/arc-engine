@@ -7,6 +7,7 @@
 #include "gamestatemanager.h"
 #include "gameoptions.h"
 #include "Game/gameability.h"
+#include "mainwindow.h"
 
 const sf::Color ManualWindow::SELECTED_COLOR = sf::Color(45, 45, 45, 96);
 
@@ -96,8 +97,9 @@ void ManualWindow::eventFilter(sf::Event *event)
 {
 	if (event->type == sf::Event::MouseButtonPressed)
 	{
-		const sf::Vector2f pos = sf::Vector2f(event->mouseButton.x, event->mouseButton.y);
-
+		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
+		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																			   *Engine::Instance().window()->view());
 		if (next.getGlobalBounds().contains(pos))
 		{
 			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
@@ -122,7 +124,9 @@ void ManualWindow::eventFilter(sf::Event *event)
 	else if (event->type == sf::Event::MouseMoved)
 	{
 		current = -1;
-		const sf::Vector2f pos = sf::Vector2f(event->mouseMove.x, event->mouseMove.y);
+		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseMove.x, event->mouseMove.y);
+		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																			   *Engine::Instance().window()->view());
 		const int startValue = MAX_ELEMENTS_COUNT * page;
 		for (unsigned int i = startValue; i < startValue + MAX_ELEMENTS_COUNT; ++i)
 		{

@@ -50,7 +50,6 @@ public:
 
 	void updatePanel();
 
-	sf::Vector2f windowCursorPos() const;
 	sf::Vector2f windowScreenPos() const;
 
 	static const sf::Color TOWER_AREA_COLOR;

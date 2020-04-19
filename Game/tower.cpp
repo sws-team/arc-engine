@@ -454,7 +454,7 @@ sf::FloatRect PowerTower::getValidArea() const
 void PowerTower::upgradePowerRect()
 {
 	powerRect.setSize(sf::Vector2f(m_stats.radius * Engine::Instance().options<GameOptions>()->mapTileSize().x,
-							   m_stats.radius * Engine::Instance().options<GameOptions>()->mapTileSize().y));
+								   m_stats.radius * Engine::Instance().options<GameOptions>()->mapTileSize().y));
 
 	powerRect.setPosition(this->pos() -
 						  sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x * level(),

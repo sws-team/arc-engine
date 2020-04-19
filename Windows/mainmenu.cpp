@@ -5,13 +5,13 @@
 #include "gamestatemanager.h"
 #include "gameplatform.h"
 #include "gameoptions.h"
+#include "mainwindow.h"
 
 MainMenu::MainMenu()
 	: Menu()
 {
 	setBackground(GAME_TEXTURE::MENU_BACKGROUND);
 	currentMenu = static_cast<MENUS>(CAMPAIGN);
-
 	setPos(sf::Vector2f(120 * Engine::Instance().settingsManager()->getScaleFactor().x,
 					640 * Engine::Instance().settingsManager()->getScaleFactor().y));
 	setColor(sf::Color(64,224,208, 100));
@@ -97,7 +97,9 @@ void MainMenu::eventFilter(sf::Event *event)
 {
 	if (event->type == sf::Event::MouseButtonPressed)
 	{
-		const sf::Vector2f pos = sf::Vector2f(event->mouseButton.x, event->mouseButton.y);
+		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
+		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																			   *Engine::Instance().window()->view());
 		if (clearStats.getGlobalBounds().contains(pos))
 		{
 			if (GamePlatform::Instance().clearAll())

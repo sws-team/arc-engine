@@ -6,6 +6,7 @@
 #include "gamemanagers.h"
 #include "gameoptions.h"
 #include "gamestatemanager.h"
+#include "mainwindow.h"
 
 const sf::Color ChooseMissionWindow::DISABLED_COLOR = sf::Color(0,34,52, 128);
 const sf::Color ChooseMissionWindow::CURRENT_COLOR = sf::Color(0,85,130, 128);
@@ -198,7 +199,9 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 //			   << mission.getGlobalBounds().left << " "
 //				  << mission.getGlobalBounds().width << " "
 //				  << mission.getGlobalBounds().height << " " << endl<<endl;
-		const sf::Vector2f pos = sf::Vector2f(event->mouseButton.x, event->mouseButton.y);
+		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
+		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																			   *Engine::Instance().window()->view());
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
 			{
@@ -231,8 +234,10 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 	}
 	else if (event->type == sf::Event::MouseMoved)
 	{
+		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseMove.x, event->mouseMove.y);
+		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																			   *Engine::Instance().window()->view());
 		int hoverId = -1;
-		const sf::Vector2f pos = sf::Vector2f(event->mouseMove.x, event->mouseMove.y);
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 		{
 			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))

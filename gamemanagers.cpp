@@ -168,7 +168,7 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::CURSOR_TEXTURE, out);
 			else if (resource.name == "instructions")
 				addTexture(GAME_TEXTURE::INSTRUCTIONS_TEXTURE, out);
-			else if (resource.name == "left_icon")
+			else if (resource.name == "previous_icon")
 				addTexture(GAME_TEXTURE::PREVIOUS, out);
 			else if (resource.name == "locked")
 				addTexture(GAME_TEXTURE::LOCKED_ICON, out);
@@ -178,7 +178,7 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::PANEL_TEXTURE, out);
 			else if (resource.name == "panel_cursor")
 				addTexture(GAME_TEXTURE::PANEL_CURSOR, out);
-			else if (resource.name == "right_icon")
+			else if (resource.name == "next_icon")
 				addTexture(GAME_TEXTURE::NEXT, out);
 			else if (resource.name == "sell_icon")
 				addTexture(GAME_TEXTURE::SELL_TEXTURE, out);
@@ -209,6 +209,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::ENEMY_ROCKET, out);
 			else if (resource.name == "enemy_bullet")
 				addTexture(GAME_TEXTURE::ENEMY_BULLET, out);
+			else if (resource.name == "chooselist_next")
+				addTexture(TexturesManager::CHOOSE_LIST_NEXT, out);
+			else if (resource.name == "chooselist_previous")
+				addTexture(TexturesManager::CHOOSE_LIST_PREVIOUS, out);
 			//effects
 			else if (resource.name == "base_explosion")
 				addTexture(GAME_TEXTURE::BASE_EXPLOSION_EFFECT, out);
@@ -845,22 +849,22 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Tour a vitesse d'attaque augmentee"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE, L"Strengthen tower"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE, L"Увеличение урона башни"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE, L"Усиление башни"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE, L"Tour aux dommages augmentes"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ABILITY_STOP, L"Stop all"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ABILITY_STOP, L"Остановка"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ABILITY_STOP, L"Stopper"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_BASE, L"Tower base"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_BASE, L"Base tower"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_BASE, L"Обычная башня"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_BASE, L"Tour de base"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_POWER, L"Tower power"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_POWER, L"Energy tower"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_POWER, L"Энергетическая башня"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_POWER, L"Tour de production d'energie"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_ROCKET, L"Tower rocket"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_ROCKET, L"Rocket tower"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_ROCKET, L"Ракетная башня"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_ROCKET, L"Tour reacteur-fusee"));
 

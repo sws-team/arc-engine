@@ -308,62 +308,6 @@ bool GameOptions::loadMap(int id)
 
 	gameMap->width = atoi(mapElement->Attribute("width"));
 	gameMap->height = atoi(mapElement->Attribute("height"));
-/*
-	TiXmlElement *propertiesElement = mapElement->FirstChildElement("properties");
-	if (propertiesElement != nullptr)
-	{
-		TiXmlElement *prop = propertiesElement->FirstChildElement("property");
-		while (prop)
-		{
-			const std::string propertyName = prop->Attribute("name");
-			const std::string propertyValue = prop->Attribute("value");
-
-//			if (propertyName == "life")
-//				gameMap->life = stod(propertyValue);
-//			else if (propertyName == "money")
-//				gameMap->money = stod(propertyValue);
-
-//			else if (propertyName == "smoke")
-//				gameMap->smoke.enabled = static_cast<bool>(stoi(propertyValue));
-//			else if (propertyName == "smoke_count")
-//				gameMap->smoke.count = stoi(propertyValue);
-//			else if (propertyName == "smoke_duration")
-//				gameMap->smoke.duration = stod(propertyValue) * EngineDefs::MSEC;
-//			else if (propertyName == "smoke_time")
-//				gameMap->smoke.time = stod(propertyValue) * EngineDefs::MSEC;
-
-//			else if (propertyName == "regress")
-//				gameMap->regress.enabled = static_cast<bool>(stoi(propertyValue));
-//			else if (propertyName == "regress_count")
-//				gameMap->regress.count = stoi(propertyValue);
-//			else if (propertyName == "regress_duration")
-//				gameMap->regress.duration = stod(propertyValue) * EngineDefs::MSEC;
-//			else if (propertyName == "regress_time")
-//				gameMap->regress.time = stod(propertyValue) * EngineDefs::MSEC;
-
-//			else if (propertyName == "moneyDrain")
-//				gameMap->moneyDrain.enabled = static_cast<bool>(stoi(propertyValue));
-//			else if (propertyName == "moneyDrain_count")
-//				gameMap->moneyDrain.count = stoi(propertyValue);
-//			else if (propertyName == "moneyDrain_duration")
-//				gameMap->moneyDrain.duration = stod(propertyValue) * EngineDefs::MSEC;
-//			else if (propertyName == "moneyDrain_time")
-//				gameMap->moneyDrain.time = stod(propertyValue) * EngineDefs::MSEC;
-
-//			else if (propertyName == "explosions")
-//				gameMap->explosions.enabled = static_cast<bool>(stoi(propertyValue));
-//			else if (propertyName == "explosions_count")
-//				gameMap->explosions.count = stoi(propertyValue);
-//			else if (propertyName == "explosions_duration")
-//				gameMap->explosions.duration = stod(propertyValue) * EngineDefs::MSEC;
-//			else if (propertyName == "explosions_time")
-//				gameMap->explosions.time = stod(propertyValue) * EngineDefs::MSEC;
-
-
-			prop = prop->NextSiblingElement("property");
-		}
-	}
-	*/
 	gameMap->stats = Balance::Instance().getMapStats(id);
 	const int firstTileID = 1;
 
@@ -445,19 +389,10 @@ bool GameOptions::loadMap(int id)
 				const int subRectToUse = tileGID - firstTileID;
 				if (subRectToUse >= 0 && !subRects.empty())
 				{
-//					sf::Sprite sprite;
-//					sprite.setTexture(tilesetImage);
-//					sprite.setTextureRect(subRects[subRectToUse]);
-
 					const float posX = x * MAP_CELL_SIZE * Engine::Instance().settingsManager()->getScaleFactor().x;
 					const float posY = y * MAP_CELL_SIZE * Engine::Instance().settingsManager()->getScaleFactor().y;
-//					sprite.setPosition(posX, posY);
-
-//					sprite.setColor(sf::Color(255, 255, 255, layer.opacity));
-//					sprite.scale(Engine::Instance().settingsManager()->getScaleFactor());
 
 					Tile tile;
-//					tile.sprite = sprite;
 
 					const int verticlesSize = layer.vertices.getVertexCount();
 					layer.vertices.resize(verticlesSize + 4);
@@ -587,8 +522,6 @@ bool GameOptions::loadMap(int id)
 					}
 				}
 
-				//				gameMap->buildings.push_back(object);
-
 				objectElement = objectElement->NextSiblingElement("object");
 			}
 			objectGroupElement = objectGroupElement->NextSiblingElement("objectgroup");
@@ -656,7 +589,6 @@ bool GameOptions::loadTiles()
 	}
 
 	const sf::Image img = Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TILES).copyToImage();
-//	img.createMaskFromColor(sf::Color(255, 255, 255));//для маски цвета.сейчас нет маски
 	tilesetImage.loadFromImage(img);
 	tilesetImage.setSmooth(false);
 	return true;
@@ -724,10 +656,10 @@ float GameOptions::difficult() const
 
 void GameOptions::updateWindow()
 {
-	Engine::Instance().reset();
 	Options::updateWindow();
+	this->reset();
 	loadMaps();
-	sf::Joystick::update();
+//	sf::Joystick::update();
 }
 
 void GameOptions::loadAchievements()

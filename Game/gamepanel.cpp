@@ -11,6 +11,7 @@
 #include "gamemanagers.h"
 #include "managers.h"
 #include "gameoptions.h"
+#include "mainwindow.h"
 
 const sf::String GamePanel::endline = "\n";
 
@@ -366,26 +367,24 @@ TOWER_TYPES GamePanel::currentTower() const
 
 sf::Vector2f GamePanel::updatePos()
 {
-	const sf::Vector2f nullPos = sf::Vector2f(0,
-											  Engine::Instance().settingsManager()->getResolution().y -
+	const sf::Vector2f nullPos = sf::Vector2f(0, Engine::Instance().settingsManager()->getResolution().y -
 											  m_sprite.getGlobalBounds().height);
 
 	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 	const sf::Vector2f iconSize = sf::Vector2f(ICON_SIZE * scaleFactor.x, ICON_SIZE * scaleFactor.y);
 
-	const float top_offset = 40 * scaleFactor.x;
+	const float top_offset = 40 * scaleFactor.y;
 	const float left_offset = 40 * scaleFactor.x;
 	const float icon_offset = 24 * scaleFactor.x;
 	const float text_offset = 338 * scaleFactor.x;
-	const float panel_offset = PANEL_OFFSET * scaleFactor.x;
+	const float panel_offset = PANEL_OFFSET * scaleFactor.y;
 
-	m_bottomValue = nullPos.y + PANEL_OFFSET * scaleFactor.y;
+	m_bottomValue = nullPos.y + panel_offset;
 
 	sf::Vector2f pos = sf::Vector2f(ceil(nullPos.x), ceil(nullPos.y));
 	m_sprite.setPosition(pos);
 
 	pos.y += panel_offset;
-
 	pos.x += left_offset;
 	pos.y += top_offset;
 
@@ -462,8 +461,8 @@ sf::Vector2f GamePanel::updatePos()
 	pos.x += icon_offset;
 	pos.y = nullPos.y + 43 * scaleFactor.y;
 
-	readyText.setPosition(sf::Vector2f(Engine::Instance().settingsManager()->getInscribedResolution().x/2 - readyText.getGlobalBounds().width/2,
-								   Engine::Instance().settingsManager()->getInscribedResolution().y/2 + readyText.getGlobalBounds().height/2));
+	readyText.setPosition(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x/2 - readyText.getGlobalBounds().width/2,
+								   Engine::Instance().settingsManager()->getResolution().y/2 + readyText.getGlobalBounds().height/2));
 	waveText.setPosition(progress->pos());
 
 	towerBaseCostText.setPosition(towerBaseSprite.getPosition());
@@ -722,8 +721,7 @@ sf::String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 
 void GamePanel::updateCursor()
 {
-//	m_sprite.setColor(Engine::Instance().options<GameOptions>()->cursor()->inPanel()?Color::Red:Color::Green);
-
+//	m_sprite.setColor(Engine::Instance().options<GameOptions>()->cursor()->inPanel()?sf::Color::Red:sf::Color::Green);
 	if (!Engine::Instance().options<GameOptions>()->cursor()->inPanel())
 		return;
 	const sf::Vector2f pos = Engine::Instance().options<GameOptions>()->cursor()->windowScreenPos();
@@ -1086,16 +1084,12 @@ void GamePanel::setMapSize(const sf::Vector2f& size)
 	rTexture.create(static_cast<unsigned int>(size.x),
 					static_cast<unsigned int>(size.y));
 
-	const float minimap_scale_x = Engine::Instance().settingsManager()->getScaleFactor().x * 344.f / Engine::Instance().settingsManager()->getInscribedResolution().x;
-	const float minimap_scale_y = Engine::Instance().settingsManager()->getScaleFactor().y * 213.f / Engine::Instance().settingsManager()->getInscribedResolution().y;
+	const float minimap_scale_x = Engine::Instance().settingsManager()->getScaleFactor().x * 344.f / Engine::Instance().settingsManager()->getResolution().x;
+	const float minimap_scale_y = Engine::Instance().settingsManager()->getScaleFactor().y * 213.f / Engine::Instance().settingsManager()->getResolution().y;
 	miniMapSprite.setScale(minimap_scale_x * 1920.f/size.x, minimap_scale_y* 1088.f/size.y);
 }
 
 float GamePanel::getBottomValue() const
 {
-	const sf::Vector2i pixelPos = sf::Vector2i(0, m_bottomValue);
-	const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
-				pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView());
-
-	return pos.y;
+	return m_bottomValue;
 }

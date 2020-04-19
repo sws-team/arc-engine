@@ -7,6 +7,7 @@
 #include "Game/instructions.h"
 #include "managers.h"
 #include "gameoptions.h"
+#include "mainwindow.h"
 
 Controller::Controller()
 {
@@ -32,9 +33,11 @@ void Controller::eventFilter(sf::Event *event)
 				return;
 
 			const sf::Vector2i pixelPos = sf::Vector2i(1, 1) +
-					sf::Vector2i(event->mouseButton.x, event->mouseButton.y);//Mouse::getPosition(*Engine::Instance().window());
+					sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
+
 			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
 						pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView());
+
 			Engine::Instance().options<GameOptions>()->panel()->resetPanelIcon();
 			Engine::Instance().options<GameOptions>()->level()->chooseByPos(pos);
 		}
@@ -140,9 +143,6 @@ void Controller::eventFilter(sf::Event *event)
 			break;
 		case sf::Keyboard::N:
 			Engine::Instance().options<GameOptions>()->level()->activateStopAbility();
-			break;
-		case sf::Keyboard::R:
-			Engine::Instance().options<GameOptions>()->level()->test();
 			break;
 		case sf::Keyboard::I:
 			Engine::Instance().options<GameOptions>()->setNormalSpeed();
