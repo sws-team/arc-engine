@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	Engine::Instance().globalVariables()->setAppName("TowerDefence");
+	Engine::Instance().globalVariables()->setAppName("Arc Defence");
 	Engine::Instance().options<GameOptions>()->loadAchievements();
 	GamePlatform::Instance().requestStats();
 

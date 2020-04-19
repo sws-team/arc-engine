@@ -7,7 +7,8 @@ TEMPLATE = app
 CONFIG += windows c++11
 CONFIG -= app_bundle
 CONFIG -= qt
-DESTDIR = TowerDefence
+DESTDIR = bin
+TARGET = ArcDefence
 #QMAKE_CXXFLAGS += -std=c++17
 
 include(../build_environment.pri)
@@ -37,7 +38,6 @@ unix: DEFINES += OS_UNIX
 
 DEFINES += STEAM_API
 
-TARGET = TowerDefence
 
 include($$PWD/../Engine/Engine/Engine.pri)
 include($$PWD/3rdPartyIncludes.pri)
