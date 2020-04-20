@@ -51,17 +51,21 @@ contains(DEFINES, STEAM_API) {
 include($$PWD/../3rdParty/SteamAPI.pri)
 }
 
-RC_ICONS = icon.ico
-
-win32:LIBS += user32.lib
-unix: LIBS += -lX11
-unix: QMAKE_RPATHDIR += $ORIGIN/libs
+win32{
+LIBS += user32.lib
+#RC_ICONS = icon.ico
+}
+unix{
+LIBS += -lX11
+QMAKE_RPATHDIR += $ORIGIN/libs
+}
 macx{
 QMAKE_RPATHDIR += $ORIGIN/frameworks
 QMAKE_LFLAGS += -Wl,-rpath,@executable_path/frameworks
+#ICON = icon.icns
 }
 #DEFINES += RELEASE_BUILD
 #DEFINES += LOAD_MAPS
 #DEFINES += LOAD_BALANCE
-DEFINES += TEST_WAVES
+#DEFINES += TEST_WAVES
 #DEFINES += DEMO_VERSION
