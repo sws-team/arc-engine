@@ -53,7 +53,7 @@ include($$PWD/../3rdParty/SteamAPI.pri)
 
 win32{
 LIBS += user32.lib
-#RC_ICONS = icon.ico
+RC_ICONS = icon.ico
 }
 unix{
 LIBS += -lX11
