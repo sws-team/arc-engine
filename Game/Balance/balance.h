@@ -150,9 +150,9 @@ public:
 	float getDowngradeDuration() const;
 	float getDowngradeInterval() const;
 	float getKillTowerInterval() const;
-	float getKillAreaTowersInterval() const;
+	float getDowngradeTowerInterval() const;
 	float getKillTowerCells() const;
-	float getKillAreaTowersCells() const;
+	float getDowngradeTowerCells() const;
 
 	//maps
 	MapStats getMapStats(int number) const;
@@ -228,9 +228,9 @@ private:
 	float downgradeDuration;
 	float downgradeInterval;
 	float killTowerInterval;
-	float killAreaTowersInterval;
+	float downgradeTowerInterval;
 	float killTowerCells;
-	float killAreaTowersCells;
+	float downgradeTowerCells;
 
 	//waves
 

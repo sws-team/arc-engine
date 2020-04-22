@@ -2,6 +2,7 @@
 #define MAINMENU_H
 
 #include "Windows/menu.h"
+//#define GAME_NAME
 
 class MainMenu : public Menu
 {
@@ -23,11 +24,14 @@ private:
 		MANUAL,
 		EXIT
 	};
+#ifdef GAME_NAME
 	sf::Text gameName;
+#endif
 #ifndef RELEASE_BUILD
 	sf::Text clearStats;
 	sf::Text clearSaves;
 #endif
+	sf::Sprite logo;
 };
 
 #endif // MAINMENU_H

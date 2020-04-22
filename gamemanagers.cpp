@@ -156,8 +156,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::CREDITS, out);
 			else if (resource.name == "cursor")
 				addTexture(TexturesManager::CURSOR, out);
-			else if (resource.name == "icon")
+			else if (resource.name == "icon")	
 				addTexture(TexturesManager::ICON, out);
+			else if (resource.name == "game_logo")
+				addTexture(GAME_TEXTURE::LOGO, out);
 			else if (resource.name == "direction")
 				addTexture(GAME_TEXTURE::DIRECTION_TEXTURE, out);
 			else if (resource.name == "empty_star")
@@ -250,6 +252,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::VENOM_EFFECT, out);
 			else if (resource.name == "web")
 				addTexture(GAME_TEXTURE::WEB, out);
+			else if (resource.name == "downgrade")
+				addTexture(GAME_TEXTURE::DOWNGRADE, out);
+			else if (resource.name == "tower_explosion")
+				addTexture(GAME_TEXTURE::TOWER_EXPLOSION, out);
 			//map objects
 			else if (resource.name == "tree")
 				addTexture(GAME_TEXTURE::OBJECT_TREE, out);
@@ -298,6 +304,10 @@ void GameManagers::loadResources()
 				addSound(GAME_SOUND::REPAIR, out);
 			else if (resource.name == "roar")
 				addSound(GAME_SOUND::SPAWN_ROAR, out);
+			else if (resource.name == "tank_shoot")
+				addSound(GAME_SOUND::TANK_SHOOT, out);
+			else if (resource.name == "downgrade_shoot")
+				addSound(GAME_SOUND::DOWN_SHOOT, out);
 			else if (resource.name == "shield")
 				addSound(GAME_SOUND::SHIELD, out);
 			else if (resource.name == "shoot_web")
@@ -800,7 +810,7 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_RAGE, L"???"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"Spawn"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"Может родить новых врагов"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"Может родить новых личинок"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"???"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_TELEPORT, L"Teleport"));
@@ -830,6 +840,18 @@ void GameManagers::loadTranslations()
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"???"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"Усиленная регенерация\nпозволяет восстанавливать здоровье"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"???"));
+
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_FASTER, L"???"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_FASTER, L"Ускоряется пропорционально\nотнятому здоровью"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_FASTER, L"???"));
+
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER, L"???"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER, L"Может уничтожить башню,\nвыстрелив в нее"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER, L"???"));
+
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"???"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"Может ухудшить башню,\nвыстрелив в нее"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"???"));
 
 	//panel
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ABILITY_ACID, L"Acid"));

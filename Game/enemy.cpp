@@ -362,6 +362,11 @@ void Enemy::setFaster(const float modifier)
 	m_speedModifier = modifier;
 }
 
+EnemyAbility *Enemy::getAbility()
+{
+	return ability;
+}
+
 sf::Vector2i Enemy::getLastCell() const
 {
 	return m_lastCell;
@@ -511,7 +516,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		texture_id = GAME_TEXTURE::ENEMY_TANK;
 		size.x = 2;
 		size.y = 2;
-		abilityType = EnemyInfo::KILL_TOWER;
+		abilityType = EnemyInfo::DOWNGRADE_TOWER;
 	}
 		break;
 	case SPIDER:
@@ -575,7 +580,7 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		texture_id = GAME_TEXTURE::ENEMY_BIG_TANK;
 		size.x = 4;
 		size.y = 4;
-		abilityType = EnemyInfo::KILL_AREA_TOWERS;
+		abilityType = EnemyInfo::KILL_TOWER;
 	}
 		break;
 	case SPAWN_ENEMY:
@@ -651,8 +656,8 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const sf::Vector2f &startPo
 	case EnemyInfo::KILL_TOWER:
 		ability = new KillTowerAbility();
 		break;
-	case EnemyInfo::KILL_AREA_TOWERS:
-		ability = new KillAreaTowersAbility();
+	case EnemyInfo::DOWNGRADE_TOWER:
+		ability = new DowngradeTowerAbility();
 		break;
 	default:
 		break;
@@ -842,6 +847,11 @@ void TowerEffectAbility::update()
 		projectile->update();
 }
 
+Tower *TowerEffectAbility::getTarget()
+{
+	return targetTower;
+}
+
 void TowerEffectAbility::use()
 {
 	switch (m_state)
@@ -994,13 +1004,29 @@ ShutdownTowerAbility::ShutdownTowerAbility()
 ShutdownTowerAbility::~ShutdownTowerAbility()
 {
 	if (targetTower != nullptr && !targetTower->isActive())
-		targetTower->setActive(true);
+		effect(false);
+}
+
+void ShutdownTowerAbility::stop()
+{
+	m_state = FINISHED;
+	if (m_state == FINISHED)
+		use();
 }
 
 void ShutdownTowerAbility::effect(bool isActive)
 {
-	if (targetTower != nullptr)
-		targetTower->setActive(!isActive);
+	if (targetTower == nullptr)
+		return;
+	if (targetTower->isActive() == !isActive)
+		return;
+	targetTower->setActive(!isActive);
+	if (isActive)
+		Engine::Instance().options<GameOptions>()->level()->addAnimation(
+					GAME_TEXTURE::WEB, targetTower->pos(),
+					sf::Vector2i(GameOptions::CELL_SIZE,
+								 GameOptions::CELL_SIZE),
+					Balance::Instance().getShutdownDuration()/4, 4, 0);
 }
 
 DownTowerAbility::DownTowerAbility()
@@ -1032,13 +1058,13 @@ void DownTowerAbility::effect(bool isActive)
 KillTowerAbility::KillTowerAbility()
 	: TowerEffectAbility(Balance::Instance().getKillTowerInterval())
 {
-	info.enemyTextureId = GAME_TEXTURE::ENEMY_TANK;
+	info.enemyTextureId = GAME_TEXTURE::ENEMY_BIG_TANK;
 	info.animationSize = sf::Vector2i(GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE,
 									  GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE);
-	info.pojectileTextureId = GAME_TEXTURE::ENEMY_ROCKET;
-	info.projectileSize = sf::Vector2i(32, 16);
+	info.pojectileTextureId = GAME_TEXTURE::ENEMY_BULLET;
+	info.projectileSize = sf::Vector2i(56, 24);
 	info.duration = 0;
-	info.catchSound = GAME_SOUND::CATCH;
+	info.catchSound = GAME_SOUND::TANK_SHOOT;
 	info.cells = Balance::Instance().getKillTowerCells();
 	info.projectileSpeed = 15;
 }
@@ -1056,6 +1082,34 @@ void KillTowerAbility::effect(bool isActive)
 	targetTower = nullptr;
 }
 
+DowngradeTowerAbility::DowngradeTowerAbility()
+	: TowerEffectAbility(Balance::Instance().getDowngradeTowerInterval())
+{
+	info.enemyTextureId = GAME_TEXTURE::ENEMY_TANK;
+	info.animationSize = sf::Vector2i(GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE,
+									  GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE);
+	info.pojectileTextureId = GAME_TEXTURE::ENEMY_ROCKET;
+	info.projectileSize = sf::Vector2i(32, 16);
+	info.duration = 0;
+	info.catchSound = GAME_SOUND::DOWN_SHOOT;
+	info.cells = Balance::Instance().getDowngradeTowerCells();
+	info.projectileSpeed = 15;
+}
+
+void DowngradeTowerAbility::effect(bool isActive)
+{
+	if (!isActive)
+		return;
+	if(targetTower == nullptr)
+		return;
+	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::DOWNGRADE, targetTower->pos(),
+											 sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE),
+											 250, 4, 0);
+
+	targetTower->levelDown();
+}
+
+#ifdef KILL_AREA
 KillAreaTowersAbility::KillAreaTowersAbility()
 	: TowerEffectAbility(Balance::Instance().getKillAreaTowersInterval())
 {
@@ -1106,6 +1160,7 @@ std::vector<Tower *> KillAreaTowersAbility::findAreaTowers(Tower *tower)
 	results.push_back(tower);
 	return results;
 }
+#endif
 
 SpawnEnemy::SpawnEnemy()
 	: EnemyAbility(Balance::Instance().getSpawnInterval())

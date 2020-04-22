@@ -176,16 +176,14 @@ void Level::startMission(const unsigned int n)
 #ifdef TEST_WAVES
 	const int _testWavesCount = 3;
 	const int _testEnemiesCount = 15;
-	const int _testInterval = 1000;
+	const int _testInterval = 10000;
 
 	Wave wave;
 	wave.protection = 0.f;
 	wave.respawnTime = _testInterval;
 	for (int i = 0; i < _testEnemiesCount; ++i)
 	{
-//		wave.spawnEnemies.push_back(ENEMY_TYPES::BIG_SLOW);
-		wave.spawnEnemies.push_back(ENEMY_TYPES::ANOTHER_ENEMY);
-
+		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::TRICYCLE);
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
 	}
@@ -936,7 +934,7 @@ std::vector<Enemy *> Level::getAllEnemies() const
 	return enemies;
 }
 
-void Level::addAnimation(const TextureType& texture_id,
+Animation* Level::addAnimation(const TextureType& texture_id,
 						 const sf::Vector2f &pos,
 						 const sf::Vector2i &size,
 						 int duration,
@@ -953,6 +951,7 @@ void Level::addAnimation(const TextureType& texture_id,
 	animation->sprite.setPosition(pos);
 
 	effects.push_back(animation);
+	return animation;
 }
 
 void Level::removeAnimation(Animation *animation)
@@ -1113,6 +1112,23 @@ void Level::chooseByPos(const sf::Vector2f &pos)
 
 void Level::choose(const sf::Vector2i &cell, bool inPanel)
 {
+//	for(Enemy *enemy : enemies)
+//	{
+//		if (enemy->type() == ENEMY_TYPES::SPIDER)
+//		{
+//			ShutdownTowerAbility *web = static_cast<ShutdownTowerAbility*>(enemy->getAbility());
+//			if (web == nullptr || web->getTarget() == nullptr)
+//				continue;
+//			const sf::Vector2i towerCell = Engine::Instance().options<GameOptions>()->camera()->posToCell(
+//						web->getTarget()->getCenter());
+//			if (towerCell == cell)
+//			{
+//				web->stop();
+//				return;
+//			}
+//		}
+//	}
+
 	Tower *selectedTower = m_selectedTower;
 	if (m_selectedTower != nullptr)
 		setSelectedTower(nullptr);

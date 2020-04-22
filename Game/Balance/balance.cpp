@@ -63,9 +63,9 @@ Balance::Balance() :
   ,downgradeDuration(9.f)
   ,downgradeInterval(5.f)
   ,killTowerInterval(10.f)
-  ,killAreaTowersInterval(15.f)
+  ,downgradeTowerInterval(15.f)
   ,killTowerCells(15)
-  ,killAreaTowersCells(20)
+  ,downgradeTowerCells(20)
 {
 
 }
@@ -348,9 +348,9 @@ void Balance::loadEnemiesAbilities(const Json::Value &jsonEnemiesAbilities)
 	downgradeDuration = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_DURATION_KEY].asFloat() * EngineDefs::MSEC;
 	downgradeInterval = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;	
 	killTowerInterval = jsonEnemiesAbilities[BalanceDef::KILL_TOWER_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
-	killAreaTowersInterval = jsonEnemiesAbilities[BalanceDef::KILL_AREA_TOWERS_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
+	downgradeTowerInterval = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_TOWER_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
 	killTowerCells = jsonEnemiesAbilities[BalanceDef::KILL_TOWER_CELLS_KEY].asFloat();
-	killAreaTowersCells = jsonEnemiesAbilities[BalanceDef::KILL_AREA_TOWERS_CELLS_KEY].asFloat();
+	downgradeTowerCells = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_TOWER_CELLS_KEY].asFloat();
 }
 
 void Balance::loadWaves(const Json::Value &jsonWaves)
@@ -668,9 +668,9 @@ float Balance::getKillTowerInterval() const
 	return killTowerInterval;
 }
 
-float Balance::getKillAreaTowersInterval() const
+float Balance::getDowngradeTowerInterval() const
 {
-	return killAreaTowersInterval;
+	return downgradeTowerInterval;
 }
 
 float Balance::getKillTowerCells() const
@@ -678,9 +678,9 @@ float Balance::getKillTowerCells() const
 	return killTowerCells;
 }
 
-float Balance::getKillAreaTowersCells() const
+float Balance::getDowngradeTowerCells() const
 {
-	return killAreaTowersCells;
+	return downgradeTowerCells;
 }
 
 MapStats Balance::getMapStats(int number) const

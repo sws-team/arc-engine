@@ -608,66 +608,66 @@ void ManualWindow::Element::update()
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(Balance::Instance().getBombCooldown());
+			description += GlobalVariables::to_string_with_precision(Balance::Instance().getBombCooldown(), 1);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(Balance::Instance().getBombDamage());
+			description += GlobalVariables::to_string_with_precision(Balance::Instance().getBombDamage(), 1);
 			break;
 		case ACTION_STATE::ABILITY_FREEZE_BOMB:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(Balance::Instance().getFreezeCooldown());
+			description += GlobalVariables::to_string_with_precision(Balance::Instance().getFreezeCooldown(), 1);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(Balance::Instance().getFreezeDuration());
+			description += GlobalVariables::to_string_with_precision(Balance::Instance().getFreezeDuration(), 1);
 			break;
 		case ACTION_STATE::ABILITY_ACID:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ACID_ABILITY_DESCRIPTION);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(Balance::Instance().getAcidCooldown());
+			description += GlobalVariables::to_string_with_precision(Balance::Instance().getAcidCooldown(), 1);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(Balance::Instance().getAcidCount() * Balance::Instance().getAcidDamage());
+			description += GlobalVariables::to_string_with_precision(Balance::Instance().getAcidCount() * Balance::Instance().getAcidDamage(), 1);
 			break;
 		case ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(Balance::Instance().getIncreaseDamageCooldown());
+			description += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseDamageCooldown(), 1);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(Balance::Instance().getIncreaseDamageDuration());
+			description += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseDamageDuration(), 1);
 			break;
 		case ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(Balance::Instance().getIncreaseAttackSpeedCooldown());
+			description += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseAttackSpeedCooldown(), 1);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(Balance::Instance().getIncreaseAttackSpeedDuration());
+			description += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseAttackSpeedDuration(), 1);
 			break;
 		case ACTION_STATE::ABILITY_STOP:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 			description += separator;
-			description += std::to_string(Balance::Instance().getStopCooldown());
+			description += GlobalVariables::to_string_with_precision(Balance::Instance().getStopCooldown(), 1);
 			description += endline;
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
 			description += separator;
-			description += std::to_string(Balance::Instance().getStopDuration());
+			description += GlobalVariables::to_string_with_precision(Balance::Instance().getStopDuration(), 1);
 			break;
 		default:
 			break;
@@ -690,11 +690,11 @@ void ManualWindow::Element::update()
 		//speed
 		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SPEED) + separator;
 		if (enemyInfo.stats.speed < 30)
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SLOW);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FAST);
 		else if (enemyInfo.stats.speed < 65)
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::NORMAL_SPEED);
 		else
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FAST);
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SLOW);
 		description += endline;
 		//size
 		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SIZE) + separator;
@@ -726,9 +726,6 @@ void ManualWindow::Element::update()
 
 		switch (enemyInfo.abilityType)
 		{
-		case EnemiesFactory::EnemyInfo::NONE:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_NONE);
-			break;
 		case EnemiesFactory::EnemyInfo::RAGE:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_RAGE);
 			break;
@@ -756,7 +753,17 @@ void ManualWindow::Element::update()
 		case EnemiesFactory::EnemyInfo::SELF_HEAL:
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL);
 			break;
+		case EnemiesFactory::EnemyInfo::FASTER:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_FASTER);
+			break;
+		case EnemiesFactory::EnemyInfo::KILL_TOWER:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER);
+			break;
+		case EnemiesFactory::EnemyInfo::DOWNGRADE_TOWER:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER);
+			break;
 		default:
+			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_NONE);
 			break;
 		}
 	}

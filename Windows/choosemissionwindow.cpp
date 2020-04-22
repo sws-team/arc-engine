@@ -83,7 +83,13 @@ ChooseMissionWindow::ChooseMissionWindow()
 	const unsigned int maxCompletedLevel = Engine::Instance().options<GameOptions>()->maxCompletedLevel();
 	const bool hasCompletedMissions = !Engine::Instance().options<GameOptions>()->getCompletedMissions().empty();
 	TextureType textureType = GAME_TEXTURE::MAP_ICON_MISSION_1;
-	for (unsigned int i = 0; i < Engine::Instance().options<GameOptions>()->missionsCount(); ++i)
+	const unsigned int missionsCount =
+#ifdef DEMO_VERSION
+			2;
+#else
+	Engine::Instance().options<GameOptions>()->missionsCount();
+#endif
+	for (unsigned int i = 0; i < missionsCount; ++i)
 	{
 		if (i % COLUMN_COUNT == 0 && i != 0)
 		{

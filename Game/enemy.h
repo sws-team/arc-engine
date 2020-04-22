@@ -68,6 +68,7 @@ public:
 
 	void setFaster(const float modifier);
 
+	EnemyAbility *getAbility();
 private:
 	ENEMY_TYPES m_type;
 	EnemyStats m_stats;
@@ -102,6 +103,7 @@ private:
 	sf::Vector2f m_pos;//global pos
 
 	constexpr static float LIFEBAR_OFFSET = 4;
+
 	EnemyAbility *ability;
 	bool m_stopped;
 	bool m_visible;
@@ -196,17 +198,19 @@ private:
 	constexpr static int TELEPORT_DISAPPEAR_ROW = 1;
 	constexpr static int TELEPORT_APPEAR_ROW = 2;
 };
-
+class Tower;
 class TowerEffectAbility : public EnemyAbility
 {
 public:
 	TowerEffectAbility(float msec);
 	void draw(sf::RenderTarget *const target) override;
 	void update() override;
+
+	Tower *getTarget();
 protected:
 	virtual void effect(bool isActive) = 0;
 	void use() override;
-	class Tower *targetTower;
+	Tower *targetTower;
 
 	struct AbilityInfo
 	{
@@ -220,7 +224,7 @@ protected:
 		float projectileSpeed;
 	};
 	AbilityInfo info;
-private:
+protected:
 	enum STATES
 	{
 		READY,
@@ -230,6 +234,7 @@ private:
 		FINISHED,
 	};
 	STATES m_state;
+private:
 	Timer moveTimer;
 	GameObject *projectile;
 	float m_angle;
@@ -244,6 +249,7 @@ public:
 	ShutdownTowerAbility();
 	~ShutdownTowerAbility();
 
+	void stop();
 protected:
 	void effect(bool isActive) override;
 };
@@ -266,6 +272,14 @@ protected:
 	void effect(bool isActive) override;
 };
 
+class DowngradeTowerAbility : public TowerEffectAbility
+{
+public:
+	DowngradeTowerAbility();
+protected:
+	void effect(bool isActive) override;
+};
+#ifdef KILL_AREA
 class KillAreaTowersAbility : public TowerEffectAbility
 {
 public:
@@ -276,7 +290,7 @@ private:
 	std::vector<Tower *> findAreaTowers(Tower *tower);
 	float zeroGround;
 };
-
+#endif
 class SpawnEnemy : public EnemyAbility
 {
 public:
@@ -355,7 +369,7 @@ public:
 			SELF_HEAL,
 			FASTER,
 			KILL_TOWER,
-			KILL_AREA_TOWERS,
+			DOWNGRADE_TOWER,
 		};
 
 		EnemyStats stats;

@@ -65,7 +65,7 @@ public:
 
 	std::vector<Enemy *> getAllEnemies() const;
 
-	void addAnimation(const TextureType& texture_id,
+	Animation *addAnimation(const TextureType& texture_id,
 					  const sf::Vector2f &pos,
 					  const sf::Vector2i &size,
 					  int duration,

@@ -162,6 +162,18 @@ bool Tower::isInvulnerable() const
 	return m_invulnerable;
 }
 
+void Tower::levelDown()
+{
+	if (m_level == 1)
+		return;
+
+	m_level--;
+	m_stats.cost /= 1 + Balance::Instance().getTowerUpgradeGain();
+	m_stats.damage /= 1 + Balance::Instance().getTowerUpgradeGain();
+	m_stats.radius /= 1 + Balance::Instance().getTowerUpgradeGain();
+	m_stats.attackSpeed /= 1 - Balance::Instance().getTowerUpgradeGain();
+}
+
 void Tower::setInvulnerable(bool invulnerable)
 {
 	m_invulnerable = invulnerable;
@@ -233,11 +245,6 @@ float Tower::actualAttackSpeed() const
 void Tower::setActive(bool isActive)
 {
 	m_isActive = isActive;
-	if (!isActive)
-		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::WEB, this->pos(),
-																		 sf::Vector2i(GameOptions::CELL_SIZE,
-																					  GameOptions::CELL_SIZE),
-																		 Balance::Instance().getShutdownDuration()/4, 4, 0);
 }
 
 int Tower::kills() const
@@ -345,6 +352,12 @@ void BaseTower::upgrade()
 	ProjectilesTower::upgrade();
 	if (level() == ABILITY_LEVEL)
 		this->setInvulnerable(true);
+}
+
+void BaseTower::levelDown()
+{
+	ProjectilesTower::upgrade();
+	this->setInvulnerable(false);
 }
 
 const sf::Color PowerTower::POWER_TOWER_AREA_COLOR = sf::Color(23, 200, 124, 100);

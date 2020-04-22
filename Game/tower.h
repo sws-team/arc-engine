@@ -92,6 +92,8 @@ public:
 
 	bool isInvulnerable() const;
 
+	virtual void levelDown();
+
 protected:
 	TowerStats m_stats;
 	Timer actionTimer;
@@ -161,6 +163,7 @@ public:
 
 	void projectileAction(Enemy *enemy) override;
 	void upgrade() override;
+	void levelDown() override;
 private:
 };
 

@@ -12,20 +12,29 @@ MainMenu::MainMenu()
 {
 	setBackground(GAME_TEXTURE::MENU_BACKGROUND);
 	currentMenu = static_cast<MENUS>(CAMPAIGN);
-	setPos(sf::Vector2f(120 * Engine::Instance().settingsManager()->getScaleFactor().x,
-					640 * Engine::Instance().settingsManager()->getScaleFactor().y));
+
+	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
+
+	setPos(sf::Vector2f(120 * scaleFactor.x,
+						640 * scaleFactor.y));
 	setColor(sf::Color(64,224,208, 100));
 	setCurrentColor(sf::Color(64,224,208));
-
+#ifdef GAME_NAME
 	gameName.setFont(Engine::Instance().fontManager()->font());
-	gameName.setString("Game Name");
+	gameName.setString("Arc Defence");
 	gameName.setFillColor(sf::Color::Cyan);
 	gameName.setOutlineColor(sf::Color::Black);
 	gameName.setOutlineThickness(5);
 	gameName.setCharacterSize(150);
-	gameName.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	gameName.setScale(scaleFactor);
 	gameName.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 - gameName.getGlobalBounds().width/2,
 						 gameName.getGlobalBounds().height/2);
+#endif
+	logo.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::LOGO));
+	logo.setScale(scaleFactor);
+	logo.setPosition(512 * scaleFactor.x,
+					 32 * scaleFactor.y);
+
 #ifndef RELEASE_BUILD
 	clearStats.setFont(Engine::Instance().fontManager()->font());
 	clearStats.setString("Clear stats");
@@ -33,7 +42,7 @@ MainMenu::MainMenu()
 	clearStats.setOutlineColor(sf::Color::Black);
 	clearStats.setOutlineThickness(5);
 	clearStats.setCharacterSize(50);
-	clearStats.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	clearStats.setScale(scaleFactor);
 	clearStats.setPosition(20, 200);
 
 	clearSaves.setFont(Engine::Instance().fontManager()->font());
@@ -42,7 +51,7 @@ MainMenu::MainMenu()
 	clearSaves.setOutlineColor(sf::Color::Black);
 	clearSaves.setOutlineThickness(5);
 	clearSaves.setCharacterSize(50);
-	clearSaves.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	clearSaves.setScale(scaleFactor);
 	clearSaves.setPosition(20, 250);
 #endif
 
@@ -87,7 +96,10 @@ void MainMenu::closeEvent()
 void MainMenu::paint(sf::RenderWindow *window)
 {
 	Menu::paint(window);
+#ifdef GAME_NAME
 	window->draw(gameName);
+#endif
+	window->draw(logo);
 	window->draw(clearStats);
 	window->draw(clearSaves);
 }
