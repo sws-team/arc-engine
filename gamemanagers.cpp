@@ -168,8 +168,12 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::EXIT, out);
 			else if (resource.name == "game_cursor")
 				addTexture(GAME_TEXTURE::CURSOR_TEXTURE, out);
-			else if (resource.name == "instructions")
-				addTexture(GAME_TEXTURE::INSTRUCTIONS_TEXTURE, out);
+			else if (resource.name == "instruction_top")
+				addTexture(GAME_TEXTURE::INSTRUCTIONS_TOP, out);
+			else if (resource.name == "instruction_bottom")
+				addTexture(GAME_TEXTURE::INSTRUCTIONS_BOTTOM, out);
+			else if (resource.name == "instruction_vertical")
+				addTexture(GAME_TEXTURE::INSTRUCTIONS_VERTICAL, out);
 			else if (resource.name == "previous_icon")
 				addTexture(GAME_TEXTURE::PREVIOUS, out);
 			else if (resource.name == "locked")
@@ -194,6 +198,8 @@ void GameManagers::loadResources()
 				addTexture(TexturesManager::AUDIO_ICON, out);
 			else if (resource.name == "quiet_icon")
 				addTexture(TexturesManager::QUIET_ICON, out);
+			else if (resource.name == "character")
+				addTexture(GAME_TEXTURE::CHARACTER, out);
 			//weapons
 			else if (resource.name == "bullet")
 				addTexture(GAME_TEXTURE::BASE_PROJECTILE, out);

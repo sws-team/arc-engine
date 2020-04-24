@@ -483,6 +483,8 @@ void ManualWindow::Element::init()
 void ManualWindow::Element::update()
 {
 	int frameCount = 1;
+	bool cycled = false;
+	int rowCount = 1;
 	sf::Vector2i frameSize;
 	//texture
 	icon.setTexture(Engine::Instance().texturesManager()->getTexture(texture));
@@ -496,8 +498,12 @@ void ManualWindow::Element::update()
 	{
 	case Element::E_Tower:
 	{
+		rowCount = 4;
+		cycled = true;
+		frameCount = 7;
 		frameSize = sf::Vector2i(192, 192);
 		icon.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
+		icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
 
 		switch (towerType)
 		{
@@ -773,6 +779,8 @@ void ManualWindow::Element::update()
 	}
 
 	object = new GameObject(texture, sf::Vector2f(0,0), frameSize, frameCount);
+	object->cycled = cycled;
+	object->rowCount = rowCount;
 
 	descriptionText.setString(description);
 }

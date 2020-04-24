@@ -14,11 +14,12 @@
 
 const float Tower::TOWER_SCAlE = 1.f/3.f;
 
-Tower::Tower(const TextureType &texture_id, const sf::Vector2f &pos, const TowerStats &stats)
+Tower::Tower(const TextureType &texture_id,
+			 const sf::Vector2f &pos,
+			 const TowerStats &stats)
 	: GameObject(texture_id, pos,
 				 sf::Vector2i(GameOptions::CELL_SIZE/TOWER_SCAlE,
-						  GameOptions::CELL_SIZE/TOWER_SCAlE),
-				 1)
+						  GameOptions::CELL_SIZE/TOWER_SCAlE), 7)
 	,m_stats(stats)
 	,m_level(1)
 	,m_kills(0)
@@ -28,6 +29,7 @@ Tower::Tower(const TextureType &texture_id, const sf::Vector2f &pos, const Tower
 	,m_regressed(false)
 	,m_invulnerable(false)
 {
+	animationSpeed = 150;
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
 }
 
@@ -75,6 +77,9 @@ void Tower::collide(const std::vector<Enemy *> &enemies)
 void Tower::upgrade()
 {
 	m_level++;
+
+	currentFrame = 0;
+	row++;
 
 	m_stats.cost *= 1 + Balance::Instance().getTowerUpgradeGain();
 	m_stats.damage *= 1 + Balance::Instance().getTowerUpgradeGain();
@@ -168,6 +173,10 @@ void Tower::levelDown()
 		return;
 
 	m_level--;
+
+	currentFrame = 0;
+	row--;
+
 	m_stats.cost /= 1 + Balance::Instance().getTowerUpgradeGain();
 	m_stats.damage /= 1 + Balance::Instance().getTowerUpgradeGain();
 	m_stats.radius /= 1 + Balance::Instance().getTowerUpgradeGain();

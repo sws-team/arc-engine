@@ -69,27 +69,27 @@ GamePanel::GamePanel() :
 	abilityStopSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ABILITY_TIME_STOP));
 	abilityStopSprite.setScale(scaleFactor);
 
-	towerBaseSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_BASE));
+	towerBaseSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_BASE_ICON));
 	towerBaseSprite.setScale(scaleFactor);
 	towerBaseSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
-	towerLaserSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_LASER));
+	towerLaserSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_LASER_ICON));
 	towerLaserSprite.setScale(scaleFactor);
 	towerLaserSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
-	towerFreezeSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_FREEZE));
+	towerFreezeSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_FREEZE_ICON));
 	towerFreezeSprite.setScale(scaleFactor);
 	towerFreezeSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
-	towerRocketSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_ROCKET));
+	towerRocketSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_ROCKET_ICON));
 	towerRocketSprite.setScale(scaleFactor);
 	towerRocketSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
-	towerPowerSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_POWER));
+	towerPowerSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_POWER_ICON));
 	towerPowerSprite.setScale(scaleFactor);
 	towerPowerSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
-	towerImprovedSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_IMPROVED));
+	towerImprovedSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_IMPROVED_ICON));
 	towerImprovedSprite.setScale(scaleFactor);
 	towerImprovedSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 

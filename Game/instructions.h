@@ -36,11 +36,17 @@ private:
 	STATES m_state;
 	void changeState(STATES state);
 
-	sf::Sprite textSprite;
 	sf::Text text;
 	sf::RectangleShape targetRect;
 
 	constexpr static int INSTRUCTIONS_OFFSET = 350;
+
+	sf::Sprite character;
+	sf::RectangleShape bottom;
+	sf::RectangleShape top;
+	sf::RectangleShape left;
+	sf::RectangleShape right;
+	sf::RectangleShape textRext;
 };
 
 #endif // INSTRUCTIONS_H

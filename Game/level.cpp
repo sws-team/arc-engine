@@ -183,7 +183,7 @@ void Level::startMission(const unsigned int n)
 	wave.respawnTime = _testInterval;
 	for (int i = 0; i < _testEnemiesCount; ++i)
 	{
-		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
+		wave.spawnEnemies.push_back(ENEMY_TYPES::TANK);
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::TRICYCLE);
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
 	}
@@ -208,8 +208,8 @@ void Level::startMission(const unsigned int n)
 	Engine::Instance().options<GameOptions>()->panel()->initMission(n);
 	updateStartEndPos(gameMap->spawnPos, sf::Vector2f(gameMap->endRect.left, gameMap->endRect.top));
 
-	if (n != 0 || !Engine::Instance().options<GameOptions>()->getCompletedMissions().empty())
-		Engine::Instance().options<GameOptions>()->instructions()->skip();
+//	if (n != 0 || !Engine::Instance().options<GameOptions>()->getCompletedMissions().empty())
+//		Engine::Instance().options<GameOptions>()->instructions()->skip();
 
 	Engine::Instance().options<GameOptions>()->cursor()->initCell();
 
@@ -919,6 +919,9 @@ void Level::ready()
 	smoke->resetTimers();
 	moneyDrain->resetTimers();
 	mapExplosion->resetTimers();
+
+	for(Tower* tower : towers)
+		tower->resume();
 }
 
 int Level::currentProgress() const
@@ -1273,6 +1276,8 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 			Tower *tower = TowersFactory::createTower(type, pos);
 			if (tower == nullptr)
 				return;
+			if (m_state == WAIT_READY)
+				tower->pause();
 			GamePlatform::Instance().incrementValue(STAT_TOWERS_BUILDED);
 			Engine::Instance().soundManager()->playOnce(GAME_SOUND::SETUP);
 			towers.push_back(tower);

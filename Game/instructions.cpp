@@ -5,6 +5,7 @@
 #include "managers.h"
 #include "gamemanagers.h"
 #include "gameoptions.h"
+#include "gamepanel.h"
 
 Instructions::Instructions() :
   m_state(START)
@@ -15,19 +16,59 @@ Instructions::Instructions() :
 	color.a = 150;
 	shadowRect.setFillColor(color);
 
-	textSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::INSTRUCTIONS_TEXTURE));
-	textSprite.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 
 	targetRect.setFillColor(sf::Color::Transparent);
 	targetRect.setOutlineThickness(3);
 	targetRect.setOutlineColor(sf::Color::Blue);
 
 	text.setFont(Engine::Instance().fontManager()->font());
-	text.setCharacterSize(25);
+	text.setCharacterSize(40);
 	text.setFillColor(sf::Color::Red);
 	text.setOutlineColor(sf::Color::Black);
 	text.setOutlineThickness(2);
-	text.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	text.setScale(scaleFactor);
+
+	character.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::CHARACTER));
+	character.setScale(scaleFactor);
+
+	bottom.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::INSTRUCTIONS_BOTTOM));
+	bottom.setScale(scaleFactor);
+
+	top.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::INSTRUCTIONS_TOP));
+	top.setScale(scaleFactor);
+
+	left.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::INSTRUCTIONS_VERTICAL));
+	left.setScale(scaleFactor);
+
+	right.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::INSTRUCTIONS_VERTICAL));
+	right.setScale(scaleFactor);
+
+	const sf::Vector2f rectSize = sf::Vector2f(1024, 256);
+	textRext.setFillColor(sf::Color(191,145,255, 128));
+	textRext.setSize(rectSize);
+	textRext.setScale(scaleFactor);
+	textRext.setPosition(INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
+						 INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
+
+	const sf::Vector2f lineSize = sf::Vector2f(32 * scaleFactor.x, 32 * scaleFactor.y);
+
+	top.setSize(sf::Vector2f(rectSize.x, lineSize.y));
+	top.setPosition(textRext.getGlobalBounds().left, textRext.getGlobalBounds().top);
+
+	left.setSize(sf::Vector2f(lineSize.x, rectSize.y));
+	left.setPosition(textRext.getGlobalBounds().left, textRext.getGlobalBounds().top);
+
+	right.setSize(sf::Vector2f(lineSize.x, rectSize.y));
+	right.setPosition(textRext.getGlobalBounds().left + textRext.getGlobalBounds().width - right.getGlobalBounds().width,
+					  textRext.getGlobalBounds().top);
+
+	bottom.setSize(sf::Vector2f(rectSize.x, lineSize.y));
+	bottom.setPosition(textRext.getGlobalBounds().left,
+					   textRext.getGlobalBounds().top + textRext.getGlobalBounds().height - bottom.getGlobalBounds().height);
+
+	text.setPosition(textRext.getPosition().x + left.getGlobalBounds().width,
+					 textRext.getPosition().y + top.getGlobalBounds().height);
 }
 
 void Instructions::init()
@@ -42,9 +83,15 @@ void Instructions::draw(sf::RenderTarget * const target)
 
 	target->draw(shadowRect);
 
-	target->draw(textSprite);
-	target->draw(text);
+	target->draw(textRext);
 	target->draw(targetRect);
+	target->draw(left);
+	target->draw(right);
+	target->draw(bottom);
+	target->draw(top);
+	target->draw(text);
+
+	target->draw(character);
 }
 
 void Instructions::update()
@@ -75,48 +122,40 @@ void Instructions::changeState(Instructions::STATES state)
 	{
 	case START:
 	{
-		textSprite.setPosition(INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
-							 INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
+
+		character.setPosition(Engine::Instance().settingsManager()->getResolution().x - character.getGlobalBounds().width,
+							  Engine::Instance().options<GameOptions>()->panel()->getBottomValue() - character.getGlobalBounds().height);
 		rect = sf::FloatRect();
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_WELCOME);
 	}
 		break;
 	case TOWERS:
 	{
-		textSprite.setPosition(INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
-							 INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
 		rect = Engine::Instance().options<GameOptions>()->panel()->getTowersRect();
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_TOWERS);
 	}
 		break;
 	case ABILITIES:
 	{
-		textSprite.setPosition(INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
-							 INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
 		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilitiesRect();
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_ABILITIES);
 	}
 		break;
 	case MONEY:
 	{
-		textSprite.setPosition(INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
-							 INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
+
 		rect = Engine::Instance().options<GameOptions>()->panel()->getMoneyRect();
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_MONEY);
 	}
 		break;
 	case HEALTH:
 	{
-		textSprite.setPosition(INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
-							 INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
 		rect = Engine::Instance().options<GameOptions>()->panel()->getHealthRect();
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_HEALTH);
 	}
 		break;
 	case PROGRESS:
 	{
-		textSprite.setPosition(INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
-							 INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
 		rect = Engine::Instance().options<GameOptions>()->panel()->getProgressRect();
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_PROGRESS);
 	}
@@ -127,8 +166,6 @@ void Instructions::changeState(Instructions::STATES state)
 	textStr += "\n";
 	textStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_SKIP);
 	text.setString(textStr);
-	text.setPosition(textSprite.getPosition().x,
-					 textSprite.getPosition().y);
 	targetRect.setPosition(rect.left, rect.top);
 	targetRect.setSize(sf::Vector2f(rect.width, rect.height));
 	m_state = state;

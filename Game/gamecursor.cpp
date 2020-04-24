@@ -201,6 +201,9 @@ void GameCursor::activateTower(float radius, TOWER_TYPES type)
 	towerSprite.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	towerSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 	towerSprite.setColor(sf::Color(255, 255, 255, 128));
+	towerSprite.setTextureRect(sf::IntRect(0, 0,
+										   GameOptions::CELL_SIZE / Tower::TOWER_SCAlE,
+										   GameOptions::CELL_SIZE / Tower::TOWER_SCAlE));
 	m_state = TOWER;
 
 	updateCell();
