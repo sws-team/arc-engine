@@ -291,27 +291,39 @@ void ManualWindow::addElements()
 	//towers
 	elements.push_back(Element(GAME_TEXTURE::TOWER_BASE,
 							   GAME_TRANSLATION::TOWER_BASE,
-							   BASE));
+							   BASE,
+							   TowersFactory::getFrameCount(BASE),
+							   TowersFactory::getAnimationSpeed(BASE)));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_POWER,
 							   GAME_TRANSLATION::TOWER_POWER,
-							   POWER));
+							   POWER,
+							   TowersFactory::getFrameCount(POWER),
+							   TowersFactory::getAnimationSpeed(POWER)));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_LASER,
 							   GAME_TRANSLATION::TOWER_LASER,
-							   LASER));
+							   LASER,
+							   TowersFactory::getFrameCount(LASER),
+							   TowersFactory::getAnimationSpeed(LASER)));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_FREEZE,
 							   GAME_TRANSLATION::TOWER_FREEZE,
-							   FREEZE));
+							   FREEZE,
+							   TowersFactory::getFrameCount(FREEZE),
+							   TowersFactory::getAnimationSpeed(FREEZE)));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_ROCKET,
 							   GAME_TRANSLATION::TOWER_ROCKET,
-							   ROCKET));
+							   ROCKET,
+							   TowersFactory::getFrameCount(ROCKET),
+							   TowersFactory::getAnimationSpeed(ROCKET)));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_IMPROVED,
 							   GAME_TRANSLATION::TOWER_IMPROVED,
-							   IMPROVED));
+							   IMPROVED,
+							   TowersFactory::getFrameCount(IMPROVED),
+							   TowersFactory::getAnimationSpeed(IMPROVED)));
 	//abilities
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_BOMB,
 							   GAME_TRANSLATION::ABILITY_BOMB,
@@ -340,67 +352,100 @@ void ManualWindow::addElements()
 	//enemies
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_INFANTRY,
 							   GAME_TRANSLATION::INFANTRY,
-							   EnemiesFactory::getEnemyInfo(INFANTRY)));
+							   EnemiesFactory::getEnemyInfo(INFANTRY),
+							   EnemiesFactory::getFrameCount(INFANTRY),
+							   EnemiesFactory::getAnimationSpeed(INFANTRY)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_CAR,
 							   GAME_TRANSLATION::CAR,
-							   EnemiesFactory::getEnemyInfo(CAR)));
+							   EnemiesFactory::getEnemyInfo(CAR),
+							   EnemiesFactory::getFrameCount(CAR),
+							   EnemiesFactory::getAnimationSpeed(CAR)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TRICYCLE,
 							   GAME_TRANSLATION::TRICYCLE,
-							   EnemiesFactory::getEnemyInfo(TRICYCLE)));
+							   EnemiesFactory::getEnemyInfo(TRICYCLE),
+							   EnemiesFactory::getFrameCount(TRICYCLE),
+							   EnemiesFactory::getAnimationSpeed(TRICYCLE)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TANK,
 							   GAME_TRANSLATION::TANK,
-							   EnemiesFactory::getEnemyInfo(TANK)));
+							   EnemiesFactory::getEnemyInfo(TANK),
+							   EnemiesFactory::getFrameCount(TANK),
+							   EnemiesFactory::getAnimationSpeed(TANK)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SPIDER,
 							   GAME_TRANSLATION::SPIDER,
-							   EnemiesFactory::getEnemyInfo(SPIDER)));
+							   EnemiesFactory::getEnemyInfo(SPIDER),
+							   EnemiesFactory::getFrameCount(SPIDER),
+							   EnemiesFactory::getAnimationSpeed(SPIDER)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_HELICOPTER,
 							   GAME_TRANSLATION::HELICOPTER,
-							   EnemiesFactory::getEnemyInfo(MID_FAST)));
+							   EnemiesFactory::getEnemyInfo(MID_FAST),
+							   EnemiesFactory::getFrameCount(MID_FAST),
+							   EnemiesFactory::getAnimationSpeed(MID_FAST)
+							   ));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_AIRCARRIER,
 							   GAME_TRANSLATION::AIRCARRIER,
-							   EnemiesFactory::getEnemyInfo(BIG_SLOW)));
+							   EnemiesFactory::getEnemyInfo(BIG_SLOW),
+							   EnemiesFactory::getFrameCount(BIG_SLOW),
+							   EnemiesFactory::getAnimationSpeed(BIG_SLOW)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_BIG_TANK,
 							   GAME_TRANSLATION::BIG_TANK,
-							   EnemiesFactory::getEnemyInfo(BIG_TANK)));
+							   EnemiesFactory::getEnemyInfo(BIG_TANK),
+							   EnemiesFactory::getFrameCount(BIG_TANK),
+							   EnemiesFactory::getAnimationSpeed(BIG_TANK)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_PLANE,
 							   GAME_TRANSLATION::PLANE,
-							   EnemiesFactory::getEnemyInfo(ANOTHER_ENEMY)));
+							   EnemiesFactory::getEnemyInfo(ANOTHER_ENEMY),
+							   EnemiesFactory::getFrameCount(ANOTHER_ENEMY),
+							   EnemiesFactory::getAnimationSpeed(ANOTHER_ENEMY)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_REPAIR,
 							   GAME_TRANSLATION::REPAIR,
-							   EnemiesFactory::getEnemyInfo(REPAIR_ENEMY)));
+							   EnemiesFactory::getEnemyInfo(REPAIR_ENEMY),
+							   EnemiesFactory::getFrameCount(REPAIR_ENEMY),
+							   EnemiesFactory::getAnimationSpeed(REPAIR_ENEMY)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SHIELD,
 							   GAME_TRANSLATION::SHELL,
-							   EnemiesFactory::getEnemyInfo(SHIELD_ENEMY)));
+							   EnemiesFactory::getEnemyInfo(SHIELD_ENEMY),
+							   EnemiesFactory::getFrameCount(SHIELD_ENEMY),
+							   EnemiesFactory::getAnimationSpeed(SHIELD_ENEMY)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TELEPORT,
 							   GAME_TRANSLATION::TELEPORT,
-							   EnemiesFactory::getEnemyInfo(TELEPORT_ENEMY)));
+							   EnemiesFactory::getEnemyInfo(TELEPORT_ENEMY),
+							   EnemiesFactory::getFrameCount(TELEPORT_ENEMY),
+							   EnemiesFactory::getAnimationSpeed(TELEPORT_ENEMY)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SELF_HEAL,
 							   GAME_TRANSLATION::SELF_HEAL,
-							   EnemiesFactory::getEnemyInfo(SELFHEAL_ENEMY)));
+							   EnemiesFactory::getEnemyInfo(SELFHEAL_ENEMY),
+							   EnemiesFactory::getFrameCount(SELFHEAL_ENEMY),
+							   EnemiesFactory::getAnimationSpeed(SELFHEAL_ENEMY)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TRACTOR,
 							   GAME_TRANSLATION::DOWN_TOWER,
-							   EnemiesFactory::getEnemyInfo(TRACTOR)));
+							   EnemiesFactory::getEnemyInfo(TRACTOR),
+							   EnemiesFactory::getFrameCount(TRACTOR),
+							   EnemiesFactory::getAnimationSpeed(TRACTOR)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_WORM,
 							   GAME_TRANSLATION::WORM,
-							   EnemiesFactory::getEnemyInfo(WORM)));
+							   EnemiesFactory::getEnemyInfo(WORM),
+							   EnemiesFactory::getFrameCount(WORM),
+							   EnemiesFactory::getAnimationSpeed(WORM)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_COW,
 							   GAME_TRANSLATION::COW,
-							   EnemiesFactory::getEnemyInfo(SPAWN_ENEMY)));
+							   EnemiesFactory::getEnemyInfo(SPAWN_ENEMY),
+							   EnemiesFactory::getFrameCount(SPAWN_ENEMY),
+							   EnemiesFactory::getAnimationSpeed(SPAWN_ENEMY)));
 }
 
 
@@ -436,11 +481,15 @@ void ManualWindow::previousPage()
 
 ManualWindow::Element::Element(TextureType texture,
 							   TranslationType name,
-							   const EnemiesFactory::EnemyInfo& info)
+							   const EnemiesFactory::EnemyInfo& info,
+							   int frameCount,
+							   float animationSpeed)
 	: 	texture(texture)
 	,name(name)
 	,type(E_Enemy)
 	,enemyInfo(info)
+	,frameCount(frameCount)
+	,animationSpeed(animationSpeed)
 {
 
 }
@@ -452,17 +501,23 @@ ManualWindow::Element::Element(TextureType texture,
 	,name(name)
 	,type(E_Ability)
 	,abilityType(type)
+	,frameCount(1)
+	,animationSpeed(100)
 {
 
 }
 
 ManualWindow::Element::Element(TextureType texture,
 							   TranslationType name,
-							   TOWER_TYPES towerType)
+							   TOWER_TYPES towerType,
+							   int frameCount,
+							   float animationSpeed)
 	: 	texture(texture)
 	,name(name)
 	,type(E_Tower)
 	,towerType(towerType)
+	,frameCount(frameCount)
+	,animationSpeed(animationSpeed)
 {
 
 }
@@ -482,7 +537,6 @@ void ManualWindow::Element::init()
 
 void ManualWindow::Element::update()
 {
-	int frameCount = 1;
 	bool cycled = false;
 	int rowCount = 1;
 	sf::Vector2i frameSize;
@@ -500,7 +554,6 @@ void ManualWindow::Element::update()
 	{
 		rowCount = 4;
 		cycled = true;
-		frameCount = 7;
 		frameSize = sf::Vector2i(192, 192);
 		icon.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 		icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
@@ -682,7 +735,6 @@ void ManualWindow::Element::update()
 		break;
 	case Element::E_Enemy:
 	{
-		frameCount = 4;
 		frameSize = sf::Vector2i(Enemy::ENEMY_SCALE * enemyInfo.size.x * GameOptions::MAP_CELL_SIZE,
 								 Enemy::ENEMY_SCALE * enemyInfo.size.y * GameOptions::MAP_CELL_SIZE);
 		icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
@@ -779,6 +831,7 @@ void ManualWindow::Element::update()
 	}
 
 	object = new GameObject(texture, sf::Vector2f(0,0), frameSize, frameCount);
+	object->animationSpeed = animationSpeed;
 	object->cycled = cycled;
 	object->rowCount = rowCount;
 

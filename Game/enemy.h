@@ -382,6 +382,8 @@ public:
 
 	static Enemy *createEnemy(ENEMY_TYPES type, const sf::Vector2f &startPos);
 	static EnemyInfo getEnemyInfo(ENEMY_TYPES type);
+	static float getAnimationSpeed(ENEMY_TYPES type);
+	static float getFrameCount(ENEMY_TYPES type);
 };
 
 #endif // ENEMY_H

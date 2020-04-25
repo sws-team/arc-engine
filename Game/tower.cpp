@@ -19,7 +19,7 @@ Tower::Tower(const TextureType &texture_id,
 			 const TowerStats &stats)
 	: GameObject(texture_id, pos,
 				 sf::Vector2i(GameOptions::CELL_SIZE/TOWER_SCAlE,
-						  GameOptions::CELL_SIZE/TOWER_SCAlE), 7)
+						  GameOptions::CELL_SIZE/TOWER_SCAlE), 1)
 	,m_stats(stats)
 	,m_level(1)
 	,m_kills(0)
@@ -29,7 +29,6 @@ Tower::Tower(const TextureType &texture_id,
 	,m_regressed(false)
 	,m_invulnerable(false)
 {
-	animationSpeed = 150;
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
 }
 
@@ -291,7 +290,49 @@ Tower *TowersFactory::createTower(TOWER_TYPES type, const sf::Vector2f &pos)
 		break;
 	}
 	tower->setType(type);
+	tower->frameCount = TowersFactory::getFrameCount(type);
+	tower->animationSpeed = TowersFactory::getAnimationSpeed(type);
 	return tower;
+}
+
+float TowersFactory::getAnimationSpeed(TOWER_TYPES type)
+{
+	switch (type)
+	{
+	case BASE:
+		return 200;
+	case POWER:
+		return 150;
+	case ROCKET:
+		return 200;
+	case FREEZE:
+		return 200;
+	case LASER:
+		return 200;
+	case IMPROVED:
+		return 200;
+	}
+	return 200;
+}
+
+int TowersFactory::getFrameCount(TOWER_TYPES type)
+{
+	switch (type)
+	{
+	case BASE:
+		return 1;
+	case POWER:
+		return 7;
+	case ROCKET:
+		return 1;
+	case FREEZE:
+		return 1;
+	case LASER:
+		return 1;
+	case IMPROVED:
+		return 1;
+	}
+	return 1;
 }
 
 bool TowersFactory::isIntersects(const sf::FloatRect &rect, const sf::Vector2f &center, float radius)
@@ -328,6 +369,7 @@ bool TowersFactory::isIntersects(const sf::FloatRect &rect, const sf::Vector2f &
 
 	return false;
 }
+
 const int PowerTower::COST_OFFSET = 10;
 
 BaseTower::BaseTower(const sf::Vector2f &pos)

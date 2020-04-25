@@ -34,7 +34,9 @@ private:
 
 		Element(TextureType texture,
 				TranslationType name,
-				const EnemiesFactory::EnemyInfo& info);
+				const EnemiesFactory::EnemyInfo& info,
+				int frameCount,
+				float animationSpeed);
 
 		Element(TextureType texture,
 				TranslationType name,
@@ -42,7 +44,9 @@ private:
 
 		Element(TextureType texture,
 				TranslationType name,
-				TOWER_TYPES towerType);
+				TOWER_TYPES towerType,
+				int frameCount,
+				float animationSpeed);
 
 		TextureType texture;
 		TranslationType name;
@@ -57,6 +61,8 @@ private:
 		GameObject *object;
 		sf::Text nameText;
 		sf::Text descriptionText;
+		int frameCount;
+		float animationSpeed;
 
 		void init();
 		void update();

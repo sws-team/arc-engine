@@ -37,6 +37,8 @@ public:
 	static bool isIntersects(const sf::FloatRect& rect, const sf::Vector2f& center, float radius);
 	constexpr static float UPGRADE_TO_2_COST_MODIFIER = 0.5f;
 	constexpr static float UPGRADE_TO_3_COST_MODIFIER = 0.75f;
+	static float getAnimationSpeed(TOWER_TYPES type);
+	static int getFrameCount(TOWER_TYPES type);
 };
 
 class Tower : public GameObject

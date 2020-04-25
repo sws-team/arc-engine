@@ -174,6 +174,8 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::INSTRUCTIONS_BOTTOM, out);
 			else if (resource.name == "instruction_vertical")
 				addTexture(GAME_TEXTURE::INSTRUCTIONS_VERTICAL, out);
+			else if (resource.name == "arrow")
+				addTexture(GAME_TEXTURE::ARROW, out);
 			else if (resource.name == "previous_icon")
 				addTexture(GAME_TEXTURE::PREVIOUS, out);
 			else if (resource.name == "locked")

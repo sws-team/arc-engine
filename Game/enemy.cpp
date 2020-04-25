@@ -442,8 +442,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 
 	const EnemyStats stats = Balance::Instance().getEnemyStats(type);
 
-	float animationSpeed = 200;
-	float frameCount = 4;
 	sf::Vector2i size;
 	size.x = 1;
 	size.y = 1;
@@ -463,7 +461,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		texture_id = GAME_TEXTURE::ENEMY_CAR;
 		size.x = 1;
 		size.y = 1;
-		animationSpeed = 50;
 		abilityType = EnemyInfo::STRONG;
 	}
 		break;
@@ -479,8 +476,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		texture_id = GAME_TEXTURE::ENEMY_WORM;
 		size.x = 1;
 		size.y = 1;
-		frameCount = 6;
-		animationSpeed = 200;
 	}
 		break;
 	case SELFHEAL_ENEMY:
@@ -495,8 +490,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	{
 		texture_id = GAME_TEXTURE::ENEMY_TRACTOR;
 		abilityType = EnemyInfo::DOWN_TOWER;
-		animationSpeed = 100;
-		frameCount = 5;
 		size.x = 1;
 		size.y = 1;
 	}
@@ -507,7 +500,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		texture_id = GAME_TEXTURE::ENEMY_PLANE;
 		size.x = 2;
 		size.y = 2;
-		animationSpeed = FasterAbility::FASTER_ANIMATION_SPEED;
 		abilityType = EnemyInfo::FASTER;
 	}
 		break;
@@ -524,8 +516,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		texture_id = GAME_TEXTURE::ENEMY_SPIDER;
 		size.x = 2;
 		size.y = 2;
-		animationSpeed = 100;
-		frameCount = 5;
 		abilityType = EnemyInfo::SHUTDOWN_TOWER;
 	}
 		break;
@@ -534,7 +524,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		texture_id = GAME_TEXTURE::ENEMY_HELICOPTER;
 		size.x = 2;
 		size.y = 2;
-		animationSpeed = 100;
 		abilityType = EnemyInfo::STRONG;
 	}
 		break;
@@ -551,8 +540,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		texture_id = GAME_TEXTURE::ENEMY_SHIELD;
 		size.x = 2;
 		size.y = 2;
-		animationSpeed = 300;
-		frameCount = 9;
 		abilityType = EnemyInfo::SHELL_NEAR;
 	}
 		break;
@@ -561,8 +548,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		texture_id = GAME_TEXTURE::ENEMY_TELEPORT;
 		size.x = 2;
 		size.y = 2;
-		frameCount = TeleportAbility::TELEPORT_FRAME_COUNT;
-		animationSpeed = TeleportAbility::TELEPORT_DEFAULT_ANIMATION_SPEED;
 		abilityType = EnemyInfo::TELEPORT;
 	}
 		break;
@@ -588,8 +573,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		texture_id = GAME_TEXTURE::ENEMY_COW;
 		size.x = 4;
 		size.y = 4;
-		animationSpeed = SpawnEnemy::DEFAULT_ANIMATION_SPEED;
-		frameCount = SpawnEnemy::DEFAULT_SPAWN_FRAME_COUNT;
 		abilityType = EnemyInfo::SPAWN;
 	}
 		break;
@@ -598,8 +581,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		const EnemyInfo wormInfo = getEnemyInfo(WORM);
 		texture_id = GAME_TEXTURE::ENEMY_SPAWN_WORM;
 		size = wormInfo.size;
-		animationSpeed = wormInfo.animationSpeed;
-		frameCount = wormInfo.frameCount;
 		abilityType = wormInfo.abilityType;
 	}
 		break;
@@ -611,9 +592,98 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	info.size = size;
 	info.stats = stats;
 	info.abilityType = abilityType;
-	info.animationSpeed = animationSpeed;
-	info.frameCount = frameCount;
+	info.animationSpeed = getAnimationSpeed(type);
+	info.frameCount = getFrameCount(type);
 	return info;
+}
+
+float EnemiesFactory::getAnimationSpeed(ENEMY_TYPES type)
+{
+	switch (type)
+	{
+	case INFANTRY:
+		break;
+	case CAR:
+		return 50;
+	case TRICYCLE:
+		break;
+	case WORM:
+		return 200;
+		break;
+	case SELFHEAL_ENEMY:
+		break;
+	case TRACTOR:
+		return 100;
+	case ANOTHER_ENEMY:
+		return FasterAbility::FASTER_ANIMATION_SPEED;
+	case TANK:
+		break;
+	case SPIDER:
+		return 100;
+	case MID_FAST:
+		return 100;
+	case REPAIR_ENEMY:
+		break;
+	case SHIELD_ENEMY:
+		return 300;
+	case TELEPORT_ENEMY:
+		return TeleportAbility::TELEPORT_DEFAULT_ANIMATION_SPEED;
+	case BIG_SLOW:
+		break;
+	case BIG_TANK:
+		break;
+	case SPAWN_ENEMY:
+		return SpawnEnemy::DEFAULT_ANIMATION_SPEED;
+	case SPAWN_WORM:
+		return getAnimationSpeed(WORM);
+	default:
+		break;
+	}
+	return 200;
+}
+
+float EnemiesFactory::getFrameCount(ENEMY_TYPES type)
+{
+	switch (type)
+	{
+	case INFANTRY:
+		break;
+	case CAR:
+		break;
+	case TRICYCLE:
+		break;
+	case WORM:
+		return 6;
+	case SELFHEAL_ENEMY:
+		break;
+	case TRACTOR:
+		return 5;
+	case ANOTHER_ENEMY:
+		break;
+	case TANK:
+		break;
+	case SPIDER:
+		return 5;
+	case MID_FAST:
+		break;
+	case REPAIR_ENEMY:
+		break;
+	case SHIELD_ENEMY:
+		return 9;
+	case TELEPORT_ENEMY:
+		return TeleportAbility::TELEPORT_FRAME_COUNT;
+	case BIG_SLOW:
+		break;
+	case BIG_TANK:
+		break;
+	case SPAWN_ENEMY:
+		return SpawnEnemy::DEFAULT_SPAWN_FRAME_COUNT;
+	case SPAWN_WORM:
+		return getFrameCount(WORM);
+	default:
+		break;
+	}
+	return 4;
 }
 
 Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const sf::Vector2f &startPos)
