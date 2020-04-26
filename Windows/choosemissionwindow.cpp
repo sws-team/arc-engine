@@ -22,29 +22,30 @@ ChooseMissionWindow::ChooseMissionWindow()
 	chooseRect.setOutlineColor(CURRENT_BORDER_COLOR);
 	chooseRect.setFillColor(sf::Color::Transparent);
 	currentMission = 0;
-
+#ifdef WITH_DIFFICULT
 	initDifficults();
-
-	const float rectSizeX = 160 * Engine::Instance().settingsManager()->getScaleFactor().x;
-	const float rectSizeY = 160 * Engine::Instance().settingsManager()->getScaleFactor().y;
-	const float offsetX = Engine::Instance().settingsManager()->getScaleFactor().x * 20;
-	const float iconSizeX = 32 * Engine::Instance().settingsManager()->getScaleFactor().x;
-	const float iconSizeY = 32 * Engine::Instance().settingsManager()->getScaleFactor().y;
-	const float topOffset = Engine::Instance().settingsManager()->getScaleFactor().y * 45;
+#endif
+	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
+	const float rectSizeX = 160 * scaleFactor.x;
+	const float rectSizeY = 160 * scaleFactor.y;
+	const float offsetX = scaleFactor.x * 20;
+	const float iconSizeX = 32 * scaleFactor.x;
+	const float iconSizeY = 32 * scaleFactor.y;
+	const float topOffset = scaleFactor.y * 45;
 
 	chooseRect.setSize(sf::Vector2f(rectSizeX, rectSizeY + iconSizeY));
 	const float left = Engine::Instance().settingsManager()->getResolution().x * 0.3f;
 	float x = left;
 	float y = topOffset;
-
+#ifdef WITH_DIFFICULT
 	const float difficultHeight = 60;
 	const sf::Vector2f difficultSize = sf::Vector2f(rectSizeX * COLUMN_COUNT + offsetX * (COLUMN_COUNT - 1),
 											difficultHeight);
 	difficultRect.setPosition(x, y);
 	difficultRect.setSize(difficultSize);
 
-	const sf::Vector2f difficultRectSize = sf::Vector2f(200 * Engine::Instance().settingsManager()->getScaleFactor().x,
-												30 * Engine::Instance().settingsManager()->getScaleFactor().y);
+	const sf::Vector2f difficultRectSize = sf::Vector2f(200 * scaleFactor.x,
+												30 * scaleFactor.y);
 	const float difficultOffsetX = (difficultSize.x - 3 * difficultRectSize.x)/4;
 	const float difficultOffsetY = (difficultSize.y - difficultRectSize.y)/2;
 
@@ -78,8 +79,10 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 	y += difficultHeight;
 	y += difficultOffsetY;
+#else
+	y += 64 * scaleFactor.y;
+#endif
 	y += topOffset;
-
 	const unsigned int maxCompletedLevel = Engine::Instance().options<GameOptions>()->maxCompletedLevel();
 	const bool hasCompletedMissions = !Engine::Instance().options<GameOptions>()->getCompletedMissions().empty();
 	TextureType textureType = GAME_TEXTURE::MAP_ICON_MISSION_1;
@@ -200,18 +203,13 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 {
 	if (event->type == sf::Event::MouseButtonPressed)
 	{
-//		cout <<event->mouseButton.x << " "  << event->mouseButton.y << endl
-//			<< mission.getGlobalBounds().top << " "
-//			   << mission.getGlobalBounds().left << " "
-//				  << mission.getGlobalBounds().width << " "
-//				  << mission.getGlobalBounds().height << " " << endl<<endl;
 		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
 		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
 																			   *Engine::Instance().window()->view());
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
 			{
-				if (missions.at(mission).enabled)
+//				if (missions.at(mission).enabled)
 				{
 					Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
 					accept(mission);
@@ -380,7 +378,7 @@ unsigned int ChooseMissionWindow::getRating(unsigned int n) const
 			return mission.stars;
 	return 0;
 }
-
+#ifdef WITH_DIFFICULT
 void ChooseMissionWindow::initDifficults()
 {
 	const sf::Color difficultRectFillColor = sf::Color(16, 32, 64, 128);
@@ -433,3 +431,4 @@ void ChooseMissionWindow::initDifficults()
 	hardText.setOutlineColor(sf::Color::Black);
 	hardText.setOutlineThickness(thickness);
 }
+#endif

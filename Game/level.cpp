@@ -169,6 +169,7 @@ void Level::update()
 
 void Level::startMission(const unsigned int n)
 {
+	Engine::Instance().options<GameOptions>()->instructions()->init(n);
 	spawnTimer.reset();
 	currentWave = 0;
 	Engine::Instance().options<GameOptions>()->panel()->updateWaveText();
@@ -183,7 +184,7 @@ void Level::startMission(const unsigned int n)
 	wave.respawnTime = _testInterval;
 	for (int i = 0; i < _testEnemiesCount; ++i)
 	{
-		wave.spawnEnemies.push_back(ENEMY_TYPES::TANK);
+		wave.spawnEnemies.push_back(ENEMY_TYPES::WORM);
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::TRICYCLE);
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
 	}

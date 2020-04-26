@@ -25,7 +25,6 @@ GameWindow::GameWindow()
 	tick = 0;
 	lastTime = 0;
 
-	Engine::Instance().options<GameOptions>()->instructions()->init();
 	Engine::Instance().options<GameOptions>()->camera()->init();
 	currentMenu = static_cast<GAME_MENU>(CONTINUE_GAME);
 

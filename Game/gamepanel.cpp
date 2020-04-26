@@ -1030,25 +1030,27 @@ void GamePanel::initMission(unsigned int n)
 	}
 }
 
-sf::FloatRect GamePanel::getTowersRect() const
+sf::FloatRect GamePanel::getTowerRect(TOWER_TYPES type) const
 {
-	const sf::Vector2f pos = sf::Vector2f(towerBaseSprite.getGlobalBounds().left, towerBaseSprite.getGlobalBounds().top);
+	const int n = static_cast<int>(type) + 1;
+	const sf::Vector2f pos = sf::Vector2f(towerBaseSprite.getGlobalBounds().left,
+										  towerBaseSprite.getGlobalBounds().top);
 	const float icons_space = ICONS_SPACE * Engine::Instance().settingsManager()->getScaleFactor().x;
 	sf::Vector2f size;
-	size.x = towerBaseSprite.getGlobalBounds().width * 6;
-	size.x += icons_space * 5;
+	size.x = towerBaseSprite.getGlobalBounds().width * n;
+	size.x += icons_space * (n - 1);
 	size.y = towerBaseSprite.getGlobalBounds().height;
 	return sf::FloatRect(pos, size);
 }
 
-sf::FloatRect GamePanel::getAbilitiesRect() const
+sf::FloatRect GamePanel::getAbilityRect(ACTION_STATE type) const
 {
-	const sf::Vector2f pos = sf::Vector2f(abilityBombSprite.getGlobalBounds().left, abilityBombSprite.getGlobalBounds().top);
+	const int n = static_cast<int>(type) - 1;
 	const float icons_space = ICONS_SPACE * Engine::Instance().settingsManager()->getScaleFactor().x;
-	sf::Vector2f size;
-	size.x = abilityBombSprite.getGlobalBounds().width * 6;
-	size.x += icons_space * 5;
-	size.y = abilityBombSprite.getGlobalBounds().height;
+
+	const sf::Vector2f pos = sf::Vector2f(abilityBombSprite.getGlobalBounds().left,
+										  abilityBombSprite.getGlobalBounds().top);
+	const sf::Vector2f size = Engine::Instance().options<GameOptions>()->tileSize();
 	return sf::FloatRect(pos, size);
 }
 

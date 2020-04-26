@@ -8,6 +8,7 @@
 #include "gameoptions.h"
 #include "Game/gameability.h"
 #include "mainwindow.h"
+#include "Game/instructions.h"
 
 const sf::Color ManualWindow::SELECTED_COLOR = sf::Color(45, 45, 45, 96);
 
@@ -446,6 +447,31 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getEnemyInfo(SPAWN_ENEMY),
 							   EnemiesFactory::getFrameCount(SPAWN_ENEMY),
 							   EnemiesFactory::getAnimationSpeed(SPAWN_ENEMY)));
+
+	//map effects
+	elements.push_back(Element(GAME_TEXTURE::SMOKE,
+							   GAME_TRANSLATION::SMOKE_NAME,
+							   Instructions::SMOKE,
+							   1,
+							   100));
+
+	elements.push_back(Element(GAME_TEXTURE::REGRESS,
+							   GAME_TRANSLATION::REGRESS_NAME,
+							   Instructions::REGRESS,
+							   4,
+							   200));
+
+	elements.push_back(Element(GAME_TEXTURE::DRAIN,
+							   GAME_TRANSLATION::DRAIN_NAME,
+							   Instructions::DRAIN,
+							   4,
+							   200));
+
+	elements.push_back(Element(GAME_TEXTURE::TOWER_EXPLOSION,
+							   GAME_TRANSLATION::TOWER_EXPLOSION_NAME,
+							   Instructions::EXPLOSION,
+							   4,
+							   200));
 }
 
 
@@ -484,7 +510,7 @@ ManualWindow::Element::Element(TextureType texture,
 							   const EnemiesFactory::EnemyInfo& info,
 							   int frameCount,
 							   float animationSpeed)
-	: 	texture(texture)
+	: texture(texture)
 	,name(name)
 	,type(E_Enemy)
 	,enemyInfo(info)
@@ -497,7 +523,7 @@ ManualWindow::Element::Element(TextureType texture,
 ManualWindow::Element::Element(TextureType texture,
 							   TranslationType name,
 							   ACTION_STATE type)
-	: 	texture(texture)
+	: texture(texture)
 	,name(name)
 	,type(E_Ability)
 	,abilityType(type)
@@ -512,10 +538,25 @@ ManualWindow::Element::Element(TextureType texture,
 							   TOWER_TYPES towerType,
 							   int frameCount,
 							   float animationSpeed)
-	: 	texture(texture)
+	: texture(texture)
 	,name(name)
 	,type(E_Tower)
 	,towerType(towerType)
+	,frameCount(frameCount)
+	,animationSpeed(animationSpeed)
+{
+
+}
+
+ManualWindow::Element::Element(TextureType texture,
+							   TranslationType name,
+							   Instructions::MAP_EFFECTS type,
+							   int frameCount,
+							   float animationSpeed)
+	: texture(texture)
+	,name(name)
+	,type(E_Effect)
+	,effectType(type)
 	,frameCount(frameCount)
 	,animationSpeed(animationSpeed)
 {
@@ -546,8 +587,6 @@ void ManualWindow::Element::update()
 	nameText.setString(Engine::Instance().translationsManager()->translate(name));
 	//description
 	sf::String description;
-	const sf::String separator = ": ";
-	const sf::String endline = "\n";
 	switch (type)
 	{
 	case Element::E_Tower:
@@ -558,179 +597,30 @@ void ManualWindow::Element::update()
 		icon.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 		icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
 
-		switch (towerType)
-		{
-		case BASE:
-		{
-			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_BASE);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
-			description += separator;
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BASE_TOWER_ABILITY);
-		}
-			break;
-		case POWER:
-		{
-			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_POWER);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_TRAIT);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
-			description += separator;
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_ABILITY);
-		}
-			break;
-		case ROCKET:
-		{
-			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ROCKET);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
-			description += separator;
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ROCKET_TOWER_ABILITY);
-		}
-			break;
-		case FREEZE:
-		{
-			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_FREEZE);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
-			description += separator;
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_TOWER_ABILITY);
-		}
-			break;
-		case LASER:
-		{
-			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_LASER);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
-			description += separator;
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LASER_TOWER_ABILITY);
-		}
-			break;
-		case IMPROVED:
-		{
-			description = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_IMPROVED);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
-			description += separator;
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::IMPROVED_TOWER_ABILITY);
-		}
-			break;
-		}
-
-		description += endline;
+		description += Instructions::towerInfoText(towerType);
+		description += EngineDefs::endline;
 
 		const TowerStats towerStats = Balance::Instance().getTowerStats(towerType);
 		const float dps = towerStats.damage / ((towerStats.attackSpeed) * 0.001f);
 
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND) + separator + GlobalVariables::to_string_with_precision(dps, 2);
-		description += endline;
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND) + EngineDefs::separator + GlobalVariables::to_string_with_precision(dps, 2);
+		description += EngineDefs::endline;
 
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::RADIUS) + separator +
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::RADIUS) + EngineDefs::separator +
 				GlobalVariables::to_string_with_precision(towerStats.radius, 1);
-		description += endline;
+		description += EngineDefs::endline;
 
 		const float cost = towerStats.cost;
 
 		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COST);
-		description += separator;
+		description += EngineDefs::separator;
 		description += GlobalVariables::to_string_with_precision(cost, 2);
 	}
 		break;
 	case Element::E_Ability:
 	{		
-		frameSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
-		description += Engine::Instance().translationsManager()->translate(name);
-		description += endline;
-		switch (abilityType)
-		{
-		case ACTION_STATE::ABILITY_BOMB:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BOMB_ABILITY_DESCRIPTION);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
-			description += separator;
-			description += GlobalVariables::to_string_with_precision(Balance::Instance().getBombCooldown(), 1);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_ATTRIBUTE);
-			description += separator;
-			description += GlobalVariables::to_string_with_precision(Balance::Instance().getBombDamage(), 1);
-			break;
-		case ACTION_STATE::ABILITY_FREEZE_BOMB:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
-			description += separator;
-			description += GlobalVariables::to_string_with_precision(Balance::Instance().getFreezeCooldown(), 1);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
-			description += separator;
-			description += GlobalVariables::to_string_with_precision(Balance::Instance().getFreezeDuration(), 1);
-			break;
-		case ACTION_STATE::ABILITY_ACID:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ACID_ABILITY_DESCRIPTION);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
-			description += separator;
-			description += GlobalVariables::to_string_with_precision(Balance::Instance().getAcidCooldown(), 1);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_ATTRIBUTE);
-			description += separator;
-			description += GlobalVariables::to_string_with_precision(Balance::Instance().getAcidCount() * Balance::Instance().getAcidDamage(), 1);
-			break;
-		case ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
-			description += separator;
-			description += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseDamageCooldown(), 1);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
-			description += separator;
-			description += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseDamageDuration(), 1);
-			break;
-		case ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
-			description += separator;
-			description += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseAttackSpeedCooldown(), 1);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
-			description += separator;
-			description += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseAttackSpeedDuration(), 1);
-			break;
-		case ACTION_STATE::ABILITY_STOP:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
-			description += separator;
-			description += GlobalVariables::to_string_with_precision(Balance::Instance().getStopCooldown(), 1);
-			description += endline;
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
-			description += separator;
-			description += GlobalVariables::to_string_with_precision(Balance::Instance().getStopDuration(), 1);
-			break;
-		default:
-			break;
-		}
+		frameSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);		
+		description += Instructions::abilityInfoText(abilityType);
 	}
 		break;
 	case Element::E_Enemy:
@@ -744,43 +634,43 @@ void ManualWindow::Element::update()
 		icon.scale(k.x/Enemy::ENEMY_SCALE, k.y/Enemy::ENEMY_SCALE);
 
 		description += Engine::Instance().translationsManager()->translate(name);
-		description += endline;
+		description += EngineDefs::endline;
 		//speed
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SPEED) + separator;
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SPEED) + EngineDefs::separator;
 		if (enemyInfo.stats.speed < 30)
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FAST);
 		else if (enemyInfo.stats.speed < 65)
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::NORMAL_SPEED);
 		else
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SLOW);
-		description += endline;
+		description += EngineDefs::endline;
 		//size
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SIZE) + separator;
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SIZE) + EngineDefs::separator;
 		if (enemyInfo.size.x == 1)
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SMALL);
 		else if (enemyInfo.size.x == 2)
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::MID);
 		else
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BIG);
-		description += endline;
+		description += EngineDefs::endline;
 		//health
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::HEALTH) + separator +
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::HEALTH) + EngineDefs::separator +
 				GlobalVariables::to_string_with_precision(enemyInfo.stats.health, 1);
-		description += endline;
+		description += EngineDefs::endline;
 
 		//armor
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR) + separator;
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR) + EngineDefs::separator;
 		if (enemyInfo.stats.reflection < 0.1f)
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_LIGHT);
 		else if (enemyInfo.stats.reflection < 0.3f)
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_MEDIUM);
 		else
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_STRONG);
-		description += endline;
+		description += EngineDefs::endline;
 
 		//ability
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY) + separator;
-		description += endline;
+		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY) + EngineDefs::separator;
+		description += EngineDefs::endline;
 
 		switch (enemyInfo.abilityType)
 		{
@@ -824,6 +714,31 @@ void ManualWindow::Element::update()
 			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_NONE);
 			break;
 		}
+	}
+		break;
+	case Element::E_Effect:
+	{
+		frameSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
+		icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+		switch (effectType)
+		{
+		case Instructions::SMOKE:
+			rowCount = 4;
+			break;
+		case Instructions::REGRESS:
+			rowCount = 3;
+			break;
+		case Instructions::DRAIN:
+			rowCount = 2;
+			break;
+		case Instructions::EXPLOSION:
+			rowCount = 1;
+			break;
+		default:
+			break;
+		}
+		cycled = true;
+		description += Instructions::mapEffectInfoText(effectType);
 	}
 		break;
 	default:

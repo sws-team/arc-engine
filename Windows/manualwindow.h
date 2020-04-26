@@ -4,6 +4,7 @@
 #include "statewindow.h"
 #include "enginedef.h"
 #include "gameobject.h"
+#include "Game/instructions.h"
 
 #include "Game/enemy.h"
 #include "Game/tower.h"
@@ -29,7 +30,8 @@ private:
 		{
 			E_Tower,
 			E_Ability,
-			E_Enemy
+			E_Enemy,
+			E_Effect,
 		};
 
 		Element(TextureType texture,
@@ -48,6 +50,12 @@ private:
 				int frameCount,
 				float animationSpeed);
 
+		Element(TextureType texture,
+				TranslationType name,
+				Instructions::MAP_EFFECTS type,
+				int frameCount,
+				float animationSpeed);
+
 		TextureType texture;
 		TranslationType name;
 		ElementType type;
@@ -55,6 +63,7 @@ private:
 		EnemiesFactory::EnemyInfo enemyInfo;
 		TOWER_TYPES towerType;
 		ACTION_STATE abilityType;
+		Instructions::MAP_EFFECTS effectType;
 
 		sf::RectangleShape rect;
 		sf::Sprite icon;

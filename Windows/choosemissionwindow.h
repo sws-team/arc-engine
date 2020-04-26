@@ -44,6 +44,7 @@ private:
 	static const sf::Color CURRENT_BORDER_COLOR;
 
 
+#ifdef WITH_DIFFICULT
 	sf::RectangleShape difficultRect;
 	sf::RectangleShape currentDifficultRect;
 	sf::RectangleShape choosedDifficultRect;
@@ -55,9 +56,8 @@ private:
 	sf::Text easyText;
 	sf::Text normalText;
 	sf::Text hardText;
-
 	void initDifficults();
-
+#endif
 	int hovered;
 };
 

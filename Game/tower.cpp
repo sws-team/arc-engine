@@ -89,6 +89,7 @@ void Tower::upgrade()
 											 sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE),
 											 250, 4, 0);
 	Engine::Instance().soundManager()->playOnce(GAME_SOUND::UPGRADE);
+	updateTextureRect();
 }
 
 TOWER_TYPES Tower::type() const
@@ -300,17 +301,17 @@ float TowersFactory::getAnimationSpeed(TOWER_TYPES type)
 	switch (type)
 	{
 	case BASE:
-		return 200;
+		return 100;
 	case POWER:
 		return 150;
 	case ROCKET:
 		return 200;
 	case FREEZE:
-		return 200;
+		return 100;
 	case LASER:
-		return 200;
+		return 80;
 	case IMPROVED:
-		return 200;
+		return 100;
 	}
 	return 200;
 }
@@ -320,17 +321,17 @@ int TowersFactory::getFrameCount(TOWER_TYPES type)
 	switch (type)
 	{
 	case BASE:
-		return 1;
+		return 6;
 	case POWER:
 		return 7;
 	case ROCKET:
 		return 1;
 	case FREEZE:
-		return 1;
+		return 6;
 	case LASER:
-		return 1;
+		return 6;
 	case IMPROVED:
-		return 1;
+		return 6;
 	}
 	return 1;
 }

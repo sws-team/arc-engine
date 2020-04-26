@@ -56,8 +56,11 @@ int main(int argc, char *argv[])
 #endif
 		return EXIT_FAILURE;
 	}
-
+#ifdef DEMO_DEMO_VERSION
+	Engine::Instance().globalVariables()->setAppName("Arc Defence Demo");
+#else
 	Engine::Instance().globalVariables()->setAppName("Arc Defence");
+#endif
 	Engine::Instance().options<GameOptions>()->loadAchievements();
 	GamePlatform::Instance().requestStats();
 

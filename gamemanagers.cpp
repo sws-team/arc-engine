@@ -677,14 +677,6 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Добро пожаловать в игру!"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Welcome!"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INSTRUCTION_TOWERS, L"Towers"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INSTRUCTION_TOWERS, L"Башни"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INSTRUCTION_TOWERS, L"Towers"));
-
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INSTRUCTION_ABILITIES, L"Abilities"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INSTRUCTION_ABILITIES, L"Способности"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INSTRUCTION_ABILITIES, L"Abilities"));
-
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INSTRUCTION_MONEY, L"Money"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INSTRUCTION_MONEY, L"Валюта"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INSTRUCTION_MONEY, L"Money"));
@@ -765,7 +757,7 @@ void GameManagers::loadTranslations()
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::COW, L"Корова"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::COW, L"Корова"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::COW, L"Корова"));
-
+#ifdef WITH_DIFFICULT
 	//difficult
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::EASY, L"Easy"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::EASY, L"Легко"));
@@ -778,7 +770,7 @@ void GameManagers::loadTranslations()
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::HARD, L"Hard"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::HARD, L"Трудно"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::HARD, L"Hard"));
-
+#endif
 	//towers abilities
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::BASE_TOWER_ABILITY, L"Invulnerability"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::BASE_TOWER_ABILITY, L"Неуязвимость"));
@@ -989,6 +981,39 @@ void GameManagers::loadTranslations()
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Stops the movement of all enemies"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Останавливает движение всех\nврагов"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Stopper tous les ennemis"));
+
+	//map effects
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SMOKE_NAME, L"Mist"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SMOKE_NAME, L"Туман"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SMOKE_NAME, L"???"));
+
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DRAIN_NAME, L"Energy leech"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DRAIN_NAME, L"Энергопиявка"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DRAIN_NAME, L"???"));
+
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::REGRESS_NAME, L"???"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::REGRESS_NAME, L"???"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::REGRESS_NAME, L"???"));
+
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_EXPLOSION_NAME, L"ICBM"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_EXPLOSION_NAME, L"МБР"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_EXPLOSION_NAME, L"???"));
+
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"???"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"При попадании на башню ограничивет точность приборов наведения. Уменьшает радиус стрельбы башни"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"???"));
+
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DRAIN_DESCRIPTION, L"???"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DRAIN_DESCRIPTION, L"Выкачивает энергию из энергетических башен. Может быть уничтожен взрывом бомбы"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DRAIN_DESCRIPTION, L"???"));
+
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::REGRESS_DESCRIPTION, L"???"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::REGRESS_DESCRIPTION, L"Вызывает помехи в работе башен, снижается урон и скорость стрельбы."));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::REGRESS_DESCRIPTION, L"???"));
+
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION, L"???"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION, L"Уничтожает башню независимо от уровня."));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION, L"???"));
 
 	Engine::Instance().translationsManager()->addTranslation(std::string("russian"), russainTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);
