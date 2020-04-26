@@ -38,7 +38,7 @@ Instructions::Instructions() :
 	targetRect.setOutlineColor(sf::Color::Blue);
 
 	text.setFont(Engine::Instance().fontManager()->font());
-	text.setCharacterSize(35);
+	text.setCharacterSize(Engine::Instance().fontManager()->getCharSize(35));
 	text.setFillColor(sf::Color::Red);
 	text.setOutlineColor(sf::Color::Black);
 	text.setOutlineThickness(2);
@@ -385,84 +385,84 @@ void Instructions::updateState()
 	case INSTRUCTION_TOWER_BASE:
 	{
 		showArrow = true;
-		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(BASE);
+		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(0);
 		textStr = towerInfoText(BASE);
 	}
 		break;
 	case INSTRUCTION_TOWER_FREEZE:
 	{
 		showArrow = true;
-		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(FREEZE);
+		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(1);
 		textStr = towerInfoText(FREEZE);
 	}
 		break;
 	case INSTRUCTION_TOWER_ENERGY:
 	{
 		showArrow = true;
-		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(POWER);
+		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(3);
 		textStr = towerInfoText(POWER);
 	}
 		break;
 	case INSTRUCTION_TOWER_ROCKET:
 	{
 		showArrow = true;
-		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(ROCKET);
+		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(2);
 		textStr = towerInfoText(ROCKET);
 	}
 		break;
 	case INSTRUCTION_TOWER_LASER:
 	{
 		showArrow = true;
-		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(LASER);
+		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(4);
 		textStr = towerInfoText(LASER);
 	}
 		break;
 	case INSTRUCTION_TOWER_IMPROVED:
 	{
 		showArrow = true;
-		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(IMPROVED);
+		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(5);
 		textStr = towerInfoText(IMPROVED);
 	}
 		break;
 	case INSTRUCTION_BOMB:
 	{
 		showArrow = true;
-		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(ABILITY_BOMB);
+		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(0);
 		textStr = abilityInfoText(ABILITY_BOMB);
 	}
 		break;
 	case INSTRUCTION_FREEZE_BOMB:
 	{
 		showArrow = true;
-		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(ABILITY_FREEZE_BOMB);
+		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(1);
 		textStr = abilityInfoText(ABILITY_FREEZE_BOMB);
 	}
 		break;
 	case INSTRUCTION_ACID:
 	{
 		showArrow = true;
-		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(ABILITY_ACID);
+		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(2);
 		textStr = abilityInfoText(ABILITY_ACID);
 	}
 		break;
 	case INSTRUCTION_INCREASE_DAMAGE:
 	{
 		showArrow = true;
-		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(ABILITY_INCREASE_TOWER_DAMAGE);
+		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(3);
 		textStr = abilityInfoText(ABILITY_INCREASE_TOWER_DAMAGE);
 	}
 		break;
 	case INSTRUCTION_INCREASE_ATTACK_SPEED:
 	{
 		showArrow = true;
-		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(ABILITY_INCREASE_TOWER_ATTACK_SPEED);
+		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(4);
 		textStr = abilityInfoText(ABILITY_INCREASE_TOWER_ATTACK_SPEED);
 	}
 		break;
 	case INSTRUCTION_STOP:
 	{
 		showArrow = true;
-		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(ABILITY_STOP);
+		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(5);
 		textStr = abilityInfoText(ABILITY_STOP);
 	}
 		break;

@@ -60,7 +60,7 @@ Level::Level() :
 	sellCostText.setFillColor(textColor);
 	sellCostText.setOutlineColor(textOutlineColor);
 	sellCostText.setOutlineThickness(1);
-	sellCostText.setCharacterSize(fieldIconsCharacterSize);
+	sellCostText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(fieldIconsCharacterSize));
 	sellCostText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
 	upgradeCostText.setFont(Engine::Instance().fontManager()->font());
@@ -68,7 +68,7 @@ Level::Level() :
 	upgradeCostText.setStyle(sf::Text::Bold);
 	upgradeCostText.setOutlineColor(textOutlineColor);
 	upgradeCostText.setOutlineThickness(1);
-	upgradeCostText.setCharacterSize(fieldIconsCharacterSize);
+	upgradeCostText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(fieldIconsCharacterSize));
 	upgradeCostText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
 

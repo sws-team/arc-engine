@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
 #endif
 	Engine::Instance().options<GameOptions>()->loadAchievements();
 	GamePlatform::Instance().requestStats();
+	Engine::Instance().fontManager()->setFontModifier(0.75f);
 
 	MainWindow w;
 	Engine::Instance().options<GameOptions>()->setMainWindow(&w);

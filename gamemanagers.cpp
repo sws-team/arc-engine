@@ -177,7 +177,10 @@ void GameManagers::loadResources()
 			else if (resource.name == "arrow")
 				addTexture(GAME_TEXTURE::ARROW, out);
 			else if (resource.name == "previous_icon")
+			{
 				addTexture(GAME_TEXTURE::PREVIOUS, out);
+				addTexture(TexturesManager::CHOOSE_LIST_PREVIOUS, out);
+			}
 			else if (resource.name == "locked")
 				addTexture(GAME_TEXTURE::LOCKED_ICON, out);
 			else if (resource.name == "money_icon")
@@ -187,7 +190,10 @@ void GameManagers::loadResources()
 			else if (resource.name == "panel_cursor")
 				addTexture(GAME_TEXTURE::PANEL_CURSOR, out);
 			else if (resource.name == "next_icon")
+			{
 				addTexture(GAME_TEXTURE::NEXT, out);
+				addTexture(TexturesManager::CHOOSE_LIST_NEXT, out);
+			}
 			else if (resource.name == "sell_icon")
 				addTexture(GAME_TEXTURE::SELL_TEXTURE, out);
 			else if (resource.name == "star")
@@ -219,10 +225,6 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::ENEMY_ROCKET, out);
 			else if (resource.name == "enemy_bullet")
 				addTexture(GAME_TEXTURE::ENEMY_BULLET, out);
-			else if (resource.name == "chooselist_next")
-				addTexture(TexturesManager::CHOOSE_LIST_NEXT, out);
-			else if (resource.name == "chooselist_previous")
-				addTexture(TexturesManager::CHOOSE_LIST_PREVIOUS, out);
 			//effects
 			else if (resource.name == "base_explosion")
 				addTexture(GAME_TEXTURE::BASE_EXPLOSION_EFFECT, out);
@@ -1000,15 +1002,15 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_EXPLOSION_NAME, L"???"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"???"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"При попадании на башню ограничивет точность приборов наведения. Уменьшает радиус стрельбы башни"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"При попадании на башню ограничивет\nточность приборов наведения.\nУменьшает радиус стрельбы башни"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"???"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DRAIN_DESCRIPTION, L"???"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DRAIN_DESCRIPTION, L"Выкачивает энергию из энергетических башен. Может быть уничтожен взрывом бомбы"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DRAIN_DESCRIPTION, L"Выкачивает энергию из энергетических башен.\nМожет быть уничтожен взрывом бомбы"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DRAIN_DESCRIPTION, L"???"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::REGRESS_DESCRIPTION, L"???"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::REGRESS_DESCRIPTION, L"Вызывает помехи в работе башен, снижается урон и скорость стрельбы."));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::REGRESS_DESCRIPTION, L"Вызывает помехи в работе башен,\nснижается урон и скорость стрельбы."));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::REGRESS_DESCRIPTION, L"???"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION, L"???"));

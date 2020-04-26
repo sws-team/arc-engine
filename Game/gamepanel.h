@@ -39,8 +39,8 @@ public:
 
 	void initMission(unsigned int n);
 
-	sf::FloatRect getTowerRect(TOWER_TYPES type) const;
-	sf::FloatRect getAbilityRect(ACTION_STATE type) const;
+	sf::FloatRect getTowerRect(const int n) const;
+	sf::FloatRect getAbilityRect(const int n) const;
 	sf::FloatRect getMoneyRect() const;
 	sf::FloatRect getHealthRect() const;
 	sf::FloatRect getProgressRect() const;

@@ -305,7 +305,7 @@ float TowersFactory::getAnimationSpeed(TOWER_TYPES type)
 	case POWER:
 		return 150;
 	case ROCKET:
-		return 200;
+		return 120;
 	case FREEZE:
 		return 100;
 	case LASER:
@@ -325,7 +325,7 @@ int TowersFactory::getFrameCount(TOWER_TYPES type)
 	case POWER:
 		return 7;
 	case ROCKET:
-		return 1;
+		return 6;
 	case FREEZE:
 		return 6;
 	case LASER:

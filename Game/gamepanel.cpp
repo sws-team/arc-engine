@@ -34,14 +34,14 @@ GamePanel::GamePanel() :
 	info.setFillColor(sf::Color::Black);
 	info.setOutlineColor(sf::Color::Yellow);
 	info.setOutlineThickness(2);
-	info.setCharacterSize(25);
+	info.setCharacterSize(Engine::Instance().fontManager()->getCharSize(25));
 	info.setScale(scaleFactor);
 
 	moneyCountText.setFont(Engine::Instance().fontManager()->font());
 	moneyCountText.setFillColor(sf::Color::Black);
 	moneyCountText.setOutlineColor(sf::Color::Yellow);
 	moneyCountText.setOutlineThickness(2);
-	moneyCountText.setCharacterSize(34);
+	moneyCountText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(34));
 	moneyCountText.setScale(scaleFactor);
 
 	cursorSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::PANEL_CURSOR));
@@ -97,7 +97,7 @@ GamePanel::GamePanel() :
 	readyText.setFillColor(sf::Color::Black);
 	readyText.setOutlineColor(sf::Color::Yellow);
 	readyText.setOutlineThickness(2);
-	readyText.setCharacterSize(45);
+	readyText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(45));
 	readyText.setScale(scaleFactor);
 	readyText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::START_GAME));
 
@@ -159,7 +159,7 @@ GamePanel::GamePanel() :
 	waveText.setFillColor(sf::Color::Magenta);
 	waveText.setOutlineThickness(2);
 	waveText.setOutlineColor(sf::Color::Yellow);
-	waveText.setCharacterSize(25);
+	waveText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(25));
 	waveText.setScale(scaleFactor);
 
 	m_bottomValue = 0;
@@ -879,7 +879,7 @@ void GamePanel::initText(sf::Text *text, const unsigned int size,
 	text->setFillColor(fillColor);
 	text->setOutlineColor(outlineColor);
 	text->setOutlineThickness(1);
-	text->setCharacterSize(size);
+	text->setCharacterSize(Engine::Instance().fontManager()->getCharSize(size));
 	text->setScale(Engine::Instance().settingsManager()->getScaleFactor());
 }
 
@@ -1030,28 +1030,24 @@ void GamePanel::initMission(unsigned int n)
 	}
 }
 
-sf::FloatRect GamePanel::getTowerRect(TOWER_TYPES type) const
+sf::FloatRect GamePanel::getTowerRect(const int n) const
 {
-	const int n = static_cast<int>(type) + 1;
-	const sf::Vector2f pos = sf::Vector2f(towerBaseSprite.getGlobalBounds().left,
-										  towerBaseSprite.getGlobalBounds().top);
 	const float icons_space = ICONS_SPACE * Engine::Instance().settingsManager()->getScaleFactor().x;
-	sf::Vector2f size;
-	size.x = towerBaseSprite.getGlobalBounds().width * n;
-	size.x += icons_space * (n - 1);
-	size.y = towerBaseSprite.getGlobalBounds().height;
-	return sf::FloatRect(pos, size);
+	sf::Vector2f pos = sf::Vector2f(towerBaseSprite.getGlobalBounds().left,
+										  towerBaseSprite.getGlobalBounds().top);
+	pos.x += Engine::Instance().options<GameOptions>()->tileSize().x * n;
+	pos.x += icons_space * n;
+	return sf::FloatRect(pos, Engine::Instance().options<GameOptions>()->tileSize());
 }
 
-sf::FloatRect GamePanel::getAbilityRect(ACTION_STATE type) const
+sf::FloatRect GamePanel::getAbilityRect(const int n) const
 {
-	const int n = static_cast<int>(type) - 1;
 	const float icons_space = ICONS_SPACE * Engine::Instance().settingsManager()->getScaleFactor().x;
-
-	const sf::Vector2f pos = sf::Vector2f(abilityBombSprite.getGlobalBounds().left,
-										  abilityBombSprite.getGlobalBounds().top);
-	const sf::Vector2f size = Engine::Instance().options<GameOptions>()->tileSize();
-	return sf::FloatRect(pos, size);
+	sf::Vector2f pos = sf::Vector2f(abilityBombSprite.getGlobalBounds().left,
+									abilityBombSprite.getGlobalBounds().top);
+	pos.x += Engine::Instance().options<GameOptions>()->tileSize().x * n;
+	pos.x += icons_space * n;
+	return sf::FloatRect(pos, Engine::Instance().options<GameOptions>()->tileSize());
 }
 
 sf::FloatRect GamePanel::getMoneyRect() const

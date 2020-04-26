@@ -41,7 +41,7 @@ MainMenu::MainMenu()
 	clearStats.setFillColor(sf::Color::Cyan);
 	clearStats.setOutlineColor(sf::Color::Black);
 	clearStats.setOutlineThickness(5);
-	clearStats.setCharacterSize(50);
+	clearStats.setCharacterSize(Engine::Instance().fontManager()->getCharSize(50));
 	clearStats.setScale(scaleFactor);
 	clearStats.setPosition(20, 200);
 
@@ -50,7 +50,7 @@ MainMenu::MainMenu()
 	clearSaves.setFillColor(sf::Color::Cyan);
 	clearSaves.setOutlineColor(sf::Color::Black);
 	clearSaves.setOutlineThickness(5);
-	clearSaves.setCharacterSize(50);
+	clearSaves.setCharacterSize(Engine::Instance().fontManager()->getCharSize(50));
 	clearSaves.setScale(scaleFactor);
 	clearSaves.setPosition(20, 250);
 #endif

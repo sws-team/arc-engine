@@ -30,7 +30,7 @@ ManualWindow::ManualWindow()
 
 	toolTip.setFont(Engine::Instance().fontManager()->font());
 	toolTip.setScale(Engine::Instance().settingsManager()->getScaleFactor());
-	toolTip.setCharacterSize(40);
+	toolTip.setCharacterSize(Engine::Instance().fontManager()->getCharSize(40));
 	toolTip.setOutlineThickness(1.f);
 	toolTip.setFillColor(sf::Color::Red);
 	toolTip.setOutlineColor(sf::Color::Blue);
@@ -569,11 +569,11 @@ void ManualWindow::Element::init()
 
 	nameText.setFont(Engine::Instance().fontManager()->font());
 	nameText.setFillColor(sf::Color::Red);
-	nameText.setCharacterSize(36);
+	nameText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(36));
 
 	descriptionText.setFont(Engine::Instance().fontManager()->font());
 	descriptionText.setFillColor(sf::Color::Red);
-	descriptionText.setCharacterSize(36);
+	descriptionText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(36));
 }
 
 void ManualWindow::Element::update()
@@ -719,11 +719,11 @@ void ManualWindow::Element::update()
 	case Element::E_Effect:
 	{
 		frameSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
-		icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
 		switch (effectType)
 		{
 		case Instructions::SMOKE:
-			rowCount = 4;
+			frameSize = sf::Vector2i(256, 256);
+			rowCount = 3;
 			break;
 		case Instructions::REGRESS:
 			rowCount = 3;
@@ -737,6 +737,9 @@ void ManualWindow::Element::update()
 		default:
 			break;
 		}
+		icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+		if (effectType == Instructions::SMOKE)
+			icon.scale(0.25f, 0.25f);
 		cycled = true;
 		description += Instructions::mapEffectInfoText(effectType);
 	}

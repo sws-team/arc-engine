@@ -106,7 +106,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 		mission.highlight.setPosition(x, y);
 		mission.highlight.setSize(sf::Vector2f(rectSizeX, rectSizeY + iconSizeY));
 		mission.numberText.setFont(Engine::Instance().fontManager()->font());
-		mission.numberText.setCharacterSize(60);
+		mission.numberText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(60));
 		mission.numberText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 		mission.numberText.setString(std::to_string(i + 1));
 		mission.numberText.setPosition(x, y);
@@ -209,7 +209,7 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
 			{
-//				if (missions.at(mission).enabled)
+				if (missions.at(mission).enabled)
 				{
 					Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
 					accept(mission);

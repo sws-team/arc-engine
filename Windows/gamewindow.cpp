@@ -43,7 +43,7 @@ GameWindow::GameWindow()
 	text.setOutlineThickness(5);
 	text.setOutlineColor(sf::Color::Yellow);
 	text.setFont(Engine::Instance().fontManager()->font());
-	text.setCharacterSize(100);
+	text.setCharacterSize(Engine::Instance().fontManager()->getCharSize(100));
 	text.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
 	Engine::Instance().options<GameOptions>()->panel()->init();
