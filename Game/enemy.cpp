@@ -1172,9 +1172,6 @@ void DowngradeTowerAbility::effect(bool isActive)
 		return;
 	if(targetTower == nullptr)
 		return;
-	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::DOWNGRADE, targetTower->pos(),
-											 sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE),
-											 250, 4, 0);
 
 	targetTower->levelDown();
 }

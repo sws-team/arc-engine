@@ -7,6 +7,7 @@
 #include "gameoptions.h"
 #include "gamepanel.h"
 #include "Balance/balance.h"
+#include "gameobject.h"
 
 const std::map<int, std::vector<Instructions::STATES> > Instructions::INSTRUCTIONS =
 {
@@ -39,8 +40,8 @@ Instructions::Instructions() :
 
 	text.setFont(Engine::Instance().fontManager()->font());
 	text.setCharacterSize(Engine::Instance().fontManager()->getCharSize(35));
-	text.setFillColor(sf::Color::Red);
-	text.setOutlineColor(sf::Color::Black);
+	text.setFillColor(sf::Color(25,45,12));
+	text.setOutlineColor(sf::Color::White);
 	text.setOutlineThickness(2);
 	text.setScale(scaleFactor);
 
@@ -59,13 +60,18 @@ Instructions::Instructions() :
 	right.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::INSTRUCTIONS_VERTICAL));
 	right.setScale(scaleFactor);
 
-	textRext.setFillColor(sf::Color(191,145,255, 128));
+	textRext.setFillColor(sf::Color(154,97,44, 128));
 	textRext.setScale(scaleFactor);
-	textRext.setPosition(INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
-						 INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
+	textRext.setPosition((INSTRUCTIONS_OFFSET + RECT_OFFSET) * Engine::Instance().settingsManager()->getScaleFactor().x,
+						 (INSTRUCTIONS_OFFSET + RECT_OFFSET) * Engine::Instance().settingsManager()->getScaleFactor().y);
 
-	arrow.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::ARROW));
-	arrow.setScale(scaleFactor);
+	arrow = new GameObject(GAME_TEXTURE::ARROW, sf::Vector2f(0,0), sf::Vector2i(64, 105), 8);
+	arrow->animationSpeed = 75;
+}
+
+Instructions::~Instructions()
+{
+	delete arrow;
 }
 
 void Instructions::init(const unsigned int level)
@@ -94,14 +100,14 @@ void Instructions::draw(sf::RenderTarget * const target)
 	if (showArrow)
 	{
 		target->draw(targetRect);
-		target->draw(arrow);
+		arrow->draw(target);
 	}
 	target->draw(character);
 }
 
 void Instructions::update()
 {
-
+	arrow->update();
 }
 
 bool Instructions::isActive() const
@@ -505,36 +511,44 @@ void Instructions::updateState()
 
 void Instructions::updateTextRect()
 {
-	const sf::Vector2f lineSize = sf::Vector2f(32 * Engine::Instance().settingsManager()->getScaleFactor().x,
-											   32 * Engine::Instance().settingsManager()->getScaleFactor().y);
-	const float textHeight = text.getLocalBounds().height + lineSize.y * 3;
-	const sf::Vector2f rectSize = sf::Vector2f(TEXT_WIDTH, textHeight);
-	textRext.setSize(rectSize);
+	const sf::Vector2f lineSize = sf::Vector2f(26, 47);
+	const float textHeight = text.getLocalBounds().height + lineSize.y * 3 * Engine::Instance().settingsManager()->getScaleFactor().y;
+	const sf::Vector2f rectSize = sf::Vector2f(TEXT_WIDTH, textHeight);	
+	const sf::Vector2f rectOffset = sf::Vector2f(RECT_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
+												 RECT_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
+	const sf::Vector2f rectPos = sf::Vector2f(INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
+											  (INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y));
 
 	top.setSize(sf::Vector2f(rectSize.x, lineSize.y));
-	top.setPosition(textRext.getGlobalBounds().left, textRext.getGlobalBounds().top);
+	top.setPosition(rectPos.x, rectPos.y);
 
-	left.setSize(sf::Vector2f(lineSize.x, rectSize.y));
-	left.setPosition(textRext.getGlobalBounds().left, textRext.getGlobalBounds().top);
+	left.setSize(sf::Vector2f(lineSize.x, rectSize.y - rectOffset.y * 2));
+	left.setPosition(rectPos.x, rectPos.y + rectOffset.y);
 
-	right.setSize(sf::Vector2f(lineSize.x, rectSize.y));
-	right.setPosition(textRext.getGlobalBounds().left + textRext.getGlobalBounds().width - right.getGlobalBounds().width,
-					  textRext.getGlobalBounds().top);
+	right.setSize(sf::Vector2f(lineSize.x, rectSize.y - rectOffset.y * 2));
+	right.setPosition(rectPos.x + rectSize.x * Engine::Instance().settingsManager()->getScaleFactor().x -
+					  right.getGlobalBounds().width,
+					  rectPos.y + rectOffset.y);
 
 	bottom.setSize(sf::Vector2f(rectSize.x, lineSize.y));
-	bottom.setPosition(textRext.getGlobalBounds().left,
-					   textRext.getGlobalBounds().top + textRext.getGlobalBounds().height - bottom.getGlobalBounds().height);
+	bottom.setPosition(rectPos.x,
+					   rectPos.y + rectSize.y * Engine::Instance().settingsManager()->getScaleFactor().y -
+					   bottom.getGlobalBounds().height);
 
-	text.setPosition(textRext.getPosition().x + left.getGlobalBounds().width,
-					 textRext.getPosition().y + top.getGlobalBounds().height);
+	text.setPosition(RUBRIC_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x +
+					 rectPos.x + left.getGlobalBounds().width,
+					 rectPos.y + top.getGlobalBounds().height);
+
+	textRext.setSize(sf::Vector2f(rectSize.x - 2 * RECT_OFFSET,
+								  rectSize.y - 2 * RECT_OFFSET));
 }
 
 void Instructions::updateArrowPos()
 {
 	float x = targetRect.getGlobalBounds().left;
 	x += targetRect.getGlobalBounds().width / 2;
-	x -= arrow.getGlobalBounds().width / 2;
+	x -= arrow->getSize().x / 2;
 	float y = targetRect.getGlobalBounds().top;
-	y -= arrow.getGlobalBounds().height;
-	arrow.setPosition(x, y);
+	y -= arrow->getSize().y;
+	arrow->setPos(sf::Vector2f(x, y));
 }

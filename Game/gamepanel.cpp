@@ -31,18 +31,19 @@ GamePanel::GamePanel() :
 	m_sprite.setScale(scaleFactor);
 
 	info.setFont(Engine::Instance().fontManager()->font());
-	info.setFillColor(sf::Color::Black);
-	info.setOutlineColor(sf::Color::Yellow);
+	info.setFillColor(sf::Color(25,45,12));
+	info.setOutlineColor(sf::Color(154,97,44));
 	info.setOutlineThickness(2);
 	info.setCharacterSize(Engine::Instance().fontManager()->getCharSize(25));
 	info.setScale(scaleFactor);
 
 	moneyCountText.setFont(Engine::Instance().fontManager()->font());
-	moneyCountText.setFillColor(sf::Color::Black);
-	moneyCountText.setOutlineColor(sf::Color::Yellow);
+	moneyCountText.setFillColor(sf::Color(25,45,12));
+	moneyCountText.setOutlineColor(sf::Color(154,97,44));
 	moneyCountText.setOutlineThickness(2);
 	moneyCountText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(34));
 	moneyCountText.setScale(scaleFactor);
+	moneyCountText.setString("000");
 
 	cursorSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::PANEL_CURSOR));
 	cursorSprite.setScale(scaleFactor);
@@ -71,27 +72,21 @@ GamePanel::GamePanel() :
 
 	towerBaseSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_BASE_ICON));
 	towerBaseSprite.setScale(scaleFactor);
-	towerBaseSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerLaserSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_LASER_ICON));
 	towerLaserSprite.setScale(scaleFactor);
-	towerLaserSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerFreezeSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_FREEZE_ICON));
 	towerFreezeSprite.setScale(scaleFactor);
-	towerFreezeSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerRocketSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_ROCKET_ICON));
 	towerRocketSprite.setScale(scaleFactor);
-	towerRocketSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerPowerSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_POWER_ICON));
 	towerPowerSprite.setScale(scaleFactor);
-	towerPowerSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	towerImprovedSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::TOWER_IMPROVED_ICON));
 	towerImprovedSprite.setScale(scaleFactor);
-	towerImprovedSprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 
 	readyText.setFont(Engine::Instance().fontManager()->font());
 	readyText.setFillColor(sf::Color::Black);
@@ -166,7 +161,7 @@ GamePanel::GamePanel() :
 	const int progressWidth = Engine::Instance().settingsManager()->getResolution().x * PROGRESS_WIDTH;
 	progress->init(sf::Vector2i(progressWidth,
 								LifeBar::LIFE_BAR_HEIGHT * Engine::Instance().settingsManager()->getScaleFactor().y), sf::Color::Red);
-	life->init(sf::Vector2i(722 * scaleFactor.x, 37 * scaleFactor.y), sf::Color::Cyan);
+	life->init(sf::Vector2i(722 * scaleFactor.x, LIFE_BAR_HEIGHT * scaleFactor.y), sf::Color(25,45,12));
 
 	drainRect.setFillColor(sf::Color::Transparent);
 	drainRect.setOutlineThickness(2);
@@ -391,11 +386,13 @@ sf::Vector2f GamePanel::updatePos()
 	sf::Vector2f secondRow = sf::Vector2f(pos.x, pos.y + iconSize.y + icon_offset);
 	moneyIcon.setPosition(secondRow);
 	secondRow.x += iconSize.x;
-	moneyCountText.setPosition(secondRow);
+	moneyCountText.setPosition(secondRow.x,
+							   secondRow.y + moneyIcon.getGlobalBounds().height/2 - moneyCountText.getGlobalBounds().height/2);
 	secondRow.x += 178 * scaleFactor.x;
 	secondRow.x += icon_offset;
 	lifeIcon.setPosition(secondRow);
 	secondRow.x += iconSize.x;
+	secondRow.y += lifeIcon.getGlobalBounds().height/2 - LIFE_BAR_HEIGHT/2 * scaleFactor.y;
 	life->setPos(secondRow);
 
 	drainRect.setPosition(moneyCountText.getGlobalBounds().left,

@@ -9,6 +9,7 @@ class Instructions : public GameDrawable
 {
 public:
 	Instructions();
+	~Instructions() override;
 
 	void init(const unsigned int level);
 
@@ -82,10 +83,12 @@ private:
 	std::vector<Instructions::STATES> states;
 	int currentState;
 	bool active;
-	sf::Sprite arrow;
+	GameObject* arrow;
 	bool showArrow;
 	void updateArrowPos();
-	static constexpr float TEXT_WIDTH = 1024;
+	static constexpr float TEXT_WIDTH = 966;
+	static constexpr float RECT_OFFSET = 5;
+	static constexpr float RUBRIC_OFFSET = 16;
 };
 
 #endif // INSTRUCTIONS_H

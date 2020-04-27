@@ -181,6 +181,10 @@ void Tower::levelDown()
 	m_stats.damage /= 1 + Balance::Instance().getTowerUpgradeGain();
 	m_stats.radius /= 1 + Balance::Instance().getTowerUpgradeGain();
 	m_stats.attackSpeed /= 1 - Balance::Instance().getTowerUpgradeGain();
+
+	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::DOWNGRADE, this->pos(),
+											 sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE),
+											 250, 4, 0);
 }
 
 void Tower::setInvulnerable(bool invulnerable)

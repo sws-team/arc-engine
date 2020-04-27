@@ -595,7 +595,7 @@ void ManualWindow::Element::update()
 		cycled = true;
 		frameSize = sf::Vector2i(192, 192);
 		icon.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
-		icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+		icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
 
 		description += Instructions::towerInfoText(towerType);
 		description += EngineDefs::endline;

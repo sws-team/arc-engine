@@ -179,12 +179,12 @@ void GameWindow::update()
 		isFinal = true;
 	}
 	if (Engine::Instance().soundManager()->isMusicFinished())
-	{
 		nextTrack();
-	}
+
 	Engine::Instance().options<GameOptions>()->cursor()->update();
 	Engine::Instance().options<GameOptions>()->level()->update();
 	Engine::Instance().options<GameOptions>()->panel()->update();
+	Engine::Instance().options<GameOptions>()->instructions()->update();
 
 	switch (Engine::Instance().options<GameOptions>()->level()->getState())
 	{

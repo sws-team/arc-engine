@@ -1025,7 +1025,8 @@ void GameManagers::loadTranslations()
 std::vector<sf::String> GameManagers::creators()
 {
 	std::vector<sf::String> creatorsVec;
-	creatorsVec.push_back(sf::String("TowerDefence") + " " + sf::String("Version: ") + APP_VERSION);
+	creatorsVec.push_back(Engine::Instance().globalVariables()->appName() +
+						  sf::String(" Version: ") + APP_VERSION);
 
 	creatorsVec.push_back(sf::String("Developers:"));
 	creatorsVec.push_back(sf::String("FIO"));
@@ -1035,6 +1036,11 @@ std::vector<sf::String> GameManagers::creators()
 
 	creatorsVec.push_back(sf::String("Desiner:"));
 	creatorsVec.push_back(sf::String("FIO"));
+
+	creatorsVec.push_back(sf::String("Translators:"));
+	creatorsVec.push_back(sf::String("Russian: "));
+	creatorsVec.push_back(sf::String("French: "));
+	creatorsVec.push_back(sf::String("German: "));
 
 	creatorsVec.push_back(sf::String("Libraries:"));
 	creatorsVec.push_back(sf::String("SFML"));

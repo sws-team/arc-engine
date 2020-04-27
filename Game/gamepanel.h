@@ -181,6 +181,7 @@ private:
 	sf::Sprite miniMapSprite;
 
 	static constexpr unsigned int PANEL_POS_ID = 128;
+	static constexpr float LIFE_BAR_HEIGHT = 16;
 };
 
 #endif // GAMEPANEL_H
