@@ -38,12 +38,21 @@ Instructions::Instructions() :
 	targetRect.setOutlineThickness(3);
 	targetRect.setOutlineColor(sf::Color::Blue);
 
+	const unsigned int textCharacterSize = 35;
 	text.setFont(Engine::Instance().fontManager()->font());
-	text.setCharacterSize(Engine::Instance().fontManager()->getCharSize(35));
+	text.setCharacterSize(Engine::Instance().fontManager()->getCharSize(textCharacterSize));
 	text.setFillColor(sf::Color(25,45,12));
 	text.setOutlineColor(sf::Color::White);
 	text.setOutlineThickness(2);
 	text.setScale(scaleFactor);
+
+	skipText.setFont(Engine::Instance().fontManager()->font());
+	skipText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(textCharacterSize * 0.7f));
+	skipText.setFillColor(sf::Color(25,45,12));
+	skipText.setOutlineColor(sf::Color::White);
+	skipText.setOutlineThickness(2);
+	skipText.setScale(scaleFactor);
+	skipText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_SKIP));
 
 	character.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::CHARACTER));
 	character.setScale(scaleFactor);
@@ -97,6 +106,8 @@ void Instructions::draw(sf::RenderTarget * const target)
 	target->draw(bottom);
 	target->draw(top);
 	target->draw(text);
+	target->draw(skipText);
+
 	if (showArrow)
 	{
 		target->draw(targetRect);
@@ -499,9 +510,6 @@ void Instructions::updateState()
 	default:
 		break;
 	}
-	textStr += EngineDefs::endline;
-	textStr += EngineDefs::endline;
-	textStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_SKIP);
 	text.setString(textStr);
 	targetRect.setPosition(rect.left, rect.top);
 	targetRect.setSize(sf::Vector2f(rect.width, rect.height));
@@ -512,7 +520,9 @@ void Instructions::updateState()
 void Instructions::updateTextRect()
 {
 	const sf::Vector2f lineSize = sf::Vector2f(26, 47);
-	const float textHeight = text.getLocalBounds().height + lineSize.y * 3 * Engine::Instance().settingsManager()->getScaleFactor().y;
+	const float textHeight = text.getLocalBounds().height +
+			lineSize.y * 4 * Engine::Instance().settingsManager()->getScaleFactor().y +
+			skipText.getGlobalBounds().height;
 	const sf::Vector2f rectSize = sf::Vector2f(TEXT_WIDTH, textHeight);	
 	const sf::Vector2f rectOffset = sf::Vector2f(RECT_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
 												 RECT_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
@@ -538,6 +548,8 @@ void Instructions::updateTextRect()
 	text.setPosition(RUBRIC_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x +
 					 rectPos.x + left.getGlobalBounds().width,
 					 rectPos.y + top.getGlobalBounds().height);
+	skipText.setPosition(text.getPosition().x, text.getPosition().y +
+						 text.getGlobalBounds().height + lineSize.y * Engine::Instance().settingsManager()->getScaleFactor().y);
 
 	textRext.setSize(sf::Vector2f(rectSize.x - 2 * RECT_OFFSET,
 								  rectSize.y - 2 * RECT_OFFSET));

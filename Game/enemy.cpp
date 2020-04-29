@@ -989,7 +989,8 @@ void TowerEffectAbility::use()
 			angle += 360;
 		angle -= 180;
 
-		projectile = new GameObject(info.pojectileTextureId, aPos, info.projectileSize, 1);
+		projectile = new GameObject(info.pojectileTextureId, aPos,
+									info.projectileSize, info.profectileFrameCount);
 		projectile->sprite.setRotation(angle);
 		m_angle = angle;
 		targetTower = target;
@@ -1069,6 +1070,7 @@ ShutdownTowerAbility::ShutdownTowerAbility()
 	info.catchSound = GAME_SOUND::CATCH;
 	info.cells = Balance::Instance().getShutdownCells();
 	info.projectileSpeed = 10;
+	info.profectileFrameCount = 1;
 }
 
 ShutdownTowerAbility::~ShutdownTowerAbility()
@@ -1111,6 +1113,7 @@ DownTowerAbility::DownTowerAbility()
 	info.catchSound = GAME_SOUND::CATCH;
 	info.cells = Balance::Instance().getDowngradeCells();
 	info.projectileSpeed = 5;
+	info.profectileFrameCount = 3;
 }
 
 DownTowerAbility::~DownTowerAbility()
@@ -1137,6 +1140,7 @@ KillTowerAbility::KillTowerAbility()
 	info.catchSound = GAME_SOUND::TANK_SHOOT;
 	info.cells = Balance::Instance().getKillTowerCells();
 	info.projectileSpeed = 15;
+	info.profectileFrameCount = 1;
 }
 
 void KillTowerAbility::effect(bool isActive)
@@ -1164,6 +1168,7 @@ DowngradeTowerAbility::DowngradeTowerAbility()
 	info.catchSound = GAME_SOUND::DOWN_SHOOT;
 	info.cells = Balance::Instance().getDowngradeTowerCells();
 	info.projectileSpeed = 15;
+	info.profectileFrameCount = 1;
 }
 
 void DowngradeTowerAbility::effect(bool isActive)
@@ -1189,6 +1194,7 @@ KillAreaTowersAbility::KillAreaTowersAbility()
 	info.catchSound = GAME_SOUND::CATCH;
 	info.cells = Balance::Instance().getKillAreaTowersCells();
 	info.projectileSpeed = 15;
+	info.profectileFrameCount = 1;
 
 	zeroGround = Engine::Instance().options<GameOptions>()->tileSize().x * Balance::Instance().getFreezeTowerCells();
 }

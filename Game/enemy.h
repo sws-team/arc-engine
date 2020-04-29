@@ -214,6 +214,7 @@ protected:
 
 	struct AbilityInfo
 	{
+		int profectileFrameCount;
 		TextureType enemyTextureId;
 		sf::Vector2i animationSize;
 		TextureType pojectileTextureId;

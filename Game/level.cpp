@@ -184,8 +184,8 @@ void Level::startMission(const unsigned int n)
 	wave.respawnTime = _testInterval;
 	for (int i = 0; i < _testEnemiesCount; ++i)
 	{
-		wave.spawnEnemies.push_back(ENEMY_TYPES::WORM);
-//		wave.spawnEnemies.push_back(ENEMY_TYPES::TRICYCLE);
+//		wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
+		wave.spawnEnemies.push_back(ENEMY_TYPES::BIG_SLOW);
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
 	}
 	for (int i = 0; i < _testWavesCount; ++i)
@@ -894,7 +894,7 @@ unsigned int Level::getCurrentWave() const
 
 void Level::test()
 {
-	checkEnemyMove();
+	changeState(LEVEL_STATE::WIN);
 }
 
 Abilities *Level::getAbilities()

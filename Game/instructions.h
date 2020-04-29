@@ -89,6 +89,7 @@ private:
 	static constexpr float TEXT_WIDTH = 966;
 	static constexpr float RECT_OFFSET = 5;
 	static constexpr float RUBRIC_OFFSET = 16;
+	sf::Text skipText;
 };
 
 #endif // INSTRUCTIONS_H

@@ -632,7 +632,7 @@ FreezeTower::FreezeTower(const sf::Vector2f &pos)
 {
 	m_shotSound = GAME_SOUND::FREEZE_SHOT;
 	projectileInfo.size = sf::Vector2i(20, 10);
-	projectileInfo.frameCount = 1;
+	projectileInfo.frameCount = 3;
 	projectileInfo.texture_id = GAME_TEXTURE::FREEZE_PROJECTILE;
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::FREEZE_EXPLOSION_EFFECT;
 	projectileInfo.explosionSize = sf::Vector2i(12, 12);
@@ -814,7 +814,7 @@ ImprovedTower::ImprovedTower(const sf::Vector2f &pos)
 	m_shotSound = GAME_SOUND::IMPROVED_SHOT;
 
 	projectileInfo.size = sf::Vector2i(40, 16);
-	projectileInfo.frameCount = 5;
+	projectileInfo.frameCount = 1;
 	projectileInfo.texture_id = GAME_TEXTURE::IMPROVED_PROJECTILE;
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::IMPROVED_EXPLOSION_EFFECT;
 	projectileInfo.explosionSize = sf::Vector2i(32, 32);
