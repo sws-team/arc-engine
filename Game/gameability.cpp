@@ -101,6 +101,9 @@ void Abilities::draw(sf::RenderTarget * const target)
 
 void Abilities::update()
 {
+	if (acidAbility->isActive())
+		acidAbility->object->update();
+
 	acidAbility->checkDuration();
 	increaseTowerAttackSpeedAbility->checkDuration();
 	increaseTowerDamageAbility->checkDuration();
@@ -209,7 +212,7 @@ void AcidAbility::activate()
 									  sf::Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
 											   m_areaSize.y * GameOptions::CELL_SIZE);
 
-	object = new GameObject(GAME_TEXTURE::VENOM_EFFECT, sf::Vector2f(0, 0), size, 1);
+	object = new GameObject(GAME_TEXTURE::VENOM_EFFECT, sf::Vector2f(0, 0), size, 6);
 	GameAbility::activate();
 //	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
 	const sf::Vector2f pos = sf::Vector2f(Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect().left,

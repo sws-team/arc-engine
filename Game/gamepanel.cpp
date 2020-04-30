@@ -460,7 +460,7 @@ sf::Vector2f GamePanel::updatePos()
 
 	readyText.setPosition(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x/2 - readyText.getGlobalBounds().width/2,
 								   Engine::Instance().settingsManager()->getResolution().y/2 + readyText.getGlobalBounds().height/2));
-	waveText.setPosition(progress->pos());
+	waveText.setPosition(progress->pos() + sf::Vector2f(0, 16 * scaleFactor.y));
 
 	towerBaseCostText.setPosition(towerBaseSprite.getPosition());
 	towerFreezeCostText.setPosition(towerFreezeSprite.getPosition());
@@ -1061,7 +1061,7 @@ sf::FloatRect GamePanel::getProgressRect() const
 {
 	return sf::FloatRect(progress->pos().x, progress->pos().y,
 					 Engine::Instance().settingsManager()->getResolution().x * PROGRESS_WIDTH,
-					 PROGRESS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
+					 PROGRESS_OFFSET/2 * Engine::Instance().settingsManager()->getScaleFactor().y);
 }
 
 void GamePanel::setProgressMax(int progressMax)
@@ -1078,10 +1078,9 @@ void GamePanel::setMapSize(const sf::Vector2f& size)
 {
 	rTexture.create(static_cast<unsigned int>(size.x),
 					static_cast<unsigned int>(size.y));
-
 	const float minimap_scale_x = Engine::Instance().settingsManager()->getScaleFactor().x * 344.f / Engine::Instance().settingsManager()->getResolution().x;
 	const float minimap_scale_y = Engine::Instance().settingsManager()->getScaleFactor().y * 213.f / Engine::Instance().settingsManager()->getResolution().y;
-	miniMapSprite.setScale(minimap_scale_x * 1920.f/size.x, minimap_scale_y* 1088.f/size.y);
+	miniMapSprite.setScale(minimap_scale_x, minimap_scale_y);
 }
 
 float GamePanel::getBottomValue() const

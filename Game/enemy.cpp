@@ -990,7 +990,8 @@ void TowerEffectAbility::use()
 		angle -= 180;
 
 		projectile = new GameObject(info.pojectileTextureId, aPos,
-									info.projectileSize, info.profectileFrameCount);
+									info.projectileSize, info.profectileFrameCount);		
+		projectile->animationSpeed = info.projectileAnimationSpeed;
 		projectile->sprite.setRotation(angle);
 		m_angle = angle;
 		targetTower = target;
@@ -1070,6 +1071,7 @@ ShutdownTowerAbility::ShutdownTowerAbility()
 	info.catchSound = GAME_SOUND::CATCH;
 	info.cells = Balance::Instance().getShutdownCells();
 	info.projectileSpeed = 10;
+	info.projectileAnimationSpeed = 150;
 	info.profectileFrameCount = 1;
 }
 
@@ -1108,12 +1110,13 @@ DownTowerAbility::DownTowerAbility()
 	info.animationSize = sf::Vector2i(GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE,
 									  GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::DOWNGRADE_PROJECTILE;
-	info.projectileSize = sf::Vector2i(200, 16);
+	info.projectileSize = sf::Vector2i(32, 32);
 	info.duration = Balance::Instance().getDowngradeDuration();
 	info.catchSound = GAME_SOUND::CATCH;
 	info.cells = Balance::Instance().getDowngradeCells();
 	info.projectileSpeed = 5;
-	info.profectileFrameCount = 3;
+	info.projectileAnimationSpeed = 50;
+	info.profectileFrameCount = 5;
 }
 
 DownTowerAbility::~DownTowerAbility()
@@ -1140,7 +1143,8 @@ KillTowerAbility::KillTowerAbility()
 	info.catchSound = GAME_SOUND::TANK_SHOOT;
 	info.cells = Balance::Instance().getKillTowerCells();
 	info.projectileSpeed = 15;
-	info.profectileFrameCount = 1;
+	info.projectileAnimationSpeed = 150;
+	info.profectileFrameCount = 3;
 }
 
 void KillTowerAbility::effect(bool isActive)
@@ -1168,7 +1172,8 @@ DowngradeTowerAbility::DowngradeTowerAbility()
 	info.catchSound = GAME_SOUND::DOWN_SHOOT;
 	info.cells = Balance::Instance().getDowngradeTowerCells();
 	info.projectileSpeed = 15;
-	info.profectileFrameCount = 1;
+	info.projectileAnimationSpeed = 150;
+	info.profectileFrameCount = 3;
 }
 
 void DowngradeTowerAbility::effect(bool isActive)

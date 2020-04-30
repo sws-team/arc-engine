@@ -177,7 +177,7 @@ void Level::startMission(const unsigned int n)
 #ifdef TEST_WAVES
 	const int _testWavesCount = 3;
 	const int _testEnemiesCount = 15;
-	const int _testInterval = 10000;
+	const int _testInterval = 2000;
 
 	Wave wave;
 	wave.protection = 0.f;
@@ -185,8 +185,9 @@ void Level::startMission(const unsigned int n)
 	for (int i = 0; i < _testEnemiesCount; ++i)
 	{
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
-		wave.spawnEnemies.push_back(ENEMY_TYPES::BIG_SLOW);
-//		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
+//		wave.spawnEnemies.push_back(ENEMY_TYPES::BIG_SLOW);
+		wave.spawnEnemies.push_back(ENEMY_TYPES::CAR);
+		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
 	}
 	for (int i = 0; i < _testWavesCount; ++i)
 		waves.push_back(wave);

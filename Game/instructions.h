@@ -85,7 +85,7 @@ private:
 	bool active;
 	GameObject* arrow;
 	bool showArrow;
-	void updateArrowPos();
+	void updateArrowPos(const sf::Vector2f &offset);
 	static constexpr float TEXT_WIDTH = 966;
 	static constexpr float RECT_OFFSET = 5;
 	static constexpr float RUBRIC_OFFSET = 16;

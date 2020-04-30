@@ -223,6 +223,7 @@ protected:
 		SoundType catchSound;
 		float cells;
 		float projectileSpeed;
+		float projectileAnimationSpeed;
 	};
 	AbilityInfo info;
 protected:

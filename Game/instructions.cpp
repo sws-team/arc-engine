@@ -367,6 +367,8 @@ void Instructions::updateState()
 		active = false;
 		return;
 	}
+	arrow->sprite.setRotation(0);
+	sf::Vector2f offset = sf::Vector2f(0,0);
 	const STATES state = states.at(currentState);
 	sf::FloatRect rect = sf::FloatRect();;
 	sf::String textStr;
@@ -394,7 +396,9 @@ void Instructions::updateState()
 		break;
 	case PROGRESS:
 	{
-		showArrow = false;
+		showArrow = true;
+		arrow->sprite.setRotation(180);
+		offset.y += arrow->size.y * 2;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getProgressRect();
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_PROGRESS);
 	}
@@ -514,7 +518,7 @@ void Instructions::updateState()
 	targetRect.setPosition(rect.left, rect.top);
 	targetRect.setSize(sf::Vector2f(rect.width, rect.height));
 	updateTextRect();
-	updateArrowPos();
+	updateArrowPos(offset);
 }
 
 void Instructions::updateTextRect()
@@ -555,12 +559,12 @@ void Instructions::updateTextRect()
 								  rectSize.y - 2 * RECT_OFFSET));
 }
 
-void Instructions::updateArrowPos()
+void Instructions::updateArrowPos(const sf::Vector2f& offset)
 {
 	float x = targetRect.getGlobalBounds().left;
 	x += targetRect.getGlobalBounds().width / 2;
 	x -= arrow->getSize().x / 2;
 	float y = targetRect.getGlobalBounds().top;
 	y -= arrow->getSize().y;
-	arrow->setPos(sf::Vector2f(x, y));
+	arrow->setPos(sf::Vector2f(x, y) + offset);
 }
