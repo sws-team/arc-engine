@@ -41,14 +41,14 @@ Instructions::Instructions() :
 	const unsigned int textCharacterSize = 35;
 	text.setFont(Engine::Instance().fontManager()->font());
 	text.setCharacterSize(Engine::Instance().fontManager()->getCharSize(textCharacterSize));
-	text.setFillColor(sf::Color(25,45,12));
+	text.setFillColor(GameOptions::secondaryColor);
 	text.setOutlineColor(sf::Color::White);
 	text.setOutlineThickness(2);
 	text.setScale(scaleFactor);
 
 	skipText.setFont(Engine::Instance().fontManager()->font());
 	skipText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(textCharacterSize * 0.7f));
-	skipText.setFillColor(sf::Color(25,45,12));
+	skipText.setFillColor(GameOptions::secondaryColor);
 	skipText.setOutlineColor(sf::Color::White);
 	skipText.setOutlineThickness(2);
 	skipText.setScale(scaleFactor);
@@ -69,7 +69,9 @@ Instructions::Instructions() :
 	right.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::INSTRUCTIONS_VERTICAL));
 	right.setScale(scaleFactor);
 
-	textRext.setFillColor(sf::Color(154,97,44, 128));
+	sf::Color textRectColor = GameOptions::primaryColor;
+	textRectColor.a = 128;
+	textRext.setFillColor(textRectColor);
 	textRext.setScale(scaleFactor);
 	textRext.setPosition((INSTRUCTIONS_OFFSET + RECT_OFFSET) * Engine::Instance().settingsManager()->getScaleFactor().x,
 						 (INSTRUCTIONS_OFFSET + RECT_OFFSET) * Engine::Instance().settingsManager()->getScaleFactor().y);
@@ -88,7 +90,8 @@ void Instructions::init(const unsigned int level)
 	character.setPosition(Engine::Instance().settingsManager()->getResolution().x - character.getGlobalBounds().width,
 						  Engine::Instance().options<GameOptions>()->panel()->getBottomValue() - character.getGlobalBounds().height);
 	active = true;
-	states = INSTRUCTIONS.at(level);
+	if (level < Instructions::INSTRUCTIONS.size())
+		states = INSTRUCTIONS.at(level);
 	currentState = 0;
 	updateState();
 }
@@ -143,9 +146,7 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type)
 	switch (type)
 	{
 	case BASE:
-	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_BASE);
-		str += EngineDefs::endline;
+	{		
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
@@ -156,9 +157,7 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type)
 		break;
 	case POWER:
 	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_POWER);
-		str += EngineDefs::endline;
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENERGY_TOWER_DESCRIPTION);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_TRAIT);
 		str += EngineDefs::endline;
@@ -169,9 +168,7 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type)
 	}
 		break;
 	case ROCKET:
-	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ROCKET);
-		str += EngineDefs::endline;
+	{		
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
@@ -181,9 +178,7 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type)
 	}
 		break;
 	case FREEZE:
-	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_FREEZE);
-		str += EngineDefs::endline;
+	{		
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
@@ -193,9 +188,7 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type)
 	}
 		break;
 	case LASER:
-	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_LASER);
-		str += EngineDefs::endline;
+	{		
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
@@ -205,9 +198,7 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type)
 	}
 		break;
 	case IMPROVED:
-	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_IMPROVED);
-		str += EngineDefs::endline;
+	{		
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
@@ -226,9 +217,7 @@ sf::String Instructions::abilityInfoText(ACTION_STATE type)
 	switch (type)
 	{
 	case ACTION_STATE::ABILITY_BOMB:
-	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_BOMB);
-		str += EngineDefs::endline;
+	{		
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BOMB_ABILITY_DESCRIPTION);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
@@ -241,9 +230,7 @@ sf::String Instructions::abilityInfoText(ACTION_STATE type)
 	}
 		break;
 	case ACTION_STATE::ABILITY_FREEZE_BOMB:
-	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_FREEZE_BOMB);
-		str += EngineDefs::endline;
+	{		
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
@@ -257,8 +244,6 @@ sf::String Instructions::abilityInfoText(ACTION_STATE type)
 		break;
 	case ACTION_STATE::ABILITY_ACID:
 	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_ACID);
-		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ACID_ABILITY_DESCRIPTION);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
@@ -272,8 +257,6 @@ sf::String Instructions::abilityInfoText(ACTION_STATE type)
 		break;
 	case ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE:
 	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE);
-		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
@@ -287,8 +270,6 @@ sf::String Instructions::abilityInfoText(ACTION_STATE type)
 		break;
 	case ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED:
 	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED);
-		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
@@ -302,8 +283,6 @@ sf::String Instructions::abilityInfoText(ACTION_STATE type)
 		break;
 	case ACTION_STATE::ABILITY_STOP:
 	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_STOP);
-		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
@@ -327,32 +306,16 @@ sf::String Instructions::mapEffectInfoText(Instructions::MAP_EFFECTS type)
 	switch (type)
 	{
 	case SMOKE:
-	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SMOKE_NAME);
-		str += EngineDefs::endline;
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SMOKE_DESCRIPTION);
-	}
+		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SMOKE_DESCRIPTION);
 		break;
 	case DRAIN:
-	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DRAIN_NAME);
-		str += EngineDefs::endline;
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DRAIN_DESCRIPTION);
-	}
+		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DRAIN_DESCRIPTION);
 		break;
 	case REGRESS:
-	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::REGRESS_NAME);
-		str += EngineDefs::endline;
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::REGRESS_DESCRIPTION);
-	}
+		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::REGRESS_DESCRIPTION);
 		break;
 	case EXPLOSION:
-	{
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_EXPLOSION_NAME);
-		str += EngineDefs::endline;
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION);
-	}
+		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION);
 		break;
 	default:
 		break;
@@ -407,108 +370,140 @@ void Instructions::updateState()
 	{
 		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(0);
-		textStr = towerInfoText(BASE);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_BASE);
+		textStr += EngineDefs::endline;
+		textStr += towerInfoText(BASE);
 	}
 		break;
 	case INSTRUCTION_TOWER_FREEZE:
 	{
 		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(1);
-		textStr = towerInfoText(FREEZE);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_FREEZE);
+		textStr += EngineDefs::endline;
+		textStr += towerInfoText(FREEZE);
 	}
 		break;
 	case INSTRUCTION_TOWER_ENERGY:
 	{
 		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(3);
-		textStr = towerInfoText(POWER);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_POWER);
+		textStr += EngineDefs::endline;
+		textStr += towerInfoText(POWER);
 	}
 		break;
 	case INSTRUCTION_TOWER_ROCKET:
 	{
 		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(2);
-		textStr = towerInfoText(ROCKET);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ROCKET);
+		textStr += EngineDefs::endline;
+		textStr += towerInfoText(ROCKET);
 	}
 		break;
 	case INSTRUCTION_TOWER_LASER:
 	{
 		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(4);
-		textStr = towerInfoText(LASER);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_LASER);
+		textStr += EngineDefs::endline;
+		textStr += towerInfoText(LASER);
 	}
 		break;
 	case INSTRUCTION_TOWER_IMPROVED:
 	{
 		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getTowerRect(5);
-		textStr = towerInfoText(IMPROVED);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_IMPROVED);
+		textStr += EngineDefs::endline;
+		textStr += towerInfoText(IMPROVED);
 	}
 		break;
 	case INSTRUCTION_BOMB:
 	{
 		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(0);
-		textStr = abilityInfoText(ABILITY_BOMB);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_BOMB);
+		textStr += EngineDefs::endline;
+		textStr += abilityInfoText(ABILITY_BOMB);
 	}
 		break;
 	case INSTRUCTION_FREEZE_BOMB:
 	{
 		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(1);
-		textStr = abilityInfoText(ABILITY_FREEZE_BOMB);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_FREEZE_BOMB);
+		textStr += EngineDefs::endline;
+		textStr += abilityInfoText(ABILITY_FREEZE_BOMB);
 	}
 		break;
 	case INSTRUCTION_ACID:
 	{
 		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(2);
-		textStr = abilityInfoText(ABILITY_ACID);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_ACID);
+		textStr += EngineDefs::endline;
+		textStr += abilityInfoText(ABILITY_ACID);
 	}
 		break;
 	case INSTRUCTION_INCREASE_DAMAGE:
 	{
 		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(3);
-		textStr = abilityInfoText(ABILITY_INCREASE_TOWER_DAMAGE);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE);
+		textStr += EngineDefs::endline;
+		textStr += abilityInfoText(ABILITY_INCREASE_TOWER_DAMAGE);
 	}
 		break;
 	case INSTRUCTION_INCREASE_ATTACK_SPEED:
 	{
 		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(4);
-		textStr = abilityInfoText(ABILITY_INCREASE_TOWER_ATTACK_SPEED);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED);
+		textStr += EngineDefs::endline;
+		textStr += abilityInfoText(ABILITY_INCREASE_TOWER_ATTACK_SPEED);
 	}
 		break;
 	case INSTRUCTION_STOP:
 	{
 		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getAbilityRect(5);
-		textStr = abilityInfoText(ABILITY_STOP);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_STOP);
+		textStr += EngineDefs::endline;
+		textStr += abilityInfoText(ABILITY_STOP);
 	}
 		break;
 	case MAP_SMOKE:
 	{
 		showArrow = false;
-		textStr = mapEffectInfoText(SMOKE);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SMOKE_NAME);
+		textStr += EngineDefs::endline;
+		textStr += mapEffectInfoText(SMOKE);
 	}
 		break;
 	case MAP_REGRESS:
 	{
 		showArrow = false;
-		textStr = mapEffectInfoText(REGRESS);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::REGRESS_NAME);
+		textStr += EngineDefs::endline;
+		textStr += mapEffectInfoText(REGRESS);
 	}
 		break;
 	case MAP_DRAIN:
 	{
 		showArrow = false;
-		textStr = mapEffectInfoText(DRAIN);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DRAIN_NAME);
+		textStr += EngineDefs::endline;
+		textStr += mapEffectInfoText(DRAIN);
 	}
 		break;
 	case MAP_EXPLOSION:
 	{
 		showArrow = false;
-		textStr = mapEffectInfoText(EXPLOSION);
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_EXPLOSION_NAME);
+		textStr += EngineDefs::endline;
+		textStr += mapEffectInfoText(EXPLOSION);
 	}
 		break;
 	default:

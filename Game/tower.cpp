@@ -87,7 +87,7 @@ void Tower::upgrade()
 
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::UPGRADE, this->pos(),
 											 sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE),
-											 250, 6, 0);
+											 150, 5, 0);
 	Engine::Instance().soundManager()->playOnce(GAME_SOUND::UPGRADE);
 	updateTextureRect();
 }

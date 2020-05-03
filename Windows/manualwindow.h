@@ -68,8 +68,9 @@ private:
 		sf::RectangleShape rect;
 		sf::Sprite icon;
 		GameObject *object;
-		sf::Text nameText;
+		sf::Text titleText;
 		sf::Text descriptionText;
+		sf::Text nameText;
 		int frameCount;
 		float animationSpeed;
 

@@ -18,7 +18,7 @@ MainMenu::MainMenu()
 	setPos(sf::Vector2f(120 * scaleFactor.x,
 						640 * scaleFactor.y));
 	setColor(sf::Color(154,97,44, 100));
-	setCurrentColor(sf::Color(154,97,44));
+	setCurrentColor(GameOptions::primaryColor);
 #ifdef GAME_NAME
 	gameName.setFont(Engine::Instance().fontManager()->font());
 	gameName.setString("Arc Defence");

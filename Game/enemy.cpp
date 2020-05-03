@@ -308,8 +308,8 @@ void Enemy::protect(float shell, bool show)
 		m_data.reflection = 0.f;
 	if (show)
 		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::SHELL_EFFECT, this->pos(),
-											 sf::Vector2i(GameOptions::MAP_CELL_SIZE, GameOptions::MAP_CELL_SIZE),
-												 50, 4, 0);
+																		 sf::Vector2i(GameOptions::MAP_CELL_SIZE, GameOptions::MAP_CELL_SIZE),
+																		 100, 6, 0);
 }
 
 void Enemy::setReflection(const float reflection)
@@ -647,6 +647,7 @@ float EnemiesFactory::getFrameCount(ENEMY_TYPES type)
 	switch (type)
 	{
 	case INFANTRY:
+		return 6;
 		break;
 	case CAR:
 		break;

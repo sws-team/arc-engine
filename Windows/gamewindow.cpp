@@ -28,8 +28,8 @@ GameWindow::GameWindow()
 	Engine::Instance().options<GameOptions>()->camera()->init();
 	currentMenu = static_cast<GAME_MENU>(CONTINUE_GAME);
 
-	setColor(sf::Color(64,224,208, 100));
-	setCurrentColor(sf::Color(64,224,208));
+	setColor(GameOptions::primaryColor);
+	setCurrentColor(GameOptions::secondaryColor);
 
 	m_state = PLAYING;
 

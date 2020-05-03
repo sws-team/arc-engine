@@ -32,8 +32,8 @@ ManualWindow::ManualWindow()
 	toolTip.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	toolTip.setCharacterSize(Engine::Instance().fontManager()->getCharSize(40));
 	toolTip.setOutlineThickness(1.f);
-	toolTip.setFillColor(sf::Color::Red);
-	toolTip.setOutlineColor(sf::Color::Blue);
+	toolTip.setFillColor(GameOptions::primaryColor);
+	toolTip.setOutlineColor(GameOptions::secondaryColor);
 
 	addElements();
 	updatePos();
@@ -74,7 +74,7 @@ void ManualWindow::paint(sf::RenderWindow *window)
 		const Element element = elements.at(i);
 		window->draw(element.rect);
 		window->draw(element.icon);
-		window->draw(element.nameText);
+		window->draw(element.titleText);
 	}
 	if (current != -1)
 	{
@@ -83,6 +83,7 @@ void ManualWindow::paint(sf::RenderWindow *window)
 		const int id = page * MAX_ELEMENTS_COUNT + current;
 		if (id < elements.size())
 		{
+			window->draw(elements.at(id).nameText);
 			window->draw(elements.at(id).descriptionText);
 			elements.at(id).object->draw(window);
 		}
@@ -267,12 +268,16 @@ void ManualWindow::updatePos()
 											sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
 
-		element.descriptionText.setScale(scaleFactor);
-		element.descriptionText.setPosition(element.object->pos() +
-											sf::Vector2f(element.object->getSize().x + ICON_X_OFFSET, 0));
-
 		element.nameText.setScale(scaleFactor);
-		element.nameText.setPosition(pos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET) +
+		element.nameText.setPosition(element.object->pos() +
+									 sf::Vector2f(element.object->getSize().x + ICON_X_OFFSET, 0));
+
+		element.descriptionText.setScale(scaleFactor);
+		element.descriptionText.setPosition(element.nameText.getPosition() +
+											sf::Vector2f(0, element.nameText.getGlobalBounds().height + ICON_Y_OFFSET));
+
+		element.titleText.setScale(scaleFactor);
+		element.titleText.setPosition(pos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET) +
 									 sf::Vector2f(ICON_WIDTH + ICON_X_OFFSET, 0));
 
 		pos.y += ICON_Y_OFFSET + RECT_HEIGHT;
@@ -567,13 +572,23 @@ void ManualWindow::Element::init()
 {
 	rect.setFillColor(sf::Color(34, 53, 200, 100));
 
+	titleText.setFont(Engine::Instance().fontManager()->font());
+	titleText.setFillColor(GameOptions::primaryColor);
+	titleText.setOutlineThickness(1);
+	titleText.setOutlineColor(GameOptions::secondaryColor);
+	titleText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(30));
+
 	nameText.setFont(Engine::Instance().fontManager()->font());
-	nameText.setFillColor(sf::Color::Red);
-	nameText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(36));
+	nameText.setFillColor(GameOptions::primaryColor);
+	nameText.setOutlineThickness(1);
+	nameText.setOutlineColor(GameOptions::secondaryColor);
+	nameText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(45));
 
 	descriptionText.setFont(Engine::Instance().fontManager()->font());
-	descriptionText.setFillColor(sf::Color::Red);
-	descriptionText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(36));
+	descriptionText.setFillColor(GameOptions::primaryColor);
+	descriptionText.setOutlineThickness(1);
+	descriptionText.setOutlineColor(GameOptions::secondaryColor);
+	descriptionText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(35));
 }
 
 void ManualWindow::Element::update()
@@ -584,9 +599,10 @@ void ManualWindow::Element::update()
 	//texture
 	icon.setTexture(Engine::Instance().texturesManager()->getTexture(texture));
 	//name
-	nameText.setString(Engine::Instance().translationsManager()->translate(name));
+	titleText.setString(Engine::Instance().translationsManager()->translate(name));
 	//description
-	sf::String description;
+	sf::String descriptionStr;
+	const sf::String nameStr = Engine::Instance().translationsManager()->translate(name);
 	switch (type)
 	{
 	case Element::E_Tower:
@@ -597,30 +613,30 @@ void ManualWindow::Element::update()
 		icon.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 		icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
 
-		description += Instructions::towerInfoText(towerType);
-		description += EngineDefs::endline;
+		descriptionStr += Instructions::towerInfoText(towerType);
+		descriptionStr += EngineDefs::endline;
 
 		const TowerStats towerStats = Balance::Instance().getTowerStats(towerType);
 		const float dps = towerStats.damage / ((towerStats.attackSpeed) * 0.001f);
 
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND) + EngineDefs::separator + GlobalVariables::to_string_with_precision(dps, 2);
-		description += EngineDefs::endline;
+		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND) + EngineDefs::separator + GlobalVariables::to_string_with_precision(dps, 2);
+		descriptionStr += EngineDefs::endline;
 
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::RADIUS) + EngineDefs::separator +
+		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::RADIUS) + EngineDefs::separator +
 				GlobalVariables::to_string_with_precision(towerStats.radius, 1);
-		description += EngineDefs::endline;
+		descriptionStr += EngineDefs::endline;
 
 		const float cost = towerStats.cost;
 
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COST);
-		description += EngineDefs::separator;
-		description += GlobalVariables::to_string_with_precision(cost, 2);
+		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COST);
+		descriptionStr += EngineDefs::separator;
+		descriptionStr += GlobalVariables::to_string_with_precision(cost, 2);
 	}
 		break;
 	case Element::E_Ability:
 	{		
 		frameSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);		
-		description += Instructions::abilityInfoText(abilityType);
+		descriptionStr += Instructions::abilityInfoText(abilityType);
 	}
 		break;
 	case Element::E_Enemy:
@@ -633,85 +649,83 @@ void ManualWindow::Element::update()
 											2.f/static_cast<float>(enemyInfo.size.y));
 		icon.scale(k.x/Enemy::ENEMY_SCALE, k.y/Enemy::ENEMY_SCALE);
 
-		description += Engine::Instance().translationsManager()->translate(name);
-		description += EngineDefs::endline;
 		//speed
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SPEED) + EngineDefs::separator;
+		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SPEED) + EngineDefs::separator;
 		if (enemyInfo.stats.speed < 30)
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FAST);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FAST);
 		else if (enemyInfo.stats.speed < 65)
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::NORMAL_SPEED);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::NORMAL_SPEED);
 		else
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SLOW);
-		description += EngineDefs::endline;
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SLOW);
+		descriptionStr += EngineDefs::endline;
 		//size
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SIZE) + EngineDefs::separator;
+		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SIZE) + EngineDefs::separator;
 		if (enemyInfo.size.x == 1)
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SMALL);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SMALL);
 		else if (enemyInfo.size.x == 2)
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::MID);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::MID);
 		else
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BIG);
-		description += EngineDefs::endline;
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BIG);
+		descriptionStr += EngineDefs::endline;
 		//health
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::HEALTH) + EngineDefs::separator +
+		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::HEALTH) + EngineDefs::separator +
 				GlobalVariables::to_string_with_precision(enemyInfo.stats.health, 1);
-		description += EngineDefs::endline;
+		descriptionStr += EngineDefs::endline;
 
 		//armor
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR) + EngineDefs::separator;
+		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR) + EngineDefs::separator;
 		if (enemyInfo.stats.reflection < 0.1f)
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_LIGHT);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_LIGHT);
 		else if (enemyInfo.stats.reflection < 0.3f)
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_MEDIUM);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_MEDIUM);
 		else
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_STRONG);
-		description += EngineDefs::endline;
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_STRONG);
+		descriptionStr += EngineDefs::endline;
 
 		//ability
-		description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY) + EngineDefs::separator;
-		description += EngineDefs::endline;
+		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY) + EngineDefs::separator;
+		descriptionStr += EngineDefs::endline;
 
 		switch (enemyInfo.abilityType)
 		{
 		case EnemiesFactory::EnemyInfo::RAGE:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_RAGE);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_RAGE);
 			break;
 		case EnemiesFactory::EnemyInfo::SPAWN:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN);
 			break;
 		case EnemiesFactory::EnemyInfo::TELEPORT:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_TELEPORT);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_TELEPORT);
 			break;
 		case EnemiesFactory::EnemyInfo::SHELL_NEAR:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SHELL_NEAR);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SHELL_NEAR);
 			break;
 		case EnemiesFactory::EnemyInfo::HEAL_NEAR:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_HEAL_NEAR);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_HEAL_NEAR);
 			break;
 		case EnemiesFactory::EnemyInfo::SHUTDOWN_TOWER:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER);
 			break;
 		case EnemiesFactory::EnemyInfo::STRONG:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_STRONG);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_STRONG);
 			break;
 		case EnemiesFactory::EnemyInfo::DOWN_TOWER:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER);
 			break;
 		case EnemiesFactory::EnemyInfo::SELF_HEAL:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL);
 			break;
 		case EnemiesFactory::EnemyInfo::FASTER:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_FASTER);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_FASTER);
 			break;
 		case EnemiesFactory::EnemyInfo::KILL_TOWER:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER);
 			break;
 		case EnemiesFactory::EnemyInfo::DOWNGRADE_TOWER:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER);
 			break;
 		default:
-			description += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_NONE);
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_NONE);
 			break;
 		}
 	}
@@ -741,7 +755,7 @@ void ManualWindow::Element::update()
 		if (effectType == Instructions::SMOKE)
 			icon.scale(0.25f, 0.25f);
 		cycled = true;
-		description += Instructions::mapEffectInfoText(effectType);
+		descriptionStr += Instructions::mapEffectInfoText(effectType);
 	}
 		break;
 	default:
@@ -753,5 +767,6 @@ void ManualWindow::Element::update()
 	object->cycled = cycled;
 	object->rowCount = rowCount;
 
-	descriptionText.setString(description);
+	nameText.setString(nameStr);
+	descriptionText.setString(descriptionStr);
 }

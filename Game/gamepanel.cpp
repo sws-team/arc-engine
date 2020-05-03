@@ -31,15 +31,15 @@ GamePanel::GamePanel() :
 	m_sprite.setScale(scaleFactor);
 
 	info.setFont(Engine::Instance().fontManager()->font());
-	info.setFillColor(sf::Color(25,45,12));
-	info.setOutlineColor(sf::Color(154,97,44));
+	info.setFillColor(GameOptions::secondaryColor);
+	info.setOutlineColor(GameOptions::primaryColor);
 	info.setOutlineThickness(2);
 	info.setCharacterSize(Engine::Instance().fontManager()->getCharSize(25));
 	info.setScale(scaleFactor);
 
 	moneyCountText.setFont(Engine::Instance().fontManager()->font());
-	moneyCountText.setFillColor(sf::Color(25,45,12));
-	moneyCountText.setOutlineColor(sf::Color(154,97,44));
+	moneyCountText.setFillColor(GameOptions::secondaryColor);
+	moneyCountText.setOutlineColor(GameOptions::primaryColor);
 	moneyCountText.setOutlineThickness(2);
 	moneyCountText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(34));
 	moneyCountText.setScale(scaleFactor);
@@ -89,8 +89,8 @@ GamePanel::GamePanel() :
 	towerImprovedSprite.setScale(scaleFactor);
 
 	readyText.setFont(Engine::Instance().fontManager()->font());
-	readyText.setFillColor(sf::Color::Black);
-	readyText.setOutlineColor(sf::Color::Yellow);
+	readyText.setFillColor(GameOptions::primaryColor);
+	readyText.setOutlineColor(GameOptions::secondaryColor);
 	readyText.setOutlineThickness(2);
 	readyText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(45));
 	readyText.setScale(scaleFactor);
@@ -151,9 +151,9 @@ GamePanel::GamePanel() :
 	lifeIcon.setScale(scaleFactor);
 
 	waveText.setFont(Engine::Instance().fontManager()->font());
-	waveText.setFillColor(sf::Color::Magenta);
-	waveText.setOutlineThickness(2);
-	waveText.setOutlineColor(sf::Color::Yellow);
+	waveText.setFillColor(GameOptions::primaryColor);
+	waveText.setOutlineThickness(1);
+	waveText.setOutlineColor(GameOptions::secondaryColor);
 	waveText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(25));
 	waveText.setScale(scaleFactor);
 
@@ -161,7 +161,7 @@ GamePanel::GamePanel() :
 	const int progressWidth = Engine::Instance().settingsManager()->getResolution().x * PROGRESS_WIDTH;
 	progress->init(sf::Vector2i(progressWidth,
 								LifeBar::LIFE_BAR_HEIGHT * Engine::Instance().settingsManager()->getScaleFactor().y), sf::Color::Red);
-	life->init(sf::Vector2i(722 * scaleFactor.x, LIFE_BAR_HEIGHT * scaleFactor.y), sf::Color(25,45,12));
+	life->init(sf::Vector2i(722 * scaleFactor.x, LIFE_BAR_HEIGHT * scaleFactor.y), GameOptions::secondaryColor);
 
 	drainRect.setFillColor(sf::Color::Transparent);
 	drainRect.setOutlineThickness(2);
@@ -269,7 +269,7 @@ void GamePanel::update()
 		if (blinkTimer.check(BLINK_TIME))
 		{
 			waitBlink = !waitBlink;
-			readyText.setFillColor(waitBlink ? sf::Color::Black : sf::Color::Red);
+			readyText.setFillColor(waitBlink ? sf::Color::White : GameOptions::primaryColor);
 		}
 	}
 	if (m_drain)
@@ -644,7 +644,7 @@ sf::String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 	{
 		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_POWER);
 		str += endline;
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENERGY_TOWER_DESCRIPTION);
 	}
 		break;
 	case ROCKET:

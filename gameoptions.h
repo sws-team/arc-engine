@@ -84,6 +84,9 @@ public:
 
 	void clearSaves();
 
+	static const sf::Color primaryColor;
+	static const sf::Color secondaryColor;
+
 private:
 	Camera *m_camera;
 	GameCursor *m_cursor;

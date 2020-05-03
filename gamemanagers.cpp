@@ -705,7 +705,7 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::CAR, L"Машина"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TRICYCLE, L"Tricycle de reconnaissance"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TANK, L"Танк"));
@@ -944,9 +944,9 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION, L"Замедляет врага"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION, L"Ralentissement d'un ennemi"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION, L"Produces resources"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION, L"Производит ресурсы"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::POWER_TOWER_DESCRIPTION, L"Extraire les ressourses"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENERGY_TOWER_DESCRIPTION, L"Produces resources"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENERGY_TOWER_DESCRIPTION, L"Производит ресурсы"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ENERGY_TOWER_DESCRIPTION, L"Extraire les ressourses"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION, L"Rocket explosion deals area damage"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION, L"Взрыв от ракеты наносит урон\nпо площади"));
@@ -1054,8 +1054,8 @@ std::vector<sf::String> GameManagers::creators()
 
 	creatorsVec.push_back(sf::String("Music:"));
 	creatorsVec.push_back(sf::String("https://opengameart.org"));
-	creatorsVec.push_back(sf::String("http://www.bensound.com/royalty-free-music"));
 	creatorsVec.push_back(sf::String("https://freesound.org/"));
+	creatorsVec.push_back(sf::String("Main theme: \"The Adventure Begins\"\nby Bart Kelsey licensed by CC-BY-SA 3.0\nhttps://opengameart.org/content/adventure-begins"));
 
 	creatorsVec.push_back(sf::String("Shaders:"));
 	creatorsVec.push_back(sf::String("http://glslsandbox.com"));

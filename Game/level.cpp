@@ -187,7 +187,7 @@ void Level::startMission(const unsigned int n)
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::BIG_SLOW);
 		wave.spawnEnemies.push_back(ENEMY_TYPES::CAR);
-		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
+//		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
 	}
 	for (int i = 0; i < _testWavesCount; ++i)
 		waves.push_back(wave);
@@ -210,8 +210,9 @@ void Level::startMission(const unsigned int n)
 	Engine::Instance().options<GameOptions>()->panel()->initMission(n);
 	updateStartEndPos(gameMap->spawnPos, sf::Vector2f(gameMap->endRect.left, gameMap->endRect.top));
 
-//	if (n != 0 || !Engine::Instance().options<GameOptions>()->getCompletedMissions().empty())
-//		Engine::Instance().options<GameOptions>()->instructions()->skip();
+	const int starsValue = Engine::Instance().options<GameOptions>()->missionStars(n);
+	if (starsValue != -1)
+		Engine::Instance().options<GameOptions>()->instructions()->skip();
 
 	Engine::Instance().options<GameOptions>()->cursor()->initCell();
 

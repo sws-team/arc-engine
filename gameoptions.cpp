@@ -36,6 +36,9 @@ FILE *fmemopen(void *buf, size_t size)
 }
 #endif
 
+const sf::Color GameOptions::primaryColor = sf::Color(154,97,44);
+const sf::Color GameOptions::secondaryColor = sf::Color(25,45,12);
+
 GameOptions::GameOptions() :
 	m_camera(nullptr)
   ,m_cursor(nullptr)
