@@ -387,36 +387,36 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getFrameCount(TANK),
 							   EnemiesFactory::getAnimationSpeed(TANK)));
 
-	elements.push_back(Element(GAME_TEXTURE::ENEMY_SPIDER,
-							   GAME_TRANSLATION::SPIDER,
-							   EnemiesFactory::getEnemyInfo(SPIDER),
-							   EnemiesFactory::getFrameCount(SPIDER),
-							   EnemiesFactory::getAnimationSpeed(SPIDER)));
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_MECHSPIDER,
+							   GAME_TRANSLATION::MECHSPIDER,
+							   EnemiesFactory::getEnemyInfo(MECHSPIDER),
+							   EnemiesFactory::getFrameCount(MECHSPIDER),
+							   EnemiesFactory::getAnimationSpeed(MECHSPIDER)));
 
-	elements.push_back(Element(GAME_TEXTURE::ENEMY_HELICOPTER,
-							   GAME_TRANSLATION::HELICOPTER,
-							   EnemiesFactory::getEnemyInfo(MID_FAST),
-							   EnemiesFactory::getFrameCount(MID_FAST),
-							   EnemiesFactory::getAnimationSpeed(MID_FAST)
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_TUATARA,
+							   GAME_TRANSLATION::TUATARA,
+							   EnemiesFactory::getEnemyInfo(TUATARA),
+							   EnemiesFactory::getFrameCount(TUATARA),
+							   EnemiesFactory::getAnimationSpeed(TUATARA)
 							   ));
 
-	elements.push_back(Element(GAME_TEXTURE::ENEMY_AIRCARRIER,
-							   GAME_TRANSLATION::AIRCARRIER,
-							   EnemiesFactory::getEnemyInfo(BIG_SLOW),
-							   EnemiesFactory::getFrameCount(BIG_SLOW),
-							   EnemiesFactory::getAnimationSpeed(BIG_SLOW)));
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_GIANT_SLUG,
+							   GAME_TRANSLATION::GIANT_SLUG,
+							   EnemiesFactory::getEnemyInfo(GIANT_SLUG),
+							   EnemiesFactory::getFrameCount(GIANT_SLUG),
+							   EnemiesFactory::getAnimationSpeed(GIANT_SLUG)));
 
-	elements.push_back(Element(GAME_TEXTURE::ENEMY_BIG_TANK,
-							   GAME_TRANSLATION::BIG_TANK,
-							   EnemiesFactory::getEnemyInfo(BIG_TANK),
-							   EnemiesFactory::getFrameCount(BIG_TANK),
-							   EnemiesFactory::getAnimationSpeed(BIG_TANK)));
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_HEAVY_TANK,
+							   GAME_TRANSLATION::HEAVY_TANK,
+							   EnemiesFactory::getEnemyInfo(HEAVY_TANK),
+							   EnemiesFactory::getFrameCount(HEAVY_TANK),
+							   EnemiesFactory::getAnimationSpeed(HEAVY_TANK)));
 
-	elements.push_back(Element(GAME_TEXTURE::ENEMY_PLANE,
-							   GAME_TRANSLATION::PLANE,
-							   EnemiesFactory::getEnemyInfo(ANOTHER_ENEMY),
-							   EnemiesFactory::getFrameCount(ANOTHER_ENEMY),
-							   EnemiesFactory::getAnimationSpeed(ANOTHER_ENEMY)));
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_SLUGGY,
+							   GAME_TRANSLATION::SLUGGY,
+							   EnemiesFactory::getEnemyInfo(SLUGGY),
+							   EnemiesFactory::getFrameCount(SLUGGY),
+							   EnemiesFactory::getAnimationSpeed(SLUGGY)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_REPAIR,
 							   GAME_TRANSLATION::REPAIR,
@@ -430,11 +430,11 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getFrameCount(SHIELD_ENEMY),
 							   EnemiesFactory::getAnimationSpeed(SHIELD_ENEMY)));
 
-	elements.push_back(Element(GAME_TEXTURE::ENEMY_TELEPORT,
-							   GAME_TRANSLATION::TELEPORT,
-							   EnemiesFactory::getEnemyInfo(TELEPORT_ENEMY),
-							   EnemiesFactory::getFrameCount(TELEPORT_ENEMY),
-							   EnemiesFactory::getAnimationSpeed(TELEPORT_ENEMY)));
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_WALKER,
+							   GAME_TRANSLATION::WALKER,
+							   EnemiesFactory::getEnemyInfo(WALKER),
+							   EnemiesFactory::getFrameCount(WALKER),
+							   EnemiesFactory::getAnimationSpeed(WALKER)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SELF_HEAL,
 							   GAME_TRANSLATION::SELF_HEAL,
@@ -443,7 +443,7 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getAnimationSpeed(SELFHEAL_ENEMY)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TRACTOR,
-							   GAME_TRANSLATION::DOWN_TOWER,
+							   GAME_TRANSLATION::TRACTOR,
 							   EnemiesFactory::getEnemyInfo(TRACTOR),
 							   EnemiesFactory::getFrameCount(TRACTOR),
 							   EnemiesFactory::getAnimationSpeed(TRACTOR)));
@@ -454,11 +454,11 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getFrameCount(WORM),
 							   EnemiesFactory::getAnimationSpeed(WORM)));
 
-	elements.push_back(Element(GAME_TEXTURE::ENEMY_COW,
-							   GAME_TRANSLATION::COW,
-							   EnemiesFactory::getEnemyInfo(SPAWN_ENEMY),
-							   EnemiesFactory::getFrameCount(SPAWN_ENEMY),
-							   EnemiesFactory::getAnimationSpeed(SPAWN_ENEMY)));
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_BUGSAURUS,
+							   GAME_TRANSLATION::BUGSAURUS,
+							   EnemiesFactory::getEnemyInfo(BUGSAURUS),
+							   EnemiesFactory::getFrameCount(BUGSAURUS),
+							   EnemiesFactory::getAnimationSpeed(BUGSAURUS)));
 
 	//map effects
 	elements.push_back(Element(GAME_TEXTURE::SMOKE,

@@ -493,9 +493,9 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 	}
 		break;
 		//mid
-	case ANOTHER_ENEMY:
+	case SLUGGY:
 	{
-		texture_id = GAME_TEXTURE::ENEMY_PLANE;
+		texture_id = GAME_TEXTURE::ENEMY_SLUGGY;
 		size.x = 2;
 		size.y = 2;
 		abilityType = EnemyInfo::FASTER;
@@ -509,17 +509,17 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		abilityType = EnemyInfo::DOWNGRADE_TOWER;
 	}
 		break;
-	case SPIDER:
+	case MECHSPIDER:
 	{
-		texture_id = GAME_TEXTURE::ENEMY_SPIDER;
+		texture_id = GAME_TEXTURE::ENEMY_MECHSPIDER;
 		size.x = 2;
 		size.y = 2;
 		abilityType = EnemyInfo::SHUTDOWN_TOWER;
 	}
 		break;
-	case MID_FAST:
+	case TUATARA:
 	{
-		texture_id = GAME_TEXTURE::ENEMY_HELICOPTER;
+		texture_id = GAME_TEXTURE::ENEMY_TUATARA;
 		size.x = 2;
 		size.y = 2;
 		abilityType = EnemyInfo::STRONG;
@@ -541,34 +541,34 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		abilityType = EnemyInfo::SHELL_NEAR;
 	}
 		break;
-	case TELEPORT_ENEMY:
+	case WALKER:
 	{
-		texture_id = GAME_TEXTURE::ENEMY_TELEPORT;
+		texture_id = GAME_TEXTURE::ENEMY_WALKER;
 		size.x = 2;
 		size.y = 2;
 		abilityType = EnemyInfo::TELEPORT;
 	}
 		break;
 		//big
-	case BIG_SLOW:
+	case GIANT_SLUG:
 	{
-		texture_id = GAME_TEXTURE::ENEMY_AIRCARRIER;
+		texture_id = GAME_TEXTURE::ENEMY_GIANT_SLUG;
 		size.x = 4;
 		size.y = 4;
 		abilityType = EnemyInfo::RAGE;
 	}
 		break;
-	case BIG_TANK:
+	case HEAVY_TANK:
 	{
-		texture_id = GAME_TEXTURE::ENEMY_BIG_TANK;
+		texture_id = GAME_TEXTURE::ENEMY_HEAVY_TANK;
 		size.x = 4;
 		size.y = 4;
 		abilityType = EnemyInfo::KILL_TOWER;
 	}
 		break;
-	case SPAWN_ENEMY:
+	case BUGSAURUS:
 	{
-		texture_id = GAME_TEXTURE::ENEMY_COW;
+		texture_id = GAME_TEXTURE::ENEMY_BUGSAURUS;
 		size.x = 4;
 		size.y = 4;
 		abilityType = EnemyInfo::SPAWN;
@@ -612,25 +612,25 @@ float EnemiesFactory::getAnimationSpeed(ENEMY_TYPES type)
 		break;
 	case TRACTOR:
 		return 100;
-	case ANOTHER_ENEMY:
+	case SLUGGY:
 		return FasterAbility::FASTER_ANIMATION_SPEED;
 	case TANK:
 		break;
-	case SPIDER:
+	case MECHSPIDER:
 		return 100;
-	case MID_FAST:
+	case TUATARA:
 		return 100;
 	case REPAIR_ENEMY:
 		break;
 	case SHIELD_ENEMY:
 		return 300;
-	case TELEPORT_ENEMY:
+	case WALKER:
 		return TeleportAbility::TELEPORT_DEFAULT_ANIMATION_SPEED;
-	case BIG_SLOW:
+	case GIANT_SLUG:
 		break;
-	case BIG_TANK:
+	case HEAVY_TANK:
 		break;
-	case SPAWN_ENEMY:
+	case BUGSAURUS:
 		return SpawnEnemy::DEFAULT_ANIMATION_SPEED;
 	case SPAWN_WORM:
 		return getAnimationSpeed(WORM);
@@ -657,25 +657,25 @@ float EnemiesFactory::getFrameCount(ENEMY_TYPES type)
 		break;
 	case TRACTOR:
 		return 5;
-	case ANOTHER_ENEMY:
+	case SLUGGY:
 		break;
 	case TANK:
 		break;
-	case SPIDER:
+	case MECHSPIDER:
 		return 5;
-	case MID_FAST:
+	case TUATARA:
 		break;
 	case REPAIR_ENEMY:
 		break;
 	case SHIELD_ENEMY:
 		return 9;
-	case TELEPORT_ENEMY:
+	case WALKER:
 		return TeleportAbility::TELEPORT_FRAME_COUNT;
-	case BIG_SLOW:
+	case GIANT_SLUG:
 		break;
-	case BIG_TANK:
+	case HEAVY_TANK:
 		break;
-	case SPAWN_ENEMY:
+	case BUGSAURUS:
 		return SpawnEnemy::DEFAULT_SPAWN_FRAME_COUNT;
 	case SPAWN_WORM:
 		return getFrameCount(WORM);
@@ -1066,7 +1066,7 @@ void TowerEffectAbility::getBack()
 ShutdownTowerAbility::ShutdownTowerAbility()
 	: TowerEffectAbility(Balance::Instance().getShutdownInterval())
 {
-	info.enemyTextureId = GAME_TEXTURE::ENEMY_SPIDER;
+	info.enemyTextureId = GAME_TEXTURE::ENEMY_MECHSPIDER;
 	info.animationSize = sf::Vector2i(GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE,
 									  GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::WEB;
@@ -1138,7 +1138,7 @@ void DownTowerAbility::effect(bool isActive)
 KillTowerAbility::KillTowerAbility()
 	: TowerEffectAbility(Balance::Instance().getKillTowerInterval())
 {
-	info.enemyTextureId = GAME_TEXTURE::ENEMY_BIG_TANK;
+	info.enemyTextureId = GAME_TEXTURE::ENEMY_HEAVY_TANK;
 	info.animationSize = sf::Vector2i(GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE,
 									  GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::ENEMY_BULLET;

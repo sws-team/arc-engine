@@ -47,7 +47,7 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::WINDOW_TEXTURE, out);
 			//enemies
 			else if (resource.name == "spider")
-				addTexture(GAME_TEXTURE::ENEMY_SPIDER, out);
+				addTexture(GAME_TEXTURE::ENEMY_MECHSPIDER, out);
 			else if (resource.name == "car")
 				addTexture(GAME_TEXTURE::ENEMY_WAR_VEHICLE, out);
 			else if (resource.name == "tricycle")
@@ -60,22 +60,22 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::ENEMY_INFANTRY, out);
 			else if (resource.name == "shield")
 				addTexture(GAME_TEXTURE::ENEMY_SHIELD, out);
-			else if (resource.name == "teleport")
-				addTexture(GAME_TEXTURE::ENEMY_TELEPORT, out);
+			else if (resource.name == "walker")
+				addTexture(GAME_TEXTURE::ENEMY_WALKER, out);
 			else if (resource.name == "big_tank")
-				addTexture(GAME_TEXTURE::ENEMY_BIG_TANK, out);
-			else if (resource.name == "aircarrier")
-				addTexture(GAME_TEXTURE::ENEMY_AIRCARRIER, out);
+				addTexture(GAME_TEXTURE::ENEMY_HEAVY_TANK, out);
+			else if (resource.name == "giant_slug")
+				addTexture(GAME_TEXTURE::ENEMY_GIANT_SLUG, out);
 			else if (resource.name == "worm")
 				addTexture(GAME_TEXTURE::ENEMY_WORM, out);
 			else if (resource.name == "spawn_worm")
 				addTexture(GAME_TEXTURE::ENEMY_SPAWN_WORM, out);
-			else if (resource.name == "cow")
-				addTexture(GAME_TEXTURE::ENEMY_COW, out);
-			else if (resource.name == "helicopter")
-				addTexture(GAME_TEXTURE::ENEMY_HELICOPTER, out);
-			else if (resource.name == "plane")
-				addTexture(GAME_TEXTURE::ENEMY_PLANE, out);
+			else if (resource.name == "bugsaurus")
+				addTexture(GAME_TEXTURE::ENEMY_BUGSAURUS, out);
+			else if (resource.name == "tuatara")
+				addTexture(GAME_TEXTURE::ENEMY_TUATARA, out);
+			else if (resource.name == "sluggy")
+				addTexture(GAME_TEXTURE::ENEMY_SLUGGY, out);
 			else if (resource.name == "repair")
 				addTexture(GAME_TEXTURE::ENEMY_REPAIR, out);
 			else if (resource.name == "selfheal")
@@ -714,25 +714,25 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TANK, L"Танк"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TANK, L"Танк"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SPIDER, L"Паук"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SPIDER, L"Мехпаук"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SPIDER, L"Паук"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::MECHSPIDER, L"Паук"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::MECHSPIDER, L"Мехпаук"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::MECHSPIDER, L"Паук"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::HELICOPTER, L"Вертолет"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::HELICOPTER, L"Вертолет"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::HELICOPTER, L"Вертолет"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TUATARA, L"Вертолет"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TUATARA, L"Вертолет"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TUATARA, L"Вертолет"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::AIRCARRIER, L"Авианосец"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::AIRCARRIER, L"Авианосец"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::AIRCARRIER, L"Авианосец"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::GIANT_SLUG, L"Авианосец"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::GIANT_SLUG, L"Авианосец"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::GIANT_SLUG, L"Авианосец"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::BIG_TANK, L"Большой танк"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::BIG_TANK, L"Большой танк"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::BIG_TANK, L"Большой танк"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::HEAVY_TANK, L"Большой танк"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::HEAVY_TANK, L"Большой танк"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::HEAVY_TANK, L"Большой танк"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::PLANE, L"Самолет"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::PLANE, L"Самолет"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::PLANE, L"Самолет"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SLUGGY, L"Самолет"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SLUGGY, L"Самолет"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SLUGGY, L"Самолет"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::REPAIR, L"Скорая"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::REPAIR, L"Скорая"));
@@ -742,25 +742,25 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SHELL, L"Ракушка"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SHELL, L"Ракушка"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TELEPORT, L"Телепорт"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TELEPORT, L"Телепорт"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TELEPORT, L"Телепорт"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::WALKER, L"Телепорт"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::WALKER, L"Телепорт"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::WALKER, L"Телепорт"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SELF_HEAL, L"Самолечит"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SELF_HEAL, L"Самолечит"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::SELF_HEAL, L"Самолечит"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DOWN_TOWER, L"Ухудшение башни"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DOWN_TOWER, L"Ухудшение башни"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::DOWN_TOWER, L"Ухудшение башни"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TRACTOR, L"Ухудшение башни"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TRACTOR, L"Ухудшение башни"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TRACTOR, L"Ухудшение башни"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::WORM, L"Larva"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::WORM, L"Личинка"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::WORM, L"???"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::COW, L"Корова"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::COW, L"Корова"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::COW, L"Корова"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::BUGSAURUS, L"Корова"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::BUGSAURUS, L"Корова"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::BUGSAURUS, L"Корова"));
 #ifdef WITH_DIFFICULT
 	//difficult
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::EASY, L"Easy"));

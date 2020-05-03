@@ -183,16 +183,16 @@ void Balance::loadEnemies(const Json::Value &jsonEnemies)
 	loadEnemy(ENEMY_TYPES::SPAWN_WORM, jsonEnemies[BalanceDef::SMALL_KEY]);
 	loadEnemy(ENEMY_TYPES::SELFHEAL_ENEMY, jsonEnemies[BalanceDef::SELFHEAL_KEY]);
 	loadEnemy(ENEMY_TYPES::TRACTOR, jsonEnemies[BalanceDef::TRACTOR_KEY]);
-	loadEnemy(ENEMY_TYPES::ANOTHER_ENEMY, jsonEnemies[BalanceDef::ANOTHER_KEY]);
+	loadEnemy(ENEMY_TYPES::SLUGGY, jsonEnemies[BalanceDef::ANOTHER_KEY]);
 	loadEnemy(ENEMY_TYPES::TANK, jsonEnemies[BalanceDef::TANK_KEY]);
-	loadEnemy(ENEMY_TYPES::SPIDER, jsonEnemies[BalanceDef::SPIDER_KEY]);
-	loadEnemy(ENEMY_TYPES::MID_FAST, jsonEnemies[BalanceDef::MID_KEY]);
+	loadEnemy(ENEMY_TYPES::MECHSPIDER, jsonEnemies[BalanceDef::SPIDER_KEY]);
+	loadEnemy(ENEMY_TYPES::TUATARA, jsonEnemies[BalanceDef::MID_KEY]);
 	loadEnemy(ENEMY_TYPES::REPAIR_ENEMY, jsonEnemies[BalanceDef::REPAIR_KEY]);
 	loadEnemy(ENEMY_TYPES::SHIELD_ENEMY, jsonEnemies[BalanceDef::SHIELD_KEY]);
-	loadEnemy(ENEMY_TYPES::TELEPORT_ENEMY, jsonEnemies[BalanceDef::TELEPORT_KEY]);
-	loadEnemy(ENEMY_TYPES::BIG_SLOW, jsonEnemies[BalanceDef::BIG_KEY]);
-	loadEnemy(ENEMY_TYPES::BIG_TANK, jsonEnemies[BalanceDef::BIG_TANK_KEY]);
-	loadEnemy(ENEMY_TYPES::SPAWN_ENEMY, jsonEnemies[BalanceDef::SPAWN_KEY]);
+	loadEnemy(ENEMY_TYPES::WALKER, jsonEnemies[BalanceDef::TELEPORT_KEY]);
+	loadEnemy(ENEMY_TYPES::GIANT_SLUG, jsonEnemies[BalanceDef::BIG_KEY]);
+	loadEnemy(ENEMY_TYPES::HEAVY_TANK, jsonEnemies[BalanceDef::BIG_TANK_KEY]);
+	loadEnemy(ENEMY_TYPES::BUGSAURUS, jsonEnemies[BalanceDef::SPAWN_KEY]);
 }
 
 void Balance::loadEnemy(const ENEMY_TYPES type, const Json::Value &jsonEnemy)

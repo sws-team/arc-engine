@@ -392,20 +392,20 @@ void Level::checkAlive()
 			case WORM:
 			case SELFHEAL_ENEMY:
 			case TRACTOR:
-			case ANOTHER_ENEMY:
+			case SLUGGY:
 				GamePlatform::Instance().incrementValue(STAT_SMALL_KILLS);
 				break;				
 			case TANK:
-			case SPIDER:
-			case MID_FAST:
+			case MECHSPIDER:
+			case TUATARA:
 			case REPAIR_ENEMY:
 			case SHIELD_ENEMY:
-			case TELEPORT_ENEMY:
+			case WALKER:
 				GamePlatform::Instance().incrementValue(STAT_MID_KILLS);
 				break;
-			case BIG_SLOW:
-			case BIG_TANK:
-			case SPAWN_ENEMY:
+			case GIANT_SLUG:
+			case HEAVY_TANK:
+			case BUGSAURUS:
 				GamePlatform::Instance().incrementValue(STAT_BIG_KILLS);
 				break;
 			default:
@@ -1120,7 +1120,7 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 {
 //	for(Enemy *enemy : enemies)
 //	{
-//		if (enemy->type() == ENEMY_TYPES::SPIDER)
+//		if (enemy->type() == ENEMY_TYPES::MECHSPIDER)
 //		{
 //			ShutdownTowerAbility *web = static_cast<ShutdownTowerAbility*>(enemy->getAbility());
 //			if (web == nullptr || web->getTarget() == nullptr)
