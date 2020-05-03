@@ -59,7 +59,7 @@ GameWindow::GameWindow()
 	const float offsetY = 20.f * Engine::Instance().settingsManager()->getScaleFactor().y;
 
 	pos.x += Engine::Instance().options<GameOptions>()->tileSize().x;
-	pos.y += Engine::Instance().settingsManager()->getResolution().y/2;
+	pos.y += 290 * Engine::Instance().settingsManager()->getScaleFactor().y;
 
 	for(sf::Text& menuText : menus)
 	{

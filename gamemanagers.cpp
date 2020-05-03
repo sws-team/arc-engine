@@ -1029,6 +1029,7 @@ std::vector<sf::String> GameManagers::creators()
 	std::vector<sf::String> creatorsVec;
 	creatorsVec.push_back(Engine::Instance().globalVariables()->appName() +
 						  sf::String(" Version: ") + APP_VERSION);
+	creatorsVec.push_back(Engine::EngineName() + ": " + Engine::EngineVersion());
 
 	creatorsVec.push_back(sf::String("Developers:"));
 	creatorsVec.push_back(sf::String("FIO"));
