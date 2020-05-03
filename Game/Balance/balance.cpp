@@ -177,7 +177,7 @@ void Balance::loadEnemies(const Json::Value &jsonEnemies)
 {
 	enemiesStats.clear();
 	loadEnemy(ENEMY_TYPES::INFANTRY, jsonEnemies[BalanceDef::INFANTRY_KEY]);
-	loadEnemy(ENEMY_TYPES::CAR, jsonEnemies[BalanceDef::CAR_KEY]);
+	loadEnemy(ENEMY_TYPES::WAR_VEHICLE, jsonEnemies[BalanceDef::CAR_KEY]);
 	loadEnemy(ENEMY_TYPES::TRICYCLE, jsonEnemies[BalanceDef::TRICYCLE_KEY]);
 	loadEnemy(ENEMY_TYPES::WORM, jsonEnemies[BalanceDef::SMALL_KEY]);
 	loadEnemy(ENEMY_TYPES::SPAWN_WORM, jsonEnemies[BalanceDef::SMALL_KEY]);

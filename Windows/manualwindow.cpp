@@ -57,7 +57,10 @@ void ManualWindow::update()
 	{
 		const int id = page * MAX_ELEMENTS_COUNT + current;
 		if (id < elements.size())
+		{
 			elements.at(id).object->update();
+//			elements.at(id).elementDemo->update();
+		}
 	}
 	StateWindow::update();
 }
@@ -86,6 +89,7 @@ void ManualWindow::paint(sf::RenderWindow *window)
 			window->draw(elements.at(id).nameText);
 			window->draw(elements.at(id).descriptionText);
 			elements.at(id).object->draw(window);
+//			elements.at(id).elementDemo->draw(window);
 		}
 	}
 	window->draw(previous);
@@ -267,7 +271,6 @@ void ManualWindow::updatePos()
 													 infoRect.getGlobalBounds().top) +
 											sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
-
 		element.nameText.setScale(scaleFactor);
 		element.nameText.setPosition(element.object->pos() +
 									 sf::Vector2f(element.object->getSize().x + ICON_X_OFFSET, 0));
@@ -279,6 +282,10 @@ void ManualWindow::updatePos()
 		element.titleText.setScale(scaleFactor);
 		element.titleText.setPosition(pos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET) +
 									 sf::Vector2f(ICON_WIDTH + ICON_X_OFFSET, 0));
+
+//		element.elementDemo->setPos(sf::Vector2f(infoRect.getGlobalBounds().left,
+//												 element.descriptionText.getGlobalBounds().top +
+//												 element.descriptionText.getGlobalBounds().height));
 
 		pos.y += ICON_Y_OFFSET + RECT_HEIGHT;
 
@@ -362,11 +369,11 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getFrameCount(INFANTRY),
 							   EnemiesFactory::getAnimationSpeed(INFANTRY)));
 
-	elements.push_back(Element(GAME_TEXTURE::ENEMY_CAR,
-							   GAME_TRANSLATION::CAR,
-							   EnemiesFactory::getEnemyInfo(CAR),
-							   EnemiesFactory::getFrameCount(CAR),
-							   EnemiesFactory::getAnimationSpeed(CAR)));
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_WAR_VEHICLE,
+							   GAME_TRANSLATION::WAR_VEHICLE,
+							   EnemiesFactory::getEnemyInfo(WAR_VEHICLE),
+							   EnemiesFactory::getFrameCount(WAR_VEHICLE),
+							   EnemiesFactory::getAnimationSpeed(WAR_VEHICLE)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TRICYCLE,
 							   GAME_TRANSLATION::TRICYCLE,
@@ -766,6 +773,11 @@ void ManualWindow::Element::update()
 	object->animationSpeed = animationSpeed;
 	object->cycled = cycled;
 	object->rowCount = rowCount;
+
+//	elementDemo = new GameObject(GAME_TEXTURE::TEST_TEXTTURE, sf::Vector2f(0,0), sf::Vector2i(320, 240), 10);
+//	elementDemo->animationSpeed = 50;
+//	elementDemo->cycled = true;
+//	elementDemo->rowCount = 17;
 
 	nameText.setString(nameStr);
 	descriptionText.setString(descriptionStr);

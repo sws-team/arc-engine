@@ -49,7 +49,7 @@ void GameManagers::loadResources()
 			else if (resource.name == "spider")
 				addTexture(GAME_TEXTURE::ENEMY_SPIDER, out);
 			else if (resource.name == "car")
-				addTexture(GAME_TEXTURE::ENEMY_CAR, out);
+				addTexture(GAME_TEXTURE::ENEMY_WAR_VEHICLE, out);
 			else if (resource.name == "tricycle")
 				addTexture(GAME_TEXTURE::ENEMY_TRICYCLE, out);
 			else if (resource.name == "tank")
@@ -457,6 +457,8 @@ void GameManagers::loadResources()
 		addFile(n, data);
 	}
 #endif
+
+	loadExtraResources();
 }
 
 void GameManagers::addTexture(TextureType type, const std::string &data)
@@ -700,9 +702,9 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INFANTRY, L"Пехота"));
 	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::INFANTRY, L"???"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::CAR, L"Машина"));
-	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::CAR, L"Машина"));
-	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::CAR, L"Машина"));
+	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::WAR_VEHICLE, L"Машина"));
+	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::WAR_VEHICLE, L"Машина"));
+	frenchTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::WAR_VEHICLE, L"Машина"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TRICYCLE, L"Трицикл"));
 	russainTranslation.insert(std::pair<int, sf::String>(GAME_TRANSLATION::TRICYCLE, L"Tricycle de reconnaissance"));
@@ -1061,5 +1063,21 @@ std::vector<sf::String> GameManagers::creators()
 	creatorsVec.push_back(sf::String("http://glslsandbox.com"));
 
 	return creatorsVec;
+}
+
+void GameManagers::loadExtraResources()
+{
+	const std::vector<GameResource::Resource> resources = GameResource::Resource::loadResources("display.dat");
+	for(const GameResource::Resource &resource : resources)
+	{
+		std::string out;
+		Base64::Decode(resource.data, &out);
+
+		if (resource.type == GameResource::TEXTURE)
+		{
+//			if (resource.name == "")
+//				addTexture(GAME_TEXTURE::SHOW_BASE_TOWER_ABILITY, out);
+		}
+	}
 }
 

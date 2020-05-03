@@ -384,8 +384,8 @@ BaseTower::BaseTower(const sf::Vector2f &pos)
 	projectileInfo.frameCount = 1;
 	projectileInfo.texture_id = GAME_TEXTURE::BASE_PROJECTILE;
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::BASE_EXPLOSION_EFFECT;
-	projectileInfo.explosionSize = sf::Vector2i(12, 12);
-	projectileInfo.explosionFrameCount = 16;
+	projectileInfo.explosionSize = sf::Vector2i(64, 64);
+	projectileInfo.explosionFrameCount = 8;
 	m_shotSound = GAME_SOUND::BASE_SHOT;
 
 	TowersCounter::Instance().baseTowerCount++;
@@ -635,8 +635,8 @@ FreezeTower::FreezeTower(const sf::Vector2f &pos)
 	projectileInfo.frameCount = 3;
 	projectileInfo.texture_id = GAME_TEXTURE::FREEZE_PROJECTILE;
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::FREEZE_EXPLOSION_EFFECT;
-	projectileInfo.explosionSize = sf::Vector2i(12, 12);
-	projectileInfo.explosionFrameCount = 16;
+	projectileInfo.explosionSize = sf::Vector2i(64, 64);
+	projectileInfo.explosionFrameCount = 8;
 	TowersCounter::Instance().freezeTowerCount++;
 	zeroGround = Engine::Instance().options<GameOptions>()->tileSize().x * Balance::Instance().getFreezeTowerCells();
 }
@@ -962,6 +962,7 @@ std::vector<Projectile *> ProjectilesTower::projectiles() const
 
 void ProjectilesTower::projectileAction(Enemy *enemy)
 {
+	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 	enemy->hit(actualDamage(enemy->getArmorType()));
 	checkKill(enemy);
 	const sf::Vector2f size = enemy->getEnemySize();
@@ -974,12 +975,14 @@ void ProjectilesTower::projectileAction(Enemy *enemy)
 	if (size.y > projectileInfo.explosionSize.y)
 		maxY = static_cast<int>(size.y/2 - projectileInfo.explosionSize.y/2);
 
-	const sf::Vector2f offset = sf::Vector2f(rand() % maxX * 2 - maxX, rand() % maxY * 2 - maxY);
+	const sf::Vector2f offset = sf::Vector2f((rand() % maxX * 2 - maxX) * scaleFactor.x,
+											 (rand() % maxY * 2 - maxY)) * scaleFactor.y;
+
+	const sf::Vector2f centerOffset = sf::Vector2f(projectileInfo.explosionSize.x/2 * scaleFactor.x,
+												   projectileInfo.explosionSize.y/2 * scaleFactor.y);
 
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(projectileInfo.explosion_texture_id,
-											 enemy->enemyCenter() + offset -
-											 sf::Vector2f(projectileInfo.explosionSize.x/2,
-													  projectileInfo.explosionSize.y/2),
+											 enemy->enemyCenter() - centerOffset + offset,
 											 projectileInfo.explosionSize,
 											 50, projectileInfo.explosionFrameCount, 0);
 }

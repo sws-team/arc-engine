@@ -131,6 +131,7 @@ public:
 	EnemyAbility(float msec);
 	virtual void draw(sf::RenderTarget *const target) override;
 	void update() override;
+	virtual void moved();
 
 	void setOwner(Enemy *owner);
 
@@ -326,9 +327,20 @@ class StrongAbility : public EnemyAbility
 {
 public:
 	StrongAbility();
+	~StrongAbility() override;
+
+	virtual void draw(sf::RenderTarget *const target) override;
+	void update() override;
+	void moved() override;
 
 protected:
 	void use() override;
+private:
+	static constexpr int STRONG_FRAMES_COUNT = 6;
+	static constexpr int STRONG_ANIMATION_SPEED = 100;
+	bool isShow;
+	Timer strongAbilityTimer;
+	GameObject *strongAnimation;
 };
 
 class RageAbility : public EnemyAbility

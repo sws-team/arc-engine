@@ -186,7 +186,7 @@ void Level::startMission(const unsigned int n)
 	{
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::BIG_SLOW);
-		wave.spawnEnemies.push_back(ENEMY_TYPES::CAR);
+		wave.spawnEnemies.push_back(ENEMY_TYPES::WAR_VEHICLE);
 //		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
 	}
 	for (int i = 0; i < _testWavesCount; ++i)
@@ -387,7 +387,7 @@ void Level::checkAlive()
 			switch (enemy->type())
 			{
 			case INFANTRY:
-			case CAR:
+			case WAR_VEHICLE:
 			case TRICYCLE:
 			case WORM:
 			case SELFHEAL_ENEMY:

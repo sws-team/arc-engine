@@ -123,6 +123,8 @@ void Enemy::moveEnemy()
 	}
 	m_pos += offset;
 	setPos(m_pos + m_spritePos);
+	if (ability != nullptr)
+		ability->moved();
 	offset.x *= 1.f/Engine::Instance().options<GameOptions>()->gameSpeed();
 	offset.y *= 1.f/Engine::Instance().options<GameOptions>()->gameSpeed();
 	update();
@@ -306,10 +308,6 @@ void Enemy::protect(float shell, bool show)
 		m_data.reflection = 0.9f;
 	if (m_data.reflection < 0.f)
 		m_data.reflection = 0.f;
-	if (show)
-		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::SHELL_EFFECT, this->pos(),
-																		 sf::Vector2i(GameOptions::MAP_CELL_SIZE, GameOptions::MAP_CELL_SIZE),
-																		 100, 6, 0);
 }
 
 void Enemy::setReflection(const float reflection)
@@ -456,9 +454,9 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		size.y = 1;
 	}
 		break;
-	case CAR:
+	case WAR_VEHICLE:
 	{
-		texture_id = GAME_TEXTURE::ENEMY_CAR;
+		texture_id = GAME_TEXTURE::ENEMY_WAR_VEHICLE;
 		size.x = 1;
 		size.y = 1;
 		abilityType = EnemyInfo::STRONG;
@@ -603,7 +601,7 @@ float EnemiesFactory::getAnimationSpeed(ENEMY_TYPES type)
 	{
 	case INFANTRY:
 		break;
-	case CAR:
+	case WAR_VEHICLE:
 		return 50;
 	case TRICYCLE:
 		break;
@@ -649,7 +647,7 @@ float EnemiesFactory::getFrameCount(ENEMY_TYPES type)
 	case INFANTRY:
 		return 6;
 		break;
-	case CAR:
+	case WAR_VEHICLE:
 		break;
 	case TRICYCLE:
 		break;
@@ -764,6 +762,11 @@ void EnemyAbility::update()
 {
 	if (abilityTimer.check(m_interval))
 		use();
+}
+
+void EnemyAbility::moved()
+{
+
 }
 
 void EnemyAbility::setOwner(Enemy *owner)
@@ -1321,13 +1324,51 @@ void SpawnEnemy::use()
 
 StrongAbility::StrongAbility()
 	: EnemyAbility(Balance::Instance().getStrongInterval())
+	,isShow(false)
 {
+	strongAnimation = new GameObject(GAME_TEXTURE::SHELL_EFFECT, sf::Vector2f(0,0),
+									 sf::Vector2i(GameOptions::MAP_CELL_SIZE, GameOptions::MAP_CELL_SIZE),
+									 STRONG_FRAMES_COUNT);
+	strongAnimation->animationSpeed = STRONG_ANIMATION_SPEED;
+}
 
+StrongAbility::~StrongAbility()
+{
+	delete strongAnimation;
+}
+
+void StrongAbility::draw(sf::RenderTarget * const target)
+{
+	if (isShow)
+		strongAnimation->draw(target);
+}
+
+void StrongAbility::update()
+{
+	EnemyAbility::update();
+	if (strongAbilityTimer.check(STRONG_ANIMATION_SPEED * STRONG_FRAMES_COUNT))
+	{
+		isShow = false;
+		return;
+	}
+	strongAnimation->update();
+}
+
+void StrongAbility::moved()
+{
+	if (!isShow)
+		return;
+
+	strongAnimation->setPos(owner->pos());
 }
 
 void StrongAbility::use()
 {
+	isShow = true;
 	owner->protect(Balance::Instance().getStrongValue());
+	moved();
+	strongAnimation->currentFrame = 0;
+	strongAbilityTimer.reset();
 }
 
 RageAbility::RageAbility()

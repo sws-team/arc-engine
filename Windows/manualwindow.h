@@ -76,6 +76,8 @@ private:
 
 		void init();
 		void update();
+
+//		GameObject *elementDemo;
 	};
 
 	std::vector<Element> elements;
