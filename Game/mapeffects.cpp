@@ -119,6 +119,7 @@ void MapEffect::init()
 
 void MapEffect::resetTimers()
 {
+	m_interval = m_time;
 	stepTimer.reset();
 }
 
