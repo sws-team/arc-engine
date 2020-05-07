@@ -11,7 +11,7 @@
 
 const std::map<int, std::vector<Instructions::STATES> > Instructions::INSTRUCTIONS =
 {
-	{0, { WELCOME, MONEY, HEALTH, PROGRESS, INSTRUCTION_TOWER_ENERGY, INSTRUCTION_TOWER_BASE, INSTRUCTION_BOMB } },
+	{0, { WELCOME, MONEY, HEALTH, PROGRESS, INSTRUCTION_TOWER_ENERGY, INSTRUCTION_TOWER_BASE, INSTRUCTION_BOMB, GOOD_LUCK } },
 	{1, { INSTRUCTION_TOWER_FREEZE, INSTRUCTION_FREEZE_BOMB} },
 	{2, { INSTRUCTION_TOWER_ROCKET, INSTRUCTION_ACID } },
 	{3, { INSTRUCTION_TOWER_LASER } },
@@ -333,7 +333,7 @@ void Instructions::updateState()
 	arrow->sprite.setRotation(0);
 	sf::Vector2f offset = sf::Vector2f(0,0);
 	const STATES state = states.at(currentState);
-	sf::FloatRect rect = sf::FloatRect();;
+	sf::FloatRect rect = sf::FloatRect();
 	sf::String textStr;
 	switch (state)
 	{
@@ -364,6 +364,12 @@ void Instructions::updateState()
 		offset.y += arrow->size.y * 2;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getProgressRect();
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_PROGRESS);
+	}
+		break;
+	case GOOD_LUCK:
+	{
+		showArrow = false;
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_GOOD_LUCK);
 	}
 		break;
 	case INSTRUCTION_TOWER_BASE:

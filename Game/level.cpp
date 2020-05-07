@@ -209,11 +209,11 @@ void Level::startMission(const unsigned int n)
 	Engine::Instance().options<GameOptions>()->cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
 	Engine::Instance().options<GameOptions>()->panel()->initMission(n);
 	updateStartEndPos(gameMap->spawnPos, sf::Vector2f(gameMap->endRect.left, gameMap->endRect.top));
-
+#ifndef CHECK_INSTRUCTIONS
 	const int starsValue = Engine::Instance().options<GameOptions>()->missionStars(n);
 	if (starsValue != -1)
 		Engine::Instance().options<GameOptions>()->instructions()->skip();
-
+#endif
 	Engine::Instance().options<GameOptions>()->cursor()->initCell();
 
 	spawnRect.setPosition(gameMap->spawnPos.x * Engine::Instance().settingsManager()->getScaleFactor().x,

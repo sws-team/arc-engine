@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     gamemanagers.cpp \
     gameoptions.cpp \
     gamestatemanager.cpp \
-    controller.cpp
+    controller.cpp \
+    gametranslations.cpp
 HEADERS += \
     gamemanagers.h \
     gameoptions.h \
@@ -69,3 +70,4 @@ QMAKE_LFLAGS += -Wl,-rpath,@executable_path/frameworks
 DEFINES += LOAD_BALANCE
 #DEFINES += TEST_WAVES
 #DEFINES += DEMO_VERSION
+DEFINES += CHECK_INSTRUCTIONS
