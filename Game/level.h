@@ -182,7 +182,7 @@ private:
 	std::set<TOWER_TYPES> fullyUpgradedTowers;
 	bool abilityActivated;
 	bool attackTowerBuilded;
-	static constexpr float ECONOMIST_MONEY_VALUE = 30000;
+	static constexpr float ECONOMIST_MONEY_VALUE = 15000;
 };
 
 #endif // LEVEL_H

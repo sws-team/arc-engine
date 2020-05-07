@@ -208,6 +208,8 @@ void GameManagers::loadResources()
 				addTexture(TexturesManager::QUIET_ICON, out);
 			else if (resource.name == "character")
 				addTexture(GAME_TEXTURE::CHARACTER, out);
+			else if (resource.name == "frame")
+				addTexture(GAME_TEXTURE::FRAME, out);
 			//weapons
 			else if (resource.name == "bullet")
 				addTexture(GAME_TEXTURE::BASE_PROJECTILE, out);
@@ -603,10 +605,6 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(std::pair<int, sf::String>(TranslationsManager::SETTINGS, L"Настройки"));
 	frenchTranslation.insert(std::pair<int, sf::String>(TranslationsManager::SETTINGS, L"Parametres"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(TranslationsManager::AUDIO, L"Audio"));
-	russainTranslation.insert(std::pair<int, sf::String>(TranslationsManager::AUDIO, L"Аудио"));
-	frenchTranslation.insert(std::pair<int, sf::String>(TranslationsManager::AUDIO, L"Audio"));
-
 	englishTranslation.insert(std::pair<int, sf::String>(TranslationsManager::SOUND, L"Sound"));
 	russainTranslation.insert(std::pair<int, sf::String>(TranslationsManager::SOUND, L"Звуки"));
 	frenchTranslation.insert(std::pair<int, sf::String>(TranslationsManager::SOUND, L"Sons"));
@@ -615,10 +613,6 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(std::pair<int, sf::String>(TranslationsManager::MUSIC, L"Музыка"));
 	frenchTranslation.insert(std::pair<int, sf::String>(TranslationsManager::MUSIC, L"Musique"));
 
-	englishTranslation.insert(std::pair<int, sf::String>(TranslationsManager::VIDEO, L"Video"));
-	russainTranslation.insert(std::pair<int, sf::String>(TranslationsManager::VIDEO, L"Видео"));
-	frenchTranslation.insert(std::pair<int, sf::String>(TranslationsManager::VIDEO, L"Video"));
-
 	englishTranslation.insert(std::pair<int, sf::String>(TranslationsManager::FULLSCREEN, L"Fullscreen"));
 	russainTranslation.insert(std::pair<int, sf::String>(TranslationsManager::FULLSCREEN, L"Полноэкранный режим"));
 	frenchTranslation.insert(std::pair<int, sf::String>(TranslationsManager::FULLSCREEN, L"Plein ecran"));
@@ -626,10 +620,6 @@ void GameManagers::loadTranslations()
 	englishTranslation.insert(std::pair<int, sf::String>(TranslationsManager::RESOLUTION, L"Resolution"));
 	russainTranslation.insert(std::pair<int, sf::String>(TranslationsManager::RESOLUTION, L"Разрешение"));
 	frenchTranslation.insert(std::pair<int, sf::String>(TranslationsManager::RESOLUTION, L"Resolution"));
-
-	englishTranslation.insert(std::pair<int, sf::String>(TranslationsManager::MISC, L"Misc"));
-	russainTranslation.insert(std::pair<int, sf::String>(TranslationsManager::MISC, L"Разное"));
-	frenchTranslation.insert(std::pair<int, sf::String>(TranslationsManager::MISC, L"Autres"));
 
 	englishTranslation.insert(std::pair<int, sf::String>(TranslationsManager::LANGUAGE, L"Language"));
 	russainTranslation.insert(std::pair<int, sf::String>(TranslationsManager::LANGUAGE, L"Язык"));

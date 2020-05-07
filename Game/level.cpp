@@ -126,7 +126,7 @@ void Level::update()
 					powerTower->updateGain();
 
 					if (money >= ECONOMIST_MONEY_VALUE)
-						GamePlatform::Instance().unlock(ACHIEVEMENT_GAIN_30000_MONEY);
+						GamePlatform::Instance().unlock(ACHIEVEMENT_GAIN_MANY_MONEY);
 				}
 			}
 			else
@@ -1149,7 +1149,7 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 		{
 			const TOWER_TYPES type = Engine::Instance().options<GameOptions>()->panel()->currentTower();
 			const float cost = type == TOWER_TYPES::POWER ?
-						Balance::Instance().getTowerStats(type).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET :
+						Balance::Instance().getTowerStats(type).cost + TowersCounter::Instance().powerTowerCount * Balance::Instance().getPowerTowerCostOffset() :
 						Balance::Instance().getTowerStats(type).cost;
 			if (money < cost)
 				return;

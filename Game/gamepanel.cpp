@@ -298,7 +298,7 @@ void GamePanel::updatePanel()
 
 	towerPowerCostText.setString(
 				GlobalVariables::to_string_with_precision(
-					Balance::Instance().getTowerStats(POWER).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET, 0));
+					Balance::Instance().getTowerStats(POWER).cost + TowersCounter::Instance().powerTowerCount * Balance::Instance().getPowerTowerCostOffset(), 0));
 
 	updateCursor();
 	updateInfo();
@@ -513,7 +513,8 @@ float GamePanel::getTowerUpgradeCost(Tower *tower) const
 
 	const TOWER_TYPES type = tower->type();
 	float cost = type == TOWER_TYPES::POWER ?
-				Balance::Instance().getTowerStats(type).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET :
+				Balance::Instance().getTowerStats(type).cost +
+				TowersCounter::Instance().powerTowerCount * Balance::Instance().getPowerTowerCostOffset() :
 				Balance::Instance().getTowerStats(type).cost;
 
 	switch (tower->level())
@@ -534,7 +535,7 @@ float GamePanel::getTowerSellCost(Tower *tower) const
 {
 	const TOWER_TYPES type = tower->type();
 	float cost = type == TOWER_TYPES::POWER ?
-				tower->data().cost + (TowersCounter::Instance().powerTowerCount - 1) * PowerTower::COST_OFFSET :
+				tower->data().cost + (TowersCounter::Instance().powerTowerCount - 1) * Balance::Instance().getPowerTowerCostOffset() :
 				tower->data().cost;
 	cost /= 2;
 	return cost;
@@ -580,7 +581,7 @@ void GamePanel::updateEnableTowers()
 	else
 		towerRocketSprite.setColor(sf::Color::White);
 
-	cost = Balance::Instance().getTowerStats(TOWER_TYPES::POWER).cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET;
+	cost = Balance::Instance().getTowerStats(TOWER_TYPES::POWER).cost + TowersCounter::Instance().powerTowerCount * Balance::Instance().getPowerTowerCostOffset();
 	if (money < cost || !TowersCounter::Instance().canBuildPowerTower())
 		towerPowerSprite.setColor(EngineDefs::GrayColor);
 	else
@@ -696,7 +697,7 @@ sf::String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 	if (tower == nullptr)
 	{
 		const float cost = type == TOWER_TYPES::POWER ?
-					towerStats.cost + TowersCounter::Instance().powerTowerCount * PowerTower::COST_OFFSET :
+					towerStats.cost + TowersCounter::Instance().powerTowerCount * Balance::Instance().getPowerTowerCostOffset() :
 					towerStats.cost;
 
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COST);

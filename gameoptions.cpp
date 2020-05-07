@@ -681,7 +681,7 @@ void GameOptions::loadAchievements()
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_BUILD_1000_TOWERS, std::string("BUILD_1000_TOWERS"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_ABILITIES, std::string("COMPLETE_LEVEL_WITHOUT_ABILITIES"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_TOWERS, std::string("COMPLETE_LEVEL_WITHOUT_TOWERS"));
-	GamePlatform::Instance().addAchievement(ACHIEVEMENT_GAIN_30000_MONEY, std::string("GAIN_30000_MONEY"));
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_GAIN_MANY_MONEY, std::string("GAIN_MANY_MONEY"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_SELL_INACTIVE_TOWER, std::string("SELL_INACTIVE_TOWER"));
 
 

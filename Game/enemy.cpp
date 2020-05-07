@@ -522,7 +522,6 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		texture_id = GAME_TEXTURE::ENEMY_TUATARA;
 		size.x = 2;
 		size.y = 2;
-		abilityType = EnemyInfo::STRONG;
 	}
 		break;
 	case REPAIR_ENEMY:

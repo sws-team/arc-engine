@@ -34,6 +34,7 @@ struct TowerStats
 	float radius;
 	float projectileSpeed;
 	float cost;
+	float damageOffset;
 	TowerArmorDamage armorDamage;
 };
 

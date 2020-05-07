@@ -20,21 +20,26 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 	chooseRect.setOutlineThickness(5);
 	chooseRect.setOutlineColor(CURRENT_BORDER_COLOR);
-	chooseRect.setFillColor(sf::Color::Transparent);
+	chooseRect.setFillColor(CURRENT_COLOR);
 	currentMission = 0;
 #ifdef WITH_DIFFICULT
 	initDifficults();
 #endif
 	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
-	const float rectSizeX = 160 * scaleFactor.x;
-	const float rectSizeY = 160 * scaleFactor.y;
-	const float offsetX = scaleFactor.x * 20;
-	const float iconSizeX = 32 * scaleFactor.x;
-	const float iconSizeY = 32 * scaleFactor.y;
-	const float topOffset = scaleFactor.y * 45;
+	const float rectSizeX = 240 * scaleFactor.x;
+	const float rectSizeY = 135 * scaleFactor.y;
+	const float frameRectOffsetX = 16 * scaleFactor.x;
+	const float frameRectOffsetY = 18 * scaleFactor.y;
+	const float offsetX = 42 * scaleFactor.x;
+	const float iconSizeX = 30 * scaleFactor.x;
+	const float iconSizeY = 30 * scaleFactor.y;
+	const float topOffset =  64 * scaleFactor.y;
+	const float starOffsetX = 15 * scaleFactor.x;
+	const float starOffsetY = 10 * scaleFactor.y;
 
-	chooseRect.setSize(sf::Vector2f(rectSizeX, rectSizeY + iconSizeY));
-	const float left = Engine::Instance().settingsManager()->getResolution().x * 0.3f;
+	chooseRect.setSize(sf::Vector2f(rectSizeX, rectSizeY + iconSizeY + starOffsetY));
+	const float left = scaleFactor.x * (Engine::Instance().settingsManager()->getResolution().x - COLUMN_COUNT * 160 + (COLUMN_COUNT - 1) * 20) / 2;
+
 	float x = left;
 	float y = topOffset;
 #ifdef WITH_DIFFICULT
@@ -101,10 +106,14 @@ ChooseMissionWindow::ChooseMissionWindow()
 		}
 
 		MissionView mission;
-		mission.rect.setPosition(x, y);
-		mission.rect.setSize(sf::Vector2f(rectSizeX, rectSizeY));
+		mission.rect.setPosition(x - frameRectOffsetX, y - frameRectOffsetY);
+		mission.rect.setSize(sf::Vector2f(rectSizeX + frameRectOffsetX * 2,
+										  rectSizeY + frameRectOffsetY * 2 + iconSizeY + starOffsetY));
+		mission.rect.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::FRAME));
+		mission.mapRect.setPosition(x, y);
+		mission.mapRect.setSize(sf::Vector2f(rectSizeX, rectSizeY));
 		mission.highlight.setPosition(x, y);
-		mission.highlight.setSize(sf::Vector2f(rectSizeX, rectSizeY + iconSizeY));
+		mission.highlight.setSize(sf::Vector2f(rectSizeX, rectSizeY + iconSizeY + starOffsetY));
 		mission.numberText.setFont(Engine::Instance().fontManager()->font());
 		mission.numberText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(60));
 		mission.numberText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
@@ -125,11 +134,11 @@ ChooseMissionWindow::ChooseMissionWindow()
 		if (mission.enabled)
 		{
 			mission.highlight.setFillColor(sf::Color::Transparent);
-			mission.rect.setTexture(&Engine::Instance().texturesManager()->getTexture(textureType));
+			mission.mapRect.setTexture(&Engine::Instance().texturesManager()->getTexture(textureType));
 		}
 		else
 		{
-			mission.rect.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::LOCKED_ICON));
+			mission.mapRect.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::LOCKED_ICON));
 			mission.highlight.setFillColor(DISABLED_COLOR);
 		}
 
@@ -137,12 +146,13 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 		unsigned int rating = getRating(i);
 		float posX = x;
+		posX += starOffsetX;
 		for (unsigned int j = 0; j < STARS_COUNT; ++j)
 		{
 			sf::RectangleShape starRect;
 			starRect.setFillColor(sf::Color::White);
 			starRect.setSize(sf::Vector2f(iconSizeX, iconSizeY));
-			starRect.setPosition(posX, y + rectSizeY);
+			starRect.setPosition(posX, y + rectSizeY + starOffsetY);
 			if (j >= rating)
 				starRect.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::EMPTY_STAR_TEXTURE));
 			else
@@ -150,6 +160,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 			mission.stars.push_back(starRect);
 			posX += iconSizeX;
+			posX += starOffsetX;
 		}
 
 		missions.push_back(mission);
@@ -174,9 +185,10 @@ void ChooseMissionWindow::paint(sf::RenderWindow *window)
 	drawBackground(window);
 	for (const MissionView& mission : missions)
 	{
+		window->draw(mission.rect);
 		for(const sf::RectangleShape& rect : mission.stars)
 			window->draw(rect);
-		window->draw(mission.rect);
+		window->draw(mission.mapRect);
 		window->draw(mission.numberText);
 		window->draw(mission.highlight);
 	}
@@ -209,7 +221,9 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
 			{
-//				if (missions.at(mission).enabled)
+#ifndef TEST_WAVES
+				if (missions.at(mission).enabled)
+#endif
 				{
 					Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
 					accept(mission);

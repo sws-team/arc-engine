@@ -151,6 +151,7 @@ void Balance::loadTower(const TOWER_TYPES type, const Json::Value &jsonTower)
 	stats.radius = jsonTower[BalanceDef::RADIUS_KEY].asFloat();
 	stats.projectileSpeed = jsonTower[BalanceDef::PROJECTILE_SPEED_KEY].asFloat();
 	stats.cost = jsonTower[BalanceDef::COST_KEY].asFloat();
+	stats.damageOffset = jsonTower[BalanceDef::DAMAGE_OFFSET_KEY].asFloat();
 
 
 	const Json::Value &jsonArmorDamage = jsonTower[BalanceDef::ARMOR_DAMAGE_KEY];

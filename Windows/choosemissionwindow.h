@@ -23,8 +23,9 @@ private:
 	constexpr static int STARS_COUNT = 5;
 	struct MissionView
 	{
-		sf::Text numberText;
 		sf::RectangleShape rect;
+		sf::Text numberText;
+		sf::RectangleShape mapRect;
 		sf::RectangleShape highlight;
 		bool completed;
 		int activeStars;

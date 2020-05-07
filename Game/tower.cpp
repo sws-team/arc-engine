@@ -246,7 +246,11 @@ float Tower::actualDamage(const ARMOR_TYPE armorType) const
 		damage *= Balance::Instance().getDowngradeValue();
 	if (m_regressed)
 		damage *= Balance::Instance().getRegressValue();
-	return damage;
+	const int offsetMin = static_cast<int>(damage * m_stats.damageOffset);
+	const int offsetMax = offsetMin * 2;
+	const int offset = offsetMax == 0 ? 0 : rand() % offsetMax;
+	const float realDamage = damage - offsetMin + offset;
+	return realDamage;
 }
 
 float Tower::actualAttackSpeed() const
@@ -375,8 +379,6 @@ bool TowersFactory::isIntersects(const sf::FloatRect &rect, const sf::Vector2f &
 	return false;
 }
 
-const int PowerTower::COST_OFFSET = 10;
-
 BaseTower::BaseTower(const sf::Vector2f &pos)
 	: ProjectilesTower(GAME_TEXTURE::TOWER_BASE, pos, Balance::Instance().getTowerStats(BASE))
 {
@@ -485,7 +487,9 @@ void PowerTower::updateGain()
 void PowerTower::upgrade()
 {
 	m_gain *= 1 + Balance::Instance().getTowerUpgradeGain();
+	const float as = m_stats.attackSpeed;
 	Tower::upgrade();
+	m_stats.attackSpeed -= (m_stats.attackSpeed - as) * Balance::Instance().getTowerUpgradeGain();
 	switch (level())
 	{
 	case 1:
@@ -548,10 +552,10 @@ void PowerTower::activateBlast()
 			switch (enemy->size.x)
 			{
 			case 96:
-				modifier /= 2;
+				modifier *= 3;
 				break;
 			case 192:
-				modifier /= 5;
+				modifier *= 1.5f;
 				break;
 			default:
 				break;
@@ -617,7 +621,7 @@ void RocketTower::projectileAction(Enemy *enemy)
 		const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
 		if (r <= zeroGround)
 		{
-			const float actualDamage = r/zeroGround * m_stats.damage;
+			const float actualDamage = (1 - r/zeroGround) * m_stats.damage;
 			levelEnemy->hit(actualDamage);
 			checkKill(levelEnemy);
 			if(level() == ABILITY_LEVEL)
