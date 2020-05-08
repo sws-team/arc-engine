@@ -11,14 +11,14 @@
 
 const std::map<int, std::vector<Instructions::STATES> > Instructions::INSTRUCTIONS =
 {
-	{0, { WELCOME, MONEY, HEALTH, PROGRESS, INSTRUCTION_TOWER_ENERGY, INSTRUCTION_TOWER_BASE, INSTRUCTION_BOMB, GOOD_LUCK } },
-	{1, { INSTRUCTION_TOWER_FREEZE, INSTRUCTION_FREEZE_BOMB} },
-	{2, { INSTRUCTION_TOWER_ROCKET, INSTRUCTION_ACID } },
-	{3, { INSTRUCTION_TOWER_LASER } },
-	{4, { INSTRUCTION_INCREASE_DAMAGE, INSTRUCTION_INCREASE_ATTACK_SPEED, MAP_SMOKE } },
-	{5, { INSTRUCTION_TOWER_IMPROVED, INSTRUCTION_STOP, MAP_REGRESS} },
-	{6, { MAP_DRAIN} },
-	{7, { MAP_EXPLOSION} },
+	{1, { WELCOME, MONEY, HEALTH, PROGRESS, INSTRUCTION_TOWER_ENERGY, INSTRUCTION_TOWER_BASE, INSTRUCTION_BOMB, GOOD_LUCK } },
+	{2, { INSTRUCTION_TOWER_FREEZE, INSTRUCTION_FREEZE_BOMB} },
+	{3, { INSTRUCTION_TOWER_ROCKET, INSTRUCTION_ACID } },
+	{4, { INSTRUCTION_TOWER_LASER } },
+	{5, { INSTRUCTION_INCREASE_DAMAGE, INSTRUCTION_INCREASE_ATTACK_SPEED, MAP_SMOKE } },
+	{6, { INSTRUCTION_TOWER_IMPROVED, INSTRUCTION_STOP, MAP_REGRESS} },
+	{7, { MAP_DRAIN} },
+	{8, { MAP_EXPLOSION} },
 };
 
 Instructions::Instructions() :
@@ -90,7 +90,8 @@ void Instructions::init(const unsigned int level)
 	character.setPosition(Engine::Instance().settingsManager()->getResolution().x - character.getGlobalBounds().width,
 						  Engine::Instance().options<GameOptions>()->panel()->getBottomValue() - character.getGlobalBounds().height);
 	active = true;
-	if (level < Instructions::INSTRUCTIONS.size())
+	states.clear();
+	if (Instructions::INSTRUCTIONS.find(level) != Instructions::INSTRUCTIONS.end())
 		states = INSTRUCTIONS.at(level);
 	currentState = 0;
 	updateState();

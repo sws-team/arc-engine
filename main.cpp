@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
 	Engine::Instance().options<GameOptions>()->loadAchievements();
 	GamePlatform::Instance().requestStats();
 	Engine::Instance().fontManager()->setFontModifier(0.75f);
+	Engine::Instance().options<GameOptions>()->setDev(std::string(lpCmdLine) == std::string("-dev"));
 
 	MainWindow w;
 	Engine::Instance().options<GameOptions>()->setMainWindow(&w);

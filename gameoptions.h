@@ -40,7 +40,6 @@ public:
 	unsigned int missionsCount() const;
 	unsigned int getMission() const;
 	void setMission(unsigned int mission);
-	Map *getMap(unsigned int mission);
 
 	void save();
 	void load();
@@ -69,6 +68,7 @@ public:
 	void setFastSpeed();
 	void setExtraFastSpeed();
 
+	Map *findMapByNumber(unsigned int num);
 
 	void setEasyDifficult();
 	void setNormalDifficult();
@@ -87,6 +87,9 @@ public:
 	static const sf::Color primaryColor;
 	static const sf::Color secondaryColor;
 
+	bool getDev() const;
+	void setDev(bool dev);
+
 private:
 	Camera *m_camera;
 	GameCursor *m_cursor;
@@ -99,7 +102,6 @@ private:
 	std::vector<Map*> maps;
 	unsigned int m_mission;
 
-	Map *findMapByNumber(unsigned int num);
 	bool loadMap(int id);
 	bool loadTiles();
 
@@ -108,6 +110,7 @@ private:
 	float m_gameSpeed;
 	void setSpeed(float speed);
 	float m_difficult;
+	bool m_dev;
 };
 
 #endif // GAMEOPTIONS_H

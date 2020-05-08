@@ -986,7 +986,7 @@ void GamePanel::initMission(unsigned int n)
 
 	switch (n)
 	{
-	case 0:
+	case 1:
 		iconsAvaliable.isRocketEnabled = false;
 		iconsAvaliable.isFreezeEnabled = false;
 		iconsAvaliable.isLaserEnabled = false;
@@ -997,7 +997,7 @@ void GamePanel::initMission(unsigned int n)
 		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
 		iconsAvaliable.isAbilityStopEnabled = false;
 		break;
-	case 1:
+	case 2:
 		iconsAvaliable.isRocketEnabled = false;
 		iconsAvaliable.isLaserEnabled = false;
 		iconsAvaliable.isImprovedEnabled = false;
@@ -1006,20 +1006,20 @@ void GamePanel::initMission(unsigned int n)
 		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
 		iconsAvaliable.isAbilityStopEnabled = false;
 		break;
-	case 2:
+	case 3:
 		iconsAvaliable.isLaserEnabled = false;
 		iconsAvaliable.isImprovedEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
 		iconsAvaliable.isAbilityStopEnabled = false;
 		break;
-	case 3:
+	case 4:
 		iconsAvaliable.isImprovedEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerDamageEnabled = false;
 		iconsAvaliable.isAbilityIncreaseTowerAttackSpeedEnabled = false;
 		iconsAvaliable.isAbilityStopEnabled = false;
 		break;
-	case 4:
+	case 5:
 		iconsAvaliable.isImprovedEnabled = false;
 		iconsAvaliable.isAbilityStopEnabled = false;
 		break;

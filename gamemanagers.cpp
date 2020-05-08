@@ -397,6 +397,8 @@ void GameManagers::loadResources()
 			else if (resource.name == "tiles")
 				addFile(GAME_FILES::TILES, out);
 #ifndef LOAD_MAPS
+			else if (resource.name == "mission0")
+				addFile(GAME_FILES::TEST_MISSION, out);
 			else if (resource.name == "mission1")
 				addFile(GAME_FILES::MISSON_1, out);
 			else if (resource.name == "mission2")

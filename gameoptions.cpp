@@ -49,6 +49,7 @@ GameOptions::GameOptions() :
   ,m_mission(0)
   ,m_gameSpeed(1)
   ,m_difficult(1)
+  ,m_dev(false)
 {
 	reset();
 }
@@ -71,11 +72,6 @@ unsigned int GameOptions::getMission() const
 void GameOptions::setMission(unsigned int mission)
 {
 	m_mission = mission;
-}
-
-Map *GameOptions::getMap(unsigned int mission)
-{
-	return findMapByNumber(mission + 1);
 }
 
 void GameOptions::save()
@@ -283,7 +279,11 @@ void GameOptions::reset()
 
 unsigned int GameOptions::missionsCount() const
 {
-	return maps.size();
+#ifdef DEMO_VERSION
+	return 2;
+#else
+	return maps.size() - 1;
+#endif
 }
 
 bool GameOptions::loadMap(int id)
@@ -311,7 +311,13 @@ bool GameOptions::loadMap(int id)
 
 	gameMap->width = atoi(mapElement->Attribute("width"));
 	gameMap->height = atoi(mapElement->Attribute("height"));
-	gameMap->stats = Balance::Instance().getMapStats(id);
+	if (id == GAME_FILES::TEST_MISSION)
+	{
+		gameMap->stats.life = 1;
+		gameMap->stats.money = 9999;
+	}
+	else
+		gameMap->stats = Balance::Instance().getMapStats(id);
 	const int firstTileID = 1;
 
 	const int columns = tilesetImage.getSize().x / MAP_CELL_SIZE;
@@ -602,6 +608,16 @@ void GameOptions::setSpeed(float speed)
 	m_gameSpeed = speed;
 }
 
+bool GameOptions::getDev() const
+{
+	return m_dev;
+}
+
+void GameOptions::setDev(bool dev)
+{
+	m_dev = dev;
+}
+
 void GameOptions::loadMaps()
 {
 	maps.clear();
@@ -611,7 +627,8 @@ void GameOptions::loadMaps()
 		return;
 	}
 
-	const std::list<GAME_FILES::FILE_ID> missions = {
+	const std::list<GAME_FILES::FILE_ID> missions =
+	{
 		GAME_FILES::MISSON_1,
 		GAME_FILES::MISSON_2,
 		GAME_FILES::MISSON_3,
@@ -626,8 +643,10 @@ void GameOptions::loadMaps()
 		GAME_FILES::MISSON_12,
 		GAME_FILES::MISSON_13,
 		GAME_FILES::MISSON_14,
-		GAME_FILES::MISSON_15
+		GAME_FILES::MISSON_15,
+		GAME_FILES::TEST_MISSION
 	};
+
 	for(const GAME_FILES::FILE_ID& mission : missions)
 		loadMap(mission);
 }

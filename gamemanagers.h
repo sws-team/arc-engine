@@ -387,7 +387,7 @@ namespace GAME_FILES {
 
 enum FILE_ID
 {
-	TILES,
+	TEST_MISSION,
 	MISSON_1 = 1,
 	MISSON_2,
 	MISSON_3,
@@ -403,7 +403,8 @@ enum FILE_ID
 	MISSON_13,
 	MISSON_14,
 	MISSON_15,
-	BALANCE
+	BALANCE,
+	TILES,
 };
 
 }

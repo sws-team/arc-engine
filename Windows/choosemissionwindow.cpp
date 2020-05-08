@@ -91,12 +91,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 	const unsigned int maxCompletedLevel = Engine::Instance().options<GameOptions>()->maxCompletedLevel();
 	const bool hasCompletedMissions = !Engine::Instance().options<GameOptions>()->getCompletedMissions().empty();
 	TextureType textureType = GAME_TEXTURE::MAP_ICON_MISSION_1;
-	const unsigned int missionsCount =
-#ifdef DEMO_VERSION
-			2;
-#else
-	Engine::Instance().options<GameOptions>()->missionsCount();
-#endif
+	const unsigned int missionsCount = Engine::Instance().options<GameOptions>()->missionsCount();
 	for (unsigned int i = 0; i < missionsCount; ++i)
 	{
 		if (i % COLUMN_COUNT == 0 && i != 0)
@@ -221,9 +216,7 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 		for (unsigned int mission = 0; mission < missions.size(); ++mission)
 			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
 			{
-#ifndef TEST_WAVES
 				if (missions.at(mission).enabled)
-#endif
 				{
 					Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
 					accept(mission);
@@ -315,6 +308,12 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 				return;
 			}
 			break;
+		case sf::Keyboard::Tab:
+		{
+			if (Engine::Instance().options<GameOptions>()->getDev())
+				accept(-1);
+		}
+			break;
 		default:
 			break;
 		}
@@ -362,7 +361,7 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 
 void ChooseMissionWindow::accept(unsigned int num)
 {
-	Engine::Instance().options<GameOptions>()->setMission(num);
+	Engine::Instance().options<GameOptions>()->setMission(num + 1);
 	Engine::Instance().stateManager()->setState(GameStateManager::IN_GAME);
 }
 

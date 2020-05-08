@@ -169,35 +169,43 @@ void Level::update()
 
 void Level::startMission(const unsigned int n)
 {
+	int mapNumber = n - 1;
 	Engine::Instance().options<GameOptions>()->instructions()->init(n);
 	spawnTimer.reset();
 	currentWave = 0;
 	Engine::Instance().options<GameOptions>()->panel()->updateWaveText();
 	m_state = WAIT_READY;
-#ifdef TEST_WAVES
-	const int _testWavesCount = 3;
-	const int _testEnemiesCount = 15;
-	const int _testInterval = 2000;
-
-	Wave wave;
-	wave.protection = 0.f;
-	wave.respawnTime = _testInterval;
-	for (int i = 0; i < _testEnemiesCount; ++i)
+	std::string showLevelText;
+	if (n == 0)
 	{
-//		wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
-//		wave.spawnEnemies.push_back(ENEMY_TYPES::BIG_SLOW);
-		wave.spawnEnemies.push_back(ENEMY_TYPES::WAR_VEHICLE);
-//		wave.spawnEnemies.push_back(ENEMY_TYPES::SPIDER);
-	}
-	for (int i = 0; i < _testWavesCount; ++i)
-		waves.push_back(wave);
+		const int _testWavesCount = 100;
+		const int _testEnemiesCount = 100;
+		const int _testInterval = 2000;
 
-#else
-	waves = Balance::Instance().getWave(n);
-#endif
-	gameMap = Engine::Instance().options<GameOptions>()->getMap(n);
-	Engine::Instance().options<GameOptions>()->panel()->setMapSize(sf::Vector2f(gameMap->width * GameOptions::MAP_CELL_SIZE,
-													gameMap->height * GameOptions::MAP_CELL_SIZE));
+		Wave wave;
+		wave.protection = 0.f;
+		wave.respawnTime = _testInterval;
+		for (int i = 0; i < _testEnemiesCount; ++i)
+		{
+	//		wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
+	//		wave.spawnEnemies.push_back(ENEMY_TYPES::BIG_SLOW);
+//			wave.spawnEnemies.push_back(ENEMY_TYPES::WAR_VEHICLE);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::MECHSPIDER);
+		}
+		for (int i = 0; i < _testWavesCount; ++i)
+			waves.push_back(wave);
+		showLevelText = std::string("test");
+	}
+	else
+	{
+		waves = Balance::Instance().getWave(mapNumber);
+		showLevelText = std::to_string(n);
+	}
+
+	gameMap = Engine::Instance().options<GameOptions>()->findMapByNumber(n);
+	Engine::Instance().options<GameOptions>()->panel()->setMapSize(
+				sf::Vector2f(gameMap->width * GameOptions::MAP_CELL_SIZE,
+							 gameMap->height * GameOptions::MAP_CELL_SIZE));
 
 	Engine::Instance().options<GameOptions>()->panel()->setProgressMax(currentProgress());
 	life = gameMap->stats.life;
@@ -277,7 +285,7 @@ void Level::startMission(const unsigned int n)
 		}
 	}
 
-	GamePlatform::Instance().setPlatformState("lvl", std::to_string(n + 1));
+	GamePlatform::Instance().setPlatformState("lvl", showLevelText);
 	GamePlatform::Instance().setPlatformState("steam_display", "#Status");
 }
 
