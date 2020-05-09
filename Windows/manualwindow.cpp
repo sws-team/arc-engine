@@ -9,6 +9,7 @@
 #include "Game/gameability.h"
 #include "mainwindow.h"
 #include "Game/instructions.h"
+#include "Game/gamepanel.h"
 
 const sf::Color ManualWindow::SELECTED_COLOR = sf::Color(45, 45, 45, 96);
 
@@ -632,25 +633,7 @@ void ManualWindow::Element::update()
 		frameSize = sf::Vector2i(192, 192);
 		icon.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 		icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
-
 		descriptionStr += Instructions::towerInfoText(towerType);
-		descriptionStr += EngineDefs::endline;
-
-		const TowerStats towerStats = Balance::Instance().getTowerStats(towerType);
-		const float dps = towerStats.damage / ((towerStats.attackSpeed) * 0.001f);
-
-		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND) + EngineDefs::separator + GlobalVariables::to_string_with_precision(dps, 2);
-		descriptionStr += EngineDefs::endline;
-
-		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::RADIUS) + EngineDefs::separator +
-				GlobalVariables::to_string_with_precision(towerStats.radius, 1);
-		descriptionStr += EngineDefs::endline;
-
-		const float cost = towerStats.cost;
-
-		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COST);
-		descriptionStr += EngineDefs::separator;
-		descriptionStr += GlobalVariables::to_string_with_precision(cost, 2);
 	}
 		break;
 	case Element::E_Ability:

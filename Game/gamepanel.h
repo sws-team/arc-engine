@@ -71,6 +71,7 @@ public:
 
 	bool clickOnMiniMap(const sf::Vector2f& pos);
 
+	sf::String towerStatsStr(TOWER_TYPES type, Tower *tower) const;
 private:
 	sf::Sprite m_sprite;
 	sf::RenderTexture rTexture;
@@ -167,7 +168,6 @@ private:
 
 	unsigned int currentCursorPos;
 	void updateCurrentCursor();
-	static const sf::String endline;
 	sf::Text waveText;
 
 	LifeBar *life;

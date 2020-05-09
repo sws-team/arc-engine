@@ -220,6 +220,8 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type)
 	}
 		break;
 	}
+	str += EngineDefs::endline;
+	str += Engine::Instance().options<GameOptions>()->panel()->towerStatsStr(type, nullptr);
 	return str;
 }
 

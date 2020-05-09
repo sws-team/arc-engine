@@ -27,7 +27,6 @@ TowerStats::TowerStats(float damage,
 
 Balance::Balance() :
 	towerUpgradeGain(0.25f)
-  ,energyGain(10.f)
   ,powerTowerCostOffset(10.f)
   ,blastCells(6.f)
   ,blastCount(5)
@@ -231,7 +230,6 @@ void Balance::loadLimits(const Json::Value &jsonLimits)
 void Balance::loadOthers(const Json::Value &jsonOthers)
 {
 	towerUpgradeGain = jsonOthers[BalanceDef::UPGRADE_GAIN_KEY].asFloat();
-	energyGain = jsonOthers[BalanceDef::ENERGY_GAIN_KEY].asFloat();
 	powerTowerCostOffset = jsonOthers[BalanceDef::POWER_TOWER_COST_OFFSET_KEY].asFloat();
 	blastCells = jsonOthers[BalanceDef::BLAST_CELLS_KEY].asFloat();
 	blastCount = jsonOthers[BalanceDef::BLAST_COUNT_KEY].asInt();
@@ -402,11 +400,6 @@ int Balance::getTowerLimit(const TOWER_TYPES type) const
 float Balance::getTowerUpgradeGain() const
 {
 	return towerUpgradeGain;
-}
-
-float Balance::getEnergyGain() const
-{
-	return energyGain;
 }
 
 float Balance::getPowerTowerCostOffset() const

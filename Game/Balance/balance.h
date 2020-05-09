@@ -94,7 +94,6 @@ public:
 
 	//other
 	float getTowerUpgradeGain() const;
-	float getEnergyGain() const;
 	float getPowerTowerCostOffset() const;
 	float getBlastCells() const;
 	int getBlastCount() const;
@@ -171,7 +170,6 @@ private:
 
 	//others
 	float towerUpgradeGain;
-	float energyGain;
 	float powerTowerCostOffset;
 	float blastCells;
 	int blastCount;

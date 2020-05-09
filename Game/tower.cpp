@@ -80,9 +80,10 @@ void Tower::upgrade()
 	currentFrame = 0;
 	row++;
 
-	m_stats.cost *= 1 + Balance::Instance().getTowerUpgradeGain();
-	m_stats.damage *= 1 + Balance::Instance().getTowerUpgradeGain();
-	m_stats.radius *= 1 + Balance::Instance().getTowerUpgradeGain();
+	const float k = 1 + Balance::Instance().getTowerUpgradeGain();
+	m_stats.cost *= k;
+	m_stats.damage *= k;
+	m_stats.radius *= k;
 	m_stats.attackSpeed *= 1 - Balance::Instance().getTowerUpgradeGain();
 
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::UPGRADE, this->pos(),
@@ -177,9 +178,10 @@ void Tower::levelDown()
 	currentFrame = 0;
 	row--;
 
-	m_stats.cost /= 1 + Balance::Instance().getTowerUpgradeGain();
-	m_stats.damage /= 1 + Balance::Instance().getTowerUpgradeGain();
-	m_stats.radius /= 1 + Balance::Instance().getTowerUpgradeGain();
+	const float k = 1 + Balance::Instance().getTowerUpgradeGain();
+	m_stats.cost /= k;
+	m_stats.damage /= k;
+	m_stats.radius /= k;
 	m_stats.attackSpeed /= 1 - Balance::Instance().getTowerUpgradeGain();
 
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::DOWNGRADE, this->pos(),
@@ -432,8 +434,6 @@ PowerTower::PowerTower(const sf::Vector2f &pos)
 							   m_stats.radius * Engine::Instance().options<GameOptions>()->mapTileSize().y));
 	powerRect.setFillColor(POWER_TOWER_AREA_COLOR);
 	powerRect.setPosition(pos - Engine::Instance().options<GameOptions>()->tileSize());
-	m_gain = Balance::Instance().getEnergyGain();
-
 	TowersCounter::Instance().powerTowerCount++;
 }
 
@@ -463,11 +463,6 @@ void PowerTower::setHighlighted(bool isHighlighted)
 	m_isHighlighted = isHighlighted;
 }
 
-float PowerTower::gain() const
-{
-	return m_gain;
-}
-
 void PowerTower::updateGain()
 {
 	gainCount++;
@@ -486,24 +481,11 @@ void PowerTower::updateGain()
 
 void PowerTower::upgrade()
 {
-	m_gain *= 1 + Balance::Instance().getTowerUpgradeGain();
 	const float as = m_stats.attackSpeed;
 	Tower::upgrade();
 	m_stats.attackSpeed -= (m_stats.attackSpeed - as) * Balance::Instance().getTowerUpgradeGain();
-	switch (level())
-	{
-	case 1:
-		m_stats.radius = m_stats.radius;
-		break;
-	case 2:
-		m_stats.radius = 10;
-		break;
-	case 3:
-		m_stats.radius = 14;
-		break;
-	default:
-		break;
-	}
+	m_stats.attackSpeed = getAttackSpeed(level());
+	m_stats.radius = getRadius(level());
 	upgradePowerRect();
 	if (level() == ABILITY_LEVEL)
 	{
@@ -517,6 +499,46 @@ void PowerTower::upgrade()
 										 LifeBar::LIFE_BAR_HEIGHT * Engine::Instance().settingsManager()->getScaleFactor().y));
 		abilityProgress->setValue(0);
 	}
+}
+
+void PowerTower::levelDown()
+{
+	if (abilityProgress != nullptr)
+	{
+		delete abilityProgress;
+		abilityProgress = nullptr;
+	}
+	Tower::levelDown();
+	m_stats.radius = getRadius(level());
+	m_stats.attackSpeed = getAttackSpeed(level());
+	upgradePowerRect();
+}
+
+float PowerTower::getRadius(int level)
+{
+	switch (level)
+	{
+	case 2:
+		return 10;
+	case 3:
+		return 14;
+	default:
+		return Balance::Instance().getTowerStats(POWER).attackSpeed;
+		break;
+	}
+}
+
+float PowerTower::getAttackSpeed(int level)
+{
+	const float tower_as = Balance::Instance().getTowerStats(POWER).attackSpeed;
+	float as = tower_as;
+	as *= Balance::Instance().getTowerUpgradeGain();
+	as *= 0.75f;
+	const float k = (level - 1) * 0.5f;
+	as *= k;
+	const float result = tower_as - as;
+	watch(result);
+	return result;
 }
 
 sf::FloatRect PowerTower::getValidArea() const

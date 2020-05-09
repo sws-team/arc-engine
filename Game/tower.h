@@ -180,18 +180,19 @@ public:
 	bool hasEnergy();
 	void setHighlighted(bool isHighlighted);
 
-	float gain() const;
 	void updateGain();
 
 	void upgrade() override;
+	void levelDown() override;
+
+	static float getRadius(int level);
+	static float getAttackSpeed(int level);
 
 	sf::FloatRect getValidArea() const;
 
 	static const sf::Color POWER_TOWER_AREA_COLOR;
 private:
 	bool m_isHighlighted;
-	float m_gain;
-
 	sf::RectangleShape powerRect;
 	void upgradePowerRect();
 

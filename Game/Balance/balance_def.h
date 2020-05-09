@@ -74,7 +74,6 @@ const std::string IMPROVED_LIMIT_KEY = "improved_max";
 
 //others
 const std::string UPGRADE_GAIN_KEY = "upgrade_gain";
-const std::string ENERGY_GAIN_KEY = "energy_gain";
 const std::string POWER_TOWER_COST_OFFSET_KEY = "power_tower_cost_offset";
 const std::string BLAST_CELLS_KEY = "blast_cells";
 const std::string BLAST_COUNT_KEY = "blast_count";

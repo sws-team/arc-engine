@@ -121,7 +121,7 @@ void Level::update()
 				PowerTower *powerTower = static_cast<PowerTower*>(tower);
 				if (powerTower->hasEnergy())
 				{
-					const float gain = powerTower->gain() * Engine::Instance().options<GameOptions>()->difficult();
+					const float gain = powerTower->actualDamage(DEFAULT_ARMOR) * Engine::Instance().options<GameOptions>()->difficult();
 					money += gain;
 					powerTower->updateGain();
 
