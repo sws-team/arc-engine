@@ -70,7 +70,7 @@ private:
 	sf::Text text;
 	sf::RectangleShape targetRect;
 
-	constexpr static int INSTRUCTIONS_OFFSET = 350;
+	constexpr static int INSTRUCTIONS_OFFSET = 400;
 
 	sf::Sprite character;
 	sf::RectangleShape bottom;
@@ -91,6 +91,8 @@ private:
 	static constexpr float RECT_OFFSET = 5;
 	static constexpr float RUBRIC_OFFSET = 16;
 	sf::Text skipText;
+	sf::RectangleShape demoRect;
+	GameObject *demoObject;
 };
 
 #endif // INSTRUCTIONS_H

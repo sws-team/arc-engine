@@ -178,8 +178,8 @@ void Level::startMission(const unsigned int n)
 	std::string showLevelText;
 	if (n == 0)
 	{
-		const int _testWavesCount = 100;
-		const int _testEnemiesCount = 100;
+		const int _testWavesCount = 999;
+		const int _testEnemiesCount = 999;
 		const int _testInterval = 2000;
 
 		Wave wave;
@@ -187,10 +187,12 @@ void Level::startMission(const unsigned int n)
 		wave.respawnTime = _testInterval;
 		for (int i = 0; i < _testEnemiesCount; ++i)
 		{
-	//		wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
-	//		wave.spawnEnemies.push_back(ENEMY_TYPES::BIG_SLOW);
-//			wave.spawnEnemies.push_back(ENEMY_TYPES::WAR_VEHICLE);
-			wave.spawnEnemies.push_back(ENEMY_TYPES::MECHSPIDER);
+#if 1
+			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
+				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
+#else
+			wave.spawnEnemies.push_back(ENEMY_TYPES::TRICYCLE);
+#endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
 			waves.push_back(wave);

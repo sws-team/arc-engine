@@ -542,8 +542,10 @@ void GameManagers::loadExtraResources()
 
 		if (resource.type == GameResource::TEXTURE)
 		{
-//			if (resource.name == "")
-//				addTexture(GAME_TEXTURE::SHOW_BASE_TOWER_ABILITY, out);
+			if (resource.name == "show_bomb_ability")
+				addTexture(GAME_TEXTURE::SHOW_BOMB_ABILITY, out);
+			else if (resource.name == "show_freeze_bomb_ability")
+				addTexture(GAME_TEXTURE::SHOW_FREEZE_BOMB_ABILITY, out);
 		}
 	}
 }

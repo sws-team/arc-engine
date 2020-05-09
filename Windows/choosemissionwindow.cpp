@@ -25,6 +25,8 @@ ChooseMissionWindow::ChooseMissionWindow()
 #ifdef WITH_DIFFICULT
 	initDifficults();
 #endif
+	const unsigned int missionsCount = Engine::Instance().options<GameOptions>()->missionsCount();
+	const int rowCount = static_cast<int>(ceil(static_cast<float>(missionsCount) / COLUMN_COUNT));
 	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 	const float rectSizeX = 240 * scaleFactor.x;
 	const float rectSizeY = 135 * scaleFactor.y;
@@ -33,15 +35,19 @@ ChooseMissionWindow::ChooseMissionWindow()
 	const float offsetX = 42 * scaleFactor.x;
 	const float iconSizeX = 30 * scaleFactor.x;
 	const float iconSizeY = 30 * scaleFactor.y;
-	const float topOffset =  64 * scaleFactor.y;
 	const float starOffsetX = 15 * scaleFactor.x;
 	const float starOffsetY = 10 * scaleFactor.y;
 
 	chooseRect.setSize(sf::Vector2f(rectSizeX, rectSizeY + iconSizeY + starOffsetY));
-	const float left = scaleFactor.x * (Engine::Instance().settingsManager()->getResolution().x - COLUMN_COUNT * 160 + (COLUMN_COUNT - 1) * 20) / 2;
+	const sf::Vector2f areaSize =
+			sf::Vector2f(COLUMN_COUNT * (rectSizeX + frameRectOffsetX * 2),
+				rowCount * (rectSizeY + iconSizeY + starOffsetY + frameRectOffsetY * 2));
+
+	const float left = (Engine::Instance().settingsManager()->getResolution().x - areaSize.x) / 2;
+	const float top = (Engine::Instance().settingsManager()->getResolution().y - areaSize.y) / 2;
 
 	float x = left;
-	float y = topOffset;
+	float y = top;
 #ifdef WITH_DIFFICULT
 	const float difficultHeight = 60;
 	const sf::Vector2f difficultSize = sf::Vector2f(rectSizeX * COLUMN_COUNT + offsetX * (COLUMN_COUNT - 1),
@@ -84,14 +90,10 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 	y += difficultHeight;
 	y += difficultOffsetY;
-#else
-	y += 64 * scaleFactor.y;
 #endif
-	y += topOffset;
 	const unsigned int maxCompletedLevel = Engine::Instance().options<GameOptions>()->maxCompletedLevel();
 	const bool hasCompletedMissions = !Engine::Instance().options<GameOptions>()->getCompletedMissions().empty();
 	TextureType textureType = GAME_TEXTURE::MAP_ICON_MISSION_1;
-	const unsigned int missionsCount = Engine::Instance().options<GameOptions>()->missionsCount();
 	for (unsigned int i = 0; i < missionsCount; ++i)
 	{
 		if (i % COLUMN_COUNT == 0 && i != 0)

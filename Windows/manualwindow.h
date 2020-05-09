@@ -38,23 +38,27 @@ private:
 				TranslationType name,
 				const EnemiesFactory::EnemyInfo& info,
 				int frameCount,
-				float animationSpeed);
+				float animationSpeed,
+				TextureType demoTextureType = -1);
 
 		Element(TextureType texture,
 				TranslationType name,
-				ACTION_STATE type);
+				ACTION_STATE type,
+				TextureType demoTextureType = -1);
 
 		Element(TextureType texture,
 				TranslationType name,
 				TOWER_TYPES towerType,
 				int frameCount,
-				float animationSpeed);
+				float animationSpeed,
+				TextureType demoTextureType = -1);
 
 		Element(TextureType texture,
 				TranslationType name,
 				Instructions::MAP_EFFECTS type,
 				int frameCount,
-				float animationSpeed);
+				float animationSpeed,
+				TextureType demoTextureType = -1);
 
 		TextureType texture;
 		TranslationType name;
@@ -73,11 +77,12 @@ private:
 		sf::Text nameText;
 		int frameCount;
 		float animationSpeed;
+		TextureType demoTextureType;
 
 		void init();
 		void update();
 
-//		GameObject *elementDemo;
+		GameObject *elementDemo;
 	};
 
 	std::vector<Element> elements;

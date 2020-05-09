@@ -25,6 +25,7 @@ Instructions::Instructions() :
 	currentState(0)
   ,active(false)
   ,showArrow(false)
+  ,demoObject(nullptr)
 {
 	shadowRect.setSize(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x,
 									Engine::Instance().settingsManager()->getResolution().y));
@@ -83,6 +84,8 @@ Instructions::Instructions() :
 Instructions::~Instructions()
 {
 	delete arrow;
+	if (demoObject != nullptr)
+		delete demoObject;
 }
 
 void Instructions::init(const unsigned int level)
@@ -93,6 +96,11 @@ void Instructions::init(const unsigned int level)
 	states.clear();
 	if (Instructions::INSTRUCTIONS.find(level) != Instructions::INSTRUCTIONS.end())
 		states = INSTRUCTIONS.at(level);
+	if (level == 0)
+	{
+		for (int i = WELCOME; i < FINISHED; ++i)
+			states.push_back(static_cast<STATES>(i));
+	}
 	currentState = 0;
 	updateState();
 }
@@ -111,7 +119,8 @@ void Instructions::draw(sf::RenderTarget * const target)
 	target->draw(top);
 	target->draw(text);
 	target->draw(skipText);
-
+	if (demoObject != nullptr)
+		demoObject->draw(target);
 	if (showArrow)
 	{
 		target->draw(targetRect);
@@ -123,6 +132,8 @@ void Instructions::draw(sf::RenderTarget * const target)
 void Instructions::update()
 {
 	arrow->update();
+	if (demoObject != nullptr)
+		demoObject->update();
 }
 
 bool Instructions::isActive() const
@@ -331,6 +342,7 @@ void Instructions::updateState()
 		active = false;
 		return;
 	}
+	GAME_TEXTURE::TEXTURE_ID textureId = GAME_TEXTURE::FRAME;
 	arrow->sprite.setRotation(0);
 	sf::Vector2f offset = sf::Vector2f(0,0);
 	const STATES state = states.at(currentState);
@@ -434,6 +446,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_BOMB);
 		textStr += EngineDefs::endline;
 		textStr += abilityInfoText(ABILITY_BOMB);
+		textureId = GAME_TEXTURE::SHOW_BOMB_ABILITY;
 	}
 		break;
 	case INSTRUCTION_FREEZE_BOMB:
@@ -443,6 +456,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_FREEZE_BOMB);
 		textStr += EngineDefs::endline;
 		textStr += abilityInfoText(ABILITY_FREEZE_BOMB);
+		textureId = GAME_TEXTURE::SHOW_FREEZE_BOMB_ABILITY;
 	}
 		break;
 	case INSTRUCTION_ACID:
@@ -516,6 +530,18 @@ void Instructions::updateState()
 	default:
 		break;
 	}
+	if (demoObject != nullptr)
+	{
+		delete demoObject;
+		demoObject = nullptr;
+	}
+	if (textureId != GAME_TEXTURE::FRAME)
+	{
+		demoObject = new GameObject(textureId, sf::Vector2f(0,0), sf::Vector2i(320, 240), 10);
+		demoObject->animationSpeed = 50;
+		demoObject->cycled = true;
+		demoObject->rowCount = 5;
+	}
 	text.setString(textStr);
 	targetRect.setPosition(rect.left, rect.top);
 	targetRect.setSize(sf::Vector2f(rect.width, rect.height));
@@ -559,6 +585,14 @@ void Instructions::updateTextRect()
 
 	textRext.setSize(sf::Vector2f(rectSize.x - 2 * RECT_OFFSET,
 								  rectSize.y - 2 * RECT_OFFSET));
+
+	if (demoObject != nullptr)
+	{
+		const float framesOffset = 16 * Engine::Instance().settingsManager()->getScaleFactor().x;
+		const sf::Vector2f demoPosOffset = sf::Vector2f(demoObject->size.x * Engine::Instance().settingsManager()->getScaleFactor().x + framesOffset,
+														(demoObject->size.y - textHeight)/2);
+		demoObject->setPos(rectPos - demoPosOffset);
+	}
 }
 
 void Instructions::updateArrowPos(const sf::Vector2f& offset)

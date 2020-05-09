@@ -59,7 +59,8 @@ void ManualWindow::update()
 		if (id < elements.size())
 		{
 			elements.at(id).object->update();
-//			elements.at(id).elementDemo->update();
+			if (elements.at(id).elementDemo != nullptr)
+				elements.at(id).elementDemo->update();
 		}
 	}
 	StateWindow::update();
@@ -89,7 +90,8 @@ void ManualWindow::paint(sf::RenderWindow *window)
 			window->draw(elements.at(id).nameText);
 			window->draw(elements.at(id).descriptionText);
 			elements.at(id).object->draw(window);
-//			elements.at(id).elementDemo->draw(window);
+			if (elements.at(id).elementDemo != nullptr)
+				elements.at(id).elementDemo->draw(window);
 		}
 	}
 	window->draw(previous);
@@ -283,9 +285,10 @@ void ManualWindow::updatePos()
 		element.titleText.setPosition(pos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET) +
 									 sf::Vector2f(ICON_WIDTH + ICON_X_OFFSET, 0));
 
-//		element.elementDemo->setPos(sf::Vector2f(infoRect.getGlobalBounds().left,
-//												 element.descriptionText.getGlobalBounds().top +
-//												 element.descriptionText.getGlobalBounds().height));
+		if (element.elementDemo != nullptr)
+			element.elementDemo->setPos(sf::Vector2f(infoRect.getGlobalBounds().left,
+												 element.descriptionText.getGlobalBounds().top +
+												 element.descriptionText.getGlobalBounds().height));
 
 		pos.y += ICON_Y_OFFSET + RECT_HEIGHT;
 
@@ -340,11 +343,13 @@ void ManualWindow::addElements()
 	//abilities
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_BOMB,
 							   GAME_TRANSLATION::ABILITY_BOMB,
-							   ACTION_STATE::ABILITY_BOMB));
+							   ACTION_STATE::ABILITY_BOMB,
+							   GAME_TEXTURE::SHOW_BOMB_ABILITY));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_FREEZE_BOMB,
 							   GAME_TRANSLATION::ABILITY_FREEZE_BOMB,
-							   ACTION_STATE::ABILITY_FREEZE_BOMB));
+							   ACTION_STATE::ABILITY_FREEZE_BOMB,
+							   GAME_TEXTURE::SHOW_FREEZE_BOMB_ABILITY));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_ACID,
 							   GAME_TRANSLATION::ABILITY_ACID,
@@ -521,26 +526,30 @@ ManualWindow::Element::Element(TextureType texture,
 							   TranslationType name,
 							   const EnemiesFactory::EnemyInfo& info,
 							   int frameCount,
-							   float animationSpeed)
+							   float animationSpeed,
+							   TextureType demoTextureType)
 	: texture(texture)
 	,name(name)
 	,type(E_Enemy)
 	,enemyInfo(info)
 	,frameCount(frameCount)
 	,animationSpeed(animationSpeed)
+	,demoTextureType(demoTextureType)
 {
 
 }
 
 ManualWindow::Element::Element(TextureType texture,
 							   TranslationType name,
-							   ACTION_STATE type)
+							   ACTION_STATE type,
+							   TextureType demoTextureType)
 	: texture(texture)
 	,name(name)
 	,type(E_Ability)
 	,abilityType(type)
 	,frameCount(1)
 	,animationSpeed(100)
+	,demoTextureType(demoTextureType)
 {
 
 }
@@ -549,13 +558,15 @@ ManualWindow::Element::Element(TextureType texture,
 							   TranslationType name,
 							   TOWER_TYPES towerType,
 							   int frameCount,
-							   float animationSpeed)
+							   float animationSpeed,
+							   TextureType demoTextureType)
 	: texture(texture)
 	,name(name)
 	,type(E_Tower)
 	,towerType(towerType)
 	,frameCount(frameCount)
 	,animationSpeed(animationSpeed)
+	,demoTextureType(demoTextureType)
 {
 
 }
@@ -564,13 +575,15 @@ ManualWindow::Element::Element(TextureType texture,
 							   TranslationType name,
 							   Instructions::MAP_EFFECTS type,
 							   int frameCount,
-							   float animationSpeed)
+							   float animationSpeed,
+							   TextureType demoTextureType)
 	: texture(texture)
 	,name(name)
 	,type(E_Effect)
 	,effectType(type)
 	,frameCount(frameCount)
 	,animationSpeed(animationSpeed)
+	,demoTextureType(demoTextureType)
 {
 
 }
@@ -774,10 +787,15 @@ void ManualWindow::Element::update()
 	object->cycled = cycled;
 	object->rowCount = rowCount;
 
-//	elementDemo = new GameObject(GAME_TEXTURE::TEST_TEXTTURE, sf::Vector2f(0,0), sf::Vector2i(320, 240), 10);
-//	elementDemo->animationSpeed = 50;
-//	elementDemo->cycled = true;
-//	elementDemo->rowCount = 17;
+	if (demoTextureType == -1)
+		elementDemo = nullptr;
+	else
+	{
+		elementDemo = new GameObject(demoTextureType, sf::Vector2f(0,0), sf::Vector2i(320, 240), 10);
+		elementDemo->animationSpeed = 50;
+		elementDemo->cycled = true;
+		elementDemo->rowCount = 5;
+	}
 
 	nameText.setString(nameStr);
 	descriptionText.setString(descriptionStr);
