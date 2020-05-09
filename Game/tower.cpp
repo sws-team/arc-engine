@@ -81,7 +81,7 @@ void Tower::upgrade()
 	row++;
 
 	const float k = 1 + Balance::Instance().getTowerUpgradeGain();
-	m_stats.cost *= k;
+	m_stats.cost *= 1 + Balance::Instance().getTowerUpgradeGain() * Tower::UPGRADE_PRICE_MODIFIER;
 	m_stats.damage *= k;
 	m_stats.radius *= k;
 	m_stats.attackSpeed *= 1 - Balance::Instance().getTowerUpgradeGain();
@@ -179,7 +179,7 @@ void Tower::levelDown()
 	row--;
 
 	const float k = 1 + Balance::Instance().getTowerUpgradeGain();
-	m_stats.cost /= k;
+	m_stats.cost /= 1 + Balance::Instance().getTowerUpgradeGain() * Tower::UPGRADE_PRICE_MODIFIER;
 	m_stats.damage /= k;
 	m_stats.radius /= k;
 	m_stats.attackSpeed /= 1 - Balance::Instance().getTowerUpgradeGain();
@@ -481,9 +481,7 @@ void PowerTower::updateGain()
 
 void PowerTower::upgrade()
 {
-	const float as = m_stats.attackSpeed;
 	Tower::upgrade();
-	m_stats.attackSpeed -= (m_stats.attackSpeed - as) * Balance::Instance().getTowerUpgradeGain();
 	m_stats.attackSpeed = getAttackSpeed(level());
 	m_stats.radius = getRadius(level());
 	upgradePowerRect();
@@ -533,11 +531,10 @@ float PowerTower::getAttackSpeed(int level)
 	const float tower_as = Balance::Instance().getTowerStats(POWER).attackSpeed;
 	float as = tower_as;
 	as *= Balance::Instance().getTowerUpgradeGain();
-	as *= 0.75f;
-	const float k = (level - 1) * 0.5f;
+	as *= ENERGY_MODIFIER;
+	const float k = (level - 1) * ENERGY_MODIFIER;
 	as *= k;
 	const float result = tower_as - as;
-	watch(result);
 	return result;
 }
 

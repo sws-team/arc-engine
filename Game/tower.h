@@ -35,8 +35,6 @@ class TowersFactory
 public:
 	static Tower *createTower(TOWER_TYPES type, const sf::Vector2f& pos);
 	static bool isIntersects(const sf::FloatRect& rect, const sf::Vector2f& center, float radius);
-	constexpr static float UPGRADE_TO_2_COST_MODIFIER = 0.35f;
-	constexpr static float UPGRADE_TO_3_COST_MODIFIER = 0.5f;
 	static float getAnimationSpeed(TOWER_TYPES type);
 	static int getFrameCount(TOWER_TYPES type);
 };
@@ -95,6 +93,7 @@ public:
 	bool isInvulnerable() const;
 
 	virtual void levelDown();
+	static constexpr float UPGRADE_PRICE_MODIFIER = 1.5f;
 
 protected:
 	TowerStats m_stats;
@@ -191,6 +190,7 @@ public:
 	sf::FloatRect getValidArea() const;
 
 	static const sf::Color POWER_TOWER_AREA_COLOR;
+	static constexpr float ENERGY_MODIFIER = 0.75f;
 private:
 	bool m_isHighlighted;
 	sf::RectangleShape powerRect;

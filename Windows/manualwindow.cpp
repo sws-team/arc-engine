@@ -36,6 +36,10 @@ ManualWindow::ManualWindow()
 	toolTip.setFillColor(GameOptions::primaryColor);
 	toolTip.setOutlineColor(GameOptions::secondaryColor);
 
+	characterObject = new GameObject(GAME_TEXTURE::CHARACTER_FULL, sf::Vector2f(0,0), sf::Vector2i(576, 768), 5);
+	characterObject->animationSpeed = 50;
+	characterObject->setPos(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x - characterObject->getSize().x,
+										 Engine::Instance().settingsManager()->getResolution().y - characterObject->getSize().y));
 	addElements();
 	updatePos();
 	updateCurrentInfo();
@@ -64,6 +68,7 @@ void ManualWindow::update()
 				elements.at(id).elementDemo->update();
 		}
 	}
+	characterObject->update();
 	StateWindow::update();
 }
 
@@ -100,6 +105,7 @@ void ManualWindow::paint(sf::RenderWindow *window)
 	window->draw(credits);
 	window->draw(close);
 	window->draw(toolTip);
+	characterObject->draw(window);
 }
 
 void ManualWindow::eventFilter(sf::Event *event)
@@ -220,7 +226,7 @@ void ManualWindow::eventFilter(sf::Event *event)
 void ManualWindow::updatePos()
 {
 	const float ICON_WIDTH = Engine::Instance().options<GameOptions>()->tileSize().x;
-	const float RECT_WIDTH = 512 * Engine::Instance().settingsManager()->getScaleFactor().x;
+	const float RECT_WIDTH = 464 * Engine::Instance().settingsManager()->getScaleFactor().x;
 	const float RECT_HEIGHT = 128 * Engine::Instance().settingsManager()->getScaleFactor().y;
 	const float ICON_X_OFFSET = 32 * Engine::Instance().settingsManager()->getScaleFactor().x;
 	const float ICON_Y_OFFSET = 32 * Engine::Instance().settingsManager()->getScaleFactor().y;
@@ -251,7 +257,6 @@ void ManualWindow::updatePos()
 
 	toolTip.setPosition(sf::Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
 								 infoRect.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
-
 
 	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 	sf::Vector2f pos = sf::Vector2f(ICON_X_OFFSET * 2, ICON_Y_OFFSET * 2);

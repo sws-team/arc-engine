@@ -110,6 +110,7 @@ private:
 	void previousPage();
 
 	static const sf::Color SELECTED_COLOR;
+	GameObject *characterObject;
 };
 
 #endif // MANUALWINDOW_H

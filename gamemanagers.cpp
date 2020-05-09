@@ -210,6 +210,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::CHARACTER, out);
 			else if (resource.name == "frame")
 				addTexture(GAME_TEXTURE::FRAME, out);
+			else if (resource.name == "frame_demo")
+				addTexture(GAME_TEXTURE::FRAME_DEMO, out);
+			else if (resource.name == "character_full")
+				addTexture(GAME_TEXTURE::CHARACTER_FULL, out);
 			//weapons
 			else if (resource.name == "bullet")
 				addTexture(GAME_TEXTURE::BASE_PROJECTILE, out);

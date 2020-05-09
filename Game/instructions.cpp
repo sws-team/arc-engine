@@ -21,6 +21,8 @@ const std::map<int, std::vector<Instructions::STATES> > Instructions::INSTRUCTIO
 	{8, { MAP_EXPLOSION} },
 };
 
+const sf::Vector2i Instructions::demoSize = sf::Vector2i(320, 240);
+
 Instructions::Instructions() :
 	currentState(0)
   ,active(false)
@@ -79,6 +81,11 @@ Instructions::Instructions() :
 
 	arrow = new GameObject(GAME_TEXTURE::ARROW, sf::Vector2f(0,0), sf::Vector2i(64, 105), 8);
 	arrow->animationSpeed = 75;
+
+	demoRect.setSize(sf::Vector2f(demoSize.x + 2 * DEMO_FRAME_OFFSET,
+								  demoSize.y + 2 * DEMO_FRAME_OFFSET));
+	demoRect.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::FRAME_DEMO));
+	demoRect.setScale(scaleFactor);
 }
 
 Instructions::~Instructions()
@@ -120,7 +127,10 @@ void Instructions::draw(sf::RenderTarget * const target)
 	target->draw(text);
 	target->draw(skipText);
 	if (demoObject != nullptr)
+	{
 		demoObject->draw(target);
+		target->draw(demoRect);
+	}
 	if (showArrow)
 	{
 		target->draw(targetRect);
@@ -539,7 +549,7 @@ void Instructions::updateState()
 	}
 	if (textureId != GAME_TEXTURE::FRAME)
 	{
-		demoObject = new GameObject(textureId, sf::Vector2f(0,0), sf::Vector2i(320, 240), 10);
+		demoObject = new GameObject(textureId, sf::Vector2f(0,0), demoSize, 10);
 		demoObject->animationSpeed = 50;
 		demoObject->cycled = true;
 		demoObject->rowCount = 5;
@@ -590,10 +600,13 @@ void Instructions::updateTextRect()
 
 	if (demoObject != nullptr)
 	{
-		const float framesOffset = 16 * Engine::Instance().settingsManager()->getScaleFactor().x;
+		const float framesOffset = (DEMO_FRAME_OFFSET + 16) * Engine::Instance().settingsManager()->getScaleFactor().x;
 		const sf::Vector2f demoPosOffset = sf::Vector2f(demoObject->size.x * Engine::Instance().settingsManager()->getScaleFactor().x + framesOffset,
 														(demoObject->size.y - textHeight)/2);
-		demoObject->setPos(rectPos - demoPosOffset);
+		const sf::Vector2f demoPos = rectPos - demoPosOffset;
+		demoObject->setPos(demoPos);
+		demoRect.setPosition(demoPos - sf::Vector2f(DEMO_FRAME_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
+													DEMO_FRAME_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y));
 	}
 }
 

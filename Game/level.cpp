@@ -488,7 +488,7 @@ void Level::updateCurrentTower()
 	const float upgradeCost = Engine::Instance().options<GameOptions>()->panel()->getTowerUpgradeCost(m_selectedTower);
 
 	sellCostText.setString(GlobalVariables::to_string_with_precision(sellCost, 1));
-	upgradeCostText.setString(GlobalVariables::to_string_with_precision(upgradeCost, 0));
+	upgradeCostText.setString(GlobalVariables::to_string_with_precision(upgradeCost, 1));
 
 	sellCostText.setPosition(sellSprite.getPosition());
 	upgradeCostText.setPosition(upgradeSprite.getPosition());

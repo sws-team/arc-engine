@@ -510,23 +510,22 @@ float GamePanel::getTowerUpgradeCost(Tower *tower) const
 		return 0.f;
 
 	const TOWER_TYPES type = tower->type();
-	float cost = type == TOWER_TYPES::POWER ?
+	const float cost = type == TOWER_TYPES::POWER ?
 				Balance::Instance().getTowerStats(type).cost +
 				TowersCounter::Instance().powerTowerCount * Balance::Instance().getPowerTowerCostOffset() :
 				Balance::Instance().getTowerStats(type).cost;
-
-	switch (tower->level())
+	float result = 0;
+	float price = cost;
+	float lastPrice = cost;
+	const float k = 1 + Balance::Instance().getTowerUpgradeGain() * Tower::UPGRADE_PRICE_MODIFIER;
+	const int level = tower->level() + 1;
+	for (int i = 1; i < level; ++i)
 	{
-	case 1:
-		cost *= TowersFactory::UPGRADE_TO_2_COST_MODIFIER;
-		break;
-	case 2:
-		cost *= TowersFactory::UPGRADE_TO_3_COST_MODIFIER;
-		break;
-	default:
-		break;
+		price *= k;
+		result = price - lastPrice;
+		lastPrice = price;
 	}
-	return cost;
+	return result;
 }
 
 float GamePanel::getTowerSellCost(Tower *tower) const
@@ -785,11 +784,11 @@ sf::String GamePanel::towerStatsStr(TOWER_TYPES type, Tower *tower) const
 		sf::String costStr;
 		sf::String dpsStr;
 		const float k = 1 + Balance::Instance().getTowerUpgradeGain();
-		for (int level = 1; level < Tower::ABILITY_LEVEL; ++level)
+		for (int level = 1; level <= Tower::ABILITY_LEVEL; ++level)
 		{
-			const bool nolast = level != Tower::ABILITY_LEVEL - 1;
-			const float dps = damage / attackSpeed / EngineDefs::MSEC;
-			dpsStr += GlobalVariables::to_string_with_precision(dps, 2);
+			const bool nolast = level != Tower::ABILITY_LEVEL;
+			const float dps = damage / (attackSpeed * 1 / EngineDefs::MSEC);
+			dpsStr += GlobalVariables::to_string_with_precision(dps, 1);
 			if (nolast)
 				dpsStr += level_separator;
 			radiusStr += GlobalVariables::to_string_with_precision(radius, 1);
@@ -801,6 +800,7 @@ sf::String GamePanel::towerStatsStr(TOWER_TYPES type, Tower *tower) const
 
 			radius *= k;
 			damage *= k;
+			cost *= 1 + Balance::Instance().getTowerUpgradeGain() * Tower::UPGRADE_PRICE_MODIFIER;
 			attackSpeed *= 1 - Balance::Instance().getTowerUpgradeGain();
 
 			if (type == POWER)
@@ -826,7 +826,7 @@ sf::String GamePanel::towerStatsStr(TOWER_TYPES type, Tower *tower) const
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LEVEL)
 				+ EngineDefs::separator + std::to_string(tower->level()) + EngineDefs::endline;
 		const TowerStats towerStats = tower->data();
-		const float dps = towerStats.damage / tower->actualAttackSpeed() / EngineDefs::MSEC;
+		const float dps = towerStats.damage / (tower->actualAttackSpeed() * 1 / EngineDefs::MSEC);
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND) + EngineDefs::separator + GlobalVariables::to_string_with_precision(dps, 2);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::RADIUS) + EngineDefs::separator +
