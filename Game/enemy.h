@@ -36,7 +36,7 @@ public:
 	void useAbility();
 	void freeze(float k, int duration);
 	void heal(float health);
-	void protect(float shell, bool show = true);
+	void protect(float shell);
 	void setReflection(const float reflection);
 
 	sf::Vector2f enemyPos() const;

@@ -69,7 +69,6 @@ private:
 		ACTION_STATE abilityType;
 		Instructions::MAP_EFFECTS effectType;
 
-		sf::RectangleShape rect;
 		sf::Sprite icon;
 		GameObject *object;
 		sf::Text titleText;
@@ -83,6 +82,7 @@ private:
 		void update();
 
 		GameObject *elementDemo;
+		sf::RectangleShape nameFrame;
 	};
 
 	std::vector<Element> elements;
@@ -94,7 +94,6 @@ private:
 	sf::RectangleShape currentRect;
 	int current;
 	void updateCurrentInfo();
-	sf::RectangleShape infoRect;
 
 	int page;
 	static constexpr unsigned int MAX_ELEMENTS_COUNT = 6;
@@ -111,6 +110,14 @@ private:
 
 	static const sf::Color SELECTED_COLOR;
 	GameObject *characterObject;
+
+	static constexpr float FRAME_OFFSET = 21;
+
+
+	sf::RectangleShape infoFrame;
+	sf::RectangleShape textFrame;
+	sf::RectangleShape demoFrame;
+	sf::RectangleShape textureFrame;
 };
 
 #endif // MANUALWINDOW_H

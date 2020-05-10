@@ -100,8 +100,10 @@ void MainMenu::paint(sf::RenderWindow *window)
 	window->draw(gameName);
 #endif
 	window->draw(logo);
+#ifndef RELEASE_BUILD
 	window->draw(clearStats);
 	window->draw(clearSaves);
+#endif
 }
 
 #ifndef RELEASE_BUILD

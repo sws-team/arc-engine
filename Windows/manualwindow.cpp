@@ -36,10 +36,19 @@ ManualWindow::ManualWindow()
 	toolTip.setFillColor(GameOptions::primaryColor);
 	toolTip.setOutlineColor(GameOptions::secondaryColor);
 
-	characterObject = new GameObject(GAME_TEXTURE::CHARACTER_FULL, sf::Vector2f(0,0), sf::Vector2i(576, 768), 5);
-	characterObject->animationSpeed = 50;
-	characterObject->setPos(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x - characterObject->getSize().x,
+	const float charOffsetX = 4 * Engine::Instance().settingsManager()->getScaleFactor().x;
+	characterObject = new GameObject(GAME_TEXTURE::CHARACTER_FULL, sf::Vector2f(0, 0), sf::Vector2i(608, 768), 5);
+	characterObject->setPos(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x - characterObject->getSize().x + charOffsetX,
 										 Engine::Instance().settingsManager()->getResolution().y - characterObject->getSize().y));
+	characterObject->animationSpeed = 50;
+
+	textFrame.setFillColor(sf::Color(34, 53, 200, 100));
+	demoFrame.setFillColor(sf::Color(200, 53, 3, 100));
+	textureFrame.setFillColor(sf::Color(34, 53, 200, 100));
+//	textFrame.setTexture();
+//	demoFrame.setTexture();
+//	textureFrame.setTexture();
+
 	addElements();
 	updatePos();
 	updateCurrentInfo();
@@ -75,14 +84,18 @@ void ManualWindow::update()
 void ManualWindow::paint(sf::RenderWindow *window)
 {
 	drawBackground(window);
-	window->draw(infoRect);
+	window->draw(infoFrame);
+	window->draw(textFrame);
+	window->draw(demoFrame);
+	window->draw(textureFrame);
+
 	const int startValue = MAX_ELEMENTS_COUNT * page;
 	for (unsigned int i = startValue; i < startValue + MAX_ELEMENTS_COUNT; ++i)
 	{
 		if (i >= elements.size())
 			break;
 		const Element element = elements.at(i);
-		window->draw(element.rect);
+		window->draw(element.nameFrame);
 		window->draw(element.icon);
 		window->draw(element.titleText);
 	}
@@ -147,7 +160,7 @@ void ManualWindow::eventFilter(sf::Event *event)
 		{
 			if (i >= elements.size())
 				break;
-			if (elements.at(i).rect.getGlobalBounds().contains(pos))
+			if (elements.at(i).nameFrame.getGlobalBounds().contains(pos))
 			{
 				Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 				current = i - startValue;
@@ -225,40 +238,64 @@ void ManualWindow::eventFilter(sf::Event *event)
 
 void ManualWindow::updatePos()
 {
+	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
+
 	const float ICON_WIDTH = Engine::Instance().options<GameOptions>()->tileSize().x;
-	const float RECT_WIDTH = 464 * Engine::Instance().settingsManager()->getScaleFactor().x;
+	const float RECT_WIDTH = 384 * Engine::Instance().settingsManager()->getScaleFactor().x;
 	const float RECT_HEIGHT = 128 * Engine::Instance().settingsManager()->getScaleFactor().y;
-	const float ICON_X_OFFSET = 32 * Engine::Instance().settingsManager()->getScaleFactor().x;
-	const float ICON_Y_OFFSET = 32 * Engine::Instance().settingsManager()->getScaleFactor().y;
+
+
+	const float ICON_X_OFFSET = 32 * scaleFactor.x;
+	const float ICON_Y_OFFSET = 32 * scaleFactor.y;
+
+	const sf::Vector2f textureFrameSize = sf::Vector2f(384 * scaleFactor.x,
+													   384 * scaleFactor.y);
+	const sf::Vector2f demoFrameSize = sf::Vector2f(320 * scaleFactor.x,
+													240 * scaleFactor.y);
+	const sf::Vector2f textFrameSize = sf::Vector2f(960 * scaleFactor.x,
+													448 * scaleFactor.y);
+	const sf::Vector2f infoFrameSize = sf::Vector2f(1024 * scaleFactor.x,
+													928 * scaleFactor.y);
+
+
+	textureFrame.setSize(textureFrameSize);
+	demoFrame.setSize(demoFrameSize);
+	textFrame.setSize(textFrameSize);
+
+	const sf::Vector2f infoRectPos = sf::Vector2f(ICON_X_OFFSET * 3 + RECT_WIDTH, ICON_Y_OFFSET * 2);
+	textureFrame.setPosition(infoRectPos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
+	demoFrame.setPosition(infoRectPos + sf::Vector2f(ICON_X_OFFSET * 2 + textureFrameSize.x,
+							  demoFrameSize.y/2 - textureFrame.getPosition().y/2));
+	textFrame.setPosition(infoRectPos + sf::Vector2f(ICON_X_OFFSET,
+							  ICON_Y_OFFSET * 2 + textureFrameSize.y));
+
 
 	currentRect.setFillColor(SELECTED_COLOR);
 	currentRect.setSize(sf::Vector2f(RECT_WIDTH, RECT_HEIGHT));
 	currentRect.setOutlineThickness(1);
 	currentRect.setOutlineColor(sf::Color::Black);
 
-	infoRect.setFillColor(sf::Color(45, 45, 45, 128));
-	infoRect.setSize(sf::Vector2f(RECT_WIDTH * 2,
-							  RECT_HEIGHT * MAX_ELEMENTS_COUNT + ICON_Y_OFFSET * (MAX_ELEMENTS_COUNT - 1)));
-	infoRect.setOutlineThickness(1);
-	infoRect.setOutlineColor(sf::Color::Black);
-	infoRect.setPosition(ICON_X_OFFSET * 3 + RECT_WIDTH, ICON_Y_OFFSET * 2);
+	infoFrame.setFillColor(sf::Color(45, 45, 45, 128));
+	infoFrame.setSize(infoFrameSize);
+	infoFrame.setOutlineThickness(1);
+	infoFrame.setOutlineColor(sf::Color::Black);
+	infoFrame.setPosition(infoRectPos);
 
-	previous.setPosition(sf::Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
-							  infoRect.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET, 0));
+	previous.setPosition(sf::Vector2f(infoFrame.getGlobalBounds().left + infoFrame.getGlobalBounds().width,
+							  infoFrame.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET, 0));
 
-	next.setPosition(sf::Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
-							  infoRect.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET + ICON_WIDTH, 0));
+	next.setPosition(sf::Vector2f(infoFrame.getGlobalBounds().left + infoFrame.getGlobalBounds().width,
+							  infoFrame.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET + ICON_WIDTH, 0));
 
-	credits.setPosition(sf::Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
-							   infoRect.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET + ICON_WIDTH*2, 0));
+	credits.setPosition(sf::Vector2f(infoFrame.getGlobalBounds().left + infoFrame.getGlobalBounds().width,
+							   infoFrame.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET + ICON_WIDTH*2, 0));
 
-	close.setPosition(sf::Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
-							   infoRect.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET + ICON_WIDTH*3, 0));
+	close.setPosition(sf::Vector2f(infoFrame.getGlobalBounds().left + infoFrame.getGlobalBounds().width,
+							   infoFrame.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET + ICON_WIDTH*3, 0));
 
-	toolTip.setPosition(sf::Vector2f(infoRect.getGlobalBounds().left + infoRect.getGlobalBounds().width,
-								 infoRect.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
+	toolTip.setPosition(sf::Vector2f(infoFrame.getGlobalBounds().left + infoFrame.getGlobalBounds().width,
+								 infoFrame.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
-	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 	sf::Vector2f pos = sf::Vector2f(ICON_X_OFFSET * 2, ICON_Y_OFFSET * 2);
 
 	int count = 0;
@@ -270,13 +307,13 @@ void ManualWindow::updatePos()
 		element.icon.setScale(scaleFactor);
 		element.update();
 
-		element.rect.setPosition(pos);
-		element.rect.setSize(sf::Vector2f(RECT_WIDTH, RECT_HEIGHT));
+		element.nameFrame.setPosition(pos);
+		element.nameFrame.setSize(sf::Vector2f(RECT_WIDTH, RECT_HEIGHT));
 
 		element.icon.setPosition(pos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
-		element.object->setPos(sf::Vector2f(infoRect.getGlobalBounds().left,
-													 infoRect.getGlobalBounds().top) +
+		element.object->setPos(sf::Vector2f(infoFrame.getGlobalBounds().left,
+													 infoFrame.getGlobalBounds().top) +
 											sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
 		element.nameText.setScale(scaleFactor);
@@ -292,7 +329,7 @@ void ManualWindow::updatePos()
 									 sf::Vector2f(ICON_WIDTH + ICON_X_OFFSET, 0));
 
 		if (element.elementDemo != nullptr)
-			element.elementDemo->setPos(sf::Vector2f(infoRect.getGlobalBounds().left,
+			element.elementDemo->setPos(sf::Vector2f(infoFrame.getGlobalBounds().left,
 												 element.descriptionText.getGlobalBounds().top +
 												 element.descriptionText.getGlobalBounds().height));
 
@@ -391,13 +428,13 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getEnemyInfo(TRICYCLE),
 							   EnemiesFactory::getFrameCount(TRICYCLE),
 							   EnemiesFactory::getAnimationSpeed(TRICYCLE)));
-
+#ifndef DEMO_VERSION
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TANK,
 							   GAME_TRANSLATION::TANK,
 							   EnemiesFactory::getEnemyInfo(TANK),
 							   EnemiesFactory::getFrameCount(TANK),
 							   EnemiesFactory::getAnimationSpeed(TANK)));
-
+#endif
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_MECHSPIDER,
 							   GAME_TRANSLATION::MECHSPIDER,
 							   EnemiesFactory::getEnemyInfo(MECHSPIDER),
@@ -416,13 +453,13 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getEnemyInfo(GIANT_SLUG),
 							   EnemiesFactory::getFrameCount(GIANT_SLUG),
 							   EnemiesFactory::getAnimationSpeed(GIANT_SLUG)));
-
+#ifndef DEMO_VERSION
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_HEAVY_TANK,
 							   GAME_TRANSLATION::HEAVY_TANK,
 							   EnemiesFactory::getEnemyInfo(HEAVY_TANK),
 							   EnemiesFactory::getFrameCount(HEAVY_TANK),
 							   EnemiesFactory::getAnimationSpeed(HEAVY_TANK)));
-
+#endif
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SLUGGY,
 							   GAME_TRANSLATION::SLUGGY,
 							   EnemiesFactory::getEnemyInfo(SLUGGY),
@@ -446,13 +483,13 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getEnemyInfo(WALKER),
 							   EnemiesFactory::getFrameCount(WALKER),
 							   EnemiesFactory::getAnimationSpeed(WALKER)));
-
+#ifndef DEMO_VERSION
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SELF_HEAL,
 							   GAME_TRANSLATION::SELF_HEAL,
 							   EnemiesFactory::getEnemyInfo(SELFHEAL_ENEMY),
 							   EnemiesFactory::getFrameCount(SELFHEAL_ENEMY),
 							   EnemiesFactory::getAnimationSpeed(SELFHEAL_ENEMY)));
-
+#endif
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TRACTOR,
 							   GAME_TRANSLATION::TRACTOR,
 							   EnemiesFactory::getEnemyInfo(TRACTOR),
@@ -470,7 +507,7 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getEnemyInfo(BUGSAURUS),
 							   EnemiesFactory::getFrameCount(BUGSAURUS),
 							   EnemiesFactory::getAnimationSpeed(BUGSAURUS)));
-
+#ifndef DEMO_VERSION
 	//map effects
 	elements.push_back(Element(GAME_TEXTURE::SMOKE,
 							   GAME_TRANSLATION::SMOKE_NAME,
@@ -495,6 +532,7 @@ void ManualWindow::addElements()
 							   Instructions::EXPLOSION,
 							   4,
 							   200));
+#endif
 }
 
 
@@ -507,7 +545,7 @@ void ManualWindow::updateCurrentInfo()
 	if (id >= elements.size())
 		return;
 	const Element element = elements.at(id);
-	currentRect.setPosition(element.rect.getPosition());
+	currentRect.setPosition(element.nameFrame.getPosition());
 }
 
 void ManualWindow::nextPage()
@@ -596,7 +634,8 @@ ManualWindow::Element::Element(TextureType texture,
 
 void ManualWindow::Element::init()
 {
-	rect.setFillColor(sf::Color(34, 53, 200, 100));
+	nameFrame.setFillColor(sf::Color(34, 53, 200, 100));
+//	nameFrame.setTexture();
 
 	titleText.setFont(Engine::Instance().fontManager()->font());
 	titleText.setFillColor(GameOptions::primaryColor);

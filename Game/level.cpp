@@ -187,11 +187,11 @@ void Level::startMission(const unsigned int n)
 		wave.respawnTime = _testInterval;
 		for (int i = 0; i < _testEnemiesCount; ++i)
 		{
-#if 1
+#if 0
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
-			wave.spawnEnemies.push_back(ENEMY_TYPES::TRICYCLE);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::WAR_VEHICLE);
 #endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
@@ -219,7 +219,7 @@ void Level::startMission(const unsigned int n)
 	Engine::Instance().options<GameOptions>()->cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
 	Engine::Instance().options<GameOptions>()->panel()->initMission(n);
 	updateStartEndPos(gameMap->spawnPos, sf::Vector2f(gameMap->endRect.left, gameMap->endRect.top));
-#ifndef CHECK_INSTRUCTIONS
+#ifndef SHOW_INSTRUCTIONS
 	const int starsValue = Engine::Instance().options<GameOptions>()->missionStars(n);
 	if (starsValue != -1)
 		Engine::Instance().options<GameOptions>()->instructions()->skip();
@@ -1049,7 +1049,7 @@ void Level::drawLevel(sf::RenderTarget * const target)
 Enemy* Level::spawn(const sf::Vector2f& pos, ENEMY_TYPES type, float protection, int moveDirection)
 {
 	Enemy *enemy = EnemiesFactory::createEnemy(type, pos);
-	enemy->protect(protection, false);
+	enemy->protect(protection);
 	enemy->moveNext(moveDirection);
 	enemies.push_back(enemy);
 	return enemy;

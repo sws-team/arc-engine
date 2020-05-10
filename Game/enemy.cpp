@@ -301,7 +301,7 @@ void Enemy::heal(float health)
 											 50, 8, 0);
 }
 
-void Enemy::protect(float shell, bool show)
+void Enemy::protect(float shell)
 {
 	m_data.reflection += shell;
 	if(m_data.reflection >= 0.9f)
@@ -1364,7 +1364,7 @@ void StrongAbility::moved()
 void StrongAbility::use()
 {
 	isShow = true;
-	owner->protect(Balance::Instance().getStrongValue());
+	owner->protect(-Balance::Instance().getStrongValue());
 	moved();
 	strongAnimation->currentFrame = 0;
 	strongAbilityTimer.reset();

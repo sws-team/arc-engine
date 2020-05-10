@@ -4,6 +4,7 @@
 #include "stdheader.h"
 #include "gameobject.h"
 #include "leveldef.h"
+#include "Balance/balance.h"
 
 class Level;
 class LifeBar;
@@ -71,7 +72,7 @@ public:
 
 	bool clickOnMiniMap(const sf::Vector2f& pos);
 
-	sf::String towerStatsStr(TOWER_TYPES type, Tower *tower) const;
+	std::vector<TowerStats> levelTowerStats(TOWER_TYPES type) const;
 private:
 	sf::Sprite m_sprite;
 	sf::RenderTexture rTexture;
@@ -182,6 +183,7 @@ private:
 
 	static constexpr unsigned int PANEL_POS_ID = 128;
 	static constexpr float LIFE_BAR_HEIGHT = 16;
+	sf::String towerStatsStr(TOWER_TYPES type, Tower *tower) const;
 };
 
 #endif // GAMEPANEL_H

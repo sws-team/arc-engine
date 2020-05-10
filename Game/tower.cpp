@@ -404,7 +404,7 @@ void BaseTower::projectileAction(Enemy *enemy)
 {
 	ProjectilesTower::projectileAction(enemy);
 	const float penetration = Balance::Instance().getbaseTowerPenetration() * powf(10, level());
-	enemy->protect(-penetration, false);
+	enemy->protect(-penetration);
 }
 
 void BaseTower::upgrade()
@@ -520,8 +520,10 @@ float PowerTower::getRadius(int level)
 		return 10;
 	case 3:
 		return 14;
+	case 4:
+		return 18;
 	default:
-		return Balance::Instance().getTowerStats(POWER).attackSpeed;
+		return Balance::Instance().getTowerStats(POWER).radius;
 		break;
 	}
 }

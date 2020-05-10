@@ -231,7 +231,63 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type)
 		break;
 	}
 	str += EngineDefs::endline;
-	str += Engine::Instance().options<GameOptions>()->panel()->towerStatsStr(type, nullptr);
+	if (type == POWER)
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAN_BUILD_ANYWHERE);
+	else
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER);
+	str += EngineDefs::endline;
+
+	const sf::String levelStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LEVEL);
+	sf::String dpsStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND);
+	sf::String radiusStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::RADIUS);
+	sf::String costStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COST);
+	dpsStr += EngineDefs::separator + EngineDefs::endline;
+	radiusStr += EngineDefs::separator + EngineDefs::endline;
+	costStr += EngineDefs::separator + EngineDefs::endline;
+	const sf::String sep = ";";
+	const sf::String space = " ";
+	const std::vector<TowerStats> towersStats = Engine::Instance().options<GameOptions>()->panel()->levelTowerStats(type);
+	for (size_t level = 0; level < towersStats.size(); ++level)
+	{
+		bool newLine = level % 2 != 0;
+		const int printLevel = level + 1;
+		const TowerStats stats = towersStats.at(level);
+
+		const float dps = stats.damage / (stats.attackSpeed * 1 / EngineDefs::MSEC);
+		dpsStr += levelStr;
+		dpsStr + space;
+		dpsStr += EngineDefs::separator;
+		dpsStr += std::to_string(printLevel);
+		dpsStr += EngineDefs::separator;
+		dpsStr += GlobalVariables::to_string_with_precision(dps, 2);
+		if (newLine)
+			dpsStr += EngineDefs::endline;
+		else
+			dpsStr += sep + space;
+
+		radiusStr += levelStr;
+		radiusStr += space;
+		radiusStr += std::to_string(printLevel);
+		radiusStr += EngineDefs::separator;
+		radiusStr += GlobalVariables::to_string_with_precision(stats.radius, 2);
+		if (newLine)
+			radiusStr += EngineDefs::endline;
+		else
+			radiusStr += sep + space;
+
+		costStr += levelStr;
+		costStr += space;
+		costStr += std::to_string(printLevel);
+		costStr += EngineDefs::separator;
+		costStr += GlobalVariables::to_string_with_precision(stats.cost, 2);
+		if (newLine)
+			costStr += EngineDefs::endline;
+		else
+			costStr += sep  + space;
+	}
+	str += dpsStr;
+	str += radiusStr;
+	str += costStr;
 	return str;
 }
 

@@ -650,31 +650,31 @@ sf::String GamePanel::towerInfo(TOWER_TYPES type, Tower *tower)
 		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_IMPROVED);
 		break;
 	}
-	if (tower == nullptr)
-	{
-		str += EngineDefs::endline;
-		switch (type)
-		{
-		case BASE:
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION);
-			break;
-		case POWER:
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENERGY_TOWER_DESCRIPTION);
-			break;
-		case ROCKET:
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION);
-			break;
-		case FREEZE:
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION);
-			break;
-		case LASER:
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION);
-			break;
-		case IMPROVED:
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION);
-			break;
-		}
-	}
+//	if (tower == nullptr)
+//	{
+//		str += EngineDefs::endline;
+//		switch (type)
+//		{
+//		case BASE:
+//			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION);
+//			break;
+//		case POWER:
+//			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENERGY_TOWER_DESCRIPTION);
+//			break;
+//		case ROCKET:
+//			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION);
+//			break;
+//		case FREEZE:
+//			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION);
+//			break;
+//		case LASER:
+//			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION);
+//			break;
+//		case IMPROVED:
+//			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION);
+//			break;
+//		}
+//	}
 	str += EngineDefs::endline;
 	str += towerStatsStr(type, tower);
 	return str;
@@ -774,42 +774,27 @@ sf::String GamePanel::towerStatsStr(TOWER_TYPES type, Tower *tower) const
 
 	if (tower == nullptr)
 	{
-		const sf::String level_separator = "/";
-		const TowerStats towerStats = Balance::Instance().getTowerStats(type);
-		float damage = towerStats.damage;
-		float attackSpeed = towerStats.attackSpeed;
-		float radius = towerStats.radius;
-		float cost = towerStats.cost;
+		const sf::String level_separator = "/";		
 		sf::String radiusStr;
 		sf::String costStr;
 		sf::String dpsStr;
-		const float k = 1 + Balance::Instance().getTowerUpgradeGain();
-		for (int level = 1; level <= Tower::ABILITY_LEVEL; ++level)
+		const std::vector<TowerStats> towersStats = levelTowerStats(type);
+		for (size_t i = 0; i < towersStats.size(); ++i)
 		{
-			const bool nolast = level != Tower::ABILITY_LEVEL;
-			const float dps = damage / (attackSpeed * 1 / EngineDefs::MSEC);
+			const TowerStats stats = towersStats.at(i);
+			const bool nolast = i != towersStats.size() - 1;
+			const float dps = stats.damage / (stats.attackSpeed * 1 / EngineDefs::MSEC);
 			dpsStr += GlobalVariables::to_string_with_precision(dps, 1);
 			if (nolast)
 				dpsStr += level_separator;
-			radiusStr += GlobalVariables::to_string_with_precision(radius, 1);
+			radiusStr += GlobalVariables::to_string_with_precision(stats.radius, 1);
 			if (nolast)
 				radiusStr += level_separator;
-			costStr += GlobalVariables::to_string_with_precision(cost, 2);
+			costStr += GlobalVariables::to_string_with_precision(stats.cost, 2);
 			if (nolast)
 				costStr += level_separator;
-
-			radius *= k;
-			damage *= k;
-			cost *= 1 + Balance::Instance().getTowerUpgradeGain() * Tower::UPGRADE_PRICE_MODIFIER;
-			attackSpeed *= 1 - Balance::Instance().getTowerUpgradeGain();
-
-			if (type == POWER)
-			{
-				radius = PowerTower::getRadius(level);
-				attackSpeed = PowerTower::getAttackSpeed(level);
-			}
 		}
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DPS);
 		str += EngineDefs::separator;
 		str += dpsStr;
 		str += EngineDefs::endline;
@@ -827,7 +812,7 @@ sf::String GamePanel::towerStatsStr(TOWER_TYPES type, Tower *tower) const
 				+ EngineDefs::separator + std::to_string(tower->level()) + EngineDefs::endline;
 		const TowerStats towerStats = tower->data();
 		const float dps = towerStats.damage / (tower->actualAttackSpeed() * 1 / EngineDefs::MSEC);
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_PER_SECOND) + EngineDefs::separator + GlobalVariables::to_string_with_precision(dps, 2);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DPS) + EngineDefs::separator + GlobalVariables::to_string_with_precision(dps, 2);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::RADIUS) + EngineDefs::separator +
 				GlobalVariables::to_string_with_precision(tower->actualRadius(), 1);
@@ -841,6 +826,30 @@ sf::String GamePanel::towerStatsStr(TOWER_TYPES type, Tower *tower) const
 		str += GlobalVariables::to_string_with_precision(cost, 2);
 	}
 	return str;
+}
+
+std::vector<TowerStats> GamePanel::levelTowerStats(TOWER_TYPES type) const
+{
+	std::vector<TowerStats> results;
+	TowerStats towerStats = Balance::Instance().getTowerStats(type);;
+	sf::String radiusStr;
+	sf::String costStr;
+	sf::String dpsStr;
+	const float k = 1 + Balance::Instance().getTowerUpgradeGain();
+	for (int level = 1; level <= Tower::ABILITY_LEVEL; ++level)
+	{
+		results.push_back(towerStats);
+		towerStats.radius *= k;
+		towerStats.damage *= k;
+		towerStats.cost *= 1 + Balance::Instance().getTowerUpgradeGain() * Tower::UPGRADE_PRICE_MODIFIER;
+		towerStats.attackSpeed *= 1 - Balance::Instance().getTowerUpgradeGain();
+		if (type == POWER)
+		{
+			towerStats.radius = PowerTower::getRadius(level);
+			towerStats.attackSpeed = PowerTower::getAttackSpeed(level);
+		}
+	}
+	return results;
 }
 
 void GamePanel::setDrain(bool drain)
@@ -944,58 +953,38 @@ void GamePanel::updateInfo()
 	if (Engine::Instance().options<GameOptions>()->cursor()->inPanel())
 	{
 		const ACTION_STATE state = getCurrentIcon();
-		switch (state)
-		{
-		case ADD_TOWER:
+		if (state == ADD_TOWER)
 		{
 			const TOWER_TYPES type = currentTower();
 			str = towerInfo(type, nullptr);
 		}
-			break;
-		case ABILITY_BOMB:
+		else
 		{
-			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_BOMB);
+			switch (state)
+			{
+			case ABILITY_BOMB:
+				str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_BOMB);
+				break;
+			case ABILITY_FREEZE_BOMB:
+				str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_FREEZE_BOMB);
+				break;
+			case ABILITY_ACID:
+				str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_ACID);
+				break;
+			case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
+				str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED);
+				break;
+			case ABILITY_INCREASE_TOWER_DAMAGE:
+				str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE);
+				break;
+			case ABILITY_STOP:
+				str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_STOP);
+				break;
+			default:
+				break;
+			}
 			str += EngineDefs::endline;
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BOMB_ABILITY_DESCRIPTION);
-		}
-			break;
-		case ABILITY_FREEZE_BOMB:
-		{
-			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_FREEZE_BOMB);
-			str += EngineDefs::endline;
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_BOMB_ABILITY_DESCRIPTION);
-		}
-			break;
-		case ABILITY_ACID:
-		{
-			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_ACID);
-			str += EngineDefs::endline;
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ACID_ABILITY_DESCRIPTION);
-		}
-			break;
-		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
-		{
-			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED);
-			str += EngineDefs::endline;
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION);
-		}
-			break;
-		case ABILITY_INCREASE_TOWER_DAMAGE:
-		{
-			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE);
-			str += EngineDefs::endline;
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION);
-		}
-			break;
-		case ABILITY_STOP:
-		{
-			str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_STOP);
-			str += EngineDefs::endline;
-			str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION);
-		}
-			break;
-		default:
-			break;
+			str += Instructions::abilityInfoText(state);
 		}
 	}
 	else
