@@ -3,8 +3,6 @@
 
 #include "statewindow.h"
 
-//#define WITH_DIFFICULT
-
 class ChooseMissionWindow : public StateWindow
 {
 public:
@@ -44,21 +42,6 @@ private:
 	static const sf::Color CURRENT_COLOR;
 	static const sf::Color CURRENT_BORDER_COLOR;
 
-
-#ifdef WITH_DIFFICULT
-	sf::RectangleShape difficultRect;
-	sf::RectangleShape currentDifficultRect;
-	sf::RectangleShape choosedDifficultRect;
-
-	sf::RectangleShape easyRect;
-	sf::RectangleShape normalRect;
-	sf::RectangleShape hardRect;
-
-	sf::Text easyText;
-	sf::Text normalText;
-	sf::Text hardText;
-	void initDifficults();
-#endif
 	int hovered;
 };
 

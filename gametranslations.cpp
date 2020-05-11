@@ -345,20 +345,7 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::BUGSAURUS, L"Жукозавр"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::BUGSAURUS, L"Insectosaure"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::BUGSAURUS, L"Käfersaurier"));
-#ifdef WITH_DIFFICULT
-	//difficult
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::EASY, L"Easy"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::EASY, L"Легко"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::EASY, L"Easy"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::NORMAL, L"Normal"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::NORMAL, L"Нормально"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::NORMAL, L"Normal"));
-
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::HARD, L"Hard"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::HARD, L"Трудно"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::HARD, L"Hard"));
-#endif
 	//towers abilities
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::BASE_TOWER_ABILITY, L"Invulnerability"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::BASE_TOWER_ABILITY, L"Неуязвимость"));

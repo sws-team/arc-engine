@@ -22,9 +22,6 @@ ChooseMissionWindow::ChooseMissionWindow()
 	chooseRect.setOutlineColor(CURRENT_BORDER_COLOR);
 	chooseRect.setFillColor(CURRENT_COLOR);
 	currentMission = 0;
-#ifdef WITH_DIFFICULT
-	initDifficults();
-#endif
 	const unsigned int missionsCount = Engine::Instance().options<GameOptions>()->missionsCount();
 	const int rowCount = static_cast<int>(ceil(static_cast<float>(missionsCount) / COLUMN_COUNT));
 	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
@@ -48,49 +45,6 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 	float x = left;
 	float y = top;
-#ifdef WITH_DIFFICULT
-	const float difficultHeight = 60;
-	const sf::Vector2f difficultSize = sf::Vector2f(rectSizeX * COLUMN_COUNT + offsetX * (COLUMN_COUNT - 1),
-											difficultHeight);
-	difficultRect.setPosition(x, y);
-	difficultRect.setSize(difficultSize);
-
-	const sf::Vector2f difficultRectSize = sf::Vector2f(200 * scaleFactor.x,
-												30 * scaleFactor.y);
-	const float difficultOffsetX = (difficultSize.x - 3 * difficultRectSize.x)/4;
-	const float difficultOffsetY = (difficultSize.y - difficultRectSize.y)/2;
-
-	y += difficultOffsetY;
-
-	currentDifficultRect.setSize(difficultRectSize);
-	choosedDifficultRect.setSize(difficultRectSize);
-	currentDifficultRect.setFillColor(sf::Color::Transparent);
-
-	easyRect.setPosition(x + difficultOffsetX, y);
-	easyRect.setSize(difficultRectSize);
-	easyText.setPosition(easyRect.getPosition().x + difficultRectSize.x/2 - easyText.getGlobalBounds().width/2,
-						 easyRect.getPosition().y - difficultRectSize.y/2);
-
-	normalRect.setPosition(x + difficultOffsetX * 2 + difficultRectSize.x, y);
-	normalRect.setSize(difficultRectSize);
-	normalText.setPosition(normalRect.getPosition().x + difficultRectSize.x/2 - normalText.getGlobalBounds().width/2,
-						   normalRect.getPosition().y - difficultRectSize.y/2);
-
-	hardRect.setPosition(x + difficultOffsetX * 3 + difficultRectSize.x * 2, y);
-	hardRect.setSize(difficultRectSize);
-	hardText.setPosition(hardRect.getPosition().x + difficultRectSize.x/2 - hardText.getGlobalBounds().width/2,
-						 hardRect.getPosition().y - difficultRectSize.y/2);
-
-	if (Engine::Instance().options<GameOptions>()->difficult() == 1)
-		choosedDifficultRect.setPosition(normalRect.getPosition());
-	else if (Engine::Instance().options<GameOptions>()->difficult() == 2)
-		choosedDifficultRect.setPosition(easyRect.getPosition());
-	else
-		choosedDifficultRect.setPosition(hardRect.getPosition());
-
-	y += difficultHeight;
-	y += difficultOffsetY;
-#endif
 	const unsigned int maxCompletedLevel = Engine::Instance().options<GameOptions>()->maxCompletedLevel();
 	const bool hasCompletedMissions = !Engine::Instance().options<GameOptions>()->getCompletedMissions().empty();
 	TextureType textureType = GAME_TEXTURE::MAP_ICON_MISSION_1;
@@ -190,22 +144,6 @@ void ChooseMissionWindow::paint(sf::RenderWindow *window)
 		window->draw(mission.highlight);
 	}
 	window->draw(chooseRect);
-#ifdef WITH_DIFFICULT
-	window->draw(difficultRect);
-	window->draw(currentDifficultRect);
-
-	window->draw(easyRect);
-	window->draw(normalRect);
-	window->draw(hardRect);
-
-	window->draw(choosedDifficultRect);
-
-	window->draw(easyText);
-	window->draw(normalText);
-	window->draw(hardText);
-
-	window->draw(currentDifficultRect);
-#endif
 }
 
 void ChooseMissionWindow::eventFilter(sf::Event *event)
@@ -224,26 +162,6 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 					accept(mission);
 				}
 			}
-#ifdef WITH_DIFFICULT
-		if (easyRect.getGlobalBounds().contains(pos))
-		{
-			choosedDifficultRect.setPosition(easyRect.getPosition());
-			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
-			Engine::Instance().options<GameOptions>()->setEasyDifficult();
-		}
-		if (normalRect.getGlobalBounds().contains(pos))
-		{
-			choosedDifficultRect.setPosition(normalRect.getPosition());
-			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
-			Engine::Instance().options<GameOptions>()->setNormalDifficult();
-		}
-		if (hardRect.getGlobalBounds().contains(pos))
-		{
-			choosedDifficultRect.setPosition(hardRect.getPosition());
-			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
-			Engine::Instance().options<GameOptions>()->setHardDifficult();
-		}
-#endif
 	}
 	else if (event->type == sf::Event::MouseMoved)
 	{
@@ -260,32 +178,6 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 			}
 		}
 		updateRect();
-#ifdef WITH_DIFFICULT
-		currentDifficultRect.setFillColor(sf::Color::Transparent);
-		if (easyRect.getGlobalBounds().contains(pos))
-		{
-			currentDifficultRect.setFillColor(DISABLED_COLOR);
-			currentDifficultRect.setPosition(easyRect.getPosition());
-			hoverId = missions.size() + 1;
-		}
-		if (normalRect.getGlobalBounds().contains(pos))
-		{
-			currentDifficultRect.setFillColor(DISABLED_COLOR);
-			currentDifficultRect.setPosition(normalRect.getPosition());
-			hoverId = missions.size() + 2;
-		}
-		if (hardRect.getGlobalBounds().contains(pos))
-		{
-			currentDifficultRect.setFillColor(DISABLED_COLOR);
-			currentDifficultRect.setPosition(hardRect.getPosition());
-			hoverId = missions.size() + 3;
-		}
-		if (hoverId != -1 && hovered != hoverId)
-		{
-			hovered = hoverId;
-			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
-		}
-#endif
 	}
 	else if (event->type == sf::Event::KeyPressed)
 	{
@@ -393,57 +285,3 @@ unsigned int ChooseMissionWindow::getRating(unsigned int n) const
 			return mission.stars;
 	return 0;
 }
-#ifdef WITH_DIFFICULT
-void ChooseMissionWindow::initDifficults()
-{
-	const sf::Color difficultRectFillColor = sf::Color(16, 32, 64, 128);
-	const sf::Color difficultRectBorderColor = sf::Color(64, 32, 16, 192);
-	const sf::Color choosedRectBorderColor = sf::Color(32, 128, 16, 192);
-	const float difficultCharatersSize = 40;
-	const float thickness = 3 * Engine::Instance().settingsManager()->getScaleFactor().x;
-
-	choosedDifficultRect.setOutlineThickness(thickness);
-	choosedDifficultRect.setOutlineColor(choosedRectBorderColor);
-	choosedDifficultRect.setFillColor(sf::Color::Transparent);
-
-	difficultRect.setOutlineThickness(thickness);
-	difficultRect.setFillColor(CURRENT_COLOR);
-	difficultRect.setOutlineColor(CURRENT_COLOR);
-
-	easyRect.setOutlineThickness(thickness);
-	easyRect.setFillColor(difficultRectFillColor);
-	easyRect.setOutlineColor(difficultRectBorderColor);
-
-	normalRect.setOutlineThickness(thickness);
-	normalRect.setFillColor(difficultRectFillColor);
-	normalRect.setOutlineColor(difficultRectBorderColor);
-
-	hardRect.setOutlineThickness(thickness);
-	hardRect.setFillColor(difficultRectFillColor);
-	hardRect.setOutlineColor(difficultRectBorderColor);
-
-	easyText.setFont(Engine::Instance().fontManager()->font());
-	easyText.setCharacterSize(difficultCharatersSize);
-	easyText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
-	easyText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::EASY));
-	easyText.setFillColor(sf::Color::White);
-	easyText.setOutlineColor(sf::Color::Black);
-	easyText.setOutlineThickness(thickness);
-
-	normalText.setFont(Engine::Instance().fontManager()->font());
-	normalText.setCharacterSize(difficultCharatersSize);
-	normalText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
-	normalText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::NORMAL));
-	normalText.setFillColor(sf::Color::White);
-	normalText.setOutlineColor(sf::Color::Black);
-	normalText.setOutlineThickness(thickness);
-
-	hardText.setFont(Engine::Instance().fontManager()->font());
-	hardText.setCharacterSize(difficultCharatersSize);
-	hardText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
-	hardText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::HARD));
-	hardText.setFillColor(sf::Color::White);
-	hardText.setOutlineColor(sf::Color::Black);
-	hardText.setOutlineThickness(thickness);
-}
-#endif
