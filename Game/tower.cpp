@@ -631,7 +631,7 @@ void RocketTower::moveProjectile(Projectile *projectile)
 
 void RocketTower::projectileAction(Enemy *enemy)
 {
-	if(level() == ABILITY_LEVEL)
+	if(level() == ABILITY_LEVEL && !isDowngraded())
 		enemy->startBurn();
 	const sf::Vector2f epicenter = enemy->enemyCenter();
 	const std::vector <Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
@@ -677,7 +677,7 @@ void FreezeTower::projectileAction(Enemy *enemy)
 	const float freezeValue = Balance::Instance().getFreezeValue();
 	const float freezeDuration = Balance::Instance().getFreezeTowerDuration() + level() * EngineDefs::MSEC;
 	enemy->freeze(freezeValue, freezeDuration);
-	if (level() == ABILITY_LEVEL)
+	if (level() == ABILITY_LEVEL && !isDowngraded())
 	{
 		const sf::Vector2f epicenter = enemy->enemyCenter();
 		const std::vector <Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
@@ -854,7 +854,7 @@ ImprovedTower::~ImprovedTower()
 
 void ImprovedTower::createdProjectile(Projectile *projectile)
 {
-	if (level() == ABILITY_LEVEL)
+	if (level() == ABILITY_LEVEL && !isDowngraded())
 	{
 		float angle = projectile->angle();
 		for (int i = 0; i < 7; ++i)

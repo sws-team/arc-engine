@@ -93,7 +93,7 @@ public:
 	bool isInvulnerable() const;
 
 	virtual void levelDown();
-	static constexpr float UPGRADE_PRICE_MODIFIER = 1.5f;
+	static constexpr float UPGRADE_PRICE_MODIFIER = 2.f;
 
 protected:
 	TowerStats m_stats;

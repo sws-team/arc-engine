@@ -122,7 +122,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 		mission.enabled = false;
 		if (hasCompletedMissions)
 		{
-			if (i <= maxCompletedLevel + 1)
+			if (i <= maxCompletedLevel)
 				mission.enabled = true;
 		}
 		else if (i == 0)
@@ -141,7 +141,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 
 		textureType = static_cast<TextureType>(static_cast<int>(textureType) + 1);
 
-		unsigned int rating = getRating(i);
+		unsigned int rating = getRating(i + 1);
 		float posX = x;
 		posX += starOffsetX;
 		for (unsigned int j = 0; j < STARS_COUNT; ++j)

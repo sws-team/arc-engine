@@ -42,12 +42,7 @@ ManualWindow::ManualWindow()
 										 Engine::Instance().settingsManager()->getResolution().y - characterObject->getSize().y));
 	characterObject->animationSpeed = 50;
 
-	textFrame.setFillColor(sf::Color(34, 53, 200, 100));
-	demoFrame.setFillColor(sf::Color(200, 53, 3, 100));
-	textureFrame.setFillColor(sf::Color(34, 53, 200, 100));
-//	textFrame.setTexture();
-//	demoFrame.setTexture();
-//	textureFrame.setTexture();
+	demoFrame.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::DEMO_FRAME));
 
 	addElements();
 	updatePos();
@@ -84,11 +79,6 @@ void ManualWindow::update()
 void ManualWindow::paint(sf::RenderWindow *window)
 {
 	drawBackground(window);
-	window->draw(infoFrame);
-	window->draw(textFrame);
-	window->draw(demoFrame);
-	window->draw(textureFrame);
-
 	const int startValue = MAX_ELEMENTS_COUNT * page;
 	for (unsigned int i = startValue; i < startValue + MAX_ELEMENTS_COUNT; ++i)
 	{
@@ -113,6 +103,8 @@ void ManualWindow::paint(sf::RenderWindow *window)
 				elements.at(id).elementDemo->draw(window);
 		}
 	}
+	window->draw(demoFrame);
+
 	window->draw(previous);
 	window->draw(next);
 	window->draw(credits);
@@ -240,61 +232,47 @@ void ManualWindow::updatePos()
 {
 	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 
+	const float TITLE_OFFSET = 12 * scaleFactor.y;
 	const float ICON_WIDTH = Engine::Instance().options<GameOptions>()->tileSize().x;
-	const float RECT_WIDTH = 384 * Engine::Instance().settingsManager()->getScaleFactor().x;
+	const float RECT_WIDTH = 464 * Engine::Instance().settingsManager()->getScaleFactor().x;
 	const float RECT_HEIGHT = 128 * Engine::Instance().settingsManager()->getScaleFactor().y;
-
 
 	const float ICON_X_OFFSET = 32 * scaleFactor.x;
 	const float ICON_Y_OFFSET = 32 * scaleFactor.y;
 
-	const sf::Vector2f textureFrameSize = sf::Vector2f(384 * scaleFactor.x,
-													   384 * scaleFactor.y);
-	const sf::Vector2f demoFrameSize = sf::Vector2f(320 * scaleFactor.x,
-													240 * scaleFactor.y);
-	const sf::Vector2f textFrameSize = sf::Vector2f(960 * scaleFactor.x,
-													448 * scaleFactor.y);
-	const sf::Vector2f infoFrameSize = sf::Vector2f(1024 * scaleFactor.x,
-													928 * scaleFactor.y);
+	const sf::Vector2f FRAME_OFFSET_SCALED = sf::Vector2f(FRAME_OFFSET * scaleFactor.x,
+														  FRAME_OFFSET * scaleFactor.y);
+	const sf::Vector2f FRAME_OFFSET_SCALED_X2 = sf::Vector2f(FRAME_OFFSET_SCALED.x * 2,
+														  FRAME_OFFSET_SCALED.y * 2);
 
+	const float rectsHeight = 240  * scaleFactor.y;
+	const sf::Vector2f texturePos = sf::Vector2f(656 * scaleFactor.x,
+												 96 * scaleFactor.y);
+	const sf::Vector2f demoFrameSize = sf::Vector2f(FRAME_OFFSET_SCALED.x * 4,
+													FRAME_OFFSET_SCALED.y * 4) + sf::Vector2f(320 * scaleFactor.x,
+																			 rectsHeight);
+	const sf::Vector2f textureSize = FRAME_OFFSET_SCALED_X2 + sf::Vector2f(318 * scaleFactor.x,
+																		   rectsHeight);
+	const sf::Vector2f demoPos = sf::Vector2f(1042 * scaleFactor.x,
+											  96 * scaleFactor.y) - FRAME_OFFSET_SCALED;
 
-	textureFrame.setSize(textureFrameSize);
+	const sf::Vector2f textPos = sf::Vector2f(684 * scaleFactor.x,
+											  424 * scaleFactor.y);
+
+	const sf::Vector2f buttonsPos = sf::Vector2f(1600 * scaleFactor.x,
+												 96 * scaleFactor.y);
+
 	demoFrame.setSize(demoFrameSize);
-	textFrame.setSize(textFrameSize);
-
-	const sf::Vector2f infoRectPos = sf::Vector2f(ICON_X_OFFSET * 3 + RECT_WIDTH, ICON_Y_OFFSET * 2);
-	textureFrame.setPosition(infoRectPos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
-	demoFrame.setPosition(infoRectPos + sf::Vector2f(ICON_X_OFFSET * 2 + textureFrameSize.x,
-							  demoFrameSize.y/2 - textureFrame.getPosition().y/2));
-	textFrame.setPosition(infoRectPos + sf::Vector2f(ICON_X_OFFSET,
-							  ICON_Y_OFFSET * 2 + textureFrameSize.y));
-
+	demoFrame.setPosition(demoPos);
 
 	currentRect.setFillColor(SELECTED_COLOR);
 	currentRect.setSize(sf::Vector2f(RECT_WIDTH, RECT_HEIGHT));
-	currentRect.setOutlineThickness(1);
-	currentRect.setOutlineColor(sf::Color::Black);
 
-	infoFrame.setFillColor(sf::Color(45, 45, 45, 128));
-	infoFrame.setSize(infoFrameSize);
-	infoFrame.setOutlineThickness(1);
-	infoFrame.setOutlineColor(sf::Color::Black);
-	infoFrame.setPosition(infoRectPos);
-
-	previous.setPosition(sf::Vector2f(infoFrame.getGlobalBounds().left + infoFrame.getGlobalBounds().width,
-							  infoFrame.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET, 0));
-
-	next.setPosition(sf::Vector2f(infoFrame.getGlobalBounds().left + infoFrame.getGlobalBounds().width,
-							  infoFrame.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET + ICON_WIDTH, 0));
-
-	credits.setPosition(sf::Vector2f(infoFrame.getGlobalBounds().left + infoFrame.getGlobalBounds().width,
-							   infoFrame.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET + ICON_WIDTH*2, 0));
-
-	close.setPosition(sf::Vector2f(infoFrame.getGlobalBounds().left + infoFrame.getGlobalBounds().width,
-							   infoFrame.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET + ICON_WIDTH*3, 0));
-
-	toolTip.setPosition(sf::Vector2f(infoFrame.getGlobalBounds().left + infoFrame.getGlobalBounds().width,
-								 infoFrame.getGlobalBounds().top) + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
+	previous.setPosition(buttonsPos);
+	next.setPosition(buttonsPos + sf::Vector2f(ICON_WIDTH, 0));
+	credits.setPosition(buttonsPos + sf::Vector2f(ICON_WIDTH*2, 0));
+	close.setPosition(buttonsPos + sf::Vector2f(ICON_WIDTH*3, 0));
+	toolTip.setPosition(buttonsPos + sf::Vector2f(0, ICON_Y_OFFSET));
 
 	sf::Vector2f pos = sf::Vector2f(ICON_X_OFFSET * 2, ICON_Y_OFFSET * 2);
 
@@ -310,28 +288,33 @@ void ManualWindow::updatePos()
 		element.nameFrame.setPosition(pos);
 		element.nameFrame.setSize(sf::Vector2f(RECT_WIDTH, RECT_HEIGHT));
 
+		element.titleText.setScale(scaleFactor);
+		element.titleText.setPosition(pos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET) +
+									  sf::Vector2f(ICON_WIDTH + ICON_X_OFFSET, 0));
+
 		element.icon.setPosition(pos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
-		element.object->setPos(sf::Vector2f(infoFrame.getGlobalBounds().left,
-													 infoFrame.getGlobalBounds().top) +
-											sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
+
+
+		element.object->setPos(texturePos + sf::Vector2f(textureSize.x/2 - element.object->getSize().x/2,
+														 textureSize.y/2 - element.object->getSize().y/2));
 
 		element.nameText.setScale(scaleFactor);
-		element.nameText.setPosition(element.object->pos() +
-									 sf::Vector2f(element.object->getSize().x + ICON_X_OFFSET, 0));
+		element.nameText.setPosition(textPos);
 
 		element.descriptionText.setScale(scaleFactor);
 		element.descriptionText.setPosition(element.nameText.getPosition() +
-											sf::Vector2f(0, element.nameText.getGlobalBounds().height + ICON_Y_OFFSET));
-
-		element.titleText.setScale(scaleFactor);
-		element.titleText.setPosition(pos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET) +
-									 sf::Vector2f(ICON_WIDTH + ICON_X_OFFSET, 0));
+											sf::Vector2f(0, element.nameText.getGlobalBounds().height + TITLE_OFFSET));
 
 		if (element.elementDemo != nullptr)
-			element.elementDemo->setPos(sf::Vector2f(infoFrame.getGlobalBounds().left,
-												 element.descriptionText.getGlobalBounds().top +
-												 element.descriptionText.getGlobalBounds().height));
+		{
+			const float kx = 362.f / 320.f;
+			const float ky = 282.f / 240.f;
+			element.elementDemo->sprite.scale(kx, ky);
+			element.elementDemo->setPos(FRAME_OFFSET_SCALED +
+										sf::Vector2f(demoFrame.getGlobalBounds().left,
+													 demoFrame.getGlobalBounds().top));
+		}
 
 		pos.y += ICON_Y_OFFSET + RECT_HEIGHT;
 
@@ -634,8 +617,8 @@ ManualWindow::Element::Element(TextureType texture,
 
 void ManualWindow::Element::init()
 {
-	nameFrame.setFillColor(sf::Color(34, 53, 200, 100));
-//	nameFrame.setTexture();
+//	nameFrame.setFillColor(sf::Color(34, 53, 200, 100));
+	nameFrame.setTexture(&Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::NAME_FRAME));
 
 	titleText.setFont(Engine::Instance().fontManager()->font());
 	titleText.setFillColor(GameOptions::primaryColor);
@@ -660,7 +643,8 @@ void ManualWindow::Element::update()
 {
 	bool cycled = false;
 	int rowCount = 1;
-	sf::Vector2i frameSize;
+	sf::Vector2i frameSize;	
+	TextureType objectTexture = texture;
 	//texture
 	icon.setTexture(Engine::Instance().texturesManager()->getTexture(texture));
 	//name
@@ -684,6 +668,41 @@ void ManualWindow::Element::update()
 	{		
 		frameSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);		
 		descriptionStr += Instructions::abilityInfoText(abilityType);
+		switch (abilityType)
+		{
+		case ABILITY_BOMB:
+		{
+			animationSpeed = 25;
+			frameCount = 8;
+			frameSize = sf::Vector2i(3 * GameOptions::CELL_SIZE,
+									 3 * GameOptions::CELL_SIZE);
+			objectTexture = GAME_TEXTURE::BOMB_EXPLOSION;
+		}
+			break;
+		case ABILITY_FREEZE_BOMB:
+		{
+			animationSpeed = 25;
+			frameCount = 8;
+			frameSize = sf::Vector2i(3 * GameOptions::CELL_SIZE,
+									 3 * GameOptions::CELL_SIZE);
+			objectTexture = GAME_TEXTURE::FREEZE_BOMB_EXPLOSION;
+		}
+			break;
+		case ABILITY_ACID:
+			objectTexture = GAME_TEXTURE::ABILITY_ACID;
+			break;
+		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
+
+			break;
+		case ABILITY_INCREASE_TOWER_DAMAGE:
+
+			break;
+		case ABILITY_STOP:
+
+			break;
+		default:
+			break;
+		}
 	}
 		break;
 	case Element::E_Enemy:
@@ -809,7 +828,7 @@ void ManualWindow::Element::update()
 		break;
 	}
 
-	object = new GameObject(texture, sf::Vector2f(0,0), frameSize, frameCount);
+	object = new GameObject(objectTexture, sf::Vector2f(0,0), frameSize, frameCount);
 	object->animationSpeed = animationSpeed;
 	object->cycled = cycled;
 	object->rowCount = rowCount;

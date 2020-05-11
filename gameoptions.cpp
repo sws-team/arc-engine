@@ -127,7 +127,13 @@ void GameOptions::setMissionFinished(unsigned int n, unsigned int rating)
 	if (find(m_save.begin(), m_save.end(), completedMission) == m_save.end())
 		m_save.push_back(completedMission);
 	else
-		m_save[n].stars = rating;
+	{
+		for(CompletedMission &mission :m_save)
+		{
+			if (mission.number == n)
+				mission.stars = rating;
+		}
+	}
 }
 
 int GameOptions::missionStars(unsigned int n) const

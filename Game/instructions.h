@@ -42,6 +42,8 @@ private:
 		MONEY,
 		HEALTH,
 		PROGRESS,
+		TOWERS,
+		UPGRADE_SELL,
 		GOOD_LUCK,
 
 		INSTRUCTION_TOWER_BASE,
@@ -70,8 +72,6 @@ private:
 	sf::Text text;
 	sf::RectangleShape targetRect;
 
-	constexpr static int INSTRUCTIONS_OFFSET = 400;
-
 	sf::Sprite character;
 	sf::RectangleShape bottom;
 	sf::RectangleShape top;
@@ -90,6 +90,8 @@ private:
 	static constexpr float TEXT_WIDTH = 966;
 	static constexpr float RECT_OFFSET = 5;
 	static constexpr float RUBRIC_OFFSET = 16;
+	constexpr static int INSTRUCTIONS_OFFSET_X = 400;
+	constexpr static int INSTRUCTIONS_OFFSET_Y = 200;
 	sf::Text skipText;
 	static const sf::Vector2i demoSize;
 	static constexpr float DEMO_FRAME_OFFSET = 21;

@@ -112,12 +112,7 @@ private:
 	GameObject *characterObject;
 
 	static constexpr float FRAME_OFFSET = 21;
-
-
-	sf::RectangleShape infoFrame;
-	sf::RectangleShape textFrame;
 	sf::RectangleShape demoFrame;
-	sf::RectangleShape textureFrame;
 };
 
 #endif // MANUALWINDOW_H

@@ -25,6 +25,7 @@ void GameManagers::loadResources()
 		{
 		case GameResource::TEXTURE:
 		{
+			{
 			if (resource.name == "tiles")
 				addTexture(GAME_TEXTURE::TILES, out);
 			else if (resource.name == "close")
@@ -45,8 +46,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::MANUAL_BACKGROUND, out);
 			else if (resource.name == "window")
 				addTexture(GAME_TEXTURE::WINDOW_TEXTURE, out);
+			}
 			//enemies
-			else if (resource.name == "spider")
+			{
+			if (resource.name == "spider")
 				addTexture(GAME_TEXTURE::ENEMY_MECHSPIDER, out);
 			else if (resource.name == "car")
 				addTexture(GAME_TEXTURE::ENEMY_WAR_VEHICLE, out);
@@ -80,8 +83,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::ENEMY_REPAIR, out);
 			else if (resource.name == "selfheal")
 				addTexture(GAME_TEXTURE::ENEMY_SELF_HEAL, out);
+			}
 			//map icons
-			else if (resource.name == "mission1_icon")
+			{
+			if (resource.name == "mission1_icon")
 				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_1, out);
 			else if (resource.name == "mission2_icon")
 				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_2, out);
@@ -111,8 +116,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_14, out);
 			else if (resource.name == "mission15_icon")
 				addTexture(GAME_TEXTURE::MAP_ICON_MISSION_15, out);
+			}
 			//towers
-			else if (resource.name == "tower_base")
+			{
+			if (resource.name == "tower_base")
 				addTexture(GAME_TEXTURE::TOWER_BASE, out);
 			else if (resource.name == "tower_freeze")
 				addTexture(GAME_TEXTURE::TOWER_FREEZE, out);
@@ -124,8 +131,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::TOWER_LASER, out);
 			else if (resource.name == "tower_improved")
 				addTexture(GAME_TEXTURE::TOWER_IMPROVED, out);
+			}
 			//icons
-			else if (resource.name == "ability_bomb_icon")
+			{
+			if (resource.name == "ability_bomb_icon")
 				addTexture(GAME_TEXTURE::ABILITY_BOMB, out);
 			else if (resource.name == "ability_freeze_bomb_icon")
 				addTexture(GAME_TEXTURE::ABILITY_FREEZE_BOMB, out);
@@ -149,8 +158,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::TOWER_LASER_ICON, out);
 			else if (resource.name == "tower_improved_icon")
 				addTexture(GAME_TEXTURE::TOWER_IMPROVED_ICON, out);
+			}
 			//ui
-			else if (resource.name == "focus_icon")
+			{
+			if (resource.name == "focus_icon")
 				addTexture(TexturesManager::FOCUS_ICON, out);
 			else if (resource.name == "credits_icon")
 				addTexture(GAME_TEXTURE::CREDITS, out);
@@ -214,8 +225,14 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::FRAME_DEMO, out);
 			else if (resource.name == "character_full")
 				addTexture(GAME_TEXTURE::CHARACTER_FULL, out);
+			else if (resource.name == "name_frame")
+				addTexture(GAME_TEXTURE::NAME_FRAME, out);
+			else if (resource.name == "demo_frame")
+				addTexture(GAME_TEXTURE::DEMO_FRAME, out);
+			}
 			//weapons
-			else if (resource.name == "bullet")
+			{
+			if (resource.name == "bullet")
 				addTexture(GAME_TEXTURE::BASE_PROJECTILE, out);
 			else if (resource.name == "freeze_bullet")
 				addTexture(GAME_TEXTURE::FREEZE_PROJECTILE, out);
@@ -231,8 +248,10 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::ENEMY_ROCKET, out);
 			else if (resource.name == "enemy_bullet")
 				addTexture(GAME_TEXTURE::ENEMY_BULLET, out);
+			}
 			//effects
-			else if (resource.name == "base_explosion")
+			{
+			if (resource.name == "base_explosion")
 				addTexture(GAME_TEXTURE::BASE_EXPLOSION_EFFECT, out);
 			else if (resource.name == "blast")
 				addTexture(GAME_TEXTURE::BLAST, out);
@@ -275,7 +294,7 @@ void GameManagers::loadResources()
 			//map objects
 			else if (resource.name == "tree")
 				addTexture(GAME_TEXTURE::OBJECT_TREE, out);
-
+			}
 		}
 			break;
 		case GameResource::FONT:

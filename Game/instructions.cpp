@@ -11,7 +11,7 @@
 
 const std::map<int, std::vector<Instructions::STATES> > Instructions::INSTRUCTIONS =
 {
-	{1, { WELCOME, MONEY, HEALTH, PROGRESS, INSTRUCTION_TOWER_ENERGY, INSTRUCTION_TOWER_BASE, INSTRUCTION_BOMB, GOOD_LUCK } },
+	{1, { WELCOME, MONEY, HEALTH, PROGRESS, TOWERS, UPGRADE_SELL, INSTRUCTION_TOWER_ENERGY, INSTRUCTION_TOWER_BASE, INSTRUCTION_BOMB, GOOD_LUCK } },
 	{2, { INSTRUCTION_TOWER_FREEZE, INSTRUCTION_FREEZE_BOMB} },
 	{3, { INSTRUCTION_TOWER_ROCKET, INSTRUCTION_ACID } },
 	{4, { INSTRUCTION_TOWER_LASER } },
@@ -76,8 +76,8 @@ Instructions::Instructions() :
 	textRectColor.a = 128;
 	textRext.setFillColor(textRectColor);
 	textRext.setScale(scaleFactor);
-	textRext.setPosition((INSTRUCTIONS_OFFSET + RECT_OFFSET) * Engine::Instance().settingsManager()->getScaleFactor().x,
-						 (INSTRUCTIONS_OFFSET + RECT_OFFSET) * Engine::Instance().settingsManager()->getScaleFactor().y);
+	textRext.setPosition((INSTRUCTIONS_OFFSET_X + RECT_OFFSET) * scaleFactor.x,
+						 (INSTRUCTIONS_OFFSET_Y + RECT_OFFSET) * scaleFactor.y);
 
 	arrow = new GameObject(GAME_TEXTURE::ARROW, sf::Vector2f(0,0), sf::Vector2i(64, 105), 8);
 	arrow->animationSpeed = 75;
@@ -447,6 +447,19 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_PROGRESS);
 	}
 		break;
+	case TOWERS:
+	{
+		showArrow = false;
+		rect = Engine::Instance().options<GameOptions>()->panel()->getTowersRect();
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_TOWERS);
+	}
+		break;
+	case UPGRADE_SELL:
+	{
+		showArrow = false;
+		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_UPGRADE_SELL);
+	}
+		break;
 	case GOOD_LUCK:
 	{
 		showArrow = false;
@@ -626,9 +639,8 @@ void Instructions::updateTextRect()
 	const sf::Vector2f rectSize = sf::Vector2f(TEXT_WIDTH, textHeight);	
 	const sf::Vector2f rectOffset = sf::Vector2f(RECT_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
 												 RECT_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
-	const sf::Vector2f rectPos = sf::Vector2f(INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
-											  (INSTRUCTIONS_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y));
-
+	const sf::Vector2f rectPos = sf::Vector2f(INSTRUCTIONS_OFFSET_X * Engine::Instance().settingsManager()->getScaleFactor().x,
+											  (INSTRUCTIONS_OFFSET_Y * Engine::Instance().settingsManager()->getScaleFactor().y));
 	top.setSize(sf::Vector2f(rectSize.x, lineSize.y));
 	top.setPosition(rectPos.x, rectPos.y);
 

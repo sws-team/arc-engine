@@ -220,8 +220,8 @@ void GameManagers::loadTranslations()
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Herzliche Glückwünsche!\nLevel abgeschlossen."));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Press Space to start"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Нажмите \"Пробел\" чтобы начать"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Tapez \"l'Espace\" afin de commencer le jeu"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Нажмите Пробел чтобы начать"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Tapez l'Espace afin de commencer le jeu"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Drücken Sie die Leertaste, um zu starten"));
 
 	//instructions
@@ -245,13 +245,23 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_PROGRESS, L"Avancement\nAfin d’attaquer les ennemis forment une sorte des vagues.\nNous pouvons prévoir le nombre des vagues, cette échelle\nsert à l’indiquer pour toi."));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_PROGRESS, L"Fortschritt\nUnsere Feinde neigen dazu, in Wellen zu schlagen. Glücklicherweise können wir die ungefähre Anzahl der Wellen vorhersagen. Sie werden sie hier sehen."));
 
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_TOWERS, L"Towers\nThere are two types of Towers: the Attacking towers and the Energy one. You should build the Attacking towers in the marked zones near the Energy ones to provide them necessary resources. Upgrading an Energy tower helps to expand this zone."));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_TOWERS, L"Башни\n Существует два типа башен: Ресурсная и Атакующие. Атакующие башни необходимо строить в отмеченной зоне вокруг Ресурсной, что позволит ей снабжать их необходимой энергией. При повышении уровня Ресурсной башни эта зона увеличивается."));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_TOWERS, L"Tours\nIl existe deux types des Tours: celles de production et celles d'attaque. Il est impossible de construir des Tours d'attaque loin des Tours de production d'énergie. Il faut les placer dans la zone indiquée autour des Tours de production, ce qui les permettera de proqurer les Tours d'attaque d'énergie nécéssaire. La zone grandisse avec chaque upgrade de la Tour de production"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_TOWERS, L"Türme\nDort die Angriffstürme und der Energieturm. Sie sollten die Angriffstürme in markierten Zonen in der Nähe der Energietürme errichten, um die erforderlichen Ressourcen bereitzustellen. Durch die Aufrüstung eines Energieturms wird diese Zone erweitert."));
+
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_UPGRADE_SELL, L"Tower upgrade and tower selling\nYou can improve towers characteristics by upgrading them. If you ran out of energy and can't afford any upgrade, you can wait until your Energy towers extract the amount you need or you can sell one of your previously builded Towers. To sell or upgrade a Tower you need to click on it and choose necessary option."));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_UPGRADE_SELL, L"Улучшение и продажа башен\nМожно улучшать качественные характеристики башен путем их апгрейда за определенное количество энергии. Если не хватает энергии, подожди, пока Ресурсной башне удастся добыть нужный объем, или продай башню, которая плохо справляется со своей задачей. Для улучшения и продажи нажми на башню и выбери необходимый пункт. "));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_UPGRADE_SELL, L"Upgrade et vente des Tours \n Tu peux améliorer les charactéristiques des Tours grâce à l'upgrade. Si tu n'as pas d'énergie pour payer, tu peux attendre lorsque la Tour de production en extrait assez ou vendre une autre Tour. Pour effectuer l'upgrade ou la vente tu a à taper sur la Tour et choisir l'option nécéssaire."));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_UPGRADE_SELL, L"Turm-Upgrade und Turmverkauf\nSie können die Eigenschaften von Türmen verbessern, indem Sie darauf klicken. Wenn Ihnen die Energie ausgeht und Sie sich kein Upgrade leisten können, können Sie warten, bis Ihre Energietürme die benötigte Menge extrahiert haben, oder Sie können einen Ihrer zuvor gebauten Türme verkaufen."));
+
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_GOOD_LUCK, L"So it’s time for you to show us what you can do!\nGood luck!"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_GOOD_LUCK, L"А теперь покажи нам, на что способен!\nУдачи!"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_GOOD_LUCK, L"Bon, maintenant c’est à toi d’agir!\nBonne chance!"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_PROGRESS, L"Es ist Zeit für Sie, uns zu zeigen, wozu Sie fähig sind! Viel Glück!"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_GOOD_LUCK, L"Es ist Zeit für Sie, uns zu zeigen, wozu Sie fähig sind! Viel Glück!"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Press \"Return\" to continue or \"Space\" to skip"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Нажмите \"Ввод\" чтобы продолжить или \"Пробел\" чтобы пропустить"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Нажмите Ввод, чтобы продолжить, или Пробел, чтобы пропустить"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Taper la touche \"Entree\" pour continuer ou \"l'Espace\" pour ignorer"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_SKIP, L"Drücken Sie die Eingabetaste, um fortzufahren, oder die Leertaste, um zu überspringen"));
 
@@ -362,12 +372,12 @@ void GameManagers::loadTranslations()
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::POWER_TOWER_ABILITY, L"Periodic energy impulses,\n damaging nearby enemies"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::POWER_TOWER_ABILITY, L"Периодично испускает энергетические импульсы,\n наносящие урон врагам рядом"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::POWER_TOWER_ABILITY, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::POWER_TOWER_ABILITY, L"Impultions d'énergie périodiques endommageant des ennemis à proximité"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::POWER_TOWER_ABILITY, L"Periodische Energieimpulse, die in der Nähe befindliche Feinde beschädigen"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROCKET_TOWER_ABILITY, L"Burn enemy"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROCKET_TOWER_ABILITY, L"Поджиг врага"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROCKET_TOWER_ABILITY, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROCKET_TOWER_ABILITY, L"Brûle un ennemi"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROCKET_TOWER_ABILITY, L"Verbrenne den Feind"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::LASER_TOWER_ABILITY, L"Multi-targeting"));
@@ -380,9 +390,9 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::IMPROVED_TOWER_ABILITY, L"Shoot on 4 sides"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::IMPROVED_TOWER_ABILITY, L"4-Wege-Aufnahme"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::POWER_TOWER_TRAIT, L"Building cost increase with every new tower"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::POWER_TOWER_TRAIT, L"Building cost increases with every new tower"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::POWER_TOWER_TRAIT, L"Цена постройки увеличивается\nс каждой построенное башней"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::POWER_TOWER_TRAIT, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::POWER_TOWER_TRAIT, L"Construction d'une chaque nouvelle tour augmente le prix de la suivante"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::POWER_TOWER_TRAIT, L"Die Baukosten steigen mit jedem neuen Turm"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_ANYWHERE, L"Can build anywhere"));
@@ -398,17 +408,17 @@ void GameManagers::loadTranslations()
 	//enemies abilities
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_NONE, L"None"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_NONE, L"Отсутствует"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_NONE, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_NONE, L"Absent"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_NONE, L"Keiner"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_RAGE, L"Rage - The more damage taken - the stronger the armor"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_RAGE, L"Ярость - броня увеличивается\nобратно пропорционально здоровью"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_RAGE, L"???"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_RAGE, L"Ярость – броня увеличивается\nобратно пропорционально здоровью"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_RAGE, L"Rage - Plus il est endommagé, plus sa cuirasse est solide"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_RAGE, L"Je mehr Schaden genommen wird, desto stärker ist die Rüstung"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"Can produce more larves"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"Может родить новые личинки"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"???"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"Плодит новых личинок"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"Donne naîssance aux petit larves"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SPAWN, L"Kann neue Larven gebären"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_TELEPORT, L"Teleport"));
@@ -418,32 +428,32 @@ void GameManagers::loadTranslations()
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHELL_NEAR, L"Force field generator increase the armor of the enemies nearby"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHELL_NEAR, L"Генератор силового поля\nувеличивает броню окружающих"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHELL_NEAR, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHELL_NEAR, L"Générateur de champ de forces améliore les cuirasses des ennemis à proximité"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHELL_NEAR, L"Kraftfeldgenerator erhöht die Rüstung der Feinde in der Nähe"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_HEAL_NEAR, L"Universal repair kit restores health to every enemy nearby, but not itself."));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_HEAL_NEAR, L"Ремонтное оборудование\nпозволяет восстанавливать некоторое\nколичество здоровья"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_HEAL_NEAR, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_HEAL_NEAR, L"Kit de réparation sert à redonner des points de vie aux ennemis à proximité"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_HEAL_NEAR, L"Das universelle Reparaturset stellt die Gesundheit jedes Feindes in der Nähe wieder her, aber nicht sich selbst."));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER, L"Shoots a web, temporarily disabling the tower"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER, L"Shoots a nanobot web, temporarily disabling the tower"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER, L"Может выпускать паутину из наноботов,\nкоторая временно выводит из строя башню"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER, L"Il tire des toiles d'araignée en nanites afin de neutraliser temporairement une tour"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER, L"Schießt ein Web ab und deaktiviert den Turm vorübergehend"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"Energy shield grow stronger every second."));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"Оснащен энергетическим щитом,\nвеличина заряда которого зависит от времени"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"Has an energy shield that gets wicker every second."));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"Оснащен энергетическим щитом,\nвеличина заряда которого уменьшается со временем"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"Son bouclier d'énergie devient progressivement de plus en plus faible"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"Der Energieschild wird mit jeder Sekunde stärker."));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER, L"Its equipment is able to cause a temporary breakage of Tower"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER, L"Оснащен излучателем направленного действия,\nкоторый может вызывать поломки башен"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER, L"Son équipement sert à mettre les tours en panne temporaire"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWN_TOWER, L"Es wird deinen Turm zerstören."));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"Enhanced Regeneration restores a Health of its carrier."));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"Усиленная регенерация\nпозволяет восстанавливать здоровье"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"Se redonne les points de vie grâce à sa régénération "));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"Verbesserte Regeneration stellt die Gesundheit des Trägers wieder her"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_FASTER, L"???"));
@@ -671,5 +681,5 @@ void GameManagers::loadTranslations()
 	Engine::Instance().translationsManager()->addTranslation(std::string("russian"), russainTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("french"), frenchTranslation);
-	Engine::Instance().translationsManager()->addTranslation(std::string("german"), frenchTranslation);
+	Engine::Instance().translationsManager()->addTranslation(std::string("german"), germanTranslation);
 }

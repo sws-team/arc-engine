@@ -835,6 +835,8 @@ std::vector<TowerStats> GamePanel::levelTowerStats(TOWER_TYPES type) const
 	sf::String radiusStr;
 	sf::String costStr;
 	sf::String dpsStr;
+	if (type == POWER)
+		towerStats.cost += TowersCounter::Instance().powerTowerCount * Balance::Instance().getPowerTowerCostOffset();
 	const float k = 1 + Balance::Instance().getTowerUpgradeGain();
 	for (int level = 1; level <= Tower::ABILITY_LEVEL; ++level)
 	{
@@ -1089,7 +1091,12 @@ sf::FloatRect GamePanel::getProgressRect() const
 {
 	return sf::FloatRect(progress->pos().x, progress->pos().y,
 					 Engine::Instance().settingsManager()->getResolution().x * PROGRESS_WIDTH,
-					 PROGRESS_OFFSET/2 * Engine::Instance().settingsManager()->getScaleFactor().y);
+						 PROGRESS_OFFSET/2 * Engine::Instance().settingsManager()->getScaleFactor().y);
+}
+
+sf::FloatRect GamePanel::getTowersRect() const
+{
+	return sf::FloatRect();
 }
 
 void GamePanel::setProgressMax(int progressMax)

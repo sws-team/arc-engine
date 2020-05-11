@@ -45,6 +45,7 @@ public:
 	sf::FloatRect getMoneyRect() const;
 	sf::FloatRect getHealthRect() const;
 	sf::FloatRect getProgressRect() const;
+	sf::FloatRect getTowersRect() const;
 
 	void updateCursor();
 

@@ -191,7 +191,7 @@ void Level::startMission(const unsigned int n)
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
-			wave.spawnEnemies.push_back(ENEMY_TYPES::WAR_VEHICLE);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
 #endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
