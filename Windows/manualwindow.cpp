@@ -338,30 +338,30 @@ void ManualWindow::addElements()
 							   TowersFactory::getAnimationSpeed(BASE),
 							   GAME_TEXTURE::SHOW_BASE_TOWER));
 
-	elements.push_back(Element(GAME_TEXTURE::TOWER_POWER,
-							   GAME_TRANSLATION::TOWER_POWER,
-							   POWER,
-							   TowersFactory::getFrameCount(POWER),
-							   TowersFactory::getAnimationSpeed(POWER),
-							   GAME_TEXTURE::SHOW_FREEZE_TOWER));
-
-	elements.push_back(Element(GAME_TEXTURE::TOWER_LASER,
-							   GAME_TRANSLATION::TOWER_LASER,
-							   LASER,
-							   TowersFactory::getFrameCount(LASER),
-							   TowersFactory::getAnimationSpeed(LASER)));
-
 	elements.push_back(Element(GAME_TEXTURE::TOWER_FREEZE,
 							   GAME_TRANSLATION::TOWER_FREEZE,
 							   FREEZE,
 							   TowersFactory::getFrameCount(FREEZE),
-							   TowersFactory::getAnimationSpeed(FREEZE)));
+							   TowersFactory::getAnimationSpeed(FREEZE),
+							   GAME_TEXTURE::SHOW_FREEZE_TOWER));
+
+	elements.push_back(Element(GAME_TEXTURE::TOWER_POWER,
+							   GAME_TRANSLATION::TOWER_POWER,
+							   POWER,
+							   TowersFactory::getFrameCount(POWER),
+							   TowersFactory::getAnimationSpeed(POWER)));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_ROCKET,
 							   GAME_TRANSLATION::TOWER_ROCKET,
 							   ROCKET,
 							   TowersFactory::getFrameCount(ROCKET),
 							   TowersFactory::getAnimationSpeed(ROCKET)));
+
+	elements.push_back(Element(GAME_TEXTURE::TOWER_LASER,
+							   GAME_TRANSLATION::TOWER_LASER,
+							   LASER,
+							   TowersFactory::getFrameCount(LASER),
+							   TowersFactory::getAnimationSpeed(LASER)));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_IMPROVED,
 							   GAME_TRANSLATION::TOWER_IMPROVED,

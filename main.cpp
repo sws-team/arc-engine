@@ -38,7 +38,9 @@ int main(int argc, char *argv[])
 
 	if (!SteamAPI_Init())
 	{
+#ifdef OS_WIN
 		MessageBoxA(NULL, "Steam must be running to play this game", "Fatal Error!", MB_OK | MB_ICONERROR);
+#endif
 		return EXIT_FAILURE;
 	}
 #endif
@@ -71,7 +73,9 @@ int main(int argc, char *argv[])
 	Engine::Instance().options<GameOptions>()->loadAchievements();
 	GamePlatform::Instance().requestStats();
 	Engine::Instance().fontManager()->setFontModifier(0.75f);
+#ifdef OS_WIN
 	Engine::Instance().options<GameOptions>()->setDev(std::string(lpCmdLine) == std::string("-dev"));
+#endif
 
 	MainWindow w;
 	Engine::Instance().options<GameOptions>()->setMainWindow(&w);

@@ -527,8 +527,10 @@ std::vector<sf::String> GameManagers::creators()
 	creatorsVec.push_back(sf::String("Testers:"));
 	creatorsVec.push_back(sf::String("Konstantin Grigorenko"));
 	creatorsVec.push_back(sf::String("frtkv"));
+	creatorsVec.push_back(sf::String("Dmitrii Sevastyanov"));
 
 	creatorsVec.push_back(sf::String("Proofreader:"));
+	creatorsVec.push_back(sf::String("Evgeniia Sevastyanova"));
 
 	creatorsVec.push_back(sf::String("Translators:"));
 	creatorsVec.push_back(sf::String("English: Olesya Chmireva,\nKonstantin Grigorenko"));
