@@ -29,15 +29,15 @@ GamePanel::GamePanel() :
 	m_sprite.setScale(scaleFactor);
 
 	info.setFont(Engine::Instance().fontManager()->font());
-	info.setFillColor(GameOptions::secondaryColor);
-	info.setOutlineColor(GameOptions::primaryColor);
+	info.setFillColor(GameOptions::primaryColor);
+	info.setOutlineColor(GameOptions::secondaryColor);
 	info.setOutlineThickness(2);
 	info.setCharacterSize(Engine::Instance().fontManager()->getCharSize(25));
 	info.setScale(scaleFactor);
 
 	moneyCountText.setFont(Engine::Instance().fontManager()->font());
-	moneyCountText.setFillColor(GameOptions::secondaryColor);
-	moneyCountText.setOutlineColor(GameOptions::primaryColor);
+	moneyCountText.setFillColor(GameOptions::primaryColor);
+	moneyCountText.setOutlineColor(GameOptions::secondaryColor);
 	moneyCountText.setOutlineThickness(2);
 	moneyCountText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(34));
 	moneyCountText.setScale(scaleFactor);
@@ -267,7 +267,7 @@ void GamePanel::update()
 		if (blinkTimer.check(BLINK_TIME))
 		{
 			waitBlink = !waitBlink;
-			readyText.setFillColor(waitBlink ? sf::Color::White : GameOptions::primaryColor);
+			readyText.setFillColor(waitBlink ? GameOptions::alternativePrimaryColor : GameOptions::primaryColor);
 		}
 	}
 	if (m_drain)
@@ -474,8 +474,8 @@ sf::Vector2f GamePanel::updatePos()
 	abilityIncreaseTowerAttackSpeedDurationText.setPosition(abilityIncreaseTowerAttackSpeedSprite.getPosition());
 	abilityStopDurationText.setPosition(abilityStopSprite.getPosition());
 
-	const sf::Vector2f halfCellY = sf::Vector2f(0, Engine::Instance().options<GameOptions>()->tileSize().y/2.f);
-
+	const sf::Vector2f halfCellY = sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x/2 - towerBaseLimitText.getGlobalBounds().width/2,
+												Engine::Instance().options<GameOptions>()->tileSize().y/2 - towerBaseLimitText.getGlobalBounds().height/2);
 	towerBaseLimitText.setPosition(towerBaseSprite.getPosition() + halfCellY);
 	towerFreezeLimitText.setPosition(towerFreezeSprite.getPosition() + halfCellY);
 	towerRocketLimitText.setPosition(towerRocketSprite.getPosition() + halfCellY);
@@ -1096,7 +1096,16 @@ sf::FloatRect GamePanel::getProgressRect() const
 
 sf::FloatRect GamePanel::getTowersRect() const
 {
-	return sf::FloatRect();
+	const float icons_space = ICONS_SPACE * Engine::Instance().settingsManager()->getScaleFactor().x;
+
+	const int towersCount = 6;
+	const sf::Vector2f pos = sf::Vector2f(towerBaseSprite.getGlobalBounds().left,
+										  towerBaseSprite.getGlobalBounds().top);
+	sf::Vector2f size;
+	size.y = Engine::Instance().options<GameOptions>()->tileSize().y;
+	size.x = Engine::Instance().options<GameOptions>()->tileSize().x * towersCount
+			+ icons_space * (towersCount - 1);
+	return sf::FloatRect(pos, size);
 }
 
 void GamePanel::setProgressMax(int progressMax)

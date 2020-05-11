@@ -296,8 +296,8 @@ void ManualWindow::updatePos()
 
 
 
-		element.object->setPos(texturePos + sf::Vector2f(textureSize.x/2 - element.object->getSize().x/2,
-														 textureSize.y/2 - element.object->getSize().y/2));
+		element.object->setPos(texturePos + sf::Vector2f(textureSize.x/2 - element.object->sprite.getGlobalBounds().width/2,
+														 textureSize.y/2 - element.object->sprite.getGlobalBounds().height/2));
 
 		element.nameText.setScale(scaleFactor);
 		element.nameText.setPosition(textPos);
@@ -627,31 +627,32 @@ void ManualWindow::Element::init()
 	titleText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(30));
 
 	nameText.setFont(Engine::Instance().fontManager()->font());
-	nameText.setFillColor(GameOptions::primaryColor);
+	nameText.setFillColor(GameOptions::alternativePrimaryColor);
 	nameText.setOutlineThickness(1);
-	nameText.setOutlineColor(GameOptions::secondaryColor);
+	nameText.setOutlineColor(GameOptions::alternativeSecondaryColor);
 	nameText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(45));
 
 	descriptionText.setFont(Engine::Instance().fontManager()->font());
 	descriptionText.setFillColor(GameOptions::primaryColor);
 	descriptionText.setOutlineThickness(1);
 	descriptionText.setOutlineColor(GameOptions::secondaryColor);
-	descriptionText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(35));
+	descriptionText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(34));
 }
 
 void ManualWindow::Element::update()
 {
 	bool cycled = false;
 	int rowCount = 1;
+	float objectScale = 1;
 	sf::Vector2i frameSize;	
 	TextureType objectTexture = texture;
 	//texture
 	icon.setTexture(Engine::Instance().texturesManager()->getTexture(texture));
 	//name
-	titleText.setString(Engine::Instance().translationsManager()->translate(name));
+	std::wstring titleStr = Engine::Instance().translationsManager()->translate(name).toWideString();
+	titleText.setString(titleStr);
 	//description
 	sf::String descriptionStr;
-	const sf::String nameStr = Engine::Instance().translationsManager()->translate(name);
 	switch (type)
 	{
 	case Element::E_Tower:
@@ -714,6 +715,8 @@ void ManualWindow::Element::update()
 		const sf::Vector2f k = sf::Vector2f(2.f/static_cast<float>(enemyInfo.size.x),
 											2.f/static_cast<float>(enemyInfo.size.y));
 		icon.scale(k.x/Enemy::ENEMY_SCALE, k.y/Enemy::ENEMY_SCALE);
+		if (enemyInfo.size.x == 4)
+			objectScale = 0.5f;
 
 		//speed
 		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SPEED) + EngineDefs::separator;
@@ -832,6 +835,7 @@ void ManualWindow::Element::update()
 	object->animationSpeed = animationSpeed;
 	object->cycled = cycled;
 	object->rowCount = rowCount;
+	object->sprite.scale(objectScale, objectScale);
 
 	if (demoTextureType == -1)
 		elementDemo = nullptr;
@@ -842,7 +846,7 @@ void ManualWindow::Element::update()
 		elementDemo->cycled = true;
 		elementDemo->rowCount = 5;
 	}
-
-	nameText.setString(nameStr);
+	titleStr.erase(std::remove(titleStr.begin(), titleStr.end(), '\n'), titleStr.end());
+	nameText.setString(titleStr);
 	descriptionText.setString(descriptionStr);
 }

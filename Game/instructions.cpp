@@ -39,23 +39,22 @@ Instructions::Instructions() :
 
 	targetRect.setFillColor(sf::Color::Transparent);
 	targetRect.setOutlineThickness(3);
-	targetRect.setOutlineColor(sf::Color::Blue);
+	targetRect.setOutlineColor(sf::Color(33,79,29));
 
 	const unsigned int textCharacterSize = 35;
 	text.setFont(Engine::Instance().fontManager()->font());
 	text.setCharacterSize(Engine::Instance().fontManager()->getCharSize(textCharacterSize));
-	text.setFillColor(GameOptions::secondaryColor);
-	text.setOutlineColor(sf::Color::White);
+	text.setFillColor(sf::Color(25,40,7));
+	text.setOutlineColor(sf::Color(186,191,188));
 	text.setOutlineThickness(2);
 	text.setScale(scaleFactor);
 
 	skipText.setFont(Engine::Instance().fontManager()->font());
 	skipText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(textCharacterSize * 0.7f));
-	skipText.setFillColor(GameOptions::secondaryColor);
-	skipText.setOutlineColor(sf::Color::White);
+	skipText.setFillColor(text.getFillColor());
+	skipText.setOutlineColor(text.getOutlineColor());
 	skipText.setOutlineThickness(2);
 	skipText.setScale(scaleFactor);
-	skipText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_SKIP));
 
 	character.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::CHARACTER));
 	character.setScale(scaleFactor);
@@ -76,8 +75,6 @@ Instructions::Instructions() :
 	textRectColor.a = 128;
 	textRext.setFillColor(textRectColor);
 	textRext.setScale(scaleFactor);
-	textRext.setPosition((INSTRUCTIONS_OFFSET_X + RECT_OFFSET) * scaleFactor.x,
-						 (INSTRUCTIONS_OFFSET_Y + RECT_OFFSET) * scaleFactor.y);
 
 	arrow = new GameObject(GAME_TEXTURE::ARROW, sf::Vector2f(0,0), sf::Vector2i(64, 105), 8);
 	arrow->animationSpeed = 75;
@@ -97,6 +94,7 @@ Instructions::~Instructions()
 
 void Instructions::init(const unsigned int level)
 {
+	skipText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_SKIP));
 	character.setPosition(Engine::Instance().settingsManager()->getResolution().x - character.getGlobalBounds().width,
 						  Engine::Instance().options<GameOptions>()->panel()->getBottomValue() - character.getGlobalBounds().height);
 	active = true;
@@ -449,7 +447,7 @@ void Instructions::updateState()
 		break;
 	case TOWERS:
 	{
-		showArrow = false;
+		showArrow = true;
 		rect = Engine::Instance().options<GameOptions>()->panel()->getTowersRect();
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INSTRUCTION_TOWERS);
 	}
@@ -632,15 +630,17 @@ void Instructions::updateState()
 
 void Instructions::updateTextRect()
 {
+	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 	const sf::Vector2f lineSize = sf::Vector2f(26, 47);
 	const float textHeight = text.getLocalBounds().height +
-			lineSize.y * 4 * Engine::Instance().settingsManager()->getScaleFactor().y +
+			lineSize.y * 4 * scaleFactor.y +
 			skipText.getGlobalBounds().height;
 	const sf::Vector2f rectSize = sf::Vector2f(TEXT_WIDTH, textHeight);	
-	const sf::Vector2f rectOffset = sf::Vector2f(RECT_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
-												 RECT_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
-	const sf::Vector2f rectPos = sf::Vector2f(INSTRUCTIONS_OFFSET_X * Engine::Instance().settingsManager()->getScaleFactor().x,
-											  (INSTRUCTIONS_OFFSET_Y * Engine::Instance().settingsManager()->getScaleFactor().y));
+	const sf::Vector2f rectOffset = sf::Vector2f(RECT_OFFSET * scaleFactor.x,
+												 RECT_OFFSET * scaleFactor.y);
+	const sf::Vector2f rectPos =
+			sf::Vector2f(INSTRUCTIONS_OFFSET * scaleFactor.x,
+						 Engine::Instance().settingsManager()->getResolution().y/2 - rectSize.y/2);
 	top.setSize(sf::Vector2f(rectSize.x, lineSize.y));
 	top.setPosition(rectPos.x, rectPos.y);
 
@@ -648,33 +648,35 @@ void Instructions::updateTextRect()
 	left.setPosition(rectPos.x, rectPos.y + rectOffset.y);
 
 	right.setSize(sf::Vector2f(lineSize.x, rectSize.y - rectOffset.y * 2));
-	right.setPosition(rectPos.x + rectSize.x * Engine::Instance().settingsManager()->getScaleFactor().x -
+	right.setPosition(rectPos.x + rectSize.x * scaleFactor.x -
 					  right.getGlobalBounds().width,
 					  rectPos.y + rectOffset.y);
 
 	bottom.setSize(sf::Vector2f(rectSize.x, lineSize.y));
 	bottom.setPosition(rectPos.x,
-					   rectPos.y + rectSize.y * Engine::Instance().settingsManager()->getScaleFactor().y -
+					   rectPos.y + rectSize.y * scaleFactor.y -
 					   bottom.getGlobalBounds().height);
 
-	text.setPosition(RUBRIC_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x +
+	textRext.setPosition(rectPos + sf::Vector2f(RECT_OFFSET * scaleFactor.x,
+												RECT_OFFSET * scaleFactor.y));
+	text.setPosition(RUBRIC_OFFSET * scaleFactor.x +
 					 rectPos.x + left.getGlobalBounds().width,
 					 rectPos.y + top.getGlobalBounds().height);
 	skipText.setPosition(text.getPosition().x, text.getPosition().y +
-						 text.getGlobalBounds().height + lineSize.y * Engine::Instance().settingsManager()->getScaleFactor().y);
+						 text.getGlobalBounds().height + lineSize.y * scaleFactor.y);
 
 	textRext.setSize(sf::Vector2f(rectSize.x - 2 * RECT_OFFSET,
 								  rectSize.y - 2 * RECT_OFFSET));
 
 	if (demoObject != nullptr)
 	{
-		const float framesOffset = (DEMO_FRAME_OFFSET + 16) * Engine::Instance().settingsManager()->getScaleFactor().x;
-		const sf::Vector2f demoPosOffset = sf::Vector2f(demoObject->size.x * Engine::Instance().settingsManager()->getScaleFactor().x + framesOffset,
+		const float framesOffset = (DEMO_FRAME_OFFSET + 16) * scaleFactor.x;
+		const sf::Vector2f demoPosOffset = sf::Vector2f(demoObject->size.x * scaleFactor.x + framesOffset,
 														(demoObject->size.y - textHeight)/2);
 		const sf::Vector2f demoPos = rectPos - demoPosOffset;
 		demoObject->setPos(demoPos);
-		demoRect.setPosition(demoPos - sf::Vector2f(DEMO_FRAME_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
-													DEMO_FRAME_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y));
+		demoRect.setPosition(demoPos - sf::Vector2f(DEMO_FRAME_OFFSET * scaleFactor.x,
+													DEMO_FRAME_OFFSET * scaleFactor.y));
 	}
 }
 

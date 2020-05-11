@@ -25,8 +25,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 int main(int argc, char *argv[])
 #endif
 {
+	const int steamAppId =
+		#ifdef DEMO_VERSION
+			1296240
+		#else
+			1262070
+		#endif
+			;
 #ifdef STEAM_API
-	if (SteamAPI_RestartAppIfNecessary(1262070))
+	if (SteamAPI_RestartAppIfNecessary(steamAppId))
 		return EXIT_FAILURE;
 
 	if (!SteamAPI_Init())

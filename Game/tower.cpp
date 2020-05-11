@@ -226,7 +226,7 @@ void Tower::setDowngrade(bool isDowngrade)
 		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::DOWN_EFFECT, this->pos(),
 																		 sf::Vector2i(GameOptions::CELL_SIZE,
 																					  GameOptions::CELL_SIZE),
-																		 Balance::Instance().getDowngradeDuration()/4, 4, 0);
+																		 Balance::Instance().getDowngradeDuration()/96, 96, 0);
 }
 
 bool Tower::isDowngraded() const

@@ -28,8 +28,9 @@ GameWindow::GameWindow()
 	Engine::Instance().options<GameOptions>()->camera()->init();
 	currentMenu = static_cast<GAME_MENU>(CONTINUE_GAME);
 
-	setColor(GameOptions::primaryColor);
-	setCurrentColor(GameOptions::secondaryColor);
+	setColor(GameOptions::alternativeSecondaryColor);
+	setCurrentColor(GameOptions::primaryColor);
+	setOutlineColor(GameOptions::alternativePrimaryColor);
 
 	m_state = PLAYING;
 
@@ -39,9 +40,9 @@ GameWindow::GameWindow()
 	windowSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::WINDOW_TEXTURE));
 	windowSprite.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
-	text.setFillColor(sf::Color::Magenta);
+	text.setFillColor(GameOptions::primaryColor);
 	text.setOutlineThickness(5);
-	text.setOutlineColor(sf::Color::Yellow);
+	text.setOutlineColor(GameOptions::secondaryColor);
 	text.setFont(Engine::Instance().fontManager()->font());
 	text.setCharacterSize(Engine::Instance().fontManager()->getCharSize(100));
 	text.setScale(Engine::Instance().settingsManager()->getScaleFactor());
@@ -58,7 +59,7 @@ GameWindow::GameWindow()
 
 	const float offsetY = 20.f * Engine::Instance().settingsManager()->getScaleFactor().y;
 
-	pos.x += Engine::Instance().options<GameOptions>()->tileSize().x;
+	pos.x += 20.f * Engine::Instance().settingsManager()->getScaleFactor().x;
 	pos.y += 290 * Engine::Instance().settingsManager()->getScaleFactor().y;
 
 	for(sf::Text& menuText : menus)

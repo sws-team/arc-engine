@@ -84,12 +84,13 @@ public:
 
 	void clearSaves();
 
-	static const sf::Color primaryColor;
-	static const sf::Color secondaryColor;
-
 	bool getDev() const;
 	void setDev(bool dev);
 
+	static const sf::Color primaryColor;
+	static const sf::Color secondaryColor;
+	static const sf::Color alternativePrimaryColor;
+	static const sf::Color alternativeSecondaryColor;
 private:
 	Camera *m_camera;
 	GameCursor *m_cursor;

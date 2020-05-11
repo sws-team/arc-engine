@@ -71,3 +71,7 @@ QMAKE_LFLAGS += -Wl,-rpath,@executable_path/frameworks
 #DEFINES += LOAD_MAPS
 DEFINES += LOAD_BALANCE
 #DEFINES += SHOW_INSTRUCTIONS
+
+contains(DEMO_VERSION, DEFINES){
+TARGET = ArcDefenceDemo
+}

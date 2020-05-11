@@ -90,8 +90,7 @@ private:
 	static constexpr float TEXT_WIDTH = 966;
 	static constexpr float RECT_OFFSET = 5;
 	static constexpr float RUBRIC_OFFSET = 16;
-	constexpr static int INSTRUCTIONS_OFFSET_X = 400;
-	constexpr static int INSTRUCTIONS_OFFSET_Y = 200;
+	constexpr static int INSTRUCTIONS_OFFSET = 432;
 	sf::Text skipText;
 	static const sf::Vector2i demoSize;
 	static constexpr float DEMO_FRAME_OFFSET = 21;
