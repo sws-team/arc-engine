@@ -335,13 +335,15 @@ void ManualWindow::addElements()
 							   GAME_TRANSLATION::TOWER_BASE,
 							   BASE,
 							   TowersFactory::getFrameCount(BASE),
-							   TowersFactory::getAnimationSpeed(BASE)));
+							   TowersFactory::getAnimationSpeed(BASE),
+							   GAME_TEXTURE::SHOW_BASE_TOWER));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_POWER,
 							   GAME_TRANSLATION::TOWER_POWER,
 							   POWER,
 							   TowersFactory::getFrameCount(POWER),
-							   TowersFactory::getAnimationSpeed(POWER)));
+							   TowersFactory::getAnimationSpeed(POWER),
+							   GAME_TEXTURE::SHOW_FREEZE_TOWER));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_LASER,
 							   GAME_TRANSLATION::TOWER_LASER,
@@ -846,7 +848,7 @@ void ManualWindow::Element::update()
 		elementDemo->cycled = true;
 		elementDemo->rowCount = 5;
 	}
-	titleStr.erase(std::remove(titleStr.begin(), titleStr.end(), '\n'), titleStr.end());
+	std::replace(titleStr.begin(), titleStr.end(), '\n', ' ');
 	nameText.setString(titleStr);
 	descriptionText.setString(descriptionStr);
 }

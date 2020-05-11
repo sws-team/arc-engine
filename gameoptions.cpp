@@ -176,11 +176,8 @@ LevelObject *GameOptions::createObject(OBJECTS::OBJECT_TYPES type, const sf::Vec
 
 	switch (type)
 	{
-	case OBJECTS::TREE:
-		object = new LevelObject(GAME_TEXTURE::OBJECT_TREE, pos, sf::Vector2i(64, 64), 4);
-		break;
-//	case OBJECTS::RIVER:
-//		object = new LevelObject(RESOURCES::OBJECT_RIVER, pos, Vector2i(480, 1088), 1);
+//	case OBJECTS::TREE:
+//		object = new LevelObject(GAME_TEXTURE::OBJECT_TREE, pos, sf::Vector2i(64, 64), 4);
 //		break;
 	default:
 		break;

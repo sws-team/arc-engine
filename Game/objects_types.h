@@ -7,7 +7,7 @@ enum OBJECT_TYPES
 {
 	UNKNOWN,
 
-	TREE,
+//	TREE,
 };
 
 enum SHADER_TYPES

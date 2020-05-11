@@ -92,7 +92,6 @@ GamePanel::GamePanel() :
 	readyText.setOutlineThickness(2);
 	readyText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(45));
 	readyText.setScale(scaleFactor);
-	readyText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::START_GAME));
 
 	actionsSprites.push_back(&towerBaseSprite);
 	actionsSprites.push_back(&towerFreezeSprite);
@@ -456,8 +455,7 @@ sf::Vector2f GamePanel::updatePos()
 	pos.x += icon_offset;
 	pos.y = nullPos.y + 43 * scaleFactor.y;
 
-	readyText.setPosition(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x/2 - readyText.getGlobalBounds().width/2,
-								   Engine::Instance().settingsManager()->getResolution().y/2 + readyText.getGlobalBounds().height/2));
+
 	waveText.setPosition(progress->pos() + sf::Vector2f(0, 16 * scaleFactor.y));
 
 	towerBaseCostText.setPosition(towerBaseSprite.getPosition());
@@ -1115,6 +1113,9 @@ void GamePanel::setProgressMax(int progressMax)
 
 void GamePanel::init()
 {
+	readyText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::START_GAME));
+	readyText.setPosition(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x/2 - readyText.getGlobalBounds().width/2,
+								   Engine::Instance().settingsManager()->getResolution().y/2 + readyText.getGlobalBounds().height/2));
 	rTexture.setView(*Engine::Instance().options<GameOptions>()->camera()->getMiniMapView());
 }
 

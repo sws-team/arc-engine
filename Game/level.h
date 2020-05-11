@@ -79,8 +79,9 @@ public:
 
 	unsigned int getCurrentWave() const;
 
-	//delete
+#ifndef RELEASE_BUILD
 	void test();
+#endif
 
 	Abilities *getAbilities();
 

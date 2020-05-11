@@ -76,9 +76,11 @@ void Controller::eventFilter(sf::Event *event)
 			Engine::Instance().options<GameOptions>()->level()->chooseCurrent();
 		}
 			break;
+#ifndef RELEASE_BUILD
 		case sf::Keyboard::F2:
 			Engine::Instance().options<GameOptions>()->level()->test();
 			break;
+#endif
 		case sf::Keyboard::BackSpace:
 			Engine::Instance().options<GameOptions>()->camera()->resetView();
 			break;

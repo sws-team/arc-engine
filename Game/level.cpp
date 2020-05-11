@@ -180,7 +180,7 @@ void Level::startMission(const unsigned int n)
 	{
 		const int _testWavesCount = 999;
 		const int _testEnemiesCount = 999;
-		const int _testInterval = 2000;
+		const int _testInterval = 10000;
 
 		Wave wave;
 		wave.protection = 0.f;
@@ -191,7 +191,7 @@ void Level::startMission(const unsigned int n)
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
-			wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::TRICYCLE);
 #endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
@@ -903,12 +903,12 @@ unsigned int Level::getCurrentWave() const
 {
 	return currentWave;
 }
-
+#ifndef RELEASE_BUILD
 void Level::test()
 {
 	changeState(LEVEL_STATE::WIN);
 }
-
+#endif
 Abilities *Level::getAbilities()
 {
 	return abilities;

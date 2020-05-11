@@ -292,8 +292,6 @@ void GameManagers::loadResources()
 			else if (resource.name == "tower_explosion")
 				addTexture(GAME_TEXTURE::TOWER_EXPLOSION, out);
 			//map objects
-			else if (resource.name == "tree")
-				addTexture(GAME_TEXTURE::OBJECT_TREE, out);
 			}
 		}
 			break;
@@ -520,19 +518,23 @@ std::vector<sf::String> GameManagers::creators()
 						  sf::String(" Version: ") + APP_VERSION);
 	creatorsVec.push_back(Engine::EngineName() + ": " + Engine::EngineVersion());
 
-	creatorsVec.push_back(sf::String("Developers:"));
-	creatorsVec.push_back(sf::String("FIO"));
-
-	creatorsVec.push_back(sf::String("Testers:"));
-	creatorsVec.push_back(sf::String("FIO"));
+	creatorsVec.push_back(sf::String("Developer:"));
+	creatorsVec.push_back(sf::String("Marat Turmukhambetov"));
 
 	creatorsVec.push_back(sf::String("Desiner:"));
-	creatorsVec.push_back(sf::String("FIO"));
+	creatorsVec.push_back(sf::String("Olesya Chmireva"));
+
+	creatorsVec.push_back(sf::String("Testers:"));
+	creatorsVec.push_back(sf::String("Konstantin Grigorenko"));
+	creatorsVec.push_back(sf::String("frtkv"));
+
+	creatorsVec.push_back(sf::String("Proofreader:"));
 
 	creatorsVec.push_back(sf::String("Translators:"));
-	creatorsVec.push_back(sf::String("Russian: "));
-	creatorsVec.push_back(sf::String("French: "));
-	creatorsVec.push_back(sf::String("German: "));
+	creatorsVec.push_back(sf::String("English: Olesya Chmireva,\nKonstantin Grigorenko"));
+	creatorsVec.push_back(sf::String("Russian: Marat Turmukhambetov"));
+	creatorsVec.push_back(sf::String("French: Olesya Chmireva"));
+	creatorsVec.push_back(sf::String("German: Konstantin Grigorenko"));
 
 	creatorsVec.push_back(sf::String("Libraries:"));
 	creatorsVec.push_back(sf::String("SFML"));
@@ -569,6 +571,10 @@ void GameManagers::loadExtraResources()
 				addTexture(GAME_TEXTURE::SHOW_BOMB_ABILITY, out);
 			else if (resource.name == "show_freeze_bomb_ability")
 				addTexture(GAME_TEXTURE::SHOW_FREEZE_BOMB_ABILITY, out);
+			else if (resource.name == "show_base_tower")
+				addTexture(GAME_TEXTURE::SHOW_BASE_TOWER, out);
+			else if (resource.name == "show_freeze_tower")
+				addTexture(GAME_TEXTURE::SHOW_FREEZE_TOWER, out);
 		}
 	}
 }

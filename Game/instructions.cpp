@@ -471,6 +471,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_BASE);
 		textStr += EngineDefs::endline;
 		textStr += towerInfoText(BASE);
+		textureId = GAME_TEXTURE::SHOW_BASE_TOWER;
 	}
 		break;
 	case INSTRUCTION_TOWER_FREEZE:
@@ -480,6 +481,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_FREEZE);
 		textStr += EngineDefs::endline;
 		textStr += towerInfoText(FREEZE);
+		textureId = GAME_TEXTURE::SHOW_FREEZE_TOWER;
 	}
 		break;
 	case INSTRUCTION_TOWER_ENERGY:
