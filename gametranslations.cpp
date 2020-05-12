@@ -209,15 +209,15 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::EXIT_FROM_GAME, L"Sortir du jeu"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::EXIT_FROM_GAME, L"Beende das Spiel"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"You lose!\nTry again."));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Вы проиграли!\nПопробуйте еще."));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"You lose!\nTry again"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Вы проиграли!\nПопробуйте еще"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Désolé, t'as pérdu, on recommense?"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Du verlierst!\nVersuch es noch einmal."));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Du verlierst!\nVersuch es noch einmal"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Congratulations!\nLevel completed."));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Поздравляем!\nУровень пройден."));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Congratulations!\nLevel completed"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Поздравляем!\nУровень пройден"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Cool! T'as réussi!"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Herzliche Glückwünsche!\nLevel abgeschlossen."));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Herzliche Glückwünsche!\nLevel abgeschlossen"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Press Space to start"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Нажмите Пробел чтобы начать"));
@@ -236,7 +236,7 @@ void GameManagers::loadTranslations()
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_MONEY, L"Energie.\nEs ist unsere entscheidende Ressource.\nEin großer Teil davon kann über einen Energieturm\ngewonnen werden. Es ist auch möglich,\nein bisschen Energie zu gewinnen, indem man die\nFeinde ausrottet."));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_HEALTH, L"Health scale\nWe can’t let them go further! Only a little amount of enemies\ncan cross the line without endanger our defensive campaign.\nEvery single enemy crossing the finish line takes up some\nhealth points from you: the bigger enemy is,\nthe more points are taken."));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_HEALTH, L"Шкала жизни\nМы не можем допустить, чтобы большое количество врагов\nперешло рубеж. Каждый враг, которому удается от нас уйти,\nуменьшает показатели шкалы на определенное количество очков.\nОбрати внимание, количество очков зависит от того,\nнасколько они опасны: небольшие не причиняют большого вреда,\nа мощным необходимо оказать решительный отпор."));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_HEALTH, L"Шкала жизни\nМы не можем допустить, чтобы большое количество врагов\nперешло рубеж. Каждый враг, которому удается от нас уйти,\nуменьшает показатели шкалы на определенное количество очков.\nОбрати внимание, что количество очков зависит от того,\nнасколько они опасны: небольшие не причиняют большого вреда,\nа мощным необходимо оказать решительный отпор."));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_HEALTH, L"Points de vie\nOn ne doit absolument pas laisser les ennemis passer plus loin.\nL’échelle des points de vie indique la quantité des ennemis qui\npeuvent passer la frontière sans représenter l’ultime menace.\nS’il ne reste plus de points de vie, on est foutus.\nDes ennemis géants sont plus dangereux!"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_HEALTH, L"Gesundheitsskala\nWir können sie nicht weiter gehen lassen! Nur wenige Feinde\n können die Grenze überschreiten, ohne unsere\nVerteidigungskampagne zu gefährden. Jeder einzelne Feind,\nder die Ziellinie überquert, nimmt einige Gesundheitspunkte\nvon Ihnen auf: Je größer der Feind ist, desto mehr\nPunkte werden vergeben."));
 
@@ -271,20 +271,20 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INFANTRY, L"Infanterie"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INFANTRY, L"Infanterietrupp"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::WAR_VEHICLE, L"War vehicle\n\"Praefectus\""));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::WAR_VEHICLE, L"Боевая машина\n\"Префект\""));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::WAR_VEHICLE, L"Véhicule de combat\n\"Préfet\""));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::WAR_VEHICLE, L"Kampffahrzeug\n\"Präfekt\""));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::WAR_VEHICLE, L"War vehicle\n«Praefectus»"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::WAR_VEHICLE, L"Боевая машина\n«Префект»"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::WAR_VEHICLE, L"Véhicule de combat\n«Préfet»"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::WAR_VEHICLE, L"Kampffahrzeug\n«Präfekt»"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::TRICYCLE, L"Recon tricycle \"IS2\""));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::TRICYCLE, L"Разведывательный\nтрицикл \"ИС2\""));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::TRICYCLE, L"Tricycle de\nreconnaissance \"IS2\""));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::TRICYCLE, L"Recon tricycle «IS2»"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::TRICYCLE, L"Разведывательный\nтрицикл «ИС2»"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::TRICYCLE, L"Tricycle de\nreconnaissance «IS2»"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::TRICYCLE, L"Aufklärungsdreirad IS2"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::TANK, L"Tank \"W-100\""));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::TANK, L"Танк \"В-100\""));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::TANK, L"Char \"W-100\""));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::TANK, L"Tank \"W-100\""));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::TANK, L"Tank «W-100»"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::TANK, L"Танк «В-100»"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::TANK, L"Char «W-100»"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::TANK, L"Tank «W-100»"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::MECHSPIDER, L"Mechspider"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::MECHSPIDER, L"Мехпаук"));
@@ -301,30 +301,30 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::GIANT_SLUG, L"Limace géante"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::GIANT_SLUG, L"Riesenschnecke"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::HEAVY_TANK, L"Heavy tank\n\"Juggernaut\""));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::HEAVY_TANK, L"Тяжелый танк\n\"Джаггернаут\""));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::HEAVY_TANK, L"Char lourd\n\"Juggernaut\""));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::HEAVY_TANK, L"Schwerer Panzer\n\"Juggernaut\""));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::HEAVY_TANK, L"Heavy tank\n«Juggernaut»"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::HEAVY_TANK, L"Тяжелый танк\n«Джаггернаут»"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::HEAVY_TANK, L"Char lourd\n«Juggernaut»"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::HEAVY_TANK, L"Schwerer Panzer\n«Juggernaut»"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SLUGGY, L"Sluggy"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SLUGGY, L"Слизнячок"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SLUGGY, L"Petit limace"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SLUGGY, L"Schnecklein"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"ARV \"Immunes\""));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"БРЭМ \"Иммун\""));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"ARV \"Immune\""));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"Bergepanzer \"Immun\""));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"ARV «Immunes»"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"БРЭМ «Иммун»"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"ARV «Immune»"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"Bergepanzer «Immun»"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SHELL, L"Defense combat\nvehicle \"Tachyon\""));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SHELL, L"Оборонительная боевая\nмашина \"Тахион\""));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SHELL, L"Véhicule à écran de\ndéfence \"Tachyon\""));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SHELL, L"Defensives\nKampffahrzeug \"Tachyon\""));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SHELL, L"Defense combat\nvehicle «Tachyon»"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SHELL, L"Оборонительная боевая\nмашина «Тахион»"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SHELL, L"Véhicule à écran de\ndéfence «Tachyon»"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SHELL, L"Defensives\nKampffahrzeug «Tachyon»"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::WALKER, L"Walker \"33-Qc. rev02.9\""));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::WALKER, L"Шагоход \"33-Кц. рев02.9\""));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::WALKER, L"Marcheur \"33-Qc. rev02.9\""));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::WALKER, L"Wanderer \"33-Qc. rev02.9\""));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::WALKER, L"Walker «33-Qc. rev02.9»"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::WALKER, L"Шагоход «33-Кц. рев02.9»"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::WALKER, L"Marcheur «33-Qc. rev02.9»"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::WALKER, L"Wanderer «33-Qc. rev02.9»"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELF_HEAL, L"Scarbreed"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELF_HEAL, L"Шраморожденный"));
@@ -388,7 +388,7 @@ void GameManagers::loadTranslations()
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_ANYWHERE, L"Kann überall gebaut werden"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER, L"Can build only near energy tower"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER, L"Можно построить только возле энергобашни"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER, L"Можно построить только возле Энергетической башни"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER, L"Ne peut être construite qu'à proximité\nd'une Tour de production d'énergie"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER, L"Kann nur in der Nähe des Energieturms\ngebaut werden"));
 

@@ -176,18 +176,18 @@ void Level::startMission(const unsigned int n)
 	Engine::Instance().options<GameOptions>()->panel()->updateWaveText();
 	m_state = WAIT_READY;
 	std::string showLevelText;
-	if (n == 0)
+	if (n == 0 || true)
 	{
 		const int _testWavesCount = 999;
 		const int _testEnemiesCount = 999;
-		const int _testInterval = 10000;
+		const int _testInterval = 5000;
 
 		Wave wave;
 		wave.protection = 0.f;
 		wave.respawnTime = _testInterval;
 		for (int i = 0; i < _testEnemiesCount; ++i)
 		{
-#if 0
+#if 1
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
