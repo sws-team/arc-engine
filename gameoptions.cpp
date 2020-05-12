@@ -95,12 +95,26 @@ void GameOptions::save()
 	const std::string str = styled.write(obj);
 	const std::string encodedStr = GlobalVariables::encode(str);
 
-	GamePlatform::Instance().saveFile(EngineDefs::saveFileName, encodedStr);
+	const std::string fileName =
+#ifdef DEMO_VERSION
+			"demosave.sav"
+#else
+			EngineDefs::saveFileName
+#endif
+			;
+	GamePlatform::Instance().saveFile(fileName, encodedStr);
 }
 
 void GameOptions::load()
 {
-	std::string str = GamePlatform::Instance().readFile(EngineDefs::saveFileName);
+	const std::string fileName =
+#ifdef DEMO_VERSION
+			"demosave.sav"
+#else
+			EngineDefs::saveFileName
+#endif
+			;
+	std::string str = GamePlatform::Instance().readFile(fileName);
 	const std::string decodedStr = GlobalVariables::decode(str);
 
 	Json::Reader reader;
