@@ -65,13 +65,16 @@ QMAKE_RPATHDIR += $ORIGIN/frameworks
 QMAKE_LFLAGS += -Wl,-rpath,@executable_path/frameworks
 #ICON = icon.icns
 }
-#DEFINES += DEMO_VERSION
+
+DEFINES += DEMO_VERSION
 #DEFINES += RELEASE_BUILD
 
 #DEFINES += LOAD_MAPS
 #DEFINES += LOAD_BALANCE
-#DEFINES += SHOW_INSTRUCTIONS
 
-contains(DEMO_VERSION, DEFINES){
+contains(DEFINES, DEMO_VERSION){
 TARGET = ArcDefenceDemo
+win32{
+RC_ICONS = demo_icon.ico
+}
 }

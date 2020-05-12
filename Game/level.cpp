@@ -176,7 +176,7 @@ void Level::startMission(const unsigned int n)
 	Engine::Instance().options<GameOptions>()->panel()->updateWaveText();
 	m_state = WAIT_READY;
 	std::string showLevelText;
-	if (n == 0 || true)
+	if (n == 0)
 	{
 		const int _testWavesCount = 999;
 		const int _testEnemiesCount = 999;
@@ -219,11 +219,11 @@ void Level::startMission(const unsigned int n)
 	Engine::Instance().options<GameOptions>()->cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
 	Engine::Instance().options<GameOptions>()->panel()->initMission(n);
 	updateStartEndPos(gameMap->spawnPos, sf::Vector2f(gameMap->endRect.left, gameMap->endRect.top));
-#ifndef SHOW_INSTRUCTIONS
+
 	const int starsValue = Engine::Instance().options<GameOptions>()->missionStars(n);
 	if (starsValue != -1)
 		Engine::Instance().options<GameOptions>()->instructions()->skip();
-#endif
+
 	Engine::Instance().options<GameOptions>()->cursor()->initCell();
 
 	spawnRect.setPosition(gameMap->spawnPos.x * Engine::Instance().settingsManager()->getScaleFactor().x,

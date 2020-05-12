@@ -6,7 +6,7 @@
 #include "Game/levelobject.h"
 
 const std::string GameManagers::resourcesFileName = "resources.dat";
-const std::string GameManagers::checksum = "dd";
+const std::string GameManagers::checksum = "3a9d9fcd85ffe90f358e63fe1b36e34f6866189b299de2f4eb6a4172f26a343a";
 
 GameManagers::GameManagers()
 {

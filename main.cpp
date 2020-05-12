@@ -54,7 +54,8 @@ int main(int argc, char *argv[])
 
 	const std::string steamLanguage = std::string(SteamUtils()->GetSteamUILanguage());
 	Engine::Instance().translationsManager()->setCurrentLanguage(steamLanguage);
-	Engine::Instance().globalVariables()->loadGameSettings(GamePlatform::Instance().readFile(EngineDefs::settingsFilePath));
+	Engine::Instance().globalVariables()->loadGameSettings(GamePlatform::Instance().readFile(
+															   EngineDefs::settingsFilePath));
 	Engine::Instance().setStateManager(new GameStateManager);
 	Engine::Instance().setOptions(new GameOptions);
 	Engine::Instance().options<GameOptions>()->load();
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
 #endif
 		return EXIT_FAILURE;
 	}
-#ifdef DEMO_DEMO_VERSION
+#ifdef DEMO_VERSION
 	Engine::Instance().globalVariables()->setAppName("Arc Defence Demo");
 #else
 	Engine::Instance().globalVariables()->setAppName("Arc Defence");
@@ -83,7 +84,8 @@ int main(int argc, char *argv[])
 	w.exec();
 
 	Engine::Instance().options<GameOptions>()->save();
-	GamePlatform::Instance().saveFile(EngineDefs::settingsFilePath, Engine::Instance().globalVariables()->saveGameSettings());
+	GamePlatform::Instance().saveFile(EngineDefs::settingsFilePath,
+									  Engine::Instance().globalVariables()->saveGameSettings());
 
 	Engine::Instance().clearInstance();
 

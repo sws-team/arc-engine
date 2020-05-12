@@ -250,13 +250,16 @@ sf::Vector2f GameOptions::mapTileSize() const
 
 bool GameOptions::verifyChecksum()
 {
+#ifndef RELEASE_BUILD
+	return true;
+#endif
 	std::ifstream stream(GameManagers::resourcesFileName);
 	const std::string src = std::string((std::istreambuf_iterator<char>(stream)),
 										std::istreambuf_iterator<char>());
 	const std::string checksum = picosha2::hash256_hex_string(src);
 	stream.close();
-//	if (checksum != GameManagers::checksum)
-//		return false;
+	if (checksum != GameManagers::checksum)
+		return false;
 	return true;
 }
 
