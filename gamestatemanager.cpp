@@ -6,6 +6,7 @@
 #include "Windows/mainmenu.h"
 #include "aboutwindow.h"
 #include "settingswindow.h"
+#include "gameoptions.h"
 
 GameStateManager::GameStateManager()
 {
@@ -19,8 +20,11 @@ StateWindow *GameStateManager::createState(const GameState state)
 	{
 		if (state == StateManager::ABOUT)
 		{
-			static_cast<AboutWindow*>(stateWindow)->setBackState(MANUAL);
-			static_cast<AboutWindow*>(stateWindow)->addStrings(GameManagers::creators());
+			AboutWindow *aboutWindow = static_cast<AboutWindow*>(stateWindow);
+			aboutWindow->setColor(GameOptions::primaryColor);
+			aboutWindow->setBorderColor(GameOptions::secondaryColor);
+			aboutWindow->setBackState(MANUAL);
+			aboutWindow->addStrings(GameManagers::creators());
 		}
 		else if (state == StateManager::SETTINGS)
 			static_cast<SettingsWindow*>(stateWindow)->setDrawRects(false);

@@ -302,11 +302,7 @@ void GameOptions::reset()
 
 unsigned int GameOptions::missionsCount() const
 {
-#ifdef DEMO_VERSION
-	return 2;
-#else
 	return maps.size() - 1;
-#endif
 }
 
 bool GameOptions::loadMap(int id)

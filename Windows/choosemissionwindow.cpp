@@ -26,7 +26,7 @@ ChooseMissionWindow::ChooseMissionWindow()
 	const int rowCount = static_cast<int>(ceil(static_cast<float>(missionsCount) / COLUMN_COUNT));
 	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 	const float rectSizeX = 240 * scaleFactor.x;
-	const float rectSizeY = 135 * scaleFactor.y;
+	const float rectSizeY = 136 * scaleFactor.y;
 	const float frameRectOffsetX = 16 * scaleFactor.x;
 	const float frameRectOffsetY = 18 * scaleFactor.y;
 	const float offsetX = 42 * scaleFactor.x;
@@ -81,7 +81,10 @@ ChooseMissionWindow::ChooseMissionWindow()
 		}
 		else if (i == 0)
 			mission.enabled = true;
-
+#ifdef DEMO_VERSION
+			if (i > 1)
+				mission.enabled = false;
+#endif
 		if (mission.enabled)
 		{
 			mission.highlight.setFillColor(sf::Color::Transparent);
