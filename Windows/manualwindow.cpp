@@ -450,13 +450,13 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getEnemyInfo(SLUGGY),
 							   EnemiesFactory::getFrameCount(SLUGGY),
 							   EnemiesFactory::getAnimationSpeed(SLUGGY)));
-
+#ifndef DEMO_VERSION
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_REPAIR,
 							   GAME_TRANSLATION::REPAIR,
 							   EnemiesFactory::getEnemyInfo(REPAIR_ENEMY),
 							   EnemiesFactory::getFrameCount(REPAIR_ENEMY),
 							   EnemiesFactory::getAnimationSpeed(REPAIR_ENEMY)));
-
+#endif
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SHIELD,
 							   GAME_TRANSLATION::SHELL,
 							   EnemiesFactory::getEnemyInfo(SHIELD_ENEMY),
