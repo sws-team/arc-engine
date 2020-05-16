@@ -521,7 +521,7 @@ std::vector<sf::String> GameManagers::creators()
 	creatorsVec.push_back(sf::String("Developer:"));
 	creatorsVec.push_back(sf::String("Marat Turmukhambetov"));
 
-	creatorsVec.push_back(sf::String("Desiner:"));
+	creatorsVec.push_back(sf::String("Designer:"));
 	creatorsVec.push_back(sf::String("Olesya Chmireva"));
 
 	creatorsVec.push_back(sf::String("Testers:"));
