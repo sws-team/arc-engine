@@ -420,7 +420,7 @@ void BaseTower::levelDown()
 	this->setInvulnerable(false);
 }
 
-const sf::Color PowerTower::POWER_TOWER_AREA_COLOR = sf::Color(23, 200, 124, 100);
+const sf::Color PowerTower::POWER_TOWER_AREA_COLOR = sf::Color(23, 200, 124, 64);
 const sf::Vector2i PowerTower::BLAST_SIZE = sf::Vector2i(256, 256);
 
 PowerTower::PowerTower(const sf::Vector2f &pos)

@@ -28,10 +28,9 @@ GameWindow::GameWindow()
 	Engine::Instance().options<GameOptions>()->camera()->init();
 	currentMenu = static_cast<GAME_MENU>(CONTINUE_GAME);
 
-	setColor(GameOptions::alternativeSecondaryColor);
-	setCurrentColor(GameOptions::primaryColor);
-	setOutlineColor(GameOptions::alternativePrimaryColor);
-
+	setColor(GameOptions::primaryColor);
+	setCurrentColor(GameOptions::alternativePrimaryColor);
+	setOutlineColor(GameOptions::secondaryColor);
 	m_state = PLAYING;
 
 	menuImg.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::GAME_MENU_TEXTURE));
