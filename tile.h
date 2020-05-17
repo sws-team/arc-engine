@@ -5,6 +5,15 @@
 
 struct Tile
 {
+	Tile()
+	{
+
+	}
+	Tile (int id)
+		: id(id)
+	{
+
+	}
 	int id;
 	sf::Vector2i cell;
 	sf::Sprite sprite;

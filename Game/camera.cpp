@@ -118,7 +118,7 @@ void Camera::zoomOut()
 	view->zoom(1/ZOOM_STEP);
 	zoomRatio--;
 
-	checkBorders();
+	checkBorders(true);
 }
 
 void Camera::resetZoom()
@@ -189,7 +189,7 @@ void Camera::resetView()
 					Engine::Instance().settingsManager()->getResolution().y/2);
 }
 
-void Camera::checkBorders()
+void Camera::checkBorders(bool zoom)
 {
 	const sf::Vector2f topLeft = sf::Vector2f(view->getCenter().x - view->getSize().x/2,
 								view->getCenter().y - view->getSize().y/2);
@@ -207,7 +207,8 @@ void Camera::checkBorders()
 	if (bottomRight.x > maxX)
 		view->setCenter(maxX - view->getSize().x/2, view->getCenter().y);
 
-	float maxY = (Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().y)
+	const int extraCells = zoom ? 0 : Engine::Instance().options<GameOptions>()->panel()->cellsCount() -1;
+	float maxY = (Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().y + extraCells)
 			* Engine::Instance().options<GameOptions>()->tileSize().y;
 	if (bottomRight.y > maxY)
 		view->setCenter(view->getCenter().x, maxY - Engine::Instance().options<GameOptions>()->mapTileSize().y - view->getSize().y/2);

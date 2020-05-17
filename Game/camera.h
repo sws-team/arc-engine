@@ -43,7 +43,7 @@ public:
 
 	void resetView();
 
-	void checkBorders();
+	void checkBorders(bool zoom = false);
 
 	void setCenter(const sf::Vector2f& pos);
 

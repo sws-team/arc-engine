@@ -1048,7 +1048,11 @@ void Level::drawLevel(sf::RenderTarget * const target)
 
 	if (showBuildRects)
 		for(const sf::RectangleShape& rect : buildCells)
+		{
+			if (rect.getFillColor() == GameCursor::INACTIVE_TOWER_AREA_COLOR)
+				continue;
 			target->draw(rect);
+		}
 
 	Engine::Instance().options<GameOptions>()->cursor()->draw(target);
 
@@ -1101,7 +1105,7 @@ Tile Level::getTileByCell(const sf::Vector2i &cell, unsigned int layer) const
 		if (tile.cell == cell)
 			return tile;
 	}
-	return Tile();
+	return Tile(Map::STAY);
 }
 
 void Level::chooseCurrent()
