@@ -117,28 +117,31 @@ void ManualWindow::eventFilter(sf::Event *event)
 {
 	if (event->type == sf::Event::MouseButtonPressed)
 	{
-		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
-		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
-																			   *Engine::Instance().window()->view());
-		if (next.getGlobalBounds().contains(pos))
+		if (event->mouseButton.button == sf::Mouse::Left)
 		{
-			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
-			nextPage();
-		}
-		if (previous.getGlobalBounds().contains(pos))
-		{
-			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
-			previousPage();
-		}
-		if (credits.getGlobalBounds().contains(pos))
-		{
-			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
-			return Engine::Instance().stateManager()->setState(StateManager::ABOUT);
-		}
-		if (close.getGlobalBounds().contains(pos))
-		{
-			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
-			back();
+			const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
+			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																				   *Engine::Instance().window()->view());
+			if (next.getGlobalBounds().contains(pos))
+			{
+				Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
+				nextPage();
+			}
+			if (previous.getGlobalBounds().contains(pos))
+			{
+				Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
+				previousPage();
+			}
+			if (credits.getGlobalBounds().contains(pos))
+			{
+				Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
+				return Engine::Instance().stateManager()->setState(StateManager::ABOUT);
+			}
+			if (close.getGlobalBounds().contains(pos))
+			{
+				Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
+				back();
+			}
 		}
 	}
 	else if (event->type == sf::Event::MouseMoved)

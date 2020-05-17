@@ -153,18 +153,21 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 {
 	if (event->type == sf::Event::MouseButtonPressed)
 	{
-		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
-		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
-																			   *Engine::Instance().window()->view());
-		for (unsigned int mission = 0; mission < missions.size(); ++mission)
-			if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
-			{
-				if (missions.at(mission).enabled)
+		if (event->mouseButton.button == sf::Mouse::Left)
+		{
+			const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
+			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																				   *Engine::Instance().window()->view());
+			for (unsigned int mission = 0; mission < missions.size(); ++mission)
+				if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
 				{
-					Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
-					accept(mission);
+					if (missions.at(mission).enabled)
+					{
+						Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
+						accept(mission);
+					}
 				}
-			}
+		}
 	}
 	else if (event->type == sf::Event::MouseMoved)
 	{
