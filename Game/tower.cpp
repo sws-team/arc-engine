@@ -425,7 +425,6 @@ const sf::Vector2i PowerTower::BLAST_SIZE = sf::Vector2i(256, 256);
 
 PowerTower::PowerTower(const sf::Vector2f &pos)
 	: Tower(GAME_TEXTURE::TOWER_POWER, pos, Balance::Instance().getTowerStats(POWER))
-	,m_isHighlighted(false)
 	,gainCount(false)
 	,abilityProgress(nullptr)
 {
@@ -446,8 +445,6 @@ PowerTower::~PowerTower()
 
 void PowerTower::draw(sf::RenderTarget * const target)
 {
-	if (m_isHighlighted)
-		target->draw(powerRect);
 	Tower::draw(target);
 	if (abilityProgress != nullptr)
 		abilityProgress->draw(target);
@@ -456,11 +453,6 @@ void PowerTower::draw(sf::RenderTarget * const target)
 bool PowerTower::hasEnergy()
 {
 	return actionTimer.check(actualAttackSpeed());
-}
-
-void PowerTower::setHighlighted(bool isHighlighted)
-{
-	m_isHighlighted = isHighlighted;
 }
 
 void PowerTower::updateGain()

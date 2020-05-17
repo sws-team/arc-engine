@@ -177,7 +177,6 @@ public:
 	void draw(sf::RenderTarget *const target) final;
 
 	bool hasEnergy();
-	void setHighlighted(bool isHighlighted);
 
 	void updateGain();
 
@@ -192,7 +191,6 @@ public:
 	static const sf::Color POWER_TOWER_AREA_COLOR;
 	static constexpr float ENERGY_MODIFIER = 0.75f;
 private:
-	bool m_isHighlighted;
 	sf::RectangleShape powerRect;
 	void upgradePowerRect();
 

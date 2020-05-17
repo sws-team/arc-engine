@@ -265,7 +265,8 @@ void GameCursor::updateCell()
 					 abilityHotsPot.y * Engine::Instance().options<GameOptions>()->mapTileSize().y);
 	if (m_state == TOWER)
 	{
-		const bool canCreate = Engine::Instance().options<GameOptions>()->level()->canAddTower(sf::Vector2i(m_cell.x * 2, m_cell.y * 2), towerType);
+		const bool canCreate = Engine::Instance().options<GameOptions>()->level()->canAddTower(
+					sf::Vector2i(m_cell.x * 2, m_cell.y * 2), towerType == TOWER_TYPES::POWER);
 		towerRadius.setFillColor(canCreate ? TOWER_AREA_COLOR : INACTIVE_TOWER_AREA_COLOR);
 		towerRect.setFillColor(canCreate ? PowerTower::POWER_TOWER_AREA_COLOR : INACTIVE_TOWER_AREA_COLOR);
 	}

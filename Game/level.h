@@ -46,9 +46,7 @@ public:
 	float getLifeCount() const;
 	Tower *getTowerAtPos(const sf::Vector2f& pos) const;
 
-	bool canAddTower(const sf::Vector2i& cell, TOWER_TYPES towerType) const;
-
-	void highlightPowerTowersRadius(bool active);
+	bool canAddTower(const sf::Vector2i& cell, bool isEnergy) const;
 
 	enum LEVEL_STATE
 	{
@@ -81,6 +79,7 @@ public:
 
 #ifndef RELEASE_BUILD
 	void test();
+	void giveMeMoney();
 #endif
 
 	Abilities *getAbilities();
@@ -184,6 +183,10 @@ private:
 	bool abilityActivated;
 	bool attackTowerBuilded;
 	static constexpr float ECONOMIST_MONEY_VALUE = 15000;
+
+	bool showBuildRects;
+	std::vector<sf::RectangleShape> buildCells;
+	void updateBuildCells(TOWER_TYPES type);
 };
 
 #endif // LEVEL_H

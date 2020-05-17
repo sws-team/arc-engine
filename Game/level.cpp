@@ -27,6 +27,7 @@ Level::Level() :
   ,m_selectedTower(nullptr)
   ,abilityActivated(false)
   ,attackTowerBuilded(false)
+  ,showBuildRects(false)
 {
 	shake = new Shake();
 	abilities = new Abilities();
@@ -204,6 +205,9 @@ void Level::startMission(const unsigned int n)
 		showLevelText = std::to_string(n);
 	}
 
+	const sf::Vector2i maxCells = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell();
+	const sf::Vector2f mapTileSize = Engine::Instance().options<GameOptions>()->mapTileSize();
+	const sf::Vector2f tileSize = Engine::Instance().options<GameOptions>()->tileSize();
 	gameMap = Engine::Instance().options<GameOptions>()->findMapByNumber(n);
 	Engine::Instance().options<GameOptions>()->panel()->setMapSize(
 				sf::Vector2f(gameMap->width * GameOptions::MAP_CELL_SIZE,
@@ -228,7 +232,7 @@ void Level::startMission(const unsigned int n)
 
 	spawnRect.setPosition(gameMap->spawnPos.x * Engine::Instance().settingsManager()->getScaleFactor().x,
 						  gameMap->spawnPos.y * Engine::Instance().settingsManager()->getScaleFactor().y);
-	spawnRect.setSize(Engine::Instance().options<GameOptions>()->mapTileSize());
+	spawnRect.setSize(mapTileSize);
 
 	endRect.setPosition(gameMap->endRect.left * Engine::Instance().settingsManager()->getScaleFactor().x,
 						gameMap->endRect.top * Engine::Instance().settingsManager()->getScaleFactor().y);
@@ -239,8 +243,8 @@ void Level::startMission(const unsigned int n)
 											 -DEAD_ZONE_SIZE * Engine::Instance().settingsManager()->getScaleFactor().y);
 	deadZone.setPosition(minPos);
 
-	const sf::Vector2f mapPixelSize = sf::Vector2f(gameMap->width * Engine::Instance().options<GameOptions>()->mapTileSize().x,
-												   gameMap->height * Engine::Instance().options<GameOptions>()->mapTileSize().y);
+	const sf::Vector2f mapPixelSize = sf::Vector2f(gameMap->width * mapTileSize.x,
+												   gameMap->height * mapTileSize.y);
 	deadZone.setSize(sf::Vector2f(mapPixelSize.x + fabs(minPos.x) * 2,
 								  mapPixelSize.y + fabs(minPos.y) * 2));
 
@@ -267,9 +271,8 @@ void Level::startMission(const unsigned int n)
 
 	abilities->reset();
 
-	smokeRect.setSize(sf::Vector2f(
-						  Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().x * Engine::Instance().options<GameOptions>()->tileSize().x,
-						  Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().y * Engine::Instance().options<GameOptions>()->tileSize().y));
+	smokeRect.setSize(sf::Vector2f(maxCells.x * tileSize.x,
+								   maxCells.y * tileSize.y));
 
 	for(const Map::MapObject& mapObject : gameMap->objects)
 	{
@@ -289,10 +292,22 @@ void Level::startMission(const unsigned int n)
 
 	GamePlatform::Instance().setPlatformState("lvl", showLevelText);
 	GamePlatform::Instance().setPlatformState("steam_display", "#Status");
+
+	for (int x = 0; x < maxCells.x; ++x)
+	{
+		for (int y = 0; y < maxCells.y; ++y)
+		{
+			sf::RectangleShape rect;
+			rect.setSize(tileSize);
+			rect.setPosition(x * tileSize.x, y * tileSize.y);
+			buildCells.push_back(rect);
+		}
+	}
 }
 
 void Level::clear()
 {
+	buildCells.clear();
 	clearCursor();
 	shake->deactivate();
 	for(Tower *tower : towers)
@@ -661,7 +676,7 @@ Tower *Level::getTowerAtPos(const sf::Vector2f &pos) const
 	return nullptr;
 }
 
-bool Level::canAddTower(const sf::Vector2i &cell, TOWER_TYPES towerType) const
+bool Level::canAddTower(const sf::Vector2i &cell, bool isEnergy) const
 {
 	const int direction = getTileDirectionByCell(cell);
 	if (direction != Map::STAY)
@@ -670,9 +685,10 @@ bool Level::canAddTower(const sf::Vector2i &cell, TOWER_TYPES towerType) const
 	if (tower != nullptr)
 		return false;
 	bool canCreate = true;
-	if (towerType != POWER)
+	if (!isEnergy)
 	{
-		const sf::Vector2f targetPos = Engine::Instance().options<GameOptions>()->camera()->cellToPosMap(cell + sf::Vector2i(1, 1));
+		const sf::Vector2f targetPos = Engine::Instance().options<GameOptions>()->camera()->cellToPosMap(
+					cell + sf::Vector2i(1, 1));
 		bool finded = false;
 		for(Tower *tower : towers)
 		{
@@ -691,11 +707,18 @@ bool Level::canAddTower(const sf::Vector2i &cell, TOWER_TYPES towerType) const
 	return canCreate;
 }
 
-void Level::highlightPowerTowersRadius(bool active)
+void Level::updateBuildCells(TOWER_TYPES type)
 {
-	for(Tower *tower : towers)
-		if (tower->type() == POWER)
-			static_cast<PowerTower*>(tower)->setHighlighted(active);
+	for(sf::RectangleShape &rect : buildCells)
+	{
+		const sf::Vector2f pos = sf::Vector2f(rect.getGlobalBounds().left,
+											  rect.getGlobalBounds().top) +
+				sf::Vector2f(rect.getGlobalBounds().width/2,
+							 rect.getGlobalBounds().height/2);
+		const sf::Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCell(pos);
+		const bool canAdd = canAddTower(sf::Vector2i(cell.x * 2, cell.y * 2), type == POWER);
+		rect.setFillColor(canAdd ? PowerTower::POWER_TOWER_AREA_COLOR : GameCursor::INACTIVE_TOWER_AREA_COLOR);
+	}
 }
 
 void Level::hitPlayer(float damage)
@@ -886,7 +909,7 @@ void Level::clearCursor()
 	setSelectedTower(nullptr);
 	m_actionState = READY;
 	Engine::Instance().options<GameOptions>()->cursor()->deactivate();
-	highlightPowerTowersRadius(false);
+	showBuildRects = false;
 }
 
 std::vector<Tower *> Level::getAllTowers() const
@@ -907,6 +930,11 @@ unsigned int Level::getCurrentWave() const
 void Level::test()
 {
 	changeState(LEVEL_STATE::WIN);
+}
+
+void Level::giveMeMoney()
+{
+	money += 1000;
 }
 #endif
 Abilities *Level::getAbilities()
@@ -1018,6 +1046,10 @@ void Level::drawLevel(sf::RenderTarget * const target)
 	for(Tower *tower : towers)
 		tower->draw(target);
 
+	if (showBuildRects)
+		for(const sf::RectangleShape& rect : buildCells)
+			target->draw(rect);
+
 	Engine::Instance().options<GameOptions>()->cursor()->draw(target);
 
 	for(Animation *effect : effects)
@@ -1074,7 +1106,8 @@ Tile Level::getTileByCell(const sf::Vector2i &cell, unsigned int layer) const
 
 void Level::chooseCurrent()
 {
-	choose(Engine::Instance().options<GameOptions>()->cursor()->cell(), Engine::Instance().options<GameOptions>()->cursor()->inPanel());
+	choose(Engine::Instance().options<GameOptions>()->cursor()->cell(),
+		   Engine::Instance().options<GameOptions>()->cursor()->inPanel());
 }
 
 int Level::getTileDirectionByCell(const sf::Vector2i& cell) const
@@ -1168,7 +1201,8 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 
 			const float radius = Balance::Instance().getTowerStats(type).radius * GameOptions::MAP_CELL_SIZE;
 			Engine::Instance().options<GameOptions>()->cursor()->activateTower(radius, type);
-			highlightPowerTowersRadius(type != POWER);
+			updateBuildCells(type);
+			showBuildRects = true;
 			Engine::Instance().options<GameOptions>()->cursor()->swap();
 		}
 			break;
@@ -1280,12 +1314,10 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 			if (cost > money)
 				return;
 
-			if (!canAddTower(sf::Vector2i(cell.x * 2, cell.y * 2), type))
+			if (!canAddTower(sf::Vector2i(cell.x * 2, cell.y * 2), type == TOWER_TYPES::POWER))
 				return;
 
-			if (type != POWER)
-				highlightPowerTowersRadius(false);
-
+			showBuildRects = false;
 			Tower *tower = TowersFactory::createTower(type, pos);
 			if (tower == nullptr)
 				return;

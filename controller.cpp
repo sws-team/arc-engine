@@ -80,6 +80,9 @@ void Controller::eventFilter(sf::Event *event)
 		case sf::Keyboard::F2:
 			Engine::Instance().options<GameOptions>()->level()->test();
 			break;
+		case sf::Keyboard::F6:
+			Engine::Instance().options<GameOptions>()->level()->giveMeMoney();
+			break;
 #endif
 		case sf::Keyboard::BackSpace:
 			Engine::Instance().options<GameOptions>()->camera()->resetView();
