@@ -52,10 +52,13 @@ public:
 	std::vector<Layer> layers;
 
 	std::vector<MOVE_DIRECTIONS> directions;
-	sf::Vector2f spawnPos;
-	MOVE_DIRECTIONS spawnDirection;
-
-	sf::FloatRect endRect;
+	struct SpawnInfo
+	{
+		sf::Vector2f pos;
+		MOVE_DIRECTIONS direction;
+	};
+	std::vector<SpawnInfo> spawnInfos;
+	std::vector<sf::FloatRect> endRects;
 
 	int directionsLayer;
 	int movingLayer;

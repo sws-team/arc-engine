@@ -45,9 +45,6 @@ Level::Level() :
 	currentTowerRadius.setFillColor(GameCursor::TOWER_AREA_COLOR);
 	currentTowerRect.setFillColor(PowerTower::POWER_TOWER_AREA_COLOR);
 
-	spawnRect.setFillColor(sf::Color::Transparent);
-	endRect.setFillColor(sf::Color::Transparent);
-
 	sellSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::SELL_TEXTURE));
 	sellSprite.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
@@ -76,9 +73,6 @@ Level::Level() :
 	smokeRect.setPosition(0,0);
 	smokeRect.setFillColor(sf::Color(50, 50, 50, 128));
 
-	startObject = new GameObject(GAME_TEXTURE::DIRECTION_TEXTURE, sf::Vector2f(0,0), sf::Vector2i(64, 64), 3);
-	endObject = new GameObject(GAME_TEXTURE::DIRECTION_TEXTURE, sf::Vector2f(0,0), sf::Vector2i(64, 64), 3);
-
 	updateCurrentTower();
 }
 
@@ -97,12 +91,22 @@ void Level::draw(sf::RenderTarget *const target)
 	target->setView(*Engine::Instance().options<GameOptions>()->camera()->getView());
 	drawLevel(target);
 	target->draw(deadZone);
-	target->draw(spawnRect);
-	target->draw(endRect);
 	if(m_state == Level::WAIT_READY)
 	{
-		startObject->draw(target);
-		endObject->draw(target);
+		for(const ActionPoint& actionPoint : spawnPoints)
+		{
+#ifndef RELEASE_BUILD
+			target->draw(actionPoint.rect);
+#endif
+			actionPoint.object->draw(target);
+		}
+		for(const ActionPoint& actionPoint : endPoints)
+		{
+#ifndef RELEASE_BUILD
+			target->draw(actionPoint.rect);
+#endif
+			actionPoint.object->draw(target);
+		}
 	}
 //	Engine::Instance().window()->setView(Engine::Instance().window()->getDefaultView());
 	Engine::Instance().window()->setView(*Engine::Instance().window()->view());
@@ -157,8 +161,10 @@ void Level::update()
 	}
 	if(m_state == Level::WAIT_READY)
 	{
-		startObject->update();
-		endObject->update();
+		for(const ActionPoint& actionPoint : spawnPoints)
+			actionPoint.object->update();
+		for(const ActionPoint& actionPoint : endPoints)
+			actionPoint.object->update();
 	}
 	for(LevelObject *object : objects)
 		object->update();
@@ -222,7 +228,6 @@ void Level::startMission(const unsigned int n)
 
 	Engine::Instance().options<GameOptions>()->cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
 	Engine::Instance().options<GameOptions>()->panel()->initMission(n);
-	updateStartEndPos(gameMap->spawnPos, sf::Vector2f(gameMap->endRect.left, gameMap->endRect.top));
 
 	const int starsValue = Engine::Instance().options<GameOptions>()->missionStars(n);
 	if (starsValue != -1)
@@ -230,14 +235,43 @@ void Level::startMission(const unsigned int n)
 
 	Engine::Instance().options<GameOptions>()->cursor()->initCell();
 
-	spawnRect.setPosition(gameMap->spawnPos.x * Engine::Instance().settingsManager()->getScaleFactor().x,
-						  gameMap->spawnPos.y * Engine::Instance().settingsManager()->getScaleFactor().y);
-	spawnRect.setSize(mapTileSize);
+	for(const Map::SpawnInfo& spawnInfo : gameMap->spawnInfos)
+	{
+		ActionPoint actionPoint;
+		actionPoint.direction = spawnInfo.direction;
+		const sf::Vector2f pos = sf::Vector2f(spawnInfo.pos.x * Engine::Instance().settingsManager()->getScaleFactor().x,
+											  spawnInfo.pos.y * Engine::Instance().settingsManager()->getScaleFactor().y);
+		actionPoint.rect.setPosition(pos);
+		actionPoint.rect.setSize(mapTileSize);
+		actionPoint.rect.setFillColor(sf::Color::Transparent);
+		actionPoint.rect.setOutlineColor(sf::Color::Magenta);
+		actionPoint.rect.setOutlineThickness(1);
+		actionPoint.object = new GameObject(GAME_TEXTURE::DIRECTION_TEXTURE,
+											sf::Vector2f(0,0), sf::Vector2i(64, 64), 3);
+		updateActionPoint(actionPoint.object, pos);
+		spawnPoints.push_back(actionPoint);
+	}
 
-	endRect.setPosition(gameMap->endRect.left * Engine::Instance().settingsManager()->getScaleFactor().x,
-						gameMap->endRect.top * Engine::Instance().settingsManager()->getScaleFactor().y);
-	endRect.setSize(sf::Vector2f(gameMap->endRect.width * Engine::Instance().settingsManager()->getScaleFactor().x,
-							 gameMap->endRect.height* Engine::Instance().settingsManager()->getScaleFactor().y));
+	for(const sf::FloatRect& rect : gameMap->endRects)
+	{
+		ActionPoint actionPoint;
+		const sf::Vector2f pos = sf::Vector2f(rect.left * Engine::Instance().settingsManager()->getScaleFactor().x,
+											  rect.top * Engine::Instance().settingsManager()->getScaleFactor().y);
+		actionPoint.rect.setPosition(pos);
+		actionPoint.rect.setSize(sf::Vector2f(rect.width * Engine::Instance().settingsManager()->getScaleFactor().x,
+											  rect.height* Engine::Instance().settingsManager()->getScaleFactor().y));
+		actionPoint.rect.setFillColor(sf::Color::Transparent);
+		actionPoint.rect.setOutlineColor(sf::Color::Magenta);
+		actionPoint.rect.setOutlineThickness(1);
+		actionPoint.direction = Map::NO_MOVE;
+		actionPoint.object = new GameObject(GAME_TEXTURE::DIRECTION_TEXTURE,
+											sf::Vector2f(0,0), sf::Vector2i(64, 64), 3);
+		updateActionPoint(actionPoint.object, pos);
+
+		endPoints.push_back(actionPoint);
+	}
+
+//	updateStartEndPos(gameMap->spawnPos, sf::Vector2f(gameMap->endRect.left, gameMap->endRect.top));
 
 	const sf::Vector2f minPos = sf::Vector2f(-DEAD_ZONE_SIZE * Engine::Instance().settingsManager()->getScaleFactor().x,
 											 -DEAD_ZONE_SIZE * Engine::Instance().settingsManager()->getScaleFactor().y);
@@ -326,6 +360,13 @@ void Level::clear()
 	}
 	towers.clear();
 
+	for(const ActionPoint& actionPoint : spawnPoints)
+		delete actionPoint.object;
+	spawnPoints.clear();
+	for(const ActionPoint& actionPoint : endPoints)
+		delete actionPoint.object;
+	endPoints.clear();
+
 	for(Enemy *enemy : enemies)
 		delete enemy;
 	enemies.clear();
@@ -380,19 +421,23 @@ void Level::checkDeadZone()
 
 void Level::checkEnd()
 {
-	const sf::FloatRect endFRect = getEndRect();
-	for (auto it = enemies.begin(); it != enemies.end();)
+	for(const ActionPoint& actionPoint : endPoints)
 	{
-		Enemy *enemy = *it;
-		if (endFRect.contains(enemy->enemyPos()))
+		const sf::FloatRect endRect = sf::FloatRect(actionPoint.rect.getPosition(),
+													 actionPoint.rect.getSize());
+		for (auto it = enemies.begin(); it != enemies.end();)
 		{
-			float damage = enemy->getData().damage / Engine::Instance().options<GameOptions>()->difficult();
-			hitPlayer(damage);
-			delete enemy;
-			it = enemies.erase(it);
+			Enemy *enemy = *it;
+			if (endRect.contains(enemy->enemyPos()))
+			{
+				float damage = enemy->getData().damage / Engine::Instance().options<GameOptions>()->difficult();
+				hitPlayer(damage);
+				delete enemy;
+				it = enemies.erase(it);
+			}
+			else
+				++it;
 		}
-		else
-			++it;
 	}
 	if (isFinalWave() && enemies.empty())
 		changeState(WIN);	
@@ -617,7 +662,9 @@ void Level::checkRespawn()
 		wave.spawnEnemies.erase(std::find(wave.spawnEnemies.begin(), wave.spawnEnemies.end(), type));
 		waves[currentWave] = wave;
 
-		spawn(spawnRect.getPosition(), type, wave.protection, gameMap->spawnDirection);
+		const int spawnNumber = rand() % spawnPoints.size();
+		const ActionPoint actionPoint = spawnPoints.at(spawnNumber);
+		spawn(actionPoint.rect.getPosition(), type, wave.protection, actionPoint.direction);
 	}
 	if (wave.spawnEnemies.empty())
 	{
@@ -644,9 +691,13 @@ void Level::enemyMove(Enemy *enemy)
 {
 	enemy->moveEnemy();
 
-	const sf::FloatRect endFRect = getEndRect();
-	if (endFRect.contains(enemy->enemyPos()))
-		return;
+	for(const ActionPoint& actionPoint : endPoints)
+	{
+		const sf::FloatRect endRect = sf::FloatRect(actionPoint.rect.getPosition(),
+													 actionPoint.rect.getSize());
+		if (endRect.contains(enemy->enemyPos()))
+			return;
+	}
 
 	const sf::Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(enemy->enemyPos());
 
@@ -802,6 +853,58 @@ void Level::setSelectedTower(Tower *tower)
 	updateCurrentTower();
 }
 
+void Level::updateActionPoint(GameObject *object, const sf::Vector2f& pos)
+{
+	const sf::Vector2f mapSize = sf::Vector2f(gameMap->width * Engine::Instance().options<GameOptions>()->mapTileSize().x,
+											  gameMap->height * Engine::Instance().options<GameOptions>()->mapTileSize().y);
+	const int centerX = mapSize.x/2;
+	const int centerY = mapSize.y/2;
+
+	const float x0 = 0;
+	const float x1 = mapSize.x;
+	const float y0 = 0;
+	const float y1 = mapSize.y;
+	object->sprite.setRotation(0);
+
+	sf::Vector2f resultPos = sf::Vector2f(pos.x * Engine::Instance().settingsManager()->getScaleFactor().x,
+										  pos.y * Engine::Instance().settingsManager()->getScaleFactor().y);
+	//start
+	if (pos.x <= x0 || pos.x >= x1)
+	{
+		//x
+		if (pos.x > centerX)
+		{
+			//-x
+			resultPos.x -= Engine::Instance().options<GameOptions>()->tileSize().x + Engine::Instance().options<GameOptions>()->mapTileSize().x;
+		}
+		else
+		{
+			//+x
+			resultPos.x += Engine::Instance().options<GameOptions>()->tileSize().x;
+		}
+		resultPos.y += Engine::Instance().options<GameOptions>()->mapTileSize().y;
+
+		object->sprite.setRotation(-90);
+		resultPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
+	}
+	else if (pos.y <= y0 || pos.y >= y1)
+	{
+		//y
+		if (pos.y > centerY)
+		{
+			//-y
+			resultPos.y -= Engine::Instance().options<GameOptions>()->tileSize().y + Engine::Instance().options<GameOptions>()->mapTileSize().y;
+		}
+		else
+		{
+			//+y
+			resultPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
+		}
+		resultPos.x += Engine::Instance().options<GameOptions>()->mapTileSize().x;
+	}
+	object->setPos(resultPos);
+}
+/*
 void Level::updateStartEndPos(const sf::Vector2f &startPos, const sf::Vector2f &endPos)
 {
 	const sf::Vector2f mapSize = sf::Vector2f(gameMap->width * Engine::Instance().options<GameOptions>()->mapTileSize().x,
@@ -892,7 +995,7 @@ void Level::updateStartEndPos(const sf::Vector2f &startPos, const sf::Vector2f &
 	startObject->setPos(resultStartPos);
 	endObject->setPos(resultEndPos);
 }
-
+*/
 void Level::updateUpgrade()
 {
 	if (m_selectedTower == nullptr)
@@ -915,11 +1018,6 @@ void Level::clearCursor()
 std::vector<Tower *> Level::getAllTowers() const
 {
 	return towers;
-}
-
-sf::FloatRect Level::getEndRect() const
-{
-	return sf::FloatRect(endRect.getPosition(), endRect.getSize());
 }
 
 unsigned int Level::getCurrentWave() const

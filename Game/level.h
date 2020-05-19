@@ -73,8 +73,6 @@ public:
 
 	void clearCursor();
 	std::vector<Tower *> getAllTowers() const;
-	sf::FloatRect getEndRect() const;
-
 	unsigned int getCurrentWave() const;
 
 #ifndef RELEASE_BUILD
@@ -149,8 +147,16 @@ private:
 	sf::CircleShape currentTowerRadius;
 	sf::RectangleShape currentTowerRect;
 
-	sf::RectangleShape spawnRect;
-	sf::RectangleShape endRect;
+	struct ActionPoint
+	{
+		GameObject *object;
+		sf::RectangleShape rect;
+		int direction;
+	};
+	std::vector<ActionPoint> spawnPoints;
+	std::vector<ActionPoint> endPoints;
+	void updateActionPoint(GameObject *object, const sf::Vector2f &pos);
+
 	constexpr static float DEAD_ZONE_SIZE = 300;
 	void showAnimations();
 
@@ -167,11 +173,7 @@ private:
 	ACTION_STATE isFieldButtons(const sf::Vector2f& pos) const;
 	Tower *m_selectedTower;
 	void setSelectedTower(Tower* tower);
-
-	GameObject *startObject;
-	GameObject *endObject;
-
-	void updateStartEndPos(const sf::Vector2f &startPos, const sf::Vector2f &endPos);
+//	void updateStartEndPos(const sf::Vector2f &startPos, const sf::Vector2f &endPos);
 	void updateUpgrade();
 
 	std::vector<LevelObject*> objects;

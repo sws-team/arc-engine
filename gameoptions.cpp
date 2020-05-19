@@ -491,12 +491,6 @@ bool GameOptions::loadMap(int id)
 				int x = atoi(objectElement->Attribute("x"));
 				int y = atoi(objectElement->Attribute("y"));
 
-				if (objectName == "spawn")
-				{
-					gameMap->spawnPos.x = x;
-					gameMap->spawnPos.y = y;
-				}
-
 				int width = 0;
 				int height = 0;
 				if (objectElement->Attribute("width") != nullptr)
@@ -509,12 +503,14 @@ bool GameOptions::loadMap(int id)
 					width = subRects[atoi(objectElement->Attribute("gid")) - firstTileID].width;
 					height = subRects[atoi(objectElement->Attribute("gid")) - firstTileID].height;
 				}
-				if (objectName == "end")
+				if (objectName.find("end") != std::string::npos)
 				{
-					gameMap->endRect.left = atof(objectElement->Attribute("x"));
-					gameMap->endRect.top = atof(objectElement->Attribute("y"));
-					gameMap->endRect.width = width;
-					gameMap->endRect.height = height;
+					sf::FloatRect endRect;
+					endRect.left = atof(objectElement->Attribute("x"));
+					endRect.top = atof(objectElement->Attribute("y"));
+					endRect.width = width;
+					endRect.height = height;
+					gameMap->endRects.push_back(endRect);
 				}
 
 				TiXmlElement *properties;
@@ -534,8 +530,17 @@ bool GameOptions::loadMap(int id)
 							const std::string propertyName = prop->Attribute("name");
 							const std::string propertyValue = prop->Attribute("value");
 
-							if (propertyName == "direction" && objectName == "spawn")
-								gameMap->spawnDirection = static_cast<Map::MOVE_DIRECTIONS>(atoi(propertyValue.c_str()));
+							if (propertyName == "direction")
+							{
+								if (objectName.find("spawn") != std::string::npos)
+								{
+									Map::SpawnInfo spawnInfo;
+									spawnInfo.pos.x = x;
+									spawnInfo.pos.y = y;
+									spawnInfo.direction = static_cast<Map::MOVE_DIRECTIONS>(atoi(propertyValue.c_str()));
+									gameMap->spawnInfos.push_back(spawnInfo);
+								}
+							}
 
 							if (propertyName == "id")
 								object.type = static_cast<OBJECTS::OBJECT_TYPES>(stoi(propertyValue));
@@ -557,7 +562,6 @@ bool GameOptions::loadMap(int id)
 	}
 //	else
 //		cout << "No object layers found..." << endl;
-
 	maps.push_back(gameMap);
 	fclose(file);
 	return true;
