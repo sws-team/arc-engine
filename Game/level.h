@@ -174,7 +174,6 @@ private:
 	ACTION_STATE isFieldButtons(const sf::Vector2f& pos) const;
 	Tower *m_selectedTower;
 	void setSelectedTower(Tower* tower);
-//	void updateStartEndPos(const sf::Vector2f &startPos, const sf::Vector2f &endPos);
 	void updateUpgrade();
 
 	std::vector<LevelObject*> objects;

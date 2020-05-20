@@ -111,7 +111,6 @@ void Level::draw(sf::RenderTarget *const target)
 			actionPoint.object->draw(target);
 		}
 	}
-//	Engine::Instance().window()->setView(Engine::Instance().window()->getDefaultView());
 	Engine::Instance().window()->setView(*Engine::Instance().window()->view());
 	Engine::Instance().options<GameOptions>()->panel()->draw(target);
 	Engine::Instance().options<GameOptions>()->instructions()->draw(target);
@@ -201,7 +200,7 @@ void Level::startMission(const unsigned int n)
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
-			wave.spawnEnemies.push_back(ENEMY_TYPES::TANK);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
 #endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
@@ -958,98 +957,7 @@ void Level::updateActionPoint(GameObject *object, const sf::Vector2f& pos, bool 
 	}
 	object->setPos(resultPos);
 }
-/*
-void Level::updateStartEndPos(const sf::Vector2f &startPos, const sf::Vector2f &endPos)
-{
-	const sf::Vector2f mapSize = sf::Vector2f(gameMap->width * Engine::Instance().options<GameOptions>()->mapTileSize().x,
-									  gameMap->height * Engine::Instance().options<GameOptions>()->mapTileSize().y);
-	const int centerX = mapSize.x/2;
-	const int centerY = mapSize.y/2;
 
-	const float x0 = 0;
-	const float x1 = mapSize.x;
-	const float y0 = 0;
-	const float y1 = mapSize.y;
-	startObject->sprite.setRotation(0);
-	endObject->sprite.setRotation(0);
-
-	sf::Vector2f resultStartPos = sf::Vector2f(startPos.x * Engine::Instance().settingsManager()->getScaleFactor().x,
-									   startPos.y * Engine::Instance().settingsManager()->getScaleFactor().y);
-	sf::Vector2f resultEndPos = sf::Vector2f(endPos.x * Engine::Instance().settingsManager()->getScaleFactor().x,
-									 endPos.y * Engine::Instance().settingsManager()->getScaleFactor().y);
-	//start
-	if (startPos.x <= x0 || startPos.x >= x1)
-	{
-		//x
-		if (startPos.x > centerX)
-		{
-			//-x
-			resultStartPos.x -= Engine::Instance().options<GameOptions>()->tileSize().x + Engine::Instance().options<GameOptions>()->mapTileSize().x;
-		}
-		else
-		{
-			//+x
-			resultStartPos.x += Engine::Instance().options<GameOptions>()->tileSize().x;
-		}
-		resultStartPos.y += Engine::Instance().options<GameOptions>()->mapTileSize().y;
-
-		startObject->sprite.setRotation(-90);
-		resultStartPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
-	}
-	else if (startPos.y <= y0 || startPos.y >= y1)
-	{
-		//y
-		if (startPos.y > centerY)
-		{
-			//-y
-			resultStartPos.y -= Engine::Instance().options<GameOptions>()->tileSize().y + Engine::Instance().options<GameOptions>()->mapTileSize().y;
-		}
-		else
-		{
-			//+y
-			resultStartPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
-		}
-		resultStartPos.x += Engine::Instance().options<GameOptions>()->mapTileSize().x;
-	}
-
-	//end
-	if (endPos.x <= x0 || endPos.x >= x1)
-	{
-		//x
-		if (endPos.x < centerX)
-		{
-			//-x
-			resultEndPos.x += Engine::Instance().options<GameOptions>()->mapTileSize().x + Engine::Instance().options<GameOptions>()->tileSize().x;
-		}
-		else
-		{
-			//+x
-			resultEndPos.x -= Engine::Instance().options<GameOptions>()->mapTileSize().x + Engine::Instance().options<GameOptions>()->tileSize().x;
-		}
-		resultEndPos.y += Engine::Instance().options<GameOptions>()->mapTileSize().y;
-
-		endObject->sprite.setRotation(-90);
-		resultEndPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
-	}
-	else if (endPos.y <= y0 || endPos.y >= y1)
-	{
-		//y
-		if (endPos.y > centerY)
-		{
-			//-y
-			resultEndPos.y -= Engine::Instance().options<GameOptions>()->mapTileSize().y + Engine::Instance().options<GameOptions>()->mapTileSize().y;
-		}
-		else
-		{
-			//+y
-			resultEndPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
-		}
-		resultEndPos.x += Engine::Instance().options<GameOptions>()->mapTileSize().x;
-	}
-	startObject->setPos(resultStartPos);
-	endObject->setPos(resultEndPos);
-}
-*/
 void Level::updateUpgrade()
 {
 	if (m_selectedTower == nullptr)
@@ -1226,7 +1134,7 @@ void Level::drawLevel(sf::RenderTarget * const target)
 
 		target->draw(sellSprite);
 		target->draw(sellCostText);
-//		if (m_selectedTower->isDowngraded())
+		if (m_selectedTower->isDowngraded())
 			target->draw(fixSprite);
 		if (m_selectedTower->level() < Tower::ABILITY_LEVEL)
 		{

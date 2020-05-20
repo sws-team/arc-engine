@@ -119,6 +119,7 @@ void Controller::eventFilter(sf::Event *event)
 		case sf::Keyboard::Down:
 			Engine::Instance().options<GameOptions>()->cursor()->moveDown();
 			break;
+#ifndef RELEASE_BUILD
 		case sf::Keyboard::A:
 			Engine::Instance().options<GameOptions>()->camera()->moveLeftByCell();
 			break;
@@ -131,6 +132,7 @@ void Controller::eventFilter(sf::Event *event)
 		case sf::Keyboard::S:
 			Engine::Instance().options<GameOptions>()->camera()->moveDownByCell();
 			break;
+#endif
 		case sf::Keyboard::Z:
 			Engine::Instance().options<GameOptions>()->level()->activateBombAbility();
 			break;
