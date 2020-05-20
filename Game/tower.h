@@ -111,6 +111,8 @@ private:
 	bool m_blinded;
 	bool m_regressed;
 	bool m_invulnerable;
+
+	GameObject *lowEnergyObject;
 };
 
 class ProjectilesTower : public Tower

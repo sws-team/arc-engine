@@ -188,9 +188,7 @@ void MapExplosion::draw(sf::RenderTarget * const target)
 	if (m_state == ACTIVE || m_state == PREPARE_ACTIVE)
 	{
 		for(const sf::CircleShape &shape : targets)
-		{
 			target->draw(shape);
-		}
 	}
 }
 

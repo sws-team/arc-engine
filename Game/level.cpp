@@ -51,6 +51,9 @@ Level::Level() :
 	upgradeSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::UPGRADE_TEXTURE));
 	upgradeSprite.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
+	fixSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::UPGRADE_TEXTURE));
+	fixSprite.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+
 	const sf::Color textColor = sf::Color(236,169,114);
 	const sf::Color textOutlineColor = sf::Color(104,75,56);
 	const float fieldIconsCharacterSize = 25;
@@ -187,18 +190,18 @@ void Level::startMission(const unsigned int n)
 	{
 		const int _testWavesCount = 999;
 		const int _testEnemiesCount = 999;
-		const int _testInterval = 5000;
+		const int _testInterval = 10000;
 
 		Wave wave;
 		wave.protection = 0.f;
 		wave.respawnTime = _testInterval;
 		for (int i = 0; i < _testEnemiesCount; ++i)
 		{
-#if 1
+#if 0
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
-			wave.spawnEnemies.push_back(ENEMY_TYPES::TRICYCLE);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::TANK);
 #endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
@@ -248,7 +251,7 @@ void Level::startMission(const unsigned int n)
 		actionPoint.rect.setOutlineThickness(1);
 		actionPoint.object = new GameObject(GAME_TEXTURE::DIRECTION_TEXTURE,
 											sf::Vector2f(0,0), sf::Vector2i(64, 64), 3);
-		updateActionPoint(actionPoint.object, pos);
+		updateActionPoint(actionPoint.object, spawnInfo.pos, true);
 		spawnPoints.push_back(actionPoint);
 	}
 
@@ -266,12 +269,10 @@ void Level::startMission(const unsigned int n)
 		actionPoint.direction = Map::NO_MOVE;
 		actionPoint.object = new GameObject(GAME_TEXTURE::DIRECTION_TEXTURE,
 											sf::Vector2f(0,0), sf::Vector2i(64, 64), 3);
-		updateActionPoint(actionPoint.object, pos);
+		updateActionPoint(actionPoint.object, sf::Vector2f(rect.left, rect.top), false);
 
 		endPoints.push_back(actionPoint);
 	}
-
-//	updateStartEndPos(gameMap->spawnPos, sf::Vector2f(gameMap->endRect.left, gameMap->endRect.top));
 
 	const sf::Vector2f minPos = sf::Vector2f(-DEAD_ZONE_SIZE * Engine::Instance().settingsManager()->getScaleFactor().x,
 											 -DEAD_ZONE_SIZE * Engine::Instance().settingsManager()->getScaleFactor().y);
@@ -520,29 +521,39 @@ void Level::updateCurrentTower()
 	if (m_selectedTower == nullptr)
 		return;
 
+	const sf::Vector2f tileSize = Engine::Instance().options<GameOptions>()->tileSize();
 	sf::Vector2f optionsPos = m_selectedTower->pos();
-	optionsPos.x -= Engine::Instance().options<GameOptions>()->tileSize().x;
-	sellSprite.setPosition(optionsPos);
-	const sf::Vector2i towerCell = Engine::Instance().options<GameOptions>()->camera()->posToCell(m_selectedTower->pos());
+	const sf::Vector2i towerCell = Engine::Instance().options<GameOptions>()->camera()->posToCell(optionsPos);
+
+	sf::Vector2f fixPos = sf::Vector2f(optionsPos.x,
+									   optionsPos.y - tileSize.y);
+	sf::Vector2f sellPos = sf::Vector2f(optionsPos.x - tileSize.x,
+										optionsPos.y);
+	sf::Vector2f upgradePos = sf::Vector2f(optionsPos.x + tileSize.x,
+										   optionsPos.y);
+
+	if (towerCell.y == 0)
+		fixPos.y += tileSize.y * 2;
+
 	if (towerCell.x == 0)
 	{
-		if (towerCell.y == 0)
-			sellSprite.setPosition(optionsPos.x + Engine::Instance().options<GameOptions>()->tileSize().x,
-								   optionsPos.y + Engine::Instance().options<GameOptions>()->tileSize().x);
-		else
-			sellSprite.setPosition(optionsPos.x + Engine::Instance().options<GameOptions>()->tileSize().x,
-								   optionsPos.y - Engine::Instance().options<GameOptions>()->tileSize().x);
+		fixPos.x += tileSize.x;
+		sellPos.x += tileSize.x;
+		sellPos.y += tileSize.y;
+		if (towerCell.y == Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().y - 1)
+		{
+//TODO fix
+		}
 	}
-	optionsPos.x += Engine::Instance().options<GameOptions>()->tileSize().x * 2;
-	upgradeSprite.setPosition(optionsPos);
 	if (towerCell.x == Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().x - 1)
 	{
-		if (towerCell.y == 0)
-			upgradeSprite.setPosition(optionsPos.x - Engine::Instance().options<GameOptions>()->tileSize().x,
-									  optionsPos.y + Engine::Instance().options<GameOptions>()->tileSize().x);
-		else
-			upgradeSprite.setPosition(optionsPos.x - Engine::Instance().options<GameOptions>()->tileSize().x,
-									  optionsPos.y - Engine::Instance().options<GameOptions>()->tileSize().x);
+		fixPos.x -= tileSize.x;
+		upgradePos.x -=  tileSize.x;
+		upgradePos.y += tileSize.y;
+		if (towerCell.y == Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().y - 1)
+		{
+
+		}
 	}
 	const float sellCost = Engine::Instance().options<GameOptions>()->panel()->getTowerSellCost(m_selectedTower);
 	const float upgradeCost = Engine::Instance().options<GameOptions>()->panel()->getTowerUpgradeCost(m_selectedTower);
@@ -550,6 +561,9 @@ void Level::updateCurrentTower()
 	sellCostText.setString(GlobalVariables::to_string_with_precision(sellCost, 1));
 	upgradeCostText.setString(GlobalVariables::to_string_with_precision(upgradeCost, 1));
 
+	sellSprite.setPosition(sellPos);
+	upgradeSprite.setPosition(upgradePos);
+	fixSprite.setPosition(fixPos);
 	sellCostText.setPosition(sellSprite.getPosition());
 	upgradeCostText.setPosition(upgradeSprite.getPosition());
 	updateUpgrade();
@@ -844,6 +858,8 @@ ACTION_STATE Level::isFieldButtons(const sf::Vector2f &pos) const
 		return SELL;
 	if (upgradeSprite.getGlobalBounds().contains(gPos))
 		return UPGRADE;
+	if (fixSprite.getGlobalBounds().contains(gPos))
+		return FIX;
 	return READY;
 }
 
@@ -853,7 +869,7 @@ void Level::setSelectedTower(Tower *tower)
 	updateCurrentTower();
 }
 
-void Level::updateActionPoint(GameObject *object, const sf::Vector2f& pos)
+void Level::updateActionPoint(GameObject *object, const sf::Vector2f& pos, bool isSpawn)
 {
 	const sf::Vector2f mapSize = sf::Vector2f(gameMap->width * Engine::Instance().options<GameOptions>()->mapTileSize().x,
 											  gameMap->height * Engine::Instance().options<GameOptions>()->mapTileSize().y);
@@ -868,39 +884,77 @@ void Level::updateActionPoint(GameObject *object, const sf::Vector2f& pos)
 
 	sf::Vector2f resultPos = sf::Vector2f(pos.x * Engine::Instance().settingsManager()->getScaleFactor().x,
 										  pos.y * Engine::Instance().settingsManager()->getScaleFactor().y);
-	//start
-	if (pos.x <= x0 || pos.x >= x1)
+	if (isSpawn)
 	{
-		//x
-		if (pos.x > centerX)
+		if (pos.x <= x0 || pos.x >= x1)
 		{
-			//-x
-			resultPos.x -= Engine::Instance().options<GameOptions>()->tileSize().x + Engine::Instance().options<GameOptions>()->mapTileSize().x;
-		}
-		else
-		{
-			//+x
-			resultPos.x += Engine::Instance().options<GameOptions>()->tileSize().x;
-		}
-		resultPos.y += Engine::Instance().options<GameOptions>()->mapTileSize().y;
+			//x
+			if (pos.x > centerX)
+			{
+				//-x
+				resultPos.x -= Engine::Instance().options<GameOptions>()->tileSize().x + Engine::Instance().options<GameOptions>()->mapTileSize().x;
+			}
+			else
+			{
+				//+x
+				resultPos.x += Engine::Instance().options<GameOptions>()->tileSize().x;
+			}
+			resultPos.y += Engine::Instance().options<GameOptions>()->mapTileSize().y;
 
-		object->sprite.setRotation(-90);
-		resultPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
-	}
-	else if (pos.y <= y0 || pos.y >= y1)
-	{
-		//y
-		if (pos.y > centerY)
-		{
-			//-y
-			resultPos.y -= Engine::Instance().options<GameOptions>()->tileSize().y + Engine::Instance().options<GameOptions>()->mapTileSize().y;
-		}
-		else
-		{
-			//+y
+			object->sprite.setRotation(-90);
 			resultPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
 		}
-		resultPos.x += Engine::Instance().options<GameOptions>()->mapTileSize().x;
+		else if (pos.y <= y0 || pos.y >= y1)
+		{
+			//y
+			if (pos.y > centerY)
+			{
+				//-y
+				resultPos.y -= Engine::Instance().options<GameOptions>()->tileSize().y + Engine::Instance().options<GameOptions>()->mapTileSize().y;
+			}
+			else
+			{
+				//+y
+				resultPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
+			}
+			resultPos.x += Engine::Instance().options<GameOptions>()->mapTileSize().x;
+		}
+	}
+	else
+	{
+		if (pos.x <= x0 || pos.x >= x1)
+		{
+			//x
+			if (pos.x < centerX)
+			{
+				//-x
+				resultPos.x += Engine::Instance().options<GameOptions>()->mapTileSize().x + Engine::Instance().options<GameOptions>()->tileSize().x;
+			}
+			else
+			{
+				//+x
+				resultPos.x -= Engine::Instance().options<GameOptions>()->mapTileSize().x + Engine::Instance().options<GameOptions>()->tileSize().x;
+			}
+			resultPos.y += Engine::Instance().options<GameOptions>()->mapTileSize().y;
+
+			object->sprite.setRotation(-90);
+			resultPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
+		}
+		else if (pos.y <= y0 || pos.y >= y1)
+		{
+			//y
+			if (pos.y > centerY)
+			{
+				//-y
+				resultPos.y -= Engine::Instance().options<GameOptions>()->mapTileSize().y + Engine::Instance().options<GameOptions>()->mapTileSize().y;
+			}
+			else
+			{
+				//+y
+				resultPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
+			}
+			resultPos.x += Engine::Instance().options<GameOptions>()->mapTileSize().x;
+		}
 	}
 	object->setPos(resultPos);
 }
@@ -1172,6 +1226,8 @@ void Level::drawLevel(sf::RenderTarget * const target)
 
 		target->draw(sellSprite);
 		target->draw(sellCostText);
+//		if (m_selectedTower->isDowngraded())
+			target->draw(fixSprite);
 		if (m_selectedTower->level() < Tower::ABILITY_LEVEL)
 		{
 			target->draw(upgradeSprite);
@@ -1464,6 +1520,12 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 			break;
 		case UPGRADE:
 			upgradeTower(selectedTower);
+			break;
+		case FIX:
+		{
+			if (selectedTower->isDowngraded())
+				selectedTower->setDowngrade(false);
+		}
 			break;
 		default:
 			break;

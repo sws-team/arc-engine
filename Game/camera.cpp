@@ -46,7 +46,7 @@ void Camera::moveUp(float offset)
 	view->move(0.f, -offset);
 	minimap->move(0.f, -offset);
 
-	checkBorders();
+//	checkBorders();
 }
 
 void Camera::moveDown(float offset)
@@ -54,7 +54,7 @@ void Camera::moveDown(float offset)
 	view->move(0.f, offset);
 	minimap->move(0.f, offset);
 
-	checkBorders();
+//	checkBorders();
 }
 
 void Camera::moveLeft(float offset)
@@ -62,7 +62,7 @@ void Camera::moveLeft(float offset)
 	view->move(-offset, 0.f);
 	minimap->move(-offset, 0.f);
 
-	checkBorders();
+//	checkBorders();
 }
 
 void Camera::moveRight(float offset)
@@ -70,7 +70,7 @@ void Camera::moveRight(float offset)
 	view->move(offset, 0.f);
 	minimap->move(offset, 0.f);
 
-	checkBorders();
+//	checkBorders();
 }
 
 void Camera::moveUpByCell()

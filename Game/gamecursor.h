@@ -94,6 +94,8 @@ private:
 	void moveRightCursor();
 
 	bool m_highlight;
+
+	Timer checkBordersTimer;
 };
 
 #endif // CURSOR_H

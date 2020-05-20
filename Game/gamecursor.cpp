@@ -48,7 +48,7 @@ bool GameCursor::canMove(GameCursor::MOVE_DIRECTIONS direction)
 		break;
 	case MOVE_RIGHT:
 	{
-		if (m_cell.x >= m_maxCell.x - 1)
+		if (m_cell.x >= m_maxCell.x)
 			return false;
 	}
 		break;
@@ -136,7 +136,8 @@ void GameCursor::draw(sf::RenderTarget * const target)
 void GameCursor::update()
 {
 	GameObject::update();
-	checkBorders();
+	if (checkBordersTimer.check(100))
+		checkBorders();
 }
 
 void GameCursor::activateAbility(int x, int y, int hotX, int hotY)
@@ -234,7 +235,9 @@ TOWER_TYPES GameCursor::getTowerType() const
 void GameCursor::initCell()
 {
 	const sf::Vector2i pixelPos = sf::Mouse::getPosition(*Engine::Instance().window());
-	const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView());
+	const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																		   *Engine::Instance().options<GameOptions>()->camera()->getView())
+			+ sf::Vector2f(1, 1);
 	const sf::Vector2i newCell = Engine::Instance().options<GameOptions>()->camera()->posToCell(pos);
 	if (newCell != m_cell)
 	{
@@ -285,7 +288,8 @@ void GameCursor::updateCell()
 void GameCursor::updateMousePos()
 {
 	const sf::Vector2f pos = Engine::Instance().options<GameOptions>()->camera()->cellToPos(m_cell)
-			+ sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x/2,Engine::Instance().options<GameOptions>()->tileSize().y/2);
+			+ sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x/2,
+						   Engine::Instance().options<GameOptions>()->tileSize().y/2);
 
 	const sf::Vector2i coords = Engine::Instance().window()->mapCoordsToPixel(pos, *Engine::Instance().options<GameOptions>()->camera()->getView());
 	sf::Mouse::setPosition(coords, *Engine::Instance().window());
@@ -305,8 +309,8 @@ void GameCursor::checkBorders()
 		moveRightCursor();
 	if (cell.y == Engine::Instance().options<GameOptions>()->camera()->viewTopCell())
 		moveUpCursor();
-	if (cell.y == Engine::Instance().options<GameOptions>()->camera()->viewBottomCell()/* - Engine::Instance().options<GameOptions>()->panel()->cellsCount() - 1*/)
-		moveDownCursor();
+	if (cell.y == Engine::Instance().options<GameOptions>()->camera()->viewBottomCell())
+		moveDownCursor();	
 }
 
 void GameCursor::moveDownCursor()
@@ -315,8 +319,9 @@ void GameCursor::moveDownCursor()
 		return;
 
 	m_cell.y++;
-	if (Engine::Instance().options<GameOptions>()->camera()->viewBottomCell() != m_maxCell.y + Engine::Instance().options<GameOptions>()->panel()->cellsCount() &&
-			m_cell.y > Engine::Instance().options<GameOptions>()->camera()->viewCenter().y)
+	if (Engine::Instance().options<GameOptions>()->camera()->viewBottomCell() != m_maxCell.y
+			+ Engine::Instance().options<GameOptions>()->panel()->cellsCount() - 1
+			&& m_cell.y > Engine::Instance().options<GameOptions>()->camera()->viewCenter().y)
 		Engine::Instance().options<GameOptions>()->camera()->moveDownByCell();
 	else
 		updateMousePos();
@@ -358,7 +363,7 @@ void GameCursor::moveRightCursor()
 		return;
 
 	m_cell.x++;
-	if (Engine::Instance().options<GameOptions>()->camera()->viewRightCell() != m_maxCell.x - 1 &&
+	if (Engine::Instance().options<GameOptions>()->camera()->viewRightCell() != m_maxCell.x &&
 			m_cell.x > Engine::Instance().options<GameOptions>()->camera()->viewCenter().x)
 		Engine::Instance().options<GameOptions>()->camera()->moveRightByCell();
 	else

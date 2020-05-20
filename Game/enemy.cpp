@@ -614,6 +614,7 @@ float EnemiesFactory::getAnimationSpeed(ENEMY_TYPES type)
 	case SLUGGY:
 		return FasterAbility::FASTER_ANIMATION_SPEED;
 	case TANK:
+		return 200;
 		break;
 	case MECHSPIDER:
 		return 100;
@@ -659,6 +660,7 @@ float EnemiesFactory::getFrameCount(ENEMY_TYPES type)
 	case SLUGGY:
 		break;
 	case TANK:
+		return 5;
 		break;
 	case MECHSPIDER:
 		return 5;
@@ -1084,13 +1086,6 @@ ShutdownTowerAbility::~ShutdownTowerAbility()
 		effect(false);
 }
 
-void ShutdownTowerAbility::stop()
-{
-	m_state = FINISHED;
-	if (m_state == FINISHED)
-		use();
-}
-
 void ShutdownTowerAbility::effect(bool isActive)
 {
 	if (targetTower == nullptr)
@@ -1126,6 +1121,15 @@ DownTowerAbility::~DownTowerAbility()
 {
 	if (targetTower != nullptr && targetTower->isDowngraded())
 		targetTower->setDowngrade(false);
+}
+
+void DownTowerAbility::update()
+{
+	if (m_state == FINISHED &&
+			targetTower != nullptr &&
+			!targetTower->isDowngraded())
+		use();
+	TowerEffectAbility::update();
 }
 
 void DownTowerAbility::effect(bool isActive)

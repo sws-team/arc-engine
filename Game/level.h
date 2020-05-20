@@ -155,7 +155,7 @@ private:
 	};
 	std::vector<ActionPoint> spawnPoints;
 	std::vector<ActionPoint> endPoints;
-	void updateActionPoint(GameObject *object, const sf::Vector2f &pos);
+	void updateActionPoint(GameObject *object, const sf::Vector2f &pos, bool isSpawn);
 
 	constexpr static float DEAD_ZONE_SIZE = 300;
 	void showAnimations();
@@ -168,6 +168,7 @@ private:
 
 	sf::Sprite sellSprite;
 	sf::Sprite upgradeSprite;
+	sf::Sprite fixSprite;
 	sf::Text sellCostText;
 	sf::Text upgradeCostText;
 	ACTION_STATE isFieldButtons(const sf::Vector2f& pos) const;

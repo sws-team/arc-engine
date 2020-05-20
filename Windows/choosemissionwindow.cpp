@@ -161,7 +161,9 @@ void ChooseMissionWindow::eventFilter(sf::Event *event)
 			for (unsigned int mission = 0; mission < missions.size(); ++mission)
 				if (missions.at(mission).highlight.getGlobalBounds().contains(pos))
 				{
+#ifdef RELEASE_BUILD
 					if (missions.at(mission).enabled)
+#endif
 					{
 						Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
 						accept(mission);

@@ -30,6 +30,12 @@ Tower::Tower(const TextureType &texture_id,
 	,m_invulnerable(false)
 {
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
+	const sf::Vector2f lowEnergyOffset = sf::Vector2f(Engine::Instance().options<GameOptions>()->mapTileSize().x/2,
+													  Engine::Instance().options<GameOptions>()->mapTileSize().y/2);
+	lowEnergyObject = new GameObject(GAME_TEXTURE::DOWN_EFFECT, pos + lowEnergyOffset,
+									 sf::Vector2i(GameOptions::CELL_SIZE,
+												  GameOptions::CELL_SIZE), 1);
+	lowEnergyObject->sprite.scale(0.5f, 0.5f);
 }
 
 Tower::~Tower()
@@ -40,11 +46,15 @@ Tower::~Tower()
 void Tower::update()
 {
 	GameObject::update();
+	if (m_downgraded)
+		lowEnergyObject->update();
 }
 
 void Tower::draw(sf::RenderTarget * const target)
 {
 	GameObject::draw(target);
+	if (m_downgraded)
+		lowEnergyObject->draw(target);
 }
 
 void Tower::action()
@@ -221,12 +231,10 @@ bool Tower::isActive() const
 
 void Tower::setDowngrade(bool isDowngrade)
 {
+	if (m_downgraded == isDowngrade)
+		return;
+
 	m_downgraded = isDowngrade;
-	if (isDowngrade)
-		Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::DOWN_EFFECT, this->pos(),
-																		 sf::Vector2i(GameOptions::CELL_SIZE,
-																					  GameOptions::CELL_SIZE),
-																		 Balance::Instance().getDowngradeDuration()/96, 96, 0);
 }
 
 bool Tower::isDowngraded() const
@@ -257,7 +265,11 @@ float Tower::actualDamage(const ARMOR_TYPE armorType) const
 
 float Tower::actualAttackSpeed() const
 {
-	const float attackSpeed = m_regressed ? m_stats.attackSpeed / Balance::Instance().getRegressValue() : m_stats.attackSpeed;
+	float attackSpeed = m_stats.attackSpeed;
+	if (m_downgraded)
+		attackSpeed /= Balance::Instance().getDowngradeValue();
+	if (m_regressed)
+		attackSpeed /= Balance::Instance().getRegressValue();
 	return attackSpeed;
 }
 
@@ -416,7 +428,7 @@ void BaseTower::upgrade()
 
 void BaseTower::levelDown()
 {
-	ProjectilesTower::upgrade();
+	ProjectilesTower::levelDown();
 	this->setInvulnerable(false);
 }
 

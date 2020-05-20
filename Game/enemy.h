@@ -252,7 +252,6 @@ public:
 	ShutdownTowerAbility();
 	~ShutdownTowerAbility();
 
-	void stop();
 protected:
 	void effect(bool isActive) override;
 };
@@ -263,6 +262,7 @@ public:
 	DownTowerAbility();
 	~DownTowerAbility();
 
+	void update() override;
 protected:
 	void effect(bool isActive) override;
 };
