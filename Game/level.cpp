@@ -35,6 +35,7 @@ Level::Level() :
 	smoke = new Smoke();
 	moneyDrain = new MoneyDrain();
 	towersRegress = new TowersRegress();
+	lava = new Lava();
 
 	shadersFactory = new ShadersFactory();
 
@@ -87,6 +88,7 @@ Level::~Level()
 	delete smoke;
 	delete moneyDrain;
 	delete towersRegress;
+	delete lava;
 }
 
 void Level::draw(sf::RenderTarget *const target)
@@ -147,6 +149,7 @@ void Level::update()
 		towersRegress->update();
 		smoke->update();
 		abilities->update();
+		lava->update();
 
 		for(Enemy* enemy : enemies)
 			enemy->useAbility();
@@ -200,7 +203,7 @@ void Level::startMission(const unsigned int n)
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
-			wave.spawnEnemies.push_back(ENEMY_TYPES::TRACTOR);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::JUMPER);
 #endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
@@ -298,10 +301,15 @@ void Level::startMission(const unsigned int n)
 	towersRegress->setDuration(gameMap->stats.regress.duration);
 	towersRegress->setCount(gameMap->stats.regress.count);
 
+	lava->setTime(10000);
+	lava->setDuration(9000);
+	lava->setCount(5);
+
 	smoke->init();
 	mapExplosion->init();
 	moneyDrain->init();
 	towersRegress->init();
+	lava->init();
 
 	abilities->reset();
 
@@ -384,6 +392,7 @@ void Level::clear()
 	mapExplosion->clear();
 	moneyDrain->clear();
 	towersRegress->clear();
+	lava->clear();
 	TowersCounter::Instance().reset();
 }
 
@@ -471,6 +480,7 @@ void Level::checkAlive()
 			case REPAIR_ENEMY:
 			case SHIELD_ENEMY:
 			case WALKER:
+			case JUMPER:
 				GamePlatform::Instance().incrementValue(STAT_MID_KILLS);
 				break;
 			case GIANT_SLUG:
@@ -996,6 +1006,17 @@ void Level::giveMeMoney()
 {
 	money += 1000;
 }
+
+void Level::enableDrain()
+{
+	moneyDrain->setTime(10000);
+	moneyDrain->setDuration(9000);
+	moneyDrain->setCount(1);
+
+	moneyDrain->setEnabled(true);
+	moneyDrain->init();
+	moneyDrain->resetTimers();
+}
 #endif
 Abilities *Level::getAbilities()
 {
@@ -1015,11 +1036,13 @@ void Level::ready()
 	smoke->setEnabled(gameMap->stats.smoke.enabled);
 	moneyDrain->setEnabled(gameMap->stats.moneyDrain.enabled);
 	mapExplosion->setEnabled(gameMap->stats.explosions.enabled);
+	lava->setEnabled(false);
 
 	towersRegress->resetTimers();
 	smoke->resetTimers();
 	moneyDrain->resetTimers();
 	mapExplosion->resetTimers();
+	lava->resetTimers();
 
 	for(Tower* tower : towers)
 		tower->resume();
@@ -1124,6 +1147,7 @@ void Level::drawLevel(sf::RenderTarget * const target)
 	smoke->draw(target);
 	moneyDrain->draw(target);
 	towersRegress->draw(target);
+	lava->draw(target);
 
 	if (m_selectedTower != nullptr)
 	{

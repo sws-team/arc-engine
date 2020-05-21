@@ -18,6 +18,7 @@ class Smoke;
 class MoneyDrain;
 class TowersRegress;
 class ShadersFactory;
+class Lava;
 
 class Level : public GameDrawable
 {
@@ -78,6 +79,7 @@ public:
 #ifndef RELEASE_BUILD
 	void test();
 	void giveMeMoney();
+	void enableDrain();
 #endif
 
 	Abilities *getAbilities();
@@ -165,6 +167,7 @@ private:
 	Smoke *smoke;
 	MoneyDrain *moneyDrain;
 	TowersRegress *towersRegress;
+	Lava *lava;
 
 	sf::Sprite sellSprite;
 	sf::Sprite upgradeSprite;

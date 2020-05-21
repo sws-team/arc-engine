@@ -227,7 +227,6 @@ protected:
 		float projectileAnimationSpeed;
 	};
 	AbilityInfo info;
-protected:
 	enum STATES
 	{
 		READY,
@@ -244,6 +243,7 @@ private:
 	void getBack();
 	float reflection;
 	constexpr static float REFLECTION_MODIFIER = 0.5f;
+	Tower *findTarget(const sf::Vector2f &center, const float cells);
 };
 
 class ShutdownTowerAbility : public TowerEffectAbility
@@ -364,6 +364,19 @@ protected:
 	constexpr static float FASTER_INTERVAL = 100;
 };
 
+class JumpAbility : public EnemyAbility
+{
+public:
+	JumpAbility();
+
+protected:
+	void use() override;
+
+private:
+
+	bool isJump;
+};
+
 class EnemiesFactory
 {
 public:
@@ -384,6 +397,7 @@ public:
 			FASTER,
 			KILL_TOWER,
 			DOWNGRADE_TOWER,
+			JUMP,
 		};
 
 		EnemyStats stats;

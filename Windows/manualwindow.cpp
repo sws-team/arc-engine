@@ -495,6 +495,12 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getEnemyInfo(BUGSAURUS),
 							   EnemiesFactory::getFrameCount(BUGSAURUS),
 							   EnemiesFactory::getAnimationSpeed(BUGSAURUS)));
+
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_JUMPER,
+							   GAME_TRANSLATION::WALKER,
+							   EnemiesFactory::getEnemyInfo(WALKER),
+							   EnemiesFactory::getFrameCount(WALKER),
+							   EnemiesFactory::getAnimationSpeed(WALKER)));
 #ifndef DEMO_VERSION
 	//map effects
 	elements.push_back(Element(GAME_TEXTURE::SMOKE,
@@ -509,7 +515,7 @@ void ManualWindow::addElements()
 							   4,
 							   200));
 
-	elements.push_back(Element(GAME_TEXTURE::DRAIN,
+	elements.push_back(Element(GAME_TEXTURE::ENERGY_LEECH,
 							   GAME_TRANSLATION::DRAIN_NAME,
 							   Instructions::DRAIN,
 							   4,

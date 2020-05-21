@@ -153,28 +153,20 @@ void MapEffect::setState(MapEffect::STATES state)
 
 std::vector<Tower *> MapEffect::getRandomTowers(int count, const std::vector<Tower *> &towers)
 {
-	const int actualCount = ceil(count * 0.2f);
-	const int interval = actualCount * 2 + 1;
-	const int offset = rand() % interval - actualCount;
-	const int resultCount = count + offset;
-
-	const unsigned int towersCount = std::min(static_cast<size_t>(resultCount), towers.size());
-	std::set<int> numbers;
-	std::vector<Tower *> resultTowers;
-	for (unsigned int i = 0; i < towersCount; ++i)
+	std::vector<Tower*> avaliableTowers;
+	for(Tower *tower : towers)
+	{
+		if (tower->isInvulnerable())
+			continue;
+		avaliableTowers.push_back(tower);
+	}
+	const unsigned int towersCount = std::min(static_cast<size_t>(count), avaliableTowers.size());
+	while(avaliableTowers.size() != towersCount)
 	{
 		const int n = rand() % towers.size();
-		if (towers.at(n)->isInvulnerable())
-			continue;
-		if (numbers.count(n) == 0)
-		{
-			numbers.insert(n);
-			resultTowers.push_back(towers.at(n));
-		}
-		else
-			i--;
+		avaliableTowers.erase(avaliableTowers.begin() + n);
 	}
-	return resultTowers;
+	return avaliableTowers;
 }
 
 MapExplosion::MapExplosion()
@@ -307,7 +299,8 @@ void TowersRegress::stateChanged()
 	case PREPARE_ACTIVE:
 	{
 		m_interval = 800 * 4;
-		const std::vector<Tower *> towers = getRandomTowers(m_count, Engine::Instance().options<GameOptions>()->level()->getAllTowers());
+		const std::vector<Tower *> towers = getRandomTowers(m_count,
+															Engine::Instance().options<GameOptions>()->level()->getAllTowers());
 		for (unsigned int i = 0; i < towers.size(); ++i)
 		{
 			towers.at(i)->setRegressed(true);
@@ -479,40 +472,37 @@ MoneyDrain::~MoneyDrain()
 
 void MoneyDrain::draw(sf::RenderTarget * const target)
 {
-	if (m_state == ACTIVE)
-	{
-		for(GameObject *drain : drains)
-			drain->draw(target);
-	}
+	for(GameObject *energyLeech : energyLeeches)
+		energyLeech->draw(target);
 }
 
 void MoneyDrain::update()
 {
 	MapEffect::update();
 	const bool hasDrain = m_state == ACTIVE && drainTimer.check(50);
-	for(GameObject *drain : drains)
+	for(GameObject *energyLeech : energyLeeches)
 	{
 		if (hasDrain)
 			Engine::Instance().options<GameOptions>()->level()->drainMoney(Balance::Instance().getDrainValue());
-		drain->update();
+		energyLeech->update();
 	}
 }
 
 void MoneyDrain::explosion(const sf::FloatRect &rect)
 {
-	for (auto it = drains.begin(); it != drains.end();)
+	for (auto it = energyLeeches.begin(); it != energyLeeches.end();)
 	{
-		GameObject *drain = *it;
-		if (drain->sprite.getGlobalBounds().intersects(rect))
+		GameObject *energyLeech = *it;
+		if (energyLeech->sprite.getGlobalBounds().intersects(rect))
 		{			
 			GamePlatform::Instance().unlock(ACHIEVEMENT_DROP_DRAIN);
-			delete drain;
-			it = drains.erase(it);
+			delete energyLeech;
+			it = energyLeeches.erase(it);
 		}
 		else
 			++it;
 	}
-	if (drains.size() == 0)
+	if (energyLeeches.size() == 0)
 		setState(READY);
 }
 
@@ -522,8 +512,6 @@ void MoneyDrain::stateChanged()
 	{
 	case PREPARE_ACTIVE:
 	{
-		m_interval = 800 * 4;
-
 		std::vector<Tower*> powerTowers;
 		for(Tower* tower : Engine::Instance().options<GameOptions>()->level()->getAllTowers())
 		{
@@ -531,42 +519,97 @@ void MoneyDrain::stateChanged()
 				powerTowers.push_back(tower);
 		}
 		const std::vector<Tower *> towers = getRandomTowers(m_count, powerTowers);
-		for (unsigned int i = 0; i < towers.size(); ++i)
+		for(Tower *tower : towers)
 		{
-			if (towers.at(i)->type() == POWER)
-				drains.push_back(new GameObject(GAME_TEXTURE::DRAIN, towers.at(i)->pos(), sf::Vector2i(64, 64), 4));
-			if (drains.size() == m_count)
-				break;
+			const sf::Vector2i frameSize = sf::Vector2i(384, 384);
+			GameObject *energyLeech = new GameObject(GAME_TEXTURE::ENERGY_LEECH,
+													 tower->pos() - Engine::Instance().options<GameOptions>()->mapTileSize(),
+													 frameSize, FRAME_COUNT);
+			energyLeech->sprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
+			energyLeech->row = 0;
+			energyLeech->animationSpeed = ANIMATION_SPEED;
+			energyLeeches.push_back(energyLeech);
 		}
-		for(GameObject *drain : drains)
-		{
-			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::DRAIN, drain->pos(),
-													 sf::Vector2i(64, 64), 800, 4, 1);
-		}
+		m_interval = FRAME_COUNT * ANIMATION_SPEED;
 	}
 		break;
 	case ACTIVE:
 	{
 		m_interval = m_duration;
-		if (drains.size() != 0)
+		if (energyLeeches.size() != 0)
+		{
+			for(GameObject *energyLeech : energyLeeches)
+			{
+				energyLeech->currentFrame = 0;
+				energyLeech->row = 1;
+//				energyLeech->animationSpeed = ANIMATION_SPEED;
+			}
 			Engine::Instance().options<GameOptions>()->panel()->setDrain(true);
+		}
 	}
 		break;
 	case AFTER_ACTIVE:
 	{
-		setState(READY);
+		for(GameObject *energyLeech : energyLeeches)
+		{
+			energyLeech->row = 2;
+			energyLeech->currentFrame = 0;
+//			energyLeech->animationSpeed = ANIMATION_SPEED;
+		}
+		m_interval = FRAME_COUNT * ANIMATION_SPEED;
 	}
 		break;
 	case READY:
 	{
 		m_interval = m_time;	
 		Engine::Instance().options<GameOptions>()->panel()->setDrain(false);
-		for(GameObject *drain : drains)
+		for(GameObject *drain : energyLeeches)
 			delete drain;
-		drains.clear();
+		energyLeeches.clear();
 	}
 		break;
 	default:
+		break;
+	}
+}
+
+Lava::Lava()
+{
+
+}
+
+void Lava::draw(sf::RenderTarget * const target)
+{
+	for(GameObject* lava : lavas)
+		lava->draw(target);
+}
+
+void Lava::update()
+{
+	for(GameObject* lava : lavas)
+		lava->update();
+}
+
+void Lava::stateChanged()
+{
+	switch (m_state)
+	{
+	case PREPARE_ACTIVE:
+
+		break;
+	case ACTIVE:
+
+		break;
+	case AFTER_ACTIVE:
+
+		break;
+	case READY:
+	{
+		m_interval = m_time;
+		for(GameObject* lava : lavas)
+			delete lava;
+		lavas.clear();
+	}
 		break;
 	}
 }

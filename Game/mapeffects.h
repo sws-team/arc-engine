@@ -138,8 +138,24 @@ protected:
 	void stateChanged() override;
 
 private:
-	std::vector<GameObject *> drains;
+	std::vector<GameObject *> energyLeeches;
 	Timer drainTimer;
+	static constexpr int FRAME_COUNT = 9;
+	static constexpr float ANIMATION_SPEED = 100;
+};
+
+class Lava : public MapEffect
+{
+public:
+	Lava();
+	void draw(sf::RenderTarget *const target) override;
+	void update() override;
+
+protected:
+	void stateChanged() override;
+
+private:
+	std::vector<GameObject*> lavas;
 };
 
 #endif // MAPEFFECT_H

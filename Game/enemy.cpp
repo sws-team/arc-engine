@@ -581,6 +581,14 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		abilityType = wormInfo.abilityType;
 	}
 		break;
+	case JUMPER:
+	{
+		texture_id = GAME_TEXTURE::ENEMY_JUMPER;
+		size.x = 2;
+		size.y = 2;
+		abilityType = EnemyInfo::JUMP;
+	}
+		break;
 	default:
 		break;
 	}
@@ -729,6 +737,9 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const sf::Vector2f &startPo
 	case EnemyInfo::DOWNGRADE_TOWER:
 		ability = new DowngradeTowerAbility();
 		break;
+	case EnemyInfo::JUMP:
+		ability = new JumpAbility();
+		break;
 	default:
 		break;
 	}
@@ -739,6 +750,9 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const sf::Vector2f &startPo
 							 stats, info.size,
 							 info.frameCount,
 							 info.animationSpeed);
+	if (type == JUMPER)
+		enemy->setStopped(true);
+
 	enemy->setAbility(ability);
 	enemy->setType(type);
 	if (ability != nullptr)
@@ -950,34 +964,7 @@ void TowerEffectAbility::use()
 		owner->frameCount = 1;
 		owner->currentFrame = 0;
 
-		Tower *target = nullptr;
-		const sf::Vector2f center = owner->enemyCenter();
-		const std::vector<Tower*> towers = Engine::Instance().options<GameOptions>()->level()->getAllTowers();
-		float weight = 0;
-		for(Tower* tower : towers)
-		{
-			if (tower->type() == POWER)
-				continue;
-			if (tower->isInvulnerable())
-				continue;
-			if (!tower->isActive())
-				continue;
-			if (tower->isDowngraded())
-				continue;
-			const sf::Vector2f towerCenter = tower->getCenter();
-			const float a = fabs(center.x - towerCenter.x);
-			const float b = fabs(center.y - towerCenter.y);
-			const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
-			if (r > Engine::Instance().options<GameOptions>()->tileSize().x * info.cells)
-				continue;
-
-			const float currentWeight = Engine::Instance().options<GameOptions>()->panel()->getTowerSellCost(tower);
-			if (currentWeight > weight)
-			{
-				target = tower;
-				weight = currentWeight;
-			}
-		}
+		Tower *target = findTarget(owner->enemyCenter(), info.cells);
 		if (target == nullptr)
 		{
 			getBack();
@@ -1062,6 +1049,53 @@ void TowerEffectAbility::getBack()
 	owner->update();
 	m_interval = owner->animationSpeed * owner->frameCount;
 	m_state = WAIT;
+}
+#define RANDOM_TARGET
+Tower *TowerEffectAbility::findTarget(const sf::Vector2f& center, const float cells)
+{
+	Tower *target = nullptr;
+	const std::vector<Tower*> towers = Engine::Instance().options<GameOptions>()->level()->getAllTowers();
+#ifdef RANDOM_TARGET
+	std::vector<Tower*> possibleTargets;
+#else
+	float weight = 0;
+#endif
+	for(Tower* tower : towers)
+	{
+		if (tower->type() == POWER)
+			continue;
+		if (tower->isInvulnerable())
+			continue;
+		if (!tower->isActive())
+			continue;
+		if (tower->isDowngraded())
+			continue;
+		const sf::Vector2f towerCenter = tower->getCenter();
+		const float a = fabs(center.x - towerCenter.x);
+		const float b = fabs(center.y - towerCenter.y);
+		const float r = powf(powf(a, 2) + powf(b, 2), 0.5f);
+		if (r > Engine::Instance().options<GameOptions>()->tileSize().x * cells)
+			continue;
+
+#ifdef RANDOM_TARGET
+		possibleTargets.push_back(tower);
+#else
+		const float currentWeight = Engine::Instance().options<GameOptions>()->panel()->getTowerSellCost(tower);
+		if (currentWeight > weight)
+		{
+			target = tower;
+			weight = currentWeight;
+		}
+#endif
+	}
+#ifdef RANDOM_TARGET
+	if (!possibleTargets.empty())
+	{
+		const int n = rand() % possibleTargets.size();
+		return possibleTargets.at(n);
+	}
+#endif
+	return target;
 }
 
 ShutdownTowerAbility::ShutdownTowerAbility()
@@ -1398,4 +1432,28 @@ void FasterAbility::use()
 	const float k = owner->getData().health / owner->getPureStats().health;
 	owner->animationSpeed = FASTER_ANIMATION_SPEED + 4 * FASTER_ANIMATION_SPEED * k;
 	owner->setFaster(k);
+}
+
+JumpAbility::JumpAbility()
+	: EnemyAbility(3000)
+	,isJump(false)
+{
+
+}
+
+void JumpAbility::use()
+{
+	isJump = !isJump;
+	if (isJump)
+	{
+		owner->setStopped(false);
+		owner->row = 1;
+		m_interval = 5 * 200;
+	}
+	else
+	{
+		owner->setStopped(true);
+		owner->row = 0;
+		m_interval = 3000;
+	}
 }

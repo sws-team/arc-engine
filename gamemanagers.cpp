@@ -83,6 +83,8 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::ENEMY_REPAIR, out);
 			else if (resource.name == "selfheal")
 				addTexture(GAME_TEXTURE::ENEMY_SELF_HEAL, out);
+			else if (resource.name == "jumper")
+				addTexture(GAME_TEXTURE::ENEMY_JUMPER, out);
 			}
 			//map icons
 			{
@@ -261,8 +263,8 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::BURN, out);
 			else if (resource.name == "down_effect")
 				addTexture(GAME_TEXTURE::DOWN_EFFECT, out);
-			else if (resource.name == "drain")
-				addTexture(GAME_TEXTURE::DRAIN, out);
+			else if (resource.name == "energyleech")
+				addTexture(GAME_TEXTURE::ENERGY_LEECH, out);
 			else if (resource.name == "explosion")
 				addTexture(GAME_TEXTURE::EXPLOSION, out);
 			else if (resource.name == "freeze_bomb_explosion")

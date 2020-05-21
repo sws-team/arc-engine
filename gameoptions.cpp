@@ -415,7 +415,7 @@ bool GameOptions::loadMap(int id)
 			{
 				const int tileGID = atoi(gidStr);
 				const int subRectToUse = tileGID - firstTileID;
-				if (subRectToUse >= 0 && !subRects.empty())
+				if (subRectToUse >= 0 && !subRects.empty() && tileGID < subRects.size())
 				{
 					const float posX = x * MAP_CELL_SIZE * Engine::Instance().settingsManager()->getScaleFactor().x;
 					const float posY = y * MAP_CELL_SIZE * Engine::Instance().settingsManager()->getScaleFactor().y;

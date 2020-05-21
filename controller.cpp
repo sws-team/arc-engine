@@ -83,6 +83,9 @@ void Controller::eventFilter(sf::Event *event)
 		case sf::Keyboard::F6:
 			Engine::Instance().options<GameOptions>()->level()->giveMeMoney();
 			break;
+		case sf::Keyboard::F7:
+			Engine::Instance().options<GameOptions>()->level()->enableDrain();
+			break;
 #endif
 		case sf::Keyboard::BackSpace:
 			Engine::Instance().options<GameOptions>()->camera()->resetView();

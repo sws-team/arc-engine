@@ -19,7 +19,7 @@ Tower::Tower(const TextureType &texture_id,
 			 const TowerStats &stats)
 	: GameObject(texture_id, pos,
 				 sf::Vector2i(GameOptions::CELL_SIZE/TOWER_SCAlE,
-						  GameOptions::CELL_SIZE/TOWER_SCAlE), 1)
+							  GameOptions::CELL_SIZE/TOWER_SCAlE), 1)
 	,m_stats(stats)
 	,m_level(1)
 	,m_kills(0)
