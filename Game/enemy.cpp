@@ -1144,7 +1144,7 @@ DownTowerAbility::DownTowerAbility()
 	info.pojectileTextureId = GAME_TEXTURE::DOWNGRADE_PROJECTILE;
 	info.projectileSize = sf::Vector2i(32, 32);
 	info.duration = Balance::Instance().getDowngradeDuration();
-	info.catchSound = GAME_SOUND::CATCH;
+	info.catchSound = GAME_SOUND::ELECTRIC_SHOCK;
 	info.cells = Balance::Instance().getDowngradeCells();
 	info.projectileSpeed = 5;
 	info.projectileAnimationSpeed = 50;

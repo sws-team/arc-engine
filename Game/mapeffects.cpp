@@ -524,13 +524,13 @@ void MoneyDrain::stateChanged()
 			const sf::Vector2i frameSize = sf::Vector2i(384, 384);
 			GameObject *energyLeech = new GameObject(GAME_TEXTURE::ENERGY_LEECH,
 													 tower->pos() - Engine::Instance().options<GameOptions>()->mapTileSize(),
-													 frameSize, FRAME_COUNT);
+													 frameSize, ENERGY_LEECH_FRAME_COUNT);
 			energyLeech->sprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 			energyLeech->row = 0;
-			energyLeech->animationSpeed = ANIMATION_SPEED;
+			energyLeech->animationSpeed = ENERGY_LEECH_ANIMATION_SPEED;
 			energyLeeches.push_back(energyLeech);
 		}
-		m_interval = FRAME_COUNT * ANIMATION_SPEED;
+		m_interval = ENERGY_LEECH_FRAME_COUNT * ENERGY_LEECH_ANIMATION_SPEED;
 	}
 		break;
 	case ACTIVE:
@@ -542,6 +542,7 @@ void MoneyDrain::stateChanged()
 			{
 				energyLeech->currentFrame = 0;
 				energyLeech->row = 1;
+				energyLeech->updateTextureRect();
 //				energyLeech->animationSpeed = ANIMATION_SPEED;
 			}
 			Engine::Instance().options<GameOptions>()->panel()->setDrain(true);
@@ -554,9 +555,10 @@ void MoneyDrain::stateChanged()
 		{
 			energyLeech->row = 2;
 			energyLeech->currentFrame = 0;
+			energyLeech->updateTextureRect();
 //			energyLeech->animationSpeed = ANIMATION_SPEED;
 		}
-		m_interval = FRAME_COUNT * ANIMATION_SPEED;
+		m_interval = ENERGY_LEECH_FRAME_COUNT * ENERGY_LEECH_ANIMATION_SPEED;
 	}
 		break;
 	case READY:
@@ -595,13 +597,42 @@ void Lava::stateChanged()
 	switch (m_state)
 	{
 	case PREPARE_ACTIVE:
+	{
+		const sf::Vector2i cells = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell();
+		const int x = rand() % cells.x;
+		const int y = rand() % cells.y;
+		const sf::Vector2f pos = Engine::Instance().options<GameOptions>()->camera()->cellToPos(sf::Vector2i(x, y));
 
+		for (unsigned int i = 0; i < m_count; ++i)
+		{
+			GameObject *lava = new GameObject(GAME_TEXTURE::SMOKE, pos,
+											  sf::Vector2i(256, 256), LAVA_FRAME_COUNT);
+			lavas.push_back(lava);
+		}
+
+		m_interval = LAVA_FRAME_COUNT * LAVA_ANIMATION_SPEED;
+	}
 		break;
 	case ACTIVE:
-
+	{
+		for(GameObject* lava : lavas)
+		{
+			lava->row = 1;
+			lava->currentFrame = 0;
+			lava->updateTextureRect();
+		}
+	}
 		break;
 	case AFTER_ACTIVE:
-
+	{
+		for(GameObject* lava : lavas)
+		{
+			lava->row = 2;
+			lava->currentFrame = 0;
+			lava->updateTextureRect();
+		}
+		m_interval = LAVA_FRAME_COUNT * LAVA_ANIMATION_SPEED;
+	}
 		break;
 	case READY:
 	{

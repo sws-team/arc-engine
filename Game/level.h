@@ -80,6 +80,10 @@ public:
 	void test();
 	void giveMeMoney();
 	void enableDrain();
+	void enableLava();
+	void enableRegress();
+	void enableExplosion();
+	void enableSmoke();
 #endif
 
 	Abilities *getAbilities();

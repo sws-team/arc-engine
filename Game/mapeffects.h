@@ -140,8 +140,8 @@ protected:
 private:
 	std::vector<GameObject *> energyLeeches;
 	Timer drainTimer;
-	static constexpr int FRAME_COUNT = 9;
-	static constexpr float ANIMATION_SPEED = 100;
+	static constexpr int ENERGY_LEECH_FRAME_COUNT = 9;
+	static constexpr float ENERGY_LEECH_ANIMATION_SPEED = 100;
 };
 
 class Lava : public MapEffect
@@ -156,6 +156,8 @@ protected:
 
 private:
 	std::vector<GameObject*> lavas;
+	static constexpr int LAVA_FRAME_COUNT = 4;
+	static constexpr int LAVA_ANIMATION_SPEED = 200;
 };
 
 #endif // MAPEFFECT_H

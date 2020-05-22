@@ -19,6 +19,7 @@ GamePanel::GamePanel() :
   ,currentCursorPos(0)
   ,m_drain(false)
   ,drainState(false)
+  ,miniMapRect(nullptr)
 {
 	life = new LifeBar();
 	progress = new LifeBar();
@@ -165,12 +166,13 @@ GamePanel::GamePanel() :
 	drainRect.setOutlineColor(sf::Color::Transparent);
 
 	progress->setPos(sf::Vector2f(progressWidth, PROGRESS_OFFSET * scaleFactor.y));
-	updatePos();
+	minimapPos = updatePos();
 }
 
 GamePanel::~GamePanel()
 {
-
+	if (miniMapRect != nullptr)
+		delete miniMapRect;
 }
 
 void GamePanel::draw(sf::RenderTarget * const target)
@@ -179,14 +181,15 @@ void GamePanel::draw(sf::RenderTarget * const target)
 	rTexture.clear(sf::Color::Transparent);
 	Engine::Instance().options<GameOptions>()->level()->drawLevel(&rTexture);
 	rTexture.display();
-	miniMapSprite.setTexture(rTexture.getTexture());
-
+	miniMapRect->setTexture(&rTexture.getTexture());
+//	watch(miniMapRect.getGlobalBounds().width);
+//	watch(miniMapRect.getGlobalBounds().height);
 	//draw
 	if(Engine::Instance().options<GameOptions>()->level()->getState() == Level::WAIT_READY &&
 			!Engine::Instance().options<GameOptions>()->instructions()->isActive())
 		target->draw(readyText);		
 
-	target->draw(miniMapSprite);
+	target->draw(*miniMapRect);
 	target->draw(m_sprite);
 	target->draw(moneyCountText);
 	target->draw(info);
@@ -480,8 +483,6 @@ sf::Vector2f GamePanel::updatePos()
 	towerLaserLimitText.setPosition(towerLaserSprite.getPosition() + halfCellY);
 	towerPowerLimitText.setPosition(towerPowerSprite.getPosition() + halfCellY);
 	towerImprovedLimitText.setPosition(towerImprovedSprite.getPosition() + halfCellY);
-
-	miniMapSprite.setPosition(pos);
 
 	return pos;
 }
@@ -897,14 +898,14 @@ void GamePanel::resetPanelIcon()
 
 bool GamePanel::clickOnMiniMap(const sf::Vector2f &pos)
 {
-	if (miniMapSprite.getGlobalBounds().contains(pos))
+	if (miniMapRect->getGlobalBounds().contains(pos))
 	{
 		sf::Vector2f rectPos;
-		rectPos.x = pos.x - miniMapSprite.getGlobalBounds().left;
-		rectPos.y = pos.y - miniMapSprite.getGlobalBounds().top;
+		rectPos.x = pos.x - miniMapRect->getGlobalBounds().left;
+		rectPos.y = pos.y - miniMapRect->getGlobalBounds().top;
 		sf::Vector2f k;
-		k.x = rectPos.x/miniMapSprite.getGlobalBounds().width;
-		k.y = rectPos.y/miniMapSprite.getGlobalBounds().height;
+		k.x = rectPos.x/miniMapRect->getGlobalBounds().width;
+		k.y = rectPos.y/miniMapRect->getGlobalBounds().height;
 		sf::Vector2f center;
 		center.x = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().x * Engine::Instance().options<GameOptions>()->tileSize().x;
 		center.y = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().y * Engine::Instance().options<GameOptions>()->tileSize().y;
@@ -1116,16 +1117,17 @@ void GamePanel::init()
 	readyText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::START_GAME));
 	readyText.setPosition(sf::Vector2f(Engine::Instance().settingsManager()->getResolution().x/2 - readyText.getGlobalBounds().width/2,
 								   Engine::Instance().settingsManager()->getResolution().y/2 + readyText.getGlobalBounds().height/2));
-	rTexture.setView(*Engine::Instance().options<GameOptions>()->camera()->getMiniMapView());
 }
 
-void GamePanel::setMapSize(const sf::Vector2f& size)
+void GamePanel::setMapSize(const float width, const float height)
 {
-	rTexture.create(static_cast<unsigned int>(size.x),
-					static_cast<unsigned int>(size.y));
-	const float minimap_scale_x = Engine::Instance().settingsManager()->getScaleFactor().x * 344.f / Engine::Instance().settingsManager()->getResolution().x;
-	const float minimap_scale_y = Engine::Instance().settingsManager()->getScaleFactor().y * 213.f / Engine::Instance().settingsManager()->getResolution().y;
-	miniMapSprite.setScale(minimap_scale_x, minimap_scale_y);
+	if (miniMapRect != nullptr)
+		delete miniMapRect;
+	miniMapRect = new sf::RectangleShape();
+	rTexture.create(static_cast<unsigned int>(width), static_cast<unsigned int>(height));
+	const sf::Vector2f miniMapSize = sf::Vector2f(344.f, 213.f);
+	miniMapRect->setSize(miniMapSize);
+	miniMapRect->setPosition(minimapPos);
 }
 
 float GamePanel::getBottomValue() const

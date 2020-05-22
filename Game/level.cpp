@@ -221,8 +221,8 @@ void Level::startMission(const unsigned int n)
 	const sf::Vector2f tileSize = Engine::Instance().options<GameOptions>()->tileSize();
 	gameMap = Engine::Instance().options<GameOptions>()->findMapByNumber(n);
 	Engine::Instance().options<GameOptions>()->panel()->setMapSize(
-				sf::Vector2f(gameMap->width * GameOptions::MAP_CELL_SIZE,
-							 gameMap->height * GameOptions::MAP_CELL_SIZE));
+				gameMap->width * GameOptions::MAP_CELL_SIZE,
+				gameMap->height * GameOptions::MAP_CELL_SIZE);
 
 	Engine::Instance().options<GameOptions>()->panel()->setProgressMax(currentProgress());
 	life = gameMap->stats.life;
@@ -301,9 +301,9 @@ void Level::startMission(const unsigned int n)
 	towersRegress->setDuration(gameMap->stats.regress.duration);
 	towersRegress->setCount(gameMap->stats.regress.count);
 
-	lava->setTime(10000);
-	lava->setDuration(9000);
-	lava->setCount(5);
+	lava->setTime(gameMap->stats.lava.time);
+	lava->setDuration(gameMap->stats.lava.duration);
+	lava->setCount(gameMap->stats.lava.count);
 
 	smoke->init();
 	mapExplosion->init();
@@ -1017,6 +1017,50 @@ void Level::enableDrain()
 	moneyDrain->init();
 	moneyDrain->resetTimers();
 }
+
+void Level::enableLava()
+{
+	lava->setTime(10000);
+	lava->setDuration(9000);
+	lava->setCount(4);
+
+	lava->setEnabled(true);
+	lava->init();
+	lava->resetTimers();
+}
+
+void Level::enableRegress()
+{
+	towersRegress->setTime(10000);
+	towersRegress->setDuration(5000);
+	towersRegress->setCount(2);
+
+	towersRegress->setEnabled(true);
+	towersRegress->init();
+	towersRegress->resetTimers();
+}
+
+void Level::enableExplosion()
+{
+	mapExplosion->setTime(7000);
+	mapExplosion->setDuration(2000);
+	mapExplosion->setCount(1);
+
+	mapExplosion->setEnabled(true);
+	mapExplosion->init();
+	mapExplosion->resetTimers();
+}
+
+void Level::enableSmoke()
+{
+	smoke->setTime(10000);
+	smoke->setDuration(92000);
+	smoke->setCount(6);
+
+	smoke->setEnabled(true);
+	smoke->init();
+	smoke->resetTimers();
+}
 #endif
 Abilities *Level::getAbilities()
 {
@@ -1120,7 +1164,7 @@ void Level::drawLevel(sf::RenderTarget * const target)
 		if (object->layer() == -1)
 			object->draw(target);
 	}
-
+	lava->draw(target);
 	abilities->draw(target);
 
 	for(Enemy* enemy : enemies)
@@ -1147,7 +1191,7 @@ void Level::drawLevel(sf::RenderTarget * const target)
 	smoke->draw(target);
 	moneyDrain->draw(target);
 	towersRegress->draw(target);
-	lava->draw(target);
+
 
 	if (m_selectedTower != nullptr)
 	{

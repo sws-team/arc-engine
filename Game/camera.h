@@ -23,7 +23,7 @@ public:
     void moveRightByCell();
 
 	sf::View *getView();
-	sf::View *getMiniMapView();
+//	sf::View *getMiniMapView();
 
 	void zoomIn();
 	void zoomOut();
@@ -50,12 +50,9 @@ public:
 private:
     constexpr static float CAMERA_OFFSET = 4.f;
 	constexpr static int MAX_ZOOM = 20;
-	constexpr static float MINIMAP_ZOOM = 0.1f;
 	constexpr static float ZOOM_STEP = 0.95f;
 
 	sf::View *view;
-	sf::View *minimap;
-
 	int zoomRatio;
 };
 

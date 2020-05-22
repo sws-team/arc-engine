@@ -72,6 +72,7 @@ struct MapStats
 	MapDanger smoke;
 	MapDanger moneyDrain;
 	MapDanger regress;
+	MapDanger lava;
 };
 
 namespace Json {

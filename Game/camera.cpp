@@ -19,58 +19,40 @@ void Camera::init()
 										 Engine::Instance().settingsManager()->getResolution().x,
 										 Engine::Instance().settingsManager()->getResolution().y);
 
-//	view = Engine::Instance().window()->view();
 	view = new sf::View(gameRect);
 	view->setViewport(Engine::Instance().window()->view()->getViewport());
-	minimap = new sf::View(gameRect);
 
 	resetZoom();
 	view->zoom(GameOptions::GAME_SCALE);
 	view->setCenter(sf::Vector2f(gameRect.width * GameOptions::GAME_SCALE/2,
 							 gameRect.height * GameOptions::GAME_SCALE/2));
-
-	minimap->setCenter(sf::Vector2f(150 * Engine::Instance().settingsManager()->getScaleFactor().x,
-								150 * Engine::Instance().settingsManager()->getScaleFactor().y));
 }
 
 void Camera::destroy()
 {
 	Engine::Instance().window()->setView(*Engine::Instance().window()->view());
 	delete view;
-	delete minimap;
 	view = nullptr;
 }
 
 void Camera::moveUp(float offset)
 {
 	view->move(0.f, -offset);
-	minimap->move(0.f, -offset);
-
-//	checkBorders();
 }
 
 void Camera::moveDown(float offset)
 {
 	view->move(0.f, offset);
-	minimap->move(0.f, offset);
-
-//	checkBorders();
 }
 
 void Camera::moveLeft(float offset)
 {
 	view->move(-offset, 0.f);
-	minimap->move(-offset, 0.f);
-
-//	checkBorders();
 }
 
 void Camera::moveRight(float offset)
 {
 	view->move(offset, 0.f);
-	minimap->move(offset, 0.f);
-
-//	checkBorders();
 }
 
 void Camera::moveUpByCell()
@@ -98,11 +80,6 @@ sf::View *Camera::getView()
 	return view;
 }
 
-sf::View *Camera::getMiniMapView()
-{
-	return minimap;
-}
-
 void Camera::zoomIn()
 {
 	if (zoomRatio > MAX_ZOOM)
@@ -126,9 +103,6 @@ void Camera::resetZoom()
 	view->setSize(Engine::Instance().settingsManager()->getResolution().x,
 				  Engine::Instance().settingsManager()->getResolution().y);
 	view->setViewport(Engine::Instance().window()->view()->getViewport());
-	minimap->setSize(Engine::Instance().settingsManager()->getScaleFactor().x,
-					 Engine::Instance().settingsManager()->getScaleFactor().y);
-	minimap->zoom(MINIMAP_ZOOM);
 	zoomRatio = 0;
 }
 

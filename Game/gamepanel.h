@@ -34,7 +34,7 @@ public:
 	void setProgressMax(int progressMax);
 
 	void init();
-	void setMapSize(const sf::Vector2f &size);
+	void setMapSize(const float width, const float height);
 
 	void updateInfo();
 
@@ -180,11 +180,13 @@ private:
 	Timer drainBlinkTimer;
 	sf::RectangleShape drainRect;
 	bool drainState;
-	sf::Sprite miniMapSprite;
+	sf::RectangleShape *miniMapRect;
 
 	static constexpr unsigned int PANEL_POS_ID = 128;
 	static constexpr float LIFE_BAR_HEIGHT = 16;
 	sf::String towerStatsStr(TOWER_TYPES type, Tower *tower) const;
+
+	sf::Vector2f minimapPos;
 };
 
 #endif // GAMEPANEL_H

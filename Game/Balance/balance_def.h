@@ -56,6 +56,8 @@ const std::string TELEPORT_KEY = "teleport";
 const std::string BIG_KEY = "big";
 const std::string BIG_TANK_KEY = "big_tank";
 const std::string SPAWN_KEY = "spawn";
+const std::string ENEMY_LAST_KEY = "enemy_last";
+const std::string JUMPER_KEY = "jumper";
 
 //enemy stats
 const std::string SPEED_KEY = "speed";
@@ -117,6 +119,7 @@ const std::string MAP_DRAIN_KEY = "map_drain";
 const std::string MAP_EXPLOSIONS_KEY = "map_explosions";
 const std::string MAP_SMOKE_KEY = "map_smoke";
 const std::string MAP_REGRESS_KEY = "map_regress";
+const std::string MAP_LAVA_KEY = "map_lava";
 
 const std::string MAP_EFFECT_ENABLED_KEY = "map_effect_enabled";
 const std::string MAP_EFFECT_DURATION_KEY = "map_effect_duration";

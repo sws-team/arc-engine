@@ -80,11 +80,23 @@ void Controller::eventFilter(sf::Event *event)
 		case sf::Keyboard::F2:
 			Engine::Instance().options<GameOptions>()->level()->test();
 			break;
-		case sf::Keyboard::F6:
+		case sf::Keyboard::F5:
 			Engine::Instance().options<GameOptions>()->level()->giveMeMoney();
 			break;
-		case sf::Keyboard::F7:
+		case sf::Keyboard::F6:
 			Engine::Instance().options<GameOptions>()->level()->enableDrain();
+			break;
+		case sf::Keyboard::F7:
+			Engine::Instance().options<GameOptions>()->level()->enableLava();
+			break;
+		case sf::Keyboard::F8:
+			Engine::Instance().options<GameOptions>()->level()->enableRegress();
+			break;
+		case sf::Keyboard::F9:
+			Engine::Instance().options<GameOptions>()->level()->enableSmoke();
+			break;
+		case sf::Keyboard::F10:
+			Engine::Instance().options<GameOptions>()->level()->enableExplosion();
 			break;
 #endif
 		case sf::Keyboard::BackSpace:

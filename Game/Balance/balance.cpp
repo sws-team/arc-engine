@@ -193,7 +193,7 @@ void Balance::loadEnemies(const Json::Value &jsonEnemies)
 	loadEnemy(ENEMY_TYPES::GIANT_SLUG, jsonEnemies[BalanceDef::BIG_KEY]);
 	loadEnemy(ENEMY_TYPES::HEAVY_TANK, jsonEnemies[BalanceDef::BIG_TANK_KEY]);
 	loadEnemy(ENEMY_TYPES::BUGSAURUS, jsonEnemies[BalanceDef::SPAWN_KEY]);
-	loadEnemy(ENEMY_TYPES::JUMPER, jsonEnemies[BalanceDef::TRICYCLE_KEY]);
+	loadEnemy(ENEMY_TYPES::JUMPER, jsonEnemies[BalanceDef::JUMPER_KEY]);
 }
 
 void Balance::loadEnemy(const ENEMY_TYPES type, const Json::Value &jsonEnemy)
@@ -313,6 +313,14 @@ void Balance::loadMaps(const Json::Value &jsonMaps)
 			stats.smoke.count = smokeObject[BalanceDef::MAP_EFFECT_COUNT_KEY].asInt();
 			stats.smoke.enabled = smokeObject[BalanceDef::MAP_EFFECT_ENABLED_KEY].asBool();
 		}
+		//lava
+		{
+			const Json::Value& lavaObject = mapObject[BalanceDef::MAP_LAVA_KEY];
+			stats.lava.duration = lavaObject[BalanceDef::MAP_EFFECT_DURATION_KEY].asDouble();
+			stats.lava.time = lavaObject[BalanceDef::MAP_EFFECT_TIME_KEY].asDouble();
+			stats.lava.count = lavaObject[BalanceDef::MAP_EFFECT_COUNT_KEY].asInt();
+			stats.lava.enabled = lavaObject[BalanceDef::MAP_EFFECT_ENABLED_KEY].asBool();
+		}
 		stats.smoke.time *= EngineDefs::MSEC;
 		stats.smoke.duration *= EngineDefs::MSEC;
 		stats.regress.time *= EngineDefs::MSEC;
@@ -321,6 +329,8 @@ void Balance::loadMaps(const Json::Value &jsonMaps)
 		stats.moneyDrain.duration *= EngineDefs::MSEC;
 		stats.explosions.time *= EngineDefs::MSEC;
 		stats.explosions.duration *= EngineDefs::MSEC;
+		stats.lava.time *= EngineDefs::MSEC;
+		stats.lava.duration *= EngineDefs::MSEC;
 
 		mapsStats.insert(std::pair<int, MapStats>(number, stats));
 	}
