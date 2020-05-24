@@ -112,11 +112,6 @@ void MapEffect::setEnabled(bool enabled)
 	m_enabled = enabled;
 }
 
-void MapEffect::init()
-{
-
-}
-
 void MapEffect::resetTimers()
 {
 	m_interval = m_time;
@@ -167,6 +162,20 @@ std::vector<Tower *> MapEffect::getRandomTowers(int count, const std::vector<Tow
 		avaliableTowers.erase(avaliableTowers.begin() + n);
 	}
 	return avaliableTowers;
+}
+
+std::vector<sf::Vector2f> MapEffect::getRandomPos(int count)
+{
+	std::vector<sf::Vector2f> result;
+	const sf::Vector2i cells = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell();
+	for (int i = 0; i < count; ++i)
+	{
+		const int x = rand() % cells.x;
+		const int y = rand() % cells.y;
+		const sf::Vector2f pos = Engine::Instance().options<GameOptions>()->camera()->cellToPos(sf::Vector2i(x, y));
+		result.push_back(pos);
+	}
+	return result;
 }
 
 MapExplosion::MapExplosion()
@@ -372,14 +381,6 @@ void Smoke::update()
 		cloud->update();
 }
 
-void Smoke::init()
-{
-	for (unsigned int i = 0; i < m_count; ++i)
-		clouds.push_back(new GameObject(GAME_TEXTURE::SMOKE, sf::Vector2f(0,0), sf::Vector2i(256, 256), 4));
-
-	MapEffect::init();
-}
-
 void Smoke::clear()
 {
 	for(GameObject *cloud : clouds)
@@ -394,31 +395,25 @@ void Smoke::stateChanged()
 	case PREPARE_ACTIVE:
 	{
 		m_interval = 800;
-		const sf::Vector2i maxCells = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell();
-		for(GameObject *cloud : clouds)
+		const std::vector<sf::Vector2f> points = getRandomPos(m_count);
+		for(const sf::Vector2f& pos : points)
 		{
-			const int x = rand() % maxCells.x;
-			const int y = rand() % maxCells.y;
-			cloud->setPos(sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x * x,
-								   Engine::Instance().options<GameOptions>()->tileSize().y * y));
-
-			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::SMOKE, cloud->pos(),
-													 sf::Vector2i(256, 256), 800, 4, 1);
+			GameObject *cloud = new GameObject(GAME_TEXTURE::SMOKE, pos, sf::Vector2i(256, 256), 4);
+			cloud->currentFrame = 0;
+			cloud->row = 0;
+			clouds.push_back(cloud);
 		}
-//		{
-//			cloud->currentFrame = 0;
-//			cloud->row = 1;
-//		}
+
 	}
 		break;
 	case ACTIVE:
 	{
 		m_interval = m_duration;
-//		for(GameObject *cloud : clouds)
-//		{
-//			cloud->currentFrame = 0;
-//			cloud->row = 0;
-//		}
+		for(GameObject *cloud : clouds)
+		{
+			cloud->currentFrame = 0;
+			cloud->row = 1;
+		}
 		smokeTowers(true);
 	}
 		break;
@@ -426,13 +421,10 @@ void Smoke::stateChanged()
 	{
 		m_interval = 800;
 		for(GameObject *cloud : clouds)
-
-			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::SMOKE, cloud->pos(),
-													 sf::Vector2i(256, 256), 800, 4, 2);
-//		{
-//			cloud->currentFrame = 0;
-//			cloud->row = 2;
-//		}
+		{
+			cloud->currentFrame = 0;
+			cloud->row = 2;
+		}
 	}
 		break;
 	case READY:
@@ -598,18 +590,13 @@ void Lava::stateChanged()
 	{
 	case PREPARE_ACTIVE:
 	{
-		const sf::Vector2i cells = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell();
-		const int x = rand() % cells.x;
-		const int y = rand() % cells.y;
-		const sf::Vector2f pos = Engine::Instance().options<GameOptions>()->camera()->cellToPos(sf::Vector2i(x, y));
-
-		for (unsigned int i = 0; i < m_count; ++i)
+		const std::vector<sf::Vector2f> points = getRandomPos(m_count);
+		for(const sf::Vector2f& pos : points)
 		{
 			GameObject *lava = new GameObject(GAME_TEXTURE::SMOKE, pos,
 											  sf::Vector2i(256, 256), LAVA_FRAME_COUNT);
 			lavas.push_back(lava);
 		}
-
 		m_interval = LAVA_FRAME_COUNT * LAVA_ANIMATION_SPEED;
 	}
 		break;

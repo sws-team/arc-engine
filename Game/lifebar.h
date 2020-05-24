@@ -8,7 +8,9 @@ class LifeBar
 public:
 	LifeBar();
 
-	void init(const sf::Vector2i &size, const sf::Color& color);
+	void init(const sf::Vector2i &size,
+			  const sf::Color& color,
+			  const sf::Color& borderColor = sf::Color::White);
 	sf::RectangleShape currentValue;
 	sf::RectangleShape fullValue;
 

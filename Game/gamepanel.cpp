@@ -159,7 +159,9 @@ GamePanel::GamePanel() :
 	const int progressWidth = Engine::Instance().settingsManager()->getResolution().x * PROGRESS_WIDTH;
 	progress->init(sf::Vector2i(progressWidth,
 								LifeBar::LIFE_BAR_HEIGHT * Engine::Instance().settingsManager()->getScaleFactor().y), sf::Color::Red);
-	life->init(sf::Vector2i(722 * scaleFactor.x, LIFE_BAR_HEIGHT * scaleFactor.y), GameOptions::secondaryColor);
+	life->init(sf::Vector2i(722 * scaleFactor.x, LIFE_BAR_HEIGHT * scaleFactor.y),
+			   sf::Color(32,78,29),
+			   GameOptions::alternativePrimaryColor);
 
 	drainRect.setFillColor(sf::Color::Transparent);
 	drainRect.setOutlineThickness(2);

@@ -7,14 +7,16 @@ LifeBar::LifeBar()
 
 }
 
-void LifeBar::init(const sf::Vector2i &size, const sf::Color& color)
+void LifeBar::init(const sf::Vector2i &size,
+				   const sf::Color& color,
+				   const sf::Color &borderColor)
 {
 	fullSize = size;
 	currentValue.setSize(sf::Vector2f(fullSize.x, fullSize.y));
 	currentValue.setFillColor(color);
 
 	fullValue.setSize(currentValue.getSize());
-	fullValue.setOutlineColor(sf::Color::White);
+	fullValue.setOutlineColor(borderColor);
 	fullValue.setFillColor(sf::Color::Transparent);
 	fullValue.setOutlineThickness(1 * Engine::Instance().settingsManager()->getScaleFactor().y);
 }

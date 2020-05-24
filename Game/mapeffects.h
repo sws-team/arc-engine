@@ -45,8 +45,6 @@ public:
 	void setCount(unsigned int count);
 	void setEnabled(bool enabled);
 
-	virtual void init();
-
 	void resetTimers();
 
 protected:
@@ -70,6 +68,7 @@ protected:
 	void setState(STATES state);
 
 	static std::vector<Tower *> getRandomTowers(int count, const std::vector<Tower*>& towers);
+	static std::vector<sf::Vector2f> getRandomPos(int count);
 
 private:
 	void step();
@@ -114,7 +113,6 @@ public:
 	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 
-	void init() override;
 	void clear() override;
 protected:
 	void stateChanged() override;

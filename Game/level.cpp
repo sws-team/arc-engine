@@ -203,7 +203,7 @@ void Level::startMission(const unsigned int n)
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
-			wave.spawnEnemies.push_back(ENEMY_TYPES::JUMPER);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::ROLLER);
 #endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
@@ -304,12 +304,6 @@ void Level::startMission(const unsigned int n)
 	lava->setTime(gameMap->stats.lava.time);
 	lava->setDuration(gameMap->stats.lava.duration);
 	lava->setCount(gameMap->stats.lava.count);
-
-	smoke->init();
-	mapExplosion->init();
-	moneyDrain->init();
-	towersRegress->init();
-	lava->init();
 
 	abilities->reset();
 
@@ -1014,7 +1008,6 @@ void Level::enableDrain()
 	moneyDrain->setCount(1);
 
 	moneyDrain->setEnabled(true);
-	moneyDrain->init();
 	moneyDrain->resetTimers();
 }
 
@@ -1025,7 +1018,6 @@ void Level::enableLava()
 	lava->setCount(4);
 
 	lava->setEnabled(true);
-	lava->init();
 	lava->resetTimers();
 }
 
@@ -1036,7 +1028,6 @@ void Level::enableRegress()
 	towersRegress->setCount(2);
 
 	towersRegress->setEnabled(true);
-	towersRegress->init();
 	towersRegress->resetTimers();
 }
 
@@ -1047,7 +1038,6 @@ void Level::enableExplosion()
 	mapExplosion->setCount(1);
 
 	mapExplosion->setEnabled(true);
-	mapExplosion->init();
 	mapExplosion->resetTimers();
 }
 
@@ -1058,7 +1048,6 @@ void Level::enableSmoke()
 	smoke->setCount(6);
 
 	smoke->setEnabled(true);
-	smoke->init();
 	smoke->resetTimers();
 }
 #endif

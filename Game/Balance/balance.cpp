@@ -194,6 +194,7 @@ void Balance::loadEnemies(const Json::Value &jsonEnemies)
 	loadEnemy(ENEMY_TYPES::HEAVY_TANK, jsonEnemies[BalanceDef::BIG_TANK_KEY]);
 	loadEnemy(ENEMY_TYPES::BUGSAURUS, jsonEnemies[BalanceDef::SPAWN_KEY]);
 	loadEnemy(ENEMY_TYPES::JUMPER, jsonEnemies[BalanceDef::JUMPER_KEY]);
+	loadEnemy(ENEMY_TYPES::ROLLER, jsonEnemies[BalanceDef::CAR_KEY]);
 }
 
 void Balance::loadEnemy(const ENEMY_TYPES type, const Json::Value &jsonEnemy)

@@ -85,6 +85,8 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::ENEMY_SELF_HEAL, out);
 			else if (resource.name == "jumper")
 				addTexture(GAME_TEXTURE::ENEMY_JUMPER, out);
+			else if (resource.name == "roller")
+				addTexture(GAME_TEXTURE::ENEMY_ROLLING, out);
 			}
 			//map icons
 			{

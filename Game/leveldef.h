@@ -47,6 +47,7 @@ enum ENEMY_TYPES
 	SPAWN_WORM,
 
 	JUMPER,
+	ROLLER,
 };
 
 struct Wave

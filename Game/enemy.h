@@ -368,13 +368,28 @@ class JumpAbility : public EnemyAbility
 {
 public:
 	JumpAbility();
+	constexpr static float JUMPER_ANIMATION_SPEED = 50;
+	constexpr static float JUMPER_FRAME_COUNT = 14;
+	constexpr static float JUMPER_STAY_FRAME_COUNT = 4;
 
 protected:
 	void use() override;
 
 private:
-
 	bool isJump;
+};
+class RollingAbility : public EnemyAbility
+{
+public:
+	RollingAbility();
+
+	static constexpr int ROLLING_ANIMATION_SPEED = 200;
+	static constexpr float ROLLING = 3.f;
+
+protected:
+	 void use() override;
+private:
+	bool isRolling;
 };
 
 class EnemiesFactory
@@ -398,6 +413,7 @@ public:
 			KILL_TOWER,
 			DOWNGRADE_TOWER,
 			JUMP,
+			ROLLING
 		};
 
 		EnemyStats stats;

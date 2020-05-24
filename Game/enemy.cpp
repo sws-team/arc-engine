@@ -589,6 +589,14 @@ EnemiesFactory::EnemyInfo EnemiesFactory::getEnemyInfo(ENEMY_TYPES type)
 		abilityType = EnemyInfo::JUMP;
 	}
 		break;
+	case ROLLER:
+	{
+		texture_id = GAME_TEXTURE::ENEMY_ROLLING;
+		size.x = 1;
+		size.y = 1;
+		abilityType = EnemyInfo::ROLLING;
+	}
+		break;
 	default:
 		break;
 	}
@@ -642,6 +650,12 @@ float EnemiesFactory::getAnimationSpeed(ENEMY_TYPES type)
 		return SpawnEnemy::DEFAULT_ANIMATION_SPEED;
 	case SPAWN_WORM:
 		return getAnimationSpeed(WORM);
+	case JUMPER:
+		return JumpAbility::JUMPER_ANIMATION_SPEED;
+		break;
+	case ROLLER:
+		return RollingAbility::ROLLING_ANIMATION_SPEED;
+		break;
 	default:
 		break;
 	}
@@ -688,6 +702,10 @@ float EnemiesFactory::getFrameCount(ENEMY_TYPES type)
 		return SpawnEnemy::DEFAULT_SPAWN_FRAME_COUNT;
 	case SPAWN_WORM:
 		return getFrameCount(WORM);
+	case JUMPER:
+		return JumpAbility::JUMPER_STAY_FRAME_COUNT;
+	case ROLLER:
+		return 4;
 	default:
 		break;
 	}
@@ -739,6 +757,9 @@ Enemy *EnemiesFactory::createEnemy(ENEMY_TYPES type, const sf::Vector2f &startPo
 		break;
 	case EnemyInfo::JUMP:
 		ability = new JumpAbility();
+		break;
+	case EnemyInfo::ROLLING:
+		ability = new RollingAbility();
 		break;
 	default:
 		break;
@@ -1435,7 +1456,7 @@ void FasterAbility::use()
 }
 
 JumpAbility::JumpAbility()
-	: EnemyAbility(3000)
+	: EnemyAbility(1000)
 	,isJump(false)
 {
 
@@ -1448,12 +1469,47 @@ void JumpAbility::use()
 	{
 		owner->setStopped(false);
 		owner->row = 1;
-		m_interval = 5 * 200;
+		owner->currentFrame = 0;
+		owner->frameCount = JUMPER_FRAME_COUNT;
+		owner->updateTextureRect();
+		m_interval = JUMPER_FRAME_COUNT * JUMPER_ANIMATION_SPEED - 50;
 	}
 	else
 	{
 		owner->setStopped(true);
 		owner->row = 0;
-		m_interval = 3000;
+		owner->currentFrame = 0;
+		owner->frameCount = JUMPER_STAY_FRAME_COUNT;
+		owner->updateTextureRect();
+		m_interval = 1000;
+	}
+}
+
+RollingAbility::RollingAbility()
+	: EnemyAbility(4000)
+	,isRolling(false)
+{
+
+}
+
+void RollingAbility::use()
+{
+	isRolling = !isRolling;
+	if (isRolling)
+	{
+		owner->row = 1;
+		owner->currentFrame = 0;
+		owner->updateTextureRect();
+		owner->animationSpeed = ROLLING_ANIMATION_SPEED * ROLLING;
+		owner->setFaster(ROLLING);
+	}
+	else
+	{
+		owner->row = 0;
+		owner->currentFrame = 0;
+		owner->updateTextureRect();
+		owner->animationSpeed = ROLLING_ANIMATION_SPEED;
+		owner->setFaster(1.0);
+		m_interval = 4000;
 	}
 }

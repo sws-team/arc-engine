@@ -498,9 +498,15 @@ void ManualWindow::addElements()
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_JUMPER,
 							   GAME_TRANSLATION::WALKER,
-							   EnemiesFactory::getEnemyInfo(WALKER),
-							   EnemiesFactory::getFrameCount(WALKER),
-							   EnemiesFactory::getAnimationSpeed(WALKER)));
+							   EnemiesFactory::getEnemyInfo(JUMPER),
+							   EnemiesFactory::getFrameCount(JUMPER),
+							   EnemiesFactory::getAnimationSpeed(JUMPER)));
+
+	elements.push_back(Element(GAME_TEXTURE::ENEMY_ROLLING,
+							   GAME_TRANSLATION::WALKER,
+							   EnemiesFactory::getEnemyInfo(ROLLER),
+							   EnemiesFactory::getFrameCount(ROLLER),
+							   EnemiesFactory::getAnimationSpeed(ROLLER)));
 #ifndef DEMO_VERSION
 	//map effects
 	elements.push_back(Element(GAME_TEXTURE::SMOKE,
