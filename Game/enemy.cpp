@@ -623,8 +623,6 @@ float EnemiesFactory::getAnimationSpeed(ENEMY_TYPES type)
 	case WORM:
 		return 200;
 		break;
-	case SELFHEAL_ENEMY:
-		break;
 	case TRACTOR:
 		return 100;
 	case SLUGGY:
@@ -705,7 +703,7 @@ float EnemiesFactory::getFrameCount(ENEMY_TYPES type)
 	case JUMPER:
 		return JumpAbility::JUMPER_STAY_FRAME_COUNT;
 	case ROLLER:
-		return 4;
+		return 2;
 	default:
 		break;
 	}
@@ -1487,29 +1485,63 @@ void JumpAbility::use()
 
 RollingAbility::RollingAbility()
 	: EnemyAbility(Balance::Instance().getRollInterval())
-	,isRolling(false)
+	,m_state(MOVING)
 {
 
 }
 
 void RollingAbility::use()
 {
-	isRolling = !isRolling;
-	if (isRolling)
+	switch (m_state)
 	{
-		owner->row = 1;
-		owner->currentFrame = 0;
-		owner->updateTextureRect();
-		owner->animationSpeed = ROLLING_ANIMATION_SPEED * ROLLING;
-		owner->setFaster(ROLLING);
-	}
-	else
+	case MOVING:
 	{
 		owner->row = 0;
 		owner->currentFrame = 0;
 		owner->updateTextureRect();
 		owner->animationSpeed = ROLLING_ANIMATION_SPEED;
-		owner->setFaster(1.0);
+
 		m_interval = Balance::Instance().getRollInterval();
+		m_state = MOVE_TO_ROLL;
+	}
+		break;
+	case MOVE_TO_ROLL:
+	{
+		owner->row = 1;
+		owner->currentFrame = 0;
+		owner->updateTextureRect();
+
+		m_interval = ROLLING_ANIMATION_SPEED * 2;
+		m_state = ROLLING;
+	}
+		break;
+	case ROLLING:
+	{
+		owner->row = 2;
+		owner->currentFrame = 0;
+		owner->updateTextureRect();
+		owner->animationSpeed = ROLLING_ANIMATION_SPEED;
+		owner->setFaster(ROLLING_VALUE);
+		owner->protect(0.5);
+
+		m_interval = Balance::Instance().getRollInterval() * 1.5f;
+		m_state = ROLL_TO_MOVE;
+	}
+		break;
+	case ROLL_TO_MOVE:
+	{
+		owner->row = 3;
+		owner->currentFrame = 0;
+		owner->updateTextureRect();
+		owner->animationSpeed = ROLLING_ANIMATION_SPEED;
+		owner->setFaster(1.0);
+		owner->protect(-0.5);
+
+		m_interval = ROLLING_ANIMATION_SPEED * 2;
+		m_state = MOVING;
+	}
+		break;
+	default:
+		break;
 	}
 }

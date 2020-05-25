@@ -192,7 +192,7 @@ void Level::startMission(const unsigned int n)
 	{
 		const int _testWavesCount = 999;
 		const int _testEnemiesCount = 999;
-		const int _testInterval = 10000;
+		const int _testInterval = 4000;
 
 		Wave wave;
 		wave.protection = 0.f;

@@ -473,7 +473,7 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getAnimationSpeed(WALKER)));
 #ifndef DEMO_VERSION
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SELF_HEAL,
-							   GAME_TRANSLATION::SELF_HEAL,
+							   GAME_TRANSLATION::SELFHEAL,
 							   EnemiesFactory::getEnemyInfo(SELFHEAL_ENEMY),
 							   EnemiesFactory::getFrameCount(SELFHEAL_ENEMY),
 							   EnemiesFactory::getAnimationSpeed(SELFHEAL_ENEMY)));
@@ -497,13 +497,13 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getAnimationSpeed(BUGSAURUS)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_JUMPER,
-							   GAME_TRANSLATION::WALKER,
+							   GAME_TRANSLATION::JUMPER,
 							   EnemiesFactory::getEnemyInfo(JUMPER),
 							   EnemiesFactory::getFrameCount(JUMPER),
 							   EnemiesFactory::getAnimationSpeed(JUMPER)));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_ROLLING,
-							   GAME_TRANSLATION::WALKER,
+							   GAME_TRANSLATION::ROLLER,
 							   EnemiesFactory::getEnemyInfo(ROLLER),
 							   EnemiesFactory::getFrameCount(ROLLER),
 							   EnemiesFactory::getAnimationSpeed(ROLLER)));

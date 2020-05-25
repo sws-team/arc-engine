@@ -42,31 +42,31 @@ Balance::Balance() :
   ,drainValue(1.f)
   ,blindValue(0.3f)
   ,regressValue(0.3f)
-  ,selfhealInterval(2.5f)
+  ,selfhealInterval(2.5f * EngineDefs::MSEC)
   ,selfhealValue(0.1f)
-  ,healInterval(3.f)
+  ,healInterval(3.f * EngineDefs::MSEC)
   ,healValue(0.1f)
-  ,shieldInterval(10.f)
+  ,shieldInterval(10.f * EngineDefs::MSEC)
   ,shieldValue(0.1f)
-  ,strongInterval(4.5f)
+  ,strongInterval(4.5f * EngineDefs::MSEC)
   ,strongValue(0.05f)
-  ,teleportInterval(5.f)
+  ,teleportInterval(5.f * EngineDefs::MSEC)
   ,spawnCount(2)
   ,spawnCountOffset(5)
-  ,spawnInterval(7.f)
-  ,shutdownInterval(5.f)
-  ,shutdownDuration(10.f)
+  ,spawnInterval(7.f * EngineDefs::MSEC)
+  ,shutdownInterval(5.f * EngineDefs::MSEC)
+  ,shutdownDuration(10.f * EngineDefs::MSEC)
   ,shutdownCells(10.f)
   ,downgradeValue(0.5f)
   ,downgradeCells(10.f)
-  ,downgradeDuration(9.f)
-  ,downgradeInterval(5.f)
-  ,killTowerInterval(10.f)
-  ,downgradeTowerInterval(15.f)
+  ,downgradeDuration(9.f * EngineDefs::MSEC)
+  ,downgradeInterval(5.f * EngineDefs::MSEC)
+  ,killTowerInterval(10.f * EngineDefs::MSEC)
+  ,downgradeTowerInterval(15.f * EngineDefs::MSEC)
   ,killTowerCells(15)
   ,downgradeTowerCells(20)
-  ,jumpInterval(1)
-  ,rollInterval(2)
+  ,jumpInterval(1.f * EngineDefs::MSEC)
+  ,rollInterval(2.f * EngineDefs::MSEC)
 {
 
 }
@@ -364,8 +364,8 @@ void Balance::loadEnemiesAbilities(const Json::Value &jsonEnemiesAbilities)
 	downgradeTowerInterval = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_TOWER_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
 	killTowerCells = jsonEnemiesAbilities[BalanceDef::KILL_TOWER_CELLS_KEY].asFloat();
 	downgradeTowerCells = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_TOWER_CELLS_KEY].asFloat();
-	jumpInterval = jsonEnemiesAbilities[BalanceDef::JUMP_INTERVAL_KEY].asFloat();
-	rollInterval = jsonEnemiesAbilities[BalanceDef::ROLL_INTERVAL_KEY].asFloat();
+	jumpInterval = jsonEnemiesAbilities[BalanceDef::JUMP_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
+	rollInterval = jsonEnemiesAbilities[BalanceDef::ROLL_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
 }
 
 void Balance::loadWaves(const Json::Value &jsonWaves)

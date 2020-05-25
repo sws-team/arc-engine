@@ -326,10 +326,10 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::WALKER, L"Marcheur «33-Qc. rev02.9»"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::WALKER, L"Wanderer «33-Qc. rev02.9»"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELF_HEAL, L"Scarbreed"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELF_HEAL, L"Шраморожденный"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELF_HEAL, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELF_HEAL, L"Narbengeboren"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Scarbreed"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Шраморожденный"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"???"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Narbengeboren"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::TRACTOR, L"SPG-4000"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::TRACTOR, L"САУ-4000"));
@@ -345,6 +345,16 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::BUGSAURUS, L"Жукозавр"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::BUGSAURUS, L"Insectosaure"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::BUGSAURUS, L"Käfersaurier"));
+
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Roller"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Личинка"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Larve"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Larve"));
+
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Jumper"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Личинка"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Larve"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Larve"));
 
 	//towers abilities
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::BASE_TOWER_ABILITY, L"Invulnerability"));

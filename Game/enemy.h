@@ -384,12 +384,19 @@ public:
 	RollingAbility();
 
 	static constexpr int ROLLING_ANIMATION_SPEED = 200;
-	static constexpr float ROLLING = 3.f;
+	static constexpr float ROLLING_VALUE = 0.3f;
 
 protected:
 	 void use() override;
 private:
-	bool isRolling;
+	 enum STATES
+	 {
+		 MOVING,
+		 MOVE_TO_ROLL,
+		 ROLLING,
+		 ROLL_TO_MOVE,
+	 };
+	 STATES m_state;
 };
 
 class EnemiesFactory
