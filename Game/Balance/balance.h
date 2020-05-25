@@ -154,6 +154,8 @@ public:
 	float getDowngradeTowerInterval() const;
 	float getKillTowerCells() const;
 	float getDowngradeTowerCells() const;
+	float getJumpInterval() const;
+	float getRollInterval() const;
 
 	//maps
 	MapStats getMapStats(int number) const;
@@ -231,6 +233,8 @@ private:
 	float downgradeTowerInterval;
 	float killTowerCells;
 	float downgradeTowerCells;
+	float jumpInterval;
+	float rollInterval;
 
 	//waves
 

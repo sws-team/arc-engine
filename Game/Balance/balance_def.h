@@ -56,8 +56,8 @@ const std::string TELEPORT_KEY = "teleport";
 const std::string BIG_KEY = "big";
 const std::string BIG_TANK_KEY = "big_tank";
 const std::string SPAWN_KEY = "spawn";
-const std::string ENEMY_LAST_KEY = "enemy_last";
 const std::string JUMPER_KEY = "jumper";
+const std::string ROLLER_KEY = "roller";
 
 //enemy stats
 const std::string SPEED_KEY = "speed";
@@ -150,6 +150,8 @@ const std::string KILL_TOWER_INTERVAL_KEY = "kill_tower_interval";
 const std::string DOWNGRADE_TOWER_INTERVAL_KEY = "downgrade_tower_interval";
 const std::string KILL_TOWER_CELLS_KEY = "kill_tower_cells";
 const std::string DOWNGRADE_TOWER_CELLS_KEY = "downgrade_tower_cells";
+const std::string JUMP_INTERVAL_KEY = "jump_interval";
+const std::string ROLL_INTERVAL_KEY = "roll_interval";
 
 //waves
 const std::string PROTECTION_KEY = "protection";

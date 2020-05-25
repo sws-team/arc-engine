@@ -1456,7 +1456,7 @@ void FasterAbility::use()
 }
 
 JumpAbility::JumpAbility()
-	: EnemyAbility(1000)
+	: EnemyAbility(Balance::Instance().getJumpInterval())
 	,isJump(false)
 {
 
@@ -1481,12 +1481,12 @@ void JumpAbility::use()
 		owner->currentFrame = 0;
 		owner->frameCount = JUMPER_STAY_FRAME_COUNT;
 		owner->updateTextureRect();
-		m_interval = 1000;
+		m_interval = Balance::Instance().getJumpInterval();
 	}
 }
 
 RollingAbility::RollingAbility()
-	: EnemyAbility(4000)
+	: EnemyAbility(Balance::Instance().getRollInterval())
 	,isRolling(false)
 {
 
@@ -1510,6 +1510,6 @@ void RollingAbility::use()
 		owner->updateTextureRect();
 		owner->animationSpeed = ROLLING_ANIMATION_SPEED;
 		owner->setFaster(1.0);
-		m_interval = 4000;
+		m_interval = Balance::Instance().getRollInterval();
 	}
 }

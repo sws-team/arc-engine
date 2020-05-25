@@ -65,6 +65,8 @@ Balance::Balance() :
   ,downgradeTowerInterval(15.f)
   ,killTowerCells(15)
   ,downgradeTowerCells(20)
+  ,jumpInterval(1)
+  ,rollInterval(2)
 {
 
 }
@@ -194,7 +196,7 @@ void Balance::loadEnemies(const Json::Value &jsonEnemies)
 	loadEnemy(ENEMY_TYPES::HEAVY_TANK, jsonEnemies[BalanceDef::BIG_TANK_KEY]);
 	loadEnemy(ENEMY_TYPES::BUGSAURUS, jsonEnemies[BalanceDef::SPAWN_KEY]);
 	loadEnemy(ENEMY_TYPES::JUMPER, jsonEnemies[BalanceDef::JUMPER_KEY]);
-	loadEnemy(ENEMY_TYPES::ROLLER, jsonEnemies[BalanceDef::CAR_KEY]);
+	loadEnemy(ENEMY_TYPES::ROLLER, jsonEnemies[BalanceDef::ROLLER_KEY]);
 }
 
 void Balance::loadEnemy(const ENEMY_TYPES type, const Json::Value &jsonEnemy)
@@ -362,6 +364,8 @@ void Balance::loadEnemiesAbilities(const Json::Value &jsonEnemiesAbilities)
 	downgradeTowerInterval = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_TOWER_INTERVAL_KEY].asFloat() * EngineDefs::MSEC;
 	killTowerCells = jsonEnemiesAbilities[BalanceDef::KILL_TOWER_CELLS_KEY].asFloat();
 	downgradeTowerCells = jsonEnemiesAbilities[BalanceDef::DOWNGRADE_TOWER_CELLS_KEY].asFloat();
+	jumpInterval = jsonEnemiesAbilities[BalanceDef::JUMP_INTERVAL_KEY].asFloat();
+	rollInterval = jsonEnemiesAbilities[BalanceDef::ROLL_INTERVAL_KEY].asFloat();
 }
 
 void Balance::loadWaves(const Json::Value &jsonWaves)
@@ -687,6 +691,16 @@ float Balance::getKillTowerCells() const
 float Balance::getDowngradeTowerCells() const
 {
 	return downgradeTowerCells;
+}
+
+float Balance::getJumpInterval() const
+{
+	return jumpInterval;
+}
+
+float Balance::getRollInterval() const
+{
+	return rollInterval;
 }
 
 MapStats Balance::getMapStats(int number) const
