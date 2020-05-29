@@ -273,8 +273,12 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::FREEZE_BOMB_EXPLOSION, out);
 			else if (resource.name == "freeze_explosion")
 				addTexture(GAME_TEXTURE::FREEZE_EXPLOSION_EFFECT, out);
-			else if (resource.name == "heal_effect")
-				addTexture(GAME_TEXTURE::HEAL_EFFECT, out);
+			else if (resource.name == "heal_small_effect")
+				addTexture(GAME_TEXTURE::HEAL_SMALL_EFFECT, out);
+			else if (resource.name == "heal_mid_effect")
+				addTexture(GAME_TEXTURE::HEAL_MID_EFFECT, out);
+			else if (resource.name == "heal_big_effect")
+				addTexture(GAME_TEXTURE::HEAL_BIG_EFFECT, out);
 			else if (resource.name == "improved_explosion")
 				addTexture(GAME_TEXTURE::IMPROVED_EXPLOSION_EFFECT, out);
 			else if (resource.name == "regress")
@@ -291,10 +295,14 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::VENOM_EFFECT, out);
 			else if (resource.name == "web")
 				addTexture(GAME_TEXTURE::WEB, out);
+			else if (resource.name == "web_effect")
+				addTexture(GAME_TEXTURE::WEB_EFFECT, out);
 			else if (resource.name == "downgrade")
 				addTexture(GAME_TEXTURE::DOWNGRADE, out);
 			else if (resource.name == "tower_explosion")
 				addTexture(GAME_TEXTURE::TOWER_EXPLOSION, out);
+			else if (resource.name == "lava")
+				addTexture(GAME_TEXTURE::LAVA, out);
 			//map objects
 			}
 		}
@@ -333,8 +341,6 @@ void GameManagers::loadResources()
 				addSound(GAME_SOUND::CATCH, out);
 			else if (resource.name == "electric_shock")
 				addSound(GAME_SOUND::ELECTRIC_SHOCK, out);
-			else if (resource.name == "electrick_shoot")
-				addSound(GAME_SOUND::ELECTRIC_SHOOT, out);
 			else if (resource.name == "heal")
 				addSound(GAME_SOUND::HEAL, out);
 			else if (resource.name == "repair")

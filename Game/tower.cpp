@@ -28,14 +28,21 @@ Tower::Tower(const TextureType &texture_id,
 	,m_blinded(false)
 	,m_regressed(false)
 	,m_invulnerable(false)
+	,inactiveIntermediate(false)
 {
 	sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
+	const float lowEnergyScale = 0.5f;
 	const sf::Vector2f lowEnergyOffset = sf::Vector2f(Engine::Instance().options<GameOptions>()->mapTileSize().x/2,
 													  Engine::Instance().options<GameOptions>()->mapTileSize().y/2);
 	lowEnergyObject = new GameObject(GAME_TEXTURE::DOWN_EFFECT, pos + lowEnergyOffset,
 									 sf::Vector2i(GameOptions::CELL_SIZE,
-												  GameOptions::CELL_SIZE), 1);
-	lowEnergyObject->sprite.scale(0.5f, 0.5f);
+												  GameOptions::CELL_SIZE), 4);
+	lowEnergyObject->animationSpeed = 150;
+	lowEnergyObject->sprite.scale(lowEnergyScale, lowEnergyScale);
+
+	activeObject = new GameObject(GAME_TEXTURE::WEB_EFFECT, pos, size, ACTIVE_FRAME_COUNT);
+	activeObject->animationSpeed = INACTIVE_ANIMATION_SPEED;
+	activeObject->sprite.scale(TOWER_SCAlE, TOWER_SCAlE);
 }
 
 Tower::~Tower()
@@ -48,6 +55,19 @@ void Tower::update()
 	GameObject::update();
 	if (m_downgraded)
 		lowEnergyObject->update();
+	if (!m_isActive || inactiveIntermediate)
+	{
+		if (inactiveIntermediate &&
+				inactiveTimer.check(ACTIVE_FRAME_COUNT * INACTIVE_ANIMATION_SPEED - 50))
+		{
+			inactiveIntermediate = false;
+			activeObject->row = 1;
+			activeObject->currentFrame = 0;
+			activeObject->frameCount = INACTIVE_FRAME_COUNT;
+			activeObject->updateTextureRect();
+		}
+		activeObject->update();
+	}
 }
 
 void Tower::draw(sf::RenderTarget * const target)
@@ -55,6 +75,8 @@ void Tower::draw(sf::RenderTarget * const target)
 	GameObject::draw(target);
 	if (m_downgraded)
 		lowEnergyObject->draw(target);
+	if (!m_isActive || inactiveIntermediate)
+		activeObject->draw(target);
 }
 
 void Tower::action()
@@ -196,7 +218,7 @@ void Tower::levelDown()
 
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::DOWNGRADE, this->pos(),
 											 sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE),
-											 250, 4, 0);
+											 150, 5, 0);
 }
 
 void Tower::setInvulnerable(bool invulnerable)
@@ -222,6 +244,24 @@ bool Tower::isBlinded() const
 void Tower::setBlinded(bool blinded)
 {
 	m_blinded = blinded;
+}
+
+void Tower::setActive(bool isActive)
+{
+	if (m_isActive == isActive)
+		return;
+	m_isActive = isActive;
+	if (isActive)
+		activeObject->row = 2;
+	else
+		activeObject->row = 0;
+
+	activeObject->frameCount = ACTIVE_FRAME_COUNT;
+	activeObject->currentFrame = 0;
+	activeObject->updateTextureRect();
+
+	inactiveIntermediate = true;
+	inactiveTimer.reset();
 }
 
 bool Tower::isActive() const
@@ -273,10 +313,6 @@ float Tower::actualAttackSpeed() const
 	return attackSpeed;
 }
 
-void Tower::setActive(bool isActive)
-{
-	m_isActive = isActive;
-}
 
 int Tower::kills() const
 {

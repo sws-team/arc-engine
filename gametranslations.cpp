@@ -328,7 +328,7 @@ void GameManagers::loadTranslations()
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Scarbreed"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Шраморожденный"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Balafre-né"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Narbengeboren"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::TRACTOR, L"SPG-4000"));
@@ -346,10 +346,10 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::BUGSAURUS, L"Insectosaure"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::BUGSAURUS, L"Käfersaurier"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Roller"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Личинка"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Larve"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ROLLER, L"Larve"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Roller"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Личинка"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Larve"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Larve"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Jumper"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Личинка"));
@@ -467,6 +467,11 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"Может ухудшить башню, выстрелив в нее"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"???"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"???"));
+
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"???"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"???"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"???"));
 
 	//panel
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY_ACID, L"Acid"));

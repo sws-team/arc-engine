@@ -568,6 +568,7 @@ void MoneyDrain::stateChanged()
 }
 
 Lava::Lava()
+	: MapEffect()
 {
 
 }
@@ -582,6 +583,7 @@ void Lava::update()
 {
 	for(GameObject* lava : lavas)
 		lava->update();
+	MapEffect::update();
 }
 
 void Lava::stateChanged()
@@ -593,11 +595,13 @@ void Lava::stateChanged()
 		const std::vector<sf::Vector2f> points = getRandomPos(m_count);
 		for(const sf::Vector2f& pos : points)
 		{
-			GameObject *lava = new GameObject(GAME_TEXTURE::SMOKE, pos,
-											  sf::Vector2i(256, 256), LAVA_FRAME_COUNT);
+			GameObject *lava = new GameObject(GAME_TEXTURE::LAVA, pos,
+											  sf::Vector2i(640, 640), LAVA_FRAME_COUNT);
+			lava->animationSpeed = LAVA_ANIMATION_SPEED;
+			lava->sprite.scale(0.5f, 0.5f);
 			lavas.push_back(lava);
 		}
-		m_interval = LAVA_FRAME_COUNT * LAVA_ANIMATION_SPEED;
+		m_interval = LAVA_FRAME_COUNT * LAVA_ANIMATION_SPEED - 50;
 	}
 		break;
 	case ACTIVE:
@@ -605,9 +609,11 @@ void Lava::stateChanged()
 		for(GameObject* lava : lavas)
 		{
 			lava->row = 1;
+			lava->frameCount = LAVA_FRAME_COUNT - 1;
 			lava->currentFrame = 0;
 			lava->updateTextureRect();
 		}
+		m_interval = m_duration;
 	}
 		break;
 	case AFTER_ACTIVE:
@@ -616,9 +622,10 @@ void Lava::stateChanged()
 		{
 			lava->row = 2;
 			lava->currentFrame = 0;
+			lava->frameCount = LAVA_FRAME_COUNT;
 			lava->updateTextureRect();
 		}
-		m_interval = LAVA_FRAME_COUNT * LAVA_ANIMATION_SPEED;
+		m_interval = (LAVA_FRAME_COUNT - 1) * LAVA_ANIMATION_SPEED;
 	}
 		break;
 	case READY:

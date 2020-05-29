@@ -31,6 +31,9 @@ Enemy::Enemy(const TextureType &texture_id,
 	,m_stopped(false)
 	,m_visible(true)
 	,m_burned(false)
+	,healing(false)
+	,healingValue(0.f)
+	,healCount(0)
 	,m_lastCell(sf::Vector2i(0, 0))
 	,lastUp(false)
 	,m_ignoreMoveTimer(false)
@@ -61,14 +64,28 @@ Enemy::Enemy(const TextureType &texture_id,
 						   LifeBar::LIFE_BAR_HEIGHT * Engine::Instance().settingsManager()->getScaleFactor().y),
 				  sf::Color::Red);
 
-	burnAnimation = new GameObject(GAME_TEXTURE::BURN, startPos, sf::Vector2i(32, 32), 4);
 	this->frameCount = frameCount;
 	this->animationSpeed = animationSpeed;
 	setPos(m_pos + m_spritePos);
+
+	burnAnimation = new GameObject(GAME_TEXTURE::BURN, startPos, sf::Vector2i(32, 32), 4);
+
+	TextureType healTextureId;
+	if (cellSize.x == 2)
+		healTextureId = GAME_TEXTURE::HEAL_MID_EFFECT;
+	else if(cellSize.x == 4)
+		healTextureId = GAME_TEXTURE::HEAL_BIG_EFFECT;
+	else
+		healTextureId = GAME_TEXTURE::HEAL_SMALL_EFFECT;
+
+	healAnimation = new GameObject(healTextureId, startPos, this->size, HEAL_FRAME_COUNT);
+	healAnimation->animationSpeed = HEAL_ANIMATION_SPEED;
+	healAnimation->sprite.scale(1/ENEMY_SCALE, 1/ENEMY_SCALE);
 }
 
 Enemy::~Enemy()
 {
+	delete healAnimation;
 	delete burnAnimation;
 	delete lifeBar;
 	if (ability != nullptr)
@@ -236,10 +253,23 @@ void Enemy::update()
 		const int y = this->size.y/ ENEMY_SCALE /GameOptions::MAP_CELL_SIZE - 1;
 		const sf::Vector2f posOffset = sf::Vector2f(Engine::Instance().options<GameOptions>()->mapTileSize().x/2 * x,
 											Engine::Instance().options<GameOptions>()->mapTileSize().y/2 * y);
+
 		burnAnimation->setPos(this->pos() + posOffset);
 		if (burnAttack.check(Balance::Instance().getBurnAttackSpeed()))
 			hit(Balance::Instance().getBurnDamage());
 		burnAnimation->update();
+	}
+	if (healing)
+	{
+		if (healTimer.check(HEAL_FRAME_COUNT * HEAL_ANIMATION_SPEED))
+		{
+			upHealth(healingValue);
+			healCount++;
+		}
+		healAnimation->setPos(this->pos());
+		healAnimation->update();
+		if (healCount == HEAL_ANIMATION_K)
+			healing = false;
 	}
 	GameObject::update();
 }
@@ -256,6 +286,8 @@ void Enemy::draw(sf::RenderTarget * const target)
 		ability->draw(target);
 	if (m_burned)
 		burnAnimation->draw(target);
+	if (healing)
+		healAnimation->draw(target);
 }
 
 void Enemy::hit(float damage)
@@ -290,15 +322,10 @@ void Enemy::freeze(float k, int duration)
 
 void Enemy::heal(float health)
 {
-	m_data.health += health;
-	if (m_data.health > m_stats.health)
-		m_data.health = m_stats.health;
-	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::HEAL_EFFECT,
-											 this->getCenter() - sf::Vector2f(GameOptions::MAP_CELL_SIZE/2,
-																		  GameOptions::MAP_CELL_SIZE/2),
-											 sf::Vector2i(GameOptions::MAP_CELL_SIZE,
-													  GameOptions::MAP_CELL_SIZE),
-											 50, 8, 0);
+	healing = true;
+	healingValue = health/(HEAL_FRAME_COUNT * HEAL_ANIMATION_K);
+	healCount = 0;
+	healTimer.reset();
 }
 
 void Enemy::protect(float shell)
@@ -325,6 +352,13 @@ void Enemy::drawLifeBar(sf::RenderTarget *target)
 							 sprite.getGlobalBounds().top) - sf::Vector2f(0, (LIFEBAR_OFFSET + LifeBar::LIFE_BAR_HEIGHT) * Engine::Instance().settingsManager()->getScaleFactor().y));
 	lifeBar->setValue(healthRate);
 	lifeBar->draw(target);
+}
+
+void Enemy::upHealth(const float value)
+{
+	m_data.health += value;
+	if (m_data.health > m_stats.health)
+		m_data.health = m_stats.health;
 }
 
 sf::Vector2f Enemy::actualMoveStep() const
@@ -931,8 +965,6 @@ void TeleportAbility::use()
 	}
 }
 
-
-
 TowerEffectAbility::TowerEffectAbility(float msec)
 	: EnemyAbility(msec)
 	,targetTower(nullptr)
@@ -955,9 +987,10 @@ void TowerEffectAbility::update()
 		projectile->update();
 }
 
-Tower *TowerEffectAbility::getTarget()
+void TowerEffectAbility::targetRemoved(Tower *tower)
 {
-	return targetTower;
+	if (tower == targetTower)
+		targetTower = nullptr;
 }
 
 void TowerEffectAbility::use()
@@ -1121,22 +1154,45 @@ ShutdownTowerAbility::ShutdownTowerAbility()
 	: TowerEffectAbility(Balance::Instance().getShutdownInterval())
 {
 	info.enemyTextureId = GAME_TEXTURE::ENEMY_MECHSPIDER;
-	info.animationSize = sf::Vector2i(GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE,
-									  GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::WEB;
-	info.projectileSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
+	info.projectileSize = sf::Vector2i(GameOptions::MAP_CELL_SIZE, GameOptions::MAP_CELL_SIZE);
 	info.duration = Balance::Instance().getShutdownDuration();
 	info.catchSound = GAME_SOUND::CATCH;
 	info.cells = Balance::Instance().getShutdownCells();
 	info.projectileSpeed = 10;
 	info.projectileAnimationSpeed = 150;
-	info.profectileFrameCount = 1;
+	info.profectileFrameCount = 4;
+
+	web = new GameObject(GAME_TEXTURE::WEB, sf::Vector2f(0,0),
+						 sf::Vector2i(GameOptions::CELL_SIZE,
+									  GameOptions::CELL_SIZE), 4);
 }
 
 ShutdownTowerAbility::~ShutdownTowerAbility()
 {
 	if (targetTower != nullptr && !targetTower->isActive())
 		effect(false);
+}
+
+void ShutdownTowerAbility::draw(sf::RenderTarget * const target)
+{
+	TowerEffectAbility::draw(target);
+	if (m_state == WAIT)
+		web->draw(target);
+}
+
+void ShutdownTowerAbility::update()
+{
+	TowerEffectAbility::update();
+	if (m_state == WAIT)
+	{
+		web->update();
+		if (web->currentFrame == web->frameCount && web->row == 0)
+		{
+			web->currentFrame = 0;
+			web->row = 1;
+		}
+	}
 }
 
 void ShutdownTowerAbility::effect(bool isActive)
@@ -1147,19 +1203,24 @@ void ShutdownTowerAbility::effect(bool isActive)
 		return;
 	targetTower->setActive(!isActive);
 	if (isActive)
-		Engine::Instance().options<GameOptions>()->level()->addAnimation(
-					GAME_TEXTURE::WEB, targetTower->pos(),
-					sf::Vector2i(GameOptions::CELL_SIZE,
-								 GameOptions::CELL_SIZE),
-					Balance::Instance().getShutdownDuration()/4, 4, 0);
+	{
+		web->currentFrame = 0;
+		web->row = 0;
+		web->updateTextureRect();
+		web->setPos(targetTower->pos());
+	}
+	else
+	{
+		web->currentFrame = 2;
+		web->row = 0;
+		web->updateTextureRect();
+	}
 }
 
 DownTowerAbility::DownTowerAbility()
 	: TowerEffectAbility(Balance::Instance().getDowngradeInterval())
 {
 	info.enemyTextureId = GAME_TEXTURE::ENEMY_TRACTOR;
-	info.animationSize = sf::Vector2i(GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE,
-									  GameOptions::MAP_CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::DOWNGRADE_PROJECTILE;
 	info.projectileSize = sf::Vector2i(32, 32);
 	info.duration = Balance::Instance().getDowngradeDuration();
@@ -1195,8 +1256,6 @@ KillTowerAbility::KillTowerAbility()
 	: TowerEffectAbility(Balance::Instance().getKillTowerInterval())
 {
 	info.enemyTextureId = GAME_TEXTURE::ENEMY_HEAVY_TANK;
-	info.animationSize = sf::Vector2i(GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE,
-									  GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::ENEMY_BULLET;
 	info.projectileSize = sf::Vector2i(56, 24);
 	info.duration = 0;
@@ -1224,8 +1283,6 @@ DowngradeTowerAbility::DowngradeTowerAbility()
 	: TowerEffectAbility(Balance::Instance().getDowngradeTowerInterval())
 {
 	info.enemyTextureId = GAME_TEXTURE::ENEMY_TANK;
-	info.animationSize = sf::Vector2i(GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE,
-									  GameOptions::CELL_SIZE * Enemy::ENEMY_SCALE);
 	info.pojectileTextureId = GAME_TEXTURE::ENEMY_ROCKET;
 	info.projectileSize = sf::Vector2i(32, 16);
 	info.duration = 0;

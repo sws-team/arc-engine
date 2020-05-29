@@ -203,7 +203,7 @@ void Level::startMission(const unsigned int n)
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
-			wave.spawnEnemies.push_back(ENEMY_TYPES::ROLLER);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::MECHSPIDER);
 #endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
@@ -502,6 +502,16 @@ void Level::deleteTower(Tower *tower)
 	if (tower == m_selectedTower)
 		clearCursor();
 
+	for(Enemy *enemy : enemies)
+	{
+		EnemyAbility *ability = enemy->getAbility();
+		if (ability == nullptr)
+			continue;
+		TowerEffectAbility *towerAbility = dynamic_cast<TowerEffectAbility*>(ability);
+		if (towerAbility != nullptr)
+			towerAbility->targetRemoved(tower);
+	}
+
 	towers.erase( remove( towers.begin(), towers.end(), tower ), towers.end() );
 	delete tower;
 	tower = nullptr;
@@ -645,12 +655,11 @@ void Level::sellTower(Tower *tower)
 
 	const float cost = Engine::Instance().options<GameOptions>()->panel()->getTowerSellCost(tower);
 	money += cost;
-	towers.erase( remove( towers.begin(), towers.end(), tower ), towers.end() );
 
 	if (!tower->isActive())
 		GamePlatform::Instance().unlock(ACHIEVEMENT_SELL_INACTIVE_TOWER);
 
-	delete tower;
+	deleteTower(tower);
 	Engine::Instance().soundManager()->playOnce(GAME_SOUND::SELL);
 	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
 }
@@ -1013,8 +1022,8 @@ void Level::enableDrain()
 
 void Level::enableLava()
 {
-	lava->setTime(10000);
-	lava->setDuration(9000);
+	lava->setTime(4000);
+	lava->setDuration(10000);
 	lava->setCount(4);
 
 	lava->setEnabled(true);
@@ -1130,6 +1139,8 @@ void Level::drawLevel(sf::RenderTarget * const target)
 			shader = shadersFactory->getShader(OBJECTS::MOVING);
 		else if (layer == gameMap->waterLayer)
 			shader = shadersFactory->getShader(OBJECTS::WAVE);
+		else if (layer == gameMap->lavaLayer)
+			lava->draw(target);
 
 //		for (unsigned int tile = 0; tile < gameMap->layers[layer].tiles.size(); tile++)
 //			target->draw(gameMap->layers[layer].tiles[tile].sprite, shader);
@@ -1153,7 +1164,6 @@ void Level::drawLevel(sf::RenderTarget * const target)
 		if (object->layer() == -1)
 			object->draw(target);
 	}
-	lava->draw(target);
 	abilities->draw(target);
 
 	for(Enemy* enemy : enemies)
@@ -1180,7 +1190,6 @@ void Level::drawLevel(sf::RenderTarget * const target)
 	smoke->draw(target);
 	moneyDrain->draw(target);
 	towersRegress->draw(target);
-
 
 	if (m_selectedTower != nullptr)
 	{

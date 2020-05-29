@@ -382,6 +382,8 @@ bool GameOptions::loadMap(int id)
 			gameMap->movingLayer = layersCount;
 		else if (layerName == std::string("water"))
 			gameMap->waterLayer = layersCount;
+		else if (layerName == std::string("lava_layer"))
+			gameMap->lavaLayer = layersCount;
 
 		layersCount++;
 

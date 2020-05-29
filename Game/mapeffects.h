@@ -154,8 +154,8 @@ protected:
 
 private:
 	std::vector<GameObject*> lavas;
-	static constexpr int LAVA_FRAME_COUNT = 4;
-	static constexpr int LAVA_ANIMATION_SPEED = 200;
+	static constexpr int LAVA_FRAME_COUNT = 5;
+	static constexpr int LAVA_ANIMATION_SPEED = 350;
 };
 
 #endif // MAPEFFECT_H

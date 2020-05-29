@@ -198,7 +198,7 @@ void FreezeBombAbility::activate()
 }
 
 AcidAbility::AcidAbility()
-	: GameAbility(sf::Vector2i(10, 3), sf::Vector2i(7, 2), Balance::Instance().getAcidCooldown())
+	: GameAbility(sf::Vector2i(12, 3), sf::Vector2i(7, 2), Balance::Instance().getAcidCooldown())
 	,object(nullptr)
 	,count(0)
 {
@@ -212,8 +212,10 @@ void AcidAbility::activate()
 									  sf::Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
 											   m_areaSize.y * GameOptions::CELL_SIZE);
 
-	object = new GameObject(GAME_TEXTURE::VENOM_EFFECT, sf::Vector2f(0, 0), size, 7);
-	object->animationSpeed = 400;
+	object = new GameObject(GAME_TEXTURE::VENOM_EFFECT, sf::Vector2f(0, 0), size, 14);
+	object->animationSpeed = 450;
+	if (m_rotated)
+		object->sprite.rotate(45);
 	GameAbility::activate();
 //	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
 	const sf::Vector2f pos = sf::Vector2f(Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect().left,

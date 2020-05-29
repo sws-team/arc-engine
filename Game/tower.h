@@ -113,6 +113,12 @@ private:
 	bool m_invulnerable;
 
 	GameObject *lowEnergyObject;
+	static constexpr int INACTIVE_FRAME_COUNT = 3;
+	static constexpr float INACTIVE_ANIMATION_SPEED = 100;
+	static constexpr int ACTIVE_FRAME_COUNT = 6;
+	GameObject *activeObject;
+	Timer inactiveTimer;
+	bool inactiveIntermediate;
 };
 
 class ProjectilesTower : public Tower

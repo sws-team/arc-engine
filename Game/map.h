@@ -36,6 +36,7 @@ public:
 	  ,directionsLayer(3)
 	  ,movingLayer(-1)
 	  ,waterLayer(-1)
+	  ,lavaLayer(2)
 	{
 
 	}
@@ -63,6 +64,7 @@ public:
 	int directionsLayer;
 	int movingLayer;
 	int waterLayer;
+	int lavaLayer;
 
 	struct MapObject
 	{

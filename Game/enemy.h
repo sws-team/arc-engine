@@ -69,6 +69,10 @@ public:
 	void setFaster(const float modifier);
 
 	EnemyAbility *getAbility();
+
+	sf::Vector2f actualMoveStep() const;
+	void setIgnoreMoveTimer(bool ignoreMoveTimer);
+
 private:
 	ENEMY_TYPES m_type;
 	EnemyStats m_stats;
@@ -111,11 +115,17 @@ private:
 	Timer burnTimer;
 	Timer burnAttack;
 	GameObject *burnAnimation;
-public:
-	sf::Vector2f actualMoveStep() const;
-	void setIgnoreMoveTimer(bool ignoreMoveTimer);
 
-private:
+	Timer healTimer;
+	bool healing;
+	float healingValue;
+	int healCount;
+	GameObject *healAnimation;
+	static constexpr int HEAL_FRAME_COUNT = 4;
+	static constexpr int HEAL_ANIMATION_SPEED = 50;
+	static constexpr int HEAL_ANIMATION_K = 3;
+	void upHealth(const float value);
+
 	sf::Vector2f moveStep;
 	sf::Vector2i m_lastCell;
 
@@ -207,7 +217,7 @@ public:
 	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 
-	Tower *getTarget();
+	void targetRemoved(Tower* tower);
 protected:
 	virtual void effect(bool isActive) = 0;
 	void use() override;
@@ -217,7 +227,6 @@ protected:
 	{
 		int profectileFrameCount;
 		TextureType enemyTextureId;
-		sf::Vector2i animationSize;
 		TextureType pojectileTextureId;
 		sf::Vector2i projectileSize;
 		float duration;
@@ -252,8 +261,11 @@ public:
 	ShutdownTowerAbility();
 	~ShutdownTowerAbility();
 
+	void draw(sf::RenderTarget *const target) override;
+	void update() override;
 protected:
 	void effect(bool isActive) override;
+	GameObject *web;
 };
 
 class DownTowerAbility : public TowerEffectAbility
