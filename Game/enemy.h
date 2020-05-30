@@ -122,7 +122,7 @@ private:
 	int healCount;
 	GameObject *healAnimation;
 	static constexpr int HEAL_FRAME_COUNT = 4;
-	static constexpr int HEAL_ANIMATION_SPEED = 50;
+	static constexpr int HEAL_ANIMATION_SPEED = 100;
 	static constexpr int HEAL_ANIMATION_K = 3;
 	void upHealth(const float value);
 

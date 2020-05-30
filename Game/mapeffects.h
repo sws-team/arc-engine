@@ -47,6 +47,8 @@ public:
 
 	void resetTimers();
 
+	bool isEnabled() const;
+
 protected:
 	virtual void stateChanged() = 0;
 
@@ -148,6 +150,8 @@ public:
 	Lava();
 	void draw(sf::RenderTarget *const target) override;
 	void update() override;
+
+	bool isIntersects(const sf::Vector2f &pos) const;
 
 protected:
 	void stateChanged() override;

@@ -112,6 +112,11 @@ void MapEffect::setEnabled(bool enabled)
 	m_enabled = enabled;
 }
 
+bool MapEffect::isEnabled() const
+{
+	return m_enabled;
+}
+
 void MapEffect::resetTimers()
 {
 	m_interval = m_time;
@@ -586,6 +591,17 @@ void Lava::update()
 	MapEffect::update();
 }
 
+bool Lava::isIntersects(const sf::Vector2f &pos) const
+{
+	const sf::FloatRect rect = sf::FloatRect(pos, Engine::Instance().options<GameOptions>()->tileSize());
+	for(GameObject* lava : lavas)
+	{
+		if (lava->sprite.getGlobalBounds().intersects(rect))
+			return true;
+	}
+	return false;
+}
+
 void Lava::stateChanged()
 {
 	switch (m_state)
@@ -638,3 +654,4 @@ void Lava::stateChanged()
 		break;
 	}
 }
+

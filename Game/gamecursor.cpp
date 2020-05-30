@@ -10,6 +10,7 @@
 #include "mainwindow.h"
 
 const sf::Color GameCursor::TOWER_AREA_COLOR = sf::Color(40,98,131, 100);
+const sf::Color GameCursor::BUILD_AREA_COLOR = sf::Color(121,154,185, 100);
 const sf::Color GameCursor::INACTIVE_TOWER_AREA_COLOR = sf::Color(213,84,66, 100);
 
 GameCursor::GameCursor()

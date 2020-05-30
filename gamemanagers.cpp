@@ -473,10 +473,9 @@ void GameManagers::loadResources()
 	addShader(GAME_SHADERS::SMOKE, ShadersFactory::SMOKE_SHADER);
 
 #ifdef LOAD_MAPS
-	for (int i = 0; i < 15; ++i)
+	for (int i = 0; i <= 15; ++i)
 	{
-		const int n = i + 1;
-		const std::string fileName = std::string("maps/mission") + std::to_string(n) + std::string(".tmx");
+		const std::string fileName = std::string("maps/mission") + std::to_string(i) + std::string(".tmx");
 
 		std::ifstream file;
 		file.open(fileName);
@@ -489,7 +488,7 @@ void GameManagers::loadResources()
 		file >> data;
 		file.close();
 
-		addFile(n, data);
+		addFile(i, data);
 	}
 #endif
 

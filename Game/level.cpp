@@ -203,7 +203,10 @@ void Level::startMission(const unsigned int n)
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
-			wave.spawnEnemies.push_back(ENEMY_TYPES::MECHSPIDER);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::REPAIR_ENEMY);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::WAR_VEHICLE);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::GIANT_SLUG);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::SELFHEAL_ENEMY);
 #endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
@@ -758,7 +761,8 @@ bool Level::canAddTower(const sf::Vector2i &cell, bool isEnergy) const
 	const int direction = getTileDirectionByCell(cell);
 	if (direction != Map::STAY)
 		return false;
-	Tower *tower = this->getTowerAtPos(Engine::Instance().options<GameOptions>()->camera()->cellToPosMap(cell));
+	const sf::Vector2f pos = Engine::Instance().options<GameOptions>()->camera()->cellToPosMap(cell);
+	Tower *tower = this->getTowerAtPos(pos);
 	if (tower != nullptr)
 		return false;
 	bool canCreate = true;
@@ -781,6 +785,9 @@ bool Level::canAddTower(const sf::Vector2i &cell, bool isEnergy) const
 		}
 		canCreate = canCreate && finded;
 	}
+	if (lava->isEnabled())
+		canCreate = canCreate && !lava->isIntersects(pos);
+
 	return canCreate;
 }
 
@@ -794,7 +801,7 @@ void Level::updateBuildCells(TOWER_TYPES type)
 							 rect.getGlobalBounds().height/2);
 		const sf::Vector2i cell = Engine::Instance().options<GameOptions>()->camera()->posToCell(pos);
 		const bool canAdd = canAddTower(sf::Vector2i(cell.x * 2, cell.y * 2), type == POWER);
-		rect.setFillColor(canAdd ? PowerTower::POWER_TOWER_AREA_COLOR : GameCursor::INACTIVE_TOWER_AREA_COLOR);
+		rect.setFillColor(canAdd ? GameCursor::BUILD_AREA_COLOR : GameCursor::INACTIVE_TOWER_AREA_COLOR);
 	}
 }
 

@@ -53,6 +53,7 @@ public:
 	sf::Vector2f windowScreenPos() const;
 
 	static const sf::Color TOWER_AREA_COLOR;
+	static const sf::Color BUILD_AREA_COLOR;
 	static const sf::Color INACTIVE_TOWER_AREA_COLOR;
 
 	void setHighlight(bool highlight);
