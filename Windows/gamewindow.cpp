@@ -46,6 +46,13 @@ GameWindow::GameWindow()
 	text.setCharacterSize(Engine::Instance().fontManager()->getCharSize(100));
 	text.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
+	skipText.setFillColor(GameOptions::primaryColor);
+	skipText.setOutlineThickness(2);
+	skipText.setOutlineColor(GameOptions::secondaryColor);
+	skipText.setFont(Engine::Instance().fontManager()->font());
+	skipText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(40));
+	skipText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+
 	Engine::Instance().options<GameOptions>()->panel()->init();
 
 	addItem(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CONTINUE));
@@ -106,6 +113,7 @@ void GameWindow::paint(sf::RenderWindow *window)
 	case GAME_OVER:
 		window->draw(windowSprite);
 		window->draw(text);
+		window->draw(skipText);
 		break;
 	default:
 		break;
@@ -286,7 +294,9 @@ void GameWindow::setState(const GAME_STATE &state)
 		else // 0 0.1 - 0
 			stars = 0;
 
+		Engine::Instance().soundManager()->endBackgroundSound();
 		text.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CONGRATULATIONS));
+		skipText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SKIP_TEXT));
 		updateTextPos();
 		const unsigned int mission = Engine::Instance().options<GameOptions>()->getMission();
 		const int starsValue = Engine::Instance().options<GameOptions>()->missionStars(mission);
@@ -313,7 +323,9 @@ void GameWindow::setState(const GAME_STATE &state)
 	case GAME_OVER:
 	{
 		text.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::GAME_OVER));
+		skipText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SKIP_TEXT));
 		updateTextPos();
+		Engine::Instance().soundManager()->endBackgroundSound();
 	}
 		break;
 	default:
@@ -329,8 +341,14 @@ void GameWindow::finish()
 
 void GameWindow::updateTextPos()
 {
-	text.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 - text.getGlobalBounds().width/2,
-					 Engine::Instance().settingsManager()->getResolution().y/2 - text.getGlobalBounds().height/2);
+	text.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 -
+					 text.getGlobalBounds().width/2,
+					 Engine::Instance().settingsManager()->getResolution().y/2 -
+					 text.getGlobalBounds().height/2);
+
+	skipText.setPosition(text.getPosition().x,
+						 text.getPosition().y + text.getGlobalBounds().height
+						 + Engine::Instance().options<GameOptions>()->tileSize().x);
 }
 
 void GameWindow::nextTrack()

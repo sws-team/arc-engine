@@ -399,16 +399,19 @@ void Smoke::stateChanged()
 	{
 	case PREPARE_ACTIVE:
 	{
-		m_interval = 800;
 		const std::vector<sf::Vector2f> points = getRandomPos(m_count);
 		for(const sf::Vector2f& pos : points)
 		{
-			GameObject *cloud = new GameObject(GAME_TEXTURE::SMOKE, pos, sf::Vector2i(256, 256), 4);
+			GameObject *cloud = new GameObject(GAME_TEXTURE::SMOKE, pos,
+											   sf::Vector2i(512, 512),
+											   SMOKE_ACTIVE_FRAME_COUNT);
+			cloud->sprite.scale(0.5f, 0.5f);
 			cloud->currentFrame = 0;
 			cloud->row = 0;
+			cloud->animationSpeed = SMOKE_ANIMATION_SPEED;
 			clouds.push_back(cloud);
 		}
-
+		m_interval = SMOKE_ACTIVE_FRAME_COUNT * SMOKE_ANIMATION_SPEED;
 	}
 		break;
 	case ACTIVE:
@@ -418,18 +421,20 @@ void Smoke::stateChanged()
 		{
 			cloud->currentFrame = 0;
 			cloud->row = 1;
+			cloud->frameCount = SMOKE_FRAME_COUNT;
 		}
 		smokeTowers(true);
 	}
 		break;
 	case AFTER_ACTIVE:
 	{
-		m_interval = 800;
 		for(GameObject *cloud : clouds)
 		{
 			cloud->currentFrame = 0;
 			cloud->row = 2;
+			cloud->frameCount = SMOKE_ACTIVE_FRAME_COUNT;
 		}
+		m_interval = SMOKE_ACTIVE_FRAME_COUNT * SMOKE_ANIMATION_SPEED;
 	}
 		break;
 	case READY:

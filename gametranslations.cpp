@@ -224,6 +224,11 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Tapez l'Espace afin de commencer le jeu"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Drücken Sie die Leertaste, um zu starten"));
 
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"Press Space to skip"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"Нажмите Пробел чтобы пропустить"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"Tapez l'Espace pour ignorer"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"Drücken Sie die Leertaste, um zu überspringen"));
+
 	//instructions
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Hello there! Welcome to Arc Defence game.\nWe really need your help here.\nI’ll get you acquaintance with details."));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Добро пожаловать в игру Arc Defence.\nНам нужна твоя помощь в защите территории.\nЯ введу тебя в курс дела."));
@@ -347,14 +352,14 @@ void GameManagers::loadTranslations()
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::BUGSAURUS, L"Käfersaurier"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Roller"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Личинка"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Larve"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Larve"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"???"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"???"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Jumper"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Личинка"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Larve"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Larve"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"???"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"???"));
 
 	//towers abilities
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::BASE_TOWER_ABILITY, L"Invulnerability"));
@@ -472,6 +477,11 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"???"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"???"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"???"));
+
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING, L"???"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING, L"???"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING, L"???"));
 
 	//panel
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY_ACID, L"Acid"));
@@ -660,6 +670,11 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_NAME, L"Missile balistique\nintercontinental"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_NAME, L"Interkontinentalrakete"));
 
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"???"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"???"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"???"));
+
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"Being hit in the tower will limit\nthe accuracy of the guidance devices.\nReduces turret firing range."));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"При попадании на башню ограничивет\nточность приборов наведения.\nУменьшает радиус стрельбы башни"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"???"));
@@ -679,6 +694,11 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION, L"Уничтожает башню независимо от уровня."));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION, L"???"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION, L"Es zerstört einfach den Turm."));
+
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"???"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"???"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"???"));
 
 	Engine::Instance().translationsManager()->addTranslation(std::string("russian"), russainTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);

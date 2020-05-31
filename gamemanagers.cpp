@@ -586,6 +586,9 @@ void GameManagers::loadExtraResources()
 				addTexture(GAME_TEXTURE::SHOW_BASE_TOWER, out);
 			else if (resource.name == "show_freeze_tower")
 				addTexture(GAME_TEXTURE::SHOW_FREEZE_TOWER, out);
+			//enemies
+			else if (resource.name == "show_mechspider")
+				addTexture(GAME_TEXTURE::SHOW_MECHSPIDER, out);
 		}
 	}
 }

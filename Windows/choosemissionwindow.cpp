@@ -129,6 +129,11 @@ ChooseMissionWindow::~ChooseMissionWindow()
 
 }
 
+void ChooseMissionWindow::init()
+{
+	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::MAIN_MENU_MUSIC);
+}
+
 void ChooseMissionWindow::back()
 {
 	Engine::Instance().stateManager()->setState(GameStateManager::MENU);

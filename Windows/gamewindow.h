@@ -50,6 +50,7 @@ private:
 	void finish();
 
 	sf::Text text;
+	sf::Text skipText;
 	sf::Clock clock;
 	sf::Int64 lastTime;
 	sf::Int64 tick;

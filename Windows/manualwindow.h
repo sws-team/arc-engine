@@ -109,6 +109,7 @@ private:
 	void previousPage();
 
 	static const sf::Color SELECTED_COLOR;
+	static const sf::Color CURRENT_COLOR;
 	GameObject *characterObject;
 
 	static constexpr float FRAME_OFFSET = 21;

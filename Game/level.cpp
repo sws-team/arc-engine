@@ -192,7 +192,7 @@ void Level::startMission(const unsigned int n)
 	{
 		const int _testWavesCount = 999;
 		const int _testEnemiesCount = 999;
-		const int _testInterval = 4000;
+		const int _testInterval = 3000;
 
 		Wave wave;
 		wave.protection = 0.f;
@@ -203,10 +203,7 @@ void Level::startMission(const unsigned int n)
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
-			wave.spawnEnemies.push_back(ENEMY_TYPES::REPAIR_ENEMY);
 			wave.spawnEnemies.push_back(ENEMY_TYPES::WAR_VEHICLE);
-			wave.spawnEnemies.push_back(ENEMY_TYPES::GIANT_SLUG);
-			wave.spawnEnemies.push_back(ENEMY_TYPES::SELFHEAL_ENEMY);
 #endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
@@ -219,7 +216,6 @@ void Level::startMission(const unsigned int n)
 		showLevelText = std::to_string(n);
 	}
 
-	const sf::Vector2i maxCells = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell();
 	const sf::Vector2f mapTileSize = Engine::Instance().options<GameOptions>()->mapTileSize();
 	const sf::Vector2f tileSize = Engine::Instance().options<GameOptions>()->tileSize();
 	gameMap = Engine::Instance().options<GameOptions>()->findMapByNumber(n);
@@ -236,6 +232,7 @@ void Level::startMission(const unsigned int n)
 
 	Engine::Instance().options<GameOptions>()->cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
 	Engine::Instance().options<GameOptions>()->panel()->initMission(n);
+	const sf::Vector2i maxCells = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell();
 
 	const int starsValue = Engine::Instance().options<GameOptions>()->missionStars(n);
 	if (starsValue != -1)
@@ -1060,7 +1057,7 @@ void Level::enableExplosion()
 void Level::enableSmoke()
 {
 	smoke->setTime(10000);
-	smoke->setDuration(92000);
+	smoke->setDuration(20000);
 	smoke->setCount(6);
 
 	smoke->setEnabled(true);

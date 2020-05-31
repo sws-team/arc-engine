@@ -116,6 +116,9 @@ public:
 	void update() override;
 
 	void clear() override;
+	static constexpr int SMOKE_ANIMATION_SPEED = 150;
+	static constexpr int SMOKE_FRAME_COUNT = 24;
+	static constexpr int SMOKE_ACTIVE_FRAME_COUNT = 2;
 protected:
 	void stateChanged() override;
 private:

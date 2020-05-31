@@ -17,7 +17,7 @@ const std::map<int, std::vector<Instructions::STATES> > Instructions::INSTRUCTIO
 	{4, { INSTRUCTION_TOWER_LASER } },
 	{5, { INSTRUCTION_INCREASE_DAMAGE, INSTRUCTION_INCREASE_ATTACK_SPEED, MAP_SMOKE } },
 	{6, { INSTRUCTION_TOWER_IMPROVED, INSTRUCTION_STOP, MAP_REGRESS} },
-	{7, { MAP_DRAIN} },
+	{7, { MAP_DRAIN, MAP_LAVA} },
 	{8, { MAP_EXPLOSION} },
 };
 
@@ -394,6 +394,9 @@ sf::String Instructions::mapEffectInfoText(Instructions::MAP_EFFECTS type)
 		break;
 	case EXPLOSION:
 		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION);
+		break;
+	case LAVA:
+		str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LAVA_DESCRIPTION);
 		break;
 	default:
 		break;

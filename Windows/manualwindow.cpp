@@ -11,7 +11,8 @@
 #include "Game/instructions.h"
 #include "Game/gamepanel.h"
 
-const sf::Color ManualWindow::SELECTED_COLOR = sf::Color(45, 45, 45, 96);
+const sf::Color ManualWindow::SELECTED_COLOR = sf::Color(200, 200, 200, 200);
+const sf::Color ManualWindow::CURRENT_COLOR = sf::Color(45, 45, 45, 96);
 
 ManualWindow::ManualWindow()
 	: StateWindow()
@@ -268,7 +269,7 @@ void ManualWindow::updatePos()
 	demoFrame.setSize(demoFrameSize);
 	demoFrame.setPosition(demoPos);
 
-	currentRect.setFillColor(SELECTED_COLOR);
+	currentRect.setFillColor(CURRENT_COLOR);
 	currentRect.setSize(sf::Vector2f(RECT_WIDTH, RECT_HEIGHT));
 
 	previous.setPosition(buttonsPos);
@@ -532,6 +533,12 @@ void ManualWindow::addElements()
 							   Instructions::EXPLOSION,
 							   4,
 							   200));
+
+	elements.push_back(Element(GAME_TEXTURE::LAVA,
+							   GAME_TRANSLATION::LAVA_NAME,
+							   Instructions::LAVA,
+							   4,
+							   200));
 #endif
 }
 
@@ -737,7 +744,7 @@ void ManualWindow::Element::update()
 
 		//speed
 		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SPEED) + EngineDefs::separator;
-		if (enemyInfo.stats.speed < 30)
+		if (enemyInfo.stats.speed < 35)
 			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FAST);
 		else if (enemyInfo.stats.speed < 65)
 			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::NORMAL_SPEED);
@@ -833,6 +840,9 @@ void ManualWindow::Element::update()
 			break;
 		case Instructions::EXPLOSION:
 			rowCount = 1;
+			break;
+		case Instructions::LAVA:
+			rowCount = 3;
 			break;
 		default:
 			break;

@@ -9,6 +9,7 @@ public:
 	ChooseMissionWindow();
 	~ChooseMissionWindow() override;
 
+	void init() override;
 	void back() override;
 
 protected:

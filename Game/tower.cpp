@@ -882,8 +882,8 @@ ImprovedTower::ImprovedTower(const sf::Vector2f &pos)
 	projectileInfo.frameCount = 1;
 	projectileInfo.texture_id = GAME_TEXTURE::IMPROVED_PROJECTILE;
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::IMPROVED_EXPLOSION_EFFECT;
-	projectileInfo.explosionSize = sf::Vector2i(32, 32);
-	projectileInfo.explosionFrameCount = 16;
+	projectileInfo.explosionSize = sf::Vector2i(96, 96);
+	projectileInfo.explosionFrameCount = 8;
 	TowersCounter::Instance().improvedTowerCount++;
 }
 
