@@ -324,6 +324,14 @@ void Balance::loadMaps(const Json::Value &jsonMaps)
 			stats.lava.count = lavaObject[BalanceDef::MAP_EFFECT_COUNT_KEY].asInt();
 			stats.lava.enabled = lavaObject[BalanceDef::MAP_EFFECT_ENABLED_KEY].asBool();
 		}
+		//invisibility
+		{
+			const Json::Value& invisibilityObject = mapObject[BalanceDef::MAP_INVISIBILITY_KEY];
+			stats.invisibility.duration = invisibilityObject[BalanceDef::MAP_EFFECT_DURATION_KEY].asDouble();
+			stats.invisibility.time = invisibilityObject[BalanceDef::MAP_EFFECT_TIME_KEY].asDouble();
+			stats.invisibility.count = invisibilityObject[BalanceDef::MAP_EFFECT_COUNT_KEY].asInt();
+			stats.invisibility.enabled = invisibilityObject[BalanceDef::MAP_EFFECT_ENABLED_KEY].asBool();
+		}
 		stats.smoke.time *= EngineDefs::MSEC;
 		stats.smoke.duration *= EngineDefs::MSEC;
 		stats.regress.time *= EngineDefs::MSEC;
@@ -334,6 +342,8 @@ void Balance::loadMaps(const Json::Value &jsonMaps)
 		stats.explosions.duration *= EngineDefs::MSEC;
 		stats.lava.time *= EngineDefs::MSEC;
 		stats.lava.duration *= EngineDefs::MSEC;
+		stats.invisibility.time *= EngineDefs::MSEC;
+		stats.invisibility.duration *= EngineDefs::MSEC;
 
 		mapsStats.insert(std::pair<int, MapStats>(number, stats));
 	}

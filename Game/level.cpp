@@ -308,9 +308,9 @@ void Level::startMission(const unsigned int n)
 	lava->setDuration(gameMap->stats.lava.duration);
 	lava->setCount(gameMap->stats.lava.count);
 
-	invisibility->setTime(gameMap->stats.lava.time);
-	invisibility->setDuration(gameMap->stats.lava.duration);
-	invisibility->setCount(gameMap->stats.lava.count);
+	invisibility->setTime(gameMap->stats.invisibility.time);
+	invisibility->setDuration(gameMap->stats.invisibility.duration);
+	invisibility->setCount(gameMap->stats.invisibility.count);
 
 	abilities->reset();
 
@@ -1101,7 +1101,7 @@ void Level::ready()
 	moneyDrain->setEnabled(gameMap->stats.moneyDrain.enabled);
 	mapExplosion->setEnabled(gameMap->stats.explosions.enabled);
 	lava->setEnabled(gameMap->stats.lava.enabled);
-	invisibility->setEnabled(gameMap->stats.lava.enabled);
+	invisibility->setEnabled(gameMap->stats.invisibility.enabled);
 
 	towersRegress->resetTimers();
 	smoke->resetTimers();

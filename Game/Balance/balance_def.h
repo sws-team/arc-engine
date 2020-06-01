@@ -120,6 +120,7 @@ const std::string MAP_EXPLOSIONS_KEY = "map_explosions";
 const std::string MAP_SMOKE_KEY = "map_smoke";
 const std::string MAP_REGRESS_KEY = "map_regress";
 const std::string MAP_LAVA_KEY = "map_lava";
+const std::string MAP_INVISIBILITY_KEY = "map_invisibility";
 
 const std::string MAP_EFFECT_ENABLED_KEY = "map_effect_enabled";
 const std::string MAP_EFFECT_DURATION_KEY = "map_effect_duration";
