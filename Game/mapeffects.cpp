@@ -10,6 +10,7 @@
 #include "gamemanagers.h"
 #include "gameplatform.h"
 #include "achievements.h"
+#include "enemy.h"
 
 const int Shake::MAX_SHAKE_COUNT = 9;
 const int Shake::MAX_SHAKE_OFFSET = 10;
@@ -75,6 +76,11 @@ MapEffect::MapEffect()
 	,m_state(READY)
 {
 	stepTimer.reset();
+}
+
+MapEffect::~MapEffect()
+{
+	clear();
 }
 
 void MapEffect::clear()
@@ -183,6 +189,20 @@ std::vector<sf::Vector2f> MapEffect::getRandomPos(int count)
 	return result;
 }
 
+std::vector<sf::Vector2f> MapEffect::getRandomEnemyPos(int count)
+{
+	std::vector<sf::Vector2f> result;
+	const std::vector<Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
+	const unsigned int enemiesCount = std::min(static_cast<size_t>(count), enemies.size());
+	for (unsigned int i = 0; i < enemiesCount; ++i)
+	{
+		const int n = rand() % enemies.size();
+		Enemy *enemy = enemies.at(n);
+		result.push_back(enemy->enemyCenter());
+	}
+	return result;
+}
+
 MapExplosion::MapExplosion()
 	: MapEffect()
 {
@@ -287,6 +307,13 @@ TowersRegress::TowersRegress()
 
 }
 
+void TowersRegress::clear()
+{
+	for(GameObject *drain : objects)
+		delete drain;
+	MapEffect::clear();
+}
+
 void TowersRegress::draw(sf::RenderTarget * const target)
 {
 	if (m_state == ACTIVE)
@@ -318,7 +345,12 @@ void TowersRegress::stateChanged()
 		for (unsigned int i = 0; i < towers.size(); ++i)
 		{
 			towers.at(i)->setRegressed(true);
-			objects.push_back(new GameObject(GAME_TEXTURE::REGRESS, towers.at(i)->pos(), sf::Vector2i(64, 64), 4));
+			GameObject *object = new GameObject(GAME_TEXTURE::REGRESS,
+												towers.at(i)->pos(),
+												sf::Vector2i(REGRESS_SIZE, REGRESS_SIZE),
+												REGRESS_FRAME_COUNT);
+			object->sprite.setScale(REGRESS_SCALE, REGRESS_SCALE);
+			objects.push_back(object);
 			if (objects.size() == m_count)
 				break;
 		}
@@ -365,11 +397,6 @@ Smoke::Smoke()
 	m_interval = m_time;
 }
 
-Smoke::~Smoke()
-{
-	this->clear();
-}
-
 void Smoke::draw(sf::RenderTarget * const target)
 {
 	if (m_state == ACTIVE)
@@ -381,16 +408,18 @@ void Smoke::draw(sf::RenderTarget * const target)
 
 void Smoke::update()
 {
-	MapEffect::update();
+	if (m_state == ACTIVE)
+		checkBlinded();
 	for(GameObject *cloud : clouds)
 		cloud->update();
+	MapEffect::update();
 }
 
 void Smoke::clear()
 {
 	for(GameObject *cloud : clouds)
 		delete cloud;
-	clouds.clear();
+	MapEffect::clear();
 }
 
 void Smoke::stateChanged()
@@ -403,9 +432,9 @@ void Smoke::stateChanged()
 		for(const sf::Vector2f& pos : points)
 		{
 			GameObject *cloud = new GameObject(GAME_TEXTURE::SMOKE, pos,
-											   sf::Vector2i(512, 512),
+											   sf::Vector2i(SMOKE_SIZE, SMOKE_SIZE),
 											   SMOKE_ACTIVE_FRAME_COUNT);
-			cloud->sprite.scale(0.5f, 0.5f);
+			cloud->sprite.scale(SMOKE_SCALE, SMOKE_SCALE);
 			cloud->currentFrame = 0;
 			cloud->row = 0;
 			cloud->animationSpeed = SMOKE_ANIMATION_SPEED;
@@ -423,7 +452,6 @@ void Smoke::stateChanged()
 			cloud->row = 1;
 			cloud->frameCount = SMOKE_FRAME_COUNT;
 		}
-		smokeTowers(true);
 	}
 		break;
 	case AFTER_ACTIVE:
@@ -438,26 +466,34 @@ void Smoke::stateChanged()
 	}
 		break;
 	case READY:
-		smokeTowers(false);
+	{
+		for(GameObject *cloud : clouds)
+			delete cloud;
+		clouds.clear();
+		checkBlinded();
 		m_interval = m_time;
+	}
 		break;
 	default:
 		break;
 	}
 }
 
-void Smoke::smokeTowers(bool on)
+void Smoke::checkBlinded()
 {
 	const std::vector<Tower *> towers = Engine::Instance().options<GameOptions>()->level()->getAllTowers();
 	for(Tower* tower : towers)
 	{
+		bool blinded = false;
 		for(GameObject *cloud : clouds)
 		{
 			if(cloud->gameRect().contains(tower->getCenter()))
 			{
-				tower->setBlinded(on);
+				blinded = true;
+				break;
 			}
 		}
+		tower->setBlinded(blinded);
 	}
 }
 
@@ -467,9 +503,11 @@ MoneyDrain::MoneyDrain()
 
 }
 
-MoneyDrain::~MoneyDrain()
+void MoneyDrain::clear()
 {
-
+	for(GameObject *energyLeech : energyLeeches)
+		delete energyLeech;
+	MapEffect::clear();
 }
 
 void MoneyDrain::draw(sf::RenderTarget * const target)
@@ -523,7 +561,7 @@ void MoneyDrain::stateChanged()
 		const std::vector<Tower *> towers = getRandomTowers(m_count, powerTowers);
 		for(Tower *tower : towers)
 		{
-			const sf::Vector2i frameSize = sf::Vector2i(384, 384);
+			const sf::Vector2i frameSize = sf::Vector2i(ENERGY_LEECH_SIZE, ENERGY_LEECH_SIZE);
 			GameObject *energyLeech = new GameObject(GAME_TEXTURE::ENERGY_LEECH,
 													 tower->pos() - Engine::Instance().options<GameOptions>()->mapTileSize(),
 													 frameSize, ENERGY_LEECH_FRAME_COUNT);
@@ -596,6 +634,13 @@ void Lava::update()
 	MapEffect::update();
 }
 
+void Lava::clear()
+{
+	for(GameObject *lava : lavas)
+		delete lava;
+	MapEffect::clear();
+}
+
 bool Lava::isIntersects(const sf::Vector2f &pos) const
 {
 	const sf::FloatRect rect = sf::FloatRect(pos, Engine::Instance().options<GameOptions>()->tileSize());
@@ -617,9 +662,9 @@ void Lava::stateChanged()
 		for(const sf::Vector2f& pos : points)
 		{
 			GameObject *lava = new GameObject(GAME_TEXTURE::LAVA, pos,
-											  sf::Vector2i(640, 640), LAVA_FRAME_COUNT);
+											  sf::Vector2i(LAVA_SIZE, LAVA_SIZE), LAVA_FRAME_COUNT);
 			lava->animationSpeed = LAVA_ANIMATION_SPEED;
-			lava->sprite.scale(0.5f, 0.5f);
+			lava->sprite.scale(LAVA_SCALE, LAVA_SCALE);
 			lavas.push_back(lava);
 		}
 		m_interval = LAVA_FRAME_COUNT * LAVA_ANIMATION_SPEED - 50;
@@ -660,3 +705,108 @@ void Lava::stateChanged()
 	}
 }
 
+
+InvilibilityEffect::InvilibilityEffect()
+	: MapEffect()
+{
+
+}
+
+void InvilibilityEffect::draw(sf::RenderTarget * const target)
+{
+	for(GameObject* area : areas)
+		area->draw(target);
+}
+
+void InvilibilityEffect::update()
+{
+	if (m_state == ACTIVE)
+		checkVisibility();
+	for(GameObject* area : areas)
+		area->update();
+	MapEffect::update();
+}
+
+void InvilibilityEffect::clear()
+{
+	for(GameObject *area : areas)
+		delete area;
+	MapEffect::clear();
+}
+
+void InvilibilityEffect::stateChanged()
+{
+	switch (m_state)
+	{
+	case PREPARE_ACTIVE:
+	{
+		const std::vector<sf::Vector2f> points = getRandomEnemyPos(m_count);
+		for(const sf::Vector2f& pos : points)
+		{
+			const sf::Vector2f areaPos = pos -
+					sf::Vector2f(0.5f * INVISIBILITY_SIZE * INVISIBILITY_SCALE * Engine::Instance().settingsManager()->getScaleFactor().x,
+								 0.5f * INVISIBILITY_SIZE * INVISIBILITY_SCALE * Engine::Instance().settingsManager()->getScaleFactor().y);
+
+			GameObject *area = new GameObject(GAME_TEXTURE::LAVA, areaPos,
+											  sf::Vector2i(INVISIBILITY_SIZE, INVISIBILITY_SIZE),
+											  INVISIBILITY_FRAME_COUNT);
+			area->animationSpeed = INVISIBILITY_ANIMATION_SPEED;
+			area->sprite.scale(INVISIBILITY_SCALE, INVISIBILITY_SCALE);
+			areas.push_back(area);
+		}
+		m_interval = INVISIBILITY_FRAME_COUNT * INVISIBILITY_ANIMATION_SPEED - 50;
+	}
+		break;
+	case ACTIVE:
+	{
+		for(GameObject* area : areas)
+		{
+			area->row = 1;
+			area->frameCount = INVISIBILITY_FRAME_COUNT - 1;
+			area->currentFrame = 0;
+			area->updateTextureRect();
+		}
+		m_interval = m_duration;
+	}
+		break;
+	case AFTER_ACTIVE:
+	{
+		for(GameObject* area : areas)
+		{
+			area->row = 2;
+			area->currentFrame = 0;
+			area->frameCount = INVISIBILITY_FRAME_COUNT;
+			area->updateTextureRect();
+		}
+		m_interval = (INVISIBILITY_FRAME_COUNT - 1) * INVISIBILITY_ANIMATION_SPEED;
+	}
+		break;
+	case READY:
+	{
+		m_interval = m_time;
+		for(GameObject* area : areas)
+			delete area;
+		areas.clear();
+		checkVisibility();
+	}
+		break;
+	}
+}
+
+void InvilibilityEffect::checkVisibility()
+{
+	const std::vector<Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
+	for(Enemy *enemy : enemies)
+	{
+		bool intersects = false;
+		for(GameObject *area : areas)
+		{
+			if (area->sprite.getGlobalBounds().intersects(enemy->sprite.getGlobalBounds()))
+			{
+				intersects = true;
+				break;
+			}
+		}
+		enemy->setVisible(!intersects);
+	}
+}

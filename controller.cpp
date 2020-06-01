@@ -98,6 +98,9 @@ void Controller::eventFilter(sf::Event *event)
 		case sf::Keyboard::F10:
 			Engine::Instance().options<GameOptions>()->level()->enableExplosion();
 			break;
+		case sf::Keyboard::F11:
+			Engine::Instance().options<GameOptions>()->level()->enableInvisibility();
+			break;
 #endif
 		case sf::Keyboard::BackSpace:
 			Engine::Instance().options<GameOptions>()->camera()->resetView();

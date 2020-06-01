@@ -178,6 +178,8 @@ Enemy *Tower::findNearestEnemy(const std::vector<Enemy *> &exclude)
 	const std::vector <Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
 	for(Enemy *enemy : enemies)
 	{
+		if (!enemy->isVisible())
+			continue;
 		if (find(exclude.begin(), exclude.end(), enemy) != exclude.end())
 			continue;
 		if (TowersFactory::isIntersects(enemy->enemyRect(), aPos,
@@ -878,7 +880,7 @@ ImprovedTower::ImprovedTower(const sf::Vector2f &pos)
 {
 	m_shotSound = GAME_SOUND::IMPROVED_SHOT;
 
-	projectileInfo.size = sf::Vector2i(40, 16);
+	projectileInfo.size = sf::Vector2i(24, 12);
 	projectileInfo.frameCount = 1;
 	projectileInfo.texture_id = GAME_TEXTURE::IMPROVED_PROJECTILE;
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::IMPROVED_EXPLOSION_EFFECT;

@@ -235,7 +235,7 @@ void AcidAbility::checkDuration()
 		count++;
 		for(Enemy *enemy : Engine::Instance().options<GameOptions>()->level()->getAllEnemies())
 		{
-			if (enemy->enemyRect().intersects(object->gameRect()))
+			if (enemy->sprite.getGlobalBounds().intersects(object->sprite.getGlobalBounds()))
 			{
 				enemy->hit(Balance::Instance().getAcidDamage());
 

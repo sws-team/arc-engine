@@ -19,6 +19,7 @@ class MoneyDrain;
 class TowersRegress;
 class ShadersFactory;
 class Lava;
+class InvilibilityEffect;
 
 class Level : public GameDrawable
 {
@@ -84,6 +85,7 @@ public:
 	void enableRegress();
 	void enableExplosion();
 	void enableSmoke();
+	void enableInvisibility();
 #endif
 
 	Abilities *getAbilities();
@@ -172,6 +174,7 @@ private:
 	MoneyDrain *moneyDrain;
 	TowersRegress *towersRegress;
 	Lava *lava;
+	InvilibilityEffect *invisibility;
 
 	sf::Sprite sellSprite;
 	sf::Sprite upgradeSprite;

@@ -26,7 +26,8 @@ public:
 		REGRESS,
 		EXPLOSION,
 		DRAIN,
-		LAVA
+		LAVA,
+		INVISIBILITY,
 	};
 
 	static sf::String towerInfoText(TOWER_TYPES type);
@@ -66,6 +67,7 @@ private:
 		MAP_EXPLOSION,
 		MAP_DRAIN,
 		MAP_LAVA,
+		MAP_INVISIBILITY,
 
 		FINISHED
 	};

@@ -1579,7 +1579,7 @@ void RollingAbility::use()
 		owner->updateTextureRect();
 		owner->animationSpeed = ROLLING_ANIMATION_SPEED;
 		owner->setFaster(ROLLING_VALUE);
-		owner->protect(0.5);
+		owner->protect(0.6f);
 
 		m_interval = Balance::Instance().getRollInterval() * 1.5f;
 		m_state = ROLL_TO_MOVE;

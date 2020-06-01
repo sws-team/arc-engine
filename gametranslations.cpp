@@ -675,6 +675,11 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"???"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"???"));
 
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_NAME, L"???"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_NAME, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_NAME, L"???"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_NAME, L"???"));
+
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"Being hit in the tower will limit\nthe accuracy of the guidance devices.\nReduces turret firing range."));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"При попадании на башню ограничивет\nточность приборов наведения.\nУменьшает радиус стрельбы башни"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"???"));
@@ -699,6 +704,11 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"???"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"???"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"???"));
+
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"???"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"???"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"???"));
 
 	Engine::Instance().translationsManager()->addTranslation(std::string("russian"), russainTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);

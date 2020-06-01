@@ -36,6 +36,7 @@ Level::Level() :
 	moneyDrain = new MoneyDrain();
 	towersRegress = new TowersRegress();
 	lava = new Lava();
+	invisibility = new InvilibilityEffect();
 
 	shadersFactory = new ShadersFactory();
 
@@ -89,6 +90,7 @@ Level::~Level()
 	delete moneyDrain;
 	delete towersRegress;
 	delete lava;
+	delete invisibility;
 }
 
 void Level::draw(sf::RenderTarget *const target)
@@ -150,6 +152,7 @@ void Level::update()
 		smoke->update();
 		abilities->update();
 		lava->update();
+		invisibility->update();
 
 		for(Enemy* enemy : enemies)
 			enemy->useAbility();
@@ -305,6 +308,10 @@ void Level::startMission(const unsigned int n)
 	lava->setDuration(gameMap->stats.lava.duration);
 	lava->setCount(gameMap->stats.lava.count);
 
+	invisibility->setTime(gameMap->stats.lava.time);
+	invisibility->setDuration(gameMap->stats.lava.duration);
+	invisibility->setCount(gameMap->stats.lava.count);
+
 	abilities->reset();
 
 	smokeRect.setSize(sf::Vector2f(maxCells.x * tileSize.x,
@@ -387,6 +394,7 @@ void Level::clear()
 	moneyDrain->clear();
 	towersRegress->clear();
 	lava->clear();
+	invisibility->clear();
 	TowersCounter::Instance().reset();
 }
 
@@ -1063,6 +1071,16 @@ void Level::enableSmoke()
 	smoke->setEnabled(true);
 	smoke->resetTimers();
 }
+
+void Level::enableInvisibility()
+{
+	invisibility->setTime(10000);
+	invisibility->setDuration(20000);
+	invisibility->setCount(3);
+
+	invisibility->setEnabled(true);
+	invisibility->resetTimers();
+}
 #endif
 Abilities *Level::getAbilities()
 {
@@ -1082,13 +1100,15 @@ void Level::ready()
 	smoke->setEnabled(gameMap->stats.smoke.enabled);
 	moneyDrain->setEnabled(gameMap->stats.moneyDrain.enabled);
 	mapExplosion->setEnabled(gameMap->stats.explosions.enabled);
-	lava->setEnabled(false);
+	lava->setEnabled(gameMap->stats.lava.enabled);
+	invisibility->setEnabled(gameMap->stats.lava.enabled);
 
 	towersRegress->resetTimers();
 	smoke->resetTimers();
 	moneyDrain->resetTimers();
 	mapExplosion->resetTimers();
 	lava->resetTimers();
+	invisibility->resetTimers();
 
 	for(Tower* tower : towers)
 		tower->resume();
@@ -1194,6 +1214,7 @@ void Level::drawLevel(sf::RenderTarget * const target)
 	smoke->draw(target);
 	moneyDrain->draw(target);
 	towersRegress->draw(target);
+	invisibility->draw(target);
 
 	if (m_selectedTower != nullptr)
 	{

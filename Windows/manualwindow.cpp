@@ -10,6 +10,7 @@
 #include "mainwindow.h"
 #include "Game/instructions.h"
 #include "Game/gamepanel.h"
+#include "Game/mapeffects.h"
 
 const sf::Color ManualWindow::SELECTED_COLOR = sf::Color(200, 200, 200, 200);
 const sf::Color ManualWindow::CURRENT_COLOR = sf::Color(45, 45, 45, 96);
@@ -329,7 +330,7 @@ void ManualWindow::updatePos()
 			count = 0;
 		}
 	}
-	maxPages = elements.size()/MAX_ELEMENTS_COUNT;
+	maxPages = elements.size()/MAX_ELEMENTS_COUNT - 1;
 }
 
 void ManualWindow::addElements()
@@ -513,20 +514,20 @@ void ManualWindow::addElements()
 	elements.push_back(Element(GAME_TEXTURE::SMOKE,
 							   GAME_TRANSLATION::SMOKE_NAME,
 							   Instructions::SMOKE,
-							   1,
-							   100));
+							   Smoke::SMOKE_FRAME_COUNT,
+							   Smoke::SMOKE_ANIMATION_SPEED));
 
 	elements.push_back(Element(GAME_TEXTURE::REGRESS,
 							   GAME_TRANSLATION::REGRESS_NAME,
 							   Instructions::REGRESS,
-							   4,
-							   200));
+							   TowersRegress::REGRESS_FRAME_COUNT,
+							   TowersRegress::REGRESS_ANIMATION_SPEED));
 
 	elements.push_back(Element(GAME_TEXTURE::ENERGY_LEECH,
 							   GAME_TRANSLATION::DRAIN_NAME,
 							   Instructions::DRAIN,
-							   4,
-							   200));
+							   MoneyDrain::ENERGY_LEECH_FRAME_COUNT,
+							   MoneyDrain::ENERGY_LEECH_ANIMATION_SPEED));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_EXPLOSION,
 							   GAME_TRANSLATION::TOWER_EXPLOSION_NAME,
@@ -537,8 +538,14 @@ void ManualWindow::addElements()
 	elements.push_back(Element(GAME_TEXTURE::LAVA,
 							   GAME_TRANSLATION::LAVA_NAME,
 							   Instructions::LAVA,
-							   4,
-							   200));
+							   Lava::LAVA_FRAME_COUNT - 1,
+							   Lava::LAVA_ANIMATION_SPEED));
+
+	elements.push_back(Element(GAME_TEXTURE::LAVA,
+							   GAME_TRANSLATION::INVISIBILITY_NAME,
+							   Instructions::INVISIBILITY,
+							   InvilibilityEffect::INVISIBILITY_FRAME_COUNT,
+							   InvilibilityEffect::INVISIBILITY_ANIMATION_SPEED));
 #endif
 }
 
@@ -668,6 +675,7 @@ void ManualWindow::Element::update()
 	bool cycled = false;
 	int rowCount = 1;
 	float objectScale = 1;
+	int row = 0;
 	sf::Vector2i frameSize;	
 	TextureType objectTexture = texture;
 	//texture
@@ -767,9 +775,9 @@ void ManualWindow::Element::update()
 
 		//armor
 		descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR) + EngineDefs::separator;
-		if (enemyInfo.stats.reflection < 0.1f)
+		if (enemyInfo.stats.reflection < 0.15f)
 			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_LIGHT);
-		else if (enemyInfo.stats.reflection < 0.3f)
+		else if (enemyInfo.stats.reflection < 0.25f)
 			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_MEDIUM);
 		else
 			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ARMOR_STRONG);
@@ -825,32 +833,69 @@ void ManualWindow::Element::update()
 		break;
 	case Element::E_Effect:
 	{
-		frameSize = sf::Vector2i(GameOptions::CELL_SIZE, GameOptions::CELL_SIZE);
 		switch (effectType)
 		{
 		case Instructions::SMOKE:
-			frameSize = sf::Vector2i(256, 256);
-			rowCount = 3;
+		{
+			frameSize = sf::Vector2i(Smoke::SMOKE_SIZE, Smoke::SMOKE_SIZE);
+			icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
+			row = 1;
+			cycled = false;
+			objectScale = Smoke::SMOKE_SCALE;
+			icon.scale(0.125f, 0.125f);
+		}
 			break;
 		case Instructions::REGRESS:
-			rowCount = 3;
+		{
+			frameSize = sf::Vector2i(TowersRegress::REGRESS_SIZE, TowersRegress::REGRESS_SIZE);
+			icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
+			row = 1;
+			cycled = false;
+			objectScale = TowersRegress::REGRESS_SCALE;
+//			icon.scale(0.125f, 0.125f);
+		}
 			break;
 		case Instructions::DRAIN:
-			rowCount = 2;
+		{
+			frameSize = sf::Vector2i(MoneyDrain::ENERGY_LEECH_SIZE, MoneyDrain::ENERGY_LEECH_SIZE);
+			icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
+			icon.scale(0.25f, 0.25f);
+			rowCount = 3;
+			cycled = true;
+			objectScale = Tower::TOWER_SCAlE;
+		}
 			break;
 		case Instructions::EXPLOSION:
+		{
 			rowCount = 1;
+			icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+		}
 			break;
 		case Instructions::LAVA:
-			rowCount = 3;
+		{
+			frameSize = sf::Vector2i(Lava::LAVA_SIZE, Lava::LAVA_SIZE);
+			row = 1;
+			cycled = false;
+			objectScale = Lava::LAVA_SCALE;
+			icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
+			icon.scale(0.125f, 0.125f);
+		}
+			break;
+		case Instructions::INVISIBILITY:
+		{
+			frameSize = sf::Vector2i(InvilibilityEffect::INVISIBILITY_SIZE,
+									 InvilibilityEffect::INVISIBILITY_SIZE);
+			row = 1;
+			cycled = false;
+			objectScale = InvilibilityEffect::INVISIBILITY_SCALE;
+
+			icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
+			icon.scale(0.125f, 0.125f);
+		}
 			break;
 		default:
 			break;
 		}
-		icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
-		if (effectType == Instructions::SMOKE)
-			icon.scale(0.25f, 0.25f);
-		cycled = true;
 		descriptionStr += Instructions::mapEffectInfoText(effectType);
 	}
 		break;
@@ -860,9 +905,10 @@ void ManualWindow::Element::update()
 
 	object = new GameObject(objectTexture, sf::Vector2f(0,0), frameSize, frameCount);
 	object->animationSpeed = animationSpeed;
+	object->row = row;
 	object->cycled = cycled;
 	object->rowCount = rowCount;
-	object->sprite.scale(objectScale, objectScale);
+	object->sprite.scale(objectScale, objectScale);	
 
 	if (demoTextureType == -1)
 		elementDemo = nullptr;
