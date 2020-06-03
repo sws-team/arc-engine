@@ -272,8 +272,10 @@ void MapExplosion::stateChanged()
 		{
 			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::EXPLOSION,
 						 sf::Vector2f(shape.getGlobalBounds().left - Engine::Instance().options<GameOptions>()->mapTileSize().x/2,
-								  shape.getGlobalBounds().top - Engine::Instance().options<GameOptions>()->mapTileSize().y/2),
-						 sf::Vector2i(64, 64), 80, 12, 0);
+								  shape.getGlobalBounds().top - Engine::Instance().options<GameOptions>()->mapTileSize().y/2)
+						 - Engine::Instance().options<GameOptions>()->tileSize(),
+						 sf::Vector2i(1/Tower::TOWER_SCAlE * GameOptions::CELL_SIZE,
+									  1/Tower::TOWER_SCAlE * GameOptions::CELL_SIZE), 80, 8, 0);
 			Engine::Instance().soundManager()->playOnce(GAME_SOUND::TOWER_EXPLOSION);
 		}
 	}

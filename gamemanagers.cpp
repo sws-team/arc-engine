@@ -263,8 +263,12 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::BLAST, out);
 			else if (resource.name == "bomb_explosion")
 				addTexture(GAME_TEXTURE::BOMB_EXPLOSION, out);
-			else if (resource.name == "burn")
-				addTexture(GAME_TEXTURE::BURN, out);
+			else if (resource.name == "burn_small")
+				addTexture(GAME_TEXTURE::BURN_SMALL, out);
+			else if (resource.name == "burn_mid")
+				addTexture(GAME_TEXTURE::BURN_MID, out);
+			else if (resource.name == "burn_big")
+				addTexture(GAME_TEXTURE::BURN_BIG, out);
 			else if (resource.name == "down_effect")
 				addTexture(GAME_TEXTURE::DOWN_EFFECT, out);
 			else if (resource.name == "energyleech")

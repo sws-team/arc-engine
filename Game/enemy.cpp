@@ -68,15 +68,28 @@ Enemy::Enemy(const TextureType &texture_id,
 	this->animationSpeed = animationSpeed;
 	setPos(m_pos + m_spritePos);
 
-	burnAnimation = new GameObject(GAME_TEXTURE::BURN, startPos, sf::Vector2i(32, 32), 4);
-
+	TextureType burnTexture;
 	TextureType healTextureId;
 	if (cellSize.x == 2)
+	{
 		healTextureId = GAME_TEXTURE::HEAL_MID_EFFECT;
+		burnTexture = GAME_TEXTURE::BURN_MID;
+	}
 	else if(cellSize.x == 4)
+	{
 		healTextureId = GAME_TEXTURE::HEAL_BIG_EFFECT;
+		burnTexture = GAME_TEXTURE::BURN_BIG;
+	}
 	else
+	{
 		healTextureId = GAME_TEXTURE::HEAL_SMALL_EFFECT;
+		burnTexture = GAME_TEXTURE::BURN_SMALL;
+	}
+
+	burnAnimation = new GameObject(burnTexture, startPos,
+								   sf::Vector2i(GameOptions::MAP_CELL_SIZE * cellSize.x,
+												GameOptions::MAP_CELL_SIZE * cellSize.y), 9);
+	burnAnimation->animationSpeed = 100;
 
 	healAnimation = new GameObject(healTextureId, startPos, this->size, HEAL_FRAME_COUNT);
 	healAnimation->animationSpeed = HEAL_ANIMATION_SPEED;
@@ -1272,11 +1285,14 @@ void KillTowerAbility::effect(bool isActive)
 		return;
 	if(targetTower == nullptr)
 		return;
-	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::BOMB_EXPLOSION, targetTower->pos(),
-																	 sf::Vector2i(GameOptions::MAP_CELL_SIZE, GameOptions::MAP_CELL_SIZE),
-																	 200, 12, 0);
 	Engine::Instance().options<GameOptions>()->level()->deleteTower(targetTower);
 	targetTower = nullptr;
+	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::EXPLOSION,
+																	 targetTower->pos() - Engine::Instance().options<GameOptions>()->tileSize(),
+																	 sf::Vector2i(1/Tower::TOWER_SCAlE * GameOptions::CELL_SIZE,
+																				  1/Tower::TOWER_SCAlE * GameOptions::CELL_SIZE),
+																	 80, 8, 0);
+
 }
 
 DowngradeTowerAbility::DowngradeTowerAbility()
