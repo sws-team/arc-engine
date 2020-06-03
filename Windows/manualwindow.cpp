@@ -431,13 +431,13 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getEnemyInfo(TRICYCLE),
 							   EnemiesFactory::getFrameCount(TRICYCLE),
 							   EnemiesFactory::getAnimationSpeed(TRICYCLE)));
-#ifndef DEMO_VERSION
+
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TANK,
 							   GAME_TRANSLATION::TANK,
 							   EnemiesFactory::getEnemyInfo(TANK),
 							   EnemiesFactory::getFrameCount(TANK),
 							   EnemiesFactory::getAnimationSpeed(TANK)));
-#endif
+
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_MECHSPIDER,
 							   GAME_TRANSLATION::MECHSPIDER,
 							   EnemiesFactory::getEnemyInfo(MECHSPIDER),
@@ -456,25 +456,25 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getEnemyInfo(GIANT_SLUG),
 							   EnemiesFactory::getFrameCount(GIANT_SLUG),
 							   EnemiesFactory::getAnimationSpeed(GIANT_SLUG)));
-#ifndef DEMO_VERSION
+
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_HEAVY_TANK,
 							   GAME_TRANSLATION::HEAVY_TANK,
 							   EnemiesFactory::getEnemyInfo(HEAVY_TANK),
 							   EnemiesFactory::getFrameCount(HEAVY_TANK),
 							   EnemiesFactory::getAnimationSpeed(HEAVY_TANK)));
-#endif
+
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SLUGGY,
 							   GAME_TRANSLATION::SLUGGY,
 							   EnemiesFactory::getEnemyInfo(SLUGGY),
 							   EnemiesFactory::getFrameCount(SLUGGY),
 							   EnemiesFactory::getAnimationSpeed(SLUGGY)));
-#ifndef DEMO_VERSION
+
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_REPAIR,
 							   GAME_TRANSLATION::REPAIR,
 							   EnemiesFactory::getEnemyInfo(REPAIR_ENEMY),
 							   EnemiesFactory::getFrameCount(REPAIR_ENEMY),
 							   EnemiesFactory::getAnimationSpeed(REPAIR_ENEMY)));
-#endif
+
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SHIELD,
 							   GAME_TRANSLATION::SHELL,
 							   EnemiesFactory::getEnemyInfo(SHIELD_ENEMY),
@@ -486,13 +486,13 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getEnemyInfo(WALKER),
 							   EnemiesFactory::getFrameCount(WALKER),
 							   EnemiesFactory::getAnimationSpeed(WALKER)));
-#ifndef DEMO_VERSION
+
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SELF_HEAL,
 							   GAME_TRANSLATION::SELFHEAL,
 							   EnemiesFactory::getEnemyInfo(SELFHEAL_ENEMY),
 							   EnemiesFactory::getFrameCount(SELFHEAL_ENEMY),
 							   EnemiesFactory::getAnimationSpeed(SELFHEAL_ENEMY)));
-#endif
+
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TRACTOR,
 							   GAME_TRANSLATION::TRACTOR,
 							   EnemiesFactory::getEnemyInfo(TRACTOR),
@@ -522,7 +522,7 @@ void ManualWindow::addElements()
 							   EnemiesFactory::getEnemyInfo(ROLLER),
 							   EnemiesFactory::getFrameCount(ROLLER),
 							   EnemiesFactory::getAnimationSpeed(ROLLER)));
-#ifndef DEMO_VERSION
+
 	//map effects
 	elements.push_back(Element(GAME_TEXTURE::SMOKE,
 							   GAME_TRANSLATION::SMOKE_NAME,
@@ -559,7 +559,6 @@ void ManualWindow::addElements()
 							   Instructions::INVISIBILITY,
 							   InvilibilityEffect::INVISIBILITY_FRAME_COUNT,
 							   InvilibilityEffect::INVISIBILITY_ANIMATION_SPEED));
-#endif
 }
 
 

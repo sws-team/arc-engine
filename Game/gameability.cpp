@@ -159,6 +159,8 @@ void BombAbility::activate()
 			enemy->hit(Balance::Instance().getBombDamage());
 			if (!enemy->isAlive())
 				count++;
+			else
+				enemy->protect(-0.1f);
 		}
 
 	if (count >= 5)
@@ -176,6 +178,7 @@ FreezeBombAbility::FreezeBombAbility()
 
 void FreezeBombAbility::activate()
 {	
+	Engine::Instance().soundManager()->playOnce(GAME_SOUND::FREEZE_BOMB);
 	GameAbility::activate();
 	const sf::FloatRect abilityRect = Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect();
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::FREEZE_BOMB_EXPLOSION,
@@ -188,6 +191,7 @@ void FreezeBombAbility::activate()
 	for(Enemy *enemy : Engine::Instance().options<GameOptions>()->level()->getAllEnemies())
 		if (enemy->enemyRect().intersects(abilityRect))
 		{
+			enemy->protect(-0.2f);
 			enemy->freeze(Balance::Instance().getFreezeValue(), Balance::Instance().getFreezeDuration() * EngineDefs::MSEC);
 			count++;
 		}
@@ -207,6 +211,7 @@ AcidAbility::AcidAbility()
 
 void AcidAbility::activate()
 {
+	Engine::Instance().soundManager()->playOnce(GAME_SOUND::ACID);
 	const sf::Vector2i size = m_rotated ? sf::Vector2i(m_areaSize.y * GameOptions::CELL_SIZE,
 											   m_areaSize.x * GameOptions::CELL_SIZE) :
 									  sf::Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
@@ -264,6 +269,7 @@ IncreaseTowerDamageAbility::IncreaseTowerDamageAbility()
 
 void IncreaseTowerDamageAbility::activate()
 {
+	Engine::Instance().soundManager()->playOnce(GAME_SOUND::TOWER_ABILITY);
 	GameAbility::activate();
 	Tower* tower = Engine::Instance().options<GameOptions>()->level()->getTowerAtPos(Engine::Instance().options<GameOptions>()->camera()->cellToPos(Engine::Instance().options<GameOptions>()->cursor()->cell()));
 	if (tower == nullptr)
@@ -296,6 +302,7 @@ IncreaseTowerAttackSpeedAbility::IncreaseTowerAttackSpeedAbility()
 
 void IncreaseTowerAttackSpeedAbility::activate()
 {
+	Engine::Instance().soundManager()->playOnce(GAME_SOUND::TOWER_ABILITY);
 	GameAbility::activate();
 	Tower* tower = Engine::Instance().options<GameOptions>()->level()->getTowerAtPos(Engine::Instance().options<GameOptions>()->camera()->cellToPos(Engine::Instance().options<GameOptions>()->cursor()->cell()));
 	if (tower == nullptr)
