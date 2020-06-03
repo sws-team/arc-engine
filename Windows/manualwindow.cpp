@@ -54,7 +54,13 @@ ManualWindow::ManualWindow()
 ManualWindow::~ManualWindow()
 {
 	for(Element& element : elements)
+	{
+		if (element.additionalObject != nullptr)
+			delete element.additionalObject;
+		if (element.elementDemo != nullptr)
+			delete element.elementDemo;
 		delete element.object;
+	}
 }
 
 void ManualWindow::back()
@@ -70,6 +76,8 @@ void ManualWindow::update()
 		if (id < elements.size())
 		{
 			elements.at(id).object->update();
+			if (elements.at(id).additionalObject != nullptr)
+				elements.at(id).additionalObject->update();
 			if (elements.at(id).elementDemo != nullptr)
 				elements.at(id).elementDemo->update();
 		}
@@ -100,6 +108,8 @@ void ManualWindow::paint(sf::RenderWindow *window)
 		{
 			window->draw(elements.at(id).nameText);
 			window->draw(elements.at(id).descriptionText);
+			if (elements.at(id).additionalObject != nullptr)
+				elements.at(id).additionalObject->draw(window);
 			elements.at(id).object->draw(window);
 			if (elements.at(id).elementDemo != nullptr)
 				elements.at(id).elementDemo->draw(window);
@@ -303,6 +313,9 @@ void ManualWindow::updatePos()
 
 		element.object->setPos(texturePos + sf::Vector2f(textureSize.x/2 - element.object->sprite.getGlobalBounds().width/2,
 														 textureSize.y/2 - element.object->sprite.getGlobalBounds().height/2));
+
+		if (element.additionalObject != nullptr)
+			element.additionalObject->setPos(element.additionalObject->pos() + element.object->pos());
 
 		element.nameText.setScale(scaleFactor);
 		element.nameText.setPosition(textPos);
@@ -520,7 +533,7 @@ void ManualWindow::addElements()
 	elements.push_back(Element(GAME_TEXTURE::REGRESS,
 							   GAME_TRANSLATION::REGRESS_NAME,
 							   Instructions::REGRESS,
-							   TowersRegress::REGRESS_FRAME_COUNT,
+							   TowersRegress::REGRESS_FRAME_COUNT - 1,
 							   TowersRegress::REGRESS_ANIMATION_SPEED));
 
 	elements.push_back(Element(GAME_TEXTURE::ENERGY_LEECH,
@@ -541,7 +554,7 @@ void ManualWindow::addElements()
 							   Lava::LAVA_FRAME_COUNT - 1,
 							   Lava::LAVA_ANIMATION_SPEED));
 
-	elements.push_back(Element(GAME_TEXTURE::LAVA,
+	elements.push_back(Element(GAME_TEXTURE::INVISIBLITY,
 							   GAME_TRANSLATION::INVISIBILITY_NAME,
 							   Instructions::INVISIBILITY,
 							   InvilibilityEffect::INVISIBILITY_FRAME_COUNT,
@@ -593,6 +606,7 @@ ManualWindow::Element::Element(TextureType texture,
 	,frameCount(frameCount)
 	,animationSpeed(animationSpeed)
 	,demoTextureType(demoTextureType)
+	,additionalObject(nullptr)
 {
 
 }
@@ -608,6 +622,7 @@ ManualWindow::Element::Element(TextureType texture,
 	,frameCount(1)
 	,animationSpeed(100)
 	,demoTextureType(demoTextureType)
+	,additionalObject(nullptr)
 {
 
 }
@@ -625,6 +640,7 @@ ManualWindow::Element::Element(TextureType texture,
 	,frameCount(frameCount)
 	,animationSpeed(animationSpeed)
 	,demoTextureType(demoTextureType)
+	,additionalObject(nullptr)
 {
 
 }
@@ -642,6 +658,7 @@ ManualWindow::Element::Element(TextureType texture,
 	,frameCount(frameCount)
 	,animationSpeed(animationSpeed)
 	,demoTextureType(demoTextureType)
+	,additionalObject(nullptr)
 {
 
 }
@@ -691,7 +708,7 @@ void ManualWindow::Element::update()
 	{
 		rowCount = 4;
 		cycled = true;
-		frameSize = sf::Vector2i(192, 192);
+		frameSize = sf::Vector2i(Tower::TOWER_SIZE, Tower::TOWER_SIZE);
 		icon.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 		icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
 		descriptionStr += Instructions::towerInfoText(towerType);
@@ -833,6 +850,9 @@ void ManualWindow::Element::update()
 		break;
 	case Element::E_Effect:
 	{
+		cycled = false;
+		bool hasTower = false;
+		sf::Vector2f towerOffset = sf::Vector2f(0,0);
 		switch (effectType)
 		{
 		case Instructions::SMOKE:
@@ -840,19 +860,19 @@ void ManualWindow::Element::update()
 			frameSize = sf::Vector2i(Smoke::SMOKE_SIZE, Smoke::SMOKE_SIZE);
 			icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
 			row = 1;
-			cycled = false;
 			objectScale = Smoke::SMOKE_SCALE;
 			icon.scale(0.125f, 0.125f);
 		}
 			break;
 		case Instructions::REGRESS:
 		{
-			frameSize = sf::Vector2i(TowersRegress::REGRESS_SIZE, TowersRegress::REGRESS_SIZE);
+			frameSize = sf::Vector2i(Tower::TOWER_SIZE, Tower::TOWER_SIZE);
 			icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
 			row = 1;
-			cycled = false;
-			objectScale = TowersRegress::REGRESS_SCALE;
-//			icon.scale(0.125f, 0.125f);
+			rowCount = 3;
+			cycled = true;
+			icon.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
+			hasTower = true;
 		}
 			break;
 		case Instructions::DRAIN:
@@ -862,7 +882,9 @@ void ManualWindow::Element::update()
 			icon.scale(0.25f, 0.25f);
 			rowCount = 3;
 			cycled = true;
-			objectScale = Tower::TOWER_SCAlE;
+			hasTower = true;
+			towerOffset = Engine::Instance().options<GameOptions>()->tileSize()
+					+ Engine::Instance().options<GameOptions>()->mapTileSize();
 		}
 			break;
 		case Instructions::EXPLOSION:
@@ -875,7 +897,6 @@ void ManualWindow::Element::update()
 		{
 			frameSize = sf::Vector2i(Lava::LAVA_SIZE, Lava::LAVA_SIZE);
 			row = 1;
-			cycled = false;
 			objectScale = Lava::LAVA_SCALE;
 			icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
 			icon.scale(0.125f, 0.125f);
@@ -885,16 +906,25 @@ void ManualWindow::Element::update()
 		{
 			frameSize = sf::Vector2i(InvilibilityEffect::INVISIBILITY_SIZE,
 									 InvilibilityEffect::INVISIBILITY_SIZE);
-			row = 1;
-			cycled = false;
 			objectScale = InvilibilityEffect::INVISIBILITY_SCALE;
 
-			icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
+			icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
 			icon.scale(0.125f, 0.125f);
 		}
 			break;
 		default:
 			break;
+		}
+		if (hasTower)
+		{
+			additionalObject = new GameObject(GAME_TEXTURE::TOWER_BASE, towerOffset,
+											  sf::Vector2i(Tower::TOWER_SIZE, Tower::TOWER_SIZE),
+											  TowersFactory::getFrameCount(BASE));
+			additionalObject->animationSpeed = TowersFactory::getAnimationSpeed(BASE);
+			additionalObject->row = 0;
+			additionalObject->cycled = true;
+			additionalObject->rowCount = 4;
+//			additionalObject->sprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 		}
 		descriptionStr += Instructions::mapEffectInfoText(effectType);
 	}

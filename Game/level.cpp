@@ -53,7 +53,7 @@ Level::Level() :
 	upgradeSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::UPGRADE_TEXTURE));
 	upgradeSprite.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
-	fixSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::UPGRADE_TEXTURE));
+	fixSprite.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::FIX_TEXTURE));
 	fixSprite.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
 	const sf::Color textColor = sf::Color(236,169,114);
@@ -1044,8 +1044,8 @@ void Level::enableLava()
 
 void Level::enableRegress()
 {
-	towersRegress->setTime(10000);
-	towersRegress->setDuration(5000);
+	towersRegress->setTime(4000);
+	towersRegress->setDuration(10000);
 	towersRegress->setCount(2);
 
 	towersRegress->setEnabled(true);

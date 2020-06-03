@@ -94,6 +94,7 @@ public:
 
 	virtual void levelDown();
 	static constexpr float UPGRADE_PRICE_MODIFIER = 2.f;
+	static constexpr int TOWER_SIZE = 192;
 
 protected:
 	TowerStats m_stats;

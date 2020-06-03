@@ -640,8 +640,8 @@ RocketTower::RocketTower(const sf::Vector2f &pos)
 	projectileInfo.frameCount = 4;
 	projectileInfo.texture_id = GAME_TEXTURE::ROCKET_PROJECTILE;
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::ROCKET_EXPLOSION_EFFECT;
-	projectileInfo.explosionSize = sf::Vector2i(96, 96);
-	projectileInfo.explosionFrameCount = 16;
+	projectileInfo.explosionSize = sf::Vector2i(64, 64);
+	projectileInfo.explosionFrameCount = 12;
 	TowersCounter::Instance().rocketTowerCount++;
 }
 

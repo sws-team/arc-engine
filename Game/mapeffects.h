@@ -103,10 +103,8 @@ public:
 	void update() override;
 	void clear() override;
 
-	static constexpr int REGRESS_FRAME_COUNT = 9;
+	static constexpr int REGRESS_FRAME_COUNT = 5;
 	static constexpr int REGRESS_ANIMATION_SPEED = 100;
-	static constexpr int REGRESS_SIZE = 64;
-	static constexpr float REGRESS_SCALE = 1.f;
 protected:
 	void stateChanged() override;
 private:
@@ -188,14 +186,15 @@ public:
 	void update() override;
 	void clear() override;
 
-	static constexpr int INVISIBILITY_SIZE = 640;
-	static constexpr int INVISIBILITY_FRAME_COUNT = 5;
-	static constexpr float INVISIBILITY_SCALE = 0.5f;
+	static constexpr int INVISIBILITY_SIZE = 512;
+	static constexpr int INVISIBILITY_FRAME_COUNT = 4;
+	static constexpr float INVISIBILITY_SCALE = 0.75f;
 	static constexpr int INVISIBILITY_ANIMATION_SPEED = 350;
 protected:
 	void stateChanged() override;
 
 private:
+	static constexpr int HIT_BOX_OFFSET = 64;
 	std::vector<GameObject*> areas;
 	void checkVisibility();
 };

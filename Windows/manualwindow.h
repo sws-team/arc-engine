@@ -23,7 +23,6 @@ protected:
 	void eventFilter(sf::Event *event) override;
 
 private:
-
 	struct Element
 	{
 		enum ElementType
@@ -77,6 +76,7 @@ private:
 		int frameCount;
 		float animationSpeed;
 		TextureType demoTextureType;
+		GameObject *additionalObject;
 
 		void init();
 		void update();

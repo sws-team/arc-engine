@@ -215,6 +215,8 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::STAR_TEXTURE, out);
 			else if (resource.name == "upgrade_icon")
 				addTexture(GAME_TEXTURE::UPGRADE_TEXTURE, out);
+			else if (resource.name == "fix_icon")
+				addTexture(GAME_TEXTURE::FIX_TEXTURE, out);
 			else if (resource.name == "life_icon")
 				addTexture(GAME_TEXTURE::LIFE_ICON, out);
 			else if (resource.name == "audio_icon")
@@ -303,6 +305,8 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::TOWER_EXPLOSION, out);
 			else if (resource.name == "lava")
 				addTexture(GAME_TEXTURE::LAVA, out);
+			else if (resource.name == "invisibility")
+				addTexture(GAME_TEXTURE::INVISIBLITY, out);
 			//map objects
 			}
 		}

@@ -169,7 +169,7 @@ std::vector<Tower *> MapEffect::getRandomTowers(int count, const std::vector<Tow
 	const unsigned int towersCount = std::min(static_cast<size_t>(count), avaliableTowers.size());
 	while(avaliableTowers.size() != towersCount)
 	{
-		const int n = rand() % towers.size();
+		const int n = rand() % avaliableTowers.size();
 		avaliableTowers.erase(avaliableTowers.begin() + n);
 	}
 	return avaliableTowers;
@@ -316,21 +316,15 @@ void TowersRegress::clear()
 
 void TowersRegress::draw(sf::RenderTarget * const target)
 {
-	if (m_state == ACTIVE)
-	{
-		for(GameObject *drain : objects)
-			drain->draw(target);
-	}
+	for(GameObject *object : objects)
+		object->draw(target);
 }
 
 void TowersRegress::update()
 {
+	for(GameObject *object : objects)
+		object->update();
 	MapEffect::update();
-	if (m_state == ACTIVE)
-	{
-		for(GameObject *object : objects)
-			object->update();
-	}
 }
 
 void TowersRegress::stateChanged()
@@ -339,51 +333,55 @@ void TowersRegress::stateChanged()
 	{
 	case PREPARE_ACTIVE:
 	{
-		m_interval = 800 * 4;
 		const std::vector<Tower *> towers = getRandomTowers(m_count,
 															Engine::Instance().options<GameOptions>()->level()->getAllTowers());
+
 		for (unsigned int i = 0; i < towers.size(); ++i)
 		{
 			towers.at(i)->setRegressed(true);
 			GameObject *object = new GameObject(GAME_TEXTURE::REGRESS,
 												towers.at(i)->pos(),
-												sf::Vector2i(REGRESS_SIZE, REGRESS_SIZE),
+												sf::Vector2i(Tower::TOWER_SIZE, Tower::TOWER_SIZE),
 												REGRESS_FRAME_COUNT);
-			object->sprite.setScale(REGRESS_SCALE, REGRESS_SCALE);
+			object->currentFrame = 0;
+			object->row = 0;
+			object->animationSpeed = REGRESS_ANIMATION_SPEED;
+			object->sprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 			objects.push_back(object);
-			if (objects.size() == m_count)
-				break;
 		}
-		for(GameObject *object : objects)
-		{
-			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::REGRESS, object->pos(),
-													 sf::Vector2i(64, 64), 800, 4, 1);
-		}
+		m_interval = REGRESS_FRAME_COUNT * REGRESS_ANIMATION_SPEED - 50;
 	}
 		break;
 	case ACTIVE:
 	{
+		for(GameObject *object : objects)
+		{
+			object->currentFrame = 0;
+			object->row = 1;
+			object->frameCount = REGRESS_FRAME_COUNT - 1;
+		}
 		m_interval = m_duration;
 	}
 		break;
 	case AFTER_ACTIVE:
 	{
-		m_interval = 800 * 4;
 		for(GameObject *object : objects)
 		{
-			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::REGRESS, object->pos(),
-													 sf::Vector2i(64, 64), 800, 4, 2);
+			object->currentFrame = 0;
+			object->row = 2;
+			object->frameCount = REGRESS_FRAME_COUNT;
 		}
+		m_interval = REGRESS_FRAME_COUNT * REGRESS_ANIMATION_SPEED - 50;
 	}
 		break;
 	case READY:
 	{
-		m_interval = m_time;
 		for(Tower* tower : Engine::Instance().options<GameOptions>()->level()->getAllTowers())
 			tower->setRegressed(false);
 		for(GameObject *object : objects)
 			delete object;
 		objects.clear();
+		m_interval = m_time;
 	}
 		break;
 	default:
@@ -399,11 +397,8 @@ Smoke::Smoke()
 
 void Smoke::draw(sf::RenderTarget * const target)
 {
-	if (m_state == ACTIVE)
-	{
-		for(GameObject *cloud : clouds)
-			cloud->draw(target);
-	}
+	for(GameObject *cloud : clouds)
+		cloud->draw(target);
 }
 
 void Smoke::update()
@@ -583,7 +578,6 @@ void MoneyDrain::stateChanged()
 				energyLeech->currentFrame = 0;
 				energyLeech->row = 1;
 				energyLeech->updateTextureRect();
-//				energyLeech->animationSpeed = ANIMATION_SPEED;
 			}
 			Engine::Instance().options<GameOptions>()->panel()->setDrain(true);
 		}
@@ -747,38 +741,38 @@ void InvilibilityEffect::stateChanged()
 					sf::Vector2f(0.5f * INVISIBILITY_SIZE * INVISIBILITY_SCALE * Engine::Instance().settingsManager()->getScaleFactor().x,
 								 0.5f * INVISIBILITY_SIZE * INVISIBILITY_SCALE * Engine::Instance().settingsManager()->getScaleFactor().y);
 
-			GameObject *area = new GameObject(GAME_TEXTURE::LAVA, areaPos,
+			GameObject *area = new GameObject(GAME_TEXTURE::INVISIBLITY, areaPos,
 											  sf::Vector2i(INVISIBILITY_SIZE, INVISIBILITY_SIZE),
 											  INVISIBILITY_FRAME_COUNT);
 			area->animationSpeed = INVISIBILITY_ANIMATION_SPEED;
 			area->sprite.scale(INVISIBILITY_SCALE, INVISIBILITY_SCALE);
 			areas.push_back(area);
 		}
-		m_interval = INVISIBILITY_FRAME_COUNT * INVISIBILITY_ANIMATION_SPEED - 50;
+		m_interval = INVISIBILITY_FRAME_COUNT * INVISIBILITY_ANIMATION_SPEED;
 	}
 		break;
 	case ACTIVE:
 	{
-		for(GameObject* area : areas)
-		{
-			area->row = 1;
-			area->frameCount = INVISIBILITY_FRAME_COUNT - 1;
-			area->currentFrame = 0;
-			area->updateTextureRect();
-		}
+//		for(GameObject* area : areas)
+//		{
+//			area->row = 1;
+//			area->frameCount = INVISIBILITY_FRAME_COUNT;
+//			area->currentFrame = 0;
+//			area->updateTextureRect();
+//		}
 		m_interval = m_duration;
 	}
 		break;
 	case AFTER_ACTIVE:
 	{
-		for(GameObject* area : areas)
-		{
-			area->row = 2;
-			area->currentFrame = 0;
-			area->frameCount = INVISIBILITY_FRAME_COUNT;
-			area->updateTextureRect();
-		}
-		m_interval = (INVISIBILITY_FRAME_COUNT - 1) * INVISIBILITY_ANIMATION_SPEED;
+//		for(GameObject* area : areas)
+//		{
+//			area->row = 2;
+//			area->currentFrame = 0;
+//			area->frameCount = INVISIBILITY_FRAME_COUNT;
+//			area->updateTextureRect();
+//		}
+		m_interval = INVISIBILITY_FRAME_COUNT * INVISIBILITY_ANIMATION_SPEED;
 	}
 		break;
 	case READY:
@@ -795,13 +789,20 @@ void InvilibilityEffect::stateChanged()
 
 void InvilibilityEffect::checkVisibility()
 {
+	const sf::Vector2f offset = sf::Vector2f(HIT_BOX_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().x,
+											 HIT_BOX_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y);
 	const std::vector<Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
 	for(Enemy *enemy : enemies)
 	{
 		bool intersects = false;
 		for(GameObject *area : areas)
 		{
-			if (area->sprite.getGlobalBounds().intersects(enemy->sprite.getGlobalBounds()))
+			sf::FloatRect hitBox = area->sprite.getGlobalBounds();
+			hitBox.left += offset.x;
+			hitBox.top += offset.y;
+			hitBox.width -= offset.x;
+			hitBox.height -= offset.y;
+			if (hitBox.intersects(enemy->sprite.getGlobalBounds()))
 			{
 				intersects = true;
 				break;
