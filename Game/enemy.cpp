@@ -262,12 +262,7 @@ void Enemy::update()
 	}
 	if (m_burned)
 	{
-		const int x = this->size.x/ ENEMY_SCALE /GameOptions::MAP_CELL_SIZE - 1;
-		const int y = this->size.y/ ENEMY_SCALE /GameOptions::MAP_CELL_SIZE - 1;
-		const sf::Vector2f posOffset = sf::Vector2f(Engine::Instance().options<GameOptions>()->mapTileSize().x/2 * x,
-											Engine::Instance().options<GameOptions>()->mapTileSize().y/2 * y);
-
-		burnAnimation->setPos(this->pos() + posOffset);
+		burnAnimation->setPos(this->pos());
 		if (burnAttack.check(Balance::Instance().getBurnAttackSpeed()))
 			hit(Balance::Instance().getBurnDamage());
 		burnAnimation->update();
