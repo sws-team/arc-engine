@@ -268,16 +268,6 @@ void MapExplosion::stateChanged()
 	{
 		Engine::Instance().soundManager()->stop(GAME_SOUND::TARGET_LOCK);
 		m_interval = 1000;
-		for(const sf::CircleShape &shape : targets)
-		{
-			Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::EXPLOSION,
-						 sf::Vector2f(shape.getGlobalBounds().left - Engine::Instance().options<GameOptions>()->mapTileSize().x/2,
-								  shape.getGlobalBounds().top - Engine::Instance().options<GameOptions>()->mapTileSize().y/2)
-						 - Engine::Instance().options<GameOptions>()->tileSize(),
-						 sf::Vector2i(1/Tower::TOWER_SCAlE * GameOptions::CELL_SIZE,
-									  1/Tower::TOWER_SCAlE * GameOptions::CELL_SIZE), 80, 8, 0);
-			Engine::Instance().soundManager()->playOnce(GAME_SOUND::TOWER_EXPLOSION);
-		}
 	}
 		break;
 	case READY:
@@ -289,6 +279,13 @@ void MapExplosion::stateChanged()
 			{
 				if (shape.getGlobalBounds().contains(tower->getCenter()))
 				{
+					Engine::Instance().soundManager()->playOnce(GAME_SOUND::TOWER_EXPLOSION);
+					Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::EXPLOSION,
+								 sf::Vector2f(shape.getGlobalBounds().left - Engine::Instance().options<GameOptions>()->mapTileSize().x/2,
+										  shape.getGlobalBounds().top - Engine::Instance().options<GameOptions>()->mapTileSize().y/2)
+								 - Engine::Instance().options<GameOptions>()->tileSize(),
+								 sf::Vector2i(1/Tower::TOWER_SCAlE * GameOptions::CELL_SIZE,
+											  1/Tower::TOWER_SCAlE * GameOptions::CELL_SIZE), 80, 8, 0);
 					Engine::Instance().options<GameOptions>()->level()->deleteTower(tower);
 					continue;
 				}
