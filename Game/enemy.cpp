@@ -877,7 +877,8 @@ HealNearAbility::HealNearAbility()
 }
 
 void HealNearAbility::use()
-{
+{	
+	Engine::Instance().soundManager()->playOnce(GAME_SOUND::REPAIR);
 	const std::vector<Enemy*> enemies = Engine::Instance().options<GameOptions>()->level()->getAllEnemies();
 	for(Enemy *enemy : enemies)
 	{
@@ -912,6 +913,7 @@ SelfHealAbility::SelfHealAbility()
 
 void SelfHealAbility::use()
 {
+	Engine::Instance().soundManager()->playOnce(GAME_SOUND::HEAL);
 	owner->heal(owner->getPureStats().health * Balance::Instance().getSelfhealValue());
 }
 
@@ -934,6 +936,7 @@ void TeleportAbility::use()
 		owner->currentFrame = 0;
 		m_state = DISAPPEAR;
 		m_interval = TELEPORT_ANIMATION_SPEED * TELEPORT_FRAME_COUNT - 50;
+		Engine::Instance().soundManager()->playOnce(GAME_SOUND::TELEPORT);
 	}
 		break;
 	case DISAPPEAR:
@@ -956,6 +959,7 @@ void TeleportAbility::use()
 		owner->currentFrame = 0;
 		m_state = FINISH;
 		m_interval = TELEPORT_ANIMATION_SPEED * TELEPORT_FRAME_COUNT;
+		Engine::Instance().soundManager()->playOnce(GAME_SOUND::TELEPORT);
 	}
 		break;
 	case FINISH:
@@ -1394,6 +1398,7 @@ void SpawnEnemy::use()
 		break;
 	case SPAWN:
 	{
+		Engine::Instance().soundManager()->playOnce(GAME_SOUND::SPAWN_ROAR);
 		owner->row = PROCESS_SPAWN_ROW;
 		owner->frameCount = PRECESS_FRAME_COUNT;
 		owner->animationSpeed = 10 * owner->frameCount;

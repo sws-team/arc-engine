@@ -351,6 +351,7 @@ void TowersRegress::stateChanged()
 			object->sprite.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 			objects.push_back(object);
 		}
+		Engine::Instance().soundManager()->playOnce(GAME_SOUND::REGRESS);
 		m_interval = REGRESS_FRAME_COUNT * REGRESS_ANIMATION_SPEED - 50;
 	}
 		break;
@@ -531,7 +532,8 @@ void MoneyDrain::explosion(const sf::FloatRect &rect)
 	{
 		GameObject *energyLeech = *it;
 		if (energyLeech->sprite.getGlobalBounds().intersects(rect))
-		{			
+		{
+			Engine::Instance().soundManager()->playOnce(GAME_SOUND::DRAIN_DROPPPED);
 			GamePlatform::Instance().unlock(ACHIEVEMENT_DROP_DRAIN);
 			delete energyLeech;
 			it = energyLeeches.erase(it);
@@ -567,6 +569,7 @@ void MoneyDrain::stateChanged()
 			energyLeech->animationSpeed = ENERGY_LEECH_ANIMATION_SPEED;
 			energyLeeches.push_back(energyLeech);
 		}
+		Engine::Instance().soundManager()->playOnce(GAME_SOUND::REGRESS);
 		m_interval = ENERGY_LEECH_FRAME_COUNT * ENERGY_LEECH_ANIMATION_SPEED;
 	}
 		break;

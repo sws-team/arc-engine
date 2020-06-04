@@ -206,7 +206,7 @@ void Level::startMission(const unsigned int n)
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
-			wave.spawnEnemies.push_back(ENEMY_TYPES::HEAVY_TANK);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::WALKER);
 #endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
@@ -840,8 +840,10 @@ void Level::changeState(Level::LEVEL_STATE state)
 	}
 		break;
 	case LOSE:
+	{
 		Engine::Instance().soundManager()->endBackgroundSound();
-
+		Engine::Instance().soundManager()->playOnce(GAME_SOUND::GAME_OVER);
+	}
 		break;
 	default:
 		break;
@@ -1318,23 +1320,6 @@ void Level::chooseByPos(const sf::Vector2f &pos)
 
 void Level::choose(const sf::Vector2i &cell, bool inPanel)
 {
-//	for(Enemy *enemy : enemies)
-//	{
-//		if (enemy->type() == ENEMY_TYPES::MECHSPIDER)
-//		{
-//			ShutdownTowerAbility *web = static_cast<ShutdownTowerAbility*>(enemy->getAbility());
-//			if (web == nullptr || web->getTarget() == nullptr)
-//				continue;
-//			const sf::Vector2i towerCell = Engine::Instance().options<GameOptions>()->camera()->posToCell(
-//						web->getTarget()->getCenter());
-//			if (towerCell == cell)
-//			{
-//				web->stop();
-//				return;
-//			}
-//		}
-//	}
-
 	Tower *selectedTower = m_selectedTower;
 	if (m_selectedTower != nullptr)
 		setSelectedTower(nullptr);

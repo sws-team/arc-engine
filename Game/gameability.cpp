@@ -32,6 +32,7 @@ bool GameAbility::isReady()
 
 void GameAbility::setUp()
 {
+	Engine::Instance().soundManager()->playOnce(GAME_SOUND::ACTIVATE_ABILITY);
 	m_rotated = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift);
 	if (m_rotated)
 		Engine::Instance().options<GameOptions>()->cursor()->activateAbility(m_areaSize.y, m_areaSize.x, m_offset.y, m_offset.x);

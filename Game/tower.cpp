@@ -599,6 +599,7 @@ void PowerTower::upgradePowerRect()
 
 void PowerTower::activateBlast()
 {
+	Engine::Instance().soundManager()->playOnce(GAME_SOUND::BLAST);
 	const sf::Vector2f pos = sf::Vector2f(BLAST_SIZE.x/2 * Engine::Instance().settingsManager()->getScaleFactor().x - Engine::Instance().options<GameOptions>()->mapTileSize().x,
 								  BLAST_SIZE.y/2 * Engine::Instance().settingsManager()->getScaleFactor().y - Engine::Instance().options<GameOptions>()->mapTileSize().y);
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::BLAST, this->pos() - pos, BLAST_SIZE, 25, 4, 0);
