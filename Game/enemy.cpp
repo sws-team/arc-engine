@@ -1268,7 +1268,7 @@ KillTowerAbility::KillTowerAbility()
 	: TowerEffectAbility(Balance::Instance().getKillTowerInterval())
 {
 	info.enemyTextureId = GAME_TEXTURE::ENEMY_HEAVY_TANK;
-	info.pojectileTextureId = GAME_TEXTURE::ENEMY_BULLET;
+	info.pojectileTextureId = GAME_TEXTURE::ENEMY_ROCKET;
 	info.projectileSize = sf::Vector2i(56, 24);
 	info.duration = 0;
 	info.catchSound = GAME_SOUND::TANK_SHOOT;
@@ -1284,21 +1284,20 @@ void KillTowerAbility::effect(bool isActive)
 		return;
 	if(targetTower == nullptr)
 		return;
-	Engine::Instance().options<GameOptions>()->level()->deleteTower(targetTower);
-	targetTower = nullptr;
 	Engine::Instance().options<GameOptions>()->level()->addAnimation(GAME_TEXTURE::EXPLOSION,
 																	 targetTower->pos() - Engine::Instance().options<GameOptions>()->tileSize(),
 																	 sf::Vector2i(1/Tower::TOWER_SCAlE * GameOptions::CELL_SIZE,
 																				  1/Tower::TOWER_SCAlE * GameOptions::CELL_SIZE),
 																	 80, 8, 0);
-
+	Engine::Instance().options<GameOptions>()->level()->deleteTower(targetTower);
+	targetTower = nullptr;
 }
 
 DowngradeTowerAbility::DowngradeTowerAbility()
 	: TowerEffectAbility(Balance::Instance().getDowngradeTowerInterval())
 {
 	info.enemyTextureId = GAME_TEXTURE::ENEMY_TANK;
-	info.pojectileTextureId = GAME_TEXTURE::ENEMY_ROCKET;
+	info.pojectileTextureId = GAME_TEXTURE::ENEMY_BULLET;
 	info.projectileSize = sf::Vector2i(32, 16);
 	info.duration = 0;
 	info.catchSound = GAME_SOUND::DOWN_SHOOT;

@@ -206,7 +206,7 @@ void Level::startMission(const unsigned int n)
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
-			wave.spawnEnemies.push_back(ENEMY_TYPES::WALKER);
+			wave.spawnEnemies.push_back(ENEMY_TYPES::HEAVY_TANK);
 #endif
 		}
 		for (int i = 0; i < _testWavesCount; ++i)
