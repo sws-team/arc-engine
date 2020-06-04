@@ -727,7 +727,7 @@ void GameOptions::loadAchievements()
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_COMPLETE_LEVEL_WITHOUT_TOWERS, std::string("COMPLETE_LEVEL_WITHOUT_TOWERS"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_GAIN_MANY_MONEY, std::string("GAIN_MANY_MONEY"));
 	GamePlatform::Instance().addAchievement(ACHIEVEMENT_SELL_INACTIVE_TOWER, std::string("SELL_INACTIVE_TOWER"));
-
+	GamePlatform::Instance().addAchievement(ACHIEVEMENT_KILL_INVISIBLE, std::string("KILL_INVISIBLE"));
 
 	GamePlatform::Instance().addStat(STAT_SMALL_KILLS, std::string("SMALL_KILLS"));
 	GamePlatform::Instance().addStat(STAT_MID_KILLS, std::string("MEDIUM_KILLS"));

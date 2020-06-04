@@ -465,6 +465,9 @@ void Level::checkAlive()
 				if (tower->type() == ROCKET)
 					static_cast<RocketTower*>(tower)->checkEnemy(enemy);
 
+			if (enemy->isVisible())
+				GamePlatform::Instance().unlock(ACHIEVEMENT_KILL_INVISIBLE);
+
 			switch (enemy->type())
 			{
 			case INFANTRY:
@@ -474,6 +477,8 @@ void Level::checkAlive()
 			case SELFHEAL_ENEMY:
 			case TRACTOR:
 			case SLUGGY:
+			case ROLLER:
+			case SPAWN_WORM:
 				GamePlatform::Instance().incrementValue(STAT_SMALL_KILLS);
 				break;				
 			case TANK:
