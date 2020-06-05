@@ -403,7 +403,7 @@ void GameManagers::loadTranslations()
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_ANYWHERE, L"Kann überall gebaut werden"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER, L"Can build only near energy tower"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER, L"Можно построить только возле Энергетической башни"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER, L"Можно построить только возле\nЭнергетической башни"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER, L"Ne peut être construite qu'à proximité\nd'une Tour de production d'énergie"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER, L"Kann nur in der Nähe des Energieturms\ngebaut werden"));
 
@@ -640,12 +640,12 @@ void GameManagers::loadTranslations()
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INC_DMG_ABILITY_DESCRIPTION, L"Erhöht vorübergehend den Turmschaden"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION, L"Temporarily increases tower attack speed"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION, L"Временно увеличивает скорость атаки башни"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION, L"Временно увеличивает скорость\nатаки башни"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION, L"Accélération temporaire des tirs"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INC_AS_ABILITY_DESCRIPTION, L"Erhöht vorübergehend die Angriffsgeschwindigkeit des Turms"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Stops the movement of all enemies"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Останавливает движение всех врагов"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Останавливает движение\nвсех врагов"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Stopper tous les ennemis"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::STOP_ABILITY_DESCRIPTION, L"Stoppt die Bewegung aller Feinde"));
 

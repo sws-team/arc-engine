@@ -511,7 +511,7 @@ void PowerTower::updateGain()
 	if (gainCount == Balance::Instance().getBlastCount())
 	{
 		gainCount = 0;
-		if (level() == ABILITY_LEVEL)
+		if (level() == ABILITY_LEVEL && !isDowngraded())
 			activateBlast();
 	}
 	if (abilityProgress != nullptr)
@@ -688,7 +688,7 @@ void RocketTower::projectileAction(Enemy *enemy)
 			const float actualDamage = (1 - r/zeroGround) * m_stats.damage;
 			levelEnemy->hit(actualDamage);
 			checkKill(levelEnemy);
-			if(level() == ABILITY_LEVEL)
+			if(level() == ABILITY_LEVEL && !isDowngraded())
 				levelEnemy->startBurn();
 		}
 	}
@@ -759,7 +759,7 @@ LaserTower::~LaserTower()
 
 void LaserTower::shoot(Enemy *target)
 {
-	if (level() == ABILITY_LEVEL && target != nullptr)
+	if (level() == ABILITY_LEVEL && !isDowngraded() && target != nullptr)
 	{
 		clearLasers();
 

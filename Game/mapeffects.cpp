@@ -65,6 +65,10 @@ void Shake::deactivate()
 	isActive = false;
 }
 
+void Shake::setSize(const sf::Vector2f &size)
+{
+	dangerRect.setSize(size);
+}
 
 MapEffect::MapEffect()
 	: GameDrawable()
@@ -482,7 +486,7 @@ void Smoke::checkBlinded()
 		bool blinded = false;
 		for(GameObject *cloud : clouds)
 		{
-			if(cloud->gameRect().contains(tower->getCenter()))
+			if(cloud->sprite.getGlobalBounds().contains(tower->getCenter()))
 			{
 				blinded = true;
 				break;

@@ -118,7 +118,7 @@ GamePanel::GamePanel() :
 	initDurationText(&abilityFreezeBombDurationText);
 	initDurationText(&abilityAcidDurationText);
 	initDurationText(&abilityIncreaseTowerDamageDurationText);
-	initDurationText(&abilityIncreaseTowerDamageDurationText);
+	initDurationText(&abilityIncreaseTowerAttackSpeedDurationText);
 	initDurationText(&abilityStopDurationText);
 
 	towerBaseCostText.setString(GlobalVariables::to_string_with_precision(Balance::Instance().getTowerStats(BASE).cost, 0));

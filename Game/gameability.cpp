@@ -270,11 +270,11 @@ IncreaseTowerDamageAbility::IncreaseTowerDamageAbility()
 
 void IncreaseTowerDamageAbility::activate()
 {
-	Engine::Instance().soundManager()->playOnce(GAME_SOUND::TOWER_ABILITY);
-	GameAbility::activate();
 	Tower* tower = Engine::Instance().options<GameOptions>()->level()->getTowerAtPos(Engine::Instance().options<GameOptions>()->camera()->cellToPos(Engine::Instance().options<GameOptions>()->cursor()->cell()));
 	if (tower == nullptr)
 		return;
+	Engine::Instance().soundManager()->playOnce(GAME_SOUND::TOWER_ABILITY);
+	GameAbility::activate();
 	target = tower;
 	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
 	tower->increaseDamage(Balance::Instance().getIncreaseDamageValue());
@@ -303,11 +303,11 @@ IncreaseTowerAttackSpeedAbility::IncreaseTowerAttackSpeedAbility()
 
 void IncreaseTowerAttackSpeedAbility::activate()
 {
-	Engine::Instance().soundManager()->playOnce(GAME_SOUND::TOWER_ABILITY);
-	GameAbility::activate();
 	Tower* tower = Engine::Instance().options<GameOptions>()->level()->getTowerAtPos(Engine::Instance().options<GameOptions>()->camera()->cellToPos(Engine::Instance().options<GameOptions>()->cursor()->cell()));
 	if (tower == nullptr)
 		return;
+	Engine::Instance().soundManager()->playOnce(GAME_SOUND::TOWER_ABILITY);
+	GameAbility::activate();
 	target = tower;
 	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
 	tower->increaseAttackSpeed(Balance::Instance().getIncreaseAttackSpeedValue());

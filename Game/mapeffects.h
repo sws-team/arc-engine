@@ -17,6 +17,7 @@ public:
 	void start();
 	void deactivate();
 
+	void setSize(const sf::Vector2f& size);
 private:
 	sf::RectangleShape dangerRect;
 	Timer dangerTimer;

@@ -202,7 +202,7 @@ void Level::startMission(const unsigned int n)
 		wave.respawnTime = _testInterval;
 		for (int i = 0; i < _testEnemiesCount; ++i)
 		{
-#if 0
+#if RELEASE_BUILD
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
@@ -314,8 +314,10 @@ void Level::startMission(const unsigned int n)
 
 	abilities->reset();
 
-	smokeRect.setSize(sf::Vector2f(maxCells.x * tileSize.x,
-								   maxCells.y * tileSize.y));
+	const sf::Vector2f mapSize = sf::Vector2f(maxCells.x * tileSize.x,
+											  maxCells.y * tileSize.y);
+	smokeRect.setSize(mapSize);
+	shake->setSize(mapSize);
 
 	for(const Map::MapObject& mapObject : gameMap->objects)
 	{
