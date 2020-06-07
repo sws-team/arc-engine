@@ -1068,13 +1068,13 @@ void TowerEffectAbility::use()
 
 			projectile->move(x2-x1, y2-y1);
 		}
-		if (Collision::PixelPerfectTest(targetTower->getSprite(), projectile->getSprite()))
+		if (targetTower == nullptr || Collision::PixelPerfectTest(targetTower->getSprite(), projectile->getSprite()))
 		{
 			delete projectile;
 			projectile = nullptr;
 			Engine::Instance().soundManager()->playOnce(info.catchSound);
 			getBack();
-			if (!targetTower->isDowngraded() && targetTower->isActive())
+			if (targetTower != nullptr && !targetTower->isDowngraded() && targetTower->isActive())
 				effect(true);
 			else
 				use();

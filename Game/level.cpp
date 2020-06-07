@@ -156,10 +156,10 @@ void Level::update()
 
 		for(Enemy* enemy : enemies)
 			enemy->useAbility();
-		calculateCollisions();
 		checkDeadZone();
-		checkEnd();
 		checkEnemyMove();
+		calculateCollisions();
+		checkEnd();
 		if (playing)
 			checkRespawn();
 		for(Enemy* enemy : enemies)
@@ -441,7 +441,8 @@ void Level::checkEnd()
 		for (auto it = enemies.begin(); it != enemies.end();)
 		{
 			Enemy *enemy = *it;
-			if (endRect.contains(enemy->enemyPos()))
+			if (endRect.contains(enemy->enemyPos()) ||
+					!deadZone.getGlobalBounds().contains(enemy->getCenter()))
 			{
 				float damage = enemy->getData().damage / Engine::Instance().options<GameOptions>()->difficult();
 				hitPlayer(damage);
@@ -467,7 +468,7 @@ void Level::checkAlive()
 				if (tower->type() == ROCKET)
 					static_cast<RocketTower*>(tower)->checkEnemy(enemy);
 
-			if (enemy->isVisible())
+			if (!enemy->isVisible())
 				GamePlatform::Instance().unlock(ACHIEVEMENT_KILL_INVISIBLE);
 
 			switch (enemy->type())

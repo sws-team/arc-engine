@@ -735,7 +735,6 @@ void GameOptions::loadAchievements()
 	GamePlatform::Instance().addStat(STAT_KILLS_BY_ACID, std::string("KILLS_BY_ACID"));
 	GamePlatform::Instance().addStat(STAT_COMPLETED_LEVELS, std::string("COMPLETED_LEVELS"));
 	GamePlatform::Instance().addStat(STAT_5_STARS_COMPLETED_LEVELS, std::string("5_STARS_COMPLETED_LEVELS"));
-	GamePlatform::Instance().addStat(STAT_TOWER_MAX_KILLS, std::string("TOWER_MAX_KILLS"));
 	GamePlatform::Instance().addStat(STAT_TOWERS_BUILDED, std::string("TOWERS_BUILDED"));
 }
 

@@ -165,8 +165,8 @@ void Tower::checkKill(Enemy *enemy)
 	if (!enemy->isAlive())
 	{
 		m_kills++;
-		//FIXME
-//		GamePlatform::Instance().incrementValue(STAT_TOWER_MAX_KILLS);
+		if (m_kills == 100)
+			GamePlatform::Instance().unlock(ACHIEVEMENT_KILL_100_BY_TOWER);
 	}
 }
 
@@ -882,8 +882,8 @@ ImprovedTower::ImprovedTower(const sf::Vector2f &pos)
 	m_shotSound = GAME_SOUND::IMPROVED_SHOT;
 
 	projectileInfo.size = sf::Vector2i(24, 12);
-	projectileInfo.frameCount = 1;
 	projectileInfo.texture_id = GAME_TEXTURE::IMPROVED_PROJECTILE;
+	projectileInfo.frameCount = 1;
 	projectileInfo.explosion_texture_id = GAME_TEXTURE::IMPROVED_EXPLOSION_EFFECT;
 	projectileInfo.explosionSize = sf::Vector2i(96, 96);
 	projectileInfo.explosionFrameCount = 8;
@@ -1012,9 +1012,11 @@ void ProjectilesTower::collide(const std::vector<Enemy *> &enemies)
 {
 	for(Enemy* enemy : enemies)
 	{
-		for(Projectile *projectile : m_projectiles)
+		const std::vector<Projectile*> projectiles = m_projectiles;
+		for(Projectile *projectile : projectiles)
 		{
-			if (Collision::PixelPerfectTest(enemy->getSprite(), projectile->getSprite()))
+			if (Collision::PixelPerfectTest(enemy->getSprite(),
+											projectile->getSprite()))
 			{
 				projectileAction(enemy);
 				removeProjectile(projectile);
