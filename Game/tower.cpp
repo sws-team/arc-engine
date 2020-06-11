@@ -900,9 +900,9 @@ void ImprovedTower::createdProjectile(Projectile *projectile)
 	if (level() == ABILITY_LEVEL && !isDowngraded())
 	{
 		float angle = projectile->angle();
-		for (int i = 0; i < 7; ++i)
+		for (int i = 0; i < 3; ++i)
 		{
-			angle += 45;
+			angle += 90;
 			Projectile *extraProjectile = new Projectile(projectileInfo.texture_id,
 													projectile->pos(),
 													projectileInfo.size,

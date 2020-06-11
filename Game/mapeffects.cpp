@@ -542,7 +542,7 @@ void MoneyDrain::explosion(const sf::FloatRect &rect)
 		else
 			++it;
 	}
-	if (energyLeeches.size() == 0)
+	if (m_state != READY && energyLeeches.size() == 0)
 		setState(READY);
 }
 

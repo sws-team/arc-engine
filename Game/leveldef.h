@@ -44,10 +44,10 @@ enum ENEMY_TYPES
 	HEAVY_TANK,
 	BUGSAURUS,
 
-	SPAWN_WORM,
-
 	JUMPER,
 	ROLLER,
+
+	SPAWN_WORM,
 };
 
 struct Wave

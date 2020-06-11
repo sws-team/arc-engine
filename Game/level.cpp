@@ -1493,9 +1493,12 @@ void Level::choose(const sf::Vector2i &cell, bool inPanel)
 			moneyDrain->explosion(Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect());
 		}
 			break;
-		case ABILITY_FREEZE_BOMB:		
+		case ABILITY_FREEZE_BOMB:
+		{
 			abilityActivated = true;
-			abilities->freezeBombAbility->activate();		
+			abilities->freezeBombAbility->activate();
+			moneyDrain->explosion(Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect());
+		}
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
 			abilityActivated = true;

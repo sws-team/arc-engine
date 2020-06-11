@@ -7,6 +7,7 @@
 #include "gameoptions.h"
 #include "gamestatemanager.h"
 #include "mainwindow.h"
+#include "gameplatform.h"
 
 const sf::Color ChooseMissionWindow::DISABLED_COLOR = sf::Color(0,34,52, 128);
 const sf::Color ChooseMissionWindow::CURRENT_COLOR = sf::Color(0,85,130, 128);
@@ -131,6 +132,7 @@ ChooseMissionWindow::~ChooseMissionWindow()
 
 void ChooseMissionWindow::init()
 {
+	GamePlatform::Instance().setPlatformState("steam_display", "#Status_AtMainMenu");
 	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::MAIN_MENU_MUSIC);
 }
 
