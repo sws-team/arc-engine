@@ -351,15 +351,15 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::BUGSAURUS, L"Insectosaure"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::BUGSAURUS, L"Käfersaurier"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Roller"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"???"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Ammonite"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Аммонит"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Ammonite"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SELFHEAL, L"Ammoniten"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Jumper"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"???"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Acrididae"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Акрид"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Acrididae"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Acrididae"));
 
 	//towers abilities
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::BASE_TOWER_ABILITY, L"Invulnerability"));
@@ -458,30 +458,30 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"Se redonne les points de vie grâce\nà sa régénération "));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SELF_HEAL, L"Verbesserte Regeneration stellt die\nGesundheit des Trägers wieder her"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_FASTER, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_FASTER, L"It speeds up directly proportional to the damage it took"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_FASTER, L"Ускоряется пропорционально отнятому здоровью"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_FASTER, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_FASTER, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_FASTER, L"Plus il est endommagé, plus rapide il se déplace"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_FASTER, L"Es beschleunigt direkt proportional zum erlittenen Schaden"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER, L"???"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER, L"Может уничтожить башню,выстрелив в нее"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER, L"It equipped with blasters able to destroy towers with one shot"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER, L"Вооружен бластером сингулярности, имеющим тяжелые снаряды. Наиболее опасное оружие врага, может уничтожить башню с одного попадания."));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER, L"Ses lasers peuvent détruire complètement une tour"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_KILL_TOWER, L"Es ist mit Strahlern ausgestattet, die Türme mit einem Schuss zerstören können"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"???"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"Может ухудшить башню, выстрелив в нее"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"It equipped with guided missiles which downgrade towers"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"Вооружен самонаводящимися ракетами, при попадании которых происходит ухудшение башни."));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"Il est equipé des missiles dont l'explosion provoque un downgrade d'une tour "));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"Es ist mit Lenkflugkörpern ausgestattet, die Türme herabstufen"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"???"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"???"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"It can get faster by curling up and rolling"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"Может сворачиваться в клубок и катиться, что значительно увеличивает его скорость"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"Lové, il peut se déplacer en roulant ce qui le rend plus rapide"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"Es kann schneller werden, indem es sich zusammenrollt und rollt"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING, L"???"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING, L"???"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING, L"It moves around by hopping "));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING, L"Передвигается прыжками"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING, L"Il se déplace en sautant"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING, L"Es bewegt sich durch Hüpfen"));
 
 	//panel
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY_ACID, L"Acid"));
@@ -660,55 +660,55 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::DRAIN_NAME, L"Sangsue d'énergie"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::DRAIN_NAME, L"Energie Blutegel"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_NAME, L"???"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_NAME, L"???"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_NAME, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_NAME, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_NAME, L"Bushes"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_NAME, L"Заросли"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_NAME, L"Broussailles"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_NAME, L"Dickicht"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_NAME, L"ICBM"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_NAME, L"МБР"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_NAME, L"Missile balistique\nintercontinental"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_NAME, L"Interkontinentalrakete"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"???"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"???"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"The Goo"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"Жижа"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"la Substance"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_NAME, L"Sabsche"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_NAME, L"???"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_NAME, L"???"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_NAME, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_NAME, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_NAME, L"Blind spot"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_NAME, L"Слепая зона"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_NAME, L"Angle mort"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_NAME, L"Blinder Fleck"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"Being hit in the tower will limit\nthe accuracy of the guidance devices.\nReduces turret firing range."));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"При попадании на башню ограничивет\nточность приборов наведения.\nУменьшает радиус стрельбы башни"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"Une tour entourée du brouillard a le rayon d'action diminué"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMOKE_DESCRIPTION, L"Wenn Sie im Turm getroffen werden, wird die\nGenauigkeit der Führungsgeräte eingeschränkt.\nReduziert die Schussreichweite des Turmes."));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::DRAIN_DESCRIPTION, L"Sucks out the energy from the energy towers.\nMay be destroyed by a bomb explosion"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::DRAIN_DESCRIPTION, L"Выкачивает энергию из энергетических башен.\nМожет быть уничтожен взрывом бомбы"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::DRAIN_DESCRIPTION, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::DRAIN_DESCRIPTION, L"Elle suce l'énérgie des tours.  L'explosion d'une bombe peut la faire fuir."));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::DRAIN_DESCRIPTION, L"Saugt die Energie aus den Energietürmen heraus.\nKann durch eine Bombenexplosion zerstört werden."));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_DESCRIPTION, L"Interferes with the tower operations.\nDamage and speed are reduced."));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_DESCRIPTION, L"Вызывает помехи в работе башен,\nснижается урон и скорость стрельбы."));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_DESCRIPTION, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_DESCRIPTION, L"Les broussailles empèchent aux tours de fonctionner correctement, elles affectent les dommages causés est la vitesse du tir"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::REGRESS_DESCRIPTION, L"Eingriffe in den Turmbetrieb.\nSchaden und Geschwindigkeit werden reduziert."));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION, L"It simply destroys the tower."));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION, L"Уничтожает башню независимо от уровня."));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION, L"???"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION, L"Il peut détruir complètement une tour"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_EXPLOSION_DESCRIPTION, L"Es zerstört einfach den Turm."));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"???"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"???"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"A very mysterious substance can sometimes come out of the ground. It doesn't harm previously built Towers but it is impossible to construct new Towers on it. Hopefully, this anomaly doesn't last long"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"В некоторых местах из планетарной коры может выступать некая субстанция, на которой невозможно построить новую башню. Благодаря нашей продвинутой технологии установки фундамента на уже построенные башни аномалия не влияет. Имеет временный эффект и через определенное время исчезает."));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"La Substance mystériouse remonte parfois à la surface, où elle empèche de construire de nouvelles tours. Les tours déjà construites ne sont pas normalement endomagées par la Substance, en plus, son activité ne dire pas longtemps."));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::LAVA_DESCRIPTION, L"Manchmal kann eine sehr mysteriöse Substanz aus dem Boden kommen. Es schadet zuvor gebauten Türmen nicht, aber es ist unmöglich, neue Türme darauf zu bauen. Hoffentlich hält diese Anomalie nicht lange an"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"???"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"???"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"???"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"???"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"Such abnormal zones appear and disappear randomly, they hide enemies lurking underneath"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"Подобные аномальные зоны скрывают от наших радаров врагов, попадающих в область их распространения. Наши технологии против них бессильны. К счастью, эти аномалии недолговечны и исчезают так же внезапно, как и появляются."));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"Ces zones d'anomalies empèchent à nos tours de detecter des ennemis traversant ces secteurs. Heureusement, elles disparaissent aussi vite qu'elles apparaissent. "));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"Solche abnormalen Zonen erscheinen und verschwinden zufällig, sie verstecken darunter lauernde Feinde"));
 
 	Engine::Instance().translationsManager()->addTranslation(std::string("russian"), russainTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);
