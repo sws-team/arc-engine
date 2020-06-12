@@ -30,7 +30,7 @@ public:
 		INVISIBILITY,
 	};
 
-	static sf::String towerInfoText(TOWER_TYPES type);
+	static sf::String towerInfoText(TOWER_TYPES type, bool withStats = false);
 	static sf::String abilityInfoText(ACTION_STATE type);
 	static sf::String mapEffectInfoText(MAP_EFFECTS type);
 

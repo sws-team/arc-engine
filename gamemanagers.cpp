@@ -305,8 +305,6 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::WEB_EFFECT, out);
 			else if (resource.name == "downgrade")
 				addTexture(GAME_TEXTURE::DOWNGRADE, out);
-			else if (resource.name == "tower_explosion")
-				addTexture(GAME_TEXTURE::TOWER_EXPLOSION, out);
 			else if (resource.name == "lava")
 				addTexture(GAME_TEXTURE::LAVA, out);
 			else if (resource.name == "invisibility")

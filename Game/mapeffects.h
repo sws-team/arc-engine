@@ -87,6 +87,9 @@ public:
 
 	void draw(sf::RenderTarget *const target) override;
 	void update() override;
+	static constexpr int EXPLOSION_FRAME_SIZE = 192;
+	static constexpr int EXPLOSION_FRAME_COUNT = 8;
+	static constexpr int EXPLOSION_ANIMATION_SPEED = 80;
 protected:
 	void stateChanged() override;
 

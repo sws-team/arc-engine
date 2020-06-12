@@ -288,8 +288,8 @@ void MapExplosion::stateChanged()
 								 sf::Vector2f(shape.getGlobalBounds().left - Engine::Instance().options<GameOptions>()->mapTileSize().x/2,
 										  shape.getGlobalBounds().top - Engine::Instance().options<GameOptions>()->mapTileSize().y/2)
 								 - Engine::Instance().options<GameOptions>()->tileSize(),
-								 sf::Vector2i(1/Tower::TOWER_SCAlE * GameOptions::CELL_SIZE,
-											  1/Tower::TOWER_SCAlE * GameOptions::CELL_SIZE), 80, 8, 0);
+								 sf::Vector2i(EXPLOSION_FRAME_SIZE, EXPLOSION_FRAME_SIZE),
+											EXPLOSION_ANIMATION_SPEED, EXPLOSION_FRAME_COUNT, 0);
 					Engine::Instance().options<GameOptions>()->level()->deleteTower(tower);
 					continue;
 				}

@@ -542,11 +542,11 @@ void ManualWindow::addElements()
 							   MoneyDrain::ENERGY_LEECH_FRAME_COUNT,
 							   MoneyDrain::ENERGY_LEECH_ANIMATION_SPEED));
 
-	elements.push_back(Element(GAME_TEXTURE::TOWER_EXPLOSION,
+	elements.push_back(Element(GAME_TEXTURE::EXPLOSION,
 							   GAME_TRANSLATION::TOWER_EXPLOSION_NAME,
 							   Instructions::EXPLOSION,
-							   4,
-							   200));
+							   MapExplosion::EXPLOSION_FRAME_COUNT,
+							   MapExplosion::EXPLOSION_ANIMATION_SPEED));
 
 	elements.push_back(Element(GAME_TEXTURE::LAVA,
 							   GAME_TRANSLATION::LAVA_NAME,
@@ -710,7 +710,7 @@ void ManualWindow::Element::update()
 		frameSize = sf::Vector2i(Tower::TOWER_SIZE, Tower::TOWER_SIZE);
 		icon.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 		icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
-		descriptionStr += Instructions::towerInfoText(towerType);
+		descriptionStr += Instructions::towerInfoText(towerType, true);
 	}
 		break;
 	case Element::E_Ability:
@@ -841,6 +841,12 @@ void ManualWindow::Element::update()
 		case EnemiesFactory::EnemyInfo::DOWNGRADE_TOWER:
 			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER);
 			break;
+		case EnemiesFactory::EnemyInfo::JUMP:
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_JUMPING);
+			break;
+		case EnemiesFactory::EnemyInfo::ROLLING:
+			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING);
+			break;
 		default:
 			descriptionStr += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENEMY_ABILITY_NONE);
 			break;
@@ -888,8 +894,10 @@ void ManualWindow::Element::update()
 			break;
 		case Instructions::EXPLOSION:
 		{
-			rowCount = 1;
-			icon.setTextureRect(sf::IntRect(0, 0, frameSize.x, frameSize.y));
+			frameSize = sf::Vector2i(MapExplosion::EXPLOSION_FRAME_SIZE,
+									 MapExplosion::EXPLOSION_FRAME_SIZE);
+			icon.setTextureRect(sf::IntRect(frameSize.x * 3, 0, frameSize.x, frameSize.y));
+			icon.scale(Tower::TOWER_SCAlE, Tower::TOWER_SCAlE);
 		}
 			break;
 		case Instructions::LAVA:
