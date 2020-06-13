@@ -982,7 +982,9 @@ void ManualWindow::Element::update()
 		elementDemo = nullptr;
 	else
 	{
-		elementDemo = new GameObject(demoTextureType, sf::Vector2f(0,0), sf::Vector2i(320, 240), 10);
+		const int demoFrameCount = Instructions::textureColumnCount(demoTextureType);
+		elementDemo = new GameObject(demoTextureType, sf::Vector2f(0,0),
+									 Instructions::demoSize, demoFrameCount);
 		elementDemo->animationSpeed = 50;
 		elementDemo->cycled = true;
 		elementDemo->rowCount = Instructions::textureRowCount(demoTextureType);

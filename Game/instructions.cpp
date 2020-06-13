@@ -418,6 +418,13 @@ int Instructions::textureRowCount(int textureId)
 	return rows;
 }
 
+int Instructions::textureColumnCount(int textureId)
+{
+	const int height = Engine::Instance().texturesManager()->getTexture(textureId).getSize().x;
+	const int columns = height / 320;
+	return columns;
+}
+
 void Instructions::updateState()
 {
 	if (currentState >= states.size())
@@ -665,7 +672,8 @@ void Instructions::updateState()
 	}
 	if (textureId != GAME_TEXTURE::FRAME)
 	{
-		demoObject = new GameObject(textureId, sf::Vector2f(0,0), demoSize, 10);
+		const int frameCount = textureColumnCount(textureId);
+		demoObject = new GameObject(textureId, sf::Vector2f(0,0), demoSize, frameCount);
 		demoObject->animationSpeed = 50;
 		demoObject->cycled = true;
 		demoObject->rowCount = textureRowCount(textureId);
