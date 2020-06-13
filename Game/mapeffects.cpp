@@ -314,6 +314,7 @@ void TowersRegress::clear()
 {
 	for(GameObject *drain : objects)
 		delete drain;
+	objects.clear();
 	MapEffect::clear();
 }
 
@@ -418,6 +419,7 @@ void Smoke::clear()
 {
 	for(GameObject *cloud : clouds)
 		delete cloud;
+	clouds.clear();
 	MapEffect::clear();
 }
 
@@ -506,6 +508,7 @@ void MoneyDrain::clear()
 {
 	for(GameObject *energyLeech : energyLeeches)
 		delete energyLeech;
+	energyLeeches.clear();
 	MapEffect::clear();
 }
 
@@ -638,6 +641,7 @@ void Lava::clear()
 {
 	for(GameObject *lava : lavas)
 		delete lava;
+	lavas.clear();
 	MapEffect::clear();
 }
 
@@ -731,6 +735,7 @@ void InvilibilityEffect::clear()
 {
 	for(GameObject *area : areas)
 		delete area;
+	areas.clear();
 	MapEffect::clear();
 }
 
