@@ -218,10 +218,10 @@ void AcidAbility::activate()
 									  sf::Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
 											   m_areaSize.y * GameOptions::CELL_SIZE);
 
-	object = new GameObject(GAME_TEXTURE::VENOM_EFFECT, sf::Vector2f(0, 0), size, 14);
+	object = new GameObject(GAME_TEXTURE::VENOM_EFFECT, sf::Vector2f(0, 0), size, 4);
 	object->animationSpeed = 450;
-	if (m_rotated)
-		object->sprite.rotate(45);
+//	if (m_rotated)
+//		object->sprite.rotate(45);
 	GameAbility::activate();
 //	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
 	const sf::Vector2f pos = sf::Vector2f(Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect().left,

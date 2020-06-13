@@ -367,25 +367,29 @@ void ManualWindow::addElements()
 							   GAME_TRANSLATION::TOWER_POWER,
 							   POWER,
 							   TowersFactory::getFrameCount(POWER),
-							   TowersFactory::getAnimationSpeed(POWER)));
+							   TowersFactory::getAnimationSpeed(POWER),
+							   GAME_TEXTURE::SHOW_ENERGY_TOWER));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_ROCKET,
 							   GAME_TRANSLATION::TOWER_ROCKET,
 							   ROCKET,
 							   TowersFactory::getFrameCount(ROCKET),
-							   TowersFactory::getAnimationSpeed(ROCKET)));
+							   TowersFactory::getAnimationSpeed(ROCKET),
+							   GAME_TEXTURE::SHOW_ROCKET_TOWER));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_LASER,
 							   GAME_TRANSLATION::TOWER_LASER,
 							   LASER,
 							   TowersFactory::getFrameCount(LASER),
-							   TowersFactory::getAnimationSpeed(LASER)));
+							   TowersFactory::getAnimationSpeed(LASER),
+							   GAME_TEXTURE::SHOW_LASER_TOWER));
 
 	elements.push_back(Element(GAME_TEXTURE::TOWER_IMPROVED,
 							   GAME_TRANSLATION::TOWER_IMPROVED,
 							   IMPROVED,
 							   TowersFactory::getFrameCount(IMPROVED),
-							   TowersFactory::getAnimationSpeed(IMPROVED)));
+							   TowersFactory::getAnimationSpeed(IMPROVED),
+							   GAME_TEXTURE::SHOW_IMPROVED_TOWER));
 	//abilities
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_BOMB,
 							   GAME_TRANSLATION::ABILITY_BOMB,
@@ -399,166 +403,193 @@ void ManualWindow::addElements()
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_ACID,
 							   GAME_TRANSLATION::ABILITY_ACID,
-							   ACTION_STATE::ABILITY_ACID));
+							   ACTION_STATE::ABILITY_ACID,
+							   GAME_TEXTURE::SHOW_ACID_ABILITY));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_INCREASE_TOWER_DAMAGE,
 							   GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE,
-							   ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE));
+							   ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE,
+							   GAME_TEXTURE::SHOW_INCREASE_TOWER_DAMAGE_ABILITY));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_INCREASE_TOWER_ATTACK_SPEED,
 							   GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED,
-							   ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED));
+							   ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED,
+							   GAME_TEXTURE::SHOW_INCREASE_TOWER_ATTACK_SPEED_ABILITY));
 
 	elements.push_back(Element(GAME_TEXTURE::ABILITY_TIME_STOP,
 							   GAME_TRANSLATION::ABILITY_STOP,
-							   ACTION_STATE::ABILITY_STOP));
+							   ACTION_STATE::ABILITY_STOP,
+							   GAME_TEXTURE::SHOW_TIME_STOP_ABILITY));
 
 	//enemies
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_INFANTRY,
 							   GAME_TRANSLATION::INFANTRY,
 							   EnemiesFactory::getEnemyInfo(INFANTRY),
 							   EnemiesFactory::getFrameCount(INFANTRY),
-							   EnemiesFactory::getAnimationSpeed(INFANTRY)));
+							   EnemiesFactory::getAnimationSpeed(INFANTRY),
+							   GAME_TEXTURE::SHOW_INFANTRY));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_WAR_VEHICLE,
 							   GAME_TRANSLATION::WAR_VEHICLE,
 							   EnemiesFactory::getEnemyInfo(WAR_VEHICLE),
 							   EnemiesFactory::getFrameCount(WAR_VEHICLE),
-							   EnemiesFactory::getAnimationSpeed(WAR_VEHICLE)));
+							   EnemiesFactory::getAnimationSpeed(WAR_VEHICLE),
+							   GAME_TEXTURE::SHOW_WAR_VEHICLE));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TRICYCLE,
 							   GAME_TRANSLATION::TRICYCLE,
 							   EnemiesFactory::getEnemyInfo(TRICYCLE),
 							   EnemiesFactory::getFrameCount(TRICYCLE),
-							   EnemiesFactory::getAnimationSpeed(TRICYCLE)));
+							   EnemiesFactory::getAnimationSpeed(TRICYCLE),
+							   GAME_TEXTURE::SHOW_TRICYCLE));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TANK,
 							   GAME_TRANSLATION::TANK,
 							   EnemiesFactory::getEnemyInfo(TANK),
 							   EnemiesFactory::getFrameCount(TANK),
-							   EnemiesFactory::getAnimationSpeed(TANK)));
+							   EnemiesFactory::getAnimationSpeed(TANK),
+							   GAME_TEXTURE::SHOW_TANK));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_MECHSPIDER,
 							   GAME_TRANSLATION::MECHSPIDER,
 							   EnemiesFactory::getEnemyInfo(MECHSPIDER),
 							   EnemiesFactory::getFrameCount(MECHSPIDER),
-							   EnemiesFactory::getAnimationSpeed(MECHSPIDER)));
+							   EnemiesFactory::getAnimationSpeed(MECHSPIDER),
+							   GAME_TEXTURE::SHOW_MECHSPIDER));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TUATARA,
 							   GAME_TRANSLATION::TUATARA,
 							   EnemiesFactory::getEnemyInfo(TUATARA),
 							   EnemiesFactory::getFrameCount(TUATARA),
-							   EnemiesFactory::getAnimationSpeed(TUATARA)
-							   ));
+							   EnemiesFactory::getAnimationSpeed(TUATARA),
+							   GAME_TEXTURE::SHOW_TUATARA));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_GIANT_SLUG,
 							   GAME_TRANSLATION::GIANT_SLUG,
 							   EnemiesFactory::getEnemyInfo(GIANT_SLUG),
 							   EnemiesFactory::getFrameCount(GIANT_SLUG),
-							   EnemiesFactory::getAnimationSpeed(GIANT_SLUG)));
+							   EnemiesFactory::getAnimationSpeed(GIANT_SLUG),
+							   GAME_TEXTURE::SHOW_GIANT_SLUG));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_HEAVY_TANK,
 							   GAME_TRANSLATION::HEAVY_TANK,
 							   EnemiesFactory::getEnemyInfo(HEAVY_TANK),
 							   EnemiesFactory::getFrameCount(HEAVY_TANK),
-							   EnemiesFactory::getAnimationSpeed(HEAVY_TANK)));
+							   EnemiesFactory::getAnimationSpeed(HEAVY_TANK),
+							   GAME_TEXTURE::SHOW_HEAVY_TANK));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SLUGGY,
 							   GAME_TRANSLATION::SLUGGY,
 							   EnemiesFactory::getEnemyInfo(SLUGGY),
 							   EnemiesFactory::getFrameCount(SLUGGY),
-							   EnemiesFactory::getAnimationSpeed(SLUGGY)));
+							   EnemiesFactory::getAnimationSpeed(SLUGGY),
+							   GAME_TEXTURE::SHOW_SLUGGY));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_REPAIR,
 							   GAME_TRANSLATION::REPAIR,
 							   EnemiesFactory::getEnemyInfo(REPAIR_ENEMY),
 							   EnemiesFactory::getFrameCount(REPAIR_ENEMY),
-							   EnemiesFactory::getAnimationSpeed(REPAIR_ENEMY)));
+							   EnemiesFactory::getAnimationSpeed(REPAIR_ENEMY),
+							   GAME_TEXTURE::SHOW_REPAIR));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SHIELD,
 							   GAME_TRANSLATION::SHELL,
 							   EnemiesFactory::getEnemyInfo(SHIELD_ENEMY),
 							   EnemiesFactory::getFrameCount(SHIELD_ENEMY),
-							   EnemiesFactory::getAnimationSpeed(SHIELD_ENEMY)));
+							   EnemiesFactory::getAnimationSpeed(SHIELD_ENEMY),
+							   GAME_TEXTURE::SHOW_SHIELD));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_WALKER,
 							   GAME_TRANSLATION::WALKER,
 							   EnemiesFactory::getEnemyInfo(WALKER),
 							   EnemiesFactory::getFrameCount(WALKER),
-							   EnemiesFactory::getAnimationSpeed(WALKER)));
+							   EnemiesFactory::getAnimationSpeed(WALKER),
+							   GAME_TEXTURE::SHOW_WALKER));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_SELF_HEAL,
 							   GAME_TRANSLATION::SELFHEAL,
 							   EnemiesFactory::getEnemyInfo(SELFHEAL_ENEMY),
 							   EnemiesFactory::getFrameCount(SELFHEAL_ENEMY),
-							   EnemiesFactory::getAnimationSpeed(SELFHEAL_ENEMY)));
+							   EnemiesFactory::getAnimationSpeed(SELFHEAL_ENEMY),
+							   GAME_TEXTURE::SHOW_SELF_HEAL));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_TRACTOR,
 							   GAME_TRANSLATION::TRACTOR,
 							   EnemiesFactory::getEnemyInfo(TRACTOR),
 							   EnemiesFactory::getFrameCount(TRACTOR),
-							   EnemiesFactory::getAnimationSpeed(TRACTOR)));
+							   EnemiesFactory::getAnimationSpeed(TRACTOR),
+							   GAME_TEXTURE::SHOW_TRACTOR));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_WORM,
 							   GAME_TRANSLATION::WORM,
 							   EnemiesFactory::getEnemyInfo(WORM),
 							   EnemiesFactory::getFrameCount(WORM),
-							   EnemiesFactory::getAnimationSpeed(WORM)));
+							   EnemiesFactory::getAnimationSpeed(WORM),
+							   GAME_TEXTURE::SHOW_WORM));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_BUGSAURUS,
 							   GAME_TRANSLATION::BUGSAURUS,
 							   EnemiesFactory::getEnemyInfo(BUGSAURUS),
 							   EnemiesFactory::getFrameCount(BUGSAURUS),
-							   EnemiesFactory::getAnimationSpeed(BUGSAURUS)));
+							   EnemiesFactory::getAnimationSpeed(BUGSAURUS),
+							   GAME_TEXTURE::SHOW_BUGSAURUS));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_JUMPER,
 							   GAME_TRANSLATION::JUMPER,
 							   EnemiesFactory::getEnemyInfo(JUMPER),
 							   EnemiesFactory::getFrameCount(JUMPER),
-							   EnemiesFactory::getAnimationSpeed(JUMPER)));
+							   EnemiesFactory::getAnimationSpeed(JUMPER),
+							   GAME_TEXTURE::SHOW_JUMPER));
 
 	elements.push_back(Element(GAME_TEXTURE::ENEMY_ROLLING,
 							   GAME_TRANSLATION::ROLLER,
 							   EnemiesFactory::getEnemyInfo(ROLLER),
 							   EnemiesFactory::getFrameCount(ROLLER),
-							   EnemiesFactory::getAnimationSpeed(ROLLER)));
+							   EnemiesFactory::getAnimationSpeed(ROLLER),
+							   GAME_TEXTURE::SHOW_ROLLING));
 
 	//map effects
 	elements.push_back(Element(GAME_TEXTURE::SMOKE,
 							   GAME_TRANSLATION::SMOKE_NAME,
 							   Instructions::SMOKE,
 							   Smoke::SMOKE_FRAME_COUNT,
-							   Smoke::SMOKE_ANIMATION_SPEED));
+							   Smoke::SMOKE_ANIMATION_SPEED,
+							   GAME_TEXTURE::SHOW_SMOKE));
 
 	elements.push_back(Element(GAME_TEXTURE::REGRESS,
 							   GAME_TRANSLATION::REGRESS_NAME,
 							   Instructions::REGRESS,
 							   TowersRegress::REGRESS_FRAME_COUNT - 1,
-							   TowersRegress::REGRESS_ANIMATION_SPEED));
+							   TowersRegress::REGRESS_ANIMATION_SPEED,
+							   GAME_TEXTURE::SHOW_REGRESS));
 
 	elements.push_back(Element(GAME_TEXTURE::ENERGY_LEECH,
 							   GAME_TRANSLATION::DRAIN_NAME,
 							   Instructions::DRAIN,
 							   MoneyDrain::ENERGY_LEECH_FRAME_COUNT,
-							   MoneyDrain::ENERGY_LEECH_ANIMATION_SPEED));
+							   MoneyDrain::ENERGY_LEECH_ANIMATION_SPEED,
+							   GAME_TEXTURE::SHOW_DRAIN));
 
 	elements.push_back(Element(GAME_TEXTURE::EXPLOSION,
 							   GAME_TRANSLATION::TOWER_EXPLOSION_NAME,
 							   Instructions::EXPLOSION,
 							   MapExplosion::EXPLOSION_FRAME_COUNT,
-							   MapExplosion::EXPLOSION_ANIMATION_SPEED));
+							   MapExplosion::EXPLOSION_ANIMATION_SPEED,
+							   GAME_TEXTURE::SHOW_TOWER_EXPLOSION));
 
 	elements.push_back(Element(GAME_TEXTURE::LAVA,
 							   GAME_TRANSLATION::LAVA_NAME,
 							   Instructions::LAVA,
 							   Lava::LAVA_FRAME_COUNT - 1,
-							   Lava::LAVA_ANIMATION_SPEED));
+							   Lava::LAVA_ANIMATION_SPEED,
+							   GAME_TEXTURE::SHOW_LAVA));
 
 	elements.push_back(Element(GAME_TEXTURE::INVISIBLITY,
 							   GAME_TRANSLATION::INVISIBILITY_NAME,
 							   Instructions::INVISIBILITY,
 							   InvilibilityEffect::INVISIBILITY_FRAME_COUNT,
-							   InvilibilityEffect::INVISIBILITY_ANIMATION_SPEED));
+							   InvilibilityEffect::INVISIBILITY_ANIMATION_SPEED,
+							   GAME_TEXTURE::SHOW_INVISIBILITY));
 }
 
 
@@ -954,7 +985,7 @@ void ManualWindow::Element::update()
 		elementDemo = new GameObject(demoTextureType, sf::Vector2f(0,0), sf::Vector2i(320, 240), 10);
 		elementDemo->animationSpeed = 50;
 		elementDemo->cycled = true;
-		elementDemo->rowCount = 5;
+		elementDemo->rowCount = Instructions::textureRowCount(demoTextureType);
 	}
 	std::replace(titleStr.begin(), titleStr.end(), '\n', ' ');
 	nameText.setString(titleStr);

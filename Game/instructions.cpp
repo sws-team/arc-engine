@@ -411,6 +411,13 @@ sf::String Instructions::mapEffectInfoText(Instructions::MAP_EFFECTS type)
 	return str;
 }
 
+int Instructions::textureRowCount(int textureId)
+{
+	const int height = Engine::Instance().texturesManager()->getTexture(textureId).getSize().y;
+	const int rows = height / 240;
+	return rows;
+}
+
 void Instructions::updateState()
 {
 	if (currentState >= states.size())
@@ -501,6 +508,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_POWER);
 		textStr += EngineDefs::endline;
 		textStr += towerInfoText(POWER);
+		textureId = GAME_TEXTURE::SHOW_ENERGY_TOWER;
 	}
 		break;
 	case INSTRUCTION_TOWER_ROCKET:
@@ -510,6 +518,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ROCKET);
 		textStr += EngineDefs::endline;
 		textStr += towerInfoText(ROCKET);
+		textureId = GAME_TEXTURE::SHOW_ROCKET_TOWER;
 	}
 		break;
 	case INSTRUCTION_TOWER_LASER:
@@ -519,6 +528,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_LASER);
 		textStr += EngineDefs::endline;
 		textStr += towerInfoText(LASER);
+		textureId = GAME_TEXTURE::SHOW_LASER_TOWER;
 	}
 		break;
 	case INSTRUCTION_TOWER_IMPROVED:
@@ -528,6 +538,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_IMPROVED);
 		textStr += EngineDefs::endline;
 		textStr += towerInfoText(IMPROVED);
+		textureId = GAME_TEXTURE::SHOW_IMPROVED_TOWER;
 	}
 		break;
 	case INSTRUCTION_BOMB:
@@ -557,6 +568,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_ACID);
 		textStr += EngineDefs::endline;
 		textStr += abilityInfoText(ABILITY_ACID);
+		textureId = GAME_TEXTURE::SHOW_ACID_ABILITY;
 	}
 		break;
 	case INSTRUCTION_INCREASE_DAMAGE:
@@ -566,6 +578,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE);
 		textStr += EngineDefs::endline;
 		textStr += abilityInfoText(ABILITY_INCREASE_TOWER_DAMAGE);
+		textureId = GAME_TEXTURE::SHOW_INCREASE_TOWER_DAMAGE_ABILITY;
 	}
 		break;
 	case INSTRUCTION_INCREASE_ATTACK_SPEED:
@@ -575,6 +588,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED);
 		textStr += EngineDefs::endline;
 		textStr += abilityInfoText(ABILITY_INCREASE_TOWER_ATTACK_SPEED);
+		textureId = GAME_TEXTURE::SHOW_INCREASE_TOWER_ATTACK_SPEED_ABILITY;
 	}
 		break;
 	case INSTRUCTION_STOP:
@@ -584,6 +598,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_STOP);
 		textStr += EngineDefs::endline;
 		textStr += abilityInfoText(ABILITY_STOP);
+		textureId = GAME_TEXTURE::SHOW_TIME_STOP_ABILITY;
 	}
 		break;
 	case MAP_SMOKE:
@@ -592,6 +607,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SMOKE_NAME);
 		textStr += EngineDefs::endline;
 		textStr += mapEffectInfoText(SMOKE);
+		textureId = GAME_TEXTURE::SHOW_SMOKE;
 	}
 		break;
 	case MAP_REGRESS:
@@ -600,6 +616,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::REGRESS_NAME);
 		textStr += EngineDefs::endline;
 		textStr += mapEffectInfoText(REGRESS);
+		textureId = GAME_TEXTURE::SHOW_REGRESS;
 	}
 		break;
 	case MAP_DRAIN:
@@ -608,6 +625,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DRAIN_NAME);
 		textStr += EngineDefs::endline;
 		textStr += mapEffectInfoText(DRAIN);
+		textureId = GAME_TEXTURE::SHOW_DRAIN;
 	}
 		break;
 	case MAP_EXPLOSION:
@@ -616,6 +634,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_EXPLOSION_NAME);
 		textStr += EngineDefs::endline;
 		textStr += mapEffectInfoText(EXPLOSION);
+		textureId = GAME_TEXTURE::SHOW_TOWER_EXPLOSION;
 	}
 		break;
 	case MAP_LAVA:
@@ -624,6 +643,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LAVA_NAME);
 		textStr += EngineDefs::endline;
 		textStr += mapEffectInfoText(LAVA);
+		textureId = GAME_TEXTURE::SHOW_LAVA;
 	}
 		break;
 	case MAP_INVISIBILITY:
@@ -632,6 +652,7 @@ void Instructions::updateState()
 		textStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::INVISIBILITY_NAME);
 		textStr += EngineDefs::endline;
 		textStr += mapEffectInfoText(INVISIBILITY);
+		textureId = GAME_TEXTURE::SHOW_INVISIBILITY;
 	}
 		break;
 	default:
@@ -647,7 +668,7 @@ void Instructions::updateState()
 		demoObject = new GameObject(textureId, sf::Vector2f(0,0), demoSize, 10);
 		demoObject->animationSpeed = 50;
 		demoObject->cycled = true;
-		demoObject->rowCount = 5;
+		demoObject->rowCount = textureRowCount(textureId);
 	}
 	text.setString(textStr);
 	targetRect.setPosition(rect.left, rect.top);

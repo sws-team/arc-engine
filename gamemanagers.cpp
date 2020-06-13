@@ -317,6 +317,8 @@ void GameManagers::loadResources()
 		{
 			if (resource.name == "default_font")
 				Engine::Instance().fontManager()->addFont(FontManager::DEFAULT_FONT, out.c_str(), out.size());
+			else if (resource.name == "asian_font")
+				Engine::Instance().fontManager()->addFont(FontManager::HIEROGLYPH_FONT, out.c_str(), out.size());
 		}
 			break;
 		case GameResource::SOUND:
@@ -497,7 +499,6 @@ void GameManagers::loadResources()
 		addFile(i, data);
 	}
 #endif
-
 	loadExtraResources();
 }
 
@@ -552,6 +553,7 @@ std::vector<sf::String> GameManagers::creators()
 	creatorsVec.push_back(sf::String("Russian: Marat Turmukhambetov"));
 	creatorsVec.push_back(sf::String("French: Olesya Chmireva"));
 	creatorsVec.push_back(sf::String("German: Konstantin Grigorenko"));
+	creatorsVec.push_back(sf::String("Chinese: Sherry Xiao"));
 
 	creatorsVec.push_back(sf::String("Libraries:"));
 	creatorsVec.push_back(sf::String("SFML"));
@@ -581,21 +583,84 @@ void GameManagers::loadExtraResources()
 	{
 		std::string out;
 		Base64::Decode(resource.data, &out);
-
 		if (resource.type == GameResource::TEXTURE)
 		{
-			if (resource.name == "show_bomb_ability")
-				addTexture(GAME_TEXTURE::SHOW_BOMB_ABILITY, out);
-			else if (resource.name == "show_freeze_bomb_ability")
-				addTexture(GAME_TEXTURE::SHOW_FREEZE_BOMB_ABILITY, out);
-			else if (resource.name == "show_base_tower")
+			//show towers
+			if (resource.name == "show_base_tower")
 				addTexture(GAME_TEXTURE::SHOW_BASE_TOWER, out);
 			else if (resource.name == "show_freeze_tower")
 				addTexture(GAME_TEXTURE::SHOW_FREEZE_TOWER, out);
+			else if (resource.name == "show_energy_tower")
+				addTexture(GAME_TEXTURE::SHOW_ENERGY_TOWER, out);
+			else if (resource.name == "show_rocket_tower")
+				addTexture(GAME_TEXTURE::SHOW_ROCKET_TOWER, out);
+			else if (resource.name == "show_laser_tower")
+				addTexture(GAME_TEXTURE::SHOW_LASER_TOWER, out);
+			else if (resource.name == "show_improved_tower")
+				addTexture(GAME_TEXTURE::SHOW_IMPROVED_TOWER, out);
+			//abilities
+			else if (resource.name == "show_bomb_ability")
+				addTexture(GAME_TEXTURE::SHOW_BOMB_ABILITY, out);
+			else if (resource.name == "show_freeze_bomb_ability")
+				addTexture(GAME_TEXTURE::SHOW_FREEZE_BOMB_ABILITY, out);
+			else if (resource.name == "show_acid_ability")
+				addTexture(GAME_TEXTURE::SHOW_ACID_ABILITY, out);
+			else if (resource.name == "show_inc_damage_ability")
+				addTexture(GAME_TEXTURE::SHOW_INCREASE_TOWER_DAMAGE_ABILITY, out);
+			else if (resource.name == "show_inc_as_ability")
+				addTexture(GAME_TEXTURE::SHOW_INCREASE_TOWER_ATTACK_SPEED_ABILITY, out);
+			else if (resource.name == "show_stop_ability")
+				addTexture(GAME_TEXTURE::SHOW_TIME_STOP_ABILITY, out);
+			//show map effects
+			else if (resource.name == "show_smoke")
+				addTexture(GAME_TEXTURE::SHOW_SMOKE, out);
+			else if (resource.name == "show_drain")
+				addTexture(GAME_TEXTURE::SHOW_DRAIN, out);
+			else if (resource.name == "show_regress")
+				addTexture(GAME_TEXTURE::SHOW_REGRESS, out);
+			else if (resource.name == "show_tower_explosion")
+				addTexture(GAME_TEXTURE::SHOW_TOWER_EXPLOSION, out);
+			else if (resource.name == "show_lava")
+				addTexture(GAME_TEXTURE::SHOW_LAVA, out);
+			else if (resource.name == "show_invisibility")
+				addTexture(GAME_TEXTURE::SHOW_INVISIBILITY, out);
 			//enemies
+			else if (resource.name == "show_infantry")
+				addTexture(GAME_TEXTURE::SHOW_INFANTRY, out);
+			else if (resource.name == "show_war_vehicle")
+				addTexture(GAME_TEXTURE::SHOW_WAR_VEHICLE, out);
+			else if (resource.name == "show_tricycle")
+				addTexture(GAME_TEXTURE::SHOW_TRICYCLE, out);
+			else if (resource.name == "show_tank")
+				addTexture(GAME_TEXTURE::SHOW_TANK, out);
 			else if (resource.name == "show_mechspider")
 				addTexture(GAME_TEXTURE::SHOW_MECHSPIDER, out);
+			else if (resource.name == "show_tuatara")
+				addTexture(GAME_TEXTURE::SHOW_TUATARA, out);
+			else if (resource.name == "show_giant_slug")
+				addTexture(GAME_TEXTURE::SHOW_GIANT_SLUG, out);
+			else if (resource.name == "show_heavy_tank")
+				addTexture(GAME_TEXTURE::SHOW_HEAVY_TANK, out);
+			else if (resource.name == "show_sluggy")
+				addTexture(GAME_TEXTURE::SHOW_SLUGGY, out);
+			else if (resource.name == "show_repair")
+				addTexture(GAME_TEXTURE::SHOW_REPAIR, out);
+			else if (resource.name == "show_shield")
+				addTexture(GAME_TEXTURE::SHOW_SHIELD, out);
+			else if (resource.name == "show_walker")
+				addTexture(GAME_TEXTURE::SHOW_WALKER, out);
+			else if (resource.name == "show_selfheal")
+				addTexture(GAME_TEXTURE::SHOW_SELF_HEAL, out);
+			else if (resource.name == "show_tractor")
+				addTexture(GAME_TEXTURE::SHOW_TRACTOR, out);
+			else if (resource.name == "show_worm")
+				addTexture(GAME_TEXTURE::SHOW_WORM, out);
+			else if (resource.name == "show_bugsaurus")
+				addTexture(GAME_TEXTURE::SHOW_BUGSAURUS, out);
+			else if (resource.name == "show_jumper")
+				addTexture(GAME_TEXTURE::SHOW_JUMPER, out);
+			else if (resource.name == "show_roller")
+				addTexture(GAME_TEXTURE::SHOW_ROLLING, out);
 		}
 	}
 }
-

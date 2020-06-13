@@ -34,6 +34,7 @@ public:
 	static sf::String abilityInfoText(ACTION_STATE type);
 	static sf::String mapEffectInfoText(MAP_EFFECTS type);
 
+	static int textureRowCount(int textureId);
 private:
 	sf::RectangleShape shadowRect;
 

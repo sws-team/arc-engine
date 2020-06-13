@@ -195,10 +195,10 @@ void Level::startMission(const unsigned int n)
 	{
 		const int _testWavesCount = 999;
 		const int _testEnemiesCount = 999;
-		const int _testInterval = 3000;
+		const int _testInterval = 5000;
 
 		Wave wave;
-		wave.protection = 0.f;
+		wave.protection = 0.0f;
 		wave.respawnTime = _testInterval;
 		for (int i = 0; i < _testEnemiesCount; ++i)
 		{
