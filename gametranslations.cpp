@@ -849,6 +849,12 @@ void GameManagers::loadTranslations()
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"Solche abnormalen Zonen erscheinen und\nverschwinden zufällig, sie verstecken darunter\nlauernde Feinde"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::INVISIBILITY_DESCRIPTION, L"这些异常区域随机出现和消失，它们隐藏了潜伏在下面的敌人"));
 
+	englishTranslation.insert(TR_PAIR(TranslationsManager::SHADERS, L"Shaders"));
+	russainTranslation.insert(TR_PAIR(TranslationsManager::SHADERS, L"Шейдеры"));
+	frenchTranslation.insert(TR_PAIR(TranslationsManager::SHADERS, L"Shaders"));
+	germanTranslation.insert(TR_PAIR(TranslationsManager::SHADERS, L"???"));
+	chineseTranslation.insert(TR_PAIR(TranslationsManager::SHADERS, L"???"));
+
 	Engine::Instance().translationsManager()->addTranslation(std::string("russian"), russainTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("french"), frenchTranslation);

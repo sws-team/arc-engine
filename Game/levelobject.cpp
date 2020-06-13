@@ -38,6 +38,8 @@ ShadersFactory::ShadersFactory()
 
 sf::Shader *ShadersFactory::getShader(const OBJECTS::SHADER_TYPES type)
 {
+	if (!Engine::Instance().settingsManager()->getShaders())
+		return nullptr;
 //	if (find(shaders.begin(), shaders.end(), type) != shaders.end())
 	if (shaders.count(type))
 		return shaders.at(type);

@@ -27,7 +27,11 @@ StateWindow *GameStateManager::createState(const GameState state)
 			aboutWindow->addStrings(GameManagers::creators());
 		}
 		else if (state == StateManager::SETTINGS)
-			static_cast<SettingsWindow*>(stateWindow)->setDrawRects(false);
+		{
+			SettingsWindow* settingsWindow = static_cast<SettingsWindow*>(stateWindow);
+			settingsWindow->setDrawRects(false);
+			settingsWindow->setShowShaders(true);
+		}
 		return stateWindow;
 	}
 	switch (state)

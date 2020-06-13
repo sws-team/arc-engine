@@ -34,11 +34,10 @@ NORMAL_VERSION = $$replace(GIT_VERSION, "-[a-z|0-9]+", "" )
 VERSION = $${NORMAL_VERSION}
 DEFINES += APP_VERSION=\\\"$${NORMAL_VERSION}\\\"
 
-win32: DEFINES += OS_WIN
+win32:DEFINES += OS_WIN
 unix: DEFINES += OS_UNIX
 
 DEFINES += STEAM_API
-
 
 include($$PWD/../Engine/Engine/Engine.pri)
 include($$PWD/3rdPartyIncludes.pri)
