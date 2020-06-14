@@ -105,6 +105,9 @@ void Controller::eventFilter(sf::Event *event)
 		case sf::Keyboard::BackSpace:
 			Engine::Instance().options<GameOptions>()->camera()->resetView();
 			break;
+		case sf::Keyboard::Tab:
+			Engine::Instance().options<GameOptions>()->level()->rotateAcid();
+			break;
 		case sf::Keyboard::Escape:
 			pauseFunc();
 			break;

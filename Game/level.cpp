@@ -1021,6 +1021,11 @@ unsigned int Level::getCurrentWave() const
 {
 	return currentWave;
 }
+
+void Level::rotateAcid()
+{
+	abilities->acidAbility->rotate();
+}
 #ifndef RELEASE_BUILD
 void Level::test()
 {

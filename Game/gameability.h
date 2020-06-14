@@ -24,6 +24,8 @@ public:
 	int timeLeft() const;
 	bool isActive() const;
 
+	void rotate();
+
 protected:
 	void finish();
 
@@ -34,6 +36,7 @@ protected:
 	float m_time;
 	bool m_rotated;
 private:
+	void initCursor();
 	Timer cooldownTimer;
 };
 

@@ -32,8 +32,13 @@ bool GameAbility::isReady()
 
 void GameAbility::setUp()
 {
-	Engine::Instance().soundManager()->playOnce(GAME_SOUND::ACTIVATE_ABILITY);
 	m_rotated = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift);
+	initCursor();
+}
+
+void GameAbility::initCursor()
+{
+	Engine::Instance().soundManager()->playOnce(GAME_SOUND::ACTIVATE_ABILITY);
 	if (m_rotated)
 		Engine::Instance().options<GameOptions>()->cursor()->activateAbility(m_areaSize.y, m_areaSize.x, m_offset.y, m_offset.x);
 	else
@@ -81,6 +86,15 @@ void GameAbility::finish()
 bool GameAbility::isActive() const
 {
 	return m_isActive;
+}
+
+void GameAbility::rotate()
+{
+	if (!m_isReady)
+		return;
+	finish();
+	m_rotated = !m_rotated;
+	initCursor();
 }
 
 Abilities::Abilities()

@@ -76,6 +76,7 @@ public:
 	void clearCursor();
 	std::vector<Tower *> getAllTowers() const;
 	unsigned int getCurrentWave() const;
+	void rotateAcid();
 
 #ifndef RELEASE_BUILD
 	void test();
