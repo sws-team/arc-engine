@@ -24,10 +24,8 @@ ManualWindow::ManualWindow()
 
 	next.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::NEXT));
 	next.setScale(Engine::Instance().settingsManager()->getScaleFactor());
-	next.scale(2,2);
 	previous.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::PREVIOUS));
 	previous.setScale(Engine::Instance().settingsManager()->getScaleFactor());
-	previous.scale(2,2);
 	close.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::EXIT));
 	close.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	close.scale(2,2);
@@ -901,7 +899,9 @@ void ManualWindow::Element::update()
 		{
 			frameSize = sf::Vector2i(Smoke::SMOKE_SIZE, Smoke::SMOKE_SIZE);
 			icon.setTextureRect(sf::IntRect(0, frameSize.y, frameSize.x, frameSize.y));
-			row = 1;
+			row = 0;
+			cycled = true;
+			rowCount = 4;
 			objectScale = Smoke::SMOKE_SCALE;
 			icon.scale(0.125f, 0.125f);
 		}

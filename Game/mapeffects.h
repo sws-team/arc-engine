@@ -126,7 +126,7 @@ public:
 	void clear() override;
 
 	static constexpr int SMOKE_ANIMATION_SPEED = 150;
-	static constexpr int SMOKE_FRAME_COUNT = 24;
+	static constexpr int SMOKE_FRAME_COUNT = 6;
 	static constexpr int SMOKE_ACTIVE_FRAME_COUNT = 2;
 	static constexpr int SMOKE_SIZE = 512;
 	static constexpr float SMOKE_SCALE = 0.5f;

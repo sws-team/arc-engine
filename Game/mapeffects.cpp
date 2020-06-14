@@ -438,6 +438,8 @@ void Smoke::stateChanged()
 			cloud->sprite.scale(SMOKE_SCALE, SMOKE_SCALE);
 			cloud->currentFrame = 0;
 			cloud->row = 0;
+			cloud->rowCount = 4;
+			cloud->cycled = true;
 			cloud->animationSpeed = SMOKE_ANIMATION_SPEED;
 			clouds.push_back(cloud);
 		}
@@ -447,22 +449,10 @@ void Smoke::stateChanged()
 	case ACTIVE:
 	{
 		m_interval = m_duration;
-		for(GameObject *cloud : clouds)
-		{
-			cloud->currentFrame = 0;
-			cloud->row = 1;
-			cloud->frameCount = SMOKE_FRAME_COUNT;
-		}
 	}
 		break;
 	case AFTER_ACTIVE:
 	{
-		for(GameObject *cloud : clouds)
-		{
-			cloud->currentFrame = 0;
-			cloud->row = 2;
-			cloud->frameCount = SMOKE_ACTIVE_FRAME_COUNT;
-		}
 		m_interval = SMOKE_ACTIVE_FRAME_COUNT * SMOKE_ANIMATION_SPEED;
 	}
 		break;
