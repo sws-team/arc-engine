@@ -213,19 +213,18 @@ AcidAbility::AcidAbility()
 void AcidAbility::activate()
 {
 	Engine::Instance().soundManager()->playOnce(GAME_SOUND::ACID);
-	const sf::Vector2i size = m_rotated ? sf::Vector2i(m_areaSize.y * GameOptions::CELL_SIZE,
-											   m_areaSize.x * GameOptions::CELL_SIZE) :
-									  sf::Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
-											   m_areaSize.y * GameOptions::CELL_SIZE);
-
+	const sf::Vector2i size = sf::Vector2i(m_areaSize.x * GameOptions::CELL_SIZE,
+										   m_areaSize.y * GameOptions::CELL_SIZE);
 	object = new GameObject(GAME_TEXTURE::VENOM_EFFECT, sf::Vector2f(0, 0), size, 4);
 	object->animationSpeed = 450;
-//	if (m_rotated)
-//		object->sprite.rotate(45);
+	sf::Vector2f pos = sf::Vector2f(Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect().left,
+									Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect().top);
+	if (m_rotated)
+	{
+		object->sprite.rotate(90);
+		pos.x += size.y * Engine::Instance().settingsManager()->getScaleFactor().x;
+	}
 	GameAbility::activate();
-//	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
-	const sf::Vector2f pos = sf::Vector2f(Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect().left,
-								  Engine::Instance().options<GameOptions>()->cursor()->getAbilityRect().top);
 
 	object->setPos(pos);
 	abilityTimer.reset();
