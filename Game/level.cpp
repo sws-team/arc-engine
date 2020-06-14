@@ -398,6 +398,8 @@ void Level::clear()
 	lava->clear();
 	invisibility->clear();
 	TowersCounter::Instance().reset();
+
+	Engine::Instance().soundManager()->stopAllSounds();
 }
 
 void Level::calculateCollisions()
