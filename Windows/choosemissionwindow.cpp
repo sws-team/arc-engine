@@ -133,6 +133,7 @@ ChooseMissionWindow::~ChooseMissionWindow()
 void ChooseMissionWindow::init()
 {
 	GamePlatform::Instance().setPlatformState("steam_display", "#Status_AtMainMenu");
+	Engine::Instance().soundManager()->setMusicLooped(true);
 	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::MAIN_MENU_MUSIC);
 }
 

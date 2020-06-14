@@ -66,6 +66,7 @@ MainMenu::MainMenu()
 
 void MainMenu::init()
 {
+	Engine::Instance().soundManager()->setMusicLooped(true);
 	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::MAIN_MENU_MUSIC);
 }
 

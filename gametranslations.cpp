@@ -11,8 +11,8 @@ void GameManagers::loadTranslations()
 	std::map<int, sf::String> germanTranslation;
 	std::map<int, sf::String> chineseTranslation;
 
-	russainTranslation.insert(TR_PAIR(TranslationsManager::LANGUAGE_ID, L"Русский"));
 	englishTranslation.insert(TR_PAIR(TranslationsManager::LANGUAGE_ID, L"English"));
+	russainTranslation.insert(TR_PAIR(TranslationsManager::LANGUAGE_ID, L"Russian"));
 	frenchTranslation.insert(TR_PAIR(TranslationsManager::LANGUAGE_ID, L"French"));
 	germanTranslation.insert(TR_PAIR(TranslationsManager::LANGUAGE_ID, L"Deutsch"));
 	chineseTranslation.insert(TR_PAIR(TranslationsManager::LANGUAGE_ID, L"Chinese"));
@@ -257,7 +257,7 @@ void GameManagers::loadTranslations()
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Congratulations!\nLevel completed"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Поздравляем!\nУровень пройден"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Formidable! Tu as gagné la bataille!"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Formidable!\nTu as gagné la bataille!"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Herzliche Glückwünsche!\nLevel abgeschlossen"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"恭喜你，战胜了！"));
 
@@ -276,7 +276,7 @@ void GameManagers::loadTranslations()
 	//instructions
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Hello there! Welcome to Arc Defence game.\nWe really need your help here.\nI’ll get you acquaintance with details."));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Добро пожаловать в игру Arc Defence.\nНам нужна твоя помощь в защите территории.\nЯ введу тебя в курс дела."));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Bonjour, mon pote! T’es maintenant au monde d’Arc Defence.\nNous avons vraiment besoin de ton aide.\nJe vais te renseigner comment on se débrouille là."));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Bonjour, mon pote! Tu es maintenant au monde d’Arc Defence.\nNous avons vraiment besoin de ton aide.\nJe vais te renseigner comment on se débrouille là."));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"Hallo und willkommen bei Arc Defense.\nWir brauchen wirklich Ihre Hilfe.\nIch werde Sie mit Details vertraut machen."));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::INSTRUCTION_WELCOME, L"你好，欢迎来到 ARC防御，我们真的需要你的帮助，我会帮助你了解细节"));
 
@@ -854,6 +854,18 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(TranslationsManager::SHADERS, L"Shaders"));
 	germanTranslation.insert(TR_PAIR(TranslationsManager::SHADERS, L"???"));
 	chineseTranslation.insert(TR_PAIR(TranslationsManager::SHADERS, L"???"));
+
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SECOND, L" sec"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SECOND, L" сек"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SECOND, L" sec"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SECOND, L" sek"));
+	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::SECOND, L" 秒"));
+
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::DAMAGE_HP, L" health points"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::DAMAGE_HP, L" очков здоровья"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::DAMAGE_HP, L" points de vie"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::DAMAGE_HP, L" gesundheit"));
+	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::DAMAGE_HP, L" 生命值"));
 
 	Engine::Instance().translationsManager()->addTranslation(std::string("russian"), russainTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);

@@ -304,11 +304,13 @@ sf::String Instructions::abilityInfoText(ACTION_STATE type)
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 		str += EngineDefs::separator;
-		str += GlobalVariables::to_string_with_precision(Balance::Instance().getBombCooldown(), 1);
+		str += GlobalVariables::to_string_with_precision(Balance::Instance().getBombCooldown(), 0);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SECOND);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_ATTRIBUTE);
 		str += EngineDefs::separator;
-		str += GlobalVariables::to_string_with_precision(Balance::Instance().getBombDamage(), 1);
+		str += GlobalVariables::to_string_with_precision(Balance::Instance().getBombDamage(), 0);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_HP);
 	}
 		break;
 	case ACTION_STATE::ABILITY_FREEZE_BOMB:
@@ -317,11 +319,13 @@ sf::String Instructions::abilityInfoText(ACTION_STATE type)
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 		str += EngineDefs::separator;
-		str += GlobalVariables::to_string_with_precision(Balance::Instance().getFreezeCooldown(), 1);
+		str += GlobalVariables::to_string_with_precision(Balance::Instance().getFreezeCooldown(), 0);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SECOND);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
 		str += EngineDefs::separator;
-		str += GlobalVariables::to_string_with_precision(Balance::Instance().getFreezeDuration(), 1);
+		str += GlobalVariables::to_string_with_precision(Balance::Instance().getFreezeDuration(), 0);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SECOND);
 	}
 		break;
 	case ACTION_STATE::ABILITY_ACID:
@@ -330,11 +334,13 @@ sf::String Instructions::abilityInfoText(ACTION_STATE type)
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 		str += EngineDefs::separator;
-		str += GlobalVariables::to_string_with_precision(Balance::Instance().getAcidCooldown(), 1);
+		str += GlobalVariables::to_string_with_precision(Balance::Instance().getAcidCooldown(), 0);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SECOND);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_ATTRIBUTE);
 		str += EngineDefs::separator;
-		str += GlobalVariables::to_string_with_precision(Balance::Instance().getAcidCount() * Balance::Instance().getAcidDamage(), 1);
+		str += GlobalVariables::to_string_with_precision(Balance::Instance().getAcidCount() * Balance::Instance().getAcidDamage(), 0);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DAMAGE_HP);
 	}
 		break;
 	case ACTION_STATE::ABILITY_INCREASE_TOWER_DAMAGE:
@@ -343,11 +349,13 @@ sf::String Instructions::abilityInfoText(ACTION_STATE type)
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 		str += EngineDefs::separator;
-		str += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseDamageCooldown(), 1);
+		str += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseDamageCooldown(), 0);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SECOND);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
 		str += EngineDefs::separator;
-		str += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseDamageDuration(), 1);
+		str += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseDamageDuration(), 0);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SECOND);
 	}
 		break;
 	case ACTION_STATE::ABILITY_INCREASE_TOWER_ATTACK_SPEED:
@@ -356,11 +364,13 @@ sf::String Instructions::abilityInfoText(ACTION_STATE type)
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 		str += EngineDefs::separator;
-		str += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseAttackSpeedCooldown(), 1);
+		str += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseAttackSpeedCooldown(), 0);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SECOND);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
 		str += EngineDefs::separator;
-		str += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseAttackSpeedDuration(), 1);
+		str += GlobalVariables::to_string_with_precision(Balance::Instance().getIncreaseAttackSpeedDuration(), 0);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SECOND);
 	}
 		break;
 	case ACTION_STATE::ABILITY_STOP:
@@ -369,11 +379,13 @@ sf::String Instructions::abilityInfoText(ACTION_STATE type)
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::COOLDOWN_TIME);
 		str += EngineDefs::separator;
-		str += GlobalVariables::to_string_with_precision(Balance::Instance().getStopCooldown(), 1);
+		str += GlobalVariables::to_string_with_precision(Balance::Instance().getStopCooldown(), 0);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SECOND);
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::DURATION_ATTRIBUTE);
 		str += EngineDefs::separator;
-		str += GlobalVariables::to_string_with_precision(Balance::Instance().getStopDuration(), 1);
+		str += GlobalVariables::to_string_with_precision(Balance::Instance().getStopDuration(), 0);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::SECOND);
 	}
 		break;
 	default:

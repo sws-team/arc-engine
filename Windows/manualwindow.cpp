@@ -24,12 +24,16 @@ ManualWindow::ManualWindow()
 
 	next.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::NEXT));
 	next.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	next.scale(2,2);
 	previous.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::PREVIOUS));
 	previous.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	previous.scale(2,2);
 	close.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::EXIT));
 	close.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	close.scale(2,2);
 	credits.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::CREDITS));
 	credits.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	credits.scale(2,2);
 
 	toolTip.setFont(Engine::Instance().fontManager()->font());
 	toolTip.setScale(Engine::Instance().settingsManager()->getScaleFactor());
@@ -248,12 +252,14 @@ void ManualWindow::updatePos()
 	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 
 	const float TITLE_OFFSET = 12 * scaleFactor.y;
-	const float ICON_WIDTH = Engine::Instance().options<GameOptions>()->tileSize().x;
+	const float ICON_WIDTH = 2*Engine::Instance().options<GameOptions>()->tileSize().x;
+	const float ICON_HEIGHT = Engine::Instance().options<GameOptions>()->tileSize().y;
 	const float RECT_WIDTH = 464 * Engine::Instance().settingsManager()->getScaleFactor().x;
 	const float RECT_HEIGHT = 128 * Engine::Instance().settingsManager()->getScaleFactor().y;
 
 	const float ICON_X_OFFSET = 32 * scaleFactor.x;
 	const float ICON_Y_OFFSET = 32 * scaleFactor.y;
+	const float ICON_Y_SPACE = ICON_Y_OFFSET/2;
 
 	const sf::Vector2f FRAME_OFFSET_SCALED = sf::Vector2f(FRAME_OFFSET * scaleFactor.x,
 														  FRAME_OFFSET * scaleFactor.y);
@@ -285,9 +291,9 @@ void ManualWindow::updatePos()
 
 	previous.setPosition(buttonsPos);
 	next.setPosition(buttonsPos + sf::Vector2f(ICON_WIDTH, 0));
-	credits.setPosition(buttonsPos + sf::Vector2f(ICON_WIDTH*2, 0));
-	close.setPosition(buttonsPos + sf::Vector2f(ICON_WIDTH*3, 0));
-	toolTip.setPosition(buttonsPos + sf::Vector2f(0, ICON_Y_OFFSET));
+	credits.setPosition(buttonsPos + sf::Vector2f(0, ICON_HEIGHT+ICON_Y_SPACE));
+	close.setPosition(buttonsPos + sf::Vector2f(ICON_WIDTH, ICON_HEIGHT+ICON_Y_SPACE));
+	toolTip.setPosition(buttonsPos + sf::Vector2f(0, ICON_HEIGHT*2 + ICON_Y_SPACE*2));
 
 	sf::Vector2f pos = sf::Vector2f(ICON_X_OFFSET * 2, ICON_Y_OFFSET * 2);
 
