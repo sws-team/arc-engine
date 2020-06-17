@@ -6,7 +6,7 @@
 #include "Game/levelobject.h"
 
 const std::string GameManagers::resourcesFileName = "resources.dat";
-const std::string GameManagers::checksum = "9c393757bde52138f3e763dce9e949cd57f534a13329a468c64fcfc086121219";
+const std::string GameManagers::checksum = "bd0145d0ac18653fe451a07ff19027ce738c2e99e41fbaa5bd7e7fd280f19ca6";
 
 GameManagers::GameManagers()
 {
@@ -537,7 +537,11 @@ std::vector<sf::String> GameManagers::creators()
 	creatorsVec.push_back(sf::String("Developer:"));
 	creatorsVec.push_back(sf::String("Marat Turmukhambetov"));
 
-	creatorsVec.push_back(sf::String("Designer:"));
+	creatorsVec.push_back(sf::String("Art director:"));
+	creatorsVec.push_back(sf::String("Olesya Chmireva"));
+
+	creatorsVec.push_back(sf::String("Level designers:"));
+	creatorsVec.push_back(sf::String("Marat Turmukhambetov"));
 	creatorsVec.push_back(sf::String("Olesya Chmireva"));
 
 	creatorsVec.push_back(sf::String("Testers:"));

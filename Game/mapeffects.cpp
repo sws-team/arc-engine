@@ -127,6 +127,11 @@ bool MapEffect::isEnabled() const
 	return m_enabled;
 }
 
+void MapEffect::towerRemoved(Tower *tower)
+{
+
+}
+
 void MapEffect::resetTimers()
 {
 	m_interval = m_time;
@@ -318,6 +323,19 @@ void TowersRegress::clear()
 	MapEffect::clear();
 }
 
+void TowersRegress::towerRemoved(Tower *tower)
+{
+	for(GameObject *drain : objects)
+	{
+		if (drain->pos() == tower->pos())
+		{
+			objects.erase(remove(objects.begin(), objects.end(), drain), objects.end());
+			delete drain;
+			break;
+		}
+	}
+}
+
 void TowersRegress::draw(sf::RenderTarget * const target)
 {
 	for(GameObject *object : objects)
@@ -502,6 +520,21 @@ void MoneyDrain::clear()
 	MapEffect::clear();
 }
 
+void MoneyDrain::towerRemoved(Tower *tower)
+{
+	for(GameObject *energyLeech : energyLeeches)
+	{
+		if (energyLeech->pos() == tower->pos() - Engine::Instance().options<GameOptions>()->mapTileSize())
+		{
+			energyLeeches.erase(remove(energyLeeches.begin(), energyLeeches.end(), energyLeech), energyLeeches.end());
+			delete energyLeech;
+			break;
+		}
+	}
+	if (m_state == ACTIVE && energyLeeches.empty())
+		setState(READY);
+}
+
 void MoneyDrain::draw(sf::RenderTarget * const target)
 {
 	for(GameObject *energyLeech : energyLeeches)
@@ -535,7 +568,7 @@ void MoneyDrain::explosion(const sf::FloatRect &rect)
 		else
 			++it;
 	}
-	if (m_state != READY && energyLeeches.size() == 0)
+	if (m_state != READY && energyLeeches.empty())
 		setState(READY);
 }
 

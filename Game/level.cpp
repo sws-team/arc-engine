@@ -529,6 +529,8 @@ void Level::deleteTower(Tower *tower)
 		if (towerAbility != nullptr)
 			towerAbility->targetRemoved(tower);
 	}
+	towersRegress->towerRemoved(tower);
+	moneyDrain->towerRemoved(tower);
 
 	towers.erase( remove( towers.begin(), towers.end(), tower ), towers.end() );
 	delete tower;

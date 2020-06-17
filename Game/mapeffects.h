@@ -51,6 +51,8 @@ public:
 
 	bool isEnabled() const;
 
+	virtual void towerRemoved(Tower *tower);
+
 protected:
 	virtual void stateChanged() = 0;
 
@@ -106,6 +108,7 @@ public:
 	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 	void clear() override;
+	void towerRemoved(Tower *tower) override;
 
 	static constexpr int REGRESS_FRAME_COUNT = 5;
 	static constexpr int REGRESS_ANIMATION_SPEED = 100;
@@ -145,6 +148,7 @@ public:
 	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 	void clear() override;
+	void towerRemoved(Tower *tower) override;
 
 	void explosion(const sf::FloatRect& rect);
 
