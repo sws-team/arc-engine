@@ -558,6 +558,7 @@ std::vector<sf::String> GameManagers::creators()
 	creatorsVec.push_back(sf::String("French: Olesya Chmireva"));
 	creatorsVec.push_back(sf::String("German: Konstantin Grigorenko"));
 	creatorsVec.push_back(sf::String("Chinese: Sherry Xiao"));
+	creatorsVec.push_back(sf::String("Brazilian Portuguese: Sabrina Yau"));
 
 	creatorsVec.push_back(sf::String("Libraries:"));
 	creatorsVec.push_back(sf::String("SFML"));

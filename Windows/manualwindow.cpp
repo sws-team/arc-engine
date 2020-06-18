@@ -308,8 +308,7 @@ void ManualWindow::updatePos()
 		element.nameFrame.setSize(sf::Vector2f(RECT_WIDTH, RECT_HEIGHT));
 
 		element.titleText.setScale(scaleFactor);
-		element.titleText.setPosition(pos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET) +
-									  sf::Vector2f(ICON_WIDTH + ICON_X_OFFSET, 0));
+		element.titleText.setPosition(pos + sf::Vector2f(ICON_WIDTH, ICON_Y_OFFSET));
 
 		element.icon.setPosition(pos + sf::Vector2f(ICON_X_OFFSET, ICON_Y_OFFSET));
 
