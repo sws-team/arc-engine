@@ -47,6 +47,8 @@ public:
 
 	void setCenter(const sf::Vector2f& pos);
 
+	void updateScaleByMap(const sf::Vector2f& size);
+
 private:
     constexpr static float CAMERA_OFFSET = 4.f;
 	constexpr static int MAX_ZOOM = 20;
@@ -54,6 +56,7 @@ private:
 
 	sf::View *view;
 	int zoomRatio;
+	sf::Vector2f viewSize;
 };
 
 #endif // CAMERA_H

@@ -34,7 +34,7 @@ public:
 	void setProgressMax(int progressMax);
 
 	void init();
-	void setMapSize(const float width, const float height);
+	void setMapSize(const sf::Vector2f &size);
 
 	void updateInfo();
 

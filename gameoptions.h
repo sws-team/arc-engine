@@ -32,7 +32,7 @@ public:
 	sf::Vector2f mapTileSize() const;
 	constexpr static const int CELL_SIZE = 64;
 	constexpr static const int MAP_CELL_SIZE = 32;
-	constexpr static float GAME_SCALE = 0.8f;
+	constexpr static int GAME_SCALE = 5;
 
 	bool verifyChecksum();
 	void loadMaps();

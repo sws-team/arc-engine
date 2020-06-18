@@ -21,11 +21,6 @@ void Camera::init()
 
 	view = new sf::View(gameRect);
 	view->setViewport(Engine::Instance().window()->view()->getViewport());
-
-	resetZoom();
-	view->zoom(GameOptions::GAME_SCALE);
-	view->setCenter(sf::Vector2f(gameRect.width * GameOptions::GAME_SCALE/2,
-							 gameRect.height * GameOptions::GAME_SCALE/2));
 }
 
 void Camera::destroy()
@@ -58,21 +53,25 @@ void Camera::moveRight(float offset)
 void Camera::moveUpByCell()
 {
 	moveUp(Engine::Instance().options<GameOptions>()->tileSize().y);
+	checkBorders(false);
 }
 
 void Camera::moveDownByCell()
 {
 	moveDown(Engine::Instance().options<GameOptions>()->tileSize().y);
+	checkBorders(false);
 }
 
 void Camera::moveLeftByCell()
 {
 	moveLeft(Engine::Instance().options<GameOptions>()->tileSize().x);
+	checkBorders(false);
 }
 
 void Camera::moveRightByCell()
 {
 	moveRight(Engine::Instance().options<GameOptions>()->tileSize().x);
+	checkBorders(false);
 }
 
 sf::View *Camera::getView()
@@ -90,18 +89,16 @@ void Camera::zoomIn()
 
 void Camera::zoomOut()
 {
-	if (zoomRatio <= 0)
+	if (zoomRatio <= 1)
 		return;
 	view->zoom(1/ZOOM_STEP);
 	zoomRatio--;
-
 	checkBorders(true);
 }
 
 void Camera::resetZoom()
 {
-	view->setSize(Engine::Instance().settingsManager()->getResolution().x,
-				  Engine::Instance().settingsManager()->getResolution().y);
+	view->setSize(viewSize);
 	view->setViewport(Engine::Instance().window()->view()->getViewport());
 	zoomRatio = 0;
 }
@@ -159,8 +156,7 @@ sf::Vector2f Camera::cellToPos(const sf::Vector2i &cell) const
 void Camera::resetView()
 {
 	resetZoom();
-	view->setCenter(Engine::Instance().settingsManager()->getResolution().x/2,
-					Engine::Instance().settingsManager()->getResolution().y/2);
+	view->setCenter(viewSize.x/2, viewSize.y/2);
 }
 
 void Camera::checkBorders(bool zoom)
@@ -192,4 +188,12 @@ void Camera::setCenter(const sf::Vector2f &pos)
 {
 	view->setCenter(pos);
 	checkBorders();
+}
+
+void Camera::updateScaleByMap(const sf::Vector2f &size)
+{
+	viewSize = size;
+	resetView();
+	for (int i = 0; i < GameOptions::GAME_SCALE; ++i)
+		zoomIn();
 }

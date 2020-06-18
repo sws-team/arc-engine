@@ -359,7 +359,7 @@ bool GameOptions::loadMap(int id)
 
 	//tiles
 	const sf::Vector2f tileSize = mapTileSize();
-	const float pixelOffset = 0.5f;
+	const float pixelOffset = 0.75f;
 	int layersCount = 0;
 	TiXmlElement *layerElement = mapElement->FirstChildElement("layer");
 	while (layerElement)

@@ -222,10 +222,14 @@ void Level::startMission(const unsigned int n)
 	const sf::Vector2f mapTileSize = Engine::Instance().options<GameOptions>()->mapTileSize();
 	const sf::Vector2f tileSize = Engine::Instance().options<GameOptions>()->tileSize();
 	gameMap = Engine::Instance().options<GameOptions>()->findMapByNumber(n);
-	Engine::Instance().options<GameOptions>()->panel()->setMapSize(
-				gameMap->width * GameOptions::MAP_CELL_SIZE,
-				gameMap->height * GameOptions::MAP_CELL_SIZE);
 
+	const sf::Vector2f mapSize = sf::Vector2f(gameMap->width * GameOptions::MAP_CELL_SIZE,
+											  gameMap->height * GameOptions::MAP_CELL_SIZE);
+	const sf::Vector2f mapPixelSize = sf::Vector2f(gameMap->width * mapTileSize.x,
+												   gameMap->height * mapTileSize.y);
+
+	Engine::Instance().options<GameOptions>()->panel()->setMapSize(mapSize);
+	Engine::Instance().options<GameOptions>()->camera()->updateScaleByMap(mapPixelSize);
 	Engine::Instance().options<GameOptions>()->panel()->setProgressMax(currentProgress());
 	life = gameMap->stats.life;
 	Engine::Instance().options<GameOptions>()->panel()->setLifeMax(life);
@@ -283,8 +287,6 @@ void Level::startMission(const unsigned int n)
 											 -DEAD_ZONE_SIZE * Engine::Instance().settingsManager()->getScaleFactor().y);
 	deadZone.setPosition(minPos);
 
-	const sf::Vector2f mapPixelSize = sf::Vector2f(gameMap->width * mapTileSize.x,
-												   gameMap->height * mapTileSize.y);
 	deadZone.setSize(sf::Vector2f(mapPixelSize.x + fabs(minPos.x) * 2,
 								  mapPixelSize.y + fabs(minPos.y) * 2));
 
@@ -314,10 +316,8 @@ void Level::startMission(const unsigned int n)
 
 	abilities->reset();
 
-	const sf::Vector2f mapSize = sf::Vector2f(maxCells.x * tileSize.x,
-											  maxCells.y * tileSize.y);
-	smokeRect.setSize(mapSize);
-	shake->setSize(mapSize);
+	smokeRect.setSize(mapPixelSize);
+	shake->setSize(mapPixelSize);
 
 	for(const Map::MapObject& mapObject : gameMap->objects)
 	{

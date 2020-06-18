@@ -1121,12 +1121,12 @@ void GamePanel::init()
 								   Engine::Instance().settingsManager()->getResolution().y/2 + readyText.getGlobalBounds().height/2));
 }
 
-void GamePanel::setMapSize(const float width, const float height)
+void GamePanel::setMapSize(const sf::Vector2f& size)
 {
 	if (miniMapRect != nullptr)
 		delete miniMapRect;
 	miniMapRect = new sf::RectangleShape();
-	rTexture.create(static_cast<unsigned int>(width), static_cast<unsigned int>(height));
+	rTexture.create(static_cast<unsigned int>(size.x), static_cast<unsigned int>(size.y));
 	const sf::Vector2f miniMapSize = sf::Vector2f(344.f, 213.f);
 	miniMapRect->setSize(miniMapSize);
 	miniMapRect->setPosition(minimapPos);

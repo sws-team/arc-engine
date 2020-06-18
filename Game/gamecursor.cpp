@@ -137,7 +137,7 @@ void GameCursor::draw(sf::RenderTarget * const target)
 void GameCursor::update()
 {
 	GameObject::update();
-	if (checkBordersTimer.check(100))
+	if (checkBordersTimer.check(50))
 		checkBorders();
 }
 
@@ -304,13 +304,13 @@ void GameCursor::checkBorders()
 	const sf::Vector2i cell = sf::Vector2i(pos.x/Engine::Instance().options<GameOptions>()->tileSize().x,
 								   pos.y/Engine::Instance().options<GameOptions>()->tileSize().y);
 
-	if (cell.x == Engine::Instance().options<GameOptions>()->camera()->viewLeftCell() && !m_inPanel)
+	if (cell.x <= Engine::Instance().options<GameOptions>()->camera()->viewLeftCell() && !m_inPanel)
 		moveLeftCursor();
 	if (cell.x >= Engine::Instance().options<GameOptions>()->camera()->viewRightCell() && !m_inPanel)
 		moveRightCursor();
-	if (cell.y == Engine::Instance().options<GameOptions>()->camera()->viewTopCell())
+	if (cell.y <= Engine::Instance().options<GameOptions>()->camera()->viewTopCell())
 		moveUpCursor();
-	if (cell.y == Engine::Instance().options<GameOptions>()->camera()->viewBottomCell())
+	if (cell.y >= Engine::Instance().options<GameOptions>()->camera()->viewBottomCell())
 		moveDownCursor();	
 }
 
