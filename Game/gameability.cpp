@@ -98,7 +98,7 @@ void GameAbility::checkReady()
 		animation->animationSpeed = 50;
 		animation->size = sf::Vector2i(86, 86);
 		animation->callback = std::bind(&GameAbility::removeAnimation, this, animation);
-		animation->frameCount = 7;
+		animation->frameCount = 9;
 		animation->setTextureId(GAME_TEXTURE::FLASH);
 		animation->sprite.setPosition(m_panelPos);
 	}
@@ -232,7 +232,7 @@ void BombAbility::activate()
 }
 
 FreezeBombAbility::FreezeBombAbility()
-	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), Balance::Instance().getFreezeCooldown()/5)
+	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), Balance::Instance().getFreezeCooldown())
 {
 
 }
