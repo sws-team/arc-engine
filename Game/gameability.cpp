@@ -11,6 +11,7 @@
 #include "gamemanagers.h"
 #include "gameplatform.h"
 #include "achievements.h"
+#include <functional>
 
 GameAbility::GameAbility(const sf::Vector2i &areaSize,
 						 const sf::Vector2i &offset,
@@ -21,6 +22,7 @@ GameAbility::GameAbility(const sf::Vector2i &areaSize,
   ,m_offset(offset)
   ,m_time(time * EngineDefs::MSEC)
   ,m_rotated(false)
+  ,animation(nullptr)
 {
 
 }
@@ -46,6 +48,27 @@ void GameAbility::initCursor()
 	Engine::Instance().options<GameOptions>()->cursor()->swap();
 }
 
+void GameAbility::removeAnimation(Animation *a)
+{
+	if (a != nullptr)
+	{
+		delete a;
+		animation = nullptr;
+	}
+}
+
+void GameAbility::setPanelPos(const sf::Vector2f &panelPos)
+{
+	m_panelPos = panelPos - sf::Vector2f(Engine::Instance().options<GameOptions>()->mapTileSize().x/2,
+										 Engine::Instance().options<GameOptions>()->mapTileSize().y/2);
+}
+
+void GameAbility::drawAnimation(sf::RenderTarget * const target)
+{
+	if (animation != nullptr)
+		animation->draw(target);
+}
+
 void GameAbility::activate()
 {
 	m_isActive = true;
@@ -66,8 +89,21 @@ void GameAbility::reset()
 
 void GameAbility::checkReady()
 {
-	if (cooldownTimer.check(m_time))
+	if (!m_isReady && cooldownTimer.check(m_time))
+	{
 		m_isReady = true;
+
+		animation = new Animation();
+		animation->row = 0;
+		animation->animationSpeed = 50;
+		animation->size = sf::Vector2i(86, 86);
+		animation->callback = std::bind(&GameAbility::removeAnimation, this, animation);
+		animation->frameCount = 7;
+		animation->setTextureId(GAME_TEXTURE::FLASH);
+		animation->sprite.setPosition(m_panelPos);
+	}
+	if (animation != nullptr)
+		animation->update();
 }
 
 int GameAbility::timeLeft() const
@@ -112,6 +148,16 @@ void Abilities::draw(sf::RenderTarget * const target)
 {
 	if (acidAbility->isActive())
 		acidAbility->object->draw(target);
+}
+
+void Abilities::drawPanelAnimation(sf::RenderTarget * const target)
+{
+	bombAbility->drawAnimation(target);
+	freezeBombAbility->drawAnimation(target);
+	acidAbility->drawAnimation(target);
+	increaseTowerAttackSpeedAbility->drawAnimation(target);
+	increaseTowerDamageAbility->drawAnimation(target);
+	stopAblity->drawAnimation(target);
 }
 
 void Abilities::update()
@@ -186,7 +232,7 @@ void BombAbility::activate()
 }
 
 FreezeBombAbility::FreezeBombAbility()
-	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), Balance::Instance().getFreezeCooldown())
+	: GameAbility(sf::Vector2i(3, 3), sf::Vector2i(2, 2), Balance::Instance().getFreezeCooldown()/5)
 {
 
 }

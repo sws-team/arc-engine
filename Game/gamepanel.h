@@ -74,6 +74,8 @@ public:
 	bool clickOnMiniMap(const sf::Vector2f& pos);
 
 	std::vector<TowerStats> levelTowerStats(TOWER_TYPES type) const;
+
+	void updateAbilitiesPos();
 private:
 	sf::Sprite m_sprite;
 	sf::RenderTexture rTexture;

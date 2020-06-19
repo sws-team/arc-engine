@@ -26,6 +26,10 @@ public:
 
 	void rotate();
 
+	void setPanelPos(const sf::Vector2f &panelPos);
+
+	void drawAnimation(sf::RenderTarget * const target);
+
 protected:
 	void finish();
 
@@ -38,6 +42,9 @@ protected:
 private:
 	void initCursor();
 	Timer cooldownTimer;
+	sf::Vector2f m_panelPos;
+	Animation *animation;
+	void removeAnimation(Animation *a);
 };
 
 class BombAbility : public GameAbility
@@ -113,6 +120,7 @@ public:
 	Abilities();
 
 	void draw(sf::RenderTarget *const target) override;
+	void drawPanelAnimation(sf::RenderTarget *const target);
 	void update() override;
 	void reset();
 	void clear();

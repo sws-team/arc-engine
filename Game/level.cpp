@@ -132,7 +132,7 @@ void Level::update()
 				PowerTower *powerTower = static_cast<PowerTower*>(tower);
 				if (powerTower->hasEnergy())
 				{
-					const float gain = powerTower->actualDamage(DEFAULT_ARMOR) * Engine::Instance().options<GameOptions>()->difficult();
+					const float gain = powerTower->actualDamage(DEFAULT_ARMOR);
 					money += gain;
 					powerTower->updateGain();
 
@@ -195,7 +195,7 @@ void Level::startMission(const unsigned int n)
 	{
 		const int _testWavesCount = 999;
 		const int _testEnemiesCount = 999;
-		const int _testInterval = 5000;
+		const int _testInterval = 50000;
 
 		Wave wave;
 		wave.protection = 0.0f;
@@ -234,7 +234,7 @@ void Level::startMission(const unsigned int n)
 	life = gameMap->stats.life;
 	Engine::Instance().options<GameOptions>()->panel()->setLifeMax(life);
 
-	money = gameMap->stats.money * Engine::Instance().options<GameOptions>()->difficult();
+	money = gameMap->stats.money;
 	Engine::Instance().options<GameOptions>()->panel()->updatePanel();
 
 	Engine::Instance().options<GameOptions>()->cursor()->setMaxCells(gameMap->width/2, gameMap->height/2);
@@ -446,7 +446,7 @@ void Level::checkEnd()
 			if (endRect.contains(enemy->enemyPos()) ||
 					!deadZone.getGlobalBounds().contains(enemy->getCenter()))
 			{
-				float damage = enemy->getData().damage / Engine::Instance().options<GameOptions>()->difficult();
+				const float damage = enemy->getData().damage;
 				hitPlayer(damage);
 				delete enemy;
 				it = enemies.erase(it);
@@ -754,6 +754,15 @@ void Level::enemyMove(Enemy *enemy)
 		const sf::Vector2i newCell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(nextPos);
 		const int newDirection = getTileDirectionByCell(newCell);
 		if (newDirection == Map::RIGHT || newDirection == Map::LEFT)
+			return;
+	}
+	if (enemy->getLastLeft())
+	{
+		sf::Vector2f nextPos = enemy->enemyPos();
+		nextPos.x -= enemy->actualMoveStep().x;
+		const sf::Vector2i newCell = Engine::Instance().options<GameOptions>()->camera()->posToCellMap(nextPos);
+		const int newDirection = getTileDirectionByCell(newCell);
+		if (newDirection == Map::UP || newDirection == Map::DOWN)
 			return;
 	}
 

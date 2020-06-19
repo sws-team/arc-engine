@@ -90,6 +90,7 @@ void GameWindow::init()
 {
 	unsigned int missionNumber = Engine::Instance().options<GameOptions>()->getMission();
 	Engine::Instance().options<GameOptions>()->controller()->setPauseFunc(std::bind(&GameWindow::pause, this));
+	Engine::Instance().options<GameOptions>()->panel()->updateAbilitiesPos();
 	Engine::Instance().soundManager()->endBackgroundSound();
 	Engine::Instance().soundManager()->setMusicLooped(false);
 	fillTracks(GAME_MUSIC::TRACKS_FILES);

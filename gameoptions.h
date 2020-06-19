@@ -63,19 +63,7 @@ public:
 
 	LevelObject *createObject(OBJECTS::OBJECT_TYPES type, const sf::Vector2f &pos);
 
-	float gameSpeed() const;
-	void setNormalSpeed();
-	void setFastSpeed();
-	void setExtraFastSpeed();
-
 	Map *findMapByNumber(unsigned int num);
-
-	void setEasyDifficult();
-	void setNormalDifficult();
-	void setHardDifficult();
-
-	void setDifficult(float value);
-	float difficult() const;
 
 	void updateWindow() override;
 

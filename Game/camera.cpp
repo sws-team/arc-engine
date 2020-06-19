@@ -53,25 +53,21 @@ void Camera::moveRight(float offset)
 void Camera::moveUpByCell()
 {
 	moveUp(Engine::Instance().options<GameOptions>()->tileSize().y);
-	checkBorders(false);
 }
 
 void Camera::moveDownByCell()
 {
 	moveDown(Engine::Instance().options<GameOptions>()->tileSize().y);
-	checkBorders(false);
 }
 
 void Camera::moveLeftByCell()
 {
 	moveLeft(Engine::Instance().options<GameOptions>()->tileSize().x);
-	checkBorders(false);
 }
 
 void Camera::moveRightByCell()
 {
 	moveRight(Engine::Instance().options<GameOptions>()->tileSize().x);
-	checkBorders(false);
 }
 
 sf::View *Camera::getView()

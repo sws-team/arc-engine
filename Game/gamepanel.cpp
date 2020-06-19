@@ -184,8 +184,6 @@ void GamePanel::draw(sf::RenderTarget * const target)
 	Engine::Instance().options<GameOptions>()->level()->drawLevel(&rTexture);
 	rTexture.display();
 	miniMapRect->setTexture(&rTexture.getTexture());
-//	watch(miniMapRect.getGlobalBounds().width);
-//	watch(miniMapRect.getGlobalBounds().height);
 	//draw
 	if(Engine::Instance().options<GameOptions>()->level()->getState() == Level::WAIT_READY &&
 			!Engine::Instance().options<GameOptions>()->instructions()->isActive())
@@ -230,6 +228,8 @@ void GamePanel::draw(sf::RenderTarget * const target)
 		target->draw(abilityIncreaseTowerAttackSpeedDurationText);
 	if (!abilities->stopAblity->isReady())
 		target->draw(abilityStopDurationText);
+
+	abilities->drawPanelAnimation(target);
 
 	if (!TowersCounter::Instance().canBuildBaseTower())
 		target->draw(towerBaseLimitText);
@@ -424,7 +424,6 @@ sf::Vector2f GamePanel::updatePos()
 	towerImprovedSprite.setPosition(pos);
 	pos.x += iconSize.x;
 	pos.x += left_offset;
-
 
 	//abilities
 	abilityBombSprite.setPosition(pos);
@@ -853,6 +852,17 @@ std::vector<TowerStats> GamePanel::levelTowerStats(TOWER_TYPES type) const
 		}
 	}
 	return results;
+}
+
+void GamePanel::updateAbilitiesPos()
+{
+	Abilities *abilities = Engine::Instance().options<GameOptions>()->level()->getAbilities();
+	abilities->bombAbility->setPanelPos(abilityBombSprite.getPosition());
+	abilities->freezeBombAbility->setPanelPos(abilityFreezeBombSprite.getPosition());
+	abilities->acidAbility->setPanelPos(abilityAcidSprite.getPosition());
+	abilities->increaseTowerDamageAbility->setPanelPos(abilityIncreaseTowerDamageSprite.getPosition());
+	abilities->increaseTowerAttackSpeedAbility->setPanelPos(abilityIncreaseTowerAttackSpeedSprite.getPosition());
+	abilities->stopAblity->setPanelPos(abilityStopSprite.getPosition());
 }
 
 void GamePanel::setDrain(bool drain)

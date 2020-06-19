@@ -200,26 +200,6 @@ LevelObject *GameOptions::createObject(OBJECTS::OBJECT_TYPES type, const sf::Vec
 	return object;
 }
 
-float GameOptions::gameSpeed() const
-{
-	return m_gameSpeed;
-}
-
-void GameOptions::setNormalSpeed()
-{
-	setSpeed(1.f);
-}
-
-void GameOptions::setFastSpeed()
-{
-	setSpeed(0.5f);
-}
-
-void GameOptions::setExtraFastSpeed()
-{
-	setSpeed(0.1f);
-}
-
 Camera *GameOptions::camera() const
 {
 	return m_camera;
@@ -674,31 +654,6 @@ void GameOptions::loadMaps()
 
 	for(const GAME_FILES::FILE_ID& mission : missions)
 		loadMap(mission);
-}
-
-void GameOptions::setEasyDifficult()
-{
-	m_difficult = 2;
-}
-
-void GameOptions::setNormalDifficult()
-{
-	m_difficult = 1;
-}
-
-void GameOptions::setHardDifficult()
-{
-	m_difficult = 0.5;
-}
-
-void GameOptions::setDifficult(float value)
-{
-	m_difficult = value;
-}
-
-float GameOptions::difficult() const
-{
-	return m_difficult;
 }
 
 void GameOptions::updateWindow()

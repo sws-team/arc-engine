@@ -309,6 +309,8 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::LAVA, out);
 			else if (resource.name == "invisibility")
 				addTexture(GAME_TEXTURE::INVISIBLITY, out);
+			else if (resource.name == "flash")
+				addTexture(GAME_TEXTURE::FLASH, out);
 			//map objects
 			}
 		}

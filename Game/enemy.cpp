@@ -35,7 +35,6 @@ Enemy::Enemy(const TextureType &texture_id,
 	,healingValue(0.f)
 	,healCount(0)
 	,m_lastCell(sf::Vector2i(0, 0))
-	,lastUp(false)
 	,m_ignoreMoveTimer(false)
 	,m_speedModifier(1.0)
 {
@@ -155,8 +154,6 @@ void Enemy::moveEnemy()
 	setPos(m_pos + m_spritePos);
 	if (ability != nullptr)
 		ability->moved();
-	offset.x *= 1.f/Engine::Instance().options<GameOptions>()->gameSpeed();
-	offset.y *= 1.f/Engine::Instance().options<GameOptions>()->gameSpeed();
 	update();
 }
 
@@ -165,7 +162,6 @@ void Enemy::moveNext(int direction)
 	if (direction == 0)
 		return;
 
-	lastUp = false;
 	currentDirection = direction;
 	SPRITE_DIRECTION newDirection = DEFAULT_DOWN;
 	switch (currentDirection)
@@ -173,7 +169,6 @@ void Enemy::moveNext(int direction)
 	case Map::STAY:
 		break;
 	case Map::UP:
-		lastUp = true;
 		newDirection = SPRITE_DIRECTION::SPRITE_UP;
 		break;
 	case Map::DOWN:
@@ -188,6 +183,7 @@ void Enemy::moveNext(int direction)
 	case Map::NO_MOVE:
 		return;
 	}
+	lastDirection = newDirection;
 	if (newDirection != spriteDirection)
 	{
 		float angle = 0;
@@ -389,7 +385,12 @@ float Enemy::actualSpeed() const
 
 bool Enemy::getLastUp() const
 {
-	return lastUp;
+	return lastDirection == SPRITE_DIRECTION::SPRITE_UP;
+}
+
+bool Enemy::getLastLeft() const
+{
+	return lastDirection == SPRITE_DIRECTION::SPRITE_LEFT;
 }
 
 ARMOR_TYPE Enemy::getArmorType() const

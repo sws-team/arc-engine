@@ -172,15 +172,6 @@ void Controller::eventFilter(sf::Event *event)
 		case sf::Keyboard::N:
 			Engine::Instance().options<GameOptions>()->level()->activateStopAbility();
 			break;
-		case sf::Keyboard::I:
-			Engine::Instance().options<GameOptions>()->setNormalSpeed();
-			break;
-		case sf::Keyboard::O:
-			Engine::Instance().options<GameOptions>()->setFastSpeed();
-			break;
-		case sf::Keyboard::P:
-			Engine::Instance().options<GameOptions>()->setExtraFastSpeed();
-			break;
 		case sf::Keyboard::Delete:
 			Engine::Instance().options<GameOptions>()->level()->sellTower(Engine::Instance().options<GameOptions>()->level()->selectedTower());
 			break;

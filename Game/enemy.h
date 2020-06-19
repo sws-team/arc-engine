@@ -63,6 +63,7 @@ public:
 	void setLastCell(const sf::Vector2i &lastCell);
 
 	bool getLastUp() const;
+	bool getLastLeft() const;
 
 	ARMOR_TYPE getArmorType() const;
 
@@ -129,10 +130,10 @@ private:
 	sf::Vector2f moveStep;
 	sf::Vector2i m_lastCell;
 
-	bool lastUp;
 	bool m_ignoreMoveTimer;
 	float actualSpeed() const;
 	float m_speedModifier;
+	SPRITE_DIRECTION lastDirection;
 };
 
 class EnemyAbility : public GameDrawable
