@@ -53,21 +53,25 @@ void Camera::moveRight(float offset)
 void Camera::moveUpByCell()
 {
 	moveUp(Engine::Instance().options<GameOptions>()->tileSize().y);
+	checkBorders(false);
 }
 
 void Camera::moveDownByCell()
 {
 	moveDown(Engine::Instance().options<GameOptions>()->tileSize().y);
+	checkBorders(false);
 }
 
 void Camera::moveLeftByCell()
 {
 	moveLeft(Engine::Instance().options<GameOptions>()->tileSize().x);
+	checkBorders(false);
 }
 
 void Camera::moveRightByCell()
 {
 	moveRight(Engine::Instance().options<GameOptions>()->tileSize().x);
+	checkBorders(false);
 }
 
 sf::View *Camera::getView()
@@ -173,7 +177,7 @@ void Camera::checkBorders(bool zoom)
 	if (bottomRight.x > maxX)
 		view->setCenter(maxX - view->getSize().x/2, view->getCenter().y);
 
-	const int extraCells = zoom ? 0 : Engine::Instance().options<GameOptions>()->panel()->cellsCount() -1;
+	const int extraCells = zoom ? 0 : Engine::Instance().options<GameOptions>()->panel()->cellsCount();
 	float maxY = (Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().y + extraCells)
 			* Engine::Instance().options<GameOptions>()->tileSize().y;
 	if (bottomRight.y > maxY)

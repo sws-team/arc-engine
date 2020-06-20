@@ -921,7 +921,6 @@ void Level::updateActionPoint(GameObject *object, const sf::Vector2f& pos, bool 
 											  gameMap->height * Engine::Instance().options<GameOptions>()->mapTileSize().y);
 	const int centerX = mapSize.x/2;
 	const int centerY = mapSize.y/2;
-watch(mapSize.y);
 	const float x0 = 0;
 	const float x1 = mapSize.x;
 	const float y0 = 0;

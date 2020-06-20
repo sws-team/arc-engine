@@ -321,7 +321,7 @@ void GameCursor::moveDownCursor()
 
 	m_cell.y++;
 	if (Engine::Instance().options<GameOptions>()->camera()->viewBottomCell() != m_maxCell.y
-			+ Engine::Instance().options<GameOptions>()->panel()->cellsCount() - 1
+			+ Engine::Instance().options<GameOptions>()->panel()->cellsCount()
 			&& m_cell.y > Engine::Instance().options<GameOptions>()->camera()->viewCenter().y)
 		Engine::Instance().options<GameOptions>()->camera()->moveDownByCell();
 	else
