@@ -286,7 +286,6 @@ void Level::startMission(const unsigned int n)
 	const sf::Vector2f minPos = sf::Vector2f(-DEAD_ZONE_SIZE * Engine::Instance().settingsManager()->getScaleFactor().x,
 											 -DEAD_ZONE_SIZE * Engine::Instance().settingsManager()->getScaleFactor().y);
 	deadZone.setPosition(minPos);
-
 	deadZone.setSize(sf::Vector2f(mapPixelSize.x + fabs(minPos.x) * 2,
 								  mapPixelSize.y + fabs(minPos.y) * 2));
 
@@ -922,39 +921,39 @@ void Level::updateActionPoint(GameObject *object, const sf::Vector2f& pos, bool 
 											  gameMap->height * Engine::Instance().options<GameOptions>()->mapTileSize().y);
 	const int centerX = mapSize.x/2;
 	const int centerY = mapSize.y/2;
-
+watch(mapSize.y);
 	const float x0 = 0;
 	const float x1 = mapSize.x;
 	const float y0 = 0;
 	const float y1 = mapSize.y;
 	object->sprite.setRotation(0);
 
-	sf::Vector2f resultPos = sf::Vector2f(pos.x * Engine::Instance().settingsManager()->getScaleFactor().x,
-										  pos.y * Engine::Instance().settingsManager()->getScaleFactor().y);
+	const sf::Vector2f scaledPos = sf::Vector2f(pos.x * Engine::Instance().settingsManager()->getScaleFactor().x,
+												pos.y * Engine::Instance().settingsManager()->getScaleFactor().y);
+	sf::Vector2f resultPos = scaledPos;
 	if (isSpawn)
 	{
-		if (pos.x <= x0 || pos.x >= x1)
+		if (scaledPos.x <= x0 || scaledPos.x >= x1)
 		{
 			//x
-			if (pos.x > centerX)
+			if (scaledPos.x > centerX)
 			{
 				//-x
-				resultPos.x -= Engine::Instance().options<GameOptions>()->tileSize().x + Engine::Instance().options<GameOptions>()->mapTileSize().x;
+				resultPos.x += Engine::Instance().options<GameOptions>()->mapTileSize().x;
 			}
 			else
 			{
 				//+x
 				resultPos.x += Engine::Instance().options<GameOptions>()->tileSize().x;
+				object->sprite.setRotation(-90);
+				resultPos.y += Engine::Instance().options<GameOptions>()->mapTileSize().y;
 			}
-			resultPos.y += Engine::Instance().options<GameOptions>()->mapTileSize().y;
-
-			object->sprite.setRotation(-90);
 			resultPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
 		}
-		else if (pos.y <= y0 || pos.y >= y1)
+		else if (scaledPos.y <= y0 || scaledPos.y >= y1)
 		{
 			//y
-			if (pos.y > centerY)
+			if (scaledPos.y > centerY)
 			{
 				//-y
 				resultPos.y -= Engine::Instance().options<GameOptions>()->tileSize().y + Engine::Instance().options<GameOptions>()->mapTileSize().y;
@@ -969,10 +968,25 @@ void Level::updateActionPoint(GameObject *object, const sf::Vector2f& pos, bool 
 	}
 	else
 	{
-		if (pos.x <= x0 || pos.x >= x1)
+		if (scaledPos.y <= y0 || scaledPos.y >= y1)
+		{
+			//y
+			if (scaledPos.y > centerY)
+			{
+				//-y
+				resultPos.y -= Engine::Instance().options<GameOptions>()->tileSize().y + Engine::Instance().options<GameOptions>()->tileSize().y;
+			}
+			else
+			{
+				//+y
+				resultPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
+			}
+			resultPos.x += Engine::Instance().options<GameOptions>()->mapTileSize().x;
+		}
+		else if (scaledPos.x <= x0 || scaledPos.x >= x1)
 		{
 			//x
-			if (pos.x < centerX)
+			if (scaledPos.x < centerX)
 			{
 				//-x
 				resultPos.x += Engine::Instance().options<GameOptions>()->mapTileSize().x + Engine::Instance().options<GameOptions>()->tileSize().x;
@@ -987,21 +1001,7 @@ void Level::updateActionPoint(GameObject *object, const sf::Vector2f& pos, bool 
 			object->sprite.setRotation(-90);
 			resultPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
 		}
-		else if (pos.y <= y0 || pos.y >= y1)
-		{
-			//y
-			if (pos.y > centerY)
-			{
-				//-y
-				resultPos.y -= Engine::Instance().options<GameOptions>()->mapTileSize().y + Engine::Instance().options<GameOptions>()->mapTileSize().y;
-			}
-			else
-			{
-				//+y
-				resultPos.y += Engine::Instance().options<GameOptions>()->tileSize().y;
-			}
-			resultPos.x += Engine::Instance().options<GameOptions>()->mapTileSize().x;
-		}
+
 	}
 	object->setPos(resultPos);
 }
