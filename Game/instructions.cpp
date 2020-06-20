@@ -170,7 +170,9 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type, bool withStats)
 	{		
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BASE_TOWER_DESCRIPTION);
 		str += EngineDefs::endline;
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER);
+		str += EngineDefs::endline;
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ABILITY);
 		str += EngineDefs::separator;
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::BASE_TOWER_ABILITY);
@@ -180,9 +182,11 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type, bool withStats)
 	{
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ENERGY_TOWER_DESCRIPTION);
 		str += EngineDefs::endline;
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAN_BUILD_ANYWHERE);
+		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_TRAIT);
 		str += EngineDefs::endline;
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ABILITY);
 		str += EngineDefs::separator;
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::POWER_TOWER_ABILITY);
@@ -192,7 +196,9 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type, bool withStats)
 	{		
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ROCKET_TOWER_DESCRIPTION);
 		str += EngineDefs::endline;
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER);
+		str += EngineDefs::endline;
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ABILITY);
 		str += EngineDefs::separator;
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ROCKET_TOWER_ABILITY);
@@ -202,7 +208,9 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type, bool withStats)
 	{		
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_TOWER_DESCRIPTION);
 		str += EngineDefs::endline;
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER);
+		str += EngineDefs::endline;
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ABILITY);
 		str += EngineDefs::separator;
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::FREEZE_TOWER_ABILITY);
@@ -212,7 +220,9 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type, bool withStats)
 	{		
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LASER_TOWER_DESCRIPTION);
 		str += EngineDefs::endline;
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER);
+		str += EngineDefs::endline;
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ABILITY);
 		str += EngineDefs::separator;
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::LASER_TOWER_ABILITY);
@@ -222,18 +232,15 @@ sf::String Instructions::towerInfoText(TOWER_TYPES type, bool withStats)
 	{		
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::IMPROVED_TOWER_DESCRIPTION);
 		str += EngineDefs::endline;
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY);
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER);
+		str += EngineDefs::endline;
+		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::TOWER_ABILITY);
 		str += EngineDefs::separator;
 		str += EngineDefs::endline;
 		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::IMPROVED_TOWER_ABILITY);
 	}
 		break;
 	}
-	str += EngineDefs::endline;
-	if (type == POWER)
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAN_BUILD_ANYWHERE);
-	else
-		str += Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CAN_BUILD_NEAR_ENERGY_TOWER);
 
 	if (withStats)
 	{

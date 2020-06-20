@@ -77,12 +77,12 @@ void GameManagers::loadTranslations()
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::HEALTH, L"生命值"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::HEALTH, L"Pontos de saúde"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY, L"Abilities"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY, L"Особые способности"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY, L"Pouvoirs"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY, L"Fähigkeiten"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY, L"Ability"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY, L"Способность"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY, L"Pouvoir"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY, L"Fähigkeit"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY, L"能力"));
-	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY, L"Habilidades"));
+	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY, L"Habilidade"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMALL, L"Small"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMALL, L"Мелкий"));
@@ -291,14 +291,14 @@ void GameManagers::loadTranslations()
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"You lose!\nTry again"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Вы проиграли!\nПопробуйте еще"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Désolé, tu as pérdu la bataille, on recommense?"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Désolé, tu as\npérdu la bataille,\non recommense?"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Du verlierst!\nVersuch es noch einmal"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"战败。再试一次吧！"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Você perde!\nTente novamente."));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Congratulations!\nLevel completed"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Поздравляем!\nУровень пройден"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Formidable!\nTu as gagné la bataille!"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Formidable! Tu as\ngagné la bataille!"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Herzliche Glückwünsche!\nLevel abgeschlossen"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"恭喜你，战胜了！"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"reiniciar"));
@@ -312,8 +312,8 @@ void GameManagers::loadTranslations()
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"Press any key to continue"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"Нажмите любую клавишу, чтобы продолжить"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"Drücken Sie eine beliebige Taste, um fortzufahren"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"Drücken Sie die Leertaste, um zu überspringen"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"Appuyez sur n'importe quelle touche pour continuer"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"Drücken Sie eine beliebige Taste, um fortzufahren"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"按任意键开始"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"Pressione qualquer tecla para continuar"));
 
@@ -1008,6 +1008,13 @@ void GameManagers::loadTranslations()
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::DAMAGE_HP, L" gesundheit"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::DAMAGE_HP, L" 生命值"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::DAMAGE_HP, L" pontos de saúde"));
+
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_ABILITY, L"Full upgrade ability"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_ABILITY, L"При максимальном улучшении"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_ABILITY, L"Pouvoir de l'upgrade maximal"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_ABILITY, L"Leistung des maximalen verbesserung"));
+	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_ABILITY, L"能力"));
+	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_ABILITY, L"Todas as atualize totalmente"));
 
 	Engine::Instance().translationsManager()->addTranslation(std::string("russian"), russainTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);
