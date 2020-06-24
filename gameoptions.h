@@ -100,6 +100,7 @@ private:
 	void setSpeed(float speed);
 	float m_difficult;
 	bool m_dev;
+	unsigned short calculateChecksum(const char *data_p, size_t length);
 };
 
 #endif // GAMEOPTIONS_H

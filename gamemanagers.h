@@ -485,7 +485,7 @@ public:
 	static std::vector<sf::String> creators();
 
 	static const std::string resourcesFileName;
-	static const std::string checksum;
+	static const unsigned short checksum;
 
 	static void loadExtraResources();
 };

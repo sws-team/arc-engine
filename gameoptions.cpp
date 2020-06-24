@@ -1,7 +1,6 @@
 #include "gameoptions.h"
 
 #include "Windows/gamewindow.h"
-#include "picosha2.h"
 
 #include "Game/map.h"
 #include "Game/level.h"
@@ -250,7 +249,8 @@ bool GameOptions::verifyChecksum()
 	std::ifstream stream(GameManagers::resourcesFileName);
 	const std::string src = std::string((std::istreambuf_iterator<char>(stream)),
 										std::istreambuf_iterator<char>());
-	const std::string checksum = picosha2::hash256_hex_string(src);
+
+	const unsigned short checksum = calculateChecksum(src.c_str(), src.size());
 	stream.close();
 	if (checksum != GameManagers::checksum)
 		return false;
@@ -611,6 +611,19 @@ bool GameOptions::loadTiles()
 void GameOptions::setSpeed(float speed)
 {
 	m_gameSpeed = speed;
+}
+
+unsigned short GameOptions::calculateChecksum(const char* data_p, size_t length)
+{
+	unsigned char x;
+	unsigned short crc = 0xFFFF;
+
+	while (length--){
+		x = crc >> 8 ^ *data_p++;
+		x ^= x>>4;
+		crc = (crc << 8) ^ ((unsigned short)(x << 12)) ^ ((unsigned short)(x <<5)) ^ ((unsigned short)x);
+	}
+	return crc;
 }
 
 bool GameOptions::getDev() const

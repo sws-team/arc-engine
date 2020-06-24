@@ -158,7 +158,7 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_LIGHT, L"Легкая"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_LIGHT, L"Léger"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_LIGHT, L"Leicht"));
-	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_LIGHT, L"光"));
+	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_LIGHT, L"简单"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_LIGHT, L"Leve"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_MEDIUM, L"Medium"));
@@ -172,7 +172,7 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_STRONG, L"Крепкая"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_STRONG, L"Épais"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_STRONG, L"Schwere"));
-	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_STRONG, L"强"));
+	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_STRONG, L"强大"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::ARMOR_STRONG, L"Forte"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::COOLDOWN_TIME, L"Cooldown time"));
@@ -279,7 +279,7 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::EXIT_TO_MENU, L"Выход в меню"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::EXIT_TO_MENU, L"Sortir au menu"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::EXIT_TO_MENU, L"Zum Menü\nzurückkehren"));
-	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::EXIT_TO_MENU, L"退出到主页"));
+	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::EXIT_TO_MENU, L"返回主页"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::EXIT_TO_MENU, L"Sair do menu"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::EXIT_FROM_GAME, L"Exit from game"));
@@ -292,22 +292,22 @@ void GameManagers::loadTranslations()
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"You lose!\nTry again"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Вы проиграли!\nПопробуйте еще"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Désolé, tu as\npérdu la bataille,\non recommense?"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Du verlierst!\nVersuch es noch einmal"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Du verlierst!\nVersuch es noch\neinmal"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"战败。再试一次吧！"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::GAME_OVER, L"Você perde!\nTente novamente."));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Congratulations!\nLevel completed"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Поздравляем!\nУровень пройден"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Formidable! Tu as\ngagné la bataille!"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Herzliche Glückwünsche!\nLevel abgeschlossen"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Herzliche\nGlückwünsche!\nLevel abgeschlossen"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"恭喜你，战胜了！"));
-	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"reiniciar"));
+	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::CONGRATULATIONS, L"Parabéns! Nível completo."));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Press Space to start"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Нажмите Пробел чтобы начать"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Tape l'Espace afin de commencer le jeu"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Drücken Sie die Leertaste, um zu starten"));
-	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"按空白键以开始"));
+	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"按空白键开始"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::START_GAME, L"Pressione espaço para iniciar"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::SKIP_TEXT, L"Press any key to continue"));
@@ -440,7 +440,7 @@ void GameManagers::loadTranslations()
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"ARV «Immunes»"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"БРЭМ «Иммун»"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"ARV «Immune»"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"Char de dépannage\n«Immune»"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"Bergepanzer «Immun»"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"免疫 裝甲救濟車"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::REPAIR, L"ARV «Immun»"));
@@ -498,7 +498,7 @@ void GameManagers::loadTranslations()
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Акрид"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Acrididae"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Acrididae"));
-	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"蝗蟲"));
+	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"蝗科"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::JUMPER, L"Acrididae"));
 
 	//towers abilities
@@ -655,12 +655,12 @@ void GameManagers::loadTranslations()
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"Il est equipé des missiles dont l'explosion provoque\nun downgrade d'une tour "));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"Es ist mit Lenkflugkörpern ausgestattet,\ndie Türme herabstufen"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"它装备了导弹，可以降低塔的等级"));
-	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"É equipado com mísseis guiados que rebaixam torres"));
+	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_DOWNGRADE_TOWER, L"É equipado com mísseis guiados que rebaixam\ntorres"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"It can get faster by curling up and rolling"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"Может сворачиваться в клубок и катиться,\nчто значительно увеличивает его скорость"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"Lové, il peut se déplacer en roulant ce qui le\nrend plus rapide"));
-	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"Es kann schneller werden, indem es sich zusammenrollt und rollt"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"Es kann schneller werden, indem es sich\nzusammenrollt und rollt"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"卷曲和滚动可以加快速度"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_ROLLING, L"Pode ficar mais rápido enrolando e rolando"));
 
@@ -694,7 +694,7 @@ void GameManagers::loadTranslations()
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY_FREEZE_BOMB, L"Congelar bomba"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Fire rate increase"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Увеличить скорострельность"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Увеличить\nскорострельность"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Tour à vitesse\nd'attaque augmentée"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"Erhöhen Sie\ndie Feuerrate"));
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED, L"加速塔"));

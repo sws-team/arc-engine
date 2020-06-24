@@ -347,9 +347,10 @@ void GameWindow::updateTextPos()
 					 Engine::Instance().settingsManager()->getResolution().y/2 -
 					 text.getGlobalBounds().height/2);
 
-	skipText.setPosition(text.getPosition().x,
-						 text.getPosition().y + text.getGlobalBounds().height
-						 + Engine::Instance().options<GameOptions>()->tileSize().x);
+	skipText.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 -
+						 skipText.getGlobalBounds().width/2,
+						 windowSprite.getGlobalBounds().top + windowSprite.getGlobalBounds().height -
+						 Engine::Instance().options<GameOptions>()->tileSize().y);
 }
 
 void GameWindow::nextTrack()

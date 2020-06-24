@@ -452,7 +452,7 @@ sf::Vector2f GamePanel::updatePos()
 
 	//text
 	pos.y = nullPos.y + 24 * scaleFactor.y + panel_offset;
-	info.setPosition(pos.x + 8 * scaleFactor.x, pos.y - 6 * scaleFactor.y);
+	info.setPosition(pos.x + 2 * scaleFactor.x, pos.y - 6 * scaleFactor.y);
 	pos.x += text_offset;
 	pos.x += left_offset;
 
