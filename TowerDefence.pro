@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     gameoptions.cpp \
     gamestatemanager.cpp \
     controller.cpp \
-    gametranslations.cpp
+    gametranslations.cpp \
+    loading.cpp
 HEADERS += \
     gamemanagers.h \
     gameoptions.h \

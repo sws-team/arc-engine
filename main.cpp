@@ -1,11 +1,7 @@
 #include "mainwindow.h"
-#include "engine.h"
-#include "managers.h"
 #include "gameoptions.h"
-#include "gamestatemanager.h"
-#include "gamemanagers.h"
 #include "gameplatform.h"
-#include "Game/Balance/balance.h"
+#include "gamestatemanager.h"
 
 #ifdef OS_WIN
 #include "windows.h"
@@ -18,6 +14,9 @@
 #include <iostream>
 #include <fstream>
 
+void loading();
+void showLoading();
+
 #ifdef OS_WIN
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,int nShowCmd)
 #endif
@@ -25,6 +24,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 int main(int argc, char *argv[])
 #endif
 {
+	std::srand(std::time(nullptr));
+	Engine::Instance();
+#ifdef DEMO_VERSION
+	Engine::Instance().globalVariables()->setAppName("Arc Defence Demo");
+#else
+	Engine::Instance().globalVariables()->setAppName("Arc Defence");
+#endif
+	showLoading();
 	const int steamAppId =
 		#ifdef DEMO_VERSION
 			1296240
@@ -44,14 +51,6 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 #endif
-
-	std::srand(std::time(nullptr));
-
-	Engine::Instance();
-	GameManagers::loadResources();
-	GameManagers::loadTranslations();
-	Balance::Instance().load();
-
 	const std::string steamLanguage = std::string(SteamUtils()->GetSteamUILanguage());
 	Engine::Instance().translationsManager()->setCurrentLanguage(steamLanguage);
 	Engine::Instance().globalVariables()->loadGameSettings(GamePlatform::Instance().readFile(
@@ -66,18 +65,13 @@ int main(int argc, char *argv[])
 #endif
 		return EXIT_FAILURE;
 	}
-#ifdef DEMO_VERSION
-	Engine::Instance().globalVariables()->setAppName("Arc Defence Demo");
-#else
-	Engine::Instance().globalVariables()->setAppName("Arc Defence");
-#endif
 	Engine::Instance().options<GameOptions>()->loadAchievements();
 	GamePlatform::Instance().requestStats();
 	Engine::Instance().fontManager()->setFontModifier(0.75f);
+
 #ifdef OS_WIN
 	Engine::Instance().options<GameOptions>()->setDev(std::string(lpCmdLine) == std::string("-dev"));
 #endif
-
 	MainWindow w;
 	Engine::Instance().options<GameOptions>()->setMainWindow(&w);
 	Engine::Instance().getOptions()->updateWindow();
@@ -94,3 +88,4 @@ int main(int argc, char *argv[])
 #endif
 	return EXIT_SUCCESS;
 }
+
