@@ -17,8 +17,7 @@ GameCursor::GameCursor()
 	: GameObject(GAME_TEXTURE::CURSOR_TEXTURE,
 				 sf::Vector2f(0,0),
 				 sf::Vector2i(GameOptions::CELL_SIZE,
-						  GameOptions::CELL_SIZE),
-				 2)
+						  GameOptions::CELL_SIZE), 2)
 	,m_state(NORMAL)
 	,m_inPanel(false)
 	,m_highlight(false)
@@ -35,38 +34,6 @@ void GameCursor::setMaxCells(int maxWidth, int maxHeight)
 void GameCursor::setMaxCells(const sf::Vector2i &maxCell)
 {
 	m_maxCell = maxCell;
-}
-
-bool GameCursor::canMove(GameCursor::MOVE_DIRECTIONS direction)
-{
-	switch (direction)
-	{
-	case MOVE_LEFT:
-	{
-		if (m_cell.x <= 0)
-			return false;
-	}
-		break;
-	case MOVE_RIGHT:
-	{
-		if (m_cell.x >= m_maxCell.x)
-			return false;
-	}
-		break;
-	case MOVE_UP:
-	{
-		if (m_cell.y <= 0)
-			return false;
-	}
-		break;
-	case MOVE_DOWN:
-	{
-		if (m_cell.y >= m_maxCell.y - 1)
-			return false;
-	}
-		break;
-	}
-	return true;
 }
 
 void GameCursor::moveLeft()
@@ -138,7 +105,7 @@ void GameCursor::update()
 {
 	GameObject::update();
 	if (checkBordersTimer.check(50))
-		checkBorders();
+		checkCursorFrameBorder();
 }
 
 void GameCursor::activateAbility(int x, int y, int hotX, int hotY)
@@ -237,8 +204,7 @@ void GameCursor::initCell()
 {
 	const sf::Vector2i pixelPos = sf::Mouse::getPosition(*Engine::Instance().window());
 	const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
-																		   *Engine::Instance().options<GameOptions>()->camera()->getView())
-			+ sf::Vector2f(1, 1);
+																		   *Engine::Instance().options<GameOptions>()->camera()->getView());
 	const sf::Vector2i newCell = Engine::Instance().options<GameOptions>()->camera()->posToCell(pos);
 	if (newCell != m_cell)
 	{
@@ -264,9 +230,9 @@ sf::Vector2f GameCursor::windowScreenPos() const
 void GameCursor::updateCell()
 {
 	const sf::Vector2f pos = sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x * m_cell.x,
-								  Engine::Instance().options<GameOptions>()->tileSize().y * m_cell.y) -
+										  Engine::Instance().options<GameOptions>()->tileSize().y * m_cell.y) -
 			sf::Vector2f(abilityHotsPot.x * Engine::Instance().options<GameOptions>()->mapTileSize().x,
-					 abilityHotsPot.y * Engine::Instance().options<GameOptions>()->mapTileSize().y);
+						 abilityHotsPot.y * Engine::Instance().options<GameOptions>()->mapTileSize().y);
 	if (m_state == TOWER)
 	{
 		const bool canCreate = Engine::Instance().options<GameOptions>()->level()->canAddTower(
@@ -286,89 +252,49 @@ void GameCursor::updateCell()
 	Engine::Instance().options<GameOptions>()->panel()->updateInfo();
 }
 
-void GameCursor::updateMousePos()
-{
-	const sf::Vector2f pos = Engine::Instance().options<GameOptions>()->camera()->cellToPos(m_cell)
-			+ sf::Vector2f(Engine::Instance().options<GameOptions>()->tileSize().x/2,
-						   Engine::Instance().options<GameOptions>()->tileSize().y/2);
-
-	const sf::Vector2i coords = Engine::Instance().window()->mapCoordsToPixel(pos, *Engine::Instance().options<GameOptions>()->camera()->getView());
-	sf::Mouse::setPosition(coords, *Engine::Instance().window());
-}
-
-void GameCursor::checkBorders()
+void GameCursor::checkCursorFrameBorder()
 {
 	const sf::Vector2i pixelPos = sf::Mouse::getPosition(*Engine::Instance().window());
 	const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
 				pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView()) + sf::Vector2f(1, 1);
 	const sf::Vector2i cell = sf::Vector2i(pos.x/Engine::Instance().options<GameOptions>()->tileSize().x,
-								   pos.y/Engine::Instance().options<GameOptions>()->tileSize().y);
+										   pos.y/Engine::Instance().options<GameOptions>()->tileSize().y);
 
 	if (cell.x <= Engine::Instance().options<GameOptions>()->camera()->viewLeftCell() && !m_inPanel)
 		moveLeftCursor();
 	if (cell.x >= Engine::Instance().options<GameOptions>()->camera()->viewRightCell() && !m_inPanel)
 		moveRightCursor();
 	if (cell.y <= Engine::Instance().options<GameOptions>()->camera()->viewTopCell())
-		moveUpCursor();
+		moveUpCursor();	
 	if (cell.y >= Engine::Instance().options<GameOptions>()->camera()->viewBottomCell())
 		moveDownCursor();	
 }
 
 void GameCursor::moveDownCursor()
 {
-	if (!canMove(GameCursor::MOVE_DOWN))
-		return;
-
-	m_cell.y++;
-	if (Engine::Instance().options<GameOptions>()->camera()->viewBottomCell() != m_maxCell.y
-			+ Engine::Instance().options<GameOptions>()->panel()->cellsCount()
-			&& m_cell.y > Engine::Instance().options<GameOptions>()->camera()->viewCenter().y)
-		Engine::Instance().options<GameOptions>()->camera()->moveDownByCell();
-	else
-		updateMousePos();
+	Engine::Instance().options<GameOptions>()->camera()->moveDownByCell();
+	initCell();
 	updateCell();
 }
 
 void GameCursor::moveUpCursor()
 {
-	if (!canMove(GameCursor::MOVE_UP))
-		return;
-
-	m_cell.y--;
-	if (Engine::Instance().options<GameOptions>()->camera()->viewTopCell() != 0 &&
-			m_cell.y < Engine::Instance().options<GameOptions>()->camera()->viewCenter().y)
-		Engine::Instance().options<GameOptions>()->camera()->moveUpByCell();	
-	else
-		updateMousePos();
-
+	Engine::Instance().options<GameOptions>()->camera()->moveUpByCell();
+	initCell();
 	updateCell();
 }
 
 void GameCursor::moveLeftCursor()
 {
-	if (!canMove(GameCursor::MOVE_LEFT))
-		return;
-
-	m_cell.x--;
-	if (Engine::Instance().options<GameOptions>()->camera()->viewLeftCell() != 0 &&
-			m_cell.x < Engine::Instance().options<GameOptions>()->camera()->viewCenter().x)
-		Engine::Instance().options<GameOptions>()->camera()->moveLeftByCell();
-	else
-		updateMousePos();
+	Engine::Instance().options<GameOptions>()->camera()->moveLeftByCell();
+	initCell();
 	updateCell();
 }
 
 void GameCursor::moveRightCursor()
-{
-	if (!canMove(GameCursor::MOVE_RIGHT))
-		return;
-
-	m_cell.x++;
-	if (Engine::Instance().options<GameOptions>()->camera()->viewRightCell() != m_maxCell.x &&
-			m_cell.x > Engine::Instance().options<GameOptions>()->camera()->viewCenter().x)
-		Engine::Instance().options<GameOptions>()->camera()->moveRightByCell();
-	else
-		updateMousePos();
+{	
+	Engine::Instance().options<GameOptions>()->camera()->moveRightByCell();
+	initCell();
 	updateCell();
 }
 

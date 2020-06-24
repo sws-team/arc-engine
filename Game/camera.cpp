@@ -9,6 +9,8 @@
 
 Camera::Camera()
 	: view(nullptr)
+	,zoomRatio(0)
+	,zoomFactor(1)
 {
 
 }
@@ -53,25 +55,25 @@ void Camera::moveRight(float offset)
 void Camera::moveUpByCell()
 {
 	moveUp(Engine::Instance().options<GameOptions>()->tileSize().y);
-	checkBorders(false);
+	checkTopLeft();
 }
 
 void Camera::moveDownByCell()
 {
 	moveDown(Engine::Instance().options<GameOptions>()->tileSize().y);
-	checkBorders(false);
+	checkBottomRight();
 }
 
 void Camera::moveLeftByCell()
 {
 	moveLeft(Engine::Instance().options<GameOptions>()->tileSize().x);
-	checkBorders(false);
+	checkTopLeft();
 }
 
 void Camera::moveRightByCell()
 {
 	moveRight(Engine::Instance().options<GameOptions>()->tileSize().x);
-	checkBorders(false);
+	checkBottomRight();
 }
 
 sf::View *Camera::getView()
@@ -84,6 +86,7 @@ void Camera::zoomIn()
 	if (zoomRatio > MAX_ZOOM)
 		return;
 	view->zoom(ZOOM_STEP);
+	zoomFactor *= ZOOM_STEP;
 	zoomRatio++;
 }
 
@@ -92,8 +95,9 @@ void Camera::zoomOut()
 	if (zoomRatio <= 1)
 		return;
 	view->zoom(1/ZOOM_STEP);
+	zoomFactor /= ZOOM_STEP;
 	zoomRatio--;
-	checkBorders(true);
+	fitScreen();
 }
 
 void Camera::resetZoom()
@@ -101,6 +105,7 @@ void Camera::resetZoom()
 	view->setSize(viewSize);
 	view->setViewport(Engine::Instance().window()->view()->getViewport());
 	zoomRatio = 0;
+	zoomFactor = 1.f;
 }
 
 int Camera::viewTopCell() const
@@ -159,35 +164,57 @@ void Camera::resetView()
 	view->setCenter(viewSize.x/2, viewSize.y/2);
 }
 
-void Camera::checkBorders(bool zoom)
+void Camera::fitScreen()
+{
+	checkTopLeft();
+	checkBottomRight(true);
+}
+
+void Camera::checkTopLeft()
 {
 	const sf::Vector2f topLeft = sf::Vector2f(view->getCenter().x - view->getSize().x/2,
-								view->getCenter().y - view->getSize().y/2);
-	if (topLeft.x < 0)
+											  view->getCenter().y - view->getSize().y/2);
+	const sf::Vector2i topleftCell = posToCell(topLeft);
+
+	if (topleftCell.x < 0)
 		view->setCenter(view->getSize().x/2, view->getCenter().y);
 
-	if (topLeft.y < 0)
+	if (topleftCell.y < 0)
 		view->setCenter(view->getCenter().x, view->getSize().y/2);
+}
+
+void Camera::checkBottomRight(bool zoom)
+{
+	int extraCells = Engine::Instance().options<GameOptions>()->panel()->cellsCount();
+	const sf::Vector2i max = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell();
 
 	const sf::Vector2f bottomRight = sf::Vector2f(view->getCenter().x + view->getSize().x/2,
-										  view->getCenter().y + view->getSize().y/2);
+												  view->getCenter().y + view->getSize().y/2);
 
-	const float maxX = Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().x
-			* Engine::Instance().options<GameOptions>()->tileSize().x;
-	if (bottomRight.x > maxX)
-		view->setCenter(maxX - view->getSize().x/2, view->getCenter().y);
+	const sf::Vector2i bottomRightCell = posToCell(bottomRight);
 
-	const int extraCells = zoom ? 0 : Engine::Instance().options<GameOptions>()->panel()->cellsCount();
-	float maxY = (Engine::Instance().options<GameOptions>()->cursor()->getMaxCell().y + extraCells)
-			* Engine::Instance().options<GameOptions>()->tileSize().y;
-	if (bottomRight.y > maxY)
-		view->setCenter(view->getCenter().x, maxY - Engine::Instance().options<GameOptions>()->mapTileSize().y - view->getSize().y/2);
+	extraCells--;
+	if (zoom) extraCells--;
+
+	if (bottomRightCell.x >= max.x)
+		view->setCenter(max.x * Engine::Instance().options<GameOptions>()->tileSize().x
+						- view->getSize().x/2,
+						view->getCenter().y);
+
+	if (bottomRightCell.y >= max.y + extraCells)
+	{
+		view->setCenter(view->getCenter().x,
+						max.y * Engine::Instance().options<GameOptions>()->tileSize().y
+						- view->getSize().y/2
+						+ Engine::Instance().options<GameOptions>()->panel()->getPanelHeight() * zoomFactor
+						);
+	}
 }
 
 void Camera::setCenter(const sf::Vector2f &pos)
 {
 	view->setCenter(pos);
-	checkBorders();
+	fitScreen();
 }
 
 void Camera::updateScaleByMap(const sf::Vector2f &size)

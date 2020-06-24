@@ -43,7 +43,6 @@ public:
 
 	void resetView();
 
-	void checkBorders(bool zoom = false);
 
 	void setCenter(const sf::Vector2f& pos);
 
@@ -56,7 +55,12 @@ private:
 
 	sf::View *view;
 	int zoomRatio;
+	float zoomFactor;
 	sf::Vector2f viewSize;
+
+	void fitScreen();
+	void checkTopLeft();
+	void checkBottomRight(bool zoom = false);
 };
 
 #endif // CAMERA_H

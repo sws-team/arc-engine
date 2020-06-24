@@ -308,7 +308,14 @@ void GamePanel::updatePanel()
 
 int GamePanel::cellsCount() const
 {
-	return static_cast<int>(m_sprite.getGlobalBounds().height / Engine::Instance().options<GameOptions>()->tileSize().y);
+	return static_cast<int>(getPanelHeight() /
+							Engine::Instance().options<GameOptions>()->tileSize().y);
+}
+
+float GamePanel::getPanelHeight() const
+{
+	return m_sprite.getGlobalBounds().height
+								- PANEL_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y;
 }
 
 ACTION_STATE GamePanel::getCurrentIcon() const

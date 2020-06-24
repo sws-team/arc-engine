@@ -22,6 +22,7 @@ public:
 	void updatePanel();
 
 	int cellsCount() const;
+	float getPanelHeight() const;
 
 	constexpr static float ICON_SIZE = 64;
 	constexpr static float MINIMAP_SCALE = 0.3f;

@@ -11,14 +11,6 @@ class GameCursor : public GameObject
 public:
 	GameCursor();
 
-	enum MOVE_DIRECTIONS
-	{
-		MOVE_LEFT,
-		MOVE_RIGHT,
-		MOVE_UP,
-		MOVE_DOWN
-	};
-
 	void setMaxCells(int maxWidth, int maxHeight);
 	void setMaxCells(const sf::Vector2i &maxCell);
 
@@ -64,7 +56,6 @@ private:
 	sf::Vector2i m_cell;
 	sf::Vector2i m_maxCell;
 
-	bool canMove(MOVE_DIRECTIONS direction);
 	void updateCell();
 
 	enum CURSOR_STATES
@@ -87,8 +78,7 @@ private:
 	sf::Sprite towerSprite;
 	TOWER_TYPES towerType;
 
-	void updateMousePos();
-	void checkBorders();
+	void checkCursorFrameBorder();
 	void moveDownCursor();
 	void moveUpCursor();
 	void moveLeftCursor();
