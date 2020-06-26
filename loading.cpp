@@ -9,6 +9,8 @@
 #include "gameresource.h"
 #include "base64.h"
 
+#include <cstring>
+
 namespace  {
 	bool loadingFinihed = false;
 }

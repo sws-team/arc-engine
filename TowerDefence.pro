@@ -56,11 +56,13 @@ win32{
 LIBS += user32.lib
 RC_ICONS = icon.ico
 }
-unix{
+
+unix:!macx {
 LIBS += -lX11
 QMAKE_RPATHDIR += $ORIGIN/libs
 }
-macx{
+
+macx: {
 QMAKE_RPATHDIR += $ORIGIN/frameworks
 QMAKE_LFLAGS += -Wl,-rpath,@executable_path/frameworks
 #ICON = icon.icns

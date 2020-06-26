@@ -74,7 +74,6 @@ Level::Level() :
 	upgradeCostText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(fieldIconsCharacterSize));
 	upgradeCostText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
-
 	smokeRect.setPosition(0,0);
 	smokeRect.setFillColor(sf::Color(50, 50, 50, 128));
 

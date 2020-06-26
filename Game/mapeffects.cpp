@@ -518,6 +518,7 @@ void MoneyDrain::clear()
 		delete energyLeech;
 	energyLeeches.clear();
 	MapEffect::clear();
+	Engine::Instance().options<GameOptions>()->panel()->setDrain(false);
 }
 
 void MoneyDrain::towerRemoved(Tower *tower)

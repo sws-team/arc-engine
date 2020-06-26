@@ -306,6 +306,9 @@ void GameWindow::setState(const GAME_STATE &state)
 		if (starsValue == -1)
 		{
 			GamePlatform::Instance().incrementValue(STAT_COMPLETED_LEVELS);
+			if (starsValue == 5)
+				GamePlatform::Instance().incrementValue(STAT_5_STARS_COMPLETED_LEVELS);
+
 			Engine::Instance().options<GameOptions>()->setMissionFinished(mission, stars);
 			Engine::Instance().options<GameOptions>()->save();
 		}
