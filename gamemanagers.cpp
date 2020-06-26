@@ -6,7 +6,14 @@
 #include "Game/levelobject.h"
 
 const std::string GameManagers::resourcesFileName = "resources.dat";
-const unsigned short GameManagers::checksum = 0xbca5;
+const unsigned short GameManagers::checksum =
+#ifdef OS_WIN
+	0xbca5
+#else
+		0xe4c6
+#endif
+		;
+
 
 GameManagers::GameManagers()
 {
