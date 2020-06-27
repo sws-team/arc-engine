@@ -642,10 +642,12 @@ void GameOptions::checkCompletedMissions()
 	for(const GameOptions::CompletedMission& completedMission : m_save)
 	{
 		if (completedMission.stars == 5)
+		{
 			fiveStarsMissions++;
+			GamePlatform::Instance().setValue(STAT_5_STARS_COMPLETED_LEVELS, fiveStarsMissions);
+		}
 	}
 	GamePlatform::Instance().setValue(STAT_COMPLETED_LEVELS, m_save.size());
-	GamePlatform::Instance().setValue(STAT_5_STARS_COMPLETED_LEVELS, fiveStarsMissions);
 }
 
 void GameOptions::loadMaps()
