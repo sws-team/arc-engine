@@ -32,6 +32,9 @@ ManualWindow::ManualWindow()
 	credits.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::CREDITS));
 	credits.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	credits.scale(2,2);
+	hotkeys.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::CREDITS));
+	hotkeys.setScale(Engine::Instance().settingsManager()->getScaleFactor());
+	hotkeys.scale(2,2);
 
 	toolTip.setFont(Engine::Instance().fontManager()->font());
 	toolTip.setScale(Engine::Instance().settingsManager()->getScaleFactor());
@@ -122,6 +125,7 @@ void ManualWindow::paint(sf::RenderWindow *window)
 	window->draw(previous);
 	window->draw(next);
 	window->draw(credits);
+	window->draw(hotkeys);
 	window->draw(close);
 	window->draw(toolTip);
 	characterObject->draw(window);
@@ -150,6 +154,11 @@ void ManualWindow::eventFilter(sf::Event *event)
 			{
 				Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
 				return Engine::Instance().stateManager()->setState(StateManager::ABOUT);
+			}
+			if (hotkeys.getGlobalBounds().contains(pos))
+			{
+				Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
+				return Engine::Instance().stateManager()->setState(GameStateManager::HOTKEYS);
 			}
 			if (close.getGlobalBounds().contains(pos))
 			{
@@ -202,6 +211,14 @@ void ManualWindow::eventFilter(sf::Event *event)
 			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 		}
 
+		hotkeys.setColor(sf::Color::White);
+		if (hotkeys.getGlobalBounds().contains(pos))
+		{
+			hotkeys.setColor(SELECTED_COLOR);
+			toolTip.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CREDITS));
+			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
+		}
+
 		close.setColor(sf::Color::White);
 		if (close.getGlobalBounds().contains(pos))
 		{
@@ -250,7 +267,7 @@ void ManualWindow::updatePos()
 	const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 
 	const float TITLE_OFFSET = 12 * scaleFactor.y;
-	const float ICON_WIDTH = 2*Engine::Instance().options<GameOptions>()->tileSize().x;
+	const float ICON_WIDTH = 2 * Engine::Instance().options<GameOptions>()->tileSize().x;
 	const float ICON_HEIGHT = Engine::Instance().options<GameOptions>()->tileSize().y;
 	const float RECT_WIDTH = 464 * Engine::Instance().settingsManager()->getScaleFactor().x;
 	const float RECT_HEIGHT = 128 * Engine::Instance().settingsManager()->getScaleFactor().y;
@@ -289,9 +306,11 @@ void ManualWindow::updatePos()
 
 	previous.setPosition(buttonsPos);
 	next.setPosition(buttonsPos + sf::Vector2f(ICON_WIDTH, 0));
-	credits.setPosition(buttonsPos + sf::Vector2f(0, ICON_HEIGHT+ICON_Y_SPACE));
-	close.setPosition(buttonsPos + sf::Vector2f(ICON_WIDTH, ICON_HEIGHT+ICON_Y_SPACE));
-	toolTip.setPosition(buttonsPos + sf::Vector2f(0, ICON_HEIGHT*2 + ICON_Y_SPACE*2));
+	credits.setPosition(buttonsPos + sf::Vector2f(0 - ICON_X_OFFSET, ICON_HEIGHT + ICON_Y_SPACE));
+	hotkeys.setPosition(buttonsPos + sf::Vector2f(ICON_WIDTH - ICON_X_OFFSET, ICON_HEIGHT + ICON_Y_SPACE));
+	close.setPosition(buttonsPos + sf::Vector2f(ICON_WIDTH * 2 - ICON_X_OFFSET, ICON_HEIGHT + ICON_Y_SPACE));
+
+	toolTip.setPosition(buttonsPos + sf::Vector2f(0, ICON_HEIGHT*2 + ICON_Y_SPACE * 2));
 
 	sf::Vector2f pos = sf::Vector2f(ICON_X_OFFSET * 2, ICON_Y_OFFSET * 2);
 

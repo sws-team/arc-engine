@@ -13,6 +13,8 @@ public:
 	{
 		UNKNOWN = StateManager::USER_STATE,
 
+		HOTKEYS,
+
 		MANUAL,
 		CHOOSE_MISSION,
 		IN_GAME,

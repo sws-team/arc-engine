@@ -432,6 +432,7 @@ enum TRANSLATION_ID
 
 	SECOND,
 	DAMAGE_HP,
+	HOTKEYS,
 };
 }
 namespace GAME_FILES {

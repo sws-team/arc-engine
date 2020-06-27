@@ -1016,6 +1016,13 @@ void GameManagers::loadTranslations()
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_ABILITY, L"能力"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_ABILITY, L"Todas as atualize totalmente"));
 
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Hotkeys"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Hotkeys"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Hotkeys"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Hotkeys"));
+	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Hotkeys"));
+	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Hotkeys"));
+
 	Engine::Instance().translationsManager()->addTranslation(std::string("russian"), russainTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("french"), frenchTranslation);

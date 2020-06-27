@@ -94,6 +94,13 @@ GamePanel::GamePanel() :
 	readyText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(45));
 	readyText.setScale(scaleFactor);
 
+	hotkeyText.setFont(Engine::Instance().fontManager()->font());
+	hotkeyText.setFillColor(GameOptions::alternativePrimaryColor);
+	hotkeyText.setOutlineColor(GameOptions::secondaryColor);
+	hotkeyText.setOutlineThickness(1);
+	hotkeyText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(20));
+	hotkeyText.setScale(scaleFactor);
+
 	actionsSprites.push_back(&towerBaseSprite);
 	actionsSprites.push_back(&towerFreezeSprite);
 	actionsSprites.push_back(&towerRocketSprite);
@@ -193,6 +200,8 @@ void GamePanel::draw(sf::RenderTarget * const target)
 	target->draw(m_sprite);
 	target->draw(moneyCountText);
 	target->draw(info);
+	if (Engine::Instance().options<GameOptions>()->cursor()->inPanel())
+		target->draw(hotkeyText);
 
 	target->draw(abilityBombSprite);
 	target->draw(abilityFreezeBombSprite);
@@ -909,6 +918,33 @@ void GamePanel::setCurrentIcon(const ACTION_STATE &state)
 	}
 }
 
+void GamePanel::setCurrentTowerIcon(const TOWER_TYPES &state)
+{
+	switch (state)
+	{
+	case BASE:
+		currentCursorPos = 0;
+		break;
+	case POWER:
+		currentCursorPos = 3;
+		break;
+	case ROCKET:
+		currentCursorPos = 2;
+		break;
+	case FREEZE:
+		currentCursorPos = 1;
+		break;
+	case LASER:
+		currentCursorPos = 4;
+		break;
+	case IMPROVED:
+		currentCursorPos = 5;
+		break;
+	default:
+		break;
+	}
+}
+
 void GamePanel::resetPanelIcon()
 {
 	currentCursorPos = 128;
@@ -972,11 +1008,35 @@ void GamePanel::updateInfo()
 	sf::String str;
 	if (Engine::Instance().options<GameOptions>()->cursor()->inPanel())
 	{
+		sf::String hotkeyStr = "Hotkey" + EngineDefs::separator;
 		const ACTION_STATE state = getCurrentIcon();
 		if (state == ADD_TOWER)
 		{
 			const TOWER_TYPES type = currentTower();
 			str = towerInfo(type, nullptr);
+			switch (type)
+			{
+			case BASE:
+				hotkeyStr += "T";
+				break;
+			case POWER:
+				hotkeyStr += "G";
+				break;
+			case ROCKET:
+				hotkeyStr += "U";
+				break;
+			case FREEZE:
+				hotkeyStr += "Y";
+				break;
+			case LASER:
+				hotkeyStr += "H";
+				break;
+			case IMPROVED:
+				hotkeyStr += "J";
+				break;
+			default:
+				break;
+			}
 		}
 		else
 		{
@@ -984,28 +1044,35 @@ void GamePanel::updateInfo()
 			{
 			case ABILITY_BOMB:
 				str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_BOMB);
+				hotkeyStr += "Z";
 				break;
 			case ABILITY_FREEZE_BOMB:
 				str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_FREEZE_BOMB);
+				hotkeyStr += "X";
 				break;
 			case ABILITY_ACID:
 				str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_ACID);
+				hotkeyStr += "C";
 				break;
 			case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
 				str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_ATTACK_SPEED);
+				hotkeyStr += "B";
 				break;
 			case ABILITY_INCREASE_TOWER_DAMAGE:
 				str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_INCREASE_TOWER_DAMAGE);
+				hotkeyStr += "V";
 				break;
 			case ABILITY_STOP:
 				str = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ABILITY_STOP);
+				hotkeyStr += "N";
 				break;
 			default:
 				break;
 			}
 			str += EngineDefs::endline;
 			str += Instructions::abilityInfoText(state);
-		}
+		}		
+		hotkeyText.setString(hotkeyStr);
 	}
 	else
 	{
@@ -1016,6 +1083,9 @@ void GamePanel::updateInfo()
 					Engine::Instance().options<GameOptions>()->level()->selectedTower() != tower && tower != nullptr);
 	}
 	info.setString(str);
+	const float yTextOffset = 8 * Engine::Instance().settingsManager()->getScaleFactor().y;
+	hotkeyText.setPosition(info.getPosition().x,
+						   info.getPosition().y + info.getGlobalBounds().height + yTextOffset);
 }
 
 void GamePanel::initMission(unsigned int n)

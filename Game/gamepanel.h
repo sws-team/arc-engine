@@ -69,6 +69,7 @@ public:
 	void setDrain(bool drain);
 
 	void setCurrentIcon(const ACTION_STATE& state);
+	void setCurrentTowerIcon(const TOWER_TYPES& state);
 
 	void resetPanelIcon();
 
@@ -190,6 +191,7 @@ private:
 	sf::String towerStatsStr(TOWER_TYPES type, Tower *tower) const;
 
 	sf::Vector2f minimapPos;
+	sf::Text hotkeyText;
 };
 
 #endif // GAMEPANEL_H

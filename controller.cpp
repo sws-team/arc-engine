@@ -154,6 +154,24 @@ void Controller::eventFilter(sf::Event *event)
 			Engine::Instance().options<GameOptions>()->camera()->moveDownByCell();
 			break;
 #endif
+		case sf::Keyboard::T:
+			Engine::Instance().options<GameOptions>()->level()->activateBuildTower(BASE);
+			break;
+		case sf::Keyboard::Y:
+			Engine::Instance().options<GameOptions>()->level()->activateBuildTower(FREEZE);
+			break;
+		case sf::Keyboard::U:
+			Engine::Instance().options<GameOptions>()->level()->activateBuildTower(ROCKET);
+			break;
+		case sf::Keyboard::G:
+			Engine::Instance().options<GameOptions>()->level()->activateBuildTower(POWER);
+			break;
+		case sf::Keyboard::H:
+			Engine::Instance().options<GameOptions>()->level()->activateBuildTower(LASER);
+			break;
+		case sf::Keyboard::J:
+			Engine::Instance().options<GameOptions>()->level()->activateBuildTower(IMPROVED);
+			break;
 		case sf::Keyboard::Z:
 			Engine::Instance().options<GameOptions>()->level()->activateBombAbility();
 			break;
@@ -173,6 +191,7 @@ void Controller::eventFilter(sf::Event *event)
 			Engine::Instance().options<GameOptions>()->level()->activateStopAbility();
 			break;
 		case sf::Keyboard::Delete:
+		case sf::Keyboard::R:
 			Engine::Instance().options<GameOptions>()->level()->sellTower(Engine::Instance().options<GameOptions>()->level()->selectedTower());
 			break;
 		default:

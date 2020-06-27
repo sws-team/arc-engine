@@ -641,6 +641,12 @@ void Level::activateStopAbility()
 	choose(sf::Vector2i(0,0), true);
 }
 
+void Level::activateBuildTower(TOWER_TYPES type)
+{
+	Engine::Instance().options<GameOptions>()->panel()->setCurrentTowerIcon(type);
+	choose(sf::Vector2i(0,0), true);
+}
+
 void Level::upgradeTower(Tower *tower)
 {
 	if (tower == nullptr)

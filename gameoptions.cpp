@@ -647,7 +647,8 @@ void GameOptions::checkCompletedMissions()
 			GamePlatform::Instance().setValue(STAT_5_STARS_COMPLETED_LEVELS, fiveStarsMissions);
 		}
 	}
-	GamePlatform::Instance().setValue(STAT_COMPLETED_LEVELS, m_save.size());
+	for (size_t lvl = 0; lvl < m_save.size(); ++lvl)
+		GamePlatform::Instance().setValue(STAT_COMPLETED_LEVELS, lvl);
 }
 
 void GameOptions::loadMaps()

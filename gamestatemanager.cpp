@@ -7,6 +7,7 @@
 #include "aboutwindow.h"
 #include "settingswindow.h"
 #include "gameoptions.h"
+#include "Windows/hotkeyswindow.h"
 
 GameStateManager::GameStateManager()
 {
@@ -47,6 +48,9 @@ StateWindow *GameStateManager::createState(const GameState state)
 		break;
 	case IN_GAME:
 		stateWindow = new GameWindow();
+		break;
+	case HOTKEYS:
+		stateWindow = new HotkeysWindow();
 		break;
 	default:
 		break;

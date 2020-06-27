@@ -103,6 +103,7 @@ private:
 	sf::Sprite previous;
 	sf::Sprite close;
 	sf::Sprite credits;
+	sf::Sprite hotkeys;
 	sf::Text toolTip;
 
 	void nextPage();

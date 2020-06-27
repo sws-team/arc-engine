@@ -109,6 +109,9 @@ public:
 	void activateIncreaseTowerDamageAbility();
 	void activateIncreaseTowerAttackSpeedAbility();
 	void activateStopAbility();
+
+	void activateBuildTower(TOWER_TYPES type);
+
 	void upgradeTower(Tower *tower);
 	void sellTower(Tower *tower);
 
