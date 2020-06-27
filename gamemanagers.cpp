@@ -587,6 +587,10 @@ std::vector<sf::String> GameManagers::creators()
 	creatorsVec.push_back(sf::String("Shaders:"));
 	creatorsVec.push_back(sf::String("http://glslsandbox.com"));
 
+	creatorsVec.push_back(sf::String());
+	creatorsVec.push_back(sf::String());
+	creatorsVec.push_back(sf::String());
+	creatorsVec.push_back(sf::String());
 	creatorsVec.push_back(sf::String("Thank you for playing!"));
 
 	return creatorsVec;
