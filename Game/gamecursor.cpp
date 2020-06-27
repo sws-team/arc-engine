@@ -257,17 +257,18 @@ void GameCursor::checkCursorFrameBorder()
 	const sf::Vector2i pixelPos = sf::Mouse::getPosition(*Engine::Instance().window());
 	const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(
 				pixelPos, *Engine::Instance().options<GameOptions>()->camera()->getView()) + sf::Vector2f(1, 1);
-	const sf::Vector2i cell = sf::Vector2i(pos.x/Engine::Instance().options<GameOptions>()->tileSize().x,
+
+	const sf::Vector2f cellf = sf::Vector2f(pos.x/Engine::Instance().options<GameOptions>()->tileSize().x,
 										   pos.y/Engine::Instance().options<GameOptions>()->tileSize().y);
 
-	if (cell.x <= Engine::Instance().options<GameOptions>()->camera()->viewLeftCell() && !m_inPanel)
+	if (floor(cellf.x) <= Engine::Instance().options<GameOptions>()->camera()->viewLeftCell() && !m_inPanel)
 		moveLeftCursor();
-	if (cell.x >= Engine::Instance().options<GameOptions>()->camera()->viewRightCell() && !m_inPanel)
+	if (ceil(cellf.x) >= Engine::Instance().options<GameOptions>()->camera()->viewRightCell() && !m_inPanel)
 		moveRightCursor();
-	if (cell.y <= Engine::Instance().options<GameOptions>()->camera()->viewTopCell())
+	if (floor(cellf.y) <= Engine::Instance().options<GameOptions>()->camera()->viewTopCell())
 		moveUpCursor();	
-	if (cell.y >= Engine::Instance().options<GameOptions>()->camera()->viewBottomCell())
-		moveDownCursor();	
+	if (ceil(cellf.y) >= Engine::Instance().options<GameOptions>()->camera()->viewBottomCell())
+		moveDownCursor();
 }
 
 void GameCursor::moveDownCursor()
