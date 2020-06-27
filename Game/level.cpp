@@ -101,14 +101,14 @@ void Level::draw(sf::RenderTarget *const target)
 	{
 		for(const ActionPoint& actionPoint : spawnPoints)
 		{
-#ifndef RELEASE_BUILD
+#ifdef DEV_BUILD
 			target->draw(actionPoint.rect);
 #endif
 			actionPoint.object->draw(target);
 		}
 		for(const ActionPoint& actionPoint : endPoints)
 		{
-#ifndef RELEASE_BUILD
+#ifdef DEV_BUILD
 			target->draw(actionPoint.rect);
 #endif
 			actionPoint.object->draw(target);
@@ -201,7 +201,7 @@ void Level::startMission(const unsigned int n)
 		wave.respawnTime = _testInterval;
 		for (int i = 0; i < _testEnemiesCount; ++i)
 		{
-#if RELEASE_BUILD
+#ifndef DEV_BUILD
 			for (int j = ENEMY_TYPES::INFANTRY; j < ENEMY_TYPES::BUGSAURUS; ++j)
 				wave.spawnEnemies.push_back(static_cast<ENEMY_TYPES>(j));
 #else
@@ -1037,7 +1037,7 @@ void Level::rotateAcid()
 {
 	abilities->acidAbility->rotate();
 }
-#ifndef RELEASE_BUILD
+#ifdef DEV_BUILD
 void Level::test()
 {
 	changeState(LEVEL_STATE::WIN);

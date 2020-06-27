@@ -76,7 +76,7 @@ void Controller::eventFilter(sf::Event *event)
 			Engine::Instance().options<GameOptions>()->level()->chooseCurrent();
 		}
 			break;
-#ifndef RELEASE_BUILD
+#ifdef DEV_BUILD
 		case sf::Keyboard::F2:
 			Engine::Instance().options<GameOptions>()->level()->test();
 			break;
@@ -140,7 +140,7 @@ void Controller::eventFilter(sf::Event *event)
 		case sf::Keyboard::Down:
 			Engine::Instance().options<GameOptions>()->cursor()->moveDown();
 			break;
-#ifndef RELEASE_BUILD
+#ifdef DEV_BUILD
 		case sf::Keyboard::A:
 			Engine::Instance().options<GameOptions>()->camera()->moveLeftByCell();
 			break;

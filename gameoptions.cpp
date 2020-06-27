@@ -243,7 +243,7 @@ sf::Vector2f GameOptions::mapTileSize() const
 
 bool GameOptions::verifyChecksum()
 {
-#ifndef RELEASE_BUILD
+#ifdef DEV_BUILD
 	return true;
 #endif
 	std::ifstream stream(GameManagers::resourcesFileName);

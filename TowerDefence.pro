@@ -69,7 +69,7 @@ QMAKE_LFLAGS += -Wl,-rpath,@executable_path/frameworks
 }
 
 #DEFINES += DEMO_VERSION
-DEFINES += RELEASE_BUILD
+#DEFINES += DEV_BUILD
 
 #DEFINES += LOAD_MAPS
 #DEFINES += LOAD_BALANCE
@@ -79,4 +79,7 @@ TARGET = ArcDefenceDemo
 win32{
 RC_ICONS = demo_icon.ico
 }
+}
+contains(DEFINES, DEV_BUILD){
+TARGET = ArcDefenceDev
 }

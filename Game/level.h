@@ -78,7 +78,7 @@ public:
 	unsigned int getCurrentWave() const;
 	void rotateAcid();
 
-#ifndef RELEASE_BUILD
+#ifdef DEV_BUILD
 	void test();
 	void giveMeMoney();
 	void enableDrain();

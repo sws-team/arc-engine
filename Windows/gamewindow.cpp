@@ -311,6 +311,15 @@ void GameWindow::setState(const GAME_STATE &state)
 
 			Engine::Instance().options<GameOptions>()->setMissionFinished(mission, stars);
 			Engine::Instance().options<GameOptions>()->save();
+
+			int fiveStarsMissions = 0;
+			for(const GameOptions::CompletedMission& completedMission : Engine::Instance().options<GameOptions>()->getCompletedMissions())
+			{
+				if (completedMission.stars == 5)
+					fiveStarsMissions++;
+			}
+			GamePlatform::Instance().setValue(STAT_COMPLETED_LEVELS, Engine::Instance().options<GameOptions>()->getCompletedMissions().size());
+			GamePlatform::Instance().setValue(STAT_5_STARS_COMPLETED_LEVELS, Engine::Instance().options<GameOptions>()->getCompletedMissions().size());
 		}
 		else
 		{

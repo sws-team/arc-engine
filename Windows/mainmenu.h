@@ -13,7 +13,7 @@ public:
 	void accept() override;
 	void closeEvent() override;
 	void paint(sf::RenderWindow *window) override;
-#ifndef RELEASE_BUILD
+#ifdef DEV_BUILD
 	void eventFilter(sf::Event* event) override;
 #endif
 private:
@@ -27,7 +27,7 @@ private:
 #ifdef GAME_NAME
 	sf::Text gameName;
 #endif
-#ifndef RELEASE_BUILD
+#ifdef DEV_BUILD
 	sf::Text clearStats;
 	sf::Text clearSaves;
 #endif

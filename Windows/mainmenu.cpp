@@ -36,7 +36,7 @@ MainMenu::MainMenu()
 	logo.setPosition(512 * scaleFactor.x,
 					 32 * scaleFactor.y);
 
-#ifndef RELEASE_BUILD
+#ifdef DEV_BUILD
 	clearStats.setFont(Engine::Instance().fontManager()->font());
 	clearStats.setString("Clear stats");
 	clearStats.setFillColor(sf::Color::Cyan);
@@ -102,13 +102,13 @@ void MainMenu::paint(sf::RenderWindow *window)
 	window->draw(gameName);
 #endif
 	window->draw(logo);
-#ifndef RELEASE_BUILD
+#ifdef DEV_BUILD
 	window->draw(clearStats);
 	window->draw(clearSaves);
 #endif
 }
 
-#ifndef RELEASE_BUILD
+#ifdef DEV_BUILD
 void MainMenu::eventFilter(sf::Event *event)
 {
 	if (event->type == sf::Event::MouseButtonPressed)
