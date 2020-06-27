@@ -195,7 +195,7 @@ private:
 	std::set<TOWER_TYPES> fullyUpgradedTowers;
 	bool abilityActivated;
 	bool attackTowerBuilded;
-	static constexpr float ECONOMIST_MONEY_VALUE = 15000;
+	static constexpr float ECONOMIST_MONEY_VALUE = 5000;
 
 	bool showBuildRects;
 	std::vector<sf::RectangleShape> buildCells;
