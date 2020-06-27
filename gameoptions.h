@@ -79,6 +79,8 @@ public:
 	static const sf::Color secondaryColor;
 	static const sf::Color alternativePrimaryColor;
 	static const sf::Color alternativeSecondaryColor;
+
+	void checkCompletedMissions();
 private:
 	Camera *m_camera;
 	GameCursor *m_cursor;

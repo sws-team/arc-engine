@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 	Engine::Instance().options<GameOptions>()->loadAchievements();
+	GamePlatform::Instance().setStatsReceivedCallback(std::bind(&GameOptions::checkCompletedMissions, Engine::Instance().options<GameOptions>()));
 	GamePlatform::Instance().requestStats();
 	Engine::Instance().fontManager()->setFontModifier(0.75f);
 

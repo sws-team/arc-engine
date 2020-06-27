@@ -1035,7 +1035,8 @@ unsigned int Level::getCurrentWave() const
 
 void Level::rotateAcid()
 {
-	abilities->acidAbility->rotate();
+	if (m_actionState == ABILITY_ACID)
+		abilities->acidAbility->rotate();
 }
 #ifdef DEV_BUILD
 void Level::test()
