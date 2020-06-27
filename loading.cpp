@@ -65,7 +65,7 @@ void showLoading()
 		sf::Event event;
 		window.pollEvent(event);
 
-		window.clear(sf::Color::Red);
+		window.clear(sf::Color::Black);
 		animation.update();
 		animation.draw(&window);
 		window.display();
