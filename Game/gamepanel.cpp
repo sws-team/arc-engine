@@ -1214,8 +1214,10 @@ void GamePanel::setMapSize(const sf::Vector2f& size)
 	if (miniMapRect != nullptr)
 		delete miniMapRect;
 	miniMapRect = new sf::RectangleShape();
-	rTexture.create(static_cast<unsigned int>(size.x), static_cast<unsigned int>(size.y));
-	const sf::Vector2f miniMapSize = sf::Vector2f(344.f, 213.f);
+	rTexture.create(static_cast<unsigned int>(size.x * Engine::Instance().settingsManager()->getScaleFactor().x),
+					static_cast<unsigned int>(size.y * Engine::Instance().settingsManager()->getScaleFactor().y));
+	const sf::Vector2f miniMapSize = sf::Vector2f(344.f * Engine::Instance().settingsManager()->getScaleFactor().x,
+												  213.f * Engine::Instance().settingsManager()->getScaleFactor().y);
 	miniMapRect->setSize(miniMapSize);
 	miniMapRect->setPosition(minimapPos);
 }
