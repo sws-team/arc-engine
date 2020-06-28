@@ -29,10 +29,10 @@ public:
 	void zoomOut();
 	void resetZoom();
 
-	int viewTopCell() const;
-	int viewLeftCell() const;
-	int viewRightCell() const;
-	int viewBottomCell() const;
+	float viewTop() const;
+	float viewLeft() const;
+	float viewRight() const;
+	float viewBottom() const;
 	sf::Vector2i viewCenter() const;
 
 	sf::Vector2i posToCellMap(const sf::Vector2f &pos) const;

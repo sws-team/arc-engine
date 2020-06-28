@@ -108,24 +108,24 @@ void Camera::resetZoom()
 	zoomFactor = 1.f;
 }
 
-int Camera::viewTopCell() const
+float Camera::viewTop() const
 {
-	return static_cast<int>(round((view->getCenter().y - view->getSize().y/2)/Engine::Instance().options<GameOptions>()->tileSize().y));
+	return view->getCenter().y - view->getSize().y/2;
 }
 
-int Camera::viewLeftCell() const
+float Camera::viewLeft() const
 {
-	return static_cast<int>(round((view->getCenter().x - view->getSize().x/2)/Engine::Instance().options<GameOptions>()->tileSize().x));
+	return view->getCenter().x - view->getSize().x/2;
 }
 
-int Camera::viewRightCell() const
+float Camera::viewRight() const
 {
-	return static_cast<int>(floor((view->getCenter().x + view->getSize().x/2)/Engine::Instance().options<GameOptions>()->tileSize().x));
+	return view->getCenter().x + view->getSize().x/2;
 }
 
-int Camera::viewBottomCell() const
+float Camera::viewBottom() const
 {
-	return static_cast<int>(floor((view->getCenter().y + view->getSize().y/2)/Engine::Instance().options<GameOptions>()->tileSize().y));
+	return view->getCenter().y + view->getSize().y/2;
 }
 
 sf::Vector2i Camera::viewCenter() const
