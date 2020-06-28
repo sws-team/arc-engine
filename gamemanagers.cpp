@@ -10,7 +10,7 @@ const unsigned short GameManagers::checksum =
 #ifdef OS_WIN
 		0x5836
 #else
-		0xe4c6
+		0x4459
 #endif
 		;
 
