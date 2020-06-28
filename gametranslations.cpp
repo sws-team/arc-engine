@@ -1017,11 +1017,103 @@ void GameManagers::loadTranslations()
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::TOWER_ABILITY, L"Todas as atualize totalmente"));
 
 	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Hotkeys"));
-	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Hotkeys"));
-	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Hotkeys"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Горячие клавиши"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Raccourcis clavier"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Hotkeys"));
-	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Hotkeys"));
-	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Hotkeys"));
+	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"热键"));
+	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEYS, L"Teclas de atalho"));
+
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEY, L"Hotkey"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEY, L"Горячая клавиша"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEY, L"Raccourci clavier"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEY, L"Hotkey"));
+	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEY, L"热键"));
+	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::HOTKEY, L"Tecla de atalho"));
+
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ALL_HOTKEYS_TEXT, L"Space - start/skip\n"
+																		  "Enter - action/next\n"
+																		  "Escape - pause/back\n"
+																		  "BackSpace - reset camera\n"
+																		  "Tab - rotate acid ability\n"
+																		  "Q - swap to the panel\n"
+																		  "F - upgrade selected tower\n"
+																		  "+, wheel up - zoom in\n"
+																		  "-, wheel down - zoom out\n"
+																		  "Left - move cursor left\n"
+																		  "Right - move cursor right\n"
+																		  "Up - move cursor up\n"
+																		  "Down - move cursor down\n"
+																		  "T - build base tower\n"
+																		  "Y - build freeze tower\n"
+																		  "U - build rocket tower\n"
+																		  "G - build energy tower\n"
+																		  "H - build laser tower\n"
+																		  "J - build improved tower\n"
+																		  "Z - activate bomb ability\n"
+																		  "X - activate freeze bomb ability\n"
+																		  "C - activate acid ability\n"
+																		  "V - activate increase tower damage ability\n"
+																		  "B - activate increase tower attack speed ability\n"
+																		  "N - activate stop ability\n"
+																		  "R, Delete - sell tower\n"
+																		  "F3 - show FPS"));
+	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ALL_HOTKEYS_TEXT, L"Space - начать/пропустить\n"
+																		  "Enter - действие/далее\n"
+																		  "Escape - пауза/назад\n"
+																		  "BackSpace - сбросить камеру\n"
+																		  "Tab - повернуть кислоту\n"
+																		  "Q - переключиться в панель\n"
+																		  "А - улучшить выбранную башню\n"
+																		  "+, колесо мыши вверх - приблизить\n"
+																		  "-, колесо мыши вниз - отдалить\n"
+																		  "Left - курсор влево\n"
+																		  "Right - курсор вправо\n"
+																		  "Up - курсор вверх\n"
+																		  "Down - курсор вниз\n"
+																		  "T - простроить обычную башню\n"
+																		  "Y - простроить замораживающую башню\n"
+																		  "U - построить ракетную башню\n"
+																		  "G - построить энергетическую башню\n"
+																		  "H - построить лазерную башню\n"
+																		  "J - построить улучшенную башню\n"
+																		  "Z - выбрать бомбу\n"
+																		  "X - выбрать замораживающую бомбу\n"
+																		  "C - выбрать кислоту\n"
+																		  "V - выбрать способность увеличения урона башни\n"
+																		  "B - выбрать способность ускорения башни\n"
+																		  "N - использовать способность остановки врагов\n"
+																		  "R, Delete - продать башню\n"
+																		  "F3 - показать FPS"));
+	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ALL_HOTKEYS_TEXT, L"Space - commencer/ignorer\n"
+																		 "Enter - valider/suivant\n"
+																		 "Escape - pause/retourner\n"
+																		 "BackSpace - réinitialiser les valeurs par défaut de la caméra\n"
+																		 "Tab - tourner la zone de propagation de l'acide\n"
+																		 "Q - changer contre la panelle\n"
+																		 "F - fare l'upgrade d'une tour\n"
+																		 "=, roulette de la souris vers le bas, roulette de la souris vers le bas - zoomer en avant\n"
+																		 "-, roulette de la souris vers le bas - zoomer en arrière\n"
+																		 "touche gauche - déplacer le curseur vers le gauche\n"
+																		 "touche droite - déplacer le curseur vers le droit\n"
+																		 " flèche montante - déplacer le curseur vers le haut\n"
+																		 " flèche descendante - déplacer le curseur vers le bas\n"
+																		 "T - construire une Tour de base\n"
+																		 "Y - construire une Tour a obus glaçants\n"
+																		 "U - construire une Tour reacteur-fusée\n"
+																		 "G - construire une Tour de production d'énergie\n"
+																		 "H - construire uneTour laser\n"
+																		 "J - construire une Tour de base améliorée\n"
+																		 "Z - activer une bombe\n"
+																		 "X - activer une bombe-glace\n"
+																		 "C - utiliser de l'acide\n"
+																		 "V - faire augmenter les dommages\n"
+																		 "B - faire augmenter la vitesse d'attaque\n"
+																		 "N - activer la stase\n"
+																		 "R, Delete - vendre une tour\n"
+																		 "F3 - afficher FPS"));
+	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ALL_HOTKEYS_TEXT, L"Hotkey"));
+	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::ALL_HOTKEYS_TEXT, L"热键"));
+	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::ALL_HOTKEYS_TEXT, L"Tecla de atalho"));
 
 	Engine::Instance().translationsManager()->addTranslation(std::string("russian"), russainTranslation);
 	Engine::Instance().translationsManager()->addTranslation(std::string("english"), englishTranslation);

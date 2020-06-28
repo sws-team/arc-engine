@@ -32,7 +32,7 @@ ManualWindow::ManualWindow()
 	credits.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::CREDITS));
 	credits.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	credits.scale(2,2);
-	hotkeys.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::CREDITS));
+	hotkeys.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::HOTKEYS));
 	hotkeys.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 	hotkeys.scale(2,2);
 
@@ -215,7 +215,7 @@ void ManualWindow::eventFilter(sf::Event *event)
 		if (hotkeys.getGlobalBounds().contains(pos))
 		{
 			hotkeys.setColor(SELECTED_COLOR);
-			toolTip.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::CREDITS));
+			toolTip.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::HOTKEYS));
 			Engine::Instance().soundManager()->playOnce(SoundManager::HOVER);
 		}
 
@@ -791,7 +791,14 @@ void ManualWindow::Element::update()
 		}
 			break;
 		case ABILITY_ACID:
-			objectTexture = GAME_TEXTURE::ABILITY_ACID;
+		{
+			animationSpeed = 450;
+			frameCount = 4;
+			frameSize = sf::Vector2i(12 * GameOptions::CELL_SIZE,
+									 3 * GameOptions::CELL_SIZE);
+			objectTexture = GAME_TEXTURE::VENOM_EFFECT;
+			objectScale = 0.4f;
+		}
 			break;
 		case ABILITY_INCREASE_TOWER_ATTACK_SPEED:
 

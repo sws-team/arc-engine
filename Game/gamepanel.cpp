@@ -1008,7 +1008,8 @@ void GamePanel::updateInfo()
 	sf::String str;
 	if (Engine::Instance().options<GameOptions>()->cursor()->inPanel())
 	{
-		sf::String hotkeyStr = "Hotkey" + EngineDefs::separator;
+		sf::String hotkeyStr = Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::HOTKEY);
+		hotkeyStr += EngineDefs::separator;
 		const ACTION_STATE state = getCurrentIcon();
 		if (state == ADD_TOWER)
 		{

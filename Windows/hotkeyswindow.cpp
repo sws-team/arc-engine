@@ -11,9 +11,9 @@ HotkeysWindow::HotkeysWindow()
 
 	headerText.setFont(Engine::Instance().fontManager()->font());
 	headerText.setScale(Engine::Instance().settingsManager()->getScaleFactor());
-	headerText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(100));
+	headerText.setCharacterSize(Engine::Instance().fontManager()->getCharSize(80));
 	headerText.setOutlineThickness(1.f);
-	headerText.setFillColor(GameOptions::primaryColor);
+	headerText.setFillColor(GameOptions::alternativePrimaryColor);
 	headerText.setOutlineColor(GameOptions::secondaryColor);
 
 	text.setFont(Engine::Instance().fontManager()->font());
@@ -23,45 +23,22 @@ HotkeysWindow::HotkeysWindow()
 	text.setFillColor(GameOptions::primaryColor);
 	text.setOutlineColor(GameOptions::secondaryColor);
 
-	headerText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::HOTKEYS));
+	rect.setTexture(Engine::Instance().texturesManager()->getTexture(GAME_TEXTURE::HOTKEYS_FRAME));
+	rect.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
-	sf::String str;
-	str += "Space - start/skip" + EngineDefs::endline;
-	str += "Return - action/next" + EngineDefs::endline;
-	str += "Escape - pause/back" + EngineDefs::endline;
-	str += "BackSpace - reset camera" + EngineDefs::endline;
-	str += "Tab - rotate acid ability" + EngineDefs::endline;
-	str += "Q - swap panel" + EngineDefs::endline;
-	str += "F - upgrade selected tower" + EngineDefs::endline;
-	str += "+ - zoom in" + EngineDefs::endline;
-	str += "- - zoom out" + EngineDefs::endline;
-	str += "Left - move cursor left" + EngineDefs::endline;
-	str += "Right - move cursor right" + EngineDefs::endline;
-	str += "Up - move cursor up" + EngineDefs::endline;
-	str += "Down - move cursor down" + EngineDefs::endline;
-	str += "T - build base tower" + EngineDefs::endline;
-	str += "Y - build freeze tower" + EngineDefs::endline;
-	str += "U - build rocket tower" + EngineDefs::endline;
-	str += "G - build energy tower" + EngineDefs::endline;
-	str += "H - build laser tower" + EngineDefs::endline;
-	str += "J - build improved tower" + EngineDefs::endline;
-	str += "Z - activate bomb ability" + EngineDefs::endline;
-	str += "X - activate freeze bomb ability" + EngineDefs::endline;
-	str += "C - activate acid ability" + EngineDefs::endline;
-	str += "V - activate increase tower damage ability" + EngineDefs::endline;
-	str += "B - activate increase tower attack speed ability" + EngineDefs::endline;
-	str += "N - activate stop ability" + EngineDefs::endline;
-	str += "R, Delete - sell tower" + EngineDefs::endline;
-	str += "F3 - show FPS" + EngineDefs::endline;
-	text.setString(str);
+	headerText.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::HOTKEYS));
+	text.setString(Engine::Instance().translationsManager()->translate(GAME_TRANSLATION::ALL_HOTKEYS_TEXT));
 
 	const float offset = 32 * Engine::Instance().settingsManager()->getScaleFactor().y;
-	const float yOffset = 100 * Engine::Instance().settingsManager()->getScaleFactor().y;
-	headerText.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 -
-						   headerText.getGlobalBounds().width/2,
-						   yOffset);
-	text.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 -
-					 text.getGlobalBounds().width/2, yOffset + headerText.getGlobalBounds().height + offset);
+
+	rect.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 - rect.getGlobalBounds().width/2,
+					 Engine::Instance().settingsManager()->getResolution().y/2 - rect.getGlobalBounds().height/2);
+
+	headerText.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 - headerText.getGlobalBounds().width/2,
+						   rect.getPosition().y + offset);
+
+	text.setPosition(rect.getPosition().x + offset * 2,
+					 rect.getPosition().y + offset + headerText.getGlobalBounds().height + offset);
 }
 
 HotkeysWindow::~HotkeysWindow()
@@ -77,6 +54,7 @@ void HotkeysWindow::back()
 void HotkeysWindow::paint(sf::RenderWindow *window)
 {
 	drawBackground(window);
+	window->draw(rect);
 	window->draw(headerText);
 	window->draw(text);
 }

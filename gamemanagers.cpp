@@ -8,7 +8,7 @@
 const std::string GameManagers::resourcesFileName = "resources.dat";
 const unsigned short GameManagers::checksum =
 #ifdef OS_WIN
-	0xbca5
+		0x5836
 #else
 		0xe4c6
 #endif
@@ -176,6 +176,8 @@ void GameManagers::loadResources()
 				addTexture(TexturesManager::FOCUS_ICON, out);
 			else if (resource.name == "credits_icon")
 				addTexture(GAME_TEXTURE::CREDITS, out);
+			else if (resource.name == "hotkeys_icon")
+				addTexture(GAME_TEXTURE::HOTKEYS, out);
 			else if (resource.name == "cursor")
 				addTexture(TexturesManager::CURSOR, out);
 			else if (resource.name == "icon")	
@@ -242,6 +244,8 @@ void GameManagers::loadResources()
 				addTexture(GAME_TEXTURE::NAME_FRAME, out);
 			else if (resource.name == "demo_frame")
 				addTexture(GAME_TEXTURE::DEMO_FRAME, out);
+			else if (resource.name == "hotkeys_rect")
+				addTexture(GAME_TEXTURE::HOTKEYS_FRAME, out);
 			}
 			//weapons
 			{

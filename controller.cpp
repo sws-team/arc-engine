@@ -203,7 +203,7 @@ void Controller::eventFilter(sf::Event *event)
 	{
 		if (event->mouseWheelScroll.delta < 0)
 			Engine::Instance().options<GameOptions>()->camera()->zoomOut();
-		else
+		else if (event->mouseWheelScroll.delta > 0)
 			Engine::Instance().options<GameOptions>()->camera()->zoomIn();
 	}
 		break;

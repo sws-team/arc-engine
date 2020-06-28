@@ -17,6 +17,7 @@ protected:
 private:
 	sf::Text headerText;
 	sf::Text text;
+	sf::Sprite rect;
 };
 
 #endif // HOTKEYSWINDOW_H
