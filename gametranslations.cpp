@@ -91,7 +91,7 @@ void GameManagers::loadTranslations()
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMALL, L"小"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::SMALL, L"Pequeno"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::MID, L"Mid"));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::MID, L"Medium"));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::MID, L"Средний"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::MID, L"Moyenne"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::MID, L"Mittelfein"));
@@ -615,7 +615,7 @@ void GameManagers::loadTranslations()
 	chineseTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER, L"发射一个纳米机器人网络，暂时关闭信号塔"));
 	brazilianTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_SHUTDOWN_TOWER, L"Atira em uma rede nanobot, desativando\na torre temporariamente"));
 
-	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"Has an energy shield that gets\nwicker every second."));
+	englishTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"Has an energy shield that gets\nweaker every second."));
 	russainTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"Оснащен энергетическим щитом,\nвеличина заряда которого уменьшается со временем"));
 	frenchTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"Son bouclier d'énergie devient\nprogressivement de plus en plus faible"));
 	germanTranslation.insert(TR_PAIR(GAME_TRANSLATION::ENEMY_ABILITY_STRONG, L"Der Energieschild wird mit jeder\nSekunde stärker."));

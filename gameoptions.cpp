@@ -648,7 +648,7 @@ void GameOptions::checkCompletedMissions()
 		}
 	}
 	for (size_t lvl = 0; lvl < m_save.size(); ++lvl)
-		GamePlatform::Instance().setValue(STAT_COMPLETED_LEVELS, lvl);
+		GamePlatform::Instance().setValue(STAT_COMPLETED_LEVELS, lvl + 1);
 }
 
 void GameOptions::loadMaps()
