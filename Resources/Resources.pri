@@ -1,7 +1,8 @@
 INCLUDEPATH += $$PWD
 
-SOURCES += \
-    gameresource.cpp
-
 HEADERS += \
-    gameresource.h 
+    $$PWD/gameresource.h
+
+SOURCES += \
+    $$PWD/gameresource.cpp
+
