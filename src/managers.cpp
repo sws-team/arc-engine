@@ -437,6 +437,14 @@ void FontManager::addFont(const FontType type, const sf::Font& font)
 	m_fonts.insert(std::pair<FontType, sf::Font>(type, font));
 }
 
+void FontManager::addFont(const FontType type, const std::string &path)
+{
+	sf::Font font;
+	if (!font.loadFromFile(path))
+		return;
+	addFont(type, font);
+}
+
 void FontManager::addFont(const FontType type, const char *data, const size_t size)
 {
 	sf::Font font;
