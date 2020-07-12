@@ -182,7 +182,8 @@ sf::Texture &TexturesManager::getTexture(TextureType type)
 void TexturesManager::addTexture(const TextureType type, const std::string &path)
 {
 	sf::Texture texture;
-	texture.loadFromFile(path);
+	if (!texture.loadFromFile(path))
+		return;
 	m_textures.insert(std::pair<int, sf::Texture>(type, texture));
 }
 
@@ -191,7 +192,8 @@ void TexturesManager::addTexture(const TextureType type, const char *data, const
 	sf::Texture texture;
 	void *textureData = malloc(size);
 	std::memcpy(textureData,(void*)data, size);
-	texture.loadFromMemory(textureData, size);
+	if (!texture.loadFromMemory(textureData, size))
+		return;
 	m_textures.insert(std::pair<int, sf::Texture>(type, texture));
 }
 
