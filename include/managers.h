@@ -215,7 +215,7 @@ class FontManager : public Manager
 public:
 	FontManager();
 
-	void addFont(const FontType type, const sf::Font &font);
+	void addFont(const FontType type, sf::Font *font);
 	void addFont(const FontType type, const std::string &path);
 	void addFont(const FontType type, const char *data, const size_t size);
 
@@ -235,7 +235,7 @@ public:
 	void setFontModifier(float fontModifier);
 
 private:
-	std::map<FontType, sf::Font> m_fonts;
+	std::map<FontType, sf::Font*> m_fonts;
 	float m_fontModifier;
 };
 

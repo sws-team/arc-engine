@@ -37,12 +37,18 @@ SettingsManager::SettingsManager():
   ,fullscreen(true)
   ,shaders(true)
 {
-	resolution = defaultResolution;
+	reset();
 }
 
 void SettingsManager::reset()
 {
+#ifdef OS_ANDROID
+	const sf::VideoMode videoMode = sf::VideoMode::getDesktopMode();
+	resolution.x = videoMode.width;
+	resolution.y = videoMode.height;
+#else
 	resolution = defaultResolution;
+#endif
 }
 
 float SettingsManager::getMusicLevel() const
@@ -432,25 +438,25 @@ FontManager::FontManager()
 
 }
 
-void FontManager::addFont(const FontType type, const sf::Font& font)
+void FontManager::addFont(const FontType type, sf::Font* font)
 {
-	m_fonts.insert(std::pair<FontType, sf::Font>(type, font));
+	m_fonts.insert(std::pair<FontType, sf::Font*>(type, font));
 }
 
 void FontManager::addFont(const FontType type, const std::string &path)
 {
-	sf::Font font;
-	if (!font.loadFromFile(path))
+	sf::Font *font = new sf::Font();
+	if (!font->loadFromFile(path))
 		return;
 	addFont(type, font);
 }
 
 void FontManager::addFont(const FontType type, const char *data, const size_t size)
 {
-	sf::Font font;
+	sf::Font *font = new sf::Font();
 	void *fontData = malloc(size);
 	std::memcpy(fontData,(void*)data, size);
-	if (!font.loadFromMemory(fontData, size))
+	if (!font->loadFromMemory(fontData, size))
 		return;
 	addFont(type, font);
 }
@@ -464,7 +470,7 @@ sf::Font &FontManager::font()
 
 sf::Font &FontManager::getFont(FontType type)
 {
-	return m_fonts.at(type);
+	return *m_fonts.at(type);
 }
 
 unsigned int FontManager::getCharSize(const unsigned int size)
@@ -605,15 +611,22 @@ void Options::setMainWindow(MainWindow *window)
 
 void Options::updateWindow()
 {
-	mw->create(sf::VideoMode(Engine::Instance().Instance().settingsManager()->getResolution().x,
-							 Engine::Instance().Instance().settingsManager()->getResolution().y),
-			   sf::String(Engine::Instance().globalVariables()->appName()),
-			   Engine::Instance().Instance().settingsManager()->getFullscreen()?sf::Style::Fullscreen:sf::Style::Default,
-			   sf::ContextSettings(0, 0, 8)
+	mw->create(
+#ifdef OS_ANDROID
+				sf::VideoMode::getDesktopMode()
+#else
+				sf::VideoMode(Engine::Instance().Instance().settingsManager()->getResolution().x,
+							 Engine::Instance().Instance().settingsManager()->getResolution().y)
+#endif
+			   ,sf::String(Engine::Instance().globalVariables()->appName()),
+			   Engine::Instance().Instance().settingsManager()->getFullscreen()?sf::Style::Fullscreen:sf::Style::Default
+#ifndef OS_ANDROID
+			   ,sf::ContextSettings(0, 0, 8)
+#endif
 			   );
 	mw->setVerticalSyncEnabled(true);
 	Engine::Instance().reset();
-	Engine::Instance().window()->updateView();
+//	Engine::Instance().window()->updateView();
 }
 
 void Options::globalCallbacks()

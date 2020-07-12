@@ -17,6 +17,12 @@
 #include <stdlib.h>
 #include <limits.h>
 
+#ifdef OS_ANDROID
+#include <android/log.h>
+#define  LOG_TAG    "LOG"
+#define  watch(...)  __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+#else
 #define watch(x) std::cout << (#x) << " is " << (x) << std::endl
+#endif
 
 #endif // STDHEADER_H
