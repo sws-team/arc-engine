@@ -21,7 +21,7 @@
 #include <android/log.h>
 #endif
 
-#define  A_LOG(...)  __android_log_print(ANDROID_LOG_INFO, "=============LOG", __VA_ARGS__)
+#define  A_LOG(...)  __android_log_print(ANDROID_LOG_INFO, "LOG", __VA_ARGS__)
 #define watch(x) std::cout << (#x) << " is " << (x) << std::endl
 
 #endif // STDHEADER_H
