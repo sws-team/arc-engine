@@ -628,7 +628,7 @@ void Options::updateWindow()
 			   );
 	mw->setVerticalSyncEnabled(true);
 	Engine::Instance().reset();
-//	Engine::Instance().window()->updateView();
+	Engine::Instance().window()->updateView();
 }
 
 void Options::globalCallbacks()
