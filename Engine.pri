@@ -1,8 +1,8 @@
+DEFINES += ENGINE_VERSION=\\\"1.0.0.6\\\"
+
 INCLUDEPATH += $$PWD/include
 INCLUDEPATH += $$PWD/include/Windows
 INCLUDEPATH += $$PWD/include/Widgets
-
-#DEFINES += ENGINE_LIBRARY
 
 HEADERS += \
     $$PWD/include/Widgets/button.h \
