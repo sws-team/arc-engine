@@ -32,7 +32,6 @@ file(GLOB SOURCES
     ${ARC_ENGINE_PATH}/src/Windows/closewindow.cpp
     ${ARC_ENGINE_PATH}/src/Windows/introwindow.cpp
     ${ARC_ENGINE_PATH}/src/Windows/menu.cpp
-    ${ARC_ENGINE_PATH}/src/Windows/settingswindow.cpp
     ${ARC_ENGINE_PATH}/src/managers.cpp
     ${ARC_ENGINE_PATH}/src/gameobject.cpp
     ${ARC_ENGINE_PATH}/src/mainwindow.cpp
