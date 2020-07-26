@@ -14,7 +14,6 @@ HEADERS += \
     $$PWD/include/Windows/closewindow.h \
     $$PWD/include/Windows/introwindow.h \
     $$PWD/include/Windows/menu.h \
-    $$PWD/include/Windows/settingswindow.h \
     $$PWD/include/enginedef.h \
     $$PWD/include/gameobject.h \
     $$PWD/include/managers.h \
@@ -35,7 +34,6 @@ SOURCES += \
     $$PWD/src/Windows/closewindow.cpp \
     $$PWD/src/Windows/introwindow.cpp \
     $$PWD/src/Windows/menu.cpp \
-    $$PWD/src/Windows/settingswindow.cpp \
     $$PWD/src/managers.cpp \
     $$PWD/src/gameobject.cpp \
     $$PWD/src/mainwindow.cpp \

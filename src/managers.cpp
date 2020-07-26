@@ -6,7 +6,6 @@
 #include "Windows/introwindow.h"
 #include "Windows/aboutwindow.h"
 #include "Windows/closewindow.h"
-#include "Windows/settingswindow.h"
 
 #ifdef OS_WIN
 #include "windows.h"
@@ -220,9 +219,6 @@ StateWindow *StateManager::createState(const GameState state)
 	{
 	case INTRO:
 		stateWindow = new IntroWindow();	
-		break;
-	case SETTINGS:
-		stateWindow = new SettingsWindow();
 		break;
 	case ABOUT:
 		stateWindow = new AboutWindow();
