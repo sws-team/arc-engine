@@ -4,5 +4,3 @@ macx{
 DEFINES += OS_MAC
 DEFINES -= OS_UNIX
 }
-
-DEFINES += ENGINE_VERSION=\\\"1.0.0.6\\\"
