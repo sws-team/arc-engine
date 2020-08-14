@@ -54,6 +54,8 @@ public:
 	static sf::String EngineName();
 	static sf::String EngineVersion();
 
+	static std::string assetsPath();
+
 private:
 	Engine();
 	Engine(const Engine& root) = delete;

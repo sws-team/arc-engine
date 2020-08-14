@@ -181,7 +181,7 @@ sf::Texture &TexturesManager::getTexture(TextureType type)
 void TexturesManager::addTexture(const TextureType type, const std::string &path)
 {
 	sf::Texture texture;
-	if (!texture.loadFromFile(path))
+	if (!texture.loadFromFile(Engine::assetsPath() + path))
 		return;
 	m_textures.insert(std::pair<int, sf::Texture>(type, texture));
 }
@@ -265,7 +265,7 @@ void SoundManager::addSound(const SoundType type, const std::string &path)
 	SFX sfx;
 	sfx.buffer = new sf::SoundBuffer;
 	sfx.sound = new sf::Sound(*sfx.buffer);
-	if(!sfx.buffer->loadFromFile(path))
+	if(!sfx.buffer->loadFromFile(Engine::assetsPath() + path))
 	{
 		delete sfx.buffer;
 		delete sfx.sound;
@@ -295,7 +295,7 @@ void SoundManager::addMusic(const MusicType type, const std::string &path)
 {
 	sf::Music *music = new sf::Music;
 	music->setLoop(true);
-	const bool ok = music->openFromFile(path);
+	const bool ok = music->openFromFile(Engine::assetsPath() + path);
 	if (!ok)
 		return;
 	musics.insert(std::pair<MusicType, sf::Music*>(type, music));
@@ -444,7 +444,7 @@ void FontManager::addFont(const FontType type, sf::Font* font)
 void FontManager::addFont(const FontType type, const std::string &path)
 {
 	sf::Font *font = new sf::Font();
-	if (!font->loadFromFile(path))
+	if (!font->loadFromFile(Engine::assetsPath() + path))
 		return;
 	addFont(type, font);
 }

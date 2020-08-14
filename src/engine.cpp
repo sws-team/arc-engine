@@ -110,6 +110,11 @@ sf::String Engine::EngineVersion()
 	return sf::String(ENGINE_VERSION);
 }
 
+std::string Engine::assetsPath()
+{
+	return ASSETS_PATH;
+}
+
 void Engine::reset()
 {
 	p_texturesManager->reset();
