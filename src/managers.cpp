@@ -7,15 +7,12 @@
 #include "Windows/aboutwindow.h"
 #include "Windows/closewindow.h"
 
-#ifdef OS_WIN
+#ifdef SFML_SYSTEM_WINDOWS
 #include "windows.h"
 #include <shlobj.h>
 #endif
-#ifdef OS_UNIX
+#ifdef SFML_SYSTEM_LINUX
 #include <X11/Xlib.h>
-#endif
-#ifdef OS_MAC
-#include <CoreGraphics/CoreGraphics.h>
 #endif
 
 #include <cstring>

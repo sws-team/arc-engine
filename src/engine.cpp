@@ -112,7 +112,16 @@ sf::String Engine::EngineVersion()
 
 std::string Engine::assetsPath()
 {
+#if defined(SFML_SYSTEM_WINDOWS) || \
+	defined (SFML_SYSTEM_LINUX) || \
+	defined (SFML_SYSTEM_MACOS)
+#ifdef ASSETS_PATH
 	return ASSETS_PATH;
+#endif
+#elif defined(SFML_SYSTEM_ANDROID)
+#elif defided(SFML_SYSTEM_IOS)
+#endif
+	return std::string();
 }
 
 void Engine::reset()

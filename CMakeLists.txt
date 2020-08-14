@@ -1,16 +1,9 @@
 #config
-
-if(WIN32) #if(MSVC OR MSYS OR MINGW)
-    add_definitions("-DOS_WIN")
-endif()
-
-if(UNIX AND NOT APPLE)
-    add_definitions("-DOS_UNIX")
-endif()
-
-if(APPLE)
-    add_definitions("-DOS_MAC")
-endif()
+#SFML_SYSTEM_WINDOWS
+#SFML_SYSTEM_IOS
+#SFML_SYSTEM_MACOS
+#SFML_SYSTEM_ANDROID
+#SFML_SYSTEM_LINUX
 
 #engine
 add_definitions("-DENGINE_VERSION=\"1.0.0.5\"")
