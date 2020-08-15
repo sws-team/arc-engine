@@ -17,11 +17,11 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#ifdef OS_ANDROID
+#ifdef SFML_SYSTEM_ANDROID
 #include <android/log.h>
-#endif
-
-#define  A_LOG(...)  __android_log_print(ANDROID_LOG_INFO, "LOG", __VA_ARGS__)
+#define watch(x) __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", std::string(x).c_str());
+#else
 #define watch(x) std::cout << (#x) << " is " << (x) << std::endl
+#endif
 
 #endif // STDHEADER_H

@@ -38,7 +38,7 @@ SettingsManager::SettingsManager():
 
 void SettingsManager::reset()
 {
-#ifdef OS_ANDROID
+#ifdef SFML_SYSTEM_ANDROID
 	const sf::VideoMode videoMode = sf::VideoMode::getDesktopMode();
 	resolution.x = videoMode.width;
 	resolution.y = videoMode.height;
@@ -607,7 +607,7 @@ void Options::setMainWindow(MainWindow *window)
 void Options::updateWindow()
 {
 	mw->create(
-#ifdef OS_ANDROID
+#ifdef SFML_SYSTEM_ANDROID
 				sf::VideoMode::getDesktopMode()
 #else
 				sf::VideoMode(Engine::Instance().Instance().settingsManager()->getResolution().x,
@@ -615,7 +615,7 @@ void Options::updateWindow()
 #endif
 			   ,sf::String(Engine::Instance().globalVariables()->appName()),
 			   Engine::Instance().Instance().settingsManager()->getFullscreen()?sf::Style::Fullscreen:sf::Style::Default
-#ifndef OS_ANDROID
+#ifndef SFML_SYSTEM_ANDROID
 			   ,sf::ContextSettings(0, 0, 8)
 #endif
 			   );
