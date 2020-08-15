@@ -178,8 +178,12 @@ sf::Texture &TexturesManager::getTexture(TextureType type)
 void TexturesManager::addTexture(const TextureType type, const std::string &path)
 {
 	sf::Texture texture;
-	if (!texture.loadFromFile(Engine::assetsPath() + path))
+	const std::string fullPath = Engine::assetsPath() + path;
+	if (!texture.loadFromFile(fullPath))
+	{
+		std::cout << "Error to load texture: " << fullPath << std::endl;
 		return;
+	}
 	m_textures.insert(std::pair<int, sf::Texture>(type, texture));
 }
 
@@ -262,8 +266,10 @@ void SoundManager::addSound(const SoundType type, const std::string &path)
 	SFX sfx;
 	sfx.buffer = new sf::SoundBuffer;
 	sfx.sound = new sf::Sound(*sfx.buffer);
-	if(!sfx.buffer->loadFromFile(Engine::assetsPath() + path))
+	const std::string fullPath = Engine::assetsPath() + path;
+	if(!sfx.buffer->loadFromFile(fullPath))
 	{
+		std::cout << "Error to load sound: " << fullPath << std::endl;
 		delete sfx.buffer;
 		delete sfx.sound;
 		return;
@@ -292,9 +298,14 @@ void SoundManager::addMusic(const MusicType type, const std::string &path)
 {
 	sf::Music *music = new sf::Music;
 	music->setLoop(true);
-	const bool ok = music->openFromFile(Engine::assetsPath() + path);
-	if (!ok)
+	const std::string fullPath = Engine::assetsPath() + path;
+	if (!music->openFromFile(fullPath))
+	{
+		std::cout << "Error to load music: " << fullPath << std::endl;
+		delete music;
 		return;
+	}
+
 	musics.insert(std::pair<MusicType, sf::Music*>(type, music));
 }
 
@@ -441,8 +452,13 @@ void FontManager::addFont(const FontType type, sf::Font* font)
 void FontManager::addFont(const FontType type, const std::string &path)
 {
 	sf::Font *font = new sf::Font();
-	if (!font->loadFromFile(Engine::assetsPath() + path))
+	const std::string fullPath = Engine::assetsPath() + path;
+	if (!font->loadFromFile(fullPath))
+	{
+		std::cout << "Error to load font: " << fullPath << std::endl;
+		delete font;
 		return;
+	}
 	addFont(type, font);
 }
 
