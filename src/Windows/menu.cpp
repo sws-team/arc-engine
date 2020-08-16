@@ -79,6 +79,20 @@ void Menu::eventFilter(sf::Event *event)
 		}
 	}
 		break;
+	case sf::Event::TouchBegan:
+	{
+		const sf::Vector2i pixelPos = sf::Vector2i(event->touch.x, event->touch.y);
+		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																			   *Engine::Instance().window()->view());
+		const int current = getMenuAtPos(pos);
+		if (current != -1)
+		{
+			currentMenu = current;
+			Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
+			accept();
+		}
+	}
+		break;
 	case sf::Event::JoystickButtonPressed:
 	{
 		if (event->joystickButton.button == EngineDefs::KEY_ACCEPT)
