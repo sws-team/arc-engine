@@ -30,6 +30,7 @@ void MainWindow::exec()
 	const sf::Image icon = Engine::Instance().texturesManager()->getTexture(TexturesManager::ICON).copyToImage();
 	this->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
+	bool active = true;
 	updateView();
 
 	const bool cursorLoaded = cursor.loadFromPixels(img.getPixelsPtr(), sf::Vector2u(32,32), sf::Vector2u(0,0));
@@ -59,24 +60,40 @@ void MainWindow::exec()
 			continue;
 
 		sf::Event event;
-		while (pollEvent(event))
+		while (active ? pollEvent(event) : waitEvent(event))
 		{
-			if (event.type == sf::Event::Resized)
+			switch (event.type)
+			{
+			case sf::Event::Resized:
 				updateView();
-
+				break;
+			case sf::Event::MouseLeft:
+				active = false;
+				break;
+			case sf::Event::MouseEntered:
+				active = true;
+				break;
+			default:
+				break;
+			}
 			currentState->eventFilter(&event);
 		}
 		currentState->update();
 
 		Engine::Instance().getOptions()->globalCallbacks();
 
-		clear(sf::Color::Black);
-		setView(*m_view);
-		currentState->paint(this);		
-		if (Engine::Instance().globalVariables()->isEnabledFPS())
-			drawFPS();
+		if (active)
+		{
+			clear(sf::Color::Black);
+			setView(*m_view);
+			currentState->paint(this);
+			if (Engine::Instance().globalVariables()->isEnabledFPS())
+				drawFPS();
 
-		display();
+			display();
+		}
+		else
+			sf::sleep(sf::milliseconds(100));
 	}
 }
 
