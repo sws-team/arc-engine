@@ -24,13 +24,20 @@ void Manager::reset()
 }
 
 //==================SETTINS MANAGER===================
+
 const sf::Vector2i SettingsManager::defaultResolution = sf::Vector2i(1920, 1080);
 
-SettingsManager::SettingsManager():
-	resolution(defaultResolution)
+SettingsManager::SettingsManager()
+	: Manager()
   ,soundLevel(100)
   ,musicLevel(100)
-  ,fullscreen(true)
+  ,fullscreen(
+#ifdef DEV_BUILD
+	   false
+#else
+	   true
+#endif
+	   )
   ,shaders(true)
 {
 	reset();
@@ -43,7 +50,12 @@ void SettingsManager::reset()
 	resolution.x = videoMode.width;
 	resolution.y = videoMode.height;
 #else
-	resolution = defaultResolution;
+#ifdef DEV_BUILD
+	resolution = sf::Vector2i(1366, 768);
+#else
+	const sf::VideoMode videoMode = sf::VideoMode::getDesktopMode();
+	resolution = sf::Vector2i(videoMode.width, videoMode.height);
+#endif
 #endif
 }
 
@@ -498,16 +510,6 @@ GlobalVariables::GlobalVariables() :
 	m_fps(false)
 {
 
-}
-
-
-sf::Vector2i GlobalVariables::getScreenResolution() const
-{
-	const sf::VideoMode defaultMode = sf::VideoMode::getDesktopMode();
-	sf::Vector2i resolution;
-	resolution.x = defaultMode.width;
-	resolution.y = defaultMode.height;
-	return resolution;
 }
 
 void GlobalVariables::switchFPS()

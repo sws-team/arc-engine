@@ -240,7 +240,6 @@ class GlobalVariables : public Manager
 public:
 	GlobalVariables();
 
-	sf::Vector2i getScreenResolution() const;
 	void setApplicationPath(const sf::String &applicationPath);
 
 	std::string saveGameSettings() const;

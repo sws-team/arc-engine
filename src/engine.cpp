@@ -19,7 +19,6 @@ Engine::Engine() :
 	p_filesManager = new FilesManager();
 	p_globalVariables = new GlobalVariables();
 	p_shadersManager = new ShadersManager();
-	p_settingsManager->setResolution(p_globalVariables->getScreenResolution());
 	p_window = nullptr;
 	reset();
 }
