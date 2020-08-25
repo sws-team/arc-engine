@@ -50,5 +50,5 @@ void IntroWindow::update()
 void IntroWindow::finish()
 {
 	Engine::Instance().soundManager()->stop(SoundManager::INTRO);
-	Engine::Instance().stateManager()->setState(StateManager::MENU);
+	Engine::Instance().stateManager()->setState(StateManager::LOADING);
 }

@@ -610,6 +610,13 @@ void GlobalVariables::setAppName(const std::string &appName)
 	m_appName = appName;
 }
 
+Options::Options()
+	: mw(nullptr)
+	,m_resourcesLoaded(false)
+{
+
+}
+
 MainWindow *Options::mainWindow()
 {
 	return mw;
@@ -645,9 +652,19 @@ void Options::globalCallbacks()
 
 }
 
+bool Options::isResourcesLoaded() const
+{
+    return m_resourcesLoaded;
+}
+
+void Options::setResourcesLoaded(bool loaded)
+{
+	m_resourcesLoaded = loaded;
+}
+
 FilesManager::OtherFile FilesManager::getData(FileType type)
 {
-	return m_data.at(type);
+    return m_data.at(type);
 }
 
 void FilesManager::addFile(const FileType type, const std::string &path)

@@ -7,7 +7,6 @@ Engine &Engine::Instance()
 	return singleton;
 }
 
-
 Engine::Engine() :
   p_stateManager(nullptr)
   ,p_options(nullptr)

@@ -102,6 +102,7 @@ public:
 		CLOSE_BACKGROUND,
 		ABOUT_BACKGROUND,
 		INTRO_BACKGROUND,
+		LOADING_BACKGROUND,
 
 		CHOOSE_LIST_NEXT,
 		CHOOSE_LIST_PREVIOUS,
@@ -126,6 +127,7 @@ public:
 	{
 		UNKNOWN,
 		INTRO,
+		LOADING,
 		MENU,
 		ABOUT,
 		CLOSING,
@@ -268,14 +270,19 @@ class Options : public Manager
 {
 	//classes like level, panel, cursor, camera
 public:
+	Options();
 	MainWindow *mainWindow();
 	void setMainWindow(MainWindow *window);
 	virtual void updateWindow();
 
 	virtual void globalCallbacks();
 
+	bool isResourcesLoaded() const;
+	void setResourcesLoaded(bool loaded);
+
 protected:
 	MainWindow *mw;
+	bool m_resourcesLoaded;
 };
 
 class FilesManager : public Manager
