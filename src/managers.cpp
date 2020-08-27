@@ -664,24 +664,41 @@ void Options::setResourcesLoaded(bool loaded)
 	m_resourcesLoaded = loaded;
 }
 
-FilesManager::OtherFile FilesManager::getData(FileType type)
+FilesManager::GameFile FilesManager::getData(FileType type) const
 {
     return m_data.at(type);
 }
 
 void FilesManager::addFile(const FileType type, const std::string &path)
 {
-
+	const std::string fullPath = Engine::assetsPath() + path;
+	sf::FileInputStream stream;
+	if (!stream.open(fullPath))
+	{
+		std::cout << "Open file failed." << std::endl;
+		return;
+	}
+	const sf::Int64 size = stream.getSize();
+	char *chars = new char[size];
+	const sf::Int64 readed = stream.read(chars, size);
+	const std::string data = std::string(chars).substr(0, readed);
+	delete[] chars;
+	if (data.empty())
+	{
+		std::cout << "Loaded empty file." << std::endl;
+		return;
+	}
+	addFile(type, data.c_str(), data.size());
 }
 
 void FilesManager::addFile(const FileType type, const char *data, const size_t size)
 {
 	void *file = malloc(size);
 	std::memcpy(file, (void*)data, size);
-	OtherFile oFile;
-	oFile.data = file;
-	oFile.size = size;
-	m_data.insert(std::pair<FileType, OtherFile>(type, oFile));
+	GameFile gFile;
+	gFile.data = static_cast<char*>(file);
+	gFile.size = size;
+	m_data.insert(std::pair<FileType, GameFile>(type, gFile));
 }
 
 std::string ShadersManager::getData(ShaderType type)

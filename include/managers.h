@@ -287,18 +287,18 @@ protected:
 class FilesManager : public Manager
 {
 public:
-	struct OtherFile
+	struct GameFile
 	{
-		void *data;
+		char *data;
 		size_t size;
 	};
-	OtherFile getData(FileType type);
+	GameFile getData(FileType type) const;
 
 	void addFile(const FileType type, const std::string &path);
 	void addFile(const FileType type, const char *data, const size_t size);
 
 private:
-	std::map<FileType, OtherFile> m_data;
+	std::map<FileType, GameFile> m_data;
 };
 
 class ShadersManager : public Manager
