@@ -91,6 +91,7 @@ public:
 	TexturesManager();
 
 	sf::Texture &getTexture(TextureType type);
+	void addTexture(const TextureType type, const sf::Texture& texture);
 	void addTexture(const TextureType type, const std::string &path);
 	void addTexture(const TextureType type, const char *data, const size_t size);
 

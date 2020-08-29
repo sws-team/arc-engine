@@ -187,6 +187,11 @@ sf::Texture &TexturesManager::getTexture(TextureType type)
 	return m_textures.at(type);
 }
 
+void TexturesManager::addTexture(const TextureType type, const sf::Texture &texture)
+{
+	m_textures.insert(std::pair<int, sf::Texture>(type, texture));
+}
+
 void TexturesManager::addTexture(const TextureType type, const std::string &path)
 {
 	sf::Texture texture;
@@ -196,7 +201,7 @@ void TexturesManager::addTexture(const TextureType type, const std::string &path
 		std::cout << "Error to load texture: " << fullPath << std::endl;
 		return;
 	}
-	m_textures.insert(std::pair<int, sf::Texture>(type, texture));
+	addTexture(type, texture);
 }
 
 void TexturesManager::addTexture(const TextureType type, const char *data, const size_t size)
@@ -206,7 +211,7 @@ void TexturesManager::addTexture(const TextureType type, const char *data, const
 	std::memcpy(textureData,(void*)data, size);
 	if (!texture.loadFromMemory(textureData, size))
 		return;
-	m_textures.insert(std::pair<int, sf::Texture>(type, texture));
+	addTexture(type, texture);
 }
 
 //==================STATE MANAGER===================
