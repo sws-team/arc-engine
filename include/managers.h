@@ -255,13 +255,13 @@ public:
 	std::string appVersion() const;
 	void setAppVersion(const std::string &appVersion);
 
-	std::string appName() const;
-	void setAppName(const std::string &appName);
+	sf::String appName() const;
+	void setAppName(const sf::String &appName);
 
 private:
 	bool m_fps;
 	std::string m_appVersion;
-	std::string m_appName;
+	sf::String m_appName;
 };
 
 class MainWindow;

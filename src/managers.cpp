@@ -602,12 +602,12 @@ void GlobalVariables::setAppVersion(const std::string &appVersion)
 	m_appVersion = appVersion;
 }
 
-std::string GlobalVariables::appName() const
+sf::String GlobalVariables::appName() const
 {
 	return m_appName;
 }
 
-void GlobalVariables::setAppName(const std::string &appName)
+void GlobalVariables::setAppName(const sf::String &appName)
 {
 	m_appName = appName;
 }
@@ -631,15 +631,18 @@ void Options::setMainWindow(MainWindow *window)
 
 void Options::updateWindow()
 {
+	const int w = Engine::Instance().Instance().settingsManager()->getResolution().x;
+	const int h = Engine::Instance().Instance().settingsManager()->getResolution().y;
+	const sf::String appName = Engine::Instance().globalVariables()->appName();
+	const int style = Engine::Instance().Instance().settingsManager()->getFullscreen()?sf::Style::Fullscreen:sf::Style::Default;
+
 	mw->create(
 #ifdef SFML_SYSTEM_ANDROID
 				sf::VideoMode::getDesktopMode()
 #else
-				sf::VideoMode(Engine::Instance().Instance().settingsManager()->getResolution().x,
-							 Engine::Instance().Instance().settingsManager()->getResolution().y)
+				sf::VideoMode(w, h)
 #endif
-			   ,sf::String(Engine::Instance().globalVariables()->appName()),
-			   Engine::Instance().Instance().settingsManager()->getFullscreen()?sf::Style::Fullscreen:sf::Style::Default
+			   ,appName, style
 #ifndef SFML_SYSTEM_ANDROID
 			   ,sf::ContextSettings(0, 0, 8)
 #endif
