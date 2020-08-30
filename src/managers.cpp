@@ -701,10 +701,10 @@ void FilesManager::addFile(const FileType type, const std::string &path)
 
 void FilesManager::addFile(const FileType type, const char *data, const size_t size)
 {
-	void *file = malloc(size);
-	std::memcpy(file, (void*)data, size);
+	char *file = (char*)malloc(size + 1);
+	std::memcpy(file, (void*)data, size + 1);
 	GameFile gFile;
-	gFile.data = static_cast<char*>(file);
+	gFile.data = file;
 	gFile.size = size;
 	m_data.insert(std::pair<FileType, GameFile>(type, gFile));
 }
