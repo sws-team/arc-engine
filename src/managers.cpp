@@ -512,19 +512,9 @@ void FontManager::setFontModifier(float fontModifier)
 }
 
 GlobalVariables::GlobalVariables() :
-	m_fps(false)
+	m_fps(0)
 {
 
-}
-
-void GlobalVariables::switchFPS()
-{
-	m_fps = !m_fps;
-}
-
-bool GlobalVariables::isEnabledFPS() const
-{
-	return m_fps;
 }
 
 std::string GlobalVariables::saveGameSettings() const
@@ -615,6 +605,16 @@ sf::String GlobalVariables::appName() const
 void GlobalVariables::setAppName(const sf::String &appName)
 {
 	m_appName = appName;
+}
+
+int GlobalVariables::fps() const
+{
+	return m_fps;
+}
+
+void GlobalVariables::setFps(int fps)
+{
+	m_fps = fps;
 }
 
 Options::Options()

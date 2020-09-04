@@ -22,7 +22,7 @@ private:
 	GameState state;
 	sf::Clock fpsClock;
 
-	void drawFPS();
+	void updateFPS();
 };
 
 

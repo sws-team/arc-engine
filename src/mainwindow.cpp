@@ -88,8 +88,7 @@ void MainWindow::exec()
 			clear(sf::Color::Black);
 			setView(*m_view);
 			currentState->paint(this);
-			if (Engine::Instance().globalVariables()->isEnabledFPS())
-				drawFPS();
+			updateFPS();
 
 			Engine::Instance().getOptions()->globalDraw();
 
@@ -140,15 +139,9 @@ sf::View *MainWindow::view() const
 	return m_view;
 }
 
-void MainWindow::drawFPS()
+void MainWindow::updateFPS()
 {
-	sf::Text fps;
-	fps.setFont(Engine::Instance().fontManager()->font());
-	fps.setCharacterSize(Engine::Instance().fontManager()->getCharSize(50));
-	fps.setFillColor(sf::Color::Yellow);
 	const float currentTime = fpsClock.restart().asSeconds();
 	const float fpsValue = 1.f / currentTime;
-	fps.setString(std::to_string(static_cast<int>(floor(fpsValue))));
-	fps.setPosition(Engine::Instance().settingsManager()->getResolution().x - fps.getGlobalBounds().width, 0);
-	draw(fps);
+	Engine::Instance().globalVariables()->setFps(static_cast<int>(fpsValue));
 }

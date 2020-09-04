@@ -248,8 +248,6 @@ public:
 
 	static std::string to_string_with_precision(const float a_value, const int n = 6);
 
-	void switchFPS();
-	bool isEnabledFPS() const;
 	static std::string encode(const std::string& str);
 	static std::string decode(const std::string& str);
 
@@ -259,8 +257,11 @@ public:
 	sf::String appName() const;
 	void setAppName(const sf::String &appName);
 
+	int fps() const;
+	void setFps(int fps);
+
 private:
-	bool m_fps;
+	int m_fps;
 	std::string m_appVersion;
 	sf::String m_appName;
 };
