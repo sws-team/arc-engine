@@ -20,7 +20,7 @@ private:
 	sf::View *m_view;
 	StateWindow *currentState;
 	GameState state;
-	sf::Clock clock;
+	sf::Clock fpsClock;
 
 	void drawFPS();
 };

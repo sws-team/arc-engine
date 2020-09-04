@@ -276,6 +276,8 @@ public:
 	virtual void updateWindow();
 
 	virtual void globalCallbacks();
+	virtual void globalEventFilter(sf::Event* event);
+	virtual void globalDraw();
 
 	bool isResourcesLoaded() const;
 	void setResourcesLoaded(bool loaded);

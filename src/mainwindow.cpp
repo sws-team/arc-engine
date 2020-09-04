@@ -62,6 +62,7 @@ void MainWindow::exec()
 		sf::Event event;
 		while (active ? pollEvent(event) : waitEvent(event))
 		{
+			Engine::Instance().getOptions()->globalEventFilter(&event);
 			switch (event.type)
 			{
 			case sf::Event::Resized:
@@ -89,6 +90,8 @@ void MainWindow::exec()
 			currentState->paint(this);
 			if (Engine::Instance().globalVariables()->isEnabledFPS())
 				drawFPS();
+
+			Engine::Instance().getOptions()->globalDraw();
 
 			display();
 		}
@@ -143,7 +146,7 @@ void MainWindow::drawFPS()
 	fps.setFont(Engine::Instance().fontManager()->font());
 	fps.setCharacterSize(Engine::Instance().fontManager()->getCharSize(50));
 	fps.setFillColor(sf::Color::Yellow);
-	const float currentTime = clock.restart().asSeconds();
+	const float currentTime = fpsClock.restart().asSeconds();
 	const float fpsValue = 1.f / currentTime;
 	fps.setString(std::to_string(static_cast<int>(floor(fpsValue))));
 	fps.setPosition(Engine::Instance().settingsManager()->getResolution().x - fps.getGlobalBounds().width, 0);

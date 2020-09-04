@@ -662,6 +662,16 @@ void Options::globalCallbacks()
 
 }
 
+void Options::globalEventFilter(sf::Event *event)
+{
+
+}
+
+void Options::globalDraw()
+{
+
+}
+
 bool Options::isResourcesLoaded() const
 {
     return m_resourcesLoaded;
