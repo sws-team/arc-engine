@@ -12,6 +12,8 @@ Menu::Menu()
 	,m_borderColor(sf::Color::Black)
 	,yPos(0)
 	,m_characterSize(100)
+	,m_maxMenu(0)
+	,m_textYOffset(DEFAULT_Y_OFFSET)
 {
 
 }
@@ -93,23 +95,6 @@ void Menu::eventFilter(sf::Event *event)
 		}
 	}
 		break;
-	case sf::Event::JoystickButtonPressed:
-	{
-		if (event->joystickButton.button == EngineDefs::KEY_ACCEPT)
-			accept();
-	}
-		break;
-	case sf::Event::JoystickMoved:
-	{
-		if (event->joystickMove.axis == sf::Joystick::Y)
-		{
-			if (event->joystickMove.position > 50)
-				menuDown();
-			else if (event->joystickMove.position < -50)
-				menuUp();
-		}
-	}
-		break;
 	default:
 		break;
 	}
@@ -135,7 +120,7 @@ void Menu::addItem(const sf::String& str)
 	text.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
 	text.setPosition(m_pos.x,
-					 m_pos.y + yPos + Y_OFFSET * Engine::Instance().settingsManager()->getScaleFactor().y * menus.size());
+					 m_pos.y + yPos + m_textYOffset * menus.size());
 	yPos += text.getGlobalBounds().height;
 
 	menus.push_back(text);
@@ -146,15 +131,25 @@ void Menu::addItem(const sf::String& str)
 void Menu::menuUp()
 {
 	if (currentMenu > 0)
-		currentMenu -= 1;
+		currentMenu--;
 	updateColor();
 }
 
 void Menu::menuDown()
 {
-	if (currentMenu < menus.size() - 1)
-		currentMenu += 1;
+	if (currentMenu < m_maxMenu)
+		currentMenu++;
 	updateColor();
+}
+
+void Menu::setTextYOffset(float textYOffset)
+{
+	m_textYOffset = textYOffset * Engine::Instance().settingsManager()->getScaleFactor().y;
+}
+
+void Menu::setMaxMenu(int maxMenu)
+{
+	m_maxMenu = maxMenu;
 }
 
 int Menu::getMenuAtPos(const sf::Vector2f &point) const
@@ -181,8 +176,36 @@ void Menu::updateColor()
         menu.setFillColor(m_color);
 		menu.setOutlineColor(m_borderColor);
 	}
-    menus.at(currentMenu).setFillColor(m_currentColor);
-	menus.at(currentMenu).setOutlineColor(m_borderColor);
+	if (menus.size() > currentMenu)
+	{
+		menus.at(currentMenu).setFillColor(m_currentColor);
+		menus.at(currentMenu).setOutlineColor(m_borderColor);
+	}
+}
+
+sf::Vector2f Menu::getPos() const
+{
+	return m_pos;
+}
+
+unsigned int Menu::getCharacterSize() const
+{
+	return m_characterSize;
+}
+
+sf::Color Menu::getBorderColor() const
+{
+	return m_borderColor;
+}
+
+sf::Color Menu::getCurrentColor() const
+{
+	return m_currentColor;
+}
+
+sf::Color Menu::getColor() const
+{
+	return m_color;
 }
 
 void Menu::setCharacterSize(unsigned int characterSize)
