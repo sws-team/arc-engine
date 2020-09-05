@@ -130,6 +130,7 @@ public:
 		INTRO,
 		LOADING,
 		MENU,
+		SETTINGS,
 		ABOUT,
 		CLOSING,
 		EXIT,
