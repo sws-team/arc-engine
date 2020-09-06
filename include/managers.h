@@ -5,7 +5,23 @@
 #include "enginedef.h"
 #include <sstream>
 
-class StateWindow;
+#include "statewindow.h"
+#include "Swoosh/ActivityController.h"
+
+class StateController : public swoosh::ActivityController
+{
+public:
+	StateController(sf::RenderWindow& window)
+		: swoosh::ActivityController(window)
+	{
+
+	}
+	StateWindow* currentState() const
+	{
+		swoosh::Activity *activity = const_cast<swoosh::Activity*>(getCurrentActivity());
+		return static_cast<StateWindow*>(activity);
+	}
+};
 
 class Manager
 {
@@ -113,32 +129,6 @@ public:
 
 private:
 	std::map<TextureType, sf::Texture> m_textures;
-};
-
-
-class StateManager : public Manager
-{
-public:
-	StateManager();
-
-	GameState getState() const;
-	void setState(const GameState state);
-	virtual StateWindow *createState(const GameState state);
-	enum STATE
-	{
-		UNKNOWN,
-		INTRO,
-		LOADING,
-		MENU,
-		SETTINGS,
-		ABOUT,
-		CLOSING,
-		EXIT,
-
-		USER_STATE,
-	};
-private:
-	GameState m_state;
 };
 
 class SoundManager : public Manager
@@ -267,6 +257,7 @@ private:
 	sf::String m_appName;
 };
 
+
 class MainWindow;
 class Options : public Manager
 {
@@ -284,9 +275,29 @@ public:
 	bool isResourcesLoaded() const;
 	void setResourcesLoaded(bool loaded);
 
+	StateController *controller();
+	virtual void reset() override;
+
+	enum STATE
+	{
+		UNKNOWN,
+		INTRO,
+		LOADING,
+		MENU,
+		SETTINGS,
+		ABOUT,
+		CLOSING,
+		EXIT,
+
+		USER_STATE,
+	};
+
+	virtual bool changeState(const GameState state);
+
 protected:
 	MainWindow *mw;
-	bool m_resourcesLoaded;
+	bool m_resourcesLoaded;	
+	StateController *app;
 };
 
 class FilesManager : public Manager

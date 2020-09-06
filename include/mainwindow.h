@@ -18,8 +18,6 @@ public:
 
 private:
 	sf::View *m_view;
-	StateWindow *currentState;
-	GameState state;
 	sf::Clock fpsClock;
 
 	void updateFPS();

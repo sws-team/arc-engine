@@ -2,17 +2,18 @@
 #define ABOUTWINDOW_H
 
 #include "statewindow.h"
-#include "timer.h"
+#include "gametimer.h"
 
 class AboutWindow : public StateWindow
 {
 public:
-    AboutWindow();
+	AboutWindow(swoosh::ActivityController& controller);
 
-	void init() override;
-	void paint(sf::RenderWindow *window) override;
+	void onStart() override;
+	void onDraw(sf::RenderTexture& surface) override;
+	void onUpdate(double elapsed) override;
+
 	void back() override;
-	void update() override;
 
 	void addString(const sf::String& str);
 	void addStrings(const std::vector<sf::String>& strs);
@@ -34,7 +35,7 @@ private:
 	std::vector<Creator> creators;
 
 	sf::RectangleShape rect;
-	Timer timer;
+	GameTimer timer;
 	static constexpr float CREDITS_SPEED = 50;
 	static constexpr float CREDITS_STEP = 3;
 	GameState m_backState;

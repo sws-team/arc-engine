@@ -33,8 +33,8 @@ void CheckBox::event(sf::Event *event)
 		if (event->mouseButton.button == sf::Mouse::Left)
 		{
 			const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
-			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
-																				   *Engine::Instance().window()->view());
+			const sf::Vector2f pos = Engine::Instance().getOptions()->mainWindow()->mapPixelToCoords(pixelPos,
+																				   *Engine::Instance().getOptions()->mainWindow()->view());
 
 			if (rect.getGlobalBounds().contains(pos))
 			{
@@ -47,8 +47,8 @@ void CheckBox::event(sf::Event *event)
 	else if (event->type == sf::Event::MouseMoved)
 	{
 		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseMove.x, event->mouseMove.y);
-		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
-																			   *Engine::Instance().window()->view());
+		const sf::Vector2f pos = Engine::Instance().getOptions()->mainWindow()->mapPixelToCoords(pixelPos,
+																			   *Engine::Instance().getOptions()->mainWindow()->view());
 		bool hover = false;
 		currentRect.setFillColor(sf::Color::Transparent);
 		if (rect.getGlobalBounds().contains(pos))
@@ -66,14 +66,6 @@ void CheckBox::event(sf::Event *event)
 	else if (event->type == sf::Event::KeyPressed)
 	{
 		if (event->key.code == sf::Keyboard::Return)
-		{
-			m_isChecked = !m_isChecked;
-			update();
-		}
-	}
-	else if (event->type == sf::Event::JoystickButtonPressed)
-	{
-		if (event->joystickButton.button == EngineDefs::KEY_ACCEPT)
 		{
 			m_isChecked = !m_isChecked;
 			update();

@@ -8,8 +8,8 @@ Engine &Engine::Instance()
 }
 
 Engine::Engine() :
-  p_stateManager(nullptr)
-  ,p_options(nullptr)
+//  p_stateManager(nullptr)
+  p_options(nullptr)
 {
 	p_fontManager = new FontManager();
 	p_soundManager = new SoundManager();
@@ -28,10 +28,10 @@ void Engine::clearInstance()
 	p_soundManager->clearAll();
 }
 
-void Engine::setStateManager(StateManager *manager)
-{
-	p_stateManager = manager;
-}
+//void Engine::setStateManager(StateManager *manager)
+//{
+//	p_stateManager = manager;
+//}
 
 void Engine::setOptions(Options *manager)
 {
@@ -48,10 +48,10 @@ TranslationsManager *Engine::translationsManager()
 	return p_translationsManager;
 }
 
-StateManager *Engine::stateManager()
-{
-	return p_stateManager;
-}
+//StateManager *Engine::stateManager()
+//{
+//	return p_stateManager;
+//}
 
 SoundManager *Engine::soundManager()
 {
@@ -86,16 +86,6 @@ ShadersManager *Engine::shadersManager()
 Options *Engine::getOptions()
 {
 	return p_options;
-}
-
-void Engine::setWindow(MainWindow *window)
-{
-	p_window = window;
-}
-
-MainWindow *Engine::window()
-{
-	return p_window;
 }
 
 sf::String Engine::EngineName()

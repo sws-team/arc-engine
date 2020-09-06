@@ -21,7 +21,7 @@ public:
 	static Engine &Instance();
 	void clearInstance();
 
-	void setStateManager(StateManager *manager);
+//	void setStateManager(StateManager *manager);
 	void setOptions(Options *manager);
 
 	TexturesManager *texturesManager();
@@ -34,11 +34,11 @@ public:
 	GlobalVariables *globalVariables();
 	ShadersManager *shadersManager();
 
-	template<typename Class>
-	Class castedStateManager()
-	{
-		return static_cast<Class>(p_stateManager);
-	}
+//	template<typename Class>
+//	Class castedStateManager()
+//	{
+//		return static_cast<Class>(p_stateManager);
+//	}
 	template<typename Class>
         Class* options()
 	{
@@ -47,9 +47,6 @@ public:
 	Options *getOptions();
 
 	void reset();
-
-	void setWindow(MainWindow *window);
-	MainWindow *window();
 
 	static sf::String EngineName();
 	static sf::String EngineVersion();
@@ -63,7 +60,7 @@ private:
 
 	TexturesManager *p_texturesManager;
 	TranslationsManager *p_translationsManager;
-	StateManager *p_stateManager;
+//	StateManager *p_stateManager;
 	SoundManager *p_soundManager;
 	SettingsManager *p_settingsManager;
 	FontManager *p_fontManager;

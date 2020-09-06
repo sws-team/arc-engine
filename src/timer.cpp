@@ -1,7 +1,7 @@
-#include "timer.h"
+#include "gametimer.h"
 #include "engine.h"
 
-Timer::Timer():
+GameTimer::GameTimer():
 	lastTimer(0)
   ,pausedTime(0)
   ,isPaused(false)
@@ -10,12 +10,12 @@ Timer::Timer():
 	reset();
 }
 
-Timer::~Timer()
+GameTimer::~GameTimer()
 {
 	TimersManager::Instance().removeTimer(this);
 }
 
-void Timer::reset()
+void GameTimer::reset()
 {
 	isPaused = false;
 	clock.restart();
@@ -23,19 +23,19 @@ void Timer::reset()
 	pausedTime = 0;
 }
 
-void Timer::pause()
+void GameTimer::pause()
 {
 	isPaused = true;
 	pausedTime = clock.getElapsedTime().asMilliseconds();
 }
 
-void Timer::unpause()
+void GameTimer::unpause()
 {
 	lastTimer += clock.getElapsedTime().asMilliseconds() - pausedTime;
 	isPaused = false;
 }
 
-bool Timer::check(float msec)
+bool GameTimer::check(float msec)
 {
 	if (isPaused)
 		return false;
@@ -49,7 +49,7 @@ bool Timer::check(float msec)
 	return false;
 }
 
-float Timer::getElapsedMilliseconds() const
+float GameTimer::getElapsedMilliseconds() const
 {
 	return clock.getElapsedTime().asMilliseconds() - lastTimer;
 }
@@ -60,19 +60,19 @@ TimersManager &TimersManager::Instance()
 	return instance;
 }
 
-void TimersManager::addTimer(Timer *timer)
+void TimersManager::addTimer(GameTimer *timer)
 {
 	timers.push_back(timer);
 }
 
-void TimersManager::removeTimer(Timer *timer)
+void TimersManager::removeTimer(GameTimer *timer)
 {
 	timers.erase(remove(timers.begin(), timers.end(), timer));
 }
 
 void TimersManager::setPaused(bool isPaused)
 {
-	for(Timer *timer : timers)
+	for(GameTimer *timer : timers)
 	{
 		if (isPaused)
 			timer->pause();
