@@ -4,8 +4,8 @@
 #include "enginedef.h"
 #include "mainwindow.h"
 
-Menu::Menu(swoosh::ActivityController& controller)
-	: StateWindow(controller)
+Menu::Menu()
+	: StateWindow()
 	,m_pos(sf::Vector2f(0, 0))
 	,m_color(sf::Color::Red)
 	,m_currentColor(sf::Color::Green)
@@ -18,11 +18,11 @@ Menu::Menu(swoosh::ActivityController& controller)
 
 }
 
-void Menu::onDraw(sf::RenderTexture &surface)
+void Menu::paint(sf::RenderWindow *window)
 {
-	drawBackground(&surface);
+	drawBackground(window);
 	for(const sf::Text& menu : menus)
-		surface.draw(menu);
+		window->draw(menu);
 }
 
 void Menu::eventFilter(sf::Event *event)
@@ -53,8 +53,8 @@ void Menu::eventFilter(sf::Event *event)
 	case sf::Event::MouseMoved:
 	{
 		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseMove.x, event->mouseMove.y);
-		const sf::Vector2f pos = Engine::Instance().getOptions()->mainWindow()->mapPixelToCoords(pixelPos,
-																			   *Engine::Instance().getOptions()->mainWindow()->view());
+		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																			   *Engine::Instance().window()->view());
 		const int current = getMenuAtPos(pos);
 		if (current != -1 && current != currentMenu)
 		{
@@ -69,8 +69,8 @@ void Menu::eventFilter(sf::Event *event)
 		if (event->mouseButton.button == sf::Mouse::Left)
 		{
 			const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
-			const sf::Vector2f pos = Engine::Instance().getOptions()->mainWindow()->mapPixelToCoords(pixelPos,
-																				   *Engine::Instance().getOptions()->mainWindow()->view());
+			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																				   *Engine::Instance().window()->view());
 			const int current = getMenuAtPos(pos);
 			if (current != -1)
 			{
@@ -84,8 +84,8 @@ void Menu::eventFilter(sf::Event *event)
 	case sf::Event::TouchBegan:
 	{
 		const sf::Vector2i pixelPos = sf::Vector2i(event->touch.x, event->touch.y);
-		const sf::Vector2f pos = Engine::Instance().getOptions()->mainWindow()->mapPixelToCoords(pixelPos,
-																			   *Engine::Instance().getOptions()->mainWindow()->view());
+		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																			   *Engine::Instance().window()->view());
 		const int current = getMenuAtPos(pos);
 		if (current != -1)
 		{
@@ -103,7 +103,7 @@ void Menu::eventFilter(sf::Event *event)
 
 void Menu::back()
 {
-//	Engine::Instance().stateManager()->setState(StateManager::CLOSING);
+	Engine::Instance().stateManager()->setState(StateManager::CLOSING);
 }
 
 void Menu::addItem(const sf::String& str)

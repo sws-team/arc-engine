@@ -3,9 +3,9 @@
 
 const sf::Vector2f AboutWindow::RECT_SIZE = sf::Vector2f(900, 600);
 
-AboutWindow::AboutWindow(swoosh::ActivityController &controller)
-	: StateWindow(controller)
-	,m_backState(Options::MENU)
+AboutWindow::AboutWindow()
+	: StateWindow()
+	,m_backState(StateManager::MENU)
 	,m_characterSize(40)
 	,m_color(sf::Color::White)
 	,m_borderColor(sf::Color::Black)
@@ -20,26 +20,34 @@ AboutWindow::AboutWindow(swoosh::ActivityController &controller)
 	rect.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 - rectSize.x/2,
 					 Engine::Instance().settingsManager()->getResolution().y/2 - rectSize.y/2);
 
+
 }
 
-void AboutWindow::onStart()
+void AboutWindow::init()
 {
 	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::CREDITS_MUSIC);
 }
 
-void AboutWindow::onDraw(sf::RenderTexture &surface)
+void AboutWindow::paint(sf::RenderWindow *window)
 {
-	drawBackground(&surface);
+	drawBackground(window);
 
-	surface.draw(rect);
+	window->draw(rect);
 	for(const Creator& creator : creators)
 	{
 		if (creator.visible)
-			surface.draw(creator.text);
+			window->draw(creator.text);
 	}
 }
 
-void AboutWindow::onUpdate(double elapsed)
+void AboutWindow::back()
+{
+	Engine::Instance().soundManager()->setMusicLooped(true);
+	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::MAIN_MENU_MUSIC);
+	Engine::Instance().stateManager()->setState(m_backState);
+}
+
+void AboutWindow::update()
 {
 	if (timer.check(CREDITS_SPEED))
 	{
@@ -65,13 +73,6 @@ void AboutWindow::onUpdate(double elapsed)
 	}
 	if (!notFinished && started)
 		back();
-}
-
-void AboutWindow::back()
-{
-	Engine::Instance().soundManager()->setMusicLooped(true);
-	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::MAIN_MENU_MUSIC);
-	Engine::Instance().getOptions()->changeState(m_backState);
 }
 
 void AboutWindow::addString(const sf::String &str)

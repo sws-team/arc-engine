@@ -6,9 +6,9 @@
 class Menu : public StateWindow
 {
 public:
-	Menu(swoosh::ActivityController &controller);
+	Menu();
 
-	virtual void onDraw(sf::RenderTexture& surface) override;
+	virtual void paint(sf::RenderWindow *window) override;
 	virtual void eventFilter(sf::Event* event) override;
 	virtual void back() override;
 

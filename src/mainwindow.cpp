@@ -4,12 +4,14 @@
 #include "statewindow.h"
 
 #include <SFML/Window/Cursor.hpp>
-#include "Swoosh/ActivityController.h"
 
 MainWindow::MainWindow()
 	: sf::RenderWindow ()
+	,currentState(nullptr)
 {
+	state = StateManager::UNKNOWN;
 	m_view = new sf::View();
+	Engine::Instance().setWindow(this);
 }
 
 MainWindow::~MainWindow()
@@ -19,8 +21,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::exec()
 {
-	Engine::Instance().getOptions()->changeState(Options::INTRO);
-
 	setMouseCursorGrabbed(true);
 	setMouseCursorVisible(false);
 
@@ -34,14 +34,30 @@ void MainWindow::exec()
 	updateView();
 
 	const bool cursorLoaded = cursor.loadFromPixels(img.getPixelsPtr(), sf::Vector2u(32,32), sf::Vector2u(0,0));
-	if (cursorLoaded)
-		setMouseCursor(cursor);
-
-	sf::Clock clock;
-	float elapsed = 0.0f;
 	while (isOpen())
 	{
-		clock.restart();
+		if (Engine::Instance().stateManager()->getState() != state)
+		{
+			if (currentState != nullptr)
+				delete currentState;
+
+			if (cursorLoaded)
+				setMouseCursor(cursor);
+
+			if (Engine::Instance().stateManager()->getState() == StateManager::EXIT)
+			{
+				this->close();
+				return;
+			}
+			currentState = Engine::Instance().stateManager()->createState(
+						Engine::Instance().stateManager()->getState());
+			currentState->init();
+			state = Engine::Instance().stateManager()->getState();
+			setMouseCursorVisible(state != StateManager::INTRO);
+		}
+
+		if (currentState == nullptr)
+			continue;
 
 		sf::Event event;
 		while (active ? pollEvent(event) : waitEvent(event))
@@ -61,38 +77,33 @@ void MainWindow::exec()
 			default:
 				break;
 			}
-			if (Engine::Instance().getOptions()->controller()->currentState() != nullptr)
-				Engine::Instance().getOptions()->controller()->currentState()->eventFilter(&event);
+			currentState->eventFilter(&event);
 		}
+		currentState->update();
+
+		Engine::Instance().getOptions()->globalCallbacks();
+
 		if (active)
 		{
-			Engine::Instance().getOptions()->globalCallbacks();
-			if (Engine::Instance().getOptions()->controller() != nullptr)
-				Engine::Instance().getOptions()->controller()->update(elapsed);
-
 			clear(sf::Color::Black);
 			setView(*m_view);
-			Engine::Instance().getOptions()->globalDraw();
-
-			if (Engine::Instance().getOptions()->controller() != nullptr)
-				Engine::Instance().getOptions()->controller()->draw();
-
+			currentState->paint(this);
 			updateFPS();
+
+			Engine::Instance().getOptions()->globalDraw();
 
 			display();
 		}
 		else
 			sf::sleep(sf::milliseconds(100));
-
-		elapsed = static_cast<float>(clock.getElapsedTime().asSeconds());
 	}
 }
 
 void MainWindow::updateView()
 {
 	const sf::Vector2f resolution = Engine::Instance().Instance().settingsManager()->getResolutionF();
-	Engine::Instance().getOptions()->mainWindow()->view()->setSize(resolution.x, resolution.y);
-	Engine::Instance().getOptions()->mainWindow()->view()->setCenter(resolution.x / 2, resolution.y / 2);
+	Engine::Instance().window()->view()->setSize(resolution.x, resolution.y);
+	Engine::Instance().window()->view()->setCenter(resolution.x / 2, resolution.y / 2);
 
 	float windowRatio = resolution.x / (float) resolution.y;
 	constexpr float viewRatio = 16.f / 9.f;

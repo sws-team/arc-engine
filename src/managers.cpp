@@ -5,7 +5,7 @@
 #include "mainwindow.h"
 #include "Windows/introwindow.h"
 #include "Windows/aboutwindow.h"
-#include "Windows/closingwindow.h"
+#include "Windows/closewindow.h"
 
 #ifdef SFML_SYSTEM_WINDOWS
 #include "windows.h"
@@ -15,8 +15,8 @@
 #include <X11/Xlib.h>
 #endif
 
-
 #include <cstring>
+
 
 void Manager::reset()
 {
@@ -212,6 +212,42 @@ void TexturesManager::addTexture(const TextureType type, const char *data, const
 	if (!texture.loadFromMemory(textureData, size))
 		return;
 	addTexture(type, texture);
+}
+
+//==================STATE MANAGER===================
+StateManager::StateManager()
+{
+	m_state = INTRO;
+}
+
+GameState StateManager::getState() const
+{
+	return m_state;
+}
+
+void StateManager::setState(const int state)
+{
+	m_state = state;
+}
+
+StateWindow *StateManager::createState(const GameState state)
+{
+	StateWindow *stateWindow = nullptr;
+	switch (state)
+	{
+	case INTRO:
+		stateWindow = new IntroWindow();	
+		break;
+	case ABOUT:
+		stateWindow = new AboutWindow();
+		break;
+	case CLOSING:
+		stateWindow = new class CloseWindow();
+		break;
+	default:
+		break;
+	}
+	return stateWindow;
 }
 
 SoundManager::SoundManager()
@@ -584,7 +620,6 @@ void GlobalVariables::setFps(int fps)
 Options::Options()
 	: mw(nullptr)
 	,m_resourcesLoaded(false)
-	,app(nullptr)
 {
 
 }
@@ -605,6 +640,7 @@ void Options::updateWindow()
 	const int h = Engine::Instance().Instance().settingsManager()->getResolution().y;
 	const sf::String appName = Engine::Instance().globalVariables()->appName();
 	const int style = Engine::Instance().Instance().settingsManager()->getFullscreen()?sf::Style::Fullscreen:sf::Style::Default;
+
 	mw->create(
 #ifdef SFML_SYSTEM_ANDROID
 				sf::VideoMode::getDesktopMode()
@@ -618,8 +654,7 @@ void Options::updateWindow()
 			   );
 	mw->setVerticalSyncEnabled(true);
 	Engine::Instance().reset();
-	Engine::Instance().getOptions()->mainWindow()->updateView();
-	Options::reset();
+	Engine::Instance().window()->updateView();
 }
 
 void Options::globalCallbacks()
@@ -647,51 +682,9 @@ void Options::setResourcesLoaded(bool loaded)
 	m_resourcesLoaded = loaded;
 }
 
-StateController *Options::controller()
-{
-	return app;
-}
-
-void Options::reset()
-{
-	app = new StateController(*mw);
-#if defined(SFML_SYSTEM_ANDROID) || defined(SFML_SYSTEM_IOS)
-	app->optimizeForPerformance(true);
-#else
-	app->optimizeForPerformance(false);
-#endif
-}
-#include "Segues/ZoomOut.h"
-#include "Windows/introwindow.h"
-#include "Windows/loadingwindow.h"
-#include "Windows/aboutwindow.h"
-#include "Windows/closingwindow.h"
-
-bool Options::changeState(const GameState state)
-{
-	switch (state)
-	{
-	case INTRO:
-		app->push<IntroWindow>();
-		return true;
-	case ABOUT:
-		app->push<AboutWindow>();
-		return true;
-	case CLOSING:
-		app->push<ClosingWindow>();
-		return true;
-	case EXIT:
-		mw->close();
-		return true;
-	default:
-		break;
-	}
-	return false;
-}
-
 FilesManager::GameFile FilesManager::getData(FileType type) const
 {
-	return m_data.at(type);
+    return m_data.at(type);
 }
 
 void FilesManager::addFile(const FileType type, const std::string &path)

@@ -2,7 +2,7 @@
 #define GAMEOBJECT_H
 
 #include "stdheader.h"
-#include "gametimer.h"
+#include "timer.h"
 #include "enginedef.h"
 
 class GameDrawable
@@ -22,7 +22,7 @@ public:
 	virtual void update() = 0;
 
 protected:
-	GameTimer timer;
+	Timer timer;
 };
 
 class Animation : public GameDrawable

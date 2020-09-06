@@ -2,20 +2,19 @@
 #define INTROWINDOW_H
 
 #include "statewindow.h"
-#include "gametimer.h"
+#include "timer.h"
 
 class IntroWindow : public StateWindow
 {
 public:
-	IntroWindow(swoosh::ActivityController& controller);
+	IntroWindow();
 
-	void onStart() override;
-	void onUpdate(double elapsed) override;
-	void onDraw(sf::RenderTexture& surface) override;
-
+	void init() override;
+	void paint(sf::RenderWindow *window) override;
 	void eventFilter(sf::Event* event) override;
+	void update() override;
 private:
-	GameTimer timer;
+	Timer timer;
 	int opacity;
 
 	void finish();

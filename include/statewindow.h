@@ -5,28 +5,21 @@
 #include "engine.h"
 #include "enginedef.h"
 
-#include "Swoosh/Activity.h"
-
-class StateWindow : public swoosh::Activity
+class StateWindow
 {
 public:
-	StateWindow(swoosh::ActivityController& controller);
+	StateWindow();
 	virtual ~StateWindow();
 
-	virtual void onStart() override;
-	virtual void onLeave() override;
-	virtual void onExit() override;
-	virtual void onEnter() override;
-	virtual void onResume() override;
-	virtual void onEnd() override;
-	virtual void onUpdate(double elapsed) override;
-	virtual void onDraw(sf::RenderTexture& surface) override;
+	virtual void init();
+	virtual void paint(sf::RenderWindow *window) = 0;
 	virtual void eventFilter(sf::Event* event);
+	virtual void update();
 
 	void setBackground(TextureType type);
 
 protected:
-	void drawBackground(sf::RenderTarget *target);
+	void drawBackground(sf::RenderWindow *window);
 	sf::Sprite background;
 	virtual void back();
 };

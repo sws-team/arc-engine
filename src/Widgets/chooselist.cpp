@@ -47,8 +47,8 @@ void ChooseList::event(sf::Event *event)
 		if (event->mouseButton.button == sf::Mouse::Left)
 		{
 			const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
-			const sf::Vector2f pos = Engine::Instance().getOptions()->mainWindow()->mapPixelToCoords(pixelPos,
-																				   *Engine::Instance().getOptions()->mainWindow()->view());
+			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																				   *Engine::Instance().window()->view());
 			if (previous.getGlobalBounds().contains(pos))
 			{
 				if (startValue > 0)
@@ -82,8 +82,8 @@ void ChooseList::event(sf::Event *event)
 	else if (event->type == sf::Event::MouseMoved)
 	{
 		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseMove.x, event->mouseMove.y);
-		const sf::Vector2f pos = Engine::Instance().getOptions()->mainWindow()->mapPixelToCoords(pixelPos,
-																			   *Engine::Instance().getOptions()->mainWindow()->view());
+		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
+																			   *Engine::Instance().window()->view());
 
 		currentRect.setFillColor(sf::Color::Transparent);
 		updateCurrentColors();

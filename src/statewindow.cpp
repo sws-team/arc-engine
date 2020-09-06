@@ -2,15 +2,17 @@
 #include "engine.h"
 #include "managers.h"
 
-#include "Swoosh/ActivityController.h"
-
-StateWindow::StateWindow(swoosh::ActivityController &controller)
-	: swoosh::Activity(&controller)
+StateWindow::StateWindow()
 {
 
 }
 
 StateWindow::~StateWindow()
+{
+
+}
+
+void StateWindow::init()
 {
 
 }
@@ -29,44 +31,14 @@ void StateWindow::eventFilter(sf::Event *event)
 		if (event->key.code == sf::Keyboard::Escape)
 			this->back();
 	}
+	else if (event->type == sf::Event::JoystickButtonPressed)
+	{
+		if (event->joystickButton.button == EngineDefs::KEY_ESCAPE)
+			this->back();
+	}
 }
 
-void StateWindow::onStart()
-{
-
-}
-
-void StateWindow::onLeave()
-{
-
-}
-
-void StateWindow::onExit()
-{
-
-}
-
-void StateWindow::onEnter()
-{
-
-}
-
-void StateWindow::onResume()
-{
-
-}
-
-void StateWindow::onEnd()
-{
-
-}
-
-void StateWindow::onUpdate(double elapsed)
-{
-
-}
-
-void StateWindow::onDraw(sf::RenderTexture &surface)
+void StateWindow::update()
 {
 
 }
@@ -77,9 +49,9 @@ void StateWindow::setBackground(TextureType type)
 	background.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 }
 
-void StateWindow::drawBackground(sf::RenderTarget *target)
+void StateWindow::drawBackground(sf::RenderWindow *window)
 {
-	target->draw(background);
+	window->draw(background);
 }
 
 void StateWindow::back()

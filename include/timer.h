@@ -1,12 +1,12 @@
-#ifndef GAMETIMER_H
-#define GAMETIMER_H
+#ifndef TIMER_H
+#define TIMER_H
 
 #include "stdheader.h"
 
-struct GameTimer
+struct Timer
 {
-	GameTimer();
-	~GameTimer();
+	Timer();
+	~Timer();
 
 	void reset();
 	void pause();
@@ -28,8 +28,8 @@ class TimersManager
 public:
 	static TimersManager &Instance();
 
-	void addTimer(GameTimer *timer);
-	void removeTimer(GameTimer *timer);
+	void addTimer(Timer *timer);
+	void removeTimer(Timer *timer);
 
 	void setPaused(bool isPaused);
 
@@ -38,7 +38,7 @@ private:
 	TimersManager(const TimersManager& root);
 	TimersManager& operator=(const TimersManager&);
 
-	std::vector<GameTimer*> timers;
+	std::vector<Timer*> timers;
 };
 
-#endif // GAMETIMER_H
+#endif // TIMER_H
