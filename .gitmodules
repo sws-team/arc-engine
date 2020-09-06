@@ -1,0 +1,3 @@
+[submodule "3rdParty/Swoosh"]
+	path = 3rdParty/Swoosh
+	url = https://github.com/TheMaverickProgrammer/Swoosh.git
