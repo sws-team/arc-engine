@@ -50,6 +50,7 @@ public:
 
 	void setWindow(MainWindow *window);
 	MainWindow *window();
+	sf::RenderWindow *renderWindow();
 
 	static sf::String EngineName();
 	static sf::String EngineVersion();

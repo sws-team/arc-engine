@@ -1,5 +1,6 @@
 #include "engine.h"
 #include "managers.h"
+#include "mainwindow.h"
 
 Engine &Engine::Instance()
 {
@@ -96,6 +97,11 @@ void Engine::setWindow(MainWindow *window)
 MainWindow *Engine::window()
 {
 	return p_window;
+}
+
+sf::RenderWindow *Engine::renderWindow()
+{
+	return static_cast<sf::RenderWindow*>(p_window);
 }
 
 sf::String Engine::EngineName()

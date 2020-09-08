@@ -14,6 +14,7 @@ Menu::Menu()
 	,m_characterSize(100)
 	,m_maxMenu(0)
 	,m_textYOffset(DEFAULT_Y_OFFSET)
+	,m_align(LEFT)
 {
 
 }
@@ -106,21 +107,36 @@ void Menu::back()
 	Engine::Instance().stateManager()->setState(StateManager::CLOSING);
 }
 
-void Menu::addItem(const sf::String& str)
+void Menu::addItem(const sf::String& str, float k)
 {
 	sf::Text text;
 
 	text.setFont(Engine::Instance().fontManager()->font());
 	text.setFillColor(m_color);
 	text.setString(str);
-	text.setCharacterSize(Engine::Instance().fontManager()->getCharSize(m_characterSize));
+	text.setCharacterSize(k * Engine::Instance().fontManager()->getCharSize(m_characterSize));
 	text.setStyle(sf::Text::Bold);
 	text.setOutlineThickness(2);
 	text.setOutlineColor(m_borderColor);
 	text.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 
-	text.setPosition(m_pos.x,
-					 m_pos.y + yPos + m_textYOffset * menus.size());
+	switch (m_align)
+	{
+	case LEFT:
+		text.setPosition(m_pos.x, m_pos.y + yPos + m_textYOffset * menus.size());
+		break;
+	case CENTER:
+		text.setPosition(m_pos.x - text.getGlobalBounds().width/2,
+						 m_pos.y + yPos + m_textYOffset * menus.size());
+		break;
+	case RIGHT:
+		text.setPosition(m_pos.x - text.getGlobalBounds().width,
+						 m_pos.y + yPos + m_textYOffset * menus.size());
+		break;
+	default:
+		break;
+	}
+
 	yPos += text.getGlobalBounds().height;
 
 	menus.push_back(text);
@@ -140,6 +156,11 @@ void Menu::menuDown()
 	if (currentMenu < m_maxMenu)
 		currentMenu++;
 	updateColor();
+}
+
+void Menu::setAlign(const MENU_ALIGN &align)
+{
+	m_align = align;
 }
 
 void Menu::setTextYOffset(float textYOffset)

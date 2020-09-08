@@ -27,11 +27,20 @@ public:
 	void setMaxMenu(int maxMenu);
 	void setTextYOffset(float textYOffset);
 
+	enum MENU_ALIGN
+	{
+		LEFT,
+		CENTER,
+		RIGHT
+	};
+
+	void setAlign(const MENU_ALIGN &align);
+
 protected:
 	virtual void accept() = 0;
 	virtual void closeEvent() = 0;
 	int currentMenu;
-	void addItem(const sf::String &str);
+	void addItem(const sf::String &str, float k = 1.f);
 	std::vector<sf::Text> menus;
 
 	virtual int getMenuAtPos(const sf::Vector2f &point) const;
@@ -50,6 +59,7 @@ private:
 	unsigned int m_characterSize;
 	int m_maxMenu;
 	float m_textYOffset;
+	MENU_ALIGN m_align;
 };
 
 #endif // MENU_H
