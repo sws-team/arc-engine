@@ -14,7 +14,7 @@ Menu::Menu()
 	,m_characterSize(100)
 	,m_maxMenu(0)
 	,m_textYOffset(DEFAULT_Y_OFFSET)
-	,m_align(LEFT)
+	,m_align(ALIGN_LEFT)
 {
 
 }
@@ -122,14 +122,14 @@ void Menu::addItem(const sf::String& str, float k)
 
 	switch (m_align)
 	{
-	case LEFT:
+	case ALIGN_LEFT:
 		text.setPosition(m_pos.x, m_pos.y + yPos + m_textYOffset * menus.size());
 		break;
-	case CENTER:
+	case ALIGN_CENTER:
 		text.setPosition(m_pos.x - text.getGlobalBounds().width/2,
 						 m_pos.y + yPos + m_textYOffset * menus.size());
 		break;
-	case RIGHT:
+	case ALIGN_RIGHT:
 		text.setPosition(m_pos.x - text.getGlobalBounds().width,
 						 m_pos.y + yPos + m_textYOffset * menus.size());
 		break;

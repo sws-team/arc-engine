@@ -29,9 +29,9 @@ public:
 
 	enum MENU_ALIGN
 	{
-		LEFT,
-		CENTER,
-		RIGHT
+		ALIGN_LEFT,
+		ALIGN_CENTER,
+		ALIGN_RIGHT
 	};
 
 	void setAlign(const MENU_ALIGN &align);
