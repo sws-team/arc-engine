@@ -72,6 +72,12 @@ namespace Collision {
         /// Supports scaling and rotation
         //////
 		bool BoundingBoxTest(const sf::Sprite& Object1, const sf::Sprite& Object2);
+
+
+		bool isParallelogramContainsPoint(const sf::Vector2f& target,
+										  const sf::Vector2f& point,
+										  const std::vector<sf::Vector2f>& coords,
+										  const sf::FloatRect& boundingBox);
 }
 
 #endif	/* COLLISION_H */
