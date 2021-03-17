@@ -48,6 +48,8 @@ private:
 	bool shaders;
 };
 
+#define TR(x) Engine::Instance().translationsManager()->translate(x)
+
 class TranslationsManager : public Manager
 {
 public:
