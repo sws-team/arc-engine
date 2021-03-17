@@ -7,9 +7,7 @@
 
 GamePlatform::GamePlatform()
 {
-	std::cout << 1111111 << std::endl;
 	adapter = new GAME_PLATFORM();
-	std::cout << 1111111 << std::endl;
 }
 
 GamePlatform &GamePlatform::Instance()
