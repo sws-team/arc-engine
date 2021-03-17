@@ -1,0 +1,17 @@
+#ifndef PROTOCOL_H
+#define PROTOCOL_H
+
+enum class MSG_TYPE
+{
+	UNKNOWN,
+	DEFAULT,
+
+	SYNC,
+
+	UNIT_CREATED,
+	UNIT_MOVED,
+	UNIT_SHOOT,
+	UNIT_HITED,
+};
+
+#endif // PROTOCOL_H
