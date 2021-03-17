@@ -87,7 +87,6 @@ void Lobby::refresh()
 
 void Lobby::create(const std::string &name, bool isPrivate, int playersCount)
 {
-	std::cout << "Cretare lobby"<<std::endl;
 	d->lobbyName = name;
 	const ELobbyType eLobbyType = isPrivate ? k_ELobbyTypePrivate : k_ELobbyTypePublic;
 	SteamAPICall_t request = SteamMatchmaking()->CreateLobby(eLobbyType, playersCount);
@@ -151,12 +150,10 @@ void Lobby::Private::resetID()
 
 void Lobby::Private::updateLobbyList(LobbyMatchList_t *pLobbyMatchList, bool bIOFailure)
 {
-	std::cout << " updateLobbyList" << std::endl;
 	lobbies.clear();
 	refreshing = false;
 	if (bIOFailure || pLobbyMatchList->m_nLobbiesMatching == 0)
 	{
-		std::cout << " 0000000 "  << std::endl;
 		if (lobbiesChangedCallback != nullptr)
 			lobbiesChangedCallback(lobbies);
 		return;
@@ -179,14 +176,12 @@ void Lobby::Private::updateLobbyList(LobbyMatchList_t *pLobbyMatchList, bool bIO
 		lobby.currentCount = currentCount;
 		lobbies.push_back(lobby);
 	}
-	std::cout << " updateLobbyList result " << lobbies.size() << std::endl;
 	if (lobbiesChangedCallback != nullptr)
 		lobbiesChangedCallback(lobbies);
 }
 
 void Lobby::Private::lobbyCreated(LobbyCreated_t *pLobby, bool bIOFailure)
 {
-	std::cout << "lobbyCreated"<<std::endl;
 	if (bIOFailure || pLobby->m_eResult != k_EResultOK)
 		return;
 
