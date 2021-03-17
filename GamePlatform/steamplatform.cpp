@@ -11,7 +11,6 @@ SteamPlatform::SteamPlatform()
 
 bool SteamPlatform::initialize()
 {
-	//    const int steamAppId = 1540390;
 	if (SteamAPI_RestartAppIfNecessary(GAME_ID))
 		return false;
 	if (!SteamAPI_Init())
