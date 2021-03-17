@@ -693,7 +693,7 @@ void FilesManager::addFile(const FileType type, const std::string &path)
 	sf::FileInputStream stream;
 	if (!stream.open(fullPath))
 	{
-		std::cout << "Open file failed." << std::endl;
+		std::cout << "Open file failed. - " << fullPath << std::endl;
 		return;
 	}
 	const sf::Int64 size = stream.getSize();
