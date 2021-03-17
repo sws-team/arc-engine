@@ -3,6 +3,7 @@
 #include "managers.h"
 
 StateWindow::StateWindow()
+	: transparency(false)
 {
 
 }
@@ -49,8 +50,15 @@ void StateWindow::setBackground(TextureType type)
 	background.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 }
 
+void StateWindow::setTransparency(bool transparency)
+{
+	this->transparency = transparency;
+}
+
 void StateWindow::drawBackground(sf::RenderWindow *window)
 {
+	if (transparency)
+		return;
 	window->draw(background);
 }
 

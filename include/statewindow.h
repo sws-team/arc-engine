@@ -17,10 +17,12 @@ public:
 	virtual void update();
 
 	void setBackground(TextureType type);
+	void setTransparency(bool transparency);
 
 protected:
 	void drawBackground(sf::RenderWindow *window);
 	sf::Sprite background;
+	bool transparency;
 	virtual void back();
 };
 
