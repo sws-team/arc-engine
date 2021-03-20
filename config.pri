@@ -1,6 +1,0 @@
-win32:DEFINES += OS_WIN
-unix: DEFINES += OS_UNIX
-macx{
-DEFINES += OS_MAC
-DEFINES -= OS_UNIX
-}
