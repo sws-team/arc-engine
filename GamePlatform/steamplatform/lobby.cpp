@@ -58,7 +58,7 @@ Lobby::Lobby()
 
 Lobby::~Lobby()
 {
-
+	delete d;
 }
 
 void Lobby::setJoinedCallback(const std::function<void (bool)> &callback)

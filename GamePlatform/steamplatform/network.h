@@ -7,19 +7,19 @@
 class Network
 {
 public:
-    Network();
-    ~Network();
+	Network();
+	~Network();
 
-    void setMessageReceivedCallback(const std::function<void(const std::string&)>& callback);
+	void setMessageReceivedCallback(const std::function<void(const std::string&)>& callback);
 
-    void process();
+	void process();
 
-    void startSession();
-    void sendMessage(const std::string &message);
+	void startSession();
+	void sendMessage(const std::string &message);
 
 private:
-    class Private;
-    Private *d;
+	class Private;
+	Private *d;
 };
 
 #endif //NETWORK_H

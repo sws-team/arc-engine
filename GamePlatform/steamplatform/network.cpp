@@ -40,7 +40,7 @@ Network::Network()
 
 Network::~Network()
 {
-
+	delete d;
 }
 
 void Network::setMessageReceivedCallback(const std::function<void (const std::string &)> &callback)
