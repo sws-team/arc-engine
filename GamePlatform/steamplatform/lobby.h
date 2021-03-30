@@ -35,6 +35,7 @@ public:
 	void sendMessage(const std::string& message);
 
 	std::vector<CSteamID> players() const;
+	int myID() const;
 
 private:
 	class Private;

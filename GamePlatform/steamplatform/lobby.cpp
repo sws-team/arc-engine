@@ -29,7 +29,6 @@ public:
 	std::function<void (const std::string &)> messageReceivedCallback = nullptr;
 	std::function<void (const std::vector<Lobby::LobbyData> &)> lobbiesChangedCallback = nullptr;
 
-
 	void resetID();
 
 	void updateLobbyList(LobbyMatchList_t *pLobbyMatchList, bool bIOFailure);
@@ -140,6 +139,18 @@ std::vector<CSteamID> Lobby::players() const
 		result.push_back(id);
 	}
 	return result;
+}
+
+int Lobby::myID() const
+{
+	const CSteamID id = SteamUser()->GetSteamID();
+	const int count = SteamMatchmaking()->GetNumLobbyMembers(d->lobbyID);
+	for (int i = 0; i < count; ++i)
+	{
+		if (SteamMatchmaking()->GetLobbyMemberByIndex(d->lobbyID, i) == id)
+			return i;
+	}
+	return -1;
 }
 
 
