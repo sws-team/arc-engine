@@ -674,7 +674,7 @@ void Options::globalDraw()
 
 bool Options::isResourcesLoaded() const
 {
-    return m_resourcesLoaded;
+	return m_resourcesLoaded;
 }
 
 void Options::setResourcesLoaded(bool loaded)
@@ -684,7 +684,7 @@ void Options::setResourcesLoaded(bool loaded)
 
 FilesManager::GameFile FilesManager::getData(FileType type) const
 {
-    return m_data.at(type);
+	return m_data.at(type);
 }
 
 void FilesManager::addFile(const FileType type, const std::string &path)

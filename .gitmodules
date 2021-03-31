@@ -1,0 +1,3 @@
+[submodule "3rdParty/Base64"]
+	path = 3rdParty/Base64
+	url = https://github.com/tkislan/base64.git
