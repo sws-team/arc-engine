@@ -28,6 +28,11 @@ public:
 		Engine::Instance().soundManager()->addMusic(type, data.c_str(), data.size());
 	}
 
+	static void addFont(FontType type, const std::string& data)
+	{
+		Engine::Instance().fontManager()->addFont(type, data.c_str(), data.size());
+	}
+
 	static void addFile(FileType type, const std::string& data)
 	{
 		Engine::Instance().filesManager()->addFile(type, data.c_str(), data.size());
