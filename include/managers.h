@@ -37,6 +37,7 @@ public:
 	void setShaders(bool value);
 
 	sf::Vector2f getScaleFactor() const;
+	sf::Vector2f getLowScaleFactor() const;
 
 	static const sf::Vector2i defaultResolution;
 
@@ -263,10 +264,17 @@ public:
 	int fps() const;
 	void setFps(int fps);
 
+	bool isLowGraphics() const;
+	void setLowGraphics(bool lowGraphics);
+	sf::Vector2f lowGraphicsScaleFactor() const;
+
 private:
 	int m_fps;
 	std::string m_appVersion;
 	sf::String m_appName;
+	sf::Vector2f m_lowGraphicsScaleFactor;
+	bool lowGraphics;
+	static const sf::Vector2i lowGraphicsResolution;
 };
 
 class MainWindow;

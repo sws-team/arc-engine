@@ -5,12 +5,16 @@
 
 std::vector<GameResource::Resource> GameResource::Resource::loadResources(const std::string &fileName)
 {
+//	std::cout << "LOAD "<< fileName <<std::endl;
 	std::vector<GameResource::Resource> resources;
 
 	std::ifstream file;
 	file.open(fileName);
 	if (!file.is_open())
+	{
+		std::cerr << "Error to load file: "<< fileName << std::endl;
 		return resources;
+	}
 
 	size_t count;
 	file >> count;

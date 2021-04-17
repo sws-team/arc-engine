@@ -72,27 +72,34 @@ void SettingsManager::setMusicLevel(float value)
 sf::Vector2f SettingsManager::getScaleFactor() const
 {
 	return sf::Vector2f(static_cast<float>(resolution.x)/defaultResolution.x,
-					static_cast<float>(resolution.y)/defaultResolution.y);
+						static_cast<float>(resolution.y)/defaultResolution.y);
+}
+
+sf::Vector2f SettingsManager::getLowScaleFactor() const
+{
+	const sf::Vector2f scaleFactor = getScaleFactor();
+	return sf::Vector2f(scaleFactor.x * Engine::Instance().globalVariables()->lowGraphicsScaleFactor().x,
+						scaleFactor.y * Engine::Instance().globalVariables()->lowGraphicsScaleFactor().y);
 }
 
 bool SettingsManager::getShaders() const
 {
-    return shaders;
+	return shaders;
 }
 
 void SettingsManager::setShaders(bool value)
 {
-    shaders = value;
+	shaders = value;
 }
 
 bool SettingsManager::getFullscreen() const
 {
-    return fullscreen;
+	return fullscreen;
 }
 
 void SettingsManager::setFullscreen(bool value)
 {
-    fullscreen = value;
+	fullscreen = value;
 }
 
 float SettingsManager::getSoundLevel() const
@@ -511,10 +518,11 @@ void FontManager::setFontModifier(float fontModifier)
 	m_fontModifier = fontModifier;
 }
 
+const sf::Vector2i GlobalVariables::lowGraphicsResolution = sf::Vector2i(1280, 720);
 GlobalVariables::GlobalVariables() :
 	m_fps(0)
 {
-
+	setLowGraphics(false);
 }
 
 std::string GlobalVariables::saveGameSettings() const
@@ -615,6 +623,32 @@ int GlobalVariables::fps() const
 void GlobalVariables::setFps(int fps)
 {
 	m_fps = fps;
+}
+
+bool GlobalVariables::isLowGraphics() const
+{
+	return lowGraphics;
+}
+
+void GlobalVariables::setLowGraphics(bool lowGraphics)
+{
+	if (lowGraphics)
+	{
+		this->lowGraphics = true;
+		m_lowGraphicsScaleFactor.x = static_cast<float>(SettingsManager::defaultResolution.x) / static_cast<float>(lowGraphicsResolution.x);
+		m_lowGraphicsScaleFactor.y = static_cast<float>(SettingsManager::defaultResolution.y) / static_cast<float>(lowGraphicsResolution.y);
+	}
+	else
+	{
+		this->lowGraphics = false;
+		m_lowGraphicsScaleFactor.x = 1.f;
+		m_lowGraphicsScaleFactor.y = 1.f;
+	}
+}
+
+sf::Vector2f GlobalVariables::lowGraphicsScaleFactor() const
+{
+	return m_lowGraphicsScaleFactor;
 }
 
 Options::Options()
@@ -726,13 +760,13 @@ std::string ShadersManager::getData(ShaderType type)
 
 void ShadersManager::addShader(const ShaderType type, const std::string &data)
 {
-    m_shaders.insert(std::pair<ShaderType, std::string>(type, data));
+	m_shaders.insert(std::pair<ShaderType, std::string>(type, data));
 }
 
 std::string GlobalVariables::to_string_with_precision(const float a_value, const int n)
 {
-    std::ostringstream out;
-    out.precision(n);
-    out << std::fixed << a_value;
-    return std::string(out.str());
+	std::ostringstream out;
+	out.precision(n);
+	out << std::fixed << a_value;
+	return std::string(out.str());
 }

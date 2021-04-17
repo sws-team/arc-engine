@@ -24,15 +24,14 @@ void MainWindow::exec()
 	setMouseCursorGrabbed(true);
 	setMouseCursorVisible(false);
 
-	const sf::Image img = Engine::Instance().texturesManager()->getTexture(TexturesManager::CURSOR).copyToImage();
-	sf::Cursor cursor;
-
 	const sf::Image icon = Engine::Instance().texturesManager()->getTexture(TexturesManager::ICON).copyToImage();
 	this->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
 	bool active = true;
 	updateView();
 
+	sf::Cursor cursor;
+	const sf::Image img = Engine::Instance().texturesManager()->getTexture(TexturesManager::CURSOR).copyToImage();
 	const bool cursorLoaded = cursor.loadFromPixels(img.getPixelsPtr(), sf::Vector2u(32,32), sf::Vector2u(0,0));
 	while (isOpen())
 	{
