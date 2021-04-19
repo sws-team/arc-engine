@@ -47,7 +47,7 @@ void StateWindow::update()
 void StateWindow::setBackground(TextureType type)
 {
 	background.setTexture(Engine::Instance().texturesManager()->getTexture(type));
-	background.setScale(Engine::Instance().settingsManager()->getLowScaleFactor());
+	background.setScale(Engine::Instance().settingsManager()->getScaleFactor());
 }
 
 void StateWindow::setTransparency(bool transparency)

@@ -29,16 +29,16 @@ const sf::Vector2i SettingsManager::defaultResolution = sf::Vector2i(1920, 1080)
 
 SettingsManager::SettingsManager()
 	: Manager()
-  ,soundLevel(100)
-  ,musicLevel(100)
-  ,fullscreen(
+	,soundLevel(100)
+	,musicLevel(100)
+	,fullscreen(
 #ifdef DEV_BUILD
-	   false
+	false
 #else
-	   true
+	true
 #endif
-	   )
-  ,shaders(true)
+	)
+	,shaders(true)
 {
 	reset();
 }
@@ -73,13 +73,6 @@ sf::Vector2f SettingsManager::getScaleFactor() const
 {
 	return sf::Vector2f(static_cast<float>(resolution.x)/defaultResolution.x,
 						static_cast<float>(resolution.y)/defaultResolution.y);
-}
-
-sf::Vector2f SettingsManager::getLowScaleFactor() const
-{
-	const sf::Vector2f scaleFactor = getScaleFactor();
-	return sf::Vector2f(scaleFactor.x * Engine::Instance().globalVariables()->lowGraphicsScaleFactor().x,
-						scaleFactor.y * Engine::Instance().globalVariables()->lowGraphicsScaleFactor().y);
 }
 
 bool SettingsManager::getShaders() const
@@ -518,11 +511,10 @@ void FontManager::setFontModifier(float fontModifier)
 	m_fontModifier = fontModifier;
 }
 
-const sf::Vector2i GlobalVariables::lowGraphicsResolution = sf::Vector2i(1280, 720);
 GlobalVariables::GlobalVariables() :
 	m_fps(0)
 {
-	setLowGraphics(false);
+
 }
 
 std::string GlobalVariables::saveGameSettings() const
@@ -623,32 +615,6 @@ int GlobalVariables::fps() const
 void GlobalVariables::setFps(int fps)
 {
 	m_fps = fps;
-}
-
-bool GlobalVariables::isLowGraphics() const
-{
-	return lowGraphics;
-}
-
-void GlobalVariables::setLowGraphics(bool lowGraphics)
-{
-	if (lowGraphics)
-	{
-		this->lowGraphics = true;
-		m_lowGraphicsScaleFactor.x = static_cast<float>(SettingsManager::defaultResolution.x) / static_cast<float>(lowGraphicsResolution.x);
-		m_lowGraphicsScaleFactor.y = static_cast<float>(SettingsManager::defaultResolution.y) / static_cast<float>(lowGraphicsResolution.y);
-	}
-	else
-	{
-		this->lowGraphics = false;
-		m_lowGraphicsScaleFactor.x = 1.f;
-		m_lowGraphicsScaleFactor.y = 1.f;
-	}
-}
-
-sf::Vector2f GlobalVariables::lowGraphicsScaleFactor() const
-{
-	return m_lowGraphicsScaleFactor;
 }
 
 Options::Options()
