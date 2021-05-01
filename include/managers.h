@@ -87,6 +87,8 @@ private:
 
 };
 
+#define GET_TEXTURE(x) Engine::Instance().texturesManager()->getTexture(x)
+
 class TexturesManager : public Manager
 {
 public:
