@@ -7,10 +7,11 @@
 Button::Button() :
 	hovered(false)
   ,m_characterSize(30)
+  ,color(sf::Color::White)
 {
 	rect.setOutlineThickness(2);
 	rect.setOutlineColor(sf::Color::Black);
-	rect.setFillColor(sf::Color::White);
+	rect.setFillColor(color);
 
 	m_text.setFont(Engine::Instance().fontManager()->font());
 	m_text.setCharacterSize(Engine::Instance().fontManager()->getCharSize(m_characterSize));
@@ -132,4 +133,15 @@ void Button::setCharacterSize(unsigned int characterSize)
 	m_characterSize = characterSize;
 	m_text.setCharacterSize(m_characterSize);
 	update();
+}
+
+void Button::setTexture(const sf::Texture* texture)
+{
+	rect.setTexture(texture);
+}
+
+void Button::setButtonColor(const sf::Color &color)
+{
+	this->color = color;
+	rect.setFillColor(color);
 }

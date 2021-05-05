@@ -24,6 +24,9 @@ public:
 	void setTextColor(const sf::Color &textColor);
 	void setCharacterSize(unsigned int characterSize);
 
+	void setTexture(const sf::Texture *texture);
+	void setButtonColor(const sf::Color& color);
+
 private:
 	sf::RectangleShape rect;
 	sf::Text m_text;
@@ -31,6 +34,7 @@ private:
 	sf::RectangleShape currentRect;
 	bool hovered;
 	unsigned int m_characterSize;
+	sf::Color color;
 };
 
 #endif // BUTTON_H
