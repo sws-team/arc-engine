@@ -12,6 +12,8 @@ MainWindow::MainWindow()
 	state = StateManager::UNKNOWN;
 	m_view = new sf::View();
 	Engine::Instance().setWindow(this);
+	setMouseCursorGrabbed(true);
+	setMouseCursorVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -21,9 +23,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::exec()
 {
-	setMouseCursorGrabbed(true);
-	setMouseCursorVisible(false);
-
 	const sf::Image icon = Engine::Instance().texturesManager()->getTexture(TexturesManager::ICON).copyToImage();
 	this->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 

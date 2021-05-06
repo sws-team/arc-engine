@@ -9,7 +9,7 @@ class MainWindow : public sf::RenderWindow
 {
 public:
 	MainWindow();
-    ~MainWindow();
+	~MainWindow();
 
 	void exec();
 	sf::View *view() const;
