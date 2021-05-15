@@ -8,6 +8,7 @@ Button::Button() :
 	hovered(false)
   ,m_characterSize(30)
   ,color(sf::Color::White)
+  ,m_enabled(true)
 {
 	rect.setOutlineThickness(2);
 	rect.setOutlineColor(sf::Color::Black);
@@ -29,6 +30,8 @@ void Button::draw(sf::RenderTarget *target)
 
 void Button::event(sf::Event *event)
 {
+	if (!m_enabled)
+		return;
 	if (event->type == sf::Event::MouseButtonReleased)
 	{
 		if (event->mouseButton.button == sf::Mouse::Left)
@@ -144,4 +147,14 @@ void Button::setButtonColor(const sf::Color &color)
 {
 	this->color = color;
 	rect.setFillColor(color);
+}
+
+void Button::setEnabled(bool enabled)
+{
+	m_enabled = enabled;
+}
+
+bool Button::isEnabled() const
+{
+	return m_enabled;
 }

@@ -27,6 +27,10 @@ public:
 	void setTexture(const sf::Texture *texture);
 	void setButtonColor(const sf::Color& color);
 
+	void setEnabled(bool enabled);
+
+	bool isEnabled() const;
+
 private:
 	sf::RectangleShape rect;
 	sf::Text m_text;
@@ -35,6 +39,7 @@ private:
 	bool hovered;
 	unsigned int m_characterSize;
 	sf::Color color;
+	bool m_enabled;
 };
 
 #endif // BUTTON_H
