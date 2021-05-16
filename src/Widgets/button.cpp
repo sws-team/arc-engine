@@ -116,6 +116,13 @@ void Button::setScale(const sf::Vector2f &scaleFactor)
 	m_text.setScale(scaleFactor);
 }
 
+void Button::setRotation(float angle)
+{
+	rect.setRotation(angle);
+	m_text.setRotation(angle);
+	currentRect.setRotation(angle);
+}
+
 void Button::setFillColor(const sf::Color &fillColor)
 {
 	rect.setFillColor(fillColor);

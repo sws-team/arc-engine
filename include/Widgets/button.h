@@ -18,6 +18,7 @@ public:
 	void setTextCharacterSize(unsigned int size);
 
 	void setScale(const sf::Vector2f& scaleFactor);
+	void setRotation(float angle);
 
 	void setFillColor(const sf::Color &fillColor);
 	void setBorderColor(const sf::Color &borderColor);

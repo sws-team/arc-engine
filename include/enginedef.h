@@ -25,9 +25,9 @@ namespace EngineDefs
 	static const int CRYPTO_VALUE = 12;
 	static const std::string settingsFilePath = std::string("settings.ini");
 	static const std::string saveFileName = std::string("saves.sav");
-        static constexpr float MSEC = 1000;
-        static const sf::String separator = ": ";
-        static const sf::String endline = "\n";
+	static constexpr float MSEC = 1000;
+	static const sf::String separator = ": ";
+	static const sf::String endline = "\n";
 }
 
 #endif // ENGINEDEF_H
