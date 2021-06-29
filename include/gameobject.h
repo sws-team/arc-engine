@@ -20,6 +20,10 @@ public:
 
 	virtual void draw(sf::RenderTarget *const target) = 0;
 	virtual void update() = 0;
+	virtual void eventFilter(sf::Event *event)
+	{
+
+	}
 
 protected:
 	Timer timer;
