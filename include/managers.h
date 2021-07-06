@@ -13,6 +13,9 @@ public:
 	virtual void reset();
 };
 
+#define SCALE_FACTOR Engine::Instance().settingsManager()->getScaleFactor()
+#define DEF_SCALE_FACTOR const sf::Vector2f scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
+
 class SettingsManager : public Manager
 {
 public:
