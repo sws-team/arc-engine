@@ -32,6 +32,8 @@ void Button::event(sf::Event *event)
 {
 	if (!m_enabled)
 		return;
+	if (m_callback == nullptr)
+		return;
 	if (event->type == sf::Event::MouseButtonReleased)
 	{
 		if (event->mouseButton.button == sf::Mouse::Left)
