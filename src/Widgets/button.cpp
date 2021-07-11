@@ -6,9 +6,9 @@
 
 Button::Button() :
 	hovered(false)
-  ,m_characterSize(30)
-  ,color(sf::Color::White)
-  ,m_enabled(true)
+	,m_characterSize(30)
+	,color(sf::Color::White)
+	,m_enabled(true)
 {
 	rect.setOutlineThickness(2);
 	rect.setOutlineColor(sf::Color::Black);
@@ -94,6 +94,10 @@ void Button::update()
 	currentRect.setSize(m_size);
 	m_text.setPosition(m_pos.x + m_size.x/2 - m_text.getGlobalBounds().width/2,
 					   m_pos.y + m_size.y/2 - m_text.getGlobalBounds().height/2);
+
+	rect.setRotation(m_rotation);
+	m_text.setRotation(m_rotation);
+	currentRect.setRotation(m_rotation);
 }
 
 void Button::setCallback(std::function<void ()> callback)
@@ -116,13 +120,6 @@ void Button::setScale(const sf::Vector2f &scaleFactor)
 {
 //	rect.setScale(scaleFactor);
 	m_text.setScale(scaleFactor);
-}
-
-void Button::setRotation(float angle)
-{
-	rect.setRotation(angle);
-	m_text.setRotation(angle);
-	currentRect.setRotation(angle);
 }
 
 void Button::setFillColor(const sf::Color &fillColor)

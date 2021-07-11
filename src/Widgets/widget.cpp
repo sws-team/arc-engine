@@ -5,7 +5,8 @@ const sf::Color Widget::DISABLED_COLOR = sf::Color(64, 64, 64, 150);
 
 Widget::Widget():
 	m_pos(sf::Vector2f(0,0))
-  ,m_size(sf::Vector2i(32, 32))
+	,m_size(sf::Vector2i(32, 32))
+	,m_rotation(0.f)
 {
 
 }
@@ -50,6 +51,12 @@ void Widget::setSize(const sf::Vector2f &size)
 void Widget::setSize(float x, float y)
 {
 	setSize(sf::Vector2f(x, y));
+}
+
+void Widget::setRotation(float angle)
+{
+	m_rotation = angle;
+	update();
 }
 
 sf::Vector2f Widget::size() const

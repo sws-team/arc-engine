@@ -17,6 +17,7 @@ public:
 	void setPos(float x, float y);
 	void setSize(const sf::Vector2f& size);
 	void setSize(float x, float y);
+	void setRotation(float angle);
 
 	sf::Vector2f size() const;
 	sf::Vector2f pos() const;
@@ -25,6 +26,7 @@ public:
 protected:
 	sf::Vector2f m_pos;
 	sf::Vector2f m_size;
+	float m_rotation;
 
 	static const sf::Color HOVERED_COLOR;
 };
