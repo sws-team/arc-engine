@@ -3,6 +3,7 @@
 #include "managers.h"
 #include "enginedef.h"
 #include "mainwindow.h"
+#include "collisions.h"
 
 Button::Button() :
 	hovered(false)
@@ -39,9 +40,10 @@ void Button::event(sf::Event *event)
 		if (event->mouseButton.button == sf::Mouse::Left)
 		{
 			const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
-			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
-																				   *Engine::Instance().window()->view());
-			if (rect.getGlobalBounds().contains(pos))
+			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().window()->view());
+
+			if (Collision::rectContains(rect, pos))
+//			if (rect.getGlobalBounds().contains(pos))
 			{
 				Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
 				m_callback();
@@ -55,7 +57,8 @@ void Button::event(sf::Event *event)
 																			   *Engine::Instance().window()->view());
 		bool hover = false;
 		currentRect.setFillColor(sf::Color::Transparent);
-		if (rect.getGlobalBounds().contains(pos))
+		if (Collision::rectContains(rect, pos))
+//		if (rect.getGlobalBounds().contains(pos))
 		{
 			hover = true;
 			currentRect.setFillColor(Widget::HOVERED_COLOR);

@@ -68,3 +68,8 @@ sf::Vector2f Widget::pos() const
 {
 	return m_pos;
 }
+
+float Widget::rotation() const
+{
+	return m_rotation;
+}

@@ -78,6 +78,8 @@ namespace Collision {
 										  const sf::Vector2f& point,
 										  const std::vector<sf::Vector2f>& coords,
 										  const sf::FloatRect& boundingBox);
+
+		bool rectContains(const sf::RectangleShape& rect, const sf::Vector2f& pos);
 }
 
 #endif	/* COLLISION_H */

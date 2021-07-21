@@ -217,4 +217,15 @@ namespace Collision
 				return true;
 			return false;
 		}
+
+		bool rectContains(const sf::RectangleShape& rect, const sf::Vector2f& pos)
+		{
+			std::vector<sf::Vector2f> points;
+			points.push_back(rect.getTransform().transformPoint(0, 0) - rect.getPosition());
+			points.push_back(rect.getTransform().transformPoint(rect.getLocalBounds().width, 0) - rect.getPosition());
+			points.push_back(rect.getTransform().transformPoint(rect.getLocalBounds().width, rect.getLocalBounds().height) - rect.getPosition());
+			points.push_back(rect.getTransform().transformPoint(0, rect.getLocalBounds().height) - rect.getPosition());
+
+			return isParallelogramContainsPoint(pos, rect.getPosition(), points, rect.getGlobalBounds());
+		}
 }

@@ -21,6 +21,7 @@ public:
 
 	sf::Vector2f size() const;
 	sf::Vector2f pos() const;
+	float rotation() const;
 
 	static const sf::Color DISABLED_COLOR;
 protected:
