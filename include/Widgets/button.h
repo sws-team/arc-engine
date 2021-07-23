@@ -31,10 +31,13 @@ public:
 
 	bool isEnabled() const;
 
+	void setMenu(const std::function<void ()> &menu);
+
 private:
 	sf::RectangleShape rect;
 	sf::Text m_text;
 	std::function<void()> m_callback;
+	std::function<void()> m_menu;
 	sf::RectangleShape currentRect;
 	bool hovered;
 	unsigned int m_characterSize;

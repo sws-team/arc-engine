@@ -6,7 +6,10 @@
 #include "collisions.h"
 
 Button::Button() :
-	hovered(false)
+	Widget()
+	,m_callback(nullptr)
+	,m_menu(nullptr)
+	,hovered(false)
 	,m_characterSize(30)
 	,color(sf::Color::White)
 	,m_enabled(true)
@@ -33,20 +36,22 @@ void Button::event(sf::Event *event)
 {
 	if (!m_enabled)
 		return;
-	if (m_callback == nullptr)
+	if (m_callback == nullptr && m_menu == nullptr)
 		return;
 	if (event->type == sf::Event::MouseButtonReleased)
 	{
-		if (event->mouseButton.button == sf::Mouse::Left)
-		{
-			const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
-			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().window()->view());
+		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
+		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().window()->view());
 
-			if (Collision::rectContains(rect, pos))
-//			if (rect.getGlobalBounds().contains(pos))
-			{
+		if (Collision::rectContains(rect, pos)) {
+			if (event->mouseButton.button == sf::Mouse::Left) {
 				Engine::Instance().soundManager()->playOnce(SoundManager::CLICK);
-				m_callback();
+				if (m_callback != nullptr)
+					m_callback();
+			}
+			else if (event->mouseButton.button == sf::Mouse::Right) {
+				if (m_menu != nullptr)
+					m_menu();
 			}
 		}
 	}
@@ -166,4 +171,9 @@ void Button::setEnabled(bool enabled)
 bool Button::isEnabled() const
 {
 	return m_enabled;
+}
+
+void Button::setMenu(const std::function<void ()> &menu)
+{
+	m_menu = menu;
 }
