@@ -36,4 +36,5 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/engine.cpp
     ${ARC_ENGINE_DIR}/src/statewindow.cpp
     ${ARC_ENGINE_DIR}/src/timer.cpp
+    ${ARC_ENGINE_DIR}/src/utils.cpp
     )
