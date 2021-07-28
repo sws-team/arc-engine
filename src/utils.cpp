@@ -1,6 +1,6 @@
 #include "utils.h"
 
-using namespace Utils;
+namespace Utils {
 
 std::vector<sf::Vector2f> calcCubicBezier(const sf::Vector2f &start,
 										  const sf::Vector2f &end,
@@ -21,4 +21,6 @@ std::vector<sf::Vector2f> calcCubicBezier(const sf::Vector2f &start,
 					  3.f * p * (startControl - start) + start);
 	ret.push_back(end); // Last point is fixed
 	return ret;
+}
+
 }
