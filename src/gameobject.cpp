@@ -120,6 +120,7 @@ GameObject::GameObject(const TextureType &texture_id,
 					   const sf::Vector2i &frameSize,
 					   const int fCount)
 	: Animation()
+	,visible(true)
 {
 	this->size = frameSize;
 	this->frameCount = fCount;
@@ -132,6 +133,13 @@ GameObject::GameObject(const TextureType &texture_id,
 GameObject::~GameObject()
 {
 
+}
+
+void GameObject::draw(sf::RenderTarget * const target)
+{
+	if (!visible)
+		return;
+	Animation::draw(target);
 }
 
 sf::Sprite GameObject::getSprite() const
@@ -171,6 +179,11 @@ sf::Vector2f GameObject::pos() const
 	return sprite.getPosition();
 }
 
+void GameObject::scale(float value)
+{
+	sprite.scale(value, value);
+}
+
 sf::Vector2f GameObject::getSize() const
 {
 	return sf::Vector2f(size.x * Engine::Instance().settingsManager()->getScaleFactor().x,
@@ -190,6 +203,26 @@ sf::Sprite &GameObject::getModifiableSprite()
 sf::Vector2f GameObject::getCenter() const
 {
 	return sf::Vector2f(this->pos().x + sprite.getGlobalBounds().width/2,
-					this->pos().y + sprite.getGlobalBounds().height/2);
+						this->pos().y + sprite.getGlobalBounds().height/2);
+}
+
+void GameObject::setRotation(float angle)
+{
+	sprite.setRotation(angle);
+}
+
+void GameObject::hide()
+{
+	visible = false;
+}
+
+void GameObject::show()
+{
+	visible = true;
+}
+
+void GameObject::setVisible(bool visible)
+{
+	visible?show():hide();
 }
 

@@ -35,7 +35,7 @@ public:
 	Animation();
 	virtual ~Animation() override;
 
-	virtual void draw(sf::RenderTarget *const target) override;
+	void draw(sf::RenderTarget *const target) override;
 	void update() override;
 
 	void setTextureId(const TextureType& texture_id);
@@ -76,6 +76,8 @@ public:
 			   const int fCount = 3);
 	virtual ~GameObject() override;
 
+	void draw(sf::RenderTarget *const target) override;
+
 	sf::Sprite getSprite() const;
 	void setSprite(const sf::Sprite &sprite);
 
@@ -86,6 +88,7 @@ public:
 	void setPos(const sf::Vector2f &pos);
 	sf::Vector2f pos() const;
 
+	void scale(float value);
 	sf::Vector2f getSize() const;
 
 	sf::FloatRect gameRect() const;
@@ -93,6 +96,15 @@ public:
 	sf::Sprite &getModifiableSprite();
 
 	sf::Vector2f getCenter() const;
+
+	void setRotation(float angle);
+
+	void hide();
+	void show();
+	void setVisible(bool visible);
+
+private:
+	bool visible;
 };
 
 #endif // GAMEOBJECT_H
