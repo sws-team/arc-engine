@@ -211,6 +211,11 @@ void GameObject::setRotation(float angle)
 	sprite.setRotation(angle);
 }
 
+float GameObject::rotation() const
+{
+	return sprite.getRotation();
+}
+
 void GameObject::hide()
 {
 	visible = false;

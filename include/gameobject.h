@@ -98,6 +98,7 @@ public:
 	sf::Vector2f getCenter() const;
 
 	void setRotation(float angle);
+	float rotation() const;
 
 	void hide();
 	void show();
