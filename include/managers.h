@@ -15,6 +15,7 @@ public:
 
 #define SCALE_FACTOR Engine::Instance().settingsManager()->getScaleFactor()
 #define DEF_SCALE_FACTOR const sf::Vector2f scaleFactor = SCALE_FACTOR;
+#define RESOLUTIONF Engine::Instance().settingsManager()->getResolutionF()
 
 class SettingsManager : public Manager
 {
