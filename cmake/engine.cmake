@@ -41,6 +41,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Objects/arcskeletonanimation.cpp
 
     ${ARC_ENGINE_DIR}/src/arcobject.cpp
+    ${ARC_ENGINE_DIR}/src/arcdebug.cpp
     ${ARC_ENGINE_DIR}/src/managers.cpp
     ${ARC_ENGINE_DIR}/src/gameobject.cpp
     ${ARC_ENGINE_DIR}/src/mainwindow.cpp
@@ -50,3 +51,27 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/timer.cpp
     ${ARC_ENGINE_DIR}/src/utils.cpp
     )
+
+#3rd party
+set(3RD_PARTY_DIR ${CMAKE_CURRENT_LIST_DIR}/../3rdParty)
+
+if (ARC_DEBUG)
+    add_definitions(-DARC_DEBUG)
+    include_directories(${3RD_PARTY_DIR}/imgui)
+    include_directories(${3RD_PARTY_DIR}/imgui-sfml)
+
+    set(IMGUI_SOURCES
+	${3RD_PARTY_DIR}/imgui/imgui.cpp
+	${3RD_PARTY_DIR}/imgui/imgui_draw.cpp
+	${3RD_PARTY_DIR}/imgui/imgui_tables.cpp
+	${3RD_PARTY_DIR}/imgui/imgui_widgets.cpp
+	${3RD_PARTY_DIR}/imgui/imgui_demo.cpp
+
+	${3RD_PARTY_DIR}/imgui-sfml/imgui-SFML.cpp
+	)
+    set(ARC_ENGINE_SOURCES
+	${ARC_ENGINE_SOURCES}
+	${IMGUI_SOURCES}
+	)
+endif(ARC_DEBUG)
+

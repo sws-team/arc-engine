@@ -1,6 +1,7 @@
 #include "managers.h"
 #include "enginedef.h"
 #include "engine.h"
+#include "arcdebug.h"
 
 #include "mainwindow.h"
 #include "Windows/introwindow.h"
@@ -16,7 +17,6 @@
 #endif
 
 #include <cstring>
-
 
 void Manager::reset()
 {
@@ -621,7 +621,12 @@ Options::Options()
 	: mw(nullptr)
 	,m_resourcesLoaded(false)
 {
+	debug = new ArcDebug();
+}
 
+Options::~Options()
+{
+	delete debug;
 }
 
 MainWindow *Options::mainWindow()
@@ -632,6 +637,7 @@ MainWindow *Options::mainWindow()
 void Options::setMainWindow(MainWindow *window)
 {
 	mw = window;
+	debug->init();
 }
 
 void Options::updateWindow()
@@ -657,19 +663,29 @@ void Options::updateWindow()
 	Engine::Instance().window()->updateView();
 }
 
+void Options::debugObject(ArcObject *object)
+{
+	debug->setObject(object);
+}
+
 void Options::globalCallbacks()
 {
+	debug->update();
+}
 
+void Options::clear()
+{
+	debug->clear();
 }
 
 void Options::globalEventFilter(sf::Event *event)
 {
-
+	debug->eventFilter(event);
 }
 
-void Options::globalDraw()
+void Options::globalDraw(sf::RenderTarget *target)
 {
-
+	debug->draw(target);
 }
 
 bool Options::isResourcesLoaded() const

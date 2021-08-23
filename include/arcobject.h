@@ -4,20 +4,16 @@
 #include "engine.h"
 #include "stdheader.h"
 
-class DebugArc
-{
-public:
-};
-
 class ArcObject
 {
 public:
-	ArcObject();
+	ArcObject(const std::string& name = std::string());
 	virtual ~ArcObject();
 	virtual void draw(sf::RenderTarget *const target);
 	virtual void update();
 
 	//getters
+	std::string name() const;
 	sf::Vector2f size() const;
 	float width() const;
 	float height() const;
@@ -33,13 +29,15 @@ public:
 	void setScale(const sf::Vector2f& scale);
 	virtual void setScale(float x, float y);
 
+
 protected:
 	virtual bool eventFilter(sf::Event *event);
 
 	std::vector<ArcObject*> childs;
 private:
 	//transform
-	friend class DebugArc;
+	friend class ArcDebug;
+	std::string m_name;
 	float m_x = 0.f;
 	float m_y = 0.f;
 	float m_angle = 0.f;

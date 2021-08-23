@@ -6,6 +6,8 @@
 #include <sstream>
 
 class StateWindow;
+class ArcDebug;
+class ArcObject;
 
 class Manager
 {
@@ -16,6 +18,8 @@ public:
 #define SCALE_FACTOR Engine::Instance().settingsManager()->getScaleFactor()
 #define DEF_SCALE_FACTOR const sf::Vector2f scaleFactor = SCALE_FACTOR;
 #define RESOLUTIONF Engine::Instance().settingsManager()->getResolutionF()
+#define DEBUG_OBJECT(x) Engine::Instance().getOptions()->debugObject(x);
+//
 
 class SettingsManager : public Manager
 {
@@ -281,19 +285,24 @@ class Options : public Manager
 	//classes like level, panel, cursor, camera
 public:
 	Options();
+	virtual ~Options();
+
 	MainWindow *mainWindow();
 	void setMainWindow(MainWindow *window);
 	virtual void updateWindow();
+	void debugObject(ArcObject* object);
 
 	virtual void globalCallbacks();
+	virtual void clear();
 	virtual void globalEventFilter(sf::Event* event);
-	virtual void globalDraw();
+	virtual void globalDraw(sf::RenderTarget *target);
 
 	bool isResourcesLoaded() const;
 	void setResourcesLoaded(bool loaded);
 
 protected:
-	MainWindow *mw;
+	MainWindow *mw = nullptr;
+	ArcDebug *debug = nullptr;
 	bool m_resourcesLoaded;
 };
 

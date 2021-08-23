@@ -88,7 +88,7 @@ void MainWindow::exec()
 			currentState->paint(this);
 			updateFPS();
 
-			Engine::Instance().getOptions()->globalDraw();
+			Engine::Instance().getOptions()->globalDraw(this);
 
 			display();
 		}

@@ -25,5 +25,4 @@ private:
 	void updateFPS();
 };
 
-
 #endif // MAINWINDOW_H

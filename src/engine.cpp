@@ -8,10 +8,9 @@ Engine &Engine::Instance()
 	return singleton;
 }
 
-Engine::Engine() :
-  p_stateManager(nullptr)
-  ,p_options(nullptr)
+Engine::Engine()
 {
+	std::srand(static_cast<unsigned>(std::time(nullptr)));
 	p_fontManager = new FontManager();
 	p_soundManager = new SoundManager();
 	p_translationsManager = new TranslationsManager();
@@ -27,6 +26,7 @@ Engine::Engine() :
 void Engine::clearInstance()
 {
 	p_soundManager->clearAll();
+	p_options->clear();
 }
 
 void Engine::setStateManager(StateManager *manager)

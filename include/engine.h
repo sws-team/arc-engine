@@ -57,21 +57,21 @@ public:
 
 private:
 	Engine();
-	Engine(const Engine& root) = delete;
+	Engine(const Engine&) = delete;
 	Engine& operator=(const Engine&) = delete;
 
-	TexturesManager *p_texturesManager;
-	TranslationsManager *p_translationsManager;
-	StateManager *p_stateManager;
-	SoundManager *p_soundManager;
-	SettingsManager *p_settingsManager;
-	FontManager *p_fontManager;
-	FilesManager *p_filesManager;
-	GlobalVariables *p_globalVariables;
-	ShadersManager *p_shadersManager;
-	Options *p_options;
+	TexturesManager *p_texturesManager = nullptr;
+	TranslationsManager *p_translationsManager = nullptr;
+	StateManager *p_stateManager = nullptr;
+	SoundManager *p_soundManager = nullptr;
+	SettingsManager *p_settingsManager = nullptr;
+	FontManager *p_fontManager = nullptr;
+	FilesManager *p_filesManager = nullptr;
+	GlobalVariables *p_globalVariables = nullptr;
+	ShadersManager *p_shadersManager = nullptr;
+	Options *p_options = nullptr;
 
-	MainWindow *p_window;
+	MainWindow *p_window = nullptr;
 };
 
 #endif // ENGINE_H
