@@ -1,3 +1,6 @@
 [submodule "3rdParty/Base64"]
 	path = 3rdParty/Base64
 	url = https://github.com/tkislan/base64.git
+[submodule "3rdParty/imgui"]
+	path = 3rdParty/imgui
+	url = https://github.com/ocornut/imgui.git
