@@ -34,15 +34,13 @@ public:
 	GlobalVariables *globalVariables();
 	ShadersManager *shadersManager();
 
-	template<typename Class>
-	Class castedStateManager()
+	template<typename Class> Class castedStateManager()
 	{
 		return static_cast<Class>(p_stateManager);
 	}
-	template<typename Class>
-        Class* options()
+	template<typename Class> Class* options()
 	{
-                return static_cast<Class*>(p_options);
+		return static_cast<Class*>(p_options);
 	}
 	Options *getOptions();
 

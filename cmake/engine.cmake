@@ -13,11 +13,14 @@ STRING(REGEX REPLACE "-[a-z|0-9]+" "" ENGINE_NORMAL_VERSION ${ENGINE_VERSION})
 STRING(REGEX REPLACE "\n$" "" ENGINE_NORMAL_VERSION ${ENGINE_NORMAL_VERSION})
 add_definitions("-DENGINE_VERSION=\"${ENGINE_NORMAL_VERSION}\"")
 
+option(ARC_DEBUG OFF)
+
 set(ARC_ENGINE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
 include_directories(${ARC_ENGINE_DIR}/include)
 include_directories(${ARC_ENGINE_DIR}/include/Windows)
 include_directories(${ARC_ENGINE_DIR}/include/Widgets)
+include_directories(${ARC_ENGINE_DIR}/include/Objects)
 
 set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Widgets/button.cpp
@@ -25,10 +28,19 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Widgets/chooselist.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/valuescale.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/widget.cpp
+    ${ARC_ENGINE_DIR}/src/Widgets/arclabel.cpp
+    ${ARC_ENGINE_DIR}/src/Widgets/arcbutton.cpp
+
     ${ARC_ENGINE_DIR}/src/Windows/aboutwindow.cpp
     ${ARC_ENGINE_DIR}/src/Windows/closewindow.cpp
     ${ARC_ENGINE_DIR}/src/Windows/introwindow.cpp
     ${ARC_ENGINE_DIR}/src/Windows/menu.cpp
+
+    ${ARC_ENGINE_DIR}/src/Objects/arcsprite.cpp
+    ${ARC_ENGINE_DIR}/src/Objects/arcanimatedsprite.cpp
+    ${ARC_ENGINE_DIR}/src/Objects/arcskeletonanimation.cpp
+
+    ${ARC_ENGINE_DIR}/src/arcobject.cpp
     ${ARC_ENGINE_DIR}/src/managers.cpp
     ${ARC_ENGINE_DIR}/src/gameobject.cpp
     ${ARC_ENGINE_DIR}/src/mainwindow.cpp
