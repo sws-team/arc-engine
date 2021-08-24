@@ -18,7 +18,7 @@ public:
 private:
 	ArcObject *object = nullptr;
 	sf::Clock clock;
-	void drawObject(ArcObject* obj);
+	static void drawObject(ArcObject* obj);
 };
 
 #endif // ARCDEBUG_H
