@@ -42,12 +42,12 @@ set(ARC_ENGINE_SOURCES
 
     ${ARC_ENGINE_DIR}/src/arcobject.cpp
     ${ARC_ENGINE_DIR}/src/arcdebug.cpp
+    ${ARC_ENGINE_DIR}/src/arcwindow.cpp
     ${ARC_ENGINE_DIR}/src/managers.cpp
     ${ARC_ENGINE_DIR}/src/gameobject.cpp
     ${ARC_ENGINE_DIR}/src/mainwindow.cpp
     ${ARC_ENGINE_DIR}/src/collisions.cpp
     ${ARC_ENGINE_DIR}/src/engine.cpp
-    ${ARC_ENGINE_DIR}/src/statewindow.cpp
     ${ARC_ENGINE_DIR}/src/timer.cpp
     ${ARC_ENGINE_DIR}/src/utils.cpp
     )

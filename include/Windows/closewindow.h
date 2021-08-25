@@ -1,7 +1,7 @@
 #ifndef CLOSEWINDOW_H
 #define CLOSEWINDOW_H
 
-#include "statewindow.h"
+#include "arcwindow.h"
 #include "timer.h"
 
 class CloseWindow : public ArcWindow

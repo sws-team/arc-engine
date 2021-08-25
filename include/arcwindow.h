@@ -1,5 +1,5 @@
-#ifndef STATEWINDOW_H
-#define STATEWINDOW_H
+#ifndef ARCWINDOW_H
+#define ARCWINDOW_H
 
 #include "arcobject.h"
 
@@ -17,4 +17,4 @@ protected:
 	virtual void back();
 };
 
-#endif // STATEWINDOW_H
+#endif // ARCWINDOW_H

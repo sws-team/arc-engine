@@ -1,7 +1,7 @@
 #ifndef ABOUTWINDOW_H
 #define ABOUTWINDOW_H
 
-#include "statewindow.h"
+#include "arcwindow.h"
 #include "timer.h"
 
 class AboutWindow : public ArcWindow

@@ -1,7 +1,7 @@
 #ifndef INTROWINDOW_H
 #define INTROWINDOW_H
 
-#include "statewindow.h"
+#include "arcwindow.h"
 #include "timer.h"
 
 class IntroWindow : public ArcWindow

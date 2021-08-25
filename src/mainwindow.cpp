@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "engine.h"
 #include "managers.h"
-#include "statewindow.h"
+#include "arcwindow.h"
 
 #include <SFML/Window/Cursor.hpp>
 

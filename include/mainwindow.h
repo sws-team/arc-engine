@@ -3,7 +3,7 @@
 
 #include "stdheader.h"
 #include "enginedef.h"
-#include "statewindow.h"
+#include "arcwindow.h"
 
 class MainWindow : public sf::RenderWindow
 {

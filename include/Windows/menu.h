@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "statewindow.h"
+#include "arcwindow.h"
 
 class Menu : public ArcWindow
 {
