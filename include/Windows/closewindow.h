@@ -10,8 +10,6 @@ public:
 	CloseWindow();
 
 	void init() override;
-	void paint(sf::RenderWindow *window) override;
-//	void eventFilter(Event* event) override;
 	void update() override;
 	void back() override;
 

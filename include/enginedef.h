@@ -12,12 +12,20 @@ typedef int FileType;
 typedef int ShaderType;
 typedef int FontType;
 
-namespace EngineDefs
+namespace ArcEngine
 {
-	enum JOYSTICK_KEYS
+	enum JOYSTICK_KEY
 	{
 		KEY_ESCAPE,
 		KEY_ACCEPT,
+	};
+	enum OBJECT_TYPE
+	{
+		UNDEF,
+		OBJECT,
+		SPRITE,
+		LABEL,
+		BUTTON,
 	};
 
 	static constexpr float FRAME_TIME = 1.0f / 60.0f;

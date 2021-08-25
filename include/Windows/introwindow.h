@@ -10,8 +10,7 @@ public:
 	IntroWindow();
 
 	void init() override;
-	void paint(sf::RenderWindow *window) override;
-	void eventFilter(sf::Event* event) override;
+	bool eventFilter(sf::Event* event) override;
 	void update() override;
 private:
 	Timer timer;

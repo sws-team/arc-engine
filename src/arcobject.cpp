@@ -1,9 +1,12 @@
 #include "arcobject.h"
+#include "engine.h"
+#include "managers.h"
 
-ArcObject::ArcObject(const std::string &name)
+ArcObject::ArcObject(const std::string &name, ArcEngine::OBJECT_TYPE type)
 	: m_name(name)
+	,m_type(type)
 {
-
+	scaleFactor = SCALE_FACTOR;
 }
 
 ArcObject::~ArcObject()
@@ -23,6 +26,11 @@ void ArcObject::update()
 		child->update();
 }
 
+void ArcObject::addChild(ArcObject *object)
+{
+	childs.push_back(object);
+}
+
 bool ArcObject::eventFilter(sf::Event *event)
 {
 	for(ArcObject* child : childs) {
@@ -30,6 +38,21 @@ bool ArcObject::eventFilter(sf::Event *event)
 			break;
 	}
 	return false;
+}
+
+void ArcObject::setName(const std::string &name)
+{
+	m_name = name;
+}
+
+void ArcObject::setType(ArcEngine::OBJECT_TYPE type)
+{
+	m_type = type;
+}
+
+ArcEngine::OBJECT_TYPE ArcObject::type() const
+{
+	return m_type;
 }
 
 std::string ArcObject::name() const
@@ -50,6 +73,21 @@ float ArcObject::height() const
 sf::Vector2f ArcObject::scale() const
 {
 	return sf::Vector2f(m_scaleX, m_scaleY);
+}
+
+float ArcObject::x() const
+{
+	return m_x;
+}
+
+float ArcObject::y() const
+{
+	return m_y;
+}
+
+sf::Vector2f ArcObject::pos() const
+{
+	return sf::Vector2f(m_x, m_y);
 }
 
 void ArcObject::setPos(const sf::Vector2f &coords)
@@ -86,6 +124,16 @@ void ArcObject::setScale(const sf::Vector2f &scale)
 void ArcObject::setScale(float x, float y)
 {
 	m_scaleX = x, m_scaleY = y;
+}
+
+void ArcObject::setSize(const sf::Vector2f &size)
+{
+	setSize(size.x, size.y);
+}
+
+void ArcObject::setSize(float x, float y)
+{
+	m_width = x, m_height = y;
 }
 
 float ArcObject::width() const

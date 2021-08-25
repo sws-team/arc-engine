@@ -8,8 +8,8 @@ class Menu : public StateWindow
 public:
 	Menu();
 
-	virtual void paint(sf::RenderWindow *window) override;
-	virtual void eventFilter(sf::Event* event) override;
+	bool eventFilter(sf::Event* event) override;
+	void draw(sf::RenderTarget *const target) override;
 	virtual void back() override;
 
 	void setPos(const sf::Vector2f &pos);

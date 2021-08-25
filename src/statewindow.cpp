@@ -1,11 +1,12 @@
 #include "statewindow.h"
 #include "engine.h"
 #include "managers.h"
+#include "arcsprite.h"
 
 StateWindow::StateWindow()
-	: transparency(false)
+	: ArcObject("Window")
 {
-
+	DEBUG_OBJECT(this);
 }
 
 StateWindow::~StateWindow()
@@ -18,7 +19,7 @@ void StateWindow::init()
 
 }
 
-void StateWindow::eventFilter(sf::Event *event)
+bool StateWindow::eventFilter(sf::Event *event)
 {
 	if (event->type == sf::Event::Closed)
 		this->back();
@@ -34,32 +35,18 @@ void StateWindow::eventFilter(sf::Event *event)
 	}
 	else if (event->type == sf::Event::JoystickButtonPressed)
 	{
-		if (event->joystickButton.button == EngineDefs::KEY_ESCAPE)
+		if (event->joystickButton.button == ArcEngine::KEY_ESCAPE)
 			this->back();
 	}
-}
-
-void StateWindow::update()
-{
-
+	return ArcObject::eventFilter(event);
 }
 
 void StateWindow::setBackground(TextureType type)
 {
-	background.setTexture(Engine::Instance().texturesManager()->getTexture(type));
-	background.setScale(Engine::Instance().settingsManager()->getScaleFactor());
-}
-
-void StateWindow::setTransparency(bool transparency)
-{
-	this->transparency = transparency;
-}
-
-void StateWindow::drawBackground(sf::RenderWindow *window)
-{
-	if (transparency)
-		return;
-	window->draw(background);
+	ArcSprite *bg = new ArcSprite("background");
+	bg->::ArcObject::setSize(SCREEN_SIZE);
+	bg->setTexture(type);
+	addChild(bg);
 }
 
 void StateWindow::back()

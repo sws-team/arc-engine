@@ -571,7 +571,7 @@ std::string GlobalVariables::encode(const std::string &str)
 	for (unsigned int i = 0; i < str.size(); ++i)
 	{
 		const char ch = str.at(i);
-		result.push_back(ch + EngineDefs::CRYPTO_VALUE);
+		result.push_back(ch + ArcEngine::CRYPTO_VALUE);
 	}
 	return str;
 }
@@ -582,7 +582,7 @@ std::string GlobalVariables::decode(const std::string &str)
 	for (unsigned int i = 0; i < str.size(); ++i)
 	{
 		const char ch = str.at(i);
-		result.push_back(ch - EngineDefs::CRYPTO_VALUE);
+		result.push_back(ch - ArcEngine::CRYPTO_VALUE);
 	}
 	return str;
 }

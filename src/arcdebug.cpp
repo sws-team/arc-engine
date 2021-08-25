@@ -60,6 +60,7 @@ void ArcDebug::drawObject(ArcObject *obj)
 	if (obj == nullptr)
 		return;
 #ifdef ARC_DEBUG
+//	ImGuiIO &io = ImGui::GetIO();
 	static bool showDebug = true;
 	const ImVec2 windowSize = ImVec2(Engine::Instance().settingsManager()->getResolutionF().x / 3,
 									 Engine::Instance().settingsManager()->getResolutionF().y / 3);
@@ -94,11 +95,86 @@ void ArcDebug::drawObject(ArcObject *obj)
 		ImGui::SameLine();
 		ImGui::BeginChild("Properties", ImVec2(0, 0), true);
 		ImGui::TextUnformatted("Properties");
+		//FIXME selected obj
+		drawObjectProperties(obj);
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
 
 		ImGui::End();
 	}
-//	ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 #endif
+}
+
+void ArcDebug::drawObjectProperties(ArcObject *obj)
+{
+	auto drawInheritObject = [](ArcEngine::OBJECT_TYPE type, ArcObject *obj) {
+		switch (type)
+		{
+		case ArcEngine::OBJECT:
+		{
+			// x y angle scale origin size
+		}
+			break;
+		case ArcEngine::SPRITE:
+		{
+
+		}
+			break;
+		case ArcEngine::LABEL:
+		{
+
+		}
+			break;
+		case ArcEngine::BUTTON:
+		{
+
+		}
+			break;
+		default:
+			break;
+		}
+	};
+
+	drawInheritObject(ArcEngine::OBJECT, obj);
+	switch (obj->type())
+	{
+	case ArcEngine::SPRITE:
+		drawInheritObject(ArcEngine::SPRITE, obj);
+		break;
+	case ArcEngine::LABEL:
+		drawInheritObject(ArcEngine::LABEL, obj);
+		break;
+	case ArcEngine::BUTTON:
+		drawInheritObject(ArcEngine::SPRITE, obj);
+		drawInheritObject(ArcEngine::BUTTON, obj);
+		break;
+	default:
+		break;
+	}
+}
+
+std::string ArcDebug::typeToName(ArcEngine::OBJECT_TYPE type)
+{
+	switch (type)
+	{
+	case ArcEngine::UNDEF:
+		return "Undef";
+		break;
+	case ArcEngine::OBJECT:
+		return "Object";
+		break;
+	case ArcEngine::SPRITE:
+		return "Sprite";
+		break;
+	case ArcEngine::LABEL:
+		return "Label";
+		break;
+	case ArcEngine::BUTTON:
+		return "Button";
+		break;
+	default:
+		break;
+	}
+	return std::string();
 }

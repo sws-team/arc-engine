@@ -1,23 +1,30 @@
 #ifndef ARCOBJECT_H
 #define ARCOBJECT_H
 
-#include "engine.h"
 #include "stdheader.h"
+#include "enginedef.h"
 
 class ArcObject
 {
 public:
-	ArcObject(const std::string& name = std::string());
+	ArcObject(const std::string& name = std::string(), ArcEngine::OBJECT_TYPE type = ArcEngine::UNDEF);
 	virtual ~ArcObject();
+
 	virtual void draw(sf::RenderTarget *const target);
 	virtual void update();
 
+	void addChild(ArcObject* object);
+
 	//getters
+	ArcEngine::OBJECT_TYPE type() const;
 	std::string name() const;
 	sf::Vector2f size() const;
 	float width() const;
 	float height() const;
 	sf::Vector2f scale() const;
+	float x() const;
+	float y() const;
+	sf::Vector2f pos() const;
 
 	//setters
 	void setPos(const sf::Vector2f& coords);
@@ -29,15 +36,21 @@ public:
 	void setScale(const sf::Vector2f& scale);
 	virtual void setScale(float x, float y);
 
+	void setSize(const sf::Vector2f& size);
+	virtual void setSize(float x, float y);
 
 protected:
 	virtual bool eventFilter(sf::Event *event);
+	void setName(const std::string& name);
+	void setType(ArcEngine::OBJECT_TYPE type);
 
 	std::vector<ArcObject*> childs;
+	sf::Vector2f scaleFactor;
 private:
 	//transform
 	friend class ArcDebug;
 	std::string m_name;
+	ArcEngine::OBJECT_TYPE m_type = ArcEngine::UNDEF;
 	float m_x = 0.f;
 	float m_y = 0.f;
 	float m_angle = 0.f;

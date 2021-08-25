@@ -1,4 +1,5 @@
 #include "aboutwindow.h"
+#include "engine.h"
 #include "managers.h"
 
 const sf::Vector2f AboutWindow::RECT_SIZE = sf::Vector2f(900, 600);
@@ -28,15 +29,14 @@ void AboutWindow::init()
 	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::CREDITS_MUSIC);
 }
 
-void AboutWindow::paint(sf::RenderWindow *window)
+void AboutWindow::draw(sf::RenderTarget *const target)
 {
-	drawBackground(window);
-
-	window->draw(rect);
+	StateWindow::draw(target);
+	target->draw(rect);
 	for(const Creator& creator : creators)
 	{
 		if (creator.visible)
-			window->draw(creator.text);
+			target->draw(creator.text);
 	}
 }
 

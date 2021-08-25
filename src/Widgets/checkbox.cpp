@@ -73,7 +73,7 @@ void CheckBox::event(sf::Event *event)
 	}
 	else if (event->type == sf::Event::JoystickButtonPressed)
 	{
-		if (event->joystickButton.button == EngineDefs::KEY_ACCEPT)
+		if (event->joystickButton.button == ArcEngine::KEY_ACCEPT)
 		{
 			m_isChecked = !m_isChecked;
 			update();

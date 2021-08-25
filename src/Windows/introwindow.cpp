@@ -15,23 +15,19 @@ void IntroWindow::init()
 	Engine::Instance().soundManager()->playOnce(SoundManager::INTRO);
 }
 
-void IntroWindow::paint(sf::RenderWindow *window)
+bool IntroWindow::eventFilter(sf::Event *event)
 {
-	drawBackground(window);
-}
-
-void IntroWindow::eventFilter(sf::Event *event)
-{
-        if (event->type == sf::Event::KeyPressed)
+	if (event->type == sf::Event::KeyPressed)
 	{
-                if (event->key.code == sf::Keyboard::Escape)
+		if (event->key.code == sf::Keyboard::Escape)
 			finish();
 	}
-        if (event->type == sf::Event::JoystickButtonPressed)
+	if (event->type == sf::Event::JoystickButtonPressed)
 	{
-		if (event->joystickButton.button == EngineDefs::KEY_ESCAPE)
+		if (event->joystickButton.button == ArcEngine::KEY_ESCAPE)
 			finish();
 	}
+	return StateWindow::eventFilter(event);
 }
 
 void IntroWindow::update()
@@ -41,7 +37,8 @@ void IntroWindow::update()
 		opacity -= 2;
 		if (opacity < 0)
 			opacity = 0;
-                background.setColor(sf::Color(255,255,255, opacity));
+		//FIXME action
+//		background.setColor(sf::Color(255,255,255, opacity));
 	}
 	if (opacity == 0)
 		finish();

@@ -19,14 +19,14 @@ Menu::Menu()
 
 }
 
-void Menu::paint(sf::RenderWindow *window)
+void Menu::draw(sf::RenderTarget *const target)
 {
-	drawBackground(window);
+	StateWindow::draw(target);
 	for(const sf::Text& menu : menus)
-		window->draw(menu);
+		target->draw(menu);
 }
 
-void Menu::eventFilter(sf::Event *event)
+bool Menu::eventFilter(sf::Event *event)
 {
 	switch (event->type)
 	{
@@ -99,7 +99,7 @@ void Menu::eventFilter(sf::Event *event)
 	default:
 		break;
 	}
-	StateWindow::eventFilter(event);
+	return StateWindow::eventFilter(event);
 }
 
 void Menu::back()

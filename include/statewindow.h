@@ -1,28 +1,19 @@
 #ifndef STATEWINDOW_H
 #define STATEWINDOW_H
 
-#include "stdheader.h"
-#include "engine.h"
-#include "enginedef.h"
+#include "arcobject.h"
 
-class StateWindow
+class StateWindow : public ArcObject
 {
 public:
 	StateWindow();
 	virtual ~StateWindow();
 
 	virtual void init();
-	virtual void paint(sf::RenderWindow *window) = 0;
-	virtual void eventFilter(sf::Event* event);
-	virtual void update();
-
 	void setBackground(TextureType type);
-	void setTransparency(bool transparency);
 
+	bool eventFilter(sf::Event *event) override;
 protected:
-	void drawBackground(sf::RenderWindow *window);
-	sf::Sprite background;
-	bool transparency;
 	virtual void back();
 };
 

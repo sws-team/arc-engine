@@ -6,9 +6,13 @@
 class ArcLabel : public ArcObject
 {
 public:
-	ArcLabel();
+	ArcLabel(const std::string& name);
+
+	void draw(sf::RenderTarget *const target) override;
+
 	void setPos(float x, float y) override;
 	void setOrigin(float x, float y) override;
+	void setScale(float x, float y) override;
 
 private:
 	sf::Text text;
