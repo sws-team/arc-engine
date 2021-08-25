@@ -3,11 +3,11 @@
 
 #include "arcobject.h"
 
-class StateWindow : public ArcObject
+class ArcWindow : public ArcObject
 {
 public:
-	StateWindow();
-	virtual ~StateWindow();
+	ArcWindow();
+	virtual ~ArcWindow();
 
 	virtual void init();
 	void setBackground(TextureType type);

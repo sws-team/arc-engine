@@ -3,23 +3,23 @@
 #include "managers.h"
 #include "arcsprite.h"
 
-StateWindow::StateWindow()
+ArcWindow::ArcWindow()
 	: ArcObject("Window")
 {
 	DEBUG_OBJECT(this);
 }
 
-StateWindow::~StateWindow()
+ArcWindow::~ArcWindow()
 {
 
 }
 
-void StateWindow::init()
+void ArcWindow::init()
 {
 
 }
 
-bool StateWindow::eventFilter(sf::Event *event)
+bool ArcWindow::eventFilter(sf::Event *event)
 {
 	if (event->type == sf::Event::Closed)
 		this->back();
@@ -41,7 +41,7 @@ bool StateWindow::eventFilter(sf::Event *event)
 	return ArcObject::eventFilter(event);
 }
 
-void StateWindow::setBackground(TextureType type)
+void ArcWindow::setBackground(TextureType type)
 {
 	ArcSprite *bg = new ArcSprite("background");
 	bg->::ArcObject::setSize(SCREEN_SIZE);
@@ -49,7 +49,7 @@ void StateWindow::setBackground(TextureType type)
 	addChild(bg);
 }
 
-void StateWindow::back()
+void ArcWindow::back()
 {
 
 }

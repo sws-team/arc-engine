@@ -4,7 +4,7 @@
 #include "statewindow.h"
 #include "timer.h"
 
-class CloseWindow : public StateWindow
+class CloseWindow : public ArcWindow
 {
 public:
 	CloseWindow();

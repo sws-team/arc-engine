@@ -5,7 +5,7 @@
 #include "enginedef.h"
 #include <sstream>
 
-class StateWindow;
+class ArcWindow;
 class ArcDebug;
 class ArcObject;
 
@@ -136,7 +136,7 @@ public:
 
 	GameState getState() const;
 	void setState(const GameState state);
-	virtual StateWindow *createState(const GameState state);
+	virtual ArcWindow *createState(const GameState state);
 	enum STATE
 	{
 		UNKNOWN,

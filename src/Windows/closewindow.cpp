@@ -3,7 +3,7 @@
 #include "managers.h"
 
 CloseWindow::CloseWindow()
-	: StateWindow()
+	: ArcWindow()
 {
 	setBackground(TexturesManager::CLOSE_BACKGROUND);
 	opacity = 255;

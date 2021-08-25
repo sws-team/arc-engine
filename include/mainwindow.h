@@ -18,7 +18,7 @@ public:
 
 private:
 	sf::View *m_view;
-	StateWindow *currentState;
+	ArcWindow *currentState;
 	GameState state;
 	sf::Clock fpsClock;
 

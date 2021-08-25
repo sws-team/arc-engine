@@ -5,7 +5,7 @@
 const sf::Vector2f AboutWindow::RECT_SIZE = sf::Vector2f(900, 600);
 
 AboutWindow::AboutWindow()
-	: StateWindow()
+	: ArcWindow()
 	,m_backState(StateManager::MENU)
 	,m_characterSize(40)
 	,m_color(sf::Color::White)
@@ -31,7 +31,7 @@ void AboutWindow::init()
 
 void AboutWindow::draw(sf::RenderTarget *const target)
 {
-	StateWindow::draw(target);
+	ArcWindow::draw(target);
 	target->draw(rect);
 	for(const Creator& creator : creators)
 	{

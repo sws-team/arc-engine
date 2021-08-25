@@ -4,7 +4,7 @@
 #include "statewindow.h"
 #include "timer.h"
 
-class IntroWindow : public StateWindow
+class IntroWindow : public ArcWindow
 {
 public:
 	IntroWindow();

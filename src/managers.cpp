@@ -230,9 +230,9 @@ void StateManager::setState(const int state)
 	m_state = state;
 }
 
-StateWindow *StateManager::createState(const GameState state)
+ArcWindow *StateManager::createState(const GameState state)
 {
-	StateWindow *stateWindow = nullptr;
+	ArcWindow *stateWindow = nullptr;
 	switch (state)
 	{
 	case INTRO:

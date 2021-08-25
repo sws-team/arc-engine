@@ -4,7 +4,7 @@
 #include "enginedef.h"
 
 IntroWindow::IntroWindow()
-	: StateWindow()
+	: ArcWindow()
 {
 	setBackground(TexturesManager::INTRO_BACKGROUND);
 	opacity = 255;
@@ -27,7 +27,7 @@ bool IntroWindow::eventFilter(sf::Event *event)
 		if (event->joystickButton.button == ArcEngine::KEY_ESCAPE)
 			finish();
 	}
-	return StateWindow::eventFilter(event);
+	return ArcWindow::eventFilter(event);
 }
 
 void IntroWindow::update()

@@ -3,7 +3,7 @@
 
 #include "statewindow.h"
 
-class Menu : public StateWindow
+class Menu : public ArcWindow
 {
 public:
 	Menu();
