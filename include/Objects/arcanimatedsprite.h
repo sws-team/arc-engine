@@ -17,6 +17,13 @@ public:
 	void setRowCount(int count);
 	void setLooped(bool loop);
 	void setCycled(bool cycled);
+
+	float speed() const;
+	int frameCount() const;
+	int rowCount() const;
+	bool isLooped() const;
+	bool isCycled() const;
+
 	void setCallback(const std::function<void()>& func);
 
 	void updateTextureRect();

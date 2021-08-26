@@ -77,6 +77,54 @@ sf::Vector2f SettingsManager::getScaleFactor() const
 						static_cast<float>(resolution.y)/defaultResolution.y);
 }
 
+std::string SettingsManager::saveGameSettings() const
+{
+	std::stringstream stream;
+	stream << Engine::Instance().settingsManager()->getFullscreen() << std::endl
+		   << Engine::Instance().settingsManager()->getResolution().x << std::endl
+		   << Engine::Instance().settingsManager()->getResolution().y << std::endl
+		   << Engine::Instance().settingsManager()->getSoundLevel() << std::endl
+		   << Engine::Instance().settingsManager()->getMusicLevel() << std::endl
+		   << Engine::Instance().soundManager()->quiet() << std::endl
+		   << Engine::Instance().translationsManager()->currentLanguage() << std::endl
+		   << Engine::Instance().settingsManager()->getShaders() << std::endl
+		 ;
+	return std::string(stream.str());
+}
+
+void SettingsManager::loadGameSettings(const std::string& data)
+{
+	bool fullscreen = true;
+	int width = Engine::Instance().settingsManager()->getResolution().x;
+	int height = Engine::Instance().settingsManager()->getResolution().y;
+	int soundLevel = 100;
+	int musicLevel = 50;
+	bool quite = false;
+	std::string languageName;
+	bool shaders = true;
+
+	std::stringstream stream(data);
+	stream >> fullscreen
+			>> width
+			>> height
+			>> soundLevel
+			>> musicLevel
+			>> quite
+			>> languageName
+			>> shaders
+			;
+
+	if (width < Engine::Instance().settingsManager()->getResolution().x ||
+			height < Engine::Instance().settingsManager()->getResolution().y)
+		Engine::Instance().settingsManager()->setResolution(sf::Vector2i(width, height));
+	Engine::Instance().settingsManager()->setFullscreen(fullscreen);
+	Engine::Instance().settingsManager()->setSoundLevel(soundLevel);
+	Engine::Instance().settingsManager()->setMusicLevel(musicLevel);
+	Engine::Instance().soundManager()->setQuiet(quite);
+	Engine::Instance().translationsManager()->setCurrentLanguage(languageName);
+	Engine::Instance().settingsManager()->setShaders(shaders);
+}
+
 bool SettingsManager::getShaders() const
 {
 	return shaders;
@@ -513,112 +561,6 @@ void FontManager::setFontModifier(float fontModifier)
 	m_fontModifier = fontModifier;
 }
 
-GlobalVariables::GlobalVariables() :
-	m_fps(0)
-{
-
-}
-
-std::string GlobalVariables::saveGameSettings() const
-{
-	std::stringstream stream;
-	stream << Engine::Instance().settingsManager()->getFullscreen() << std::endl
-		   << Engine::Instance().settingsManager()->getResolution().x << std::endl
-		   << Engine::Instance().settingsManager()->getResolution().y << std::endl
-		   << Engine::Instance().settingsManager()->getSoundLevel() << std::endl
-		   << Engine::Instance().settingsManager()->getMusicLevel() << std::endl
-		   << Engine::Instance().soundManager()->quiet() << std::endl
-		   << Engine::Instance().translationsManager()->currentLanguage() << std::endl
-		   << Engine::Instance().settingsManager()->getShaders() << std::endl
-		 ;
-	return std::string(stream.str());
-}
-
-void GlobalVariables::loadGameSettings(const std::string& data)
-{
-	bool fullscreen = true;
-	int width = Engine::Instance().settingsManager()->getResolution().x;
-	int height = Engine::Instance().settingsManager()->getResolution().y;
-	int soundLevel = 100;
-	int musicLevel = 50;
-	bool quite = false;
-	std::string languageName;
-	bool shaders = true;
-
-	std::stringstream stream(data);
-	stream >> fullscreen
-			>> width
-			>> height
-			>> soundLevel
-			>> musicLevel
-			>> quite
-			>> languageName
-			>> shaders
-			;
-
-	if (width < Engine::Instance().settingsManager()->getResolution().x ||
-			height < Engine::Instance().settingsManager()->getResolution().y)
-		Engine::Instance().settingsManager()->setResolution(sf::Vector2i(width, height));
-	Engine::Instance().settingsManager()->setFullscreen(fullscreen);
-	Engine::Instance().settingsManager()->setSoundLevel(soundLevel);
-	Engine::Instance().settingsManager()->setMusicLevel(musicLevel);
-	Engine::Instance().soundManager()->setQuiet(quite);
-	Engine::Instance().translationsManager()->setCurrentLanguage(languageName);
-	Engine::Instance().settingsManager()->setShaders(shaders);
-}
-
-std::string GlobalVariables::encode(const std::string &str)
-{
-	std::string result;
-	for (unsigned int i = 0; i < str.size(); ++i)
-	{
-		const char ch = str.at(i);
-		result.push_back(ch + ArcEngine::CRYPTO_VALUE);
-	}
-	return str;
-}
-
-std::string GlobalVariables::decode(const std::string &str)
-{
-	std::string result;
-	for (unsigned int i = 0; i < str.size(); ++i)
-	{
-		const char ch = str.at(i);
-		result.push_back(ch - ArcEngine::CRYPTO_VALUE);
-	}
-	return str;
-}
-
-std::string GlobalVariables::appVersion() const
-{
-	return m_appVersion;
-}
-
-void GlobalVariables::setAppVersion(const std::string &appVersion)
-{
-	m_appVersion = appVersion;
-}
-
-sf::String GlobalVariables::appName() const
-{
-	return m_appName;
-}
-
-void GlobalVariables::setAppName(const sf::String &appName)
-{
-	m_appName = appName;
-}
-
-int GlobalVariables::fps() const
-{
-	return m_fps;
-}
-
-void GlobalVariables::setFps(int fps)
-{
-	m_fps = fps;
-}
-
 Options::Options()
 	: mw(nullptr)
 	,m_resourcesLoaded(false)
@@ -646,7 +588,7 @@ void Options::updateWindow()
 {
 	const int w = Engine::Instance().Instance().settingsManager()->getResolution().x;
 	const int h = Engine::Instance().Instance().settingsManager()->getResolution().y;
-	const sf::String appName = Engine::Instance().globalVariables()->appName();
+	const sf::String appName = Engine::Instance().appName();
 	const int style = Engine::Instance().Instance().settingsManager()->getFullscreen()?sf::Style::Fullscreen:sf::Style::Default;
 
 	mw->create(
@@ -748,14 +690,6 @@ void ShadersManager::addShader(const ShaderType type, const std::string &data)
 	m_shaders.insert(std::pair<ShaderType, std::string>(type, data));
 }
 
-std::string GlobalVariables::to_string_with_precision(const float a_value, const int n)
-{
-	std::ostringstream out;
-	out.precision(n);
-	out << std::fixed << a_value;
-	return std::string(out.str());
-}
-
 ResourcesManager::ResourcesManager()
 {
 	skeletonAnimationFactory = new dragonBones::SFMLFactory();
@@ -812,4 +746,26 @@ void ResourcesManager::loadSkeletonData(FileType atlasType, FileType skeletonTyp
 	dragonBones::DragonBonesData *skeleton = skeletonAnimationFactory->loadDragonBonesData(skeletonFile.data, std::string(), scale);
 	if(skeleton == nullptr)
 		std::cout << "Loading skeleton failed." << std::endl;
+}
+
+std::string ResourcesManager::encode(const std::string &str)
+{
+	std::string result;
+	for (unsigned int i = 0; i < str.size(); ++i)
+	{
+		const char ch = str.at(i);
+		result.push_back(ch + ArcEngine::CRYPTO_VALUE);
+	}
+	return str;
+}
+
+std::string ResourcesManager::decode(const std::string &str)
+{
+	std::string result;
+	for (unsigned int i = 0; i < str.size(); ++i)
+	{
+		const char ch = str.at(i);
+		result.push_back(ch - ArcEngine::CRYPTO_VALUE);
+	}
+	return str;
 }

@@ -18,10 +18,31 @@ ArcObject::~ArcObject()
 		delete action;
 }
 
+void ArcObject::paint(sf::RenderTarget * const target)
+{
+	if (!m_enabled)
+		return;
+	draw(target);
+}
+
+void ArcObject::process()
+{
+	if (!m_enabled)
+		return;
+	update();
+}
+
+bool ArcObject::event(sf::Event *event)
+{
+	if (!m_enabled)
+		return true;
+	return eventFilter(event);
+}
+
 void ArcObject::draw(sf::RenderTarget * const target)
 {
 	for(ArcObject* child : childs)
-		child->draw(target);
+		child->paint(target);
 }
 
 void ArcObject::update()
@@ -62,6 +83,16 @@ void ArcObject::setType(ArcEngine::OBJECT_TYPE type)
 	m_type = type;
 }
 
+bool ArcObject::isEnabled() const
+{
+	return m_enabled;
+}
+
+void ArcObject::setEnabled(bool enabled)
+{
+	m_enabled = enabled;
+}
+
 ArcEngine::OBJECT_TYPE ArcObject::type() const
 {
 	return m_type;
@@ -82,6 +113,16 @@ float ArcObject::height() const
 	return m_height;
 }
 
+float ArcObject::scaleX() const
+{
+	return m_scaleX;
+}
+
+float ArcObject::scaleY() const
+{
+	return m_scaleY;
+}
+
 sf::Vector2f ArcObject::scale() const
 {
 	return sf::Vector2f(m_scaleX, m_scaleY);
@@ -100,6 +141,26 @@ float ArcObject::y() const
 sf::Vector2f ArcObject::pos() const
 {
 	return sf::Vector2f(m_x, m_y);
+}
+
+float ArcObject::originX() const
+{
+	return m_originX;
+}
+
+float ArcObject::originY() const
+{
+	return m_originY;
+}
+
+sf::Vector2f ArcObject::origin() const
+{
+	return sf::Vector2f(m_originX, m_originY);
+}
+
+float ArcObject::rotation() const
+{
+	return m_angle;
 }
 
 void ArcObject::setPos(const sf::Vector2f &coords)
@@ -146,6 +207,13 @@ void ArcObject::setSize(const sf::Vector2f &size)
 void ArcObject::setSize(float x, float y)
 {
 	m_width = x, m_height = y;
+}
+
+void ArcObject::setRotation(float angle)
+{
+	m_angle = angle;
+	for(ArcObject* child : childs)
+		child->setRotation(angle);
 }
 
 float ArcObject::width() const

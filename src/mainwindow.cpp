@@ -79,17 +79,17 @@ void MainWindow::exec()
 			}
 			if (!active)
 				break;
-			if (currentState->eventFilter(&event))
+			if (currentState->event(&event))
 				break;
 		}
 		TimersManager::Instance().setPaused(!active);
 		if (active) {
-			currentState->update();
+			currentState->process();
 			Engine::Instance().getOptions()->globalCallbacks();
 
 			clear(sf::Color::Black);
 			setView(*m_view);
-			currentState->draw(this);
+			currentState->paint(this);
 
 			Engine::Instance().getOptions()->globalDraw(this);
 

@@ -4,11 +4,11 @@
 #include "stdheader.h"
 #include "enginedef.h"
 #include "timer.h"
-#include <sstream>
 
 class ArcWindow;
 class ArcDebug;
 class ArcObject;
+class MainWindow;
 
 class Manager
 {
@@ -51,6 +51,8 @@ public:
 
 	static const sf::Vector2i defaultResolution;
 
+	std::string saveGameSettings() const;
+	void loadGameSettings(const std::string& data);
 private:
 	sf::Vector2i resolution;
 	float soundLevel;
@@ -252,37 +254,6 @@ private:
 	float m_fontModifier;
 };
 
-class GlobalVariables : public Manager
-{
-public:
-	GlobalVariables();
-
-	void setApplicationPath(const sf::String &applicationPath);
-
-	std::string saveGameSettings() const;
-	void loadGameSettings(const std::string& data);
-
-	static std::string to_string_with_precision(const float a_value, const int n = 6);
-
-	static std::string encode(const std::string& str);
-	static std::string decode(const std::string& str);
-
-	std::string appVersion() const;
-	void setAppVersion(const std::string &appVersion);
-
-	sf::String appName() const;
-	void setAppName(const sf::String &appName);
-
-	int fps() const;
-	void setFps(int fps);
-
-private:
-	int m_fps;
-	std::string m_appVersion;
-	sf::String m_appName;
-};
-
-class MainWindow;
 class Options : public Manager
 {
 	//classes like level, panel, cursor, camera
@@ -355,6 +326,9 @@ public:
 	static void addShader(ShaderType type, const std::string& data);
 
 	void loadSkeletonData(FileType atlasType, FileType skeletonType, TextureType textureType);
+
+	static std::string encode(const std::string& str);
+	static std::string decode(const std::string& str);
 private:
 	dragonBones::SFMLFactory* skeletonAnimationFactory = nullptr;
 	Timer timer;

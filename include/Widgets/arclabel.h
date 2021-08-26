@@ -10,21 +10,27 @@ public:
 
 	void draw(sf::RenderTarget *const target) override;
 
+	void setColor(const sf::Color &color);
+	sf::Color color() const;
+
+	void setFontSize(unsigned int size);
+	unsigned int fontSize() const;
+
+	void setTextBorderSize(float size);
+	float textBorderSize() const;
+
+	void setTextBorderColor(const sf::Color &color);
+	sf::Color textBorderColor() const;
+
+	void setText(const std::string& text);
+	std::string text() const;
+
+protected:
 	void setPos(float x, float y) override;
 	void setOrigin(float x, float y) override;
 	void setScale(float x, float y) override;
-
-	void setColor(const sf::Color &color);
-
-	sf::Color color() const;
-
 private:
-	sf::Text text;
-
-	float m_fontSize = 10.f;
-	float m_borderSize = 1.f;
-	sf::Color m_color = sf::Color::White;
-	sf::Color m_borderColor = sf::Color::Black;
+	sf::Text m_text;
 };
 
 #endif // ARCLABEL_H

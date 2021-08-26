@@ -40,6 +40,7 @@ void ArcSprite::setSize(float x, float y)
 
 void ArcSprite::setTexture(TextureType textureID)
 {
+	m_textureID = textureID;
 	sprite.setTexture(&GET_TEXTURE(textureID));
 }
 
@@ -48,7 +49,18 @@ void ArcSprite::setColor(const sf::Color &color)
 	sprite.setFillColor(color);
 }
 
+TextureType ArcSprite::textureID() const
+{
+	return m_textureID;
+}
+
 sf::Color ArcSprite::color() const
 {
 	return sprite.getFillColor();
+}
+
+void ArcSprite::setRotation(float angle)
+{
+	ArcObject::setRotation(angle);
+	sprite.setRotation(angle);
 }

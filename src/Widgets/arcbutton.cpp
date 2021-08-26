@@ -50,7 +50,7 @@ void ArcButton::setCallback(const std::function<void ()> &func)
 
 bool ArcButton::eventFilter(sf::Event *event)
 {
-	if (!m_enabled)
+	if (!m_clickable)
 		return false;
 	if (m_callback == nullptr)
 		return false;
@@ -98,12 +98,12 @@ bool ArcButton::eventFilter(sf::Event *event)
 	return ArcSprite::eventFilter(event);
 }
 
-void ArcButton::setEnabled(bool enabled)
+void ArcButton::setClickable(bool enabled)
 {
-	m_enabled = enabled;
+	m_clickable = enabled;
 }
 
-bool ArcButton::isEnabled() const
+bool ArcButton::isClickable() const
 {
-	return m_enabled;
+	return m_clickable;
 }

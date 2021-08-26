@@ -9,7 +9,6 @@ class StateManager;
 class SoundManager;
 class SettingsManager;
 class FontManager;
-class GlobalVariables;
 class FilesManager;
 class Options;
 class ShadersManager;
@@ -32,7 +31,6 @@ public:
 	SettingsManager *settingsManager();
 	FontManager *fontManager();
 	FilesManager *filesManager();
-	GlobalVariables *globalVariables();
 	ShadersManager *shadersManager();
 	ResourcesManager *resourceManager();
 
@@ -57,6 +55,12 @@ public:
 
 	static std::string assetsPath();
 
+	std::string appVersion() const;
+	void setAppVersion(const std::string &appVersion);
+
+	sf::String appName() const;
+	void setAppName(const sf::String &appName);
+
 private:
 	Engine();
 	Engine(const Engine&) = delete;
@@ -69,12 +73,14 @@ private:
 	SettingsManager *p_settingsManager = nullptr;
 	FontManager *p_fontManager = nullptr;
 	FilesManager *p_filesManager = nullptr;
-	GlobalVariables *p_globalVariables = nullptr;
 	ShadersManager *p_shadersManager = nullptr;
 	ResourcesManager *p_resourceManager = nullptr;
 	Options *p_options = nullptr;
 
 	MainWindow *p_window = nullptr;
+
+	std::string m_appVersion;
+	sf::String m_appName;
 };
 
 #endif // ENGINE_H

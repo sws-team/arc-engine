@@ -11,18 +11,21 @@ public:
 
 	void draw(sf::RenderTarget *const target) override;
 
+	virtual void setTexture(TextureType textureID);
+	void setColor(const sf::Color& color);
+
+	TextureType textureID() const;
+	sf::Color color() const;
+
+	void setRotation(float angle) override;
+protected:
 	void setPos(float x, float y) override;
 	void setOrigin(float x, float y) override;
 	void setScale(float x, float y) override;
 	void setSize(float x, float y) override;
 
-	virtual void setTexture(TextureType textureID);
-	void setColor(const sf::Color& color);
-
-	sf::Color color() const;
-
-protected:
 	sf::RectangleShape sprite;
+	TextureType m_textureID;
 };
 
 #endif // ARCSPRITE_H

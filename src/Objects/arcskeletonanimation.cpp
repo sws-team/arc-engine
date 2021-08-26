@@ -5,7 +5,7 @@
 #include "SFML/SFMLArmatureProxy.h"
 
 ArcSkeletonAnimation::ArcSkeletonAnimation(const std::string &name)
-	: ArcObject(name)
+	: ArcObject(name, ArcEngine::SKELETON_ANIMATION)
 {
 	display = new dragonBones::SFMLArmatureDisplay(name);
 	animation = display->getAnimation();
@@ -31,7 +31,13 @@ void ArcSkeletonAnimation::setPos(float x, float y)
 
 void ArcSkeletonAnimation::setColor(const sf::Color &color)
 {
+	m_color = color;
 	armatureProxy->setColor(color);
+}
+
+sf::Color ArcSkeletonAnimation::color() const
+{
+	return m_color;
 }
 
 void ArcSkeletonAnimation::changeAnimation(const std::string &animationName)

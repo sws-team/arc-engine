@@ -12,40 +12,50 @@ public:
 	ArcObject(const std::string& name = std::string(), ArcEngine::OBJECT_TYPE type = ArcEngine::UNDEF);
 	virtual ~ArcObject();
 
-	virtual void draw(sf::RenderTarget *const target);
-	virtual void update();
+	void paint(sf::RenderTarget *const target);
+	void process();
+	bool event(sf::Event *event);
 
 	void addChild(ArcObject* object);
 	void addAction(ArcAction* action);
 
 	//getters
+	bool isEnabled() const;
 	ArcEngine::OBJECT_TYPE type() const;
 	std::string name() const;
 	sf::Vector2f size() const;
 	float width() const;
 	float height() const;
+	float scaleX() const;
+	float scaleY() const;
 	sf::Vector2f scale() const;
 	float x() const;
 	float y() const;
 	sf::Vector2f pos() const;
+	float originX() const;
+	float originY() const;
+	sf::Vector2f origin() const;
+	float rotation() const;
 
 	//setters
 	void setPos(const sf::Vector2f& coords);
-	virtual void setPos(float x, float y);
-
 	void setOrigin(const sf::Vector2f& coords);
-	virtual void setOrigin(float x, float y);
-
 	void setScale(const sf::Vector2f& scale);
-	virtual void setScale(float x, float y);
-
 	void setSize(const sf::Vector2f& size);
-	virtual void setSize(float x, float y);
+	virtual void setRotation(float angle);
+	void setEnabled(bool enabled);
 
 protected:
+	virtual void update();
+	virtual void draw(sf::RenderTarget *const target);
 	virtual bool eventFilter(sf::Event *event);
 	void setName(const std::string& name);
 	void setType(ArcEngine::OBJECT_TYPE type);
+
+	virtual void setPos(float x, float y);
+	virtual void setOrigin(float x, float y);
+	virtual void setScale(float x, float y);
+	virtual void setSize(float x, float y);
 
 	std::vector<ArcObject*> childs;
 	std::vector<ArcAction*> actions;
@@ -55,6 +65,7 @@ private:
 	friend class ArcDebug;
 	friend class ArcAction;
 	std::string m_name;
+	bool m_enabled = true;
 	ArcEngine::OBJECT_TYPE m_type = ArcEngine::UNDEF;
 	float m_x = 0.f;
 	float m_y = 0.f;

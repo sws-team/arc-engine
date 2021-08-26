@@ -75,16 +75,16 @@ void Button::event(sf::Event *event)
 		}
 		hovered = hover;
 	}
-	else if (event->type == sf::Event::KeyPressed)
-	{
-		if (event->key.code == sf::Keyboard::Return)
-			m_callback();
-	}
-	else if (event->type == sf::Event::JoystickButtonPressed)
-	{
-		if (event->joystickButton.button == ArcEngine::KEY_ACCEPT)
-			m_callback();
-	}
+//	else if (event->type == sf::Event::KeyPressed)
+//	{
+//		if (event->key.code == sf::Keyboard::Return)
+//			m_callback();
+//	}
+//	else if (event->type == sf::Event::JoystickButtonPressed)
+//	{
+//		if (event->joystickButton.button == ArcEngine::KEY_ACCEPT)
+//			m_callback();
+//	}
 }
 
 void Button::update()

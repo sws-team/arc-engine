@@ -17,7 +17,6 @@ Engine::Engine()
 	p_texturesManager = new TexturesManager();
 	p_settingsManager = new SettingsManager();
 	p_filesManager = new FilesManager();
-	p_globalVariables = new GlobalVariables();
 	p_shadersManager = new ShadersManager();
 	p_resourceManager = new ResourcesManager();
 	p_window = nullptr;
@@ -75,11 +74,6 @@ FilesManager *Engine::filesManager()
 	return p_filesManager;
 }
 
-GlobalVariables *Engine::globalVariables()
-{
-	return p_globalVariables;
-}
-
 ShadersManager *Engine::shadersManager()
 {
 	return p_shadersManager;
@@ -132,6 +126,26 @@ std::string Engine::assetsPath()
 #elif defided(SFML_SYSTEM_IOS)
 #endif
 	return std::string();
+}
+
+std::string Engine::appVersion() const
+{
+	return m_appVersion;
+}
+
+void Engine::setAppVersion(const std::string &appVersion)
+{
+	m_appVersion = appVersion;
+}
+
+sf::String Engine::appName() const
+{
+	return m_appName;
+}
+
+void Engine::setAppName(const sf::String &appName)
+{
+	m_appName = appName;
 }
 
 void Engine::reset()

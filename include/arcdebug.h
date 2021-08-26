@@ -20,6 +20,7 @@ public:
 private:
 	ArcObject *object = nullptr;
 	sf::Clock clock;
+	bool visible = true;
 
 	struct {
 		sf::Clock clock;

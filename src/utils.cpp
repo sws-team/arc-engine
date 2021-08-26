@@ -1,5 +1,7 @@
 #include "utils.h"
 
+#include <sstream>
+
 namespace Utils {
 
 std::vector<sf::Vector2f> calcCubicBezier(const sf::Vector2f &start,
@@ -21,6 +23,14 @@ std::vector<sf::Vector2f> calcCubicBezier(const sf::Vector2f &start,
 					  3.f * p * (startControl - start) + start);
 	ret.push_back(end); // Last point is fixed
 	return ret;
+}
+
+std::string to_string_with_precision(const float a_value, const int n)
+{
+	std::ostringstream out;
+	out.precision(n);
+	out << std::fixed << a_value;
+	return std::string(out.str());
 }
 
 }

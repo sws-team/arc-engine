@@ -3,7 +3,7 @@
 ArcAnimatedSprite::ArcAnimatedSprite(const std::string& name)
 	: ArcSprite(name)
 {
-
+	setType(ArcEngine::ANIMATED_SPRITE);
 }
 
 void ArcAnimatedSprite::update()
@@ -37,6 +37,31 @@ void ArcAnimatedSprite::setLooped(bool loop)
 void ArcAnimatedSprite::setCycled(bool cycled)
 {
 	m_cycled = cycled;
+}
+
+float ArcAnimatedSprite::speed() const
+{
+	return m_animationSpeed;
+}
+
+int ArcAnimatedSprite::frameCount() const
+{
+	return m_frameCount;
+}
+
+int ArcAnimatedSprite::rowCount() const
+{
+	return m_rowCount;
+}
+
+bool ArcAnimatedSprite::isLooped() const
+{
+	return m_looped;
+}
+
+bool ArcAnimatedSprite::isCycled() const
+{
+	return m_cycled;
 }
 
 void ArcAnimatedSprite::setCallback(const std::function<void ()> &func)
