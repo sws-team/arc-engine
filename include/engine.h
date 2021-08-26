@@ -14,6 +14,7 @@ class FilesManager;
 class Options;
 class ShadersManager;
 class MainWindow;
+class ResourcesManager;
 
 class Engine
 {
@@ -33,6 +34,7 @@ public:
 	FilesManager *filesManager();
 	GlobalVariables *globalVariables();
 	ShadersManager *shadersManager();
+	ResourcesManager *resourceManager();
 
 	template<typename Class> Class castedStateManager()
 	{
@@ -69,6 +71,7 @@ private:
 	FilesManager *p_filesManager = nullptr;
 	GlobalVariables *p_globalVariables = nullptr;
 	ShadersManager *p_shadersManager = nullptr;
+	ResourcesManager *p_resourceManager = nullptr;
 	Options *p_options = nullptr;
 
 	MainWindow *p_window = nullptr;

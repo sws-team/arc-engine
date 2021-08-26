@@ -19,6 +19,7 @@ Engine::Engine()
 	p_filesManager = new FilesManager();
 	p_globalVariables = new GlobalVariables();
 	p_shadersManager = new ShadersManager();
+	p_resourceManager = new ResourcesManager();
 	p_window = nullptr;
 	reset();
 }
@@ -82,6 +83,11 @@ GlobalVariables *Engine::globalVariables()
 ShadersManager *Engine::shadersManager()
 {
 	return p_shadersManager;
+}
+
+ResourcesManager *Engine::resourceManager()
+{
+	return p_resourceManager;
 }
 
 Options *Engine::getOptions()

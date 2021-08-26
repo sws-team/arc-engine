@@ -18,7 +18,6 @@ option(ARC_DEBUG OFF)
 #resources
 include(${CMAKE_CURRENT_LIST_DIR}/../Resources/arcresources.cmake)
 
-
 set(ARC_ENGINE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
 include_directories(${ARC_ENGINE_DIR}/include)
@@ -34,6 +33,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Widgets/widget.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/arclabel.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/arcbutton.cpp
+    ${ARC_ENGINE_DIR}/src/Widgets/arctilemap.cpp
 
     ${ARC_ENGINE_DIR}/src/Windows/aboutwindow.cpp
     ${ARC_ENGINE_DIR}/src/Windows/closewindow.cpp
@@ -61,6 +61,15 @@ set(ARC_ENGINE_SOURCES
 
 #3rd party
 set(3RD_PARTY_DIR ${CMAKE_CURRENT_LIST_DIR}/../3rdParty)
+
+include_directories(${3RD_PARTY_DIR}/rapidjson/include)
+
+include(${3RD_PARTY_DIR}/DragonBonesSFML/DragonBones.cmake)
+
+set(ARC_ENGINE_SOURCES
+    ${ARC_ENGINE_SOURCES}
+    ${DRAGON_BONES_SOURCES}
+    )
 
 if (ARC_DEBUG)
     add_definitions(-DARC_DEBUG)

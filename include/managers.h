@@ -3,6 +3,7 @@
 
 #include "stdheader.h"
 #include "enginedef.h"
+#include "timer.h"
 #include <sstream>
 
 class ArcWindow;
@@ -335,15 +336,28 @@ private:
 	std::map<ShaderType, std::string> m_shaders;
 };
 
+namespace dragonBones {
+class SFMLFactory;
+}
+
 class ResourcesManager : public Manager
 {
 public:
+	ResourcesManager();
+
+	void update();
+
 	static void addTexture(TextureType type, const std::string& data);
 	static void addSound(SoundType type, const std::string& data);
 	static void addMusic(MusicType type, const std::string& data);
 	static void addFont(FontType type, const std::string& data);
 	static void addFile(FileType type, const std::string& data);
 	static void addShader(ShaderType type, const std::string& data);
+
+	void loadSkeletonData(FileType atlasType, FileType skeletonType, TextureType textureType);
+private:
+	dragonBones::SFMLFactory* skeletonAnimationFactory = nullptr;
+	Timer timer;
 };
 
 #endif // MANAGERS_H

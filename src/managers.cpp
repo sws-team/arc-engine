@@ -18,6 +18,8 @@
 
 #include <cstring>
 
+#include "SFML/SFMLFactory.h"
+
 void Manager::reset()
 {
 
@@ -670,6 +672,7 @@ void Options::debugObject(ArcObject *object)
 
 void Options::globalCallbacks()
 {
+	Engine::Instance().resourceManager()->update();
 	debug->update();
 }
 
@@ -753,6 +756,17 @@ std::string GlobalVariables::to_string_with_precision(const float a_value, const
 	return std::string(out.str());
 }
 
+ResourcesManager::ResourcesManager()
+{
+	skeletonAnimationFactory = new dragonBones::SFMLFactory();
+}
+
+void ResourcesManager::update()
+{
+	if (timer.check(ArcEngine::FRAME_TIME))
+		skeletonAnimationFactory->update(ArcEngine::FRAME_TIME);
+}
+
 void ResourcesManager::addTexture(TextureType type, const std::string &data)
 {
 	Engine::Instance().texturesManager()->addTexture(type, data.c_str(), data.size());
@@ -781,4 +795,21 @@ void ResourcesManager::addFile(FileType type, const std::string &data)
 void ResourcesManager::addShader(ShaderType type, const std::string &data)
 {
 	Engine::Instance().shadersManager()->addShader(type, data);
+}
+
+void ResourcesManager::loadSkeletonData(FileType atlasType, FileType skeletonType, TextureType textureType)
+{
+	const float scale = Engine::Instance().settingsManager()->getScaleFactor().x;
+
+	const FilesManager::GameFile atlasFile = Engine::Instance().filesManager()->getData(atlasType);
+	const FilesManager::GameFile skeletonFile = Engine::Instance().filesManager()->getData(skeletonType);
+
+	dragonBones::TextureAtlasData *atlas = skeletonAnimationFactory->loadTextureAtlasData(atlasFile.data,
+								  &Engine::Instance().texturesManager()->getTexture(textureType));
+	if(atlas == nullptr)
+		std::cout << "Loading atlas failed." << std::endl;
+
+	dragonBones::DragonBonesData *skeleton = skeletonAnimationFactory->loadDragonBonesData(skeletonFile.data, std::string(), scale);
+	if(skeleton == nullptr)
+		std::cout << "Loading skeleton failed." << std::endl;
 }

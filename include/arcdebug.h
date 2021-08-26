@@ -25,8 +25,6 @@ private:
 		sf::Clock clock;
 		int value = 0;
 		Timer updateTimer;
-		const float UPDATE_TIME = 150.f;
-		const float STANDARD = 60.f;
 	} FPS;
 
 	void drawFrame();

@@ -47,7 +47,7 @@ void ArcDebug::update()
 	ImGui::SFML::Update(*static_cast<sf::RenderWindow*>(Engine::Instance().window()), clock.restart());
 #endif
 	const float currentTime = FPS.clock.restart().asSeconds();
-	if (FPS.updateTimer.check(FPS.UPDATE_TIME)) {
+	if (FPS.updateTimer.check(ArcEngine::MSEC)) {
 		FPS.value = 1.f / currentTime;
 	}
 }
@@ -78,7 +78,7 @@ void ArcDebug::drawFrame()
 				ImGui::TextColored(ImVec4(0.8f, 0.92f, 0.45f, 1.f), ENGINE_VERSION);
 				ImGui::TextUnformatted("FPS:");
 				ImGui::SameLine();
-				const float fpsColorV = static_cast<float>(FPS.value) / FPS.STANDARD;
+				const float fpsColorV = static_cast<float>(FPS.value) * ArcEngine::FRAME_TIME;
 				ImVec4 fpsColor;
 				fpsColor.w = 1.f;
 				fpsColor.x = 1.f - fpsColorV;
