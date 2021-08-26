@@ -10,12 +10,7 @@ public:
 	CloseWindow();
 
 	void init() override;
-	void update() override;
 	void back() override;
-
-private:
-	Timer timer;
-	sf::Uint8 opacity;
 };
 
 #endif // CLOSEWINDOW_H

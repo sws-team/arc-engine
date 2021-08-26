@@ -20,6 +20,7 @@ public:
 #define RESOLUTIONF Engine::Instance().settingsManager()->getResolutionF()
 #define DEBUG_OBJECT(x) Engine::Instance().getOptions()->debugObject(x);
 #define PLAY_SOUND(x) Engine::Instance().soundManager()->playOnce(x);
+#define STOP_SOUND(x) Engine::Instance().soundManager()->stop(x);
 #define SCREEN_SIZE Engine::Instance().settingsManager()->getResolutionF()
 
 class SettingsManager : public Manager

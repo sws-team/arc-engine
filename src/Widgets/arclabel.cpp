@@ -36,3 +36,13 @@ void ArcLabel::setScale(float x, float y)
 	ArcObject::setScale(x, y);
 	text.setScale(x, y);
 }
+
+void ArcLabel::setColor(const sf::Color &color)
+{
+	text.setFillColor(color);
+}
+
+sf::Color ArcLabel::color() const
+{
+	return text.getFillColor();
+}

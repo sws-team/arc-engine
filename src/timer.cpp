@@ -39,17 +39,15 @@ bool Timer::check(float msec)
 {
 	if (isPaused)
 		return false;
-	const sf::Int64 currentTime = clock.getElapsedTime().asMilliseconds();
-
-	if (currentTime - lastTimer >= msec)
-	{
+	const sf::Int32 currentTime = getElapsedMilliseconds();
+	if (currentTime >= msec) {
 		reset();
 		return true;
 	}
 	return false;
 }
 
-float Timer::getElapsedMilliseconds() const
+sf::Int32 Timer::getElapsedMilliseconds() const
 {
 	return clock.getElapsedTime().asMilliseconds() - lastTimer;
 }

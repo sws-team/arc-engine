@@ -16,6 +16,7 @@ public:
 	virtual void update();
 
 	void addChild(ArcObject* object);
+	void addAction(ArcAction* action);
 
 	//getters
 	ArcEngine::OBJECT_TYPE type() const;
@@ -52,6 +53,7 @@ protected:
 private:
 	//transform
 	friend class ArcDebug;
+	friend class ArcAction;
 	std::string m_name;
 	ArcEngine::OBJECT_TYPE m_type = ArcEngine::UNDEF;
 	float m_x = 0.f;

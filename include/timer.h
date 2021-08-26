@@ -14,12 +14,12 @@ struct Timer
 
 	bool check(float msec);
 
-	float getElapsedMilliseconds() const;
+	sf::Int32 getElapsedMilliseconds() const;
 
 private:
 	sf::Clock clock;
-	sf::Int64 lastTimer;
-	sf::Int64 pausedTime;
+	sf::Int32 lastTimer;
+	sf::Int32 pausedTime;
 	bool isPaused;
 };
 

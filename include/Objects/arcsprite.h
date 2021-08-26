@@ -19,6 +19,8 @@ public:
 	void setTexture(TextureType textureID);
 	void setColor(const sf::Color& color);
 
+	sf::Color color() const;
+
 protected:
 	sf::RectangleShape sprite;
 };

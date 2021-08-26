@@ -11,11 +11,7 @@ public:
 
 	void init() override;
 	bool eventFilter(sf::Event* event) override;
-	void update() override;
 private:
-	Timer timer;
-	int opacity;
-
 	void finish();
 };
 

@@ -47,3 +47,8 @@ void ArcSprite::setColor(const sf::Color &color)
 {
 	sprite.setFillColor(color);
 }
+
+sf::Color ArcSprite::color() const
+{
+	return sprite.getFillColor();
+}

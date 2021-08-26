@@ -14,6 +14,10 @@ public:
 	void setOrigin(float x, float y) override;
 	void setScale(float x, float y) override;
 
+	void setColor(const sf::Color &color);
+
+	sf::Color color() const;
+
 private:
 	sf::Text text;
 

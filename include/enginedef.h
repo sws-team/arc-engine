@@ -27,10 +27,6 @@ namespace ArcEngine
 		LABEL,
 		BUTTON,
 	};
-	enum ACTION_TYPE
-	{
-
-	};
 
 	static constexpr float FRAME_TIME = 1.0f / 60.0f;
 	static const sf::Color GrayColor = sf::Color(133, 133, 133);

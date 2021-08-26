@@ -14,6 +14,8 @@ ArcObject::~ArcObject()
 {
 	for(ArcObject* child : childs)
 		delete child;
+	for(ArcAction* action : actions)
+		delete action;
 }
 
 void ArcObject::draw(sf::RenderTarget * const target)
@@ -34,6 +36,11 @@ void ArcObject::update()
 void ArcObject::addChild(ArcObject *object)
 {
 	childs.push_back(object);
+}
+
+void ArcObject::addAction(ArcAction *action)
+{
+	actions.push_back(action);
 }
 
 bool ArcObject::eventFilter(sf::Event *event)

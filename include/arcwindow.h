@@ -14,6 +14,8 @@ public:
 	bool eventFilter(sf::Event *event) override;
 protected:
 	virtual void back();
+
+	class ArcSprite *bg = nullptr;
 };
 
 #endif // ARCWINDOW_H

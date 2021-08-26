@@ -2,17 +2,22 @@
 #include "engine.h"
 #include "managers.h"
 #include "enginedef.h"
+#include "arcaction.h"
+#include "arcsprite.h"
 
 IntroWindow::IntroWindow()
 	: ArcWindow("IntroWindow")
 {
 	setBackground(TexturesManager::INTRO_BACKGROUND);
-	opacity = 255;
+
+	ArcAction *fade = new FadeInAction(2000, bg);
+	fade->setCompletedFunc(std::bind(&IntroWindow::finish, this));
+	bg->addAction(fade);
 }
 
 void IntroWindow::init()
 {
-	Engine::Instance().soundManager()->playOnce(SoundManager::INTRO);
+	PLAY_SOUND(SoundManager::INTRO);
 }
 
 bool IntroWindow::eventFilter(sf::Event *event)
@@ -30,22 +35,8 @@ bool IntroWindow::eventFilter(sf::Event *event)
 	return ArcWindow::eventFilter(event);
 }
 
-void IntroWindow::update()
-{
-	if (timer.check(10))
-	{
-		opacity -= 2;
-		if (opacity < 0)
-			opacity = 0;
-		//FIXME action
-//		background.setColor(sf::Color(255,255,255, opacity));
-	}
-	if (opacity == 0)
-		finish();
-}
-
 void IntroWindow::finish()
 {
-	Engine::Instance().soundManager()->stop(SoundManager::INTRO);
+	STOP_SOUND(SoundManager::INTRO);
 	Engine::Instance().stateManager()->setState(StateManager::LOADING);
 }
