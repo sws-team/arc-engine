@@ -2,6 +2,7 @@
 #include "engine.h"
 #include "managers.h"
 #include "arcwindow.h"
+#include "timer.h"
 
 #include <SFML/Window/Cursor.hpp>
 
@@ -58,8 +59,7 @@ void MainWindow::exec()
 			continue;
 
 		sf::Event event;
-		while (active ? pollEvent(event) : waitEvent(event))
-		{
+		while (active ? pollEvent(event) : waitEvent(event)) {
 			Engine::Instance().getOptions()->globalEventFilter(&event);
 			switch (event.type)
 			{
@@ -67,23 +67,26 @@ void MainWindow::exec()
 				updateView();
 				break;
 			case sf::Event::MouseLeft:
+			case sf::Event::LostFocus:
 				active = false;
 				break;
+			case sf::Event::GainedFocus:
 			case sf::Event::MouseEntered:
 				active = true;
 				break;
 			default:
 				break;
 			}
+			if (!active)
+				break;
 			if (currentState->eventFilter(&event))
 				break;
 		}
-		currentState->update();
+		TimersManager::Instance().setPaused(!active);
+		if (active) {
+			currentState->update();
+			Engine::Instance().getOptions()->globalCallbacks();
 
-		Engine::Instance().getOptions()->globalCallbacks();
-
-		if (active)
-		{
 			clear(sf::Color::Black);
 			setView(*m_view);
 			currentState->draw(this);
@@ -93,8 +96,9 @@ void MainWindow::exec()
 
 			display();
 		}
-		else
+		else {
 			sf::sleep(sf::milliseconds(100));
+		}
 	}
 }
 

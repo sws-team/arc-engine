@@ -31,7 +31,7 @@ public:
 	void addTimer(Timer *timer);
 	void removeTimer(Timer *timer);
 
-	void setPaused(bool isPaused);
+	void setPaused(bool paused);
 
 private:
 	TimersManager();
@@ -39,6 +39,7 @@ private:
 	TimersManager& operator=(const TimersManager&);
 
 	std::vector<Timer*> timers;
+	bool m_paused = false;
 };
 
 #endif // TIMER_H

@@ -68,11 +68,13 @@ void TimersManager::removeTimer(Timer *timer)
 	timers.erase(remove(timers.begin(), timers.end(), timer));
 }
 
-void TimersManager::setPaused(bool isPaused)
+void TimersManager::setPaused(bool paused)
 {
-	for(Timer *timer : timers)
-	{
-		if (isPaused)
+	if (m_paused == paused)
+		return;
+	m_paused = paused;
+	for(Timer *timer : timers) {
+		if (paused)
 			timer->pause();
 		else
 			timer->unpause();
