@@ -33,18 +33,15 @@ void MainWindow::exec()
 	sf::Cursor cursor;
 	const sf::Image img = Engine::Instance().texturesManager()->getTexture(TexturesManager::CURSOR).copyToImage();
 	const bool cursorLoaded = cursor.loadFromPixels(img.getPixelsPtr(), sf::Vector2u(32,32), sf::Vector2u(0,0));
-	while (isOpen())
-	{
-		if (Engine::Instance().stateManager()->getState() != state)
-		{
+	while (isOpen()) {
+		if (Engine::Instance().stateManager()->getState() != state) {
 			if (currentState != nullptr)
 				delete currentState;
 
 			if (cursorLoaded)
 				setMouseCursor(cursor);
 
-			if (Engine::Instance().stateManager()->getState() == StateManager::EXIT)
-			{
+			if (Engine::Instance().stateManager()->getState() == StateManager::EXIT) {
 				this->close();
 				return;
 			}
@@ -73,6 +70,9 @@ void MainWindow::exec()
 			case sf::Event::GainedFocus:
 			case sf::Event::MouseEntered:
 				active = true;
+				break;
+			case sf::Event::Closed:
+				Engine::Instance().stateManager()->setState(StateManager::CLOSING);
 				break;
 			default:
 				break;
