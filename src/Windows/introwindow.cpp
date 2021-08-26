@@ -10,7 +10,7 @@ IntroWindow::IntroWindow()
 {
 	setBackground(TexturesManager::INTRO_BACKGROUND);
 
-	ArcAction *fade = new FadeInAction(2000, bg);
+	ArcAction *fade = new FadeInAction(ArcEngine::DEFAULT_WINDOW_FADE_TIME, bg);
 	fade->setCompletedFunc(std::bind(&IntroWindow::finish, this));
 	bg->addAction(fade);
 }

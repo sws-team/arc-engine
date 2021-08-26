@@ -16,7 +16,7 @@ public:
 	void setScale(float x, float y) override;
 	void setSize(float x, float y) override;
 
-	void setTexture(TextureType textureID);
+	virtual void setTexture(TextureType textureID);
 	void setColor(const sf::Color& color);
 
 	sf::Color color() const;

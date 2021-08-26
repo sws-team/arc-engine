@@ -36,6 +36,7 @@ namespace ArcEngine
 	static constexpr float MSEC = 1000;
 	static const sf::String separator = ": ";
 	static const sf::String endline = "\n";
+	static constexpr float DEFAULT_WINDOW_FADE_TIME = 2000;
 }
 
 #endif // ENGINEDEF_H

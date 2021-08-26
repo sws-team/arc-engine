@@ -66,7 +66,7 @@ void ArcDebug::drawObject(ArcObject *obj)
 									 Engine::Instance().settingsManager()->getResolutionF().y / 3);
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(windowSize, ImGuiCond_FirstUseEver);
-//	ImGui::SetNextWindowBgAlpha(0.5f);
+	ImGui::SetNextWindowBgAlpha(0.5f);
 	if (ImGui::Begin("Debug", &showDebug, ImGuiWindowFlags_None)) {
 		const float height = ImGui::GetWindowSize().y;
 		static float w = 200.0f;
@@ -102,7 +102,7 @@ void ArcDebug::drawObject(ArcObject *obj)
 
 		ImGui::End();
 	}
-	ImGui::ShowDemoWindow();
+//	ImGui::ShowDemoWindow();
 #endif
 }
 

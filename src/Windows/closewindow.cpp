@@ -9,7 +9,7 @@ CloseWindow::CloseWindow()
 {
 	setBackground(TexturesManager::CLOSE_BACKGROUND);
 
-	ArcAction *fade = new FadeOutAction(2000, bg);
+	ArcAction *fade = new FadeOutAction(ArcEngine::DEFAULT_WINDOW_FADE_TIME, bg);
 	fade->setCompletedFunc([]() {
 		Engine::Instance().stateManager()->setState(StateManager::EXIT);
 	});
