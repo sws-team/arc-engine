@@ -7,3 +7,6 @@
 [submodule "3rdParty/imgui-sfml"]
 	path = 3rdParty/imgui-sfml
 	url = https://github.com/eliasdaler/imgui-sfml.git
+[submodule "3rdParty/DragonBonesSFML"]
+	path = 3rdParty/DragonBonesSFML
+	url = git@github.com:sws-team/dragonBonesSFML.git
