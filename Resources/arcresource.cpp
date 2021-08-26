@@ -1,17 +1,16 @@
-#include "gameresource.h"
+#include "arcresource.h"
 
 #include <fstream>
 #include <iostream>
 
-std::vector<GameResource::Resource> GameResource::Resource::loadResources(const std::string &fileName)
+std::vector<ArcEngine::Resource> ArcEngine::Resource::loadResources(const std::string &fileName)
 {
 //	std::cout << "LOAD "<< fileName <<std::endl;
-	std::vector<GameResource::Resource> resources;
+	std::vector<ArcEngine::Resource> resources;
 
 	std::ifstream file;
 	file.open(fileName);
-	if (!file.is_open())
-	{
+	if (!file.is_open()) {
 		std::cerr << "Error to load file: "<< fileName << std::endl;
 		return resources;
 	}
@@ -19,12 +18,11 @@ std::vector<GameResource::Resource> GameResource::Resource::loadResources(const 
 	size_t count;
 	file >> count;
 //	std::cout << "COUNT "<< count <<std::endl;
-	for (unsigned int i = 0; i < count; ++i)
-	{
+	for (unsigned int i = 0; i < count; ++i) {
 //		std::cout << "NUMBER: "<<i << std::endl;
 		uint8_t t;
 		file >> t;
-		GameResource::Resource res;
+		ArcEngine::Resource res;
 		res.type = static_cast<RESOURCE_TYPE>(t);
 //		std::cout << "Type "<< res.type <<std::endl;
 		{
@@ -63,7 +61,7 @@ std::vector<GameResource::Resource> GameResource::Resource::loadResources(const 
 	return resources;
 }
 
-bool GameResource::Resource::saveResources(const std::string &fileName, const std::vector<GameResource::Resource>& resources)
+bool ArcEngine::Resource::saveResources(const std::string &fileName, const std::vector<ArcEngine::Resource>& resources)
 {
 	std::ofstream file;
 	file.open(fileName);
@@ -71,9 +69,8 @@ bool GameResource::Resource::saveResources(const std::string &fileName, const st
 		return false;
 
 	file << resources.size() << std::endl;
-	for (unsigned int i = 0; i < resources.size(); ++i)
-	{
-		const GameResource::Resource res = resources.at(i);
+	for (unsigned int i = 0; i < resources.size(); ++i) {
+		const ArcEngine::Resource res = resources.at(i);
 		file << static_cast<uint8_t>(res.type);
 
 		file << static_cast<uint32_t>(res.name.size());

@@ -335,4 +335,15 @@ private:
 	std::map<ShaderType, std::string> m_shaders;
 };
 
+class ResourcesManager : public Manager
+{
+public:
+	static void addTexture(TextureType type, const std::string& data);
+	static void addSound(SoundType type, const std::string& data);
+	static void addMusic(MusicType type, const std::string& data);
+	static void addFont(FontType type, const std::string& data);
+	static void addFile(FileType type, const std::string& data);
+	static void addShader(ShaderType type, const std::string& data);
+};
+
 #endif // MANAGERS_H

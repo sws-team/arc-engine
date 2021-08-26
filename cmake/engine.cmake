@@ -15,6 +15,10 @@ add_definitions("-DENGINE_VERSION=\"${ENGINE_NORMAL_VERSION}\"")
 
 option(ARC_DEBUG OFF)
 
+#resources
+include(${CMAKE_CURRENT_LIST_DIR}/../Resources/arcresources.cmake)
+
+
 set(ARC_ENGINE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
 include_directories(${ARC_ENGINE_DIR}/include)
@@ -51,6 +55,8 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/engine.cpp
     ${ARC_ENGINE_DIR}/src/timer.cpp
     ${ARC_ENGINE_DIR}/src/utils.cpp
+
+    ${RESOURCES_SOURCES}
     )
 
 #3rd party

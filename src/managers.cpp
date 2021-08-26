@@ -752,3 +752,33 @@ std::string GlobalVariables::to_string_with_precision(const float a_value, const
 	out << std::fixed << a_value;
 	return std::string(out.str());
 }
+
+void ResourcesManager::addTexture(TextureType type, const std::string &data)
+{
+	Engine::Instance().texturesManager()->addTexture(type, data.c_str(), data.size());
+}
+
+void ResourcesManager::addSound(SoundType type, const std::string &data)
+{
+	Engine::Instance().soundManager()->addSound(type, data.c_str(), data.size());
+}
+
+void ResourcesManager::addMusic(MusicType type, const std::string &data)
+{
+	Engine::Instance().soundManager()->addMusic(type, data.c_str(), data.size());
+}
+
+void ResourcesManager::addFont(FontType type, const std::string &data)
+{
+	Engine::Instance().fontManager()->addFont(type, data.c_str(), data.size());
+}
+
+void ResourcesManager::addFile(FileType type, const std::string &data)
+{
+	Engine::Instance().filesManager()->addFile(type, data.c_str(), data.size());
+}
+
+void ResourcesManager::addShader(ShaderType type, const std::string &data)
+{
+	Engine::Instance().shadersManager()->addShader(type, data);
+}
