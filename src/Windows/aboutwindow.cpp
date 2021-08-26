@@ -5,7 +5,7 @@
 const sf::Vector2f AboutWindow::RECT_SIZE = sf::Vector2f(900, 600);
 
 AboutWindow::AboutWindow()
-	: ArcWindow()
+	: ArcWindow("AboutWindow")
 	,m_backState(StateManager::MENU)
 	,m_characterSize(40)
 	,m_color(sf::Color::White)

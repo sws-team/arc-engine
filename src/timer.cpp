@@ -3,8 +3,8 @@
 
 Timer::Timer():
 	lastTimer(0)
-  ,pausedTime(0)
-  ,isPaused(false)
+	,pausedTime(0)
+	,isPaused(false)
 {
 	TimersManager::Instance().addTimer(this);
 	reset();

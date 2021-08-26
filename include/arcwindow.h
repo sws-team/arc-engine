@@ -6,8 +6,7 @@
 class ArcWindow : public ArcObject
 {
 public:
-	ArcWindow();
-	virtual ~ArcWindow();
+	ArcWindow(const std::string& name = "Window");
 
 	virtual void init();
 	void setBackground(TextureType type);

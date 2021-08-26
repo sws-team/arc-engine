@@ -1,6 +1,7 @@
 #include "arcobject.h"
 #include "engine.h"
 #include "managers.h"
+#include "arcaction.h"
 
 ArcObject::ArcObject(const std::string &name, ArcEngine::OBJECT_TYPE type)
 	: m_name(name)
@@ -11,7 +12,8 @@ ArcObject::ArcObject(const std::string &name, ArcEngine::OBJECT_TYPE type)
 
 ArcObject::~ArcObject()
 {
-
+	for(ArcObject* child : childs)
+		delete child;
 }
 
 void ArcObject::draw(sf::RenderTarget * const target)
@@ -24,6 +26,9 @@ void ArcObject::update()
 {
 	for(ArcObject* child : childs)
 		child->update();
+
+	for(ArcAction* action : actions)
+		action->update();
 }
 
 void ArcObject::addChild(ArcObject *object)

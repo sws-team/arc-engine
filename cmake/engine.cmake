@@ -43,6 +43,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/arcobject.cpp
     ${ARC_ENGINE_DIR}/src/arcdebug.cpp
     ${ARC_ENGINE_DIR}/src/arcwindow.cpp
+    ${ARC_ENGINE_DIR}/src/arcaction.cpp
     ${ARC_ENGINE_DIR}/src/managers.cpp
     ${ARC_ENGINE_DIR}/src/gameobject.cpp
     ${ARC_ENGINE_DIR}/src/mainwindow.cpp

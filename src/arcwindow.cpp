@@ -3,15 +3,10 @@
 #include "managers.h"
 #include "arcsprite.h"
 
-ArcWindow::ArcWindow()
-	: ArcObject("Window")
+ArcWindow::ArcWindow(const std::string &name)
+	: ArcObject(name)
 {
 	DEBUG_OBJECT(this);
-}
-
-ArcWindow::~ArcWindow()
-{
-
 }
 
 void ArcWindow::init()

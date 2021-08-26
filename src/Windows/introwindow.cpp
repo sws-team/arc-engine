@@ -4,7 +4,7 @@
 #include "enginedef.h"
 
 IntroWindow::IntroWindow()
-	: ArcWindow()
+	: ArcWindow("IntroWindow")
 {
 	setBackground(TexturesManager::INTRO_BACKGROUND);
 	opacity = 255;

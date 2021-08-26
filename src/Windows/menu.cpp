@@ -5,7 +5,7 @@
 #include "mainwindow.h"
 
 Menu::Menu()
-	: ArcWindow()
+	: ArcWindow("Menu")
 	,m_pos(sf::Vector2f(0, 0))
 	,m_color(sf::Color::Red)
 	,m_currentColor(sf::Color::Green)

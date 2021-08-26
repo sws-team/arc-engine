@@ -4,6 +4,8 @@
 #include "stdheader.h"
 #include "enginedef.h"
 
+class ArcAction;
+
 class ArcObject
 {
 public:
@@ -45,6 +47,7 @@ protected:
 	void setType(ArcEngine::OBJECT_TYPE type);
 
 	std::vector<ArcObject*> childs;
+	std::vector<ArcAction*> actions;
 	sf::Vector2f scaleFactor;
 private:
 	//transform
