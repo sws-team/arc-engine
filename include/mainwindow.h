@@ -20,9 +20,6 @@ private:
 	sf::View *m_view;
 	ArcWindow *currentState;
 	GameState state;
-	sf::Clock fpsClock;
-
-	void updateFPS();
 };
 
 #endif // MAINWINDOW_H

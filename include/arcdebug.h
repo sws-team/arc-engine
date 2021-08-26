@@ -3,6 +3,7 @@
 
 #include "stdheader.h"
 #include "enginedef.h"
+#include "timer.h"
 
 class ArcObject;
 
@@ -19,6 +20,16 @@ public:
 private:
 	ArcObject *object = nullptr;
 	sf::Clock clock;
+
+	struct {
+		sf::Clock clock;
+		int value = 0;
+		Timer updateTimer;
+		const float UPDATE_TIME = 150.f;
+		const float STANDARD = 60.f;
+	} FPS;
+
+	void drawFrame();
 	static void drawObject(ArcObject* obj);
 	static void drawObjectProperties(ArcObject* obj);
 	static std::string typeToName(ArcEngine::OBJECT_TYPE type);

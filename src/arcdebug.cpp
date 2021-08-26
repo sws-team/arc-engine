@@ -21,7 +21,7 @@ void ArcDebug::setObject(ArcObject *object)
 
 void ArcDebug::draw(sf::RenderTarget *target)
 {
-	drawObject(object);
+	drawFrame();
 #ifdef ARC_DEBUG
 	ImGui::SFML::Render(*target);
 #endif
@@ -46,6 +46,10 @@ void ArcDebug::update()
 #ifdef ARC_DEBUG
 	ImGui::SFML::Update(*static_cast<sf::RenderWindow*>(Engine::Instance().window()), clock.restart());
 #endif
+	const float currentTime = FPS.clock.restart().asSeconds();
+	if (FPS.updateTimer.check(FPS.UPDATE_TIME)) {
+		FPS.value = 1.f / currentTime;
+	}
 }
 
 void ArcDebug::eventFilter(sf::Event *event)
@@ -55,10 +59,8 @@ void ArcDebug::eventFilter(sf::Event *event)
 #endif
 }
 
-void ArcDebug::drawObject(ArcObject *obj)
+void ArcDebug::drawFrame()
 {
-	if (obj == nullptr)
-		return;
 #ifdef ARC_DEBUG
 //	ImGuiIO &io = ImGui::GetIO();
 	static bool showDebug = true;
@@ -68,46 +70,85 @@ void ArcDebug::drawObject(ArcObject *obj)
 	ImGui::SetNextWindowSize(windowSize, ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowBgAlpha(0.5f);
 	if (ImGui::Begin("Debug", &showDebug, ImGuiWindowFlags_None)) {
-		const float height = ImGui::GetWindowSize().y;
-		static float w = 200.0f;
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0,0));
-		ImGui::BeginChild("Objects tree", ImVec2(w, 0), true);
-		ImGui::TextUnformatted("Objects tree");
-		std::function<void(ArcObject *)> drawCurrentObject;
-		drawCurrentObject = [&drawCurrentObject](ArcObject *object)-> void {
-			if (ImGui::TreeNode(object->name().c_str())) {
-				for (unsigned i = 0; i < object->childs.size(); ++i) {
-					ArcObject* child = object->childs.at(i);
-					ImGui::Indent();
-					drawCurrentObject(child);
-					ImGui::Unindent();
-				}
-				ImGui::TreePop();
+		if (ImGui::BeginTabBar("DebugTabs")) {
+			if (ImGui::BeginTabItem("Common")) {
+
+				ImGui::TextUnformatted("Arc Engine ver.#");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(0.8f, 0.92f, 0.45f, 1.f), ENGINE_VERSION);
+				ImGui::TextUnformatted("FPS:");
+				ImGui::SameLine();
+				const float fpsColorV = static_cast<float>(FPS.value) / FPS.STANDARD;
+				ImVec4 fpsColor;
+				fpsColor.w = 1.f;
+				fpsColor.x = 1.f - fpsColorV;
+				fpsColor.y = fpsColorV;
+				fpsColor.z = 0;
+				ImGui::TextColored(fpsColor, "%s", std::to_string(FPS.value).c_str());
+
+				ImGui::EndTabItem();
 			}
-		};
-		drawCurrentObject(obj);
-		ImGui::EndChild();
-		ImGui::SameLine();
-		ImGui::InvisibleButton("vsplitter", ImVec2(8.0f, height));
-		if (ImGui::IsItemActive())
-			w += ImGui::GetIO().MouseDelta.x;
-
-		ImGui::SameLine();
-		ImGui::BeginChild("Properties", ImVec2(0, 0), true);
-		ImGui::TextUnformatted("Properties");
-		//FIXME selected obj
-		drawObjectProperties(obj);
-		ImGui::EndChild();
-		ImGui::PopStyleVar();
-
+			static bool firstOpen = true;
+			const ImGuiTabItemFlags_ itemFlags = firstOpen ? ImGuiTabItemFlags_SetSelected : ImGuiTabItemFlags_None;
+			if (firstOpen)
+				firstOpen = false;
+			if (ImGui::BeginTabItem("Objects", nullptr, itemFlags)) {
+				drawObject(object);
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Other")) {
+				ImGui::EndTabItem();
+			}
+			ImGui::EndTabBar();
+		}
 		ImGui::End();
 	}
-//	ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
+#endif
+}
+
+void ArcDebug::drawObject(ArcObject *obj)
+{
+	if (obj == nullptr)
+		return;
+#ifdef ARC_DEBUG
+	const float height = ImGui::GetWindowSize().y;
+	static float w = 200.0f;
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0,0));
+	ImGui::BeginChild("Objects tree", ImVec2(w, 0), true);
+	ImGui::TextUnformatted("Objects tree");
+	std::function<void(ArcObject *)> drawCurrentObject;
+	drawCurrentObject = [&drawCurrentObject](ArcObject *object)-> void {
+		if (ImGui::TreeNode(object->name().c_str())) {
+			for (unsigned i = 0; i < object->childs.size(); ++i) {
+				ArcObject* child = object->childs.at(i);
+				ImGui::Indent();
+				drawCurrentObject(child);
+				ImGui::Unindent();
+			}
+			ImGui::TreePop();
+		}
+	};
+	drawCurrentObject(obj);
+	ImGui::EndChild();
+	ImGui::SameLine();
+	ImGui::InvisibleButton("vsplitter", ImVec2(8.0f, height));
+	if (ImGui::IsItemActive())
+		w += ImGui::GetIO().MouseDelta.x;
+
+	ImGui::SameLine();
+	ImGui::BeginChild("Properties", ImVec2(0, 0), true);
+	ImGui::TextUnformatted("Properties");
+	//FIXME selected obj
+	drawObjectProperties(obj);
+	ImGui::EndChild();
+	ImGui::PopStyleVar();
 #endif
 }
 
 void ArcDebug::drawObjectProperties(ArcObject *obj)
 {
+#ifdef ARC_DEBUG
 	auto drawInheritObject = [](ArcEngine::OBJECT_TYPE type, ArcObject *obj) {
 		switch (type)
 		{
@@ -152,6 +193,7 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 	default:
 		break;
 	}
+#endif
 }
 
 std::string ArcDebug::typeToName(ArcEngine::OBJECT_TYPE type)

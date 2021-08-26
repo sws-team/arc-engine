@@ -90,7 +90,6 @@ void MainWindow::exec()
 			clear(sf::Color::Black);
 			setView(*m_view);
 			currentState->draw(this);
-			updateFPS();
 
 			Engine::Instance().getOptions()->globalDraw(this);
 
@@ -140,12 +139,4 @@ void MainWindow::resetView()
 sf::View *MainWindow::view() const
 {
 	return m_view;
-}
-
-void MainWindow::updateFPS()
-{
-	//TODO MOVE TO DEBUG
-	const float currentTime = fpsClock.restart().asSeconds();
-	const float fpsValue = 1.f / currentTime;
-	Engine::Instance().globalVariables()->setFps(static_cast<int>(fpsValue));
 }
