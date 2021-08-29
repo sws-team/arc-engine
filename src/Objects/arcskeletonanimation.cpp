@@ -5,8 +5,9 @@
 #include "SFML/SFMLArmatureProxy.h"
 
 ArcSkeletonAnimation::ArcSkeletonAnimation(const std::string &name)
-	: ArcObject(name, ArcEngine::SKELETON_ANIMATION)
+	: ArcObject(name)
 {
+	setType(ArcEngine::SKELETON_ANIMATION);
 	display = new dragonBones::SFMLArmatureDisplay(name);
 	animation = display->getAnimation();
 	armatureProxy = display->getArmatureProxy();
@@ -14,19 +15,18 @@ ArcSkeletonAnimation::ArcSkeletonAnimation(const std::string &name)
 //		watch(animation_name);
 
 	dragonBones::SFMLEventDispatcher *dispatcher = display->getEventDispatcher();
-//	dispatcher->addDBEventListener(dragonBones::EventObject::LOOP_COMPLETE, std::bind<void>(&ArcSkeletonAnimation::animationCompleted, this));
+	//	dispatcher->addDBEventListener(dragonBones::EventObject::LOOP_COMPLETE, std::bind<void>(&ArcSkeletonAnimation::animationCompleted, this));
+}
+
+ArcSkeletonAnimation::~ArcSkeletonAnimation()
+{
+	delete display;
 }
 
 void ArcSkeletonAnimation::draw(sf::RenderTarget * const target)
 {
 	ArcObject::draw(target);
 	target->draw(*display);
-}
-
-void ArcSkeletonAnimation::setPos(float x, float y)
-{
-	ArcObject::setPos(x, y);
-	display->setPosition(sf::Vector2f(x, y));
 }
 
 void ArcSkeletonAnimation::setColor(const sf::Color &color)
@@ -45,6 +45,17 @@ void ArcSkeletonAnimation::changeAnimation(const std::string &animationName)
 	currentAnimation = animationName;
 	if (currentAnimation != animation->getLastAnimationName())
 		currentState = animation->play(currentAnimation);
+}
+
+void ArcSkeletonAnimation::updatePos()
+{
+	display->setPosition(globalPos());
+	ArcObject::updatePos();
+}
+
+void ArcSkeletonAnimation::updateScale()
+{
+	ArcObject::updateScale();
 }
 
 void ArcSkeletonAnimation::animationCompleted(dragonBones::EventObject *event)

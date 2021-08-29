@@ -39,7 +39,8 @@ bool ArcWindow::eventFilter(sf::Event *event)
 void ArcWindow::setBackground(TextureType type)
 {
 	bg = new ArcSprite("background");
-	bg->::ArcObject::setSize(SCREEN_SIZE);
+	bg->::ArcObject::setSize(sf::Vector2f(SettingsManager::defaultResolution.x,
+										  SettingsManager::defaultResolution.y));
 	bg->setTexture(type);
 	addChild(bg);
 }

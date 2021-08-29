@@ -3,44 +3,46 @@
 #include "managers.h"
 
 ArcSprite::ArcSprite(const std::string &name)
-	: ArcObject(name, ArcEngine::SPRITE)
+	: ArcObject(name)
 {
-
+	setType(ArcEngine::SPRITE);
 }
 
 void ArcSprite::draw(sf::RenderTarget * const target)
 {
-	ArcObject::draw(target);
 	target->draw(sprite);
+	ArcObject::draw(target);
 }
 
-void ArcSprite::setPos(float x, float y)
+void ArcSprite::updatePos()
 {
-	ArcObject::setPos(x, y);
-	sprite.setPosition(x, y);
+	sprite.setPosition(globalPos());
+	ArcObject::updatePos();
 }
 
-void ArcSprite::setOrigin(float x, float y)
+void ArcSprite::updateScale()
 {
-	ArcObject::setOrigin(x, y);
-	sprite.setOrigin(x, y);
+	sprite.setScale(globalScale().x, globalScale().y);
+	ArcObject::updateScale();
 }
 
-void ArcSprite::setScale(float x, float y)
+void ArcSprite::updateOrigin()
 {
-	ArcObject::setScale(x, y);
-	sprite.setScale(x, y);
+	sprite.setOrigin(globalOrigin());
+	ArcObject::updateOrigin();
 }
 
-void ArcSprite::setSize(float x, float y)
+void ArcSprite::updateSize()
 {
-	ArcObject::setSize(x, y);
-	sprite.setSize(sf::Vector2f(x, y));
+	sprite.setSize(size());
+	ArcObject::updateSize();
 }
 
 void ArcSprite::setTexture(TextureType textureID)
 {
 	m_textureID = textureID;
+	if (textureID == -1)
+		return;
 	sprite.setTexture(&GET_TEXTURE(textureID));
 }
 

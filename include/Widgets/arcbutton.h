@@ -18,10 +18,10 @@ public:
 protected:
 	bool eventFilter(sf::Event *event) override;
 
-	void setPos(float x, float y) override;
-	void setOrigin(float x, float y) override;
-	void setScale(float x, float y) override;
-	void setSize(float x, float y) override;
+	void updatePos() override;
+	void updateScale() override;
+	void updateOrigin() override;
+	void updateSize() override;
 
 private:
 	std::function<void()> m_callback = nullptr;

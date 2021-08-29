@@ -3,11 +3,24 @@
 #include "managers.h"
 #include "arcaction.h"
 
-ArcObject::ArcObject(const std::string &name, ArcEngine::OBJECT_TYPE type)
+ArcObject::ArcObject(const std::string &name)
 	: m_name(name)
-	,m_type(type)
 {
 	scaleFactor = SCALE_FACTOR;
+#ifdef ARC_DEBUG
+	debugRect.setScale(scaleFactor);
+	debugRect.setFillColor(sf::Color::Transparent);
+	debugRect.setOutlineColor(sf::Color::White);
+	debugRect.setOutlineThickness(1.f);
+
+	debugCenter.setFillColor(sf::Color::Transparent);
+	debugCenter.setOutlineColor(sf::Color::White);
+	debugCenter.setOutlineThickness(1.f);
+	debugCenter.setRadius(2.f);
+	debugCenter.setOrigin(debugCenter.getRadius(), debugCenter.getRadius());
+
+	debugOrigin.color = sf::Color::White;
+#endif
 }
 
 ArcObject::~ArcObject()
@@ -16,6 +29,14 @@ ArcObject::~ArcObject()
 		delete child;
 	for(ArcAction* action : actions)
 		delete action;
+}
+
+void ArcObject::init()
+{
+	setPos(m_x, m_y);
+	setOrigin(m_originX, m_originY);
+	setScale(m_scaleX, m_scaleY);
+	setRotation(m_angle);
 }
 
 void ArcObject::paint(sf::RenderTarget * const target)
@@ -39,8 +60,79 @@ bool ArcObject::event(sf::Event *event)
 	return eventFilter(event);
 }
 
+void ArcObject::setParent(ArcObject *parent)
+{
+	m_parent = parent;
+}
+
+void ArcObject::updatePos()
+{
+#ifdef ARC_DEBUG
+	debugRect.setPosition(globalPos());
+	debugCenter.setPosition(globalPos());
+	debugOrigin.position = globalPos();
+#endif
+	for(ArcObject* child : childs)
+		child->updatePos();
+}
+
+void ArcObject::updateScale()
+{
+#ifdef ARC_DEBUG
+	debugRect.setScale(globalScale());
+#endif
+	for(ArcObject* child : childs)
+		child->updateScale();
+}
+
+void ArcObject::updateOrigin()
+{
+#ifdef ARC_DEBUG
+	debugRect.setOrigin(globalOrigin());
+#endif
+}
+
+void ArcObject::updateSize()
+{
+#ifdef ARC_DEBUG
+	debugRect.setSize(size());
+#endif
+}
+
+#ifdef ARC_DEBUG
+void ArcObject::setDebugRectColor(const sf::Color &color)
+{
+	debugRect.setOutlineColor(color);
+	debugCenter.setOutlineColor(color);
+	debugOrigin.color = color;
+}
+
+sf::Color ArcObject::debugRectColor() const
+{
+	return debugRect.getOutlineColor();
+}
+
+void ArcObject::setDebugRectLineSize(float size)
+{
+	debugRect.setOutlineThickness(size);
+	debugCenter.setOutlineThickness(size);
+}
+
+float ArcObject::debugRectLineSize() const
+{
+	return debugRect.getOutlineThickness();
+}
+#endif
+
 void ArcObject::draw(sf::RenderTarget * const target)
 {
+#ifdef ARC_DEBUG
+	if (drawDebugRect) {
+		target->draw(debugRect);
+		target->draw(debugCenter);
+		target->draw(&debugOrigin, 1, sf::Points);
+	}
+#endif
 	for(ArcObject* child : childs)
 		child->paint(target);
 }
@@ -56,6 +148,8 @@ void ArcObject::update()
 
 void ArcObject::addChild(ArcObject *object)
 {
+	object->setParent(this);
+	object->init();
 	childs.push_back(object);
 }
 
@@ -86,6 +180,35 @@ void ArcObject::setType(ArcEngine::OBJECT_TYPE type)
 bool ArcObject::isEnabled() const
 {
 	return m_enabled;
+}
+
+sf::FloatRect ArcObject::rect() const
+{
+	return sf::FloatRect(m_x, m_y, m_x + m_width, m_y + m_height);
+}
+
+sf::Vector2f ArcObject::globalPos() const
+{
+	if (m_parent == nullptr)
+		return pos();
+	sf::Vector2f gPos = m_parent->globalPos() + pos();
+	gPos.x *= scaleFactor.x;
+	gPos.y *= scaleFactor.y;
+	return gPos;
+}
+
+sf::Vector2f ArcObject::globalScale() const
+{
+	if (m_parent == nullptr)
+		return scale();
+	return sf::Vector2f(m_parent->globalScale().x * m_scaleX * scaleFactor.x,
+						m_parent->globalScale().y * m_scaleY * scaleFactor.y);
+}
+
+sf::Vector2f ArcObject::globalOrigin() const
+{
+	return sf::Vector2f(m_originX * m_width * scaleFactor.x,
+						m_originY * m_height * scaleFactor.y);
 }
 
 void ArcObject::setEnabled(bool enabled)
@@ -166,37 +289,47 @@ float ArcObject::rotation() const
 void ArcObject::setPos(const sf::Vector2f &coords)
 {
 	setPos(coords.x, coords.y);
-	for(ArcObject* child : childs)
-		child->setPos(sf::Vector2f(m_x, m_y) + coords);
 }
 
 void ArcObject::setPos(float x, float y)
 {
 	m_x = x; m_y = y;
+	updatePos();
 }
 
 void ArcObject::setOrigin(const sf::Vector2f &coords)
 {
 	setOrigin(coords.x, coords.y);
-	for(ArcObject* child : childs)
-		child->setOrigin(sf::Vector2f(m_originX, m_originY) + coords);
 }
 
 void ArcObject::setOrigin(float x, float y)
 {
-	m_originX = x; m_originY = y;
+	if (x > 1.f)
+		m_originX = 1.f;
+	else if (x < 0.f)
+		m_originX = 0.f;
+	else
+		m_originX = x;
+
+	if (x > 1.f)
+		m_originY = 1.f;
+	else if (x < 0.f)
+		m_originY = 0.f;
+	else
+		m_originY = y;
+
+	updateOrigin();
 }
 
 void ArcObject::setScale(const sf::Vector2f &scale)
 {
 	setScale(scale.x, scale.y);
-	for(ArcObject* child : childs)
-		child->setScale(sf::Vector2f(m_scaleX * scale.x, m_scaleY * scale.y));
 }
 
 void ArcObject::setScale(float x, float y)
 {
 	m_scaleX = x, m_scaleY = y;
+	updateScale();
 }
 
 void ArcObject::setSize(const sf::Vector2f &size)
@@ -207,6 +340,8 @@ void ArcObject::setSize(const sf::Vector2f &size)
 void ArcObject::setSize(float x, float y)
 {
 	m_width = x, m_height = y;
+	updateOrigin();
+	updateSize();
 }
 
 void ArcObject::setRotation(float angle)
@@ -214,6 +349,9 @@ void ArcObject::setRotation(float angle)
 	m_angle = angle;
 	for(ArcObject* child : childs)
 		child->setRotation(angle);
+#ifdef ARC_DEBUG
+	debugRect.setRotation(angle);
+#endif
 }
 
 float ArcObject::width() const

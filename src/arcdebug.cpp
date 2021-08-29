@@ -170,19 +170,19 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 	std::function<void(const std::string&, ImVec4*)> editColor = [] (const std::string& name, ImVec4* color) {
 		ImGui::TextUnformatted(name.c_str());
 
-		ImGui::SliderFloat("##Red", &color->x, 0.f, 1.f);
+		ImGui::SliderFloat(std::string("##RedOf" + name).c_str(), &color->x, 0.f, 1.f);
 		ImGui::SameLine();
 		ImGui::TextUnformatted("Red");
 
-		ImGui::SliderFloat("##Green", &color->y, 0.f, 1.f);
+		ImGui::SliderFloat(std::string("##GreenOf" + name).c_str(), &color->y, 0.f, 1.f);
 		ImGui::SameLine();
 		ImGui::TextUnformatted("Green");
 
-		ImGui::SliderFloat("##Blue", &color->z, 0.f, 1.f);
+		ImGui::SliderFloat(std::string("##BlueOf" + name).c_str(), &color->z, 0.f, 1.f);
 		ImGui::SameLine();
 		ImGui::TextUnformatted("Blue");
 
-		ImGui::SliderFloat("##Alpha", &color->w, 0.f, 1.f);
+		ImGui::SliderFloat(std::string("##AlphaOf" + name).c_str(), &color->w, 0.f, 1.f);
 		ImGui::SameLine();
 		ImGui::TextUnformatted("Alpha");
 
@@ -202,6 +202,22 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			if (ImGui::Checkbox("Enabled", &enabled)) {
 				obj->setEnabled(enabled);
 			}
+			if (ImGui::Checkbox("Draw rect", &obj->drawDebugRect));
+			if (obj->drawDebugRect) {
+				{//Color
+					ImVec4 color = ImVec4(obj->debugRectColor());
+					editColor("Debug color", &color);
+					obj->setDebugRectColor(sf::Color(color));
+				}
+				{//Debug border size
+					float lineSize = obj->debugRectLineSize();
+					ImGui::DragFloat("##DebugBorderSize", &lineSize);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Size");
+					obj->setDebugRectLineSize(lineSize);
+				}
+			}
+
 			if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
 				{//Position
 					float x = obj->x();
@@ -219,10 +235,10 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					float x = obj->originX();
 					float y = obj->originY();
 					ImGui::TextUnformatted("Origin");
-					ImGui::DragFloat("##OriginX", &x);
+					ImGui::DragFloat("##OriginX", &x, 0.05f, 0, 1.f);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("X");
-					ImGui::DragFloat("##OriginY", &y);
+					ImGui::DragFloat("##OriginY", &y, 0.05f, 0, 1.f);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Y");
 					obj->setOrigin(sf::Vector2f(x, y));
@@ -296,10 +312,17 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::TextUnformatted("Text");
 					label->setText(std::string(buf));
 				}
+				{//Autosize
+					bool autoSize = label->autoSize();
+					ImGui::Checkbox("##AutoSize", &autoSize);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("AutoSize");
+					label->setAutoSize(autoSize);
+				}
 				ImGui::TextUnformatted("Font");
 				{//Font size
 					int fontSize = label->fontSize();
-					ImGui::DragInt("##FontSize", &fontSize);
+					ImGui::DragInt("##FontSize", &fontSize, 1.f, 1);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Size");
 					label->setFontSize(fontSize);

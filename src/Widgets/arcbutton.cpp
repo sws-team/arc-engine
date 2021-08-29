@@ -19,30 +19,6 @@ void ArcButton::draw(sf::RenderTarget * const target)
 	target->draw(hoverRect);
 }
 
-void ArcButton::setPos(float x, float y)
-{
-	ArcSprite::setPos(x, y);
-	hoverRect.setPosition(x, y);
-}
-
-void ArcButton::setOrigin(float x, float y)
-{
-	ArcSprite::setOrigin(x, y);
-	hoverRect.setOrigin(x, y);
-}
-
-void ArcButton::setScale(float x, float y)
-{
-	ArcSprite::setScale(x, y);
-	hoverRect.setScale(x, y);
-}
-
-void ArcButton::setSize(float x, float y)
-{
-	ArcSprite::setSize(x, y);
-	hoverRect.setSize(sf::Vector2f(x, y));
-}
-
 void ArcButton::setCallback(const std::function<void ()> &func)
 {
 	m_callback = func;
@@ -96,6 +72,30 @@ bool ArcButton::eventFilter(sf::Event *event)
 //			m_callback();
 //	}
 	return ArcSprite::eventFilter(event);
+}
+
+void ArcButton::updatePos()
+{
+	hoverRect.setPosition(globalPos());
+	ArcSprite::updatePos();
+}
+
+void ArcButton::updateScale()
+{
+	hoverRect.setScale(globalScale());
+	ArcSprite::updateScale();
+}
+
+void ArcButton::updateOrigin()
+{
+	hoverRect.setOrigin(globalOrigin());
+	ArcSprite::updateOrigin();
+}
+
+void ArcButton::updateSize()
+{
+	hoverRect.setSize(size());
+	ArcSprite::updateSize();
 }
 
 void ArcButton::setClickable(bool enabled)

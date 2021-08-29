@@ -15,6 +15,7 @@ class ArcSkeletonAnimation : public ArcObject
 {
 public:
 	ArcSkeletonAnimation(const std::string& name);
+	~ArcSkeletonAnimation() override;
 
 	void draw(sf::RenderTarget *const target) override;
 
@@ -24,7 +25,8 @@ public:
 protected:
 	void changeAnimation(const std::string& animationName);
 
-	void setPos(float x, float y) override;
+	void updatePos() override;
+	void updateScale() override;
 //	void setOrigin(float x, float y) override;
 //	void setScale(float x, float y) override;
 //	void setSize(float x, float y) override;

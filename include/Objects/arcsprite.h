@@ -19,13 +19,13 @@ public:
 
 	void setRotation(float angle) override;
 protected:
-	void setPos(float x, float y) override;
-	void setOrigin(float x, float y) override;
-	void setScale(float x, float y) override;
-	void setSize(float x, float y) override;
+	void updatePos() override;
+	void updateScale() override;
+	void updateOrigin() override;
+	void updateSize() override;
 
 	sf::RectangleShape sprite;
-	TextureType m_textureID;
+	TextureType m_textureID = -1;
 };
 
 #endif // ARCSPRITE_H
