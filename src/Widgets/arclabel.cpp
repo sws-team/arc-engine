@@ -78,8 +78,8 @@ std::string ArcLabel::text() const
 
 void ArcLabel::updatePos()
 {
-	sf::Vector2f center = sf::Vector2f(size().x/2 - m_text.getLocalBounds().width/2,
-									   size().y/2 - m_text.getLocalBounds().height/2);
+	sf::Vector2f center = sf::Vector2f(size().x/2 * scaledGlobalScale().x - m_text.getGlobalBounds().width/2,
+									   size().y/2 * scaledGlobalScale().y - m_text.getGlobalBounds().height);
 	m_text.setPosition(scaledGlobalPos() + center);
 	ArcObject::updatePos();
 }

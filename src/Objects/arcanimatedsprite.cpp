@@ -76,6 +76,8 @@ void ArcAnimatedSprite::updateTextureRect()
 
 void ArcAnimatedSprite::setTexture(TextureType textureID)
 {
+	if (m_textureID == textureID)
+		return;
 	ArcSprite::setTexture(textureID);
 	nextFrame();
 }

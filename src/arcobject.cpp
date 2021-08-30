@@ -8,7 +8,6 @@ ArcObject::ArcObject(const std::string &name)
 {
 	scaleFactor = SCALE_FACTOR;
 #ifdef ARC_DEBUG
-	debugRect.setScale(scaleFactor);
 	debugRect.setFillColor(sf::Color::Transparent);
 	debugRect.setOutlineColor(sf::Color::White);
 	debugRect.setOutlineThickness(1.f);
@@ -79,7 +78,7 @@ void ArcObject::updatePos()
 void ArcObject::updateScale()
 {
 #ifdef ARC_DEBUG
-	debugRect.setScale(globalScale());
+	debugRect.setScale(scaledGlobalScale());
 #endif
 	for(ArcObject* child : childs)
 		child->updateScale();
@@ -187,8 +186,10 @@ sf::Vector2f ArcObject::scaledGlobalPos() const
 
 sf::Vector2f ArcObject::scaledGlobalScale() const
 {
-	return sf::Vector2f(m_parent->globalScale().x * scaleFactor.x,
-						m_parent->globalScale().y * scaleFactor.y);
+	sf::Vector2f gScale = globalScale();
+	gScale.x *= scaleFactor.x;
+	gScale.y *= scaleFactor.y;
+	return gScale;
 }
 
 bool ArcObject::isEnabled() const
@@ -218,8 +219,8 @@ sf::Vector2f ArcObject::globalScale() const
 
 sf::Vector2f ArcObject::globalOrigin() const
 {
-	return sf::Vector2f(m_originX * m_width * scaleFactor.x,
-						m_originY * m_height * scaleFactor.y);
+	return sf::Vector2f(m_originX * m_width,
+						m_originY * m_height);
 }
 
 void ArcObject::setEnabled(bool enabled)
