@@ -7,8 +7,8 @@ class ArcWindow : public ArcObject
 {
 public:
 	ArcWindow(const std::string& name = "Window");
+	~ArcWindow() override;
 
-	virtual void init();
 	void setBackground(TextureType type);
 
 	bool eventFilter(sf::Event *event) override;

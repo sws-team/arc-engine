@@ -15,6 +15,8 @@
 #include "imconfig-SFML.h"
 #endif
 
+ArcObject *ArcDebug::selectedObject = nullptr;
+
 ArcDebug::ArcDebug()
 {
 
@@ -22,6 +24,7 @@ ArcDebug::ArcDebug()
 
 void ArcDebug::setObject(ArcObject *object)
 {
+	selectedObject = nullptr;
 	this->object = object;
 }
 
@@ -127,7 +130,6 @@ void ArcDebug::drawObject(ArcObject *obj)
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0,0));
 	ImGui::BeginChild("Objects tree", ImVec2(w, 0), true);
 	ImGui::TextUnformatted("Objects tree");
-	static ArcObject *selectedObject = nullptr;
 	std::function<void(ArcObject *)> drawCurrentObject;
 	drawCurrentObject = [&drawCurrentObject](ArcObject *object)-> void {
 		ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -191,7 +193,7 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 		ImGui::ColorEdit4(std::string("##" + name).c_str(), &color->x, ImGuiColorEditFlags_NoInputs);
 	};
 
-	auto drawInheritObject = [editColor](ArcEngine::OBJECT_TYPE type, ArcObject *obj) {
+	auto drawInheritObject = [&editColor](ArcEngine::OBJECT_TYPE type, ArcObject *obj) {
 		switch (type)
 		{
 		case ArcEngine::OBJECT:

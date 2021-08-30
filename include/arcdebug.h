@@ -28,6 +28,7 @@ private:
 		Timer updateTimer;
 	} FPS;
 
+	static ArcObject *selectedObject;
 	void drawFrame();
 	static void drawObject(ArcObject* obj);
 	static void drawObjectProperties(ArcObject* obj);

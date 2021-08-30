@@ -6,12 +6,13 @@
 ArcWindow::ArcWindow(const std::string &name)
 	: ArcObject(name)
 {
+	setType(ArcEngine::OBJECT);
 	DEBUG_OBJECT(this);
 }
 
-void ArcWindow::init()
+ArcWindow::~ArcWindow()
 {
-
+	DEBUG_OBJECT(nullptr);
 }
 
 bool ArcWindow::eventFilter(sf::Event *event)
