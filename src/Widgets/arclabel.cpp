@@ -80,13 +80,13 @@ void ArcLabel::updatePos()
 {
 	sf::Vector2f center = sf::Vector2f(size().x/2 - m_text.getLocalBounds().width/2,
 									   size().y/2 - m_text.getLocalBounds().height/2);
-	m_text.setPosition(globalPos() + center);
+	m_text.setPosition(scaledGlobalPos() + center);
 	ArcObject::updatePos();
 }
 
 void ArcLabel::updateScale()
 {
-	m_text.setScale(globalScale());
+	m_text.setScale(scaledGlobalScale());
 	ArcObject::updateScale();
 }
 

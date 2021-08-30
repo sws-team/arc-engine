@@ -59,6 +59,9 @@ protected:
 	void setName(const std::string& name);
 	void setType(ArcEngine::OBJECT_TYPE type);
 
+	sf::Vector2f scaledGlobalPos() const;
+	sf::Vector2f scaledGlobalScale() const;
+
 	sf::Vector2f globalPos() const;
 	sf::Vector2f globalScale() const;
 	sf::Vector2f globalOrigin() const;

@@ -16,13 +16,13 @@ void ArcSprite::draw(sf::RenderTarget * const target)
 
 void ArcSprite::updatePos()
 {
-	sprite.setPosition(globalPos());
+	sprite.setPosition(scaledGlobalPos());
 	ArcObject::updatePos();
 }
 
 void ArcSprite::updateScale()
 {
-	sprite.setScale(globalScale().x, globalScale().y);
+	sprite.setScale(scaledGlobalScale());
 	ArcObject::updateScale();
 }
 

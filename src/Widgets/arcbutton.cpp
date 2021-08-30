@@ -76,13 +76,13 @@ bool ArcButton::eventFilter(sf::Event *event)
 
 void ArcButton::updatePos()
 {
-	hoverRect.setPosition(globalPos());
+	hoverRect.setPosition(scaledGlobalPos());
 	ArcSprite::updatePos();
 }
 
 void ArcButton::updateScale()
 {
-	hoverRect.setScale(globalScale());
+	hoverRect.setScale(scaledGlobalScale());
 	ArcSprite::updateScale();
 }
 

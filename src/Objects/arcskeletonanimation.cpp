@@ -49,7 +49,7 @@ void ArcSkeletonAnimation::changeAnimation(const std::string &animationName)
 
 void ArcSkeletonAnimation::updatePos()
 {
-	display->setPosition(globalPos());
+	display->setPosition(scaledGlobalPos());
 	ArcObject::updatePos();
 }
 

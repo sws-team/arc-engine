@@ -68,9 +68,9 @@ void ArcObject::setParent(ArcObject *parent)
 void ArcObject::updatePos()
 {
 #ifdef ARC_DEBUG
-	debugRect.setPosition(globalPos());
-	debugCenter.setPosition(globalPos());
-	debugOrigin.position = globalPos();
+	debugRect.setPosition(scaledGlobalPos());
+	debugCenter.setPosition(scaledGlobalPos());
+	debugOrigin.position = scaledGlobalPos();
 #endif
 	for(ArcObject* child : childs)
 		child->updatePos();
@@ -177,6 +177,20 @@ void ArcObject::setType(ArcEngine::OBJECT_TYPE type)
 	m_type = type;
 }
 
+sf::Vector2f ArcObject::scaledGlobalPos() const
+{
+	sf::Vector2f gPos = globalPos();
+	gPos.x *= scaleFactor.x;
+	gPos.y *= scaleFactor.y;
+	return gPos;
+}
+
+sf::Vector2f ArcObject::scaledGlobalScale() const
+{
+	return sf::Vector2f(m_parent->globalScale().x * scaleFactor.x,
+						m_parent->globalScale().y * scaleFactor.y);
+}
+
 bool ArcObject::isEnabled() const
 {
 	return m_enabled;
@@ -191,18 +205,15 @@ sf::Vector2f ArcObject::globalPos() const
 {
 	if (m_parent == nullptr)
 		return pos();
-	sf::Vector2f gPos = m_parent->globalPos() + pos();
-	gPos.x *= scaleFactor.x;
-	gPos.y *= scaleFactor.y;
-	return gPos;
+	return m_parent->globalPos() + pos();
 }
 
 sf::Vector2f ArcObject::globalScale() const
 {
 	if (m_parent == nullptr)
 		return scale();
-	return sf::Vector2f(m_parent->globalScale().x * m_scaleX * scaleFactor.x,
-						m_parent->globalScale().y * m_scaleY * scaleFactor.y);
+	return sf::Vector2f(m_parent->globalScale().x * m_scaleX,
+						m_parent->globalScale().y * m_scaleY);
 }
 
 sf::Vector2f ArcObject::globalOrigin() const
