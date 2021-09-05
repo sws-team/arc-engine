@@ -81,16 +81,6 @@ public:
 	{
 		LANGUAGE_ID,
 
-		SETTINGS,
-		SOUND,
-		MUSIC,
-		FULLSCREEN,
-		RESOLUTION,
-		LANGUAGE,
-		SHADERS,
-		ACCEPT,
-		CANCEL,
-
 		USER_TRANSLATION_ID,
 	};
 
@@ -151,6 +141,7 @@ public:
 		ABOUT,
 		CLOSING,
 		EXIT,
+		GAME,
 
 		USER_STATE,
 	};

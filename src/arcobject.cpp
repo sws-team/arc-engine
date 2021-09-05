@@ -36,6 +36,8 @@ void ArcObject::init()
 	setOrigin(m_originX, m_originY);
 	setScale(m_scaleX, m_scaleY);
 	setRotation(m_angle);
+	for(ArcObject* child : childs)
+		child->init();
 }
 
 void ArcObject::paint(sf::RenderTarget * const target)
