@@ -316,6 +316,11 @@ class ResourcesManager : public Manager
 public:
 	ResourcesManager();
 
+	static const std::string texturesFileName;
+	static const std::string soundsFileName;
+	static const std::string resourcesFileName;
+	static const std::string preloadFileName;
+
 	void update();
 
 	static void addTexture(TextureType type, const std::string& data);

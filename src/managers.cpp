@@ -690,6 +690,11 @@ void ShadersManager::addShader(const ShaderType type, const std::string &data)
 	m_shaders.insert(std::pair<ShaderType, std::string>(type, data));
 }
 
+const std::string ResourcesManager::texturesFileName = "textures.dat";
+const std::string ResourcesManager::soundsFileName = "sounds.dat";
+const std::string ResourcesManager::preloadFileName = "preload.dat";
+const std::string ResourcesManager::resourcesFileName = "resources.dat";
+
 ResourcesManager::ResourcesManager()
 {
 	skeletonAnimationFactory = new dragonBones::SFMLFactory();
