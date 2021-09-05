@@ -3,7 +3,7 @@
 
 #include "stdheader.h"
 #ifdef ARC_DEBUG
-#include "imgui_internal.h"
+#include "imgui.h"
 #endif
 namespace Utils {
 
@@ -17,9 +17,9 @@ std::vector<sf::Vector2f> calcCubicBezier(const sf::Vector2f &start,
 std::string to_string_with_precision(const float a_value, const int n = 6);
 
 #ifdef ARC_DEBUG
-static constexpr float COLOR_CONST = 255.f;
-inline sf::Color convertToColor(const ImVec4& color);
-inline ImVec4 convertFromColor(const sf::Color& color);
+constexpr float COLOR_CONST = 255.f;
+sf::Color convertToColor(const ImVec4& color);
+ImVec4 convertFromColor(const sf::Color& color);
 #endif
 }
 

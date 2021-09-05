@@ -32,7 +32,7 @@ std::string to_string_with_precision(const float a_value, const int n)
 	out << std::fixed << a_value;
 	return std::string(out.str());
 }
-
+#ifdef ARC_DEBUG
 sf::Color convertToColor(const ImVec4 &color)
 {
 	sf::Color result;
@@ -53,4 +53,5 @@ ImVec4 convertFromColor(const sf::Color &color)
 	return result;
 }
 
+#endif
 }
