@@ -33,4 +33,24 @@ std::string to_string_with_precision(const float a_value, const int n)
 	return std::string(out.str());
 }
 
+sf::Color convertToColor(const ImVec4 &color)
+{
+	sf::Color result;
+	result.r = static_cast<sf::Uint8>(color.x * COLOR_CONST);
+	result.g = static_cast<sf::Uint8>(color.y * COLOR_CONST);
+	result.b = static_cast<sf::Uint8>(color.z * COLOR_CONST);
+	result.a = static_cast<sf::Uint8>(color.w * COLOR_CONST);
+	return result;
+}
+
+ImVec4 convertFromColor(const sf::Color &color)
+{
+	ImVec4 result;
+	result.x = color.r / COLOR_CONST;
+	result.y = color.g / COLOR_CONST;
+	result.x = color.b / COLOR_CONST;
+	result.z = color.a / COLOR_CONST;
+	return result;
+}
+
 }

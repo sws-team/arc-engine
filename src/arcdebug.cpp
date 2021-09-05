@@ -2,6 +2,7 @@
 #include "engine.h"
 #include "managers.h"
 #include "mainwindow.h"
+#include "utils.h"
 #include "arcobject.h"
 #include "arcsprite.h"
 #include "arcbutton.h"
@@ -207,9 +208,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			if (ImGui::Checkbox("Draw rect", &obj->drawDebugRect));
 			if (obj->drawDebugRect) {
 				{//Color
-					ImVec4 color = ImVec4(obj->debugRectColor());
+					ImVec4 color = Utils::convertFromColor(obj->debugRectColor());
 					editColor("Debug color", &color);
-					obj->setDebugRectColor(sf::Color(color));
+					obj->setDebugRectColor(Utils::convertToColor(color));
 				}
 				{//Debug border size
 					float lineSize = obj->debugRectLineSize();
@@ -285,9 +286,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			if (ImGui::CollapsingHeader("Sprite", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ArcSprite *sprite = static_cast<ArcSprite*>(obj);
 				{//Color
-					ImVec4 color = ImVec4(sprite->color());
+					ImVec4 color = Utils::convertFromColor(sprite->color());
 					editColor("Color", &color);
-					sprite->setColor(sf::Color(color));
+					sprite->setColor(Utils::convertToColor(color));
 				}
 				{//Texture ID
 					TextureType id = sprite->textureID();
@@ -330,9 +331,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					label->setFontSize(fontSize);
 				}
 				{//Font color
-					ImVec4 color = ImVec4(label->color());
+					ImVec4 color = Utils::convertFromColor(label->color());
 					editColor("Font color", &color);
-					label->setColor(sf::Color(color));
+					label->setColor(Utils::convertToColor(color));
 				}
 				{//Text border size
 					float textBorderSize = label->textBorderSize();
@@ -342,9 +343,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					label->setTextBorderSize(textBorderSize);
 				}
 				{//Text border color
-					ImVec4 color = ImVec4(label->textBorderColor());
+					ImVec4 color = Utils::convertFromColor(label->textBorderColor());
 					editColor("Border color", &color);
-					label->setTextBorderColor(sf::Color(color));
+					label->setTextBorderColor(Utils::convertToColor(color));
 				}
 			}
 		}
@@ -416,9 +417,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			if (ImGui::CollapsingHeader("Skeleton", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ArcSkeletonAnimation *skeleton = static_cast<ArcSkeletonAnimation*>(obj);
 				{//Color
-					ImVec4 color = ImVec4(skeleton->color());
+					ImVec4 color = Utils::convertFromColor(skeleton->color());
 					editColor("Color", &color);
-					skeleton->setColor(sf::Color(color));
+					skeleton->setColor(Utils::convertToColor(color));
 				}
 			}
 		}
