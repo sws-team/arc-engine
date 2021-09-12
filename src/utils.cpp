@@ -46,10 +46,10 @@ sf::Color convertToColor(const ImVec4 &color)
 ImVec4 convertFromColor(const sf::Color &color)
 {
 	ImVec4 result;
-	result.x = color.r / COLOR_CONST;
-	result.y = color.g / COLOR_CONST;
-	result.x = color.b / COLOR_CONST;
-	result.z = color.a / COLOR_CONST;
+	result.x = static_cast<float>(color.r) / COLOR_CONST;
+	result.y = static_cast<float>(color.g) / COLOR_CONST;
+	result.z = static_cast<float>(color.b) / COLOR_CONST;
+	result.w = static_cast<float>(color.a) / COLOR_CONST;
 	return result;
 }
 

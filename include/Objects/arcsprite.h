@@ -13,9 +13,13 @@ public:
 
 	virtual void setTexture(TextureType textureID);
 	void setColor(const sf::Color& color);
+	void setBorderColor(const sf::Color& color);
+	void setBorderSize(const float size);
 
 	TextureType textureID() const;
 	sf::Color color() const;
+	sf::Color borderColor() const;
+	float borderSize() const;
 
 	void setRotation(float angle) override;
 protected:

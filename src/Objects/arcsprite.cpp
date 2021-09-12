@@ -51,6 +51,16 @@ void ArcSprite::setColor(const sf::Color &color)
 	sprite.setFillColor(color);
 }
 
+void ArcSprite::setBorderColor(const sf::Color &color)
+{
+	sprite.setOutlineColor(color);
+}
+
+void ArcSprite::setBorderSize(const float size)
+{
+	sprite.setOutlineThickness(size);
+}
+
 TextureType ArcSprite::textureID() const
 {
 	return m_textureID;
@@ -59,6 +69,16 @@ TextureType ArcSprite::textureID() const
 sf::Color ArcSprite::color() const
 {
 	return sprite.getFillColor();
+}
+
+sf::Color ArcSprite::borderColor() const
+{
+	return sprite.getOutlineColor();
+}
+
+float ArcSprite::borderSize() const
+{
+	return sprite.getOutlineThickness();
 }
 
 void ArcSprite::setRotation(float angle)

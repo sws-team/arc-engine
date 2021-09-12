@@ -298,6 +298,18 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::TextUnformatted("ID");
 					sprite->setTexture(id);
 				}
+				{//Border color
+					ImVec4 color = Utils::convertFromColor(sprite->borderColor());
+					editColor("BorderColor", &color);
+					sprite->setBorderColor(Utils::convertToColor(color));
+				}
+				{//Border size
+					float borderSize = sprite->borderSize();
+					ImGui::DragFloat("##BorderSize", &borderSize, 1.f, 1);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Border Size");
+					sprite->setBorderSize(borderSize);
+				}
 			}
 		}
 			break;
