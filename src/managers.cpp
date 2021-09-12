@@ -34,7 +34,7 @@ SettingsManager::SettingsManager()
 	,soundLevel(100)
 	,musicLevel(100)
 	,fullscreen(
-#ifdef DEV_BUILD
+#ifdef ARC_DEBUG
 	false
 #else
 	true
@@ -52,7 +52,7 @@ void SettingsManager::reset()
 	resolution.x = videoMode.width;
 	resolution.y = videoMode.height;
 #else
-#ifdef DEV_BUILD
+#ifdef ARC_DEBUG
 	resolution = sf::Vector2i(1366, 768);
 #else
 	const sf::VideoMode videoMode = sf::VideoMode::getDesktopMode();
