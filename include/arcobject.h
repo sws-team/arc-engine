@@ -21,6 +21,9 @@ public:
 	void addChild(ArcObject* object);
 	void addAction(ArcAction* action);
 
+	void removeChild(ArcObject* object);
+	void removeAction(ArcAction *action);
+
 	//getters
 	bool isEnabled() const;
 	sf::FloatRect rect() const;
@@ -41,6 +44,8 @@ public:
 	float rotation() const;
 
 	//setters
+	void setX(float x);
+	void setY(float y);
 	void setPos(const sf::Vector2f& coords);
 	void setPos(float x, float y);
 	void setOrigin(const sf::Vector2f& coords);
@@ -77,7 +82,6 @@ protected:
 private:
 	//base
 	friend class ArcDebug;
-	friend class ArcAction;
 	bool m_enabled = true;
 	std::string m_name;
 	ArcEngine::OBJECT_TYPE m_type = ArcEngine::UNDEF;

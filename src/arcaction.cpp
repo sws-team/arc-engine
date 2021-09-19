@@ -38,15 +38,19 @@ void ArcAction::process(float progress)
 
 void ArcAction::finished()
 {
-	if (auto it = std::find(m_object->actions.begin(), m_object->actions.end(), this); it != m_object->actions.end())
-		m_object->actions.erase(it);
 	if (completedFunc != nullptr)
 		completedFunc();
+	completed = true;
 }
 
 void ArcAction::setCompletedFunc(const std::function<void ()> &func)
 {
 	completedFunc = func;
+}
+
+bool ArcAction::isCompleted() const
+{
+	return completed;
 }
 
 GroupAction::GroupAction(float time, ArcObject *object)
@@ -149,4 +153,15 @@ FadeOutAction::FadeOutAction(float time, ArcObject *object)
 sf::Uint8 FadeOutAction::alpha(float progress) const
 {
 	return MAX_ALPHA - static_cast<float>(MAX_ALPHA) * progress;
+}
+
+RepeatAction::RepeatAction(float time, ArcObject *object)
+	: ArcAction(time, object)
+{
+
+}
+
+void RepeatAction::finished()
+{
+	timer.reset();
 }

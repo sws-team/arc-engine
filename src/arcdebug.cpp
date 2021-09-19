@@ -9,6 +9,7 @@
 #include "arclabel.h"
 #include "arcanimatedsprite.h"
 #include "arcskeletonanimation.h"
+#include "arclayout.h"
 
 #ifdef ARC_DEBUG
 #include "imgui.h"
@@ -436,6 +437,44 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			}
 		}
 			break;
+		case ArcEngine::LAYOUT:
+		{
+			if (ImGui::CollapsingHeader("Layout", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ArcLayout *layout = static_cast<ArcLayout*>(obj);
+				{//Offset
+					float x = layout->offsetX();
+					float y = layout->offsetY();
+					ImGui::TextUnformatted("Offset");
+					ImGui::DragFloat("##OffsetX", &x);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("X");
+					ImGui::DragFloat("##OffsetY", &y);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Y");
+					layout->setOffset(x, y);
+				}
+				{//Grid
+					float x = layout->rows();
+					float y = layout->columns();
+					ImGui::TextUnformatted("Grid");
+					ImGui::DragFloat("##Rows", &x);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Y");
+					ImGui::DragFloat("##Columns", &y);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("X");
+					layout->setGrid(x, y);
+				}
+				{//AutoSize
+					bool autoSize = layout->autoSize();
+					ImGui::Checkbox("##AutoSize", &autoSize);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("AutoSize");
+					layout->setAutoSize(autoSize);
+				}
+			}
+		}
+			break;
 		default:
 			break;
 		}
@@ -461,6 +500,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 	case ArcEngine::SKELETON_ANIMATION:
 		drawInheritObject(ArcEngine::SKELETON_ANIMATION, obj);
 		break;
+	case ArcEngine::LAYOUT:
+		drawInheritObject(ArcEngine::LAYOUT, obj);
+		break;
 	default:
 		break;
 	}
@@ -471,9 +513,6 @@ std::string ArcDebug::typeToName(ArcEngine::OBJECT_TYPE type)
 {
 	switch (type)
 	{
-	case ArcEngine::UNDEF:
-		return "Undef";
-		break;
 	case ArcEngine::OBJECT:
 		return "Object";
 		break;
@@ -486,8 +525,17 @@ std::string ArcDebug::typeToName(ArcEngine::OBJECT_TYPE type)
 	case ArcEngine::BUTTON:
 		return "Button";
 		break;
+	case ArcEngine::ANIMATED_SPRITE:
+		return "Animated sprite";
+		break;
+	case ArcEngine::SKELETON_ANIMATION:
+		return "Skeleton animation";
+		break;
+	case ArcEngine::LAYOUT:
+		return "Layout";
+		break;
 	default:
 		break;
 	}
-	return std::string();
+	return "Undef";
 }

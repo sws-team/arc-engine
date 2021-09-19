@@ -18,13 +18,16 @@ public:
 
 	void setCompletedFunc(const std::function<void()>& func);
 
+	bool isCompleted() const;
+
 protected:
 	ArcObject *m_object;
 	float m_time = 0;
 	std::function<void()> completedFunc = nullptr;
-private:
 	Timer timer;
+private:
 	bool started = false;
+	bool completed = false;
 };
 
 class GroupAction : public ArcAction
@@ -86,5 +89,11 @@ public:
 	sf::Uint8 alpha(float progress) const;
 };
 
+class RepeatAction : public ArcAction
+{
+	RepeatAction(float time, ArcObject *object = nullptr);
+
+	void finished() override;
+};
 
 #endif // ARCACTION_H

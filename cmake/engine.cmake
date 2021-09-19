@@ -43,6 +43,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Objects/arcsprite.cpp
     ${ARC_ENGINE_DIR}/src/Objects/arcanimatedsprite.cpp
     ${ARC_ENGINE_DIR}/src/Objects/arcskeletonanimation.cpp
+    ${ARC_ENGINE_DIR}/src/Objects/arclayout.cpp
 
     ${ARC_ENGINE_DIR}/src/arcobject.cpp
     ${ARC_ENGINE_DIR}/src/arcdebug.cpp

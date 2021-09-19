@@ -28,6 +28,7 @@ namespace ArcEngine
 		BUTTON,
 		ANIMATED_SPRITE,
 		SKELETON_ANIMATION,
+		LAYOUT,
 	};
 
 	static constexpr float FRAME_TIME = 1.0f / 60.0f;

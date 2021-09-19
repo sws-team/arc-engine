@@ -5,6 +5,7 @@
 
 ArcObject::ArcObject(const std::string &name)
 	: m_name(name)
+	,m_type(ArcEngine::OBJECT)
 {
 	scaleFactor = SCALE_FACTOR;
 #ifdef ARC_DEBUG
@@ -143,8 +144,17 @@ void ArcObject::update()
 	for(ArcObject* child : childs)
 		child->update();
 
-	for(ArcAction* action : actions)
-		action->update();
+	for (auto it = actions.begin(); it != actions.end();) {
+		ArcAction* action = *it;
+		if (action->isCompleted()) {
+			delete action;
+			it = actions.erase(it);
+		}
+		else {
+			action->update();
+			++it;
+		}
+	}
 }
 
 void ArcObject::addChild(ArcObject *object)
@@ -157,6 +167,20 @@ void ArcObject::addChild(ArcObject *object)
 void ArcObject::addAction(ArcAction *action)
 {
 	actions.push_back(action);
+}
+
+void ArcObject::removeChild(ArcObject *object)
+{
+	if (auto it = std::find(childs.begin(), childs.end(), object); it != childs.end()) {
+		childs.erase(it);
+	}
+}
+
+void ArcObject::removeAction(ArcAction *action)
+{
+	if (auto it = std::find(actions.begin(), actions.end(), action); it != actions.end()) {
+		actions.erase(it);
+	}
 }
 
 bool ArcObject::eventFilter(sf::Event *event)
@@ -298,6 +322,16 @@ sf::Vector2f ArcObject::origin() const
 float ArcObject::rotation() const
 {
 	return m_angle;
+}
+
+void ArcObject::setX(float x)
+{
+	setPos(x, m_y);
+}
+
+void ArcObject::setY(float y)
+{
+	setPos(m_x, y);
 }
 
 void ArcObject::setPos(const sf::Vector2f &coords)
