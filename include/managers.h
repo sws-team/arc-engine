@@ -22,7 +22,8 @@ public:
 #define DEBUG_OBJECT(x) Engine::Instance().getOptions()->debugObject(x);
 #define PLAY_SOUND(x) Engine::Instance().soundManager()->playOnce(x);
 #define STOP_SOUND(x) Engine::Instance().soundManager()->stop(x);
-#define SCREEN_SIZE Engine::Instance().settingsManager()->getResolutionF()
+
+#define RESOLUTION SettingsManager::defaultResolution
 
 class SettingsManager : public Manager
 {
@@ -49,7 +50,7 @@ public:
 
 	sf::Vector2f getScaleFactor() const;
 
-	static const sf::Vector2i defaultResolution;
+	static const sf::Vector2f defaultResolution;
 
 	std::string saveGameSettings() const;
 	void loadGameSettings(const std::string& data);

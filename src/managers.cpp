@@ -27,7 +27,7 @@ void Manager::reset()
 
 //==================SETTINS MANAGER===================
 
-const sf::Vector2i SettingsManager::defaultResolution = sf::Vector2i(1920, 1080);
+const sf::Vector2f SettingsManager::defaultResolution = sf::Vector2f(1920.f, 1080.f);
 
 SettingsManager::SettingsManager()
 	: Manager()
