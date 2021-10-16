@@ -6,6 +6,12 @@ ArcPolygon::ArcPolygon(const std::string &name)
 	setType(ArcEngine::POLYGON);
 }
 
+void ArcPolygon::draw(sf::RenderTarget * const target)
+{
+	target->draw(polygon);
+	ArcObject::draw(target);
+}
+
 ArcPolygon::SHAPE ArcPolygon::shapeType() const
 {
 	return m_shapeType;

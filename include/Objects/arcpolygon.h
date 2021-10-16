@@ -9,6 +9,8 @@ class ArcPolygon : public ArcObject
 public:
 	ArcPolygon(const std::string& name);
 
+	void draw(sf::RenderTarget *const target) override;
+
 	enum SHAPE
 	{
 		SQUARE,

@@ -6,62 +6,68 @@ ArcRect::ArcRect(const std::string &name)
 	setType(ArcEngine::RECT);
 }
 
+void ArcRect::draw(sf::RenderTarget * const target)
+{
+	target->draw(rect);
+	ArcObject::draw(target);
+}
+
 void ArcRect::setRotation(float angle)
 {
 	ArcObject::setRotation(angle);
-	polygon.setRotation(angle);
+	rect.setRotation(angle);
 }
 
 void ArcRect::updatePos()
 {
-	polygon.setPosition(scaledGlobalPos());
+	rect.setPosition(scaledGlobalPos());
 	ArcObject::updatePos();
 }
 
 void ArcRect::updateScale()
 {
-	polygon.setScale(scaledGlobalScale());
+	rect.setScale(scaledGlobalScale());
 	ArcObject::updateScale();
 }
 
 void ArcRect::updateOrigin()
 {
-	polygon.setOrigin(globalOrigin());
+	rect.setOrigin(globalOrigin());
 	ArcObject::updateOrigin();
 }
 
 void ArcRect::updateSize()
 {
-	polygon.setSize(size());
+	rect.setSize(size());
 	ArcObject::updateSize();
 }
 
 void ArcRect::setColor(const sf::Color &color)
 {
-	polygon.setFillColor(color);
+	rect.setFillColor(color);
 }
 
 void ArcRect::setBorderColor(const sf::Color &color)
 {
-	polygon.setOutlineColor(color);
+	rect.setOutlineColor(color);
 }
 
 void ArcRect::setBorderSize(const float size)
 {
-	polygon.setOutlineThickness(size);
+	rect.setOutlineThickness(size);
 }
 
 sf::Color ArcRect::color() const
 {
-	return polygon.getFillColor();
+	return rect.getFillColor();
 }
 
 sf::Color ArcRect::borderColor() const
 {
-	return polygon.getOutlineColor();
+	return rect.getOutlineColor();
 }
 
 float ArcRect::borderSize() const
 {
-	return polygon.getOutlineThickness();
+	return rect.getOutlineThickness();
 }

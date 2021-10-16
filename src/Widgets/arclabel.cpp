@@ -8,18 +8,27 @@ ArcLabel::ArcLabel(const std::string& name)
 	setType(ArcEngine::LABEL);
 	m_text.setScale(SCALE_FACTOR);
 	m_text.setFont(Engine::Instance().fontManager()->font());
+	m_text.setRotation(30);
 }
 
 void ArcLabel::draw(sf::RenderTarget * const target)
 {
 	target->draw(m_text);
 	ArcObject::draw(target);
+
+	sf::RectangleShape rect;
+	rect.setOutlineThickness(2);
+	rect.setOutlineColor(sf::Color::Cyan);
+	rect.setFillColor(sf::Color::Transparent);
+	rect.setPosition(m_text.getGlobalBounds().left, m_text.getGlobalBounds().top);
+	rect.setSize(sf::Vector2f(m_text.getGlobalBounds().width, m_text.getGlobalBounds().height));
+	target->draw(rect);
 }
 
 void ArcLabel::setRotation(float angle)
 {
-	ArcObject::setRotation(angle);
 	m_text.setRotation(angle);
+	ArcObject::setRotation(angle);
 }
 
 void ArcLabel::setColor(const sf::Color &color)

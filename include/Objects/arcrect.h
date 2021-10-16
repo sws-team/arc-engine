@@ -9,6 +9,8 @@ class ArcRect : public ArcObject
 public:
 	ArcRect(const std::string& name);
 
+	void draw(sf::RenderTarget *const target) override;
+
 	void setColor(const sf::Color& color);
 	void setBorderColor(const sf::Color& color);
 	void setBorderSize(const float size);
@@ -24,7 +26,7 @@ protected:
 	void updateOrigin() override;
 	void updateSize() override;
 private:
-	sf::RectangleShape polygon;
+	sf::RectangleShape rect;
 };
 
 #endif // ARC_RECT_H
