@@ -10,6 +10,8 @@
 #include "arcanimatedsprite.h"
 #include "arcskeletonanimation.h"
 #include "arclayout.h"
+#include "arcpolygon.h"
+#include "arcrect.h"
 
 #ifdef ARC_DEBUG
 #include "imgui.h"
@@ -200,7 +202,7 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 		{
 		case ArcEngine::OBJECT:
 		{
-			ImGui::TextColored(ImVec4(0.3f, 0.3f, 0.8f, 1.f), "%s", typeToName(obj->type()).c_str());
+			ImGui::TextColored(Utils::convertFromColor(typeToColor(obj->type())), "%s", typeToName(obj->type()).c_str());
 			ImGui::TextUnformatted("Properties");
 			bool enabled = obj->isEnabled();
 			if (ImGui::Checkbox("Enabled", &enabled)) {
@@ -475,6 +477,54 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			}
 		}
 			break;
+		case ArcEngine::POLYGON:
+		{
+			if (ImGui::CollapsingHeader("Polygon", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ArcPolygon *polygon = static_cast<ArcPolygon*>(obj);
+				{//Color
+					ImVec4 color = Utils::convertFromColor(polygon->color());
+					editColor("Color", &color);
+					polygon->setColor(Utils::convertToColor(color));
+				}
+				{//Border color
+					ImVec4 color = Utils::convertFromColor(polygon->borderColor());
+					editColor("BorderColor", &color);
+					polygon->setBorderColor(Utils::convertToColor(color));
+				}
+				{//Border size
+					float borderSize = polygon->borderSize();
+					ImGui::DragFloat("##BorderSize", &borderSize, 1.f, 1);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Border Size");
+					polygon->setBorderSize(borderSize);
+				}
+			}
+		}
+			break;
+		case ArcEngine::RECT:
+		{
+			if (ImGui::CollapsingHeader("Rectangle", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ArcRect *rect = static_cast<ArcRect*>(obj);
+				{//Color
+					ImVec4 color = Utils::convertFromColor(rect->color());
+					editColor("Color", &color);
+					rect->setColor(Utils::convertToColor(color));
+				}
+				{//Border color
+					ImVec4 color = Utils::convertFromColor(rect->borderColor());
+					editColor("BorderColor", &color);
+					rect->setBorderColor(Utils::convertToColor(color));
+				}
+				{//Border size
+					float borderSize = rect->borderSize();
+					ImGui::DragFloat("##BorderSize", &borderSize, 1.f, 1);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Border Size");
+					rect->setBorderSize(borderSize);
+				}
+			}
+		}
+			break;
 		default:
 			break;
 		}
@@ -534,8 +584,33 @@ std::string ArcDebug::typeToName(ArcEngine::OBJECT_TYPE type)
 	case ArcEngine::LAYOUT:
 		return "Layout";
 		break;
+	case ArcEngine::POLYGON:
+		return "Polygon";
+		break;
+	case ArcEngine::RECT:
+		return "Rectangle";
+		break;
 	default:
 		break;
 	}
 	return "Undef";
+}
+
+sf::Color ArcDebug::typeToColor(ArcEngine::OBJECT_TYPE type)
+{
+	switch (type)
+	{
+	case ArcEngine::OBJECT:
+		return sf::Color(0, 160, 176, 255);
+		break;
+	case ArcEngine::SPRITE:
+		return sf::Color(0, 77, 84, 255);
+		break;
+	case ArcEngine::LAYOUT:
+		return sf::Color(113, 157, 189, 255);
+		break;
+	default:
+		break;
+	}
+	return sf::Color(186,101,30, 255);
 }

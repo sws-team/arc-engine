@@ -15,6 +15,8 @@ public:
 	void setGrid(unsigned rows, unsigned columns);
 	void setAutoSize(bool autoSize);
 
+	void setOffsetX(float x);
+	void setOffsetY(float y);
 	void setOffset(float x, float y);
 	void setOffset(const sf::Vector2f& offset);
 

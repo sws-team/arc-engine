@@ -17,6 +17,8 @@ public:
 	void process();
 	bool event(sf::Event *event);
 
+	ArcObject *findChild(const std::string& name, bool recursively = true);
+
 	void setParent(ArcObject* parent);
 	void addChild(ArcObject* object);
 	void addAction(ArcAction* action);
@@ -79,6 +81,9 @@ protected:
 	std::vector<ArcAction*> actions;
 	sf::Vector2f scaleFactor;
 	ArcObject *m_parent = nullptr;
+
+	void drawChilds(sf::RenderTarget * const target);
+
 private:
 	//base
 	friend class ArcDebug;

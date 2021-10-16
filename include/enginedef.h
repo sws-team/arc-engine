@@ -29,6 +29,8 @@ namespace ArcEngine
 		ANIMATED_SPRITE,
 		SKELETON_ANIMATION,
 		LAYOUT,
+		POLYGON,
+		RECT,
 	};
 
 	static constexpr float FRAME_TIME = 1.0f / 60.0f;

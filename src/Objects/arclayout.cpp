@@ -48,6 +48,16 @@ void ArcLayout::setAutoSize(bool autoSize)
 	refreshChilds();
 }
 
+void ArcLayout::setOffsetX(float x)
+{
+	setOffset(x, m_offset.y);
+}
+
+void ArcLayout::setOffsetY(float y)
+{
+	setOffset(m_offset.x, y);
+}
+
 void ArcLayout::setOffset(float x, float y)
 {
 	setOffset(sf::Vector2f(x, y));
@@ -95,7 +105,7 @@ unsigned ArcLayout::columns() const
 
 void ArcLayout::refreshChilds()
 {
-	sf::Vector2f pos = m_offset;
+	sf::Vector2f pos = sf::Vector2f(0, 0);
 	if (m_autoSize) {
 		bool end = false;
 		unsigned n = 0;

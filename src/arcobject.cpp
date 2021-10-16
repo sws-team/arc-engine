@@ -62,6 +62,19 @@ bool ArcObject::event(sf::Event *event)
 	return eventFilter(event);
 }
 
+ArcObject *ArcObject::findChild(const std::string &name, bool recursively)
+{
+	for(ArcObject* object : childs) {
+		if (object->name() == name)
+			return object;
+		if (recursively) {
+			if (ArcObject* childObj = object->findChild(name, recursively); childObj != nullptr)
+				return childObj;
+		}
+	}
+	return nullptr;
+}
+
 void ArcObject::setParent(ArcObject *parent)
 {
 	m_parent = parent;
@@ -101,6 +114,12 @@ void ArcObject::updateSize()
 #endif
 }
 
+void ArcObject::drawChilds(sf::RenderTarget * const target)
+{
+	for(ArcObject* child : childs)
+		child->paint(target);
+}
+
 #ifdef ARC_DEBUG
 void ArcObject::setDebugRectColor(const sf::Color &color)
 {
@@ -135,8 +154,7 @@ void ArcObject::draw(sf::RenderTarget * const target)
 		target->draw(&debugOrigin, 1, sf::Points);
 	}
 #endif
-	for(ArcObject* child : childs)
-		child->paint(target);
+	drawChilds(target);
 }
 
 void ArcObject::update()
