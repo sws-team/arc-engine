@@ -6,9 +6,7 @@ ArcLabel::ArcLabel(const std::string& name)
 	: ArcObject(name)
 {
 	setType(ArcEngine::LABEL);
-	m_text.setScale(SCALE_FACTOR);
 	m_text.setFont(Engine::Instance().fontManager()->font());
-	m_text.setRotation(30);
 }
 
 void ArcLabel::draw(sf::RenderTarget * const target)
@@ -16,19 +14,21 @@ void ArcLabel::draw(sf::RenderTarget * const target)
 	target->draw(m_text);
 	ArcObject::draw(target);
 
+#if 0
 	sf::RectangleShape rect;
-	rect.setOutlineThickness(2);
+	rect.setOutlineThickness(1);
 	rect.setOutlineColor(sf::Color::Cyan);
 	rect.setFillColor(sf::Color::Transparent);
 	rect.setPosition(m_text.getGlobalBounds().left, m_text.getGlobalBounds().top);
 	rect.setSize(sf::Vector2f(m_text.getGlobalBounds().width, m_text.getGlobalBounds().height));
 	target->draw(rect);
+#endif
 }
 
 void ArcLabel::setRotation(float angle)
 {
-	m_text.setRotation(angle);
 	ArcObject::setRotation(angle);
+	m_text.setRotation(angle);
 }
 
 void ArcLabel::setColor(const sf::Color &color)
@@ -87,9 +87,7 @@ std::string ArcLabel::text() const
 
 void ArcLabel::updatePos()
 {
-	sf::Vector2f center = sf::Vector2f(size().x/2 * scaledGlobalScale().x - m_text.getGlobalBounds().width/2,
-									   size().y/2 * scaledGlobalScale().y - m_text.getGlobalBounds().height);
-	m_text.setPosition(scaledGlobalPos() + center);
+	m_text.setPosition(scaledGlobalPos());
 	ArcObject::updatePos();
 }
 
@@ -101,7 +99,9 @@ void ArcLabel::updateScale()
 
 void ArcLabel::updateOrigin()
 {
-	m_text.setOrigin(globalOrigin());
+	sf::Vector2f center = sf::Vector2f(size().x/2 * scaledGlobalScale().x - m_text.getGlobalBounds().width/2,
+									   size().y/2 * scaledGlobalScale().y - m_text.getGlobalBounds().height);
+	m_text.setOrigin(globalOrigin() - center);
 	ArcObject::updateOrigin();
 }
 

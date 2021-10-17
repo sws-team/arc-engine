@@ -276,7 +276,7 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 				{//Angle
 					float angle = obj->rotation();
 					ImGui::TextUnformatted("Rotation");
-					ImGui::DragFloat("##Angle", &angle);
+					ImGui::DragFloat("##Angle", &angle, 1.f, 0.f, 360.f);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Angle");
 					obj->setRotation(angle);
