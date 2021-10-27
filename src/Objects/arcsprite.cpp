@@ -10,7 +10,7 @@ ArcSprite::ArcSprite(const std::string &name)
 
 void ArcSprite::draw(sf::RenderTarget * const target)
 {
-	target->draw(sprite);
+	target->draw(sprite, m_transform);
 	ArcObject::draw(target);
 }
 
@@ -81,8 +81,3 @@ float ArcSprite::borderSize() const
 	return sprite.getOutlineThickness();
 }
 
-void ArcSprite::setRotation(float angle)
-{
-	ArcObject::setRotation(angle);
-	sprite.setRotation(angle);
-}

@@ -20,6 +20,7 @@ ArcObject::ArcObject(const std::string &name)
 	debugCenter.setOrigin(debugCenter.getRadius(), debugCenter.getRadius());
 
 	debugOrigin.color = sf::Color::White;
+	debugOriginPos.color = sf::Color::White;
 #endif
 }
 
@@ -75,6 +76,11 @@ ArcObject *ArcObject::findChild(const std::string &name, bool recursively)
 	return nullptr;
 }
 
+ArcObject *ArcObject::parent()
+{
+	return m_parent;
+}
+
 void ArcObject::setParent(ArcObject *parent)
 {
 	m_parent = parent;
@@ -86,6 +92,7 @@ void ArcObject::updatePos()
 	debugRect.setPosition(scaledGlobalPos());
 	debugCenter.setPosition(scaledGlobalPos());
 	debugOrigin.position = scaledGlobalPos();
+	debugOriginPos.position = scaledGlobalPos();
 #endif
 	for(ArcObject* child : childs)
 		child->updatePos();
@@ -120,12 +127,26 @@ void ArcObject::drawChilds(sf::RenderTarget * const target)
 		child->paint(target);
 }
 
+void ArcObject::updateTransform()
+{
+	m_transform = sf::Transform();
+	std::function<void(ArcObject* object, sf::Transform *transform)> parentTransform = nullptr;
+	parentTransform = [&parentTransform](ArcObject* object, sf::Transform *transform) {
+		ArcObject* parent = object->parent();
+		if (parent != nullptr)
+			parentTransform(parent, transform);
+		transform->rotate(object->rotation(), object->scaledGlobalPos());
+	};
+	parentTransform(this, &m_transform);
+}
+
 #ifdef ARC_DEBUG
 void ArcObject::setDebugRectColor(const sf::Color &color)
 {
 	debugRect.setOutlineColor(color);
 	debugCenter.setOutlineColor(color);
 	debugOrigin.color = color;
+	debugOriginPos.color = color;
 }
 
 sf::Color ArcObject::debugRectColor() const
@@ -149,9 +170,12 @@ void ArcObject::draw(sf::RenderTarget * const target)
 {
 #ifdef ARC_DEBUG
 	if (drawDebugRect) {
-		target->draw(debugRect);
-		target->draw(debugCenter);
-		target->draw(&debugOrigin, 1, sf::Points);
+		target->draw(debugRect, m_transform);
+		target->draw(debugCenter, m_transform);
+		target->draw(&debugOrigin, 1, sf::Points, m_transform);
+		target->draw(&debugOriginPos, 1, sf::Points, m_transform);
+
+		target->draw(debugRect, m_transform);
 	}
 #endif
 	drawChilds(target);
@@ -270,6 +294,13 @@ sf::Vector2f ArcObject::globalOrigin() const
 void ArcObject::setEnabled(bool enabled)
 {
 	m_enabled = enabled;
+}
+
+void ArcObject::setCentered()
+{
+	constexpr float center = 0.5f;
+	setOrigin(center, center);
+	setPos(pos() + sf::Vector2f(m_width * center, m_height * center));
 }
 
 ArcEngine::OBJECT_TYPE ArcObject::type() const
@@ -412,12 +443,16 @@ void ArcObject::setSize(float x, float y)
 
 void ArcObject::setRotation(float angle)
 {
+	if (m_angle == angle)
+		return;
 	m_angle = angle;
-	for(ArcObject* child : childs)
-		child->setRotation(angle);
-#ifdef ARC_DEBUG
-	debugRect.setRotation(angle);
-#endif
+	std::function<void(ArcObject *obj)> updateFunc = nullptr;
+	updateFunc = [&updateFunc](ArcObject *obj) {
+		obj->updateTransform();
+		for(ArcObject *child : obj->childs)
+			updateFunc(child);
+	};
+	updateFunc(this);
 }
 
 float ArcObject::width() const

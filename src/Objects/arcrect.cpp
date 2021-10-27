@@ -8,14 +8,8 @@ ArcRect::ArcRect(const std::string &name)
 
 void ArcRect::draw(sf::RenderTarget * const target)
 {
-	target->draw(rect);
+	target->draw(rect, m_transform);
 	ArcObject::draw(target);
-}
-
-void ArcRect::setRotation(float angle)
-{
-	ArcObject::setRotation(angle);
-	rect.setRotation(angle);
 }
 
 void ArcRect::updatePos()

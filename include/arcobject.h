@@ -18,6 +18,7 @@ public:
 	bool event(sf::Event *event);
 
 	ArcObject *findChild(const std::string& name, bool recursively = true);
+	ArcObject *parent();
 
 	void setParent(ArcObject* parent);
 	void addChild(ArcObject* object);
@@ -56,8 +57,10 @@ public:
 	void setScale(float x, float y);
 	void setSize(const sf::Vector2f& size);
 	void setSize(float x, float y);
-	virtual void setRotation(float angle);
+	void setRotation(float angle);
 	void setEnabled(bool enabled);
+
+	void setCentered();
 
 protected:
 	virtual void update();
@@ -81,9 +84,10 @@ protected:
 	std::vector<ArcAction*> actions;
 	sf::Vector2f scaleFactor;
 	ArcObject *m_parent = nullptr;
+	sf::Transform m_transform;
 
 	void drawChilds(sf::RenderTarget * const target);
-
+	void updateTransform();
 private:
 	//base
 	friend class ArcDebug;
@@ -105,6 +109,7 @@ private:
 	bool drawOrigin = false;
 	sf::RectangleShape debugRect;
 	sf::Vertex debugOrigin;
+	sf::Vertex debugOriginPos;
 	sf::CircleShape debugCenter;
 	void setDebugRectColor(const sf::Color& color);
 	sf::Color debugRectColor() const;

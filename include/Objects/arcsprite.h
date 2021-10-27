@@ -21,7 +21,6 @@ public:
 	sf::Color borderColor() const;
 	float borderSize() const;
 
-	void setRotation(float angle) override;
 protected:
 	void updatePos() override;
 	void updateScale() override;

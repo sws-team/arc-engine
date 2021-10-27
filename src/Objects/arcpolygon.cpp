@@ -8,7 +8,7 @@ ArcPolygon::ArcPolygon(const std::string &name)
 
 void ArcPolygon::draw(sf::RenderTarget * const target)
 {
-	target->draw(polygon);
+	target->draw(polygon, m_transform);
 	ArcObject::draw(target);
 }
 
@@ -27,12 +27,6 @@ void ArcPolygon::init()
 {
 	ArcObject::init();
 	polygon.setPointCount(vertexCount(m_shapeType));
-}
-
-void ArcPolygon::setRotation(float angle)
-{
-	ArcObject::setRotation(angle);
-	polygon.setRotation(angle);
 }
 
 void ArcPolygon::updatePos()

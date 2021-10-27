@@ -32,7 +32,6 @@ public:
 	float borderSize() const;
 
 	void init() override;
-	void setRotation(float angle) override;
 protected:
 	void updatePos() override;
 	void updateScale() override;

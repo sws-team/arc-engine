@@ -11,7 +11,7 @@ ArcLabel::ArcLabel(const std::string& name)
 
 void ArcLabel::draw(sf::RenderTarget * const target)
 {
-	target->draw(m_text);
+	target->draw(m_text, m_transform);
 	ArcObject::draw(target);
 
 #if 0
@@ -23,12 +23,6 @@ void ArcLabel::draw(sf::RenderTarget * const target)
 	rect.setSize(sf::Vector2f(m_text.getGlobalBounds().width, m_text.getGlobalBounds().height));
 	target->draw(rect);
 #endif
-}
-
-void ArcLabel::setRotation(float angle)
-{
-	ArcObject::setRotation(angle);
-	m_text.setRotation(angle);
 }
 
 void ArcLabel::setColor(const sf::Color &color)

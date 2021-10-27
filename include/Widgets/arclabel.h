@@ -29,8 +29,6 @@ public:
 	void setAutoSize(bool autoSize);
 
 protected:
-	void setRotation(float angle) override;
-
 	void updatePos() override;
 	void updateScale() override;
 	void updateOrigin() override;

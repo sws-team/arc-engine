@@ -117,8 +117,8 @@ void ArcLayout::refreshChilds()
 				if (end)
 					break;
 				ArcObject *child = childs.at(n);
-				child->setOrigin(0.f, 0.f);
-				child->setPos(pos);
+				child->setPos(pos + sf::Vector2f(child->width() * child->originX(),
+												 child->height() * child->originY()));
 				pos.x += child->size().x;
 				pos.x += m_offset.x;
 				if (child->height() > childMaxHeight)
