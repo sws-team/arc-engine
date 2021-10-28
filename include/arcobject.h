@@ -33,6 +33,7 @@ public:
 	ArcEngine::OBJECT_TYPE type() const;
 	std::string name() const;
 	sf::Vector2f size() const;
+	sf::Vector2f scaledSize() const;
 	float width() const;
 	float height() const;
 	float scaleX() const;

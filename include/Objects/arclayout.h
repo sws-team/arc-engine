@@ -27,6 +27,7 @@ public:
 	unsigned columns() const;
 
 	void updateSize() override;
+	void updateScale() override;
 
 private:
 	unsigned m_rows = 1;

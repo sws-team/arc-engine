@@ -287,8 +287,8 @@ sf::Vector2f ArcObject::globalScale() const
 
 sf::Vector2f ArcObject::globalOrigin() const
 {
-	return sf::Vector2f(m_originX * m_width,
-						m_originY * m_height);
+	return sf::Vector2f(m_originX * m_width * m_scaleX,
+						m_originY * m_height * m_scaleY);
 }
 
 void ArcObject::setEnabled(bool enabled)
@@ -316,6 +316,12 @@ std::string ArcObject::name() const
 sf::Vector2f ArcObject::size() const
 {
 	return sf::Vector2f(m_width, m_height);
+}
+
+sf::Vector2f ArcObject::scaledSize() const
+{
+	const sf::Vector2f gScale = globalScale();
+	return sf::Vector2f(m_width * gScale.x, m_height * gScale.y);
 }
 
 float ArcObject::height() const

@@ -93,6 +93,13 @@ void ArcLayout::updateSize()
 		refreshChilds();
 }
 
+void ArcLayout::updateScale()
+{
+	ArcObject::updateScale();
+	if(m_autoSize)
+		refreshChilds();
+}
+
 unsigned ArcLayout::rows() const
 {
 	return m_rows;
@@ -117,12 +124,12 @@ void ArcLayout::refreshChilds()
 				if (end)
 					break;
 				ArcObject *child = childs.at(n);
-				child->setPos(pos + sf::Vector2f(child->width() * child->originX(),
-												 child->height() * child->originY()));
-				pos.x += child->size().x;
-				pos.x += m_offset.x;
-				if (child->height() > childMaxHeight)
-					childMaxHeight = child->height();
+				child->setPos(pos + sf::Vector2f(child->scaledSize().x * child->originX(),
+												 child->scaledSize().y * child->originY()));
+				pos.x += child->scaledSize().x;
+				pos.x += m_offset.x * scaleX();
+				if (child->scaledSize().y > childMaxHeight)
+					childMaxHeight = child->scaledSize().y;
 				n++;
 			}
 			if (end)
@@ -131,24 +138,25 @@ void ArcLayout::refreshChilds()
 				childMaxWidth = pos.x;
 			}
 			pos.y += childMaxHeight;
-			pos.x = m_offset.x;
-			pos.y += m_offset.y;
+			pos.x = m_offset.x * scaleX();
+			if (row != m_rows - 1)
+				pos.y += m_offset.y * scaleY();
 		}
 		setSize(childMaxWidth, pos.y);
 	}
 	else {
-		const sf::Vector2f sSize = size();
+		const sf::Vector2f sSize = scaledSize();
 		float maxHeight = 0;
 		for(ArcObject* child : childs) {
 			child->setPos(pos);
-			pos.x += child->size().x;
-			pos.x += m_offset.x;
-			if (child->size().y > maxHeight)
-				maxHeight = child->size().y;
+			pos.x += child->scaledSize().x;
+			pos.x += m_offset.x * scaleX();
+			if (child->scaledSize().y > maxHeight)
+				maxHeight = child->scaledSize().y;
 			if (pos.x > sSize.x) {
-				pos.x = m_offset.x;
+				pos.x = m_offset.x * scaleX();
 				pos.y += maxHeight;
-				pos.y += m_offset.y;
+				pos.y += m_offset.y * scaleY();
 				maxHeight = 0;
 			}
 		}
