@@ -26,11 +26,6 @@ include_directories(${ARC_ENGINE_DIR}/include/Widgets)
 include_directories(${ARC_ENGINE_DIR}/include/Objects)
 
 set(ARC_ENGINE_SOURCES
-    ${ARC_ENGINE_DIR}/src/Widgets/button.cpp
-    ${ARC_ENGINE_DIR}/src/Widgets/checkbox.cpp
-    ${ARC_ENGINE_DIR}/src/Widgets/chooselist.cpp
-    ${ARC_ENGINE_DIR}/src/Widgets/valuescale.cpp
-    ${ARC_ENGINE_DIR}/src/Widgets/widget.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/arclabel.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/arcbutton.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/arctilemap.cpp
@@ -52,7 +47,6 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/arcwindow.cpp
     ${ARC_ENGINE_DIR}/src/arcaction.cpp
     ${ARC_ENGINE_DIR}/src/managers.cpp
-    ${ARC_ENGINE_DIR}/src/gameobject.cpp
     ${ARC_ENGINE_DIR}/src/mainwindow.cpp
     ${ARC_ENGINE_DIR}/src/collisions.cpp
     ${ARC_ENGINE_DIR}/src/engine.cpp
