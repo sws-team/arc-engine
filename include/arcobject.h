@@ -42,6 +42,7 @@ public:
 	float x() const;
 	float y() const;
 	sf::Vector2f pos() const;
+	sf::Vector2f scaledPos() const;
 	float originX() const;
 	float originY() const;
 	sf::Vector2f origin() const;

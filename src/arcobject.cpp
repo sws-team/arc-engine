@@ -274,7 +274,12 @@ sf::Vector2f ArcObject::globalPos() const
 {
 	if (m_parent == nullptr)
 		return pos();
-	return m_parent->globalPos() + pos();
+
+	sf::Vector2f gPos = pos();
+	gPos.x *= m_parent->m_scaleX;
+	gPos.y *= m_parent->m_scaleY;
+
+	return m_parent->globalPos() + gPos;
 }
 
 sf::Vector2f ArcObject::globalScale() const
@@ -287,8 +292,7 @@ sf::Vector2f ArcObject::globalScale() const
 
 sf::Vector2f ArcObject::globalOrigin() const
 {
-	return sf::Vector2f(m_originX * m_width * m_scaleX,
-						m_originY * m_height * m_scaleY);
+	return sf::Vector2f(m_originX * m_width, m_originY * m_height);
 }
 
 void ArcObject::setEnabled(bool enabled)
@@ -357,6 +361,14 @@ float ArcObject::y() const
 sf::Vector2f ArcObject::pos() const
 {
 	return sf::Vector2f(m_x, m_y);
+}
+
+sf::Vector2f ArcObject::scaledPos() const
+{
+	if (m_parent == nullptr)
+		return pos();
+
+	return sf::Vector2f(m_x * m_parent->m_scaleX, m_y * m_parent->m_scaleY);
 }
 
 float ArcObject::originX() const
