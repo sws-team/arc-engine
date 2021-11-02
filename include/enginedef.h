@@ -44,4 +44,12 @@ namespace ArcEngine
 	static constexpr float DEFAULT_WINDOW_FADE_TIME = 2000;
 }
 
+//forward classes
+class ArcObject;
+class ArcButton;
+class ArcSprite;
+class ArcLabel;
+class ArcClippedSprite;
+class ArcRect;
+
 #endif // ENGINEDEF_H

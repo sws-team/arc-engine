@@ -16,8 +16,6 @@ public:
 	virtual void reset();
 };
 
-#define SCALE_FACTOR Engine::Instance().settingsManager()->getScaleFactor()
-#define DEF_SCALE_FACTOR const sf::Vector2f scaleFactor = SCALE_FACTOR;
 #define RESOLUTIONF Engine::Instance().settingsManager()->getResolutionF()
 #define DEBUG_OBJECT(x) Engine::Instance().getOptions()->debugObject(x);
 #define PLAY_SOUND(x) Engine::Instance().soundManager()->playOnce(x);
@@ -90,8 +88,6 @@ private:
 	std::string currentLangName;
 
 };
-
-#define GET_TEXTURE(x) Engine::Instance().texturesManager()->getTexture(x)
 
 class TexturesManager : public Manager
 {
@@ -260,7 +256,7 @@ public:
 
 	virtual void globalCallbacks();
 	virtual void clear();
-	virtual void globalEventFilter(sf::Event* event);
+	virtual bool globalEventFilter(sf::Event* event);
 	virtual void globalDraw(sf::RenderTarget *target);
 
 	bool isResourcesLoaded() const;

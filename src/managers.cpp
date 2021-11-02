@@ -623,9 +623,9 @@ void Options::clear()
 	debug->clear();
 }
 
-void Options::globalEventFilter(sf::Event *event)
+bool Options::globalEventFilter(sf::Event *event)
 {
-	debug->eventFilter(event);
+	return debug->eventFilter(event);
 }
 
 void Options::globalDraw(sf::RenderTarget *target)

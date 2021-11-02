@@ -7,7 +7,7 @@ ArcObject::ArcObject(const std::string &name)
 	: m_name(name)
 	,m_type(ArcEngine::OBJECT)
 {
-	scaleFactor = SCALE_FACTOR;
+	scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 #ifdef ARC_DEBUG
 	debugRect.setFillColor(sf::Color::Transparent);
 	debugRect.setOutlineColor(sf::Color::White);
@@ -61,6 +61,19 @@ bool ArcObject::event(sf::Event *event)
 	if (!m_enabled)
 		return true;
 	return eventFilter(event);
+}
+
+bool ArcObject::hasChild(ArcObject *object, bool recursively) const
+{
+	for(ArcObject* child : childs) {
+		if (child == object)
+			return true;
+		if (recursively) {
+			if (child->hasChild(object, recursively))
+				return true;
+		}
+	}
+	return false;
 }
 
 ArcObject *ArcObject::findChild(const std::string &name, bool recursively)

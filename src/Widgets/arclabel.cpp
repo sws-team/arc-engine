@@ -7,6 +7,9 @@ ArcLabel::ArcLabel(const std::string& name)
 {
 	setType(ArcEngine::LABEL);
 	m_text.setFont(Engine::Instance().fontManager()->font());
+	setColor(sf::Color::White);
+	setTextBorderColor(sf::Color::Black);
+	setTextBorderSize(1.f);
 }
 
 void ArcLabel::draw(sf::RenderTarget * const target)

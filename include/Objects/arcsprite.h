@@ -31,4 +31,19 @@ protected:
 	TextureType m_textureID = -1;
 };
 
+class ArcClippedSprite : ArcSprite
+{
+public:
+	ArcClippedSprite(const std::string& name);
+	void setTexture(TextureType textureID) override;
+
+	void setClip(const sf::IntRect& rect);
+	void setClip(const sf::Vector2i& pos, const sf::Vector2i& size);
+	void setClip(float x, float y, float width, float height);
+
+private:
+	sf::IntRect clip;
+	void updateClip();
+};
+
 #endif // ARCSPRITE_H

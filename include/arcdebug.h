@@ -16,7 +16,7 @@ public:
 	void init();
 	void clear();
 	void update();
-	void eventFilter(sf::Event* event);
+	bool eventFilter(sf::Event* event);
 private:
 	ArcObject *object = nullptr;
 	sf::Clock clock;

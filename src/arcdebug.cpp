@@ -3,6 +3,7 @@
 #include "managers.h"
 #include "mainwindow.h"
 #include "utils.h"
+#include "collisions.h"
 #include "arcobject.h"
 #include "arcsprite.h"
 #include "arcbutton.h"
@@ -28,8 +29,8 @@ ArcDebug::ArcDebug()
 
 void ArcDebug::setObject(ArcObject *object)
 {
-	selectedObject = nullptr;
 	this->object = object;
+	selectedObject = object;
 }
 
 void ArcDebug::draw(sf::RenderTarget *target)
@@ -65,16 +66,54 @@ void ArcDebug::update()
 	}
 }
 
-void ArcDebug::eventFilter(sf::Event *event)
+bool ArcDebug::eventFilter(sf::Event *event)
 {
-	if (event->type == sf::Event::KeyPressed) {
-		if (event->key.code == sf::Keyboard::F3) {
-			visible = !visible;
+	if (event->type == sf::Event::KeyPressed && event->key.code == sf::Keyboard::F3) {
+		visible = !visible;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+		std::function<ArcObject*(ArcObject*, const sf::Vector2f&)> findObject = nullptr;
+		findObject = [&findObject](ArcObject* object, const sf::Vector2f& pos) ->ArcObject* {
+			for(ArcObject *child : object->childs) {
+				ArcObject *findedChild = findObject(child, pos);
+				if (findedChild != nullptr)
+					return findedChild;
+				if (Collision::rectContains(child->debugRect, pos)) {
+					return child;
+				}
+			}
+			if (Collision::rectContains(object->debugRect, pos)) {
+				return object;
+			}
+			return nullptr;
+		};
+
+		if (event->type == sf::Event::MouseButtonReleased || event->type == sf::Event::MouseButtonPressed) {
+			const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
+			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().window()->view());
+			ArcObject *findedObject = findObject(object, pos);
+			if (selectedObject != nullptr) {
+				selectedObject = findedObject;
+				return false;
+			}
+		}
+		if (event->type == sf::Event::MouseMoved) {
+			const sf::Vector2i pixelPos = sf::Vector2i(event->mouseMove.x, event->mouseMove.y);
+			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().window()->view());
+			ArcObject *findedObject = findObject(object, pos);
+			static ArcObject* lastFinded = nullptr;
+			if (findedObject != nullptr) {
+				if (lastFinded != nullptr)
+					lastFinded->drawDebugRect = false;
+				findedObject->drawDebugRect = true;
+				lastFinded = findedObject;
+			}
 		}
 	}
 #ifdef ARC_DEBUG
 	ImGui::SFML::ProcessEvent(*event);
 #endif
+	return true;
 }
 
 void ArcDebug::drawFrame()
@@ -134,16 +173,21 @@ void ArcDebug::drawObject(ArcObject *obj)
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0,0));
 	ImGui::BeginChild("Objects tree", ImVec2(w, 0), true);
 	ImGui::TextUnformatted("Objects tree");
-	std::function<void(ArcObject *)> drawCurrentObject;
+	std::function<void(ArcObject *)> drawCurrentObject = nullptr;
 	drawCurrentObject = [&drawCurrentObject](ArcObject *object)-> void {
-		ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+		ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 		bool isSelected = selectedObject == object;
 		if (isSelected)
 			node_flags |= ImGuiTreeNodeFlags_Selected;
+
+		if (object->hasChild(selectedObject))
+			ImGui::SetNextItemOpen(true);
+
 		bool opened = ImGui::TreeNodeEx(object->name().c_str(), node_flags);
 		if (ImGui::IsItemClicked()) {
 			selectedObject = object;
 		}
+
 		if (opened) {
 			for (unsigned i = 0; i < object->childs.size(); ++i) {
 				ArcObject* child = object->childs.at(i);

@@ -57,7 +57,7 @@ void MainWindow::exec()
 
 		sf::Event event;
 		while (active ? pollEvent(event) : waitEvent(event)) {
-			Engine::Instance().getOptions()->globalEventFilter(&event);
+			const bool accepted = Engine::Instance().getOptions()->globalEventFilter(&event);
 			switch (event.type)
 			{
 			case sf::Event::Resized:
@@ -77,6 +77,8 @@ void MainWindow::exec()
 			default:
 				break;
 			}
+			if (!accepted)
+				continue;
 			if (!active)
 				break;
 			if (currentState->event(&event))

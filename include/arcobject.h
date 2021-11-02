@@ -17,6 +17,7 @@ public:
 	void process();
 	bool event(sf::Event *event);
 
+	bool hasChild(ArcObject* object, bool recursively = true) const;
 	ArcObject *findChild(const std::string& name, bool recursively = true);
 	ArcObject *parent();
 

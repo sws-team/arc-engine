@@ -43,7 +43,7 @@ void ArcSprite::setTexture(TextureType textureID)
 	m_textureID = textureID;
 	if (textureID == -1)
 		return;
-	sprite.setTexture(&GET_TEXTURE(textureID));
+	sprite.setTexture(&Engine::Instance().texturesManager()->getTexture(textureID));
 }
 
 void ArcSprite::setColor(const sf::Color &color)
@@ -81,3 +81,36 @@ float ArcSprite::borderSize() const
 	return sprite.getOutlineThickness();
 }
 
+
+ArcClippedSprite::ArcClippedSprite(const std::string &name)
+	: ArcSprite(name)
+{
+
+}
+
+void ArcClippedSprite::setTexture(TextureType textureID)
+{
+	ArcSprite::setTexture(textureID);
+	updateClip();
+}
+
+void ArcClippedSprite::setClip(const sf::IntRect &rect)
+{
+	clip = rect;
+	updateClip();
+}
+
+void ArcClippedSprite::setClip(const sf::Vector2i &pos, const sf::Vector2i &size)
+{
+	setClip(sf::IntRect(pos, size));
+}
+
+void ArcClippedSprite::setClip(float x, float y, float width, float height)
+{
+	setClip(sf::IntRect(x, y, width, height));
+}
+
+void ArcClippedSprite::updateClip()
+{
+	sprite.setTextureRect(clip);
+}
