@@ -26,6 +26,7 @@ public:
 	void addAction(ArcAction* action);
 
 	void removeChild(ArcObject* object);
+	void removeChild(const std::string& name);
 	void removeAction(ArcAction *action);
 
 	//getters

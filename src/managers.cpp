@@ -183,7 +183,12 @@ void TranslationsManager::addTranslation(const std::string &name, const std::map
 
 sf::String TranslationsManager::translate(TranslationType id) const
 {
-	return langs.at(currentLangName).at(id);
+	auto &translations = langs.at(currentLangName);
+	if (auto it = translations.find(id); it == translations.end()) {
+		assert("Missing text!");
+		return sf::String();
+	}
+	return translations.at(id);
 }
 
 std::vector<sf::String> TranslationsManager::getAvaliableLanguageNames() const

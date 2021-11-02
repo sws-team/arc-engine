@@ -8,8 +8,8 @@ ArcLabel::ArcLabel(const std::string& name)
 	setType(ArcEngine::LABEL);
 	m_text.setFont(Engine::Instance().fontManager()->font());
 	setColor(sf::Color::White);
-	setTextBorderColor(sf::Color::Black);
-	setTextBorderSize(1.f);
+	setBorderColor(sf::Color::Black);
+	setBorderSize(1.f);
 }
 
 void ArcLabel::draw(sf::RenderTarget * const target)
@@ -51,22 +51,22 @@ unsigned int ArcLabel::fontSize() const
 	return m_fontSize;
 }
 
-void ArcLabel::setTextBorderSize(float size)
+void ArcLabel::setBorderSize(float size)
 {
 	m_text.setOutlineThickness(size);
 }
 
-float ArcLabel::textBorderSize() const
+float ArcLabel::borderSize() const
 {
 	return m_text.getOutlineThickness();
 }
 
-void ArcLabel::setTextBorderColor(const sf::Color &color)
+void ArcLabel::setBorderColor(const sf::Color &color)
 {
 	m_text.setOutlineColor(color);
 }
 
-sf::Color ArcLabel::textBorderColor() const
+sf::Color ArcLabel::borderColor() const
 {
 	return m_text.getOutlineColor();
 }
@@ -75,6 +75,11 @@ void ArcLabel::setText(const std::string &text)
 {
 	m_text.setString(sf::String(text));
 	updateAutoSize();
+}
+
+void ArcLabel::setText(TranslationType id)
+{
+	setText(TR(id));
 }
 
 std::string ArcLabel::text() const

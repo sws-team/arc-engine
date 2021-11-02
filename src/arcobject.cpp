@@ -231,6 +231,13 @@ void ArcObject::removeChild(ArcObject *object)
 	}
 }
 
+void ArcObject::removeChild(const std::string &name)
+{
+	if (ArcObject *child = findChild(name, false)) {
+		removeChild(child);
+	}
+}
+
 void ArcObject::removeAction(ArcAction *action)
 {
 	if (auto it = std::find(actions.begin(), actions.end(), action); it != actions.end()) {

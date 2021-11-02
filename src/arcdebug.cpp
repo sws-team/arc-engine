@@ -395,16 +395,16 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					label->setColor(Utils::convertToColor(color));
 				}
 				{//Text border size
-					float textBorderSize = label->textBorderSize();
+					float textBorderSize = label->borderSize();
 					ImGui::DragFloat("##TextBorderSize", &textBorderSize);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Size");
-					label->setTextBorderSize(textBorderSize);
+					label->setBorderSize(textBorderSize);
 				}
 				{//Text border color
-					ImVec4 color = Utils::convertFromColor(label->textBorderColor());
+					ImVec4 color = Utils::convertFromColor(label->borderColor());
 					editColor("Border color", &color);
-					label->setTextBorderColor(Utils::convertToColor(color));
+					label->setBorderColor(Utils::convertToColor(color));
 				}
 			}
 		}

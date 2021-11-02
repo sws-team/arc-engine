@@ -16,13 +16,14 @@ public:
 	void setFontSize(unsigned int size);
 	unsigned int fontSize() const;
 
-	void setTextBorderSize(float size);
-	float textBorderSize() const;
+	void setBorderSize(float size);
+	float borderSize() const;
 
-	void setTextBorderColor(const sf::Color &color);
-	sf::Color textBorderColor() const;
+	void setBorderColor(const sf::Color &color);
+	sf::Color borderColor() const;
 
 	void setText(const std::string& text);
+	void setText(TranslationType id);
 	std::string text() const;
 
 	bool autoSize() const;
