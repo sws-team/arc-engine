@@ -65,6 +65,7 @@ public:
 	void setEnabled(bool enabled);
 
 	void setCentered();
+	void setCenteredOrigin();
 
 protected:
 	virtual void update();
@@ -108,6 +109,8 @@ private:
 	float m_originY = 0.f;
 	float m_width = 0.f;
 	float m_height = 0.f;
+
+	static constexpr float center = 0.5f;
 #ifdef ARC_DEBUG
 	bool drawDebugRect = false;
 	bool drawOrigin = false;

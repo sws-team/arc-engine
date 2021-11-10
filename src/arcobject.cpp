@@ -322,9 +322,13 @@ void ArcObject::setEnabled(bool enabled)
 
 void ArcObject::setCentered()
 {
-	constexpr float center = 0.5f;
-	setOrigin(center, center);
+	setCenteredOrigin();
 	setPos(pos() + sf::Vector2f(m_width * center, m_height * center));
+}
+
+void ArcObject::setCenteredOrigin()
+{
+	setOrigin(center, center);
 }
 
 ArcEngine::OBJECT_TYPE ArcObject::type() const
