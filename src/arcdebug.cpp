@@ -74,7 +74,7 @@ bool ArcDebug::eventFilter(sf::Event *event)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 		std::function<ArcObject*(ArcObject*, const sf::Vector2f&)> findObject = nullptr;
 		findObject = [&findObject](ArcObject* object, const sf::Vector2f& pos) ->ArcObject* {
-			for(ArcObject *child : object->childs) {
+			for(ArcObject *child : object->m_childs) {
 				ArcObject *findedChild = findObject(child, pos);
 				if (findedChild != nullptr)
 					return findedChild;
@@ -189,8 +189,8 @@ void ArcDebug::drawObject(ArcObject *obj)
 		}
 
 		if (opened) {
-			for (unsigned i = 0; i < object->childs.size(); ++i) {
-				ArcObject* child = object->childs.at(i);
+			for (unsigned i = 0; i < object->m_childs.size(); ++i) {
+				ArcObject* child = object->m_childs.at(i);
 				drawCurrentObject(child);
 			}
 			ImGui::TreePop();

@@ -109,25 +109,28 @@ void ArcLabel::updateOrigin()
 
 void ArcLabel::updateSize()
 {
-	updateAutoSize();
+	if (m_autoSize)
+		updateAutoSize();
 	ArcObject::updateSize();
 }
 
 void ArcLabel::updateAutoSize()
 {
-	if (!m_autoSize)
-		return;
-
-	m_text.setCharacterSize(m_fontSize);
-	unsigned actualFontSize = m_fontSize;
-	while(true) {
-		if (m_text.getLocalBounds().width <= size().x &&
-				m_text.getLocalBounds().height <= size().y)
-			break;
-		if (actualFontSize <= 1)
-			break;
-		actualFontSize--;
-		m_text.setCharacterSize(actualFontSize);
+	if (m_autoSize) {
+		m_text.setCharacterSize(m_fontSize);
+		unsigned actualFontSize = m_fontSize;
+		while(true) {
+			if (m_text.getLocalBounds().width <= size().x &&
+					m_text.getLocalBounds().height <= size().y)
+				break;
+			if (actualFontSize <= 1)
+				break;
+			actualFontSize--;
+			m_text.setCharacterSize(actualFontSize);
+		}
+	}
+	else {
+		setSize(m_text.getGlobalBounds().width, m_text.getGlobalBounds().height);
 	}
 }
 
@@ -140,5 +143,6 @@ void ArcLabel::setAutoSize(bool autoSize)
 {
 	m_autoSize = autoSize;
 	setFontSize(m_fontSize);
+	updateAutoSize();
 }
 

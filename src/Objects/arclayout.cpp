@@ -100,6 +100,45 @@ void ArcLayout::updateScale()
 		refreshChilds();
 }
 
+bool ArcLayout::skipDisabledElements() const
+{
+	return m_skipDisabledElements;
+}
+
+void ArcLayout::setSkipDisabledElements(bool skipDisabledElements)
+{
+	m_skipDisabledElements = skipDisabledElements;
+}
+
+void ArcLayout::updateLayout()
+{
+	if (isEnabled())
+		refreshChilds();
+}
+
+void ArcLayout::clear()
+{
+	for(ArcObject* child : m_childs) {
+		delete child;
+	}
+	m_childs.clear();
+}
+
+sf::Vector2f ArcLayout::borderOffset() const
+{
+	return m_borderOffset;
+}
+
+void ArcLayout::setBorderOffset(const sf::Vector2f &borderOffset)
+{
+	m_borderOffset = borderOffset;
+}
+
+void ArcLayout::setBorderOffset(float x, float y)
+{
+	setBorderOffset(sf::Vector2f(x, y));
+}
+
 unsigned ArcLayout::rows() const
 {
 	return m_rows;
@@ -112,7 +151,11 @@ unsigned ArcLayout::columns() const
 
 void ArcLayout::refreshChilds()
 {
-	sf::Vector2f pos = sf::Vector2f(0, 0);
+	sf::Vector2f pos = m_borderOffset;
+	pos.x -= originX() * width();
+	pos.y -= originY() * height();
+	const float baseX = pos.x;
+	const float baseY = pos.y;
 	if (m_autoSize) {
 		bool end = false;
 		unsigned n = 0;
@@ -120,17 +163,19 @@ void ArcLayout::refreshChilds()
 		for (unsigned row = 0; row < m_rows; ++row) {
 			float childMaxHeight = 0;
 			for (unsigned column = 0; column < m_columns; ++column) {
-				end = n == childs.size();
+				end = n == m_childs.size();
 				if (end)
 					break;
-				ArcObject *child = childs.at(n);
+				ArcObject *child = m_childs.at(n++);
+				if (!child->isEnabled())
+					continue;
 				child->setPos(pos + sf::Vector2f(child->scaledSize().x * child->originX(),
 												 child->scaledSize().y * child->originY()));
 				pos.x += child->scaledSize().x;
-				pos.x += m_offset.x * scaleX();
+				if (column < m_columns - 1)
+					pos.x += m_offset.x * scaleX();
 				if (child->scaledSize().y > childMaxHeight)
 					childMaxHeight = child->scaledSize().y;
-				n++;
 			}
 			if (end)
 				break;
@@ -138,23 +183,25 @@ void ArcLayout::refreshChilds()
 				childMaxWidth = pos.x;
 			}
 			pos.y += childMaxHeight;
-			pos.x = m_offset.x * scaleX();
+			pos.x = baseX;
 			if (row != m_rows - 1)
 				pos.y += m_offset.y * scaleY();
 		}
-		setSize(childMaxWidth, pos.y);
+		setSize(childMaxWidth - baseX, pos.y - baseY);
 	}
 	else {
 		const sf::Vector2f sSize = scaledSize();
 		float maxHeight = 0;
-		for(ArcObject* child : childs) {
+		for(ArcObject* child : m_childs) {
+			if (!child->isEnabled())
+				continue;
 			child->setPos(pos);
 			pos.x += child->scaledSize().x;
 			pos.x += m_offset.x * scaleX();
 			if (child->scaledSize().y > maxHeight)
 				maxHeight = child->scaledSize().y;
 			if (pos.x > sSize.x) {
-				pos.x = m_offset.x * scaleX();
+				pos.x = baseX;
 				pos.y += maxHeight;
 				pos.y += m_offset.y * scaleY();
 				maxHeight = 0;

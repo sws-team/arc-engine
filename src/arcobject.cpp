@@ -26,9 +26,9 @@ ArcObject::ArcObject(const std::string &name)
 
 ArcObject::~ArcObject()
 {
-	for(ArcObject* child : childs)
+	for(ArcObject* child : m_childs)
 		delete child;
-	for(ArcAction* action : actions)
+	for(ArcAction* action : m_actions)
 		delete action;
 }
 
@@ -38,7 +38,7 @@ void ArcObject::init()
 	setOrigin(m_originX, m_originY);
 	setScale(m_scaleX, m_scaleY);
 	setRotation(m_angle);
-	for(ArcObject* child : childs)
+	for(ArcObject* child : m_childs)
 		child->init();
 }
 
@@ -65,7 +65,7 @@ bool ArcObject::event(sf::Event *event)
 
 bool ArcObject::hasChild(ArcObject *object, bool recursively) const
 {
-	for(ArcObject* child : childs) {
+	for(ArcObject* child : m_childs) {
 		if (child == object)
 			return true;
 		if (recursively) {
@@ -78,7 +78,7 @@ bool ArcObject::hasChild(ArcObject *object, bool recursively) const
 
 ArcObject *ArcObject::findChild(const std::string &name, bool recursively)
 {
-	for(ArcObject* object : childs) {
+	for(ArcObject* object : m_childs) {
 		if (object->name() == name)
 			return object;
 		if (recursively) {
@@ -94,6 +94,11 @@ ArcObject *ArcObject::parent()
 	return m_parent;
 }
 
+std::vector<ArcObject *> ArcObject::childs() const
+{
+	return m_childs;
+}
+
 void ArcObject::setParent(ArcObject *parent)
 {
 	m_parent = parent;
@@ -107,7 +112,7 @@ void ArcObject::updatePos()
 	debugOrigin.position = scaledGlobalPos();
 	debugOriginPos.position = scaledGlobalPos();
 #endif
-	for(ArcObject* child : childs)
+	for(ArcObject* child : m_childs)
 		child->updatePos();
 }
 
@@ -116,7 +121,7 @@ void ArcObject::updateScale()
 #ifdef ARC_DEBUG
 	debugRect.setScale(scaledGlobalScale());
 #endif
-	for(ArcObject* child : childs)
+	for(ArcObject* child : m_childs)
 		child->updateScale();
 }
 
@@ -136,7 +141,7 @@ void ArcObject::updateSize()
 
 void ArcObject::drawChilds(sf::RenderTarget * const target)
 {
-	for(ArcObject* child : childs)
+	for(ArcObject* child : m_childs)
 		child->paint(target);
 }
 
@@ -196,14 +201,14 @@ void ArcObject::draw(sf::RenderTarget * const target)
 
 void ArcObject::update()
 {
-	for(ArcObject* child : childs)
+	for(ArcObject* child : m_childs)
 		child->update();
 
-	for (auto it = actions.begin(); it != actions.end();) {
+	for (auto it = m_actions.begin(); it != m_actions.end();) {
 		ArcAction* action = *it;
 		if (action->isCompleted()) {
 			delete action;
-			it = actions.erase(it);
+			it = m_actions.erase(it);
 		}
 		else {
 			action->update();
@@ -216,18 +221,18 @@ void ArcObject::addChild(ArcObject *object)
 {
 	object->setParent(this);
 	object->init();
-	childs.push_back(object);
+	m_childs.push_back(object);
 }
 
 void ArcObject::addAction(ArcAction *action)
 {
-	actions.push_back(action);
+	m_actions.push_back(action);
 }
 
 void ArcObject::removeChild(ArcObject *object)
 {
-	if (auto it = std::find(childs.begin(), childs.end(), object); it != childs.end()) {
-		childs.erase(it);
+	if (auto it = std::find(m_childs.begin(), m_childs.end(), object); it != m_childs.end()) {
+		m_childs.erase(it);
 	}
 }
 
@@ -240,14 +245,14 @@ void ArcObject::removeChild(const std::string &name)
 
 void ArcObject::removeAction(ArcAction *action)
 {
-	if (auto it = std::find(actions.begin(), actions.end(), action); it != actions.end()) {
-		actions.erase(it);
+	if (auto it = std::find(m_actions.begin(), m_actions.end(), action); it != m_actions.end()) {
+		m_actions.erase(it);
 	}
 }
 
 bool ArcObject::eventFilter(sf::Event *event)
 {
-	for(ArcObject* child : childs) {
+	for(ArcObject* child : m_childs) {
 		if (child->eventFilter(event))
 			break;
 	}
@@ -329,6 +334,11 @@ void ArcObject::setCentered()
 void ArcObject::setCenteredOrigin()
 {
 	setOrigin(center, center);
+}
+
+void ArcObject::setData(const std::string &name, const std::any &value)
+{
+	m_data.insert(std::pair<std::string, std::any>(name, value));
 }
 
 ArcEngine::OBJECT_TYPE ArcObject::type() const
@@ -491,7 +501,7 @@ void ArcObject::setRotation(float angle)
 	std::function<void(ArcObject *obj)> updateFunc = nullptr;
 	updateFunc = [&updateFunc](ArcObject *obj) {
 		obj->updateTransform();
-		for(ArcObject *child : obj->childs)
+		for(ArcObject *child : obj->m_childs)
 			updateFunc(child);
 	};
 	updateFunc(this);
@@ -501,3 +511,4 @@ float ArcObject::width() const
 {
 	return m_width;
 }
+

@@ -28,7 +28,6 @@ private:
 	bool m_clickable = true;
 	bool hovered = false;
 	sf::RectangleShape hoverRect;
-	static const sf::Color HOVERED_COLOR;
 };
 
 #endif // ARCBUTTON_H

@@ -31,7 +31,7 @@ protected:
 	TextureType m_textureID = -1;
 };
 
-class ArcClippedSprite : ArcSprite
+class ArcClippedSprite : public ArcSprite
 {
 public:
 	ArcClippedSprite(const std::string& name);

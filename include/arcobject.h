@@ -3,6 +3,7 @@
 
 #include "stdheader.h"
 #include "enginedef.h"
+#include <any>
 
 class ArcAction;
 
@@ -20,6 +21,7 @@ public:
 	bool hasChild(ArcObject* object, bool recursively = true) const;
 	ArcObject *findChild(const std::string& name, bool recursively = true);
 	ArcObject *parent();
+	std::vector<ArcObject*> childs() const;
 
 	void setParent(ArcObject* parent);
 	void addChild(ArcObject* object);
@@ -67,6 +69,15 @@ public:
 	void setCentered();
 	void setCenteredOrigin();
 
+	//custom data
+	void setData(const std::string& name, const std::any& value);
+	template<typename T> T data(const std::string& name)
+	{
+		if (auto it = m_data.find(name); it != m_data.end())
+			return std::any_cast<T>(m_data.at(name));
+		return T();
+	}
+
 protected:
 	virtual void update();
 	virtual void draw(sf::RenderTarget *const target);
@@ -85,8 +96,8 @@ protected:
 	virtual void updateOrigin();
 	virtual void updateSize();
 
-	std::vector<ArcObject*> childs;
-	std::vector<ArcAction*> actions;
+	std::vector<ArcObject*> m_childs;
+	std::vector<ArcAction*> m_actions;
 	sf::Vector2f scaleFactor;
 	ArcObject *m_parent = nullptr;
 	sf::Transform m_transform;
@@ -110,6 +121,7 @@ private:
 	float m_width = 0.f;
 	float m_height = 0.f;
 
+	std::map<std::string, std::any> m_data;
 	static constexpr float center = 0.5f;
 #ifdef ARC_DEBUG
 	bool drawDebugRect = false;

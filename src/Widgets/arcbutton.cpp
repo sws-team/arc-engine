@@ -4,8 +4,6 @@
 #include "collisions.h"
 #include "mainwindow.h"
 
-const sf::Color ArcButton::HOVERED_COLOR = sf::Color(32, 32, 32, 96);
-
 ArcButton::ArcButton(const std::string &name)
 	: ArcSprite(name)
 {
@@ -55,7 +53,7 @@ bool ArcButton::eventFilter(sf::Event *event)
 		if (Collision::rectContains(sprite, pos)) {
 //		if (rect.getGlobalBounds().contains(pos)) {
 			hover = true;
-			hoverRect.setFillColor(HOVERED_COLOR);
+			hoverRect.setFillColor(ArcEngine::HoverColor);
 		}
 		if (hover && !hovered) {
 			hovered = true;
