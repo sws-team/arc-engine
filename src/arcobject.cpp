@@ -290,11 +290,6 @@ bool ArcObject::isEnabled() const
 	return m_enabled;
 }
 
-sf::FloatRect ArcObject::rect() const
-{
-	return sf::FloatRect(m_x, m_y, m_x + m_width, m_y + m_height);
-}
-
 sf::Vector2f ArcObject::globalPos() const
 {
 	if (m_parent == nullptr)

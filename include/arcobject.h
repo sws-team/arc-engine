@@ -33,7 +33,6 @@ public:
 
 	//getters
 	bool isEnabled() const;
-	sf::FloatRect rect() const;
 	ArcEngine::OBJECT_TYPE type() const;
 	std::string name() const;
 	sf::Vector2f size() const;
@@ -107,6 +106,7 @@ protected:
 private:
 	//base
 	friend class ArcDebug;
+	friend class Intersection;
 	bool m_enabled = true;
 	std::string m_name;
 	ArcEngine::OBJECT_TYPE m_type = ArcEngine::UNDEF;

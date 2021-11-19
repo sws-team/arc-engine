@@ -31,8 +31,7 @@ bool ArcButton::eventFilter(sf::Event *event)
 	if (event->type == sf::Event::MouseButtonReleased) {
 		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
 		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().window()->view());
-
-		if (Collision::rectContains(sprite, pos)) {
+		if (Intersection::contains(this, pos)) {
 			if (event->mouseButton.button == sf::Mouse::Left) {
 				PLAY_SOUND(SoundManager::CLICK);
 				if (m_callback != nullptr)
@@ -50,8 +49,7 @@ bool ArcButton::eventFilter(sf::Event *event)
 																			   *Engine::Instance().window()->view());
 		bool hover = false;
 		hoverRect.setFillColor(sf::Color::Transparent);
-		if (Collision::rectContains(sprite, pos)) {
-//		if (rect.getGlobalBounds().contains(pos)) {
+		if (Intersection::contains(this, pos)) {
 			hover = true;
 			hoverRect.setFillColor(ArcEngine::HoverColor);
 		}

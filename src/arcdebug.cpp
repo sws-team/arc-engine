@@ -78,11 +78,11 @@ bool ArcDebug::eventFilter(sf::Event *event)
 				ArcObject *findedChild = findObject(child, pos);
 				if (findedChild != nullptr)
 					return findedChild;
-				if (Collision::rectContains(child->debugRect, pos)) {
+				if (Intersection::contains(child, pos)) {
 					return child;
 				}
 			}
-			if (Collision::rectContains(object->debugRect, pos)) {
+			if (Intersection::contains(object, pos)) {
 				return object;
 			}
 			return nullptr;

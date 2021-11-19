@@ -7,6 +7,8 @@
 #include <iostream>
 #include "collisions.h"
 
+#include "arcsprite.h"
+
 namespace Collision
 {
         class BitmaskManager
@@ -191,41 +193,52 @@ namespace Collision
                 }
                 return true;
 		}
-
-		bool isParallelogramContainsPoint(const sf::Vector2f& target,
-										  const sf::Vector2f& point,
-										  const std::vector<sf::Vector2f> &coords,
-										  const sf::FloatRect &boundingBox)
-		{
-			if (coords.size() != 4)
-				return false;
-			if (!boundingBox.contains(target))
-				return false;
-
-			const sf::Vector2f A = point + coords.at(0);
-			const sf::Vector2f B = point + coords.at(1);
-			const sf::Vector2f C = point + coords.at(2);
-			const sf::Vector2f D = point + coords.at(3);
-
-			const float P1 = (A.x - target.x) * (B.y - A.y) - (A.y - target.y) * (B.x - A.x);
-			const float P2 = (B.x - target.x) * (C.y - B.y) - (B.y - target.y) * (C.x - B.x);
-			const float P3 = (C.x - target.x) * (D.y - C.y) - (C.y - target.y) * (D.x - C.x);
-			const float P4 = (D.x - target.x) * (A.y - D.y) - (D.y - target.y) * (A.x - D.x);
-
-			if ((P1 < 0 && P2 < 0 && P3 < 0 && P4 < 0) ||
-					(P1 > 0 && P2 > 0 && P3 > 0 && P4 > 0))
-				return true;
-			return false;
-		}
-
-		bool rectContains(const sf::RectangleShape& rect, const sf::Vector2f& pos)
-		{
-			std::vector<sf::Vector2f> points;
-			points.push_back(rect.getTransform().transformPoint(0, 0) - rect.getPosition());
-			points.push_back(rect.getTransform().transformPoint(rect.getLocalBounds().width, 0) - rect.getPosition());
-			points.push_back(rect.getTransform().transformPoint(rect.getLocalBounds().width, rect.getLocalBounds().height) - rect.getPosition());
-			points.push_back(rect.getTransform().transformPoint(0, rect.getLocalBounds().height) - rect.getPosition());
-
-			return isParallelogramContainsPoint(pos, rect.getPosition(), points, rect.getGlobalBounds());
-		}
 }
+
+bool Intersection::isParallelogramContainsPoint(const sf::Vector2f& target,
+										 const sf::Vector2f& point,
+										 const std::vector<sf::Vector2f> &coords,
+										 const sf::FloatRect &boundingBox)
+{
+	if (coords.size() != 4)
+		return false;
+	if (!boundingBox.contains(target))
+		return false;
+
+	const sf::Vector2f A = point + coords.at(0);
+	const sf::Vector2f B = point + coords.at(1);
+	const sf::Vector2f C = point + coords.at(2);
+	const sf::Vector2f D = point + coords.at(3);
+
+	const float P1 = (A.x - target.x) * (B.y - A.y) - (A.y - target.y) * (B.x - A.x);
+	const float P2 = (B.x - target.x) * (C.y - B.y) - (B.y - target.y) * (C.x - B.x);
+	const float P3 = (C.x - target.x) * (D.y - C.y) - (C.y - target.y) * (D.x - C.x);
+	const float P4 = (D.x - target.x) * (A.y - D.y) - (D.y - target.y) * (A.x - D.x);
+
+	if ((P1 < 0 && P2 < 0 && P3 < 0 && P4 < 0) ||
+			(P1 > 0 && P2 > 0 && P3 > 0 && P4 > 0))
+		return true;
+	return false;
+}
+
+bool Intersection::contains(const sf::RectangleShape& rect, const sf::Vector2f& pos)
+{
+	std::vector<sf::Vector2f> points;
+	points.push_back(rect.getTransform().transformPoint(0, 0) - rect.getPosition());
+	points.push_back(rect.getTransform().transformPoint(rect.getLocalBounds().width, 0) - rect.getPosition());
+	points.push_back(rect.getTransform().transformPoint(rect.getLocalBounds().width, rect.getLocalBounds().height) - rect.getPosition());
+	points.push_back(rect.getTransform().transformPoint(0, rect.getLocalBounds().height) - rect.getPosition());
+
+	return isParallelogramContainsPoint(pos, rect.getPosition(), points, rect.getGlobalBounds());
+}
+
+bool Intersection::contains(ArcSprite* sprite, const sf::Vector2f& pos)
+{
+	return contains(sprite->sprite, pos);
+}
+#ifdef ARC_DEBUG
+bool Intersection::contains(ArcObject *object, const sf::Vector2f &pos)
+{
+	return contains(object->debugRect, pos);
+}
+#endif

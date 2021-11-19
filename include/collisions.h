@@ -36,6 +36,8 @@ it freely, subject to the following restrictions:
 #ifndef COLLISION_H
 #define COLLISION_H
 
+#include "enginedef.h"
+
 #include <SFML/Graphics.hpp>
 
 namespace Collision {
@@ -72,14 +74,23 @@ namespace Collision {
         /// Supports scaling and rotation
         //////
 		bool BoundingBoxTest(const sf::Sprite& Object1, const sf::Sprite& Object2);
-
-
-		bool isParallelogramContainsPoint(const sf::Vector2f& target,
-										  const sf::Vector2f& point,
-										  const std::vector<sf::Vector2f>& coords,
-										  const sf::FloatRect& boundingBox);
-
-		bool rectContains(const sf::RectangleShape& rect, const sf::Vector2f& pos);
 }
+
+class Intersection
+{
+public:
+	static bool contains(ArcSprite* sprite, const sf::Vector2f& pos);
+#ifdef ARC_DEBUG
+	static bool contains(ArcObject* object, const sf::Vector2f& pos);
+#endif
+private:
+	static bool isParallelogramContainsPoint(const sf::Vector2f& target,
+									  const sf::Vector2f& point,
+									  const std::vector<sf::Vector2f>& coords,
+									  const sf::FloatRect& boundingBox);
+
+	static bool contains(const sf::RectangleShape& rect, const sf::Vector2f& pos);
+};
+
 
 #endif	/* COLLISION_H */

@@ -22,6 +22,7 @@ public:
 	float borderSize() const;
 
 protected:
+	friend class Intersection;
 	void updatePos() override;
 	void updateScale() override;
 	void updateOrigin() override;
