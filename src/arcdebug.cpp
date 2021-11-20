@@ -74,7 +74,8 @@ bool ArcDebug::eventFilter(sf::Event *event)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 		std::function<ArcObject*(ArcObject*, const sf::Vector2f&)> findObject = nullptr;
 		findObject = [&findObject](ArcObject* object, const sf::Vector2f& pos) ->ArcObject* {
-			for(ArcObject *child : object->m_childs) {
+			for (int i = object->m_childs.size() - 1; i >= 0; --i) {
+				ArcObject *child = object->m_childs.at(i);
 				ArcObject *findedChild = findObject(child, pos);
 				if (findedChild != nullptr)
 					return findedChild;
