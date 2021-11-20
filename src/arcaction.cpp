@@ -17,9 +17,10 @@ ArcAction::~ArcAction()
 
 void ArcAction::update()
 {
-	if (!started) {
-		started = true;
+	if (!m_started) {
+		m_started = true;
 		timer.reset();
+		started();
 	}
 	if (timer.check(m_time)) {
 		finished();
@@ -31,6 +32,11 @@ void ArcAction::update()
 	process(progress);
 }
 
+void ArcAction::started()
+{
+
+}
+
 void ArcAction::process(float progress)
 {
 
@@ -40,7 +46,7 @@ void ArcAction::finished()
 {
 	if (completedFunc != nullptr)
 		completedFunc();
-	completed = true;
+	m_completed = true;
 }
 
 void ArcAction::setCompletedFunc(const std::function<void ()> &func)
@@ -50,7 +56,7 @@ void ArcAction::setCompletedFunc(const std::function<void ()> &func)
 
 bool ArcAction::isCompleted() const
 {
-	return completed;
+	return m_completed;
 }
 
 GroupAction::GroupAction(float time, ArcObject *object)
@@ -164,4 +170,37 @@ RepeatAction::RepeatAction(float time, ArcObject *object)
 void RepeatAction::finished()
 {
 	timer.reset();
+}
+
+ChangePosAction::ChangePosAction(float time, ArcObject *object, const sf::Vector2f &targetPos)
+	: ArcAction(time, object)
+	,m_targetPos(targetPos)
+{
+
+}
+
+void ChangePosAction::started()
+{
+	m_startPos = m_object->pos();
+}
+
+void ChangePosAction::process(float progress)
+{
+	const float targetX = m_startPos.x + (m_targetPos.x - m_startPos.x) * progress;
+	const float targetY = m_startPos.y + (m_targetPos.y - m_startPos.y) * progress;
+	m_object->setPos(targetX, targetY);
+}
+
+MoveAction::MoveAction(float time, ArcObject *object, const sf::Vector2f &movePos)
+	: ChangePosAction(time, object, movePos)
+{
+
+}
+
+
+void MoveAction::process(float progress)
+{
+	const float targetX = m_startPos.x + m_targetPos.x * progress;
+	const float targetY = m_startPos.y + m_targetPos.y * progress;
+	m_object->setPos(targetX, targetY);
 }

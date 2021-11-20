@@ -13,6 +13,7 @@ public:
 	virtual ~ArcAction();
 
 	void update();
+	virtual void started();
 	virtual void process(float progress);
 	virtual void finished();
 
@@ -26,8 +27,8 @@ protected:
 	std::function<void()> completedFunc = nullptr;
 	Timer timer;
 private:
-	bool started = false;
-	bool completed = false;
+	bool m_started = false;
+	bool m_completed = false;
 };
 
 class GroupAction : public ArcAction
@@ -94,6 +95,27 @@ class RepeatAction : public ArcAction
 	RepeatAction(float time, ArcObject *object = nullptr);
 
 	void finished() override;
+};
+
+class ChangePosAction : public ArcAction
+{
+public:
+	ChangePosAction(float time, ArcObject *object, const sf::Vector2f& targetPos);
+
+	void started() override;
+	void process(float progress) override;
+
+protected:
+	sf::Vector2f m_targetPos;
+	sf::Vector2f m_startPos;
+};
+
+class MoveAction : public ChangePosAction
+{
+public:
+	MoveAction(float time, ArcObject *object, const sf::Vector2f& movePos);
+
+	void process(float progress) override;
 };
 
 #endif // ARCACTION_H
