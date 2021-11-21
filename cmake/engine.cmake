@@ -29,6 +29,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Widgets/arclabel.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/arcbutton.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/arctilemap.cpp
+    ${ARC_ENGINE_DIR}/src/Widgets/customwidgets.cpp
 
     ${ARC_ENGINE_DIR}/src/Windows/aboutwindow.cpp
     ${ARC_ENGINE_DIR}/src/Windows/closewindow.cpp
