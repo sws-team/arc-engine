@@ -191,6 +191,12 @@ void ChangePosAction::process(float progress)
 	m_object->setPos(targetX, targetY);
 }
 
+void ChangePosAction::finished()
+{
+	m_object->setPos(m_targetPos);
+	ArcAction::finished();
+}
+
 MoveAction::MoveAction(float time, ArcObject *object, const sf::Vector2f &movePos)
 	: ChangePosAction(time, object, movePos)
 {

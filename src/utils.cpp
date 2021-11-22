@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "arcobject.h"
 
 #include <sstream>
 
@@ -52,6 +53,42 @@ ImVec4 convertFromColor(const sf::Color &color)
 	result.w = static_cast<float>(color.a) / COLOR_CONST;
 	return result;
 }
-
 #endif
+
+sf::Vector2f getPosition(ArcObject *from, ArcObject *to)
+{
+	auto findParent = [](ArcObject *from, ArcObject *to) -> ArcObject* {
+		ArcObject *currentObjectFrom = from;
+		while(currentObjectFrom != nullptr) {
+			ArcObject *currentObjectTo = to;
+			while(currentObjectTo != nullptr) {
+				if (currentObjectTo == currentObjectFrom) {
+					return currentObjectTo;
+				}
+				currentObjectTo = currentObjectTo->parent();
+			}
+			currentObjectFrom = currentObjectFrom->parent();
+		}
+		return nullptr;
+	};
+	ArcObject *parent = findParent(from, to);
+	if (parent == nullptr)
+		return sf::Vector2f();
+
+	auto getGlobalPos = [](ArcObject *object, ArcObject *parent) -> sf::Vector2f {
+		sf::Vector2f pos;
+		ArcObject *currentObject = object;
+		while(currentObject != nullptr) {
+			pos += currentObject->pos();
+			if (currentObject == parent)
+				break;
+			currentObject = currentObject->parent();
+		}
+		return pos;
+	};
+	const sf::Vector2f posFrom = getGlobalPos(from, parent);
+	const sf::Vector2f posTo = getGlobalPos(to, parent);
+	return posTo - posFrom;
+}
+
 }

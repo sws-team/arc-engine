@@ -392,14 +392,6 @@ sf::Vector2f ArcObject::pos() const
 	return sf::Vector2f(m_x, m_y);
 }
 
-sf::Vector2f ArcObject::scaledPos() const
-{
-	if (m_parent == nullptr)
-		return pos();
-
-	return sf::Vector2f(m_x * m_parent->m_scaleX, m_y * m_parent->m_scaleY);
-}
-
 float ArcObject::originX() const
 {
 	return m_originX;

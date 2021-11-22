@@ -25,6 +25,37 @@ include_directories(${ARC_ENGINE_DIR}/include/Windows)
 include_directories(${ARC_ENGINE_DIR}/include/Widgets)
 include_directories(${ARC_ENGINE_DIR}/include/Objects)
 
+set(ARC_ENGINE_HEADERS
+    ${ARC_ENGINE_DIR}/include/Widgets/arclabel.h
+    ${ARC_ENGINE_DIR}/include/Widgets/arcbutton.h
+    ${ARC_ENGINE_DIR}/include/Widgets/arctilemap.h
+    ${ARC_ENGINE_DIR}/include/Widgets/customwidgets.h
+
+    ${ARC_ENGINE_DIR}/include/Windows/aboutwindow.h
+    ${ARC_ENGINE_DIR}/include/Windows/closewindow.h
+    ${ARC_ENGINE_DIR}/include/Windows/introwindow.h
+    ${ARC_ENGINE_DIR}/include/Windows/menu.h
+
+    ${ARC_ENGINE_DIR}/include/Objects/arcsprite.h
+    ${ARC_ENGINE_DIR}/include/Objects/arcanimatedsprite.h
+    ${ARC_ENGINE_DIR}/include/Objects/arcskeletonanimation.h
+    ${ARC_ENGINE_DIR}/include/Objects/arclayout.h
+    ${ARC_ENGINE_DIR}/include/Objects/arcpolygon.h
+    ${ARC_ENGINE_DIR}/include/Objects/arcrect.h
+
+    ${ARC_ENGINE_DIR}/include/arclog.h
+    ${ARC_ENGINE_DIR}/include/arcobject.h
+    ${ARC_ENGINE_DIR}/include/arcdebug.h
+    ${ARC_ENGINE_DIR}/include/arcwindow.h
+    ${ARC_ENGINE_DIR}/include/arcaction.h
+    ${ARC_ENGINE_DIR}/include/managers.h
+    ${ARC_ENGINE_DIR}/include/mainwindow.h
+    ${ARC_ENGINE_DIR}/include/collisions.h
+    ${ARC_ENGINE_DIR}/include/engine.h
+    ${ARC_ENGINE_DIR}/include/timer.h
+    ${ARC_ENGINE_DIR}/include/utils.h
+    )
+
 set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Widgets/arclabel.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/arcbutton.cpp

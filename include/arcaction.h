@@ -104,6 +104,7 @@ public:
 
 	void started() override;
 	void process(float progress) override;
+	void finished() override;
 
 protected:
 	sf::Vector2f m_targetPos;

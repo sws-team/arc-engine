@@ -659,3 +659,5 @@ sf::Color ArcDebug::typeToColor(ArcEngine::OBJECT_TYPE type)
 	}
 	return sf::Color(186,101,30, 255);
 }
+
+
