@@ -9,8 +9,8 @@ class ArcObject;
 class ArcAction
 {
 public:
-	ArcAction(float time, ArcObject *object = nullptr);
-	virtual ~ArcAction();
+	ArcAction(float time);
+	virtual ~ArcAction() = default;
 
 	void update();
 	virtual void started();
@@ -22,7 +22,6 @@ public:
 	bool isCompleted() const;
 
 protected:
-	ArcObject *m_object;
 	float m_time = 0;
 	std::function<void()> completedFunc = nullptr;
 	Timer timer;
@@ -31,34 +30,58 @@ private:
 	bool m_completed = false;
 };
 
+class ActionWithObject : public ArcAction
+{
+public:
+	ActionWithObject(float time, ArcObject *object = nullptr);
+protected:
+	ArcObject *m_object = nullptr;
+};
+
 class GroupAction : public ArcAction
 {
 public:
-	GroupAction(float time, ArcObject *object = nullptr);
+	GroupAction();
+	~GroupAction() override;
 
 	void addAction(ArcAction *action);
 
-	void process(float progress) override;
+	void process(float) override;
 
 private:
-	std::queue<ArcAction*> group;
+	std::vector<ArcAction*> actions;
+};
+
+class OrderAction : public ArcAction
+{
+public:
+	OrderAction();
+	~OrderAction() override;
+
+	void addAction(ArcAction *action);
+
+	void started() override;
+	void process(float) override;
+
+private:
+	std::queue<ArcAction*> actions;
 	ArcAction *currentAction = nullptr;
 };
 
 class FunctionAction : public ArcAction
 {
 public:
-	FunctionAction(float time, ArcObject *object = nullptr);
+	FunctionAction(float time);
 
 	void process(float progress) override;
 
-	void setFunc(const std::function<void(float, ArcObject*)>& func);
+	void setFunc(const std::function<void(float)>& func);
 
 private:
-	std::function<void(float, ArcObject*)> processFunc = nullptr;
+	std::function<void(float)> processFunc = nullptr;
 };
 
-class FadeAction : public ArcAction
+class FadeAction : public ActionWithObject
 {
 public:
 	FadeAction(float time, ArcObject *object, sf::Uint8 targetAlpha);
@@ -92,12 +115,17 @@ public:
 
 class RepeatAction : public ArcAction
 {
-	RepeatAction(float time, ArcObject *object = nullptr);
+	RepeatAction(ArcAction *action);
+	~RepeatAction() override;
 
+	void process(float progress) override;
 	void finished() override;
+
+protected:
+	ArcAction *m_action = nullptr;
 };
 
-class ChangePosAction : public ArcAction
+class ChangePosAction : public ActionWithObject
 {
 public:
 	ChangePosAction(float time, ArcObject *object, const sf::Vector2f& targetPos);
@@ -115,6 +143,7 @@ class MoveAction : public ChangePosAction
 {
 public:
 	MoveAction(float time, ArcObject *object, const sf::Vector2f& movePos);
+	void finished() override;
 
 	void process(float progress) override;
 };

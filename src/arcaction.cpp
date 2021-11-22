@@ -3,14 +3,8 @@
 #include "arcsprite.h"
 #include "arclabel.h"
 
-ArcAction::ArcAction(float time, ArcObject *object)
-	:m_object(object)
-	,m_time(time)
-{
-
-}
-
-ArcAction::~ArcAction()
+ArcAction::ArcAction(float time)
+	:m_time(time)
 {
 
 }
@@ -21,6 +15,10 @@ void ArcAction::update()
 		m_started = true;
 		timer.reset();
 		started();
+	}
+	if (m_time == -1) {
+		process(-1);
+		return;
 	}
 	if (timer.check(m_time)) {
 		finished();
@@ -59,32 +57,78 @@ bool ArcAction::isCompleted() const
 	return m_completed;
 }
 
-GroupAction::GroupAction(float time, ArcObject *object)
-	: ArcAction(time, object)
+ActionWithObject::ActionWithObject(float time, ArcObject *object)
+	: ArcAction(time)
+	,m_object(object)
 {
 
+}
+
+GroupAction::GroupAction()
+	: ArcAction(-1)
+{
+
+}
+
+GroupAction::~GroupAction()
+{
+	for(ArcAction *action : actions)
+		delete action;
 }
 
 void GroupAction::addAction(ArcAction *action)
 {
-	group.push(action);
+	actions.emplace_back(action);
 }
 
-void GroupAction::process(float progress)
+void GroupAction::process(float)
 {
-	if (group.empty()) {
+	for(ArcAction *action : actions)
+		action->update();
+}
+
+OrderAction::OrderAction()
+	: ArcAction(-1)
+{
+
+}
+
+OrderAction::~OrderAction()
+{
+	while (!actions.empty()) {
+		delete currentAction;
+		actions.pop();
+		currentAction = actions.front();
+	}
+}
+
+void OrderAction::addAction(ArcAction *action)
+{
+	actions.push(action);
+}
+
+void OrderAction::started()
+{
+	if (!actions.empty())
+		currentAction = actions.front();
+}
+
+void OrderAction::process(float)
+{
+	if (actions.empty()) {
 		finished();
 		return;
 	}
-	if (currentAction == nullptr) {
-		currentAction = group.front();
-		group.pop();
+	currentAction->update();
+	if (currentAction->isCompleted()) {
+		delete currentAction;
+		actions.pop();
+		currentAction = actions.front();
 	}
-	currentAction->process(progress);
 }
 
-FunctionAction::FunctionAction(float time, ArcObject *object)
-	: ArcAction(time, object)
+FunctionAction::FunctionAction(float time)
+	: ArcAction(time)
 {
 
 }
@@ -93,16 +137,16 @@ void FunctionAction::process(float progress)
 {
 	if (processFunc == nullptr)
 		return;
-	processFunc(progress, m_object);
+	processFunc(progress);
 }
 
-void FunctionAction::setFunc(const std::function<void (float, ArcObject *)> &func)
+void FunctionAction::setFunc(const std::function<void (float)> &func)
 {
 	processFunc = func;
 }
 
 FadeAction::FadeAction(float time, ArcObject *object, sf::Uint8 targetAlpha)
-	: ArcAction(time, object)
+	: ActionWithObject(time, object)
 	,m_targetAlpha(targetAlpha)
 {
 
@@ -161,10 +205,23 @@ sf::Uint8 FadeOutAction::alpha(float progress) const
 	return MAX_ALPHA - static_cast<float>(MAX_ALPHA) * progress;
 }
 
-RepeatAction::RepeatAction(float time, ArcObject *object)
-	: ArcAction(time, object)
+RepeatAction::RepeatAction(ArcAction *action)
+	: ArcAction(-1)
+	,m_action(action)
 {
 
+}
+
+RepeatAction::~RepeatAction()
+{
+	if (m_action != nullptr)
+		delete m_action;
+}
+
+void RepeatAction::process(float progress)
+{
+	if (m_action != nullptr)
+		m_action->process(progress);
 }
 
 void RepeatAction::finished()
@@ -173,7 +230,7 @@ void RepeatAction::finished()
 }
 
 ChangePosAction::ChangePosAction(float time, ArcObject *object, const sf::Vector2f &targetPos)
-	: ArcAction(time, object)
+	: ActionWithObject(time, object)
 	,m_targetPos(targetPos)
 {
 
@@ -203,6 +260,12 @@ MoveAction::MoveAction(float time, ArcObject *object, const sf::Vector2f &movePo
 
 }
 
+void MoveAction::finished()
+{
+	m_object->setPos(m_startPos + m_targetPos);
+	ArcAction::finished();
+}
+
 
 void MoveAction::process(float progress)
 {
@@ -210,3 +273,4 @@ void MoveAction::process(float progress)
 	const float targetY = m_startPos.y + m_targetPos.y * progress;
 	m_object->setPos(targetX, targetY);
 }
+
