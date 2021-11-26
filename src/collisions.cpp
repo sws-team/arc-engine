@@ -232,6 +232,11 @@ bool Intersection::contains(const sf::RectangleShape& rect, const sf::Vector2f& 
 	return isParallelogramContainsPoint(pos, rect.getPosition(), points, rect.getGlobalBounds());
 }
 
+sf::Vector2f Intersection::getTranslatedPoint(ArcObject *object, const sf::Vector2f &point)
+{
+	return object->m_transform.transformPoint(point);
+}
+
 bool Intersection::contains(ArcSprite* sprite, const sf::Vector2f& pos)
 {
 	return contains(sprite->sprite, pos);

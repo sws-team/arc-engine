@@ -229,6 +229,13 @@ void ArcObject::addAction(ArcAction *action)
 	m_actions.push_back(action);
 }
 
+void ArcObject::insertChild(int pos, ArcObject *object)
+{
+	object->setParent(this);
+	object->init();
+	m_childs.insert(m_childs.begin() + pos, object);
+}
+
 void ArcObject::removeChild(ArcObject *object)
 {
 	if (auto it = std::find(m_childs.begin(), m_childs.end(), object); it != m_childs.end()) {

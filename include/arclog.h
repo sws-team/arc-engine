@@ -5,6 +5,7 @@
 #include <android/log.h>
 #endif
 #include <iostream>
+#include "SFML/System/Vector2.hpp"
 
 #ifdef ARC_DEBUG
 
@@ -33,6 +34,15 @@ public:
 	ARC_ARG_START long ARC_ARG_END
 	ARC_ARG_START float ARC_ARG_END
 	ARC_ARG_START double ARC_ARG_END
+
+	inline ArcLog &operator<<(const sf::Vector2f& value) {
+		std::cout << value.x << DELIMER << value.y << DELIMER;
+		return *this;
+	}
+	inline ArcLog &operator<<(char *value) {
+		std::cout << std::string(value) << DELIMER;
+		return *this;
+	}
 
 private:
 	static constexpr char DELIMER = ' ';

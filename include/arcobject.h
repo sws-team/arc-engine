@@ -26,6 +26,7 @@ public:
 	void setParent(ArcObject* parent);
 	void addChild(ArcObject* object);
 	void addAction(ArcAction* action);
+	void insertChild(int pos, ArcObject* object);
 
 	void removeChild(ArcObject* object);
 	void removeChild(const std::string& name);

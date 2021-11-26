@@ -83,6 +83,7 @@ public:
 #ifdef ARC_DEBUG
 	static bool contains(ArcObject* object, const sf::Vector2f& pos);
 #endif
+	static sf::Vector2f getTranslatedPoint(ArcObject *object, const sf::Vector2f& point);
 private:
 	static bool isParallelogramContainsPoint(const sf::Vector2f& target,
 									  const sf::Vector2f& point,
@@ -90,6 +91,7 @@ private:
 									  const sf::FloatRect& boundingBox);
 
 	static bool contains(const sf::RectangleShape& rect, const sf::Vector2f& pos);
+
 };
 
 

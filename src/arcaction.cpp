@@ -4,7 +4,7 @@
 #include "arclabel.h"
 
 ArcAction::ArcAction(float time)
-	:m_time(time)
+	: m_time(time)
 {
 
 }
@@ -273,4 +273,3 @@ void MoveAction::process(float progress)
 	const float targetY = m_startPos.y + m_targetPos.y * progress;
 	m_object->setPos(targetX, targetY);
 }
-
