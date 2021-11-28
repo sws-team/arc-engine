@@ -83,8 +83,19 @@ void GroupAction::addAction(ArcAction *action)
 
 void GroupAction::process(float)
 {
-	for(ArcAction *action : actions)
-		action->update();
+	for (auto it = actions.begin(); it != actions.end();) {
+		ArcAction* action = *it;
+		if (action->isCompleted()) {
+			delete action;
+			it = actions.erase(it);
+		}
+		else {
+			action->update();
+			++it;
+		}
+	}
+	if (actions.empty())
+		finished();
 }
 
 OrderAction::OrderAction()
@@ -109,22 +120,35 @@ void OrderAction::addAction(ArcAction *action)
 
 void OrderAction::started()
 {
+	currentAction = nullptr;
 	if (!actions.empty())
-		currentAction = actions.front();
+		nextAction();
 }
 
 void OrderAction::process(float)
 {
-	if (actions.empty()) {
-		finished();
+	auto checkFinished = [this]() {
+		if (actions.empty() && currentAction == nullptr) {
+			finished();
+			return true;
+		}
+		return false;
+	};
+	if (checkFinished())
 		return;
-	}
 	currentAction->update();
 	if (currentAction->isCompleted()) {
 		delete currentAction;
-		actions.pop();
-		currentAction = actions.front();
+		currentAction = nullptr;
+		if (!checkFinished())
+			nextAction();
 	}
+}
+
+void OrderAction::nextAction()
+{
+	currentAction = actions.front();
+	actions.pop();
 }
 
 FunctionAction::FunctionAction(float time)
@@ -251,7 +275,7 @@ void ChangePosAction::process(float progress)
 void ChangePosAction::finished()
 {
 	m_object->setPos(m_targetPos);
-	ArcAction::finished();
+	ActionWithObject::finished();
 }
 
 MoveAction::MoveAction(float time, ArcObject *object, const sf::Vector2f &movePos)
@@ -272,4 +296,45 @@ void MoveAction::process(float progress)
 	const float targetX = m_startPos.x + m_targetPos.x * progress;
 	const float targetY = m_startPos.y + m_targetPos.y * progress;
 	m_object->setPos(targetX, targetY);
+}
+
+ChangeScaleAction::ChangeScaleAction(float time, ArcObject *object, const sf::Vector2f &scale)
+	: ActionWithObject(time, object)
+	,m_targetScale(scale)
+{
+
+}
+
+ChangeScaleAction::ChangeScaleAction(float time, ArcObject *object, float scale)
+	: ChangeScaleAction(time, object, sf::Vector2f(scale, scale))
+{
+
+}
+
+void ChangeScaleAction::started()
+{
+	m_startScale = m_object->scale();
+	if (m_startScale == m_targetScale) {
+		ActionWithObject::finished();
+		return;
+	}
+	increase.first = m_startScale.x < m_targetScale.x;
+	increase.second = m_startScale.y < m_targetScale.y;
+}
+
+void ChangeScaleAction::process(float progress)
+{
+	const float offsetX = (m_targetScale.x - m_startScale.x) * progress;
+	const float offsetY = (m_targetScale.y - m_startScale.y) * progress;
+
+	const float scaleX = m_startScale.x + offsetX;
+	const float scaleY = m_startScale.y + offsetY;
+
+	m_object->setScale(scaleX, scaleY);
+}
+
+void ChangeScaleAction::finished()
+{
+	m_object->setScale(m_targetScale);
+	ActionWithObject::finished();
 }

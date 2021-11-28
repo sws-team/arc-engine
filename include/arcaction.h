@@ -66,6 +66,7 @@ public:
 private:
 	std::queue<ArcAction*> actions;
 	ArcAction *currentAction = nullptr;
+	void nextAction();
 };
 
 class FunctionAction : public ArcAction
@@ -143,9 +144,24 @@ class MoveAction : public ChangePosAction
 {
 public:
 	MoveAction(float time, ArcObject *object, const sf::Vector2f& movePos);
-	void finished() override;
 
 	void process(float progress) override;
+	void finished() override;
+};
+
+class ChangeScaleAction : public ActionWithObject
+{
+public:
+	ChangeScaleAction(float time, ArcObject *object, const sf::Vector2f& scale);
+	ChangeScaleAction(float time, ArcObject *object, float scale);
+
+	void started() override;
+	void process(float progress) override;
+	void finished() override;
+private:
+	sf::Vector2f m_startScale;
+	sf::Vector2f m_targetScale;
+	std::pair<bool, bool> increase = {true, true};
 };
 
 #endif // ARCACTION_H
