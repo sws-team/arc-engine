@@ -17,6 +17,9 @@ public:
 	void setRowCount(int count);
 	void setLooped(bool loop);
 	void setCycled(bool cycled);
+	void setRow(int row);
+	void setFrameSize(const sf::Vector2f &frameSize);
+	void setFrameSize(float width, float height);
 
 	float speed() const;
 	int frameCount() const;
@@ -28,6 +31,7 @@ public:
 
 	void updateTextureRect();
 	void setTexture(TextureType textureID) override;
+
 protected:
 	void nextFrame();
 private:
@@ -37,6 +41,8 @@ private:
 	int m_rowCount = 0;
 	bool m_looped = true;
 	bool m_cycled = false;
+	int m_row = 0;
+	sf::Vector2f m_frameSize;
 	std::function<void()> callback = nullptr;
 
 	int currentFrame = -1;

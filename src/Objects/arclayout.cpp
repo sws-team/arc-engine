@@ -159,9 +159,10 @@ void ArcLayout::refreshChilds()
 	if (m_autoSize) {
 		bool end = false;
 		unsigned n = 0;
-		float childMaxWidth = 0;
+		float rowMaxWidth = 0;
 		for (unsigned row = 0; row < m_rows; ++row) {
 			float childMaxHeight = 0;
+			float rowWidth = 0;
 			for (unsigned column = 0; column < m_columns; ++column) {
 				end = n == m_childs.size();
 				if (end)
@@ -169,25 +170,31 @@ void ArcLayout::refreshChilds()
 				ArcObject *child = m_childs.at(n++);
 				if (!child->isEnabled())
 					continue;
-				child->setPos(pos + sf::Vector2f(child->scaledSize().x * child->originX(),
+				const float childWidth = child->scaledSize().x;
+				child->setPos(pos + sf::Vector2f(childWidth * child->originX(),
 												 child->scaledSize().y * child->originY()));
-				pos.x += child->scaledSize().x;
-				if (column < m_columns - 1)
-					pos.x += m_offset.x * scaleX();
-				if (child->scaledSize().y > childMaxHeight)
-					childMaxHeight = child->scaledSize().y;
+				pos.x += childWidth;
+//				rowWidth += childWidth;
+				rowWidth += child->size().x;
+				if (column < m_columns - 1) {
+					const float actualOffset = m_offset.x * globalScale().x;
+					pos.x += actualOffset;
+					rowWidth += actualOffset;
+				}
+				if (child->size().y > childMaxHeight)
+					childMaxHeight = child->size().y;
 			}
 			if (end)
 				break;
-			if (pos.x > childMaxWidth) {
-				childMaxWidth = pos.x;
+			if (rowWidth > rowMaxWidth) {
+				rowMaxWidth = rowWidth;
 			}
 			pos.y += childMaxHeight;
 			pos.x = baseX;
 			if (row != m_rows - 1)
-				pos.y += m_offset.y * scaleY();
+				pos.y += m_offset.y * globalScale().y;
 		}
-		setSize(childMaxWidth - baseX, pos.y - baseY);
+		setSize(rowMaxWidth, pos.y - baseY);
 	}
 	else {
 		const sf::Vector2f sSize = scaledSize();
@@ -197,15 +204,22 @@ void ArcLayout::refreshChilds()
 				continue;
 			child->setPos(pos);
 			pos.x += child->scaledSize().x;
-			pos.x += m_offset.x * scaleX();
+			pos.x += m_offset.x * globalScale().x;
+
 			if (child->scaledSize().y > maxHeight)
 				maxHeight = child->scaledSize().y;
-			if (pos.x > sSize.x) {
+			if (pos.x >= sSize.x) {
 				pos.x = baseX;
 				pos.y += maxHeight;
-				pos.y += m_offset.y * scaleY();
+				pos.y += m_offset.y * globalScale().y;
 				maxHeight = 0;
 			}
 		}
+	}
+	for(ArcObject* child : m_childs) {
+		if (child->type() != ArcEngine::LAYOUT)
+			continue;
+		ArcLayout *layout = static_cast<ArcLayout*>(child);
+		layout->updateLayout();
 	}
 }

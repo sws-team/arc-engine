@@ -504,12 +504,12 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					float x = layout->rows();
 					float y = layout->columns();
 					ImGui::TextUnformatted("Grid");
-					ImGui::DragFloat("##Rows", &x);
+					ImGui::DragFloat("##Columns", &x);
 					ImGui::SameLine();
-					ImGui::TextUnformatted("Y");
-					ImGui::DragFloat("##Columns", &y);
+					ImGui::TextUnformatted("Columns");
+					ImGui::DragFloat("##Rows", &y);
 					ImGui::SameLine();
-					ImGui::TextUnformatted("X");
+					ImGui::TextUnformatted("Rows");
 					layout->setGrid(x, y);
 				}
 				{//AutoSize
@@ -518,6 +518,23 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::SameLine();
 					ImGui::TextUnformatted("AutoSize");
 					layout->setAutoSize(autoSize);
+				}
+				{//Border offser
+					float x = layout->borderOffset().x;
+					float y = layout->borderOffset().y;
+					ImGui::TextUnformatted("Border offseе");
+					ImGui::DragFloat("##BorderOffsetX", &x);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("X");
+					ImGui::DragFloat("##BorderOffsetY", &y);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Y");
+					layout->setBorderOffset(x, y);
+				}
+				{//update
+					if (ImGui::Button("updateLayout")) {
+						layout->updateLayout();
+					}
 				}
 			}
 		}

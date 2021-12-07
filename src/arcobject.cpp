@@ -487,6 +487,16 @@ void ArcObject::setSize(float x, float y)
 	updateSize();
 }
 
+void ArcObject::setWidth(float w)
+{
+	setSize(w, m_height);
+}
+
+void ArcObject::setHeight(float h)
+{
+	setSize(m_width, h);
+}
+
 void ArcObject::setRotation(float angle)
 {
 	if (m_angle == angle)

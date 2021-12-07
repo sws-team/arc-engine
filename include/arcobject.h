@@ -62,6 +62,8 @@ public:
 	void setScale(float x, float y);
 	void setSize(const sf::Vector2f& size);
 	void setSize(float x, float y);
+	void setWidth(float w);
+	void setHeight(float h);
 	void setRotation(float angle);
 	void setEnabled(bool enabled);
 

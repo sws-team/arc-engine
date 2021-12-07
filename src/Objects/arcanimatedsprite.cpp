@@ -39,6 +39,11 @@ void ArcAnimatedSprite::setCycled(bool cycled)
 	m_cycled = cycled;
 }
 
+void ArcAnimatedSprite::setRow(int row)
+{
+	m_row = row;
+}
+
 float ArcAnimatedSprite::speed() const
 {
 	return m_animationSpeed;
@@ -71,7 +76,7 @@ void ArcAnimatedSprite::setCallback(const std::function<void ()> &func)
 
 void ArcAnimatedSprite::updateTextureRect()
 {
-	sprite.setTextureRect(sf::IntRect(currentFrame * size().x, row * size().y, size().x, size().y));
+	sprite.setTextureRect(sf::IntRect(currentFrame * m_frameSize.x, row * m_frameSize.y, m_frameSize.x, m_frameSize.y));
 }
 
 void ArcAnimatedSprite::setTexture(TextureType textureID)
@@ -95,7 +100,7 @@ void ArcAnimatedSprite::nextFrame()
 					finish();
 					return;
 				}
-				row = 0;
+				row = m_row;
 			}
 		}
 		else if (!m_looped) {
@@ -106,6 +111,16 @@ void ArcAnimatedSprite::nextFrame()
 	}
 	updateTextureRect();
 	return;
+}
+
+void ArcAnimatedSprite::setFrameSize(const sf::Vector2f &frameSize)
+{
+	m_frameSize = frameSize;
+}
+
+void ArcAnimatedSprite::setFrameSize(float width, float height)
+{
+	setFrameSize(sf::Vector2f(width, height));
 }
 
 void ArcAnimatedSprite::finish()
