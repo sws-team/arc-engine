@@ -19,18 +19,11 @@ bool ArcWindow::eventFilter(sf::Event *event)
 {
 	if (event->type == sf::Event::Closed)
 		this->back();
-	if (event->type == sf::Event::MouseButtonPressed)
-	{
-		if (event->mouseButton.button == sf::Mouse::Right)
-			back();
-	}
-	else if (event->type == sf::Event::KeyPressed)
-	{
+	else if (event->type == sf::Event::KeyPressed) {
 		if (event->key.code == sf::Keyboard::Escape)
 			this->back();
 	}
-	else if (event->type == sf::Event::JoystickButtonPressed)
-	{
+	else if (event->type == sf::Event::JoystickButtonPressed) {
 		if (event->joystickButton.button == ArcEngine::KEY_ESCAPE)
 			this->back();
 	}
