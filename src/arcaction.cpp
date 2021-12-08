@@ -178,28 +178,7 @@ FadeAction::FadeAction(float time, ArcObject *object, sf::Uint8 targetAlpha)
 
 void FadeAction::process(float progress)
 {
-	switch (m_object->type())
-	{
-	case ArcEngine::SPRITE:
-	case ArcEngine::BUTTON:
-	{
-		ArcSprite *sprite = dynamic_cast<ArcSprite*>(m_object);
-		sf::Color color = sprite->color();
-		color.a = alpha(progress);
-		sprite->setColor(color);
-	}
-		break;
-	case ArcEngine::LABEL:
-	{
-		ArcLabel *label = dynamic_cast<ArcLabel*>(m_object);
-		sf::Color color = label->color();
-		color.a = alpha(progress);
-		label->setColor(color);
-	}
-		break;
-	default:
-		break;
-	}
+	m_object->setAlpha(alpha(progress));
 }
 
 void FadeAction::setTargetAlpha(sf::Uint8 targetAlpha)

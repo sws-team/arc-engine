@@ -18,7 +18,6 @@ namespace Utils {
 	std::string to_string_with_precision(const float a_value, const int n = 6);
 
 #ifdef ARC_DEBUG
-	constexpr float COLOR_CONST = 255.f;
 	sf::Color convertToColor(const ImVec4& color);
 	ImVec4 convertFromColor(const sf::Color& color);
 #endif

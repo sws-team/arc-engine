@@ -7,6 +7,7 @@
 ArcSkeletonAnimation::ArcSkeletonAnimation(const std::string &name)
 	: ArcObject(name)
 {
+	ArcProperty::setObject(this);
 	setType(ArcEngine::SKELETON_ANIMATION);
 	display = new dragonBones::SFMLArmatureDisplay(name);
 	animation = display->getAnimation();
@@ -31,13 +32,8 @@ void ArcSkeletonAnimation::draw(sf::RenderTarget * const target)
 
 void ArcSkeletonAnimation::setColor(const sf::Color &color)
 {
-	m_color = color;
-	armatureProxy->setColor(color);
-}
-
-sf::Color ArcSkeletonAnimation::color() const
-{
-	return m_color;
+	ColorProperty::setColor(color);
+	armatureProxy->setColor(actualColor());
 }
 
 void ArcSkeletonAnimation::changeAnimation(const std::string &animationName)

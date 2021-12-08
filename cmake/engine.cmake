@@ -54,6 +54,7 @@ set(ARC_ENGINE_HEADERS
     ${ARC_ENGINE_DIR}/include/engine.h
     ${ARC_ENGINE_DIR}/include/timer.h
     ${ARC_ENGINE_DIR}/include/utils.h
+    ${ARC_ENGINE_DIR}/include/arcproperties.h
     )
 
 set(ARC_ENGINE_SOURCES
@@ -84,6 +85,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/engine.cpp
     ${ARC_ENGINE_DIR}/src/timer.cpp
     ${ARC_ENGINE_DIR}/src/utils.cpp
+    ${ARC_ENGINE_DIR}/src/arcproperties.cpp
 
     ${RESOURCES_SOURCES}
     )

@@ -1,11 +1,14 @@
 #include "arcsprite.h"
 #include "engine.h"
 #include "managers.h"
+#include "utils.h"
 
 ArcSprite::ArcSprite(const std::string &name)
 	: ArcObject(name)
 {
 	setType(ArcEngine::SPRITE);
+	ColorProperty::setObject(this);
+	BorderColorProperty::setObject(this);
 }
 
 void ArcSprite::draw(sf::RenderTarget * const target)
@@ -48,37 +51,25 @@ void ArcSprite::setTexture(TextureType textureID)
 
 void ArcSprite::setColor(const sf::Color &color)
 {
-	sprite.setFillColor(color);
+	ColorProperty::setColor(color);
+	sprite.setFillColor(actualColor());
 }
 
 void ArcSprite::setBorderColor(const sf::Color &color)
 {
-	sprite.setOutlineColor(color);
+	BorderColorProperty::setBorderColor(color);
+	sprite.setOutlineColor(actualBorderColor());
 }
 
 void ArcSprite::setBorderSize(const float size)
 {
+	BorderSizeProperty::setBorderSize(size);
 	sprite.setOutlineThickness(size);
 }
 
 TextureType ArcSprite::textureID() const
 {
 	return m_textureID;
-}
-
-sf::Color ArcSprite::color() const
-{
-	return sprite.getFillColor();
-}
-
-sf::Color ArcSprite::borderColor() const
-{
-	return sprite.getOutlineColor();
-}
-
-float ArcSprite::borderSize() const
-{
-	return sprite.getOutlineThickness();
 }
 
 

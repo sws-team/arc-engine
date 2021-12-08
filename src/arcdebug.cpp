@@ -326,6 +326,14 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::TextUnformatted("Angle");
 					obj->setRotation(angle);
 				}
+				{//Alpha
+					float alpha = obj->alpha();
+					ImGui::TextUnformatted("Opacity");
+					ImGui::DragFloat("##Alpha", &alpha, 0.01f, 0, 1.f);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Alpha");
+					obj->setAlpha(alpha);
+				}
 			}
 		}
 			break;
@@ -416,10 +424,10 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 				ArcButton *button = static_cast<ArcButton*>(obj);
 				{//Clickable
 					bool clickable = button->isClickable();
-					ImGui::TextUnformatted("Color");
+					ImGui::TextUnformatted("Clickable");
 					ImGui::Checkbox("##Clickable", &clickable);
 					ImGui::SameLine();
-					ImGui::TextUnformatted("Color");
+					ImGui::TextUnformatted("Clickable");
 					button->setClickable(clickable);
 				}
 			}

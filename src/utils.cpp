@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "arcobject.h"
+#include "arcproperties.h"
 
 #include <sstream>
 
@@ -37,20 +38,20 @@ std::string to_string_with_precision(const float a_value, const int n)
 sf::Color convertToColor(const ImVec4 &color)
 {
 	sf::Color result;
-	result.r = static_cast<sf::Uint8>(color.x * COLOR_CONST);
-	result.g = static_cast<sf::Uint8>(color.y * COLOR_CONST);
-	result.b = static_cast<sf::Uint8>(color.z * COLOR_CONST);
-	result.a = static_cast<sf::Uint8>(color.w * COLOR_CONST);
+	result.r = ColorProperty::ratioToColor(color.x);
+	result.g = ColorProperty::ratioToColor(color.y);
+	result.b = ColorProperty::ratioToColor(color.z);
+	result.a = ColorProperty::ratioToColor(color.w);
 	return result;
 }
 
 ImVec4 convertFromColor(const sf::Color &color)
 {
 	ImVec4 result;
-	result.x = static_cast<float>(color.r) / COLOR_CONST;
-	result.y = static_cast<float>(color.g) / COLOR_CONST;
-	result.z = static_cast<float>(color.b) / COLOR_CONST;
-	result.w = static_cast<float>(color.a) / COLOR_CONST;
+	result.x = ColorProperty::colorToRatio(color.r);
+	result.y = ColorProperty::colorToRatio(color.g);
+	result.z = ColorProperty::colorToRatio(color.b);
+	result.w = ColorProperty::colorToRatio(color.a);
 	return result;
 }
 #endif

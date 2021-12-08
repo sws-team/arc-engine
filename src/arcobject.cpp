@@ -2,6 +2,7 @@
 #include "engine.h"
 #include "managers.h"
 #include "arcaction.h"
+#include "arcproperties.h"
 
 ArcObject::ArcObject(const std::string &name)
 	: m_name(name)
@@ -139,6 +140,17 @@ void ArcObject::updateSize()
 #endif
 }
 
+void ArcObject::updateAlpha()
+{
+	if (ColorProperty *property = dynamic_cast<ColorProperty*>(this); property != nullptr)
+		property->setColor(property->color());
+	if (BorderColorProperty *property = dynamic_cast<BorderColorProperty*>(this); property != nullptr)
+		property->setBorderColor(property->borderColor());
+
+	for(ArcObject* child : m_childs)
+		child->updateAlpha();
+}
+
 void ArcObject::drawChilds(sf::RenderTarget * const target)
 {
 	for(ArcObject* child : m_childs)
@@ -156,6 +168,19 @@ void ArcObject::updateTransform()
 		transform->rotate(object->rotation(), object->scaledGlobalPos());
 	};
 	parentTransform(this, &m_transform);
+}
+
+float ArcObject::alpha() const
+{
+	return m_alpha;
+}
+
+void ArcObject::setAlpha(float alpha)
+{
+	if (m_alpha == alpha)
+		return;
+	m_alpha = alpha;
+	updateAlpha();
 }
 
 #ifdef ARC_DEBUG
@@ -320,6 +345,13 @@ sf::Vector2f ArcObject::globalScale() const
 sf::Vector2f ArcObject::globalOrigin() const
 {
 	return sf::Vector2f(m_originX * m_width, m_originY * m_height);
+}
+
+float ArcObject::globalAlpha() const
+{
+	if (m_parent == nullptr)
+		return alpha();
+	return alpha() * m_parent->globalAlpha();
 }
 
 void ArcObject::setEnabled(bool enabled)

@@ -3,8 +3,12 @@
 
 #include "enginedef.h"
 #include "arcobject.h"
+#include "arcproperties.h"
 
-class ArcPolygon : public ArcObject
+class ArcPolygon : public ArcObject,
+		public ColorProperty,
+		public BorderColorProperty,
+		public BorderSizeProperty
 {
 public:
 	ArcPolygon(const std::string& name);
@@ -23,13 +27,9 @@ public:
 	SHAPE shapeType() const;
 	void setShapeType(const ArcPolygon::SHAPE &shapeType);
 
-	void setColor(const sf::Color& color);
-	void setBorderColor(const sf::Color& color);
-	void setBorderSize(const float size);
-
-	sf::Color color() const;
-	sf::Color borderColor() const;
-	float borderSize() const;
+	void setColor(const sf::Color& color) override;
+	void setBorderColor(const sf::Color& color) override;
+	void setBorderSize(const float size) override;
 
 	void init() override;
 protected:

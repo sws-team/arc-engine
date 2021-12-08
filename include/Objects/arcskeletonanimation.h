@@ -2,6 +2,7 @@
 #define ARCSKELETONANIMATION_H
 
 #include "arcobject.h"
+#include "arcproperties.h"
 
 namespace dragonBones{
 class SFMLArmatureDisplay;
@@ -11,7 +12,7 @@ class EventObject;
 class SFMLArmatureProxy;
 }
 
-class ArcSkeletonAnimation : public ArcObject
+class ArcSkeletonAnimation : public ArcObject, public ColorProperty
 {
 public:
 	ArcSkeletonAnimation(const std::string& name);
@@ -19,8 +20,7 @@ public:
 
 	void draw(sf::RenderTarget *const target) override;
 
-	void setColor(const sf::Color& color);
-	sf::Color color() const;
+	void setColor(const sf::Color& color) override;
 
 protected:
 	void changeAnimation(const std::string& animationName);
@@ -38,7 +38,6 @@ private:
 	dragonBones::SFMLArmatureProxy *armatureProxy = nullptr;
 
 	std::string currentAnimation;
-	sf::Color m_color = sf::Color::White;
 	void animationCompleted(dragonBones::EventObject* event);
 };
 

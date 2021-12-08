@@ -1,10 +1,13 @@
 #ifndef ARCSPRITE_H
 #define ARCSPRITE_H
 
-#include "enginedef.h"
 #include "arcobject.h"
+#include "arcproperties.h"
 
-class ArcSprite : public ArcObject
+class ArcSprite : public ArcObject,
+		public ColorProperty,
+		public BorderColorProperty,
+		public BorderSizeProperty
 {
 public:
 	ArcSprite(const std::string& name);
@@ -12,14 +15,11 @@ public:
 	void draw(sf::RenderTarget *const target) override;
 
 	virtual void setTexture(TextureType textureID);
-	void setColor(const sf::Color& color);
-	void setBorderColor(const sf::Color& color);
-	void setBorderSize(const float size);
+	void setColor(const sf::Color& color) override;
+	void setBorderColor(const sf::Color& color) override;
+	void setBorderSize(const float size) override;
 
 	TextureType textureID() const;
-	sf::Color color() const;
-	sf::Color borderColor() const;
-	float borderSize() const;
 
 protected:
 	friend class Intersection;

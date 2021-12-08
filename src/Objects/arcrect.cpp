@@ -4,6 +4,8 @@ ArcRect::ArcRect(const std::string &name)
 	: ArcObject(name)
 {
 	setType(ArcEngine::RECT);
+	ColorProperty::setObject(this);
+	BorderColorProperty::setObject(this);
 }
 
 void ArcRect::draw(sf::RenderTarget * const target)
@@ -38,30 +40,18 @@ void ArcRect::updateSize()
 
 void ArcRect::setColor(const sf::Color &color)
 {
-	rect.setFillColor(color);
+	ColorProperty::setColor(color);
+	rect.setFillColor(actualColor());
 }
 
 void ArcRect::setBorderColor(const sf::Color &color)
 {
-	rect.setOutlineColor(color);
+	BorderColorProperty::setBorderColor(color);
+	rect.setOutlineColor(actualBorderColor());
 }
 
 void ArcRect::setBorderSize(const float size)
 {
+	BorderSizeProperty::setBorderSize(size);
 	rect.setOutlineThickness(size);
-}
-
-sf::Color ArcRect::color() const
-{
-	return rect.getFillColor();
-}
-
-sf::Color ArcRect::borderColor() const
-{
-	return rect.getOutlineColor();
-}
-
-float ArcRect::borderSize() const
-{
-	return rect.getOutlineThickness();
 }

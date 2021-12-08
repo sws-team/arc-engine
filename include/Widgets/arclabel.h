@@ -3,24 +3,22 @@
 
 #include "arcobject.h"
 
-class ArcLabel : public ArcObject
+class ArcLabel : public ArcObject,
+		public ColorProperty,
+		public BorderColorProperty,
+		public BorderSizeProperty
 {
 public:
 	ArcLabel(const std::string& name);
 
 	void draw(sf::RenderTarget *const target) override;
 
-	void setColor(const sf::Color &color);
-	sf::Color color() const;
+	void setColor(const sf::Color &color) override;
+	void setBorderColor(const sf::Color &color) override;
+	void setBorderSize(float size) override;
 
 	void setFontSize(unsigned int size);
 	unsigned int fontSize() const;
-
-	void setBorderSize(float size);
-	float borderSize() const;
-
-	void setBorderColor(const sf::Color &color);
-	sf::Color borderColor() const;
 
 	void setText(const std::string& text);
 	void setText(TranslationType id);

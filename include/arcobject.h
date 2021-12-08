@@ -3,6 +3,7 @@
 
 #include "stdheader.h"
 #include "enginedef.h"
+#include "arcproperties.h"
 #include <any>
 
 class ArcAction;
@@ -50,6 +51,7 @@ public:
 	float originY() const;
 	sf::Vector2f origin() const;
 	float rotation() const;
+	float alpha() const;
 
 	//setters
 	void setX(float x);
@@ -66,6 +68,7 @@ public:
 	void setHeight(float h);
 	void setRotation(float angle);
 	void setEnabled(bool enabled);
+	void setAlpha(float alpha);
 
 	void setCentered();
 	void setCenteredOrigin();
@@ -78,6 +81,7 @@ public:
 			return std::any_cast<T>(m_data.at(name));
 		return T();
 	}
+
 
 protected:
 	virtual void update();
@@ -92,10 +96,12 @@ protected:
 	sf::Vector2f globalPos() const;
 	sf::Vector2f globalScale() const;
 	sf::Vector2f globalOrigin() const;
+	float globalAlpha() const;
 	virtual void updatePos();
 	virtual void updateScale();
 	virtual void updateOrigin();
 	virtual void updateSize();
+	void updateAlpha();
 
 	std::vector<ArcObject*> m_childs;
 	std::vector<ArcAction*> m_actions;
@@ -109,6 +115,8 @@ private:
 	//base
 	friend class ArcDebug;
 	friend class Intersection;
+	friend class ColorProperty;
+	friend class BorderColorProperty;
 	bool m_enabled = true;
 	std::string m_name;
 	ArcEngine::OBJECT_TYPE m_type = ArcEngine::UNDEF;
@@ -122,9 +130,11 @@ private:
 	float m_originY = 0.f;
 	float m_width = 0.f;
 	float m_height = 0.f;
+	float m_alpha = 1.f;
 
 	std::map<std::string, std::any> m_data;
 	static constexpr float center = 0.5f;
+	static constexpr float MAX_ALPHA = 255.f;
 #ifdef ARC_DEBUG
 	bool drawDebugRect = false;
 	bool drawOrigin = false;

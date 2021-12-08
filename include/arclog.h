@@ -19,6 +19,8 @@
 		return *this;\
 	}
 
+#define FUNC_LOG ArcLog() << __FUNCTION__
+
 class ArcLog
 {
 public:

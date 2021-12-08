@@ -7,9 +7,9 @@ ArcLabel::ArcLabel(const std::string& name)
 {
 	setType(ArcEngine::LABEL);
 	m_text.setFont(Engine::Instance().fontManager()->font());
-	setColor(sf::Color::White);
-	setBorderColor(sf::Color::Black);
-	setBorderSize(1.f);
+	ColorProperty::setObject(this);
+	BorderColorProperty::setObject(this);
+	BorderSizeProperty::setObject(this);
 }
 
 void ArcLabel::draw(sf::RenderTarget * const target)
@@ -30,12 +30,8 @@ void ArcLabel::draw(sf::RenderTarget * const target)
 
 void ArcLabel::setColor(const sf::Color &color)
 {
-	m_text.setFillColor(color);
-}
-
-sf::Color ArcLabel::color() const
-{
-	return m_text.getFillColor();
+	ColorProperty::setColor(color);
+	m_text.setFillColor(actualColor());
 }
 
 void ArcLabel::setFontSize(unsigned int size)
@@ -53,22 +49,14 @@ unsigned int ArcLabel::fontSize() const
 
 void ArcLabel::setBorderSize(float size)
 {
+	BorderSizeProperty::setBorderSize(size);
 	m_text.setOutlineThickness(size);
-}
-
-float ArcLabel::borderSize() const
-{
-	return m_text.getOutlineThickness();
 }
 
 void ArcLabel::setBorderColor(const sf::Color &color)
 {
-	m_text.setOutlineColor(color);
-}
-
-sf::Color ArcLabel::borderColor() const
-{
-	return m_text.getOutlineColor();
+	BorderColorProperty::setBorderColor(color);
+	m_text.setOutlineColor(actualBorderColor());
 }
 
 void ArcLabel::setText(const std::string &text)

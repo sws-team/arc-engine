@@ -4,6 +4,8 @@ ArcPolygon::ArcPolygon(const std::string &name)
 	: ArcObject(name)
 {
 	setType(ArcEngine::POLYGON);
+	ColorProperty::setObject(this);
+	BorderColorProperty::setObject(this);
 }
 
 void ArcPolygon::draw(sf::RenderTarget * const target)
@@ -80,30 +82,18 @@ unsigned ArcPolygon::vertexCount(ArcPolygon::SHAPE shapeType)
 
 void ArcPolygon::setColor(const sf::Color &color)
 {
-	polygon.setFillColor(color);
+	ColorProperty::setColor(color);
+	polygon.setFillColor(actualColor());
 }
 
 void ArcPolygon::setBorderColor(const sf::Color &color)
 {
-	polygon.setOutlineColor(color);
+	BorderColorProperty::setBorderColor(color);
+	polygon.setOutlineColor(actualBorderColor());
 }
 
 void ArcPolygon::setBorderSize(const float size)
 {
+	BorderSizeProperty::setBorderSize(size);
 	polygon.setOutlineThickness(size);
-}
-
-sf::Color ArcPolygon::color() const
-{
-	return polygon.getFillColor();
-}
-
-sf::Color ArcPolygon::borderColor() const
-{
-	return polygon.getOutlineColor();
-}
-
-float ArcPolygon::borderSize() const
-{
-	return polygon.getOutlineThickness();
 }
