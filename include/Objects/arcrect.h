@@ -3,6 +3,7 @@
 
 #include "enginedef.h"
 #include "arcobject.h"
+#include "arcproperties.h"
 
 class ArcRect : public ArcObject,
 		public ColorProperty,

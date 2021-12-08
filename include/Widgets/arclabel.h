@@ -2,6 +2,7 @@
 #define ARCLABEL_H
 
 #include "arcobject.h"
+#include "arcproperties.h"
 
 class ArcLabel : public ArcObject,
 		public ColorProperty,
