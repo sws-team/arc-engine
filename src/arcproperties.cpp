@@ -67,8 +67,6 @@ void BorderColorProperty::setBorderColor(const sf::Color &color)
 		return;
 
 	m_borderColor = color;
-	const float alpha = ColorProperty::colorToRatio(color.a);
-	object->setAlpha(alpha);
 }
 
 sf::Color BorderColorProperty::borderColor() const
