@@ -3,7 +3,6 @@
 
 #include "stdheader.h"
 #include "enginedef.h"
-#include "arcproperties.h"
 #include <any>
 
 class ArcAction;
