@@ -85,17 +85,17 @@ private:
 class FadeAction : public ActionWithObject
 {
 public:
-	FadeAction(float time, ArcObject *object, sf::Uint8 targetAlpha);
+	FadeAction(float time, ArcObject *object, float targetAlpha);
 
 	void process(float progress) override;
-
 	void setTargetAlpha(sf::Uint8 targetAlpha);
+	void finished() override;
 
-	virtual sf::Uint8 alpha(float progress) const = 0;
+	virtual float alpha(float progress) const = 0;
 
 protected:
-	sf::Uint8 m_targetAlpha;
-	static constexpr sf::Uint8 MAX_ALPHA = 255;
+	float m_targetAlpha;
+	static constexpr float MAX_ALPHA = 1.f;
 };
 
 class FadeInAction : public FadeAction
@@ -103,7 +103,7 @@ class FadeInAction : public FadeAction
 public:
 	FadeInAction(float time, ArcObject *object);
 
-	sf::Uint8 alpha(float progress) const;
+	float alpha(float progress) const;
 };
 
 class FadeOutAction : public FadeAction
@@ -111,7 +111,7 @@ class FadeOutAction : public FadeAction
 public:
 	FadeOutAction(float time, ArcObject *object);
 
-	sf::Uint8 alpha(float progress) const;
+	float alpha(float progress) const;
 };
 
 class RepeatAction : public ArcAction

@@ -169,7 +169,7 @@ void FunctionAction::setFunc(const std::function<void (float)> &func)
 	processFunc = func;
 }
 
-FadeAction::FadeAction(float time, ArcObject *object, sf::Uint8 targetAlpha)
+FadeAction::FadeAction(float time, ArcObject *object, float targetAlpha)
 	: ActionWithObject(time, object)
 	,m_targetAlpha(targetAlpha)
 {
@@ -186,26 +186,32 @@ void FadeAction::setTargetAlpha(sf::Uint8 targetAlpha)
 	m_targetAlpha = targetAlpha;
 }
 
+void FadeAction::finished()
+{
+	m_object->setAlpha(m_targetAlpha);
+	ArcAction::finished();
+}
+
 FadeInAction::FadeInAction(float time, ArcObject *object)
 	: FadeAction(time, object, MAX_ALPHA)
 {
-
+	object->setAlpha(0.f);
 }
 
-sf::Uint8 FadeInAction::alpha(float progress) const
+float FadeInAction::alpha(float progress) const
 {
-	return static_cast<float>(m_targetAlpha) * progress;
+	return m_targetAlpha * progress;
 }
 
 FadeOutAction::FadeOutAction(float time, ArcObject *object)
-	: FadeAction(time, object, 0)
+	: FadeAction(time, object, 0.f)
 {
-
+	object->setAlpha(MAX_ALPHA);
 }
 
-sf::Uint8 FadeOutAction::alpha(float progress) const
+float FadeOutAction::alpha(float progress) const
 {
-	return MAX_ALPHA - static_cast<float>(MAX_ALPHA) * progress;
+	return m_targetAlpha + MAX_ALPHA - progress;
 }
 
 RepeatAction::RepeatAction(ArcAction *action)
