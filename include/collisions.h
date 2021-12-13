@@ -85,12 +85,12 @@ public:
 #endif
 	static sf::Vector2f getTranslatedPoint(ArcObject *object, const sf::Vector2f& point);
 private:
-	static bool isParallelogramContainsPoint(const sf::Vector2f& target,
-									  const sf::Vector2f& point,
-									  const std::vector<sf::Vector2f>& coords,
-									  const sf::FloatRect& boundingBox);
+	static bool isParallelogramContainsPoint(const sf::Vector2f& point,
+									  const std::vector<sf::Vector2f>& coords);
 
-	static bool contains(const sf::RectangleShape& rect, const sf::Vector2f& pos);
+	static bool contains(const sf::RectangleShape& rect,
+						 const sf::Vector2f& pos,
+						 const sf::Transform& transform = sf::Transform());
 
 };
 

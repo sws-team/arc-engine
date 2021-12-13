@@ -14,7 +14,7 @@ ArcButton::ArcButton(const std::string &name)
 void ArcButton::draw(sf::RenderTarget * const target)
 {
 	ArcSprite::draw(target);
-	target->draw(hoverRect);
+	target->draw(hoverRect, m_transform);
 }
 
 void ArcButton::setCallback(const std::function<void ()> &func)

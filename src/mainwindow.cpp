@@ -77,7 +77,7 @@ void MainWindow::exec()
 			default:
 				break;
 			}
-			if (!accepted)
+			if (accepted)
 				continue;
 			if (!active)
 				break;

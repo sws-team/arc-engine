@@ -95,7 +95,7 @@ bool ArcDebug::eventFilter(sf::Event *event)
 			ArcObject *findedObject = findObject(object, pos);
 			if (selectedObject != nullptr) {
 				selectedObject = findedObject;
-				return false;
+				return true;
 			}
 		}
 		if (event->type == sf::Event::MouseMoved) {
@@ -114,7 +114,7 @@ bool ArcDebug::eventFilter(sf::Event *event)
 #ifdef ARC_DEBUG
 	ImGui::SFML::ProcessEvent(*event);
 #endif
-	return true;
+	return false;
 }
 
 void ArcDebug::drawFrame()
