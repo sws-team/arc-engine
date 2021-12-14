@@ -170,14 +170,14 @@ void ArcLayout::refreshChilds()
 				ArcObject *child = m_childs.at(n++);
 				if (!child->isEnabled())
 					continue;
-				const float childWidth = child->scaledSize().x;
+				const float childWidth = child->size().x;
 				child->setPos(pos + sf::Vector2f(childWidth * child->originX(),
-												 child->scaledSize().y * child->originY()));
+												 child->size().y * child->originY()));
 				pos.x += childWidth;
 //				rowWidth += childWidth;
 				rowWidth += child->size().x;
 				if (column < m_columns - 1) {
-					const float actualOffset = m_offset.x * globalScale().x;
+					const float actualOffset = m_offset.x * globalScale(true).x;
 					pos.x += actualOffset;
 					rowWidth += actualOffset;
 				}
@@ -192,22 +192,22 @@ void ArcLayout::refreshChilds()
 			pos.y += childMaxHeight;
 			pos.x = baseX;
 			if (row != m_rows - 1)
-				pos.y += m_offset.y * globalScale().y;
+				pos.y += m_offset.y * globalScale(true).y;
 		}
 		setSize(rowMaxWidth, pos.y - baseY);
 	}
 	else {
-		const sf::Vector2f sSize = scaledSize();
+		const sf::Vector2f sSize = size();
 		float maxHeight = 0;
 		for(ArcObject* child : m_childs) {
 			if (!child->isEnabled())
 				continue;
 			child->setPos(pos);
-			pos.x += child->scaledSize().x;
+			pos.x += child->size().x;
 			pos.x += m_offset.x * globalScale().x;
 
-			if (child->scaledSize().y > maxHeight)
-				maxHeight = child->scaledSize().y;
+			if (child->size().y > maxHeight)
+				maxHeight = child->size().y;
 			if (pos.x >= sSize.x) {
 				pos.x = baseX;
 				pos.y += maxHeight;
@@ -222,4 +222,18 @@ void ArcLayout::refreshChilds()
 		ArcLayout *layout = static_cast<ArcLayout*>(child);
 		layout->updateLayout();
 	}
+}
+
+sf::Vector2f ArcLayout::scaledGlobalPos() const
+{
+	return scaledGlobalOffset() + ArcObject::scaledGlobalPos();
+}
+
+sf::Vector2f ArcLayout::scaledGlobalOffset() const
+{
+	sf::Vector2f gPos = m_borderOffset;
+	const sf::Vector2f gScale = globalScale(true);
+	gPos.x *= gScale.x * scaleFactor.x;
+	gPos.y *= gScale.y * scaleFactor.y;
+	return gPos;
 }

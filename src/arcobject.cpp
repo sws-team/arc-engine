@@ -328,18 +328,26 @@ sf::Vector2f ArcObject::globalPos() const
 		return pos();
 
 	sf::Vector2f gPos = pos();
-	gPos.x *= m_parent->m_scaleX;
-	gPos.y *= m_parent->m_scaleY;
+	const sf::Vector2f gScale = globalScale(true);
+	gPos.x *= gScale.x;
+	gPos.y *= gScale.y;
+
+//	gPos.x *= m_parent->m_scaleX;
+//	gPos.y *= m_parent->m_scaleY;
 
 	return m_parent->globalPos() + gPos;
 }
 
-sf::Vector2f ArcObject::globalScale() const
+sf::Vector2f ArcObject::globalScale(const bool tree) const
 {
 	if (m_parent == nullptr)
-		return scale();
-	return sf::Vector2f(m_parent->globalScale().x * m_scaleX,
-						m_parent->globalScale().y * m_scaleY);
+		return tree ? sf::Vector2f(1.f, 1.f) : scale();
+	sf::Vector2f gScale = m_parent->globalScale();
+	if (!tree) {
+		gScale.x *= m_scaleX;
+		gScale.y *= m_scaleY;
+	}
+	return gScale;
 }
 
 sf::Vector2f ArcObject::globalOrigin() const
@@ -392,7 +400,7 @@ sf::Vector2f ArcObject::size() const
 
 sf::Vector2f ArcObject::scaledSize() const
 {
-	const sf::Vector2f gScale = globalScale();
+	const sf::Vector2f gScale = globalScale(true);
 	return sf::Vector2f(m_width * gScale.x, m_height * gScale.y);
 }
 

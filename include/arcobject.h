@@ -89,11 +89,11 @@ protected:
 	void setName(const std::string& name);
 	void setType(ArcEngine::OBJECT_TYPE type);
 
-	sf::Vector2f scaledGlobalPos() const;
+	virtual sf::Vector2f scaledGlobalPos() const;
 	sf::Vector2f scaledGlobalScale() const;
 
 	sf::Vector2f globalPos() const;
-	sf::Vector2f globalScale() const;
+	sf::Vector2f globalScale(const bool tree = false) const;
 	sf::Vector2f globalOrigin() const;
 	float globalAlpha() const;
 	virtual void updatePos();
@@ -116,6 +116,7 @@ private:
 	friend class Intersection;
 	friend class ColorProperty;
 	friend class BorderColorProperty;
+	friend class ArcLayout;
 	bool m_enabled = true;
 	std::string m_name;
 	ArcEngine::OBJECT_TYPE m_type = ArcEngine::UNDEF;

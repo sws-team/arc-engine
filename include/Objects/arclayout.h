@@ -47,6 +47,8 @@ private:
 	sf::Vector2f m_borderOffset;
 
 	void refreshChilds();
+	sf::Vector2f scaledGlobalPos() const override;
+	sf::Vector2f scaledGlobalOffset() const;
 };
 
 #endif // ARCLAYOUT_H
