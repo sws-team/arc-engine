@@ -37,6 +37,7 @@ void ArcDebug::draw(sf::RenderTarget *target)
 {
 	drawFrame();
 #ifdef ARC_DEBUG
+//	ImGui::SFML::SetCurrentWindow(*static_cast<sf::RenderWindow*>(target));
 	ImGui::SFML::Render(*target);
 #endif
 }
@@ -58,7 +59,8 @@ void ArcDebug::clear()
 void ArcDebug::update()
 {
 #ifdef ARC_DEBUG
-	ImGui::SFML::Update(*static_cast<sf::RenderWindow*>(Engine::Instance().window()), clock.restart());
+	const sf::Time dt = clock.restart();
+	ImGui::SFML::Update(*static_cast<sf::RenderWindow*>(Engine::Instance().window()), dt);
 #endif
 	const float currentTime = FPS.clock.restart().asSeconds();
 	if (FPS.updateTimer.check(ArcEngine::MSEC/5)) {
@@ -112,15 +114,26 @@ bool ArcDebug::eventFilter(sf::Event *event)
 		}
 	}
 #ifdef ARC_DEBUG
-	ImGui::SFML::ProcessEvent(*event);
+	ImGui::SFML::ProcessEvent(*static_cast<sf::RenderWindow*>(Engine::Instance().window()), *event);
 #endif
 	return false;
+}
+
+void ArcDebug::addSection(DebugSection *section)
+{
+	sections.push_back(section);
+}
+
+void ArcDebug::removeSection(DebugSection *section)
+{
+	if (auto it = std::find(sections.begin(), sections.end(), section); it != sections.end()) {
+		sections.erase(it);
+	}
 }
 
 void ArcDebug::drawFrame()
 {
 #ifdef ARC_DEBUG
-//	ImGuiIO &io = ImGui::GetIO();
 	const ImVec2 windowSize = ImVec2(Engine::Instance().settingsManager()->getResolutionF().x / 3,
 									 Engine::Instance().settingsManager()->getResolutionF().y / 3);
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
@@ -153,8 +166,11 @@ void ArcDebug::drawFrame()
 				drawObject(object);
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("Other")) {
-				ImGui::EndTabItem();
+			for(DebugSection *section : sections) {
+				if (ImGui::BeginTabItem(section->name().c_str())) {
+					section->draw();
+					ImGui::EndTabItem();
+				}
 			}
 			ImGui::EndTabBar();
 		}
@@ -686,3 +702,19 @@ sf::Color ArcDebug::typeToColor(ArcEngine::OBJECT_TYPE type)
 }
 
 
+
+DebugSection::DebugSection(const std::string &name)
+	: m_name(name)
+{
+
+}
+
+void DebugSection::draw()
+{
+
+}
+
+std::string DebugSection::name() const
+{
+	return m_name;
+}

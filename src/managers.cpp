@@ -42,7 +42,7 @@ SettingsManager::SettingsManager()
 	)
 	,shaders(true)
 {
-	reset();
+	SettingsManager::reset();
 }
 
 void SettingsManager::reset()
@@ -615,6 +615,16 @@ void Options::updateWindow()
 void Options::debugObject(ArcObject *object)
 {
 	debug->setObject(object);
+}
+
+void Options::addDebugSection(DebugSection *section)
+{
+	debug->addSection(section);
+}
+
+void Options::removeDebugSection(DebugSection *section)
+{
+	debug->removeSection(section);
 }
 
 void Options::globalCallbacks()

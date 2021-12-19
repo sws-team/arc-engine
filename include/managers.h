@@ -9,6 +9,7 @@ class ArcWindow;
 class ArcDebug;
 class ArcObject;
 class MainWindow;
+class DebugSection;
 
 class Manager
 {
@@ -253,6 +254,8 @@ public:
 	void setMainWindow(MainWindow *window);
 	virtual void updateWindow();
 	void debugObject(ArcObject* object);
+	void addDebugSection(DebugSection *section);
+	void removeDebugSection(DebugSection *section);
 
 	virtual void globalCallbacks();
 	virtual void clear();
