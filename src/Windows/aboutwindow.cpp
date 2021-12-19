@@ -24,8 +24,9 @@ AboutWindow::AboutWindow()
 
 }
 
-void AboutWindow::init()
+void AboutWindow::initWindow()
 {
+	ArcWindow::initWindow();
 	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::CREDITS_MUSIC);
 }
 

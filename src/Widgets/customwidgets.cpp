@@ -26,9 +26,9 @@ CircleScale::CircleScale(const std::string &name, TextureType texture, unsigned 
 	setValue(m_value);
 }
 
-void CircleScale::init()
+void CircleScale::initTransform()
 {
-	ArcObject::init();
+	ArcObject::initTransform();
 	for (unsigned i = 0; i < m_sectors; ++i) {
 		ArcSprite *sectorSprite = static_cast<ArcSprite*>(m_childs.at(i));
 		sectorSprite->setRotation(360.f * static_cast<float>(i)/static_cast<float>(m_sectors));

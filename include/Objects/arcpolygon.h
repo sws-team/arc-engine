@@ -31,8 +31,8 @@ public:
 	void setBorderColor(const sf::Color& color) override;
 	void setBorderSize(const float size) override;
 
-	void init() override;
 protected:
+	void initTransform() override;
 	void updatePos() override;
 	void updateScale() override;
 	void updateOrigin() override;

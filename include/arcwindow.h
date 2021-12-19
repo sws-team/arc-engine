@@ -9,6 +9,8 @@ public:
 	ArcWindow(const std::string& name = "Window");
 	~ArcWindow() override;
 
+	virtual void initWindow();
+
 	void setBackground(TextureType type);
 
 	bool eventFilter(sf::Event *event) override;

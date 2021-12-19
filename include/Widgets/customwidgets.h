@@ -7,11 +7,11 @@ class CircleScale : public ArcObject
 {
 public:
 	CircleScale(const std::string& name, TextureType texture, unsigned sectors = 100);
-	void init() override;
 
 	unsigned value() const;
 	void setValue(unsigned value);
-
+protected:
+	void initTransform() override;
 private:
 	unsigned m_value = 50;
 	unsigned m_sectors = 100;

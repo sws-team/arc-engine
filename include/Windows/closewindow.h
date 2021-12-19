@@ -9,7 +9,7 @@ class CloseWindow : public ArcWindow
 public:
 	CloseWindow();
 
-	void init() override;
+	void initWindow() override;
 	void back() override;
 };
 

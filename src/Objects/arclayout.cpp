@@ -6,9 +6,9 @@ ArcLayout::ArcLayout(const std::string& name)
 	setType(ArcEngine::LAYOUT);
 }
 
-void ArcLayout::init()
+void ArcLayout::initTransform()
 {
-	ArcObject::init();
+	ArcObject::initTransform();
 	refreshChilds();
 }
 

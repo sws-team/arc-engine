@@ -22,12 +22,12 @@ ArcPolygon::SHAPE ArcPolygon::shapeType() const
 void ArcPolygon::setShapeType(const SHAPE &shapeType)
 {
 	m_shapeType = shapeType;
-	init();
+	initTransform();
 }
 
-void ArcPolygon::init()
+void ArcPolygon::initTransform()
 {
-	ArcObject::init();
+	ArcObject::initTransform();
 	polygon.setPointCount(vertexCount(m_shapeType));
 }
 

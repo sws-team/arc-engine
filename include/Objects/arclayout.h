@@ -8,8 +8,6 @@ class ArcLayout : public ArcObject
 public:
 	ArcLayout(const std::string& name);
 
-	void init() override;
-
 	void setRows(unsigned count);
 	void setColumns(unsigned count);
 	void setGrid(unsigned rows, unsigned columns);
@@ -37,7 +35,8 @@ public:
 
 	void updateLayout();
 	void clear();
-
+protected:
+	void initTransform() override;
 private:
 	unsigned m_rows = 1;
 	unsigned m_columns = 1;

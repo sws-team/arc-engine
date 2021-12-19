@@ -47,7 +47,7 @@ void MainWindow::exec()
 			}
 			currentState = Engine::Instance().stateManager()->createState(
 						Engine::Instance().stateManager()->getState());
-			currentState->init();
+			currentState->initWindow();
 			state = Engine::Instance().stateManager()->getState();
 			setMouseCursorVisible(state != StateManager::INTRO);
 		}

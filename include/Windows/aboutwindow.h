@@ -7,9 +7,9 @@
 class AboutWindow : public ArcWindow
 {
 public:
-    AboutWindow();
+	AboutWindow();
 
-	void init() override;
+	void initWindow() override;
 	void draw(sf::RenderTarget *const target) override;
 	void back() override;
 	void update() override;

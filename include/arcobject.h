@@ -13,7 +13,6 @@ public:
 	ArcObject(const std::string& name);
 	virtual ~ArcObject();
 
-	virtual void init();
 	void paint(sf::RenderTarget *const target);
 	void process();
 	bool event(sf::Event *event);
@@ -83,6 +82,7 @@ public:
 
 
 protected:
+	virtual void initTransform();
 	virtual void update();
 	virtual void draw(sf::RenderTarget *const target);
 	virtual bool eventFilter(sf::Event *event);

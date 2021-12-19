@@ -33,14 +33,14 @@ ArcObject::~ArcObject()
 		delete action;
 }
 
-void ArcObject::init()
+void ArcObject::initTransform()
 {
 	setPos(m_x, m_y);
 	setOrigin(m_originX, m_originY);
 	setScale(m_scaleX, m_scaleY);
 	setRotation(m_angle);
 	for(ArcObject* child : m_childs)
-		child->init();
+		child->initTransform();
 }
 
 void ArcObject::paint(sf::RenderTarget * const target)
@@ -245,7 +245,7 @@ void ArcObject::update()
 void ArcObject::addChild(ArcObject *object)
 {
 	object->setParent(this);
-	object->init();
+	object->initTransform();
 	m_childs.push_back(object);
 }
 
@@ -257,7 +257,7 @@ void ArcObject::addAction(ArcAction *action)
 void ArcObject::insertChild(int pos, ArcObject *object)
 {
 	object->setParent(this);
-	object->init();
+	object->initTransform();
 	m_childs.insert(m_childs.begin() + pos, object);
 }
 

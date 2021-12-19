@@ -15,6 +15,11 @@ ArcWindow::~ArcWindow()
 	DEBUG_OBJECT(nullptr);
 }
 
+void ArcWindow::initWindow()
+{
+	ArcObject::initTransform();
+}
+
 bool ArcWindow::eventFilter(sf::Event *event)
 {
 	if (event->type == sf::Event::Closed)
