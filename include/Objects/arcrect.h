@@ -20,6 +20,7 @@ public:
 	void setBorderSize(const float size) override;
 
 protected:
+	friend class Intersection;
 	void updatePos() override;
 	void updateScale() override;
 	void updateOrigin() override;

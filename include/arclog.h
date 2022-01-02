@@ -42,6 +42,14 @@ public:
 		std::cout << value.x << DELIMER << value.y << DELIMER;
 		return *this;
 	}
+	inline ArcLog &operator<<(const sf::Vector2i& value) {
+		std::cout << value.x << DELIMER << value.y << DELIMER;
+		return *this;
+	}
+	inline ArcLog &operator<<(const sf::Vector2u& value) {
+		std::cout << value.x << DELIMER << value.y << DELIMER;
+		return *this;
+	}
 	inline ArcLog &operator<<(char *value) {
 		std::cout << std::string(value) << DELIMER;
 		return *this;

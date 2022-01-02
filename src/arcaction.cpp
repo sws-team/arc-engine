@@ -1,7 +1,6 @@
 #include "arcaction.h"
 #include "arcobject.h"
-#include "arcsprite.h"
-#include "arclabel.h"
+#include "navigationmap.h"
 
 ArcAction::ArcAction(float time)
 	: m_time(time)
@@ -275,12 +274,74 @@ void MoveAction::finished()
 	ArcAction::finished();
 }
 
-
 void MoveAction::process(float progress)
 {
 	const float targetX = m_startPos.x + m_targetPos.x * progress;
 	const float targetY = m_startPos.y + m_targetPos.y * progress;
 	m_object->setPos(targetX, targetY);
+}
+
+NavigationAction::NavigationAction(float time, ArcObject *object, ArcObject *navigation,
+								   const sf::Vector2f &targetPos)
+	: ActionWithObject(time, object)
+	,m_targetPos(targetPos)
+{
+	this->navigation = static_cast<NavigationMap*>(navigation);
+}
+
+void NavigationAction::setResetTime(float time)
+{
+	resetTime = time;
+}
+
+void NavigationAction::started()
+{
+	resetPath();
+}
+
+void NavigationAction::process(float progress)
+{
+	if (resetTimer.check(resetTime)) {
+		resetPath();
+		resetTimer.reset();
+	}
+	const float targetX = m_startPos.x + (m_nextPos.x - m_startPos.x) * progress;
+	const float targetY = m_startPos.y + (m_nextPos.y - m_startPos.y) * progress;
+	m_object->setPos(targetX, targetY);
+}
+
+void NavigationAction::finished()
+{
+	nextPosition();
+	timer.reset();
+}
+
+void NavigationAction::resetPath()
+{
+	positions = navigation->findPath(m_object, m_targetPos);
+	if (positions.empty()) {
+		end();
+		return;
+	}
+	currentIndex = 0;
+	nextPosition();
+}
+
+void NavigationAction::nextPosition()
+{
+	m_startPos = m_object->pos();
+	m_nextPos = positions.at(currentIndex);
+	currentIndex++;
+	if (currentIndex == positions.size()) {
+		end();
+		return;
+	}
+}
+
+void NavigationAction::end()
+{
+	m_object->setPos(m_targetPos);
+	ActionWithObject::finished();
 }
 
 ChangeScaleAction::ChangeScaleAction(float time, ArcObject *object, const sf::Vector2f &scale)
@@ -323,3 +384,4 @@ void ChangeScaleAction::finished()
 	m_object->setScale(m_targetScale);
 	ActionWithObject::finished();
 }
+

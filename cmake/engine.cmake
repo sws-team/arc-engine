@@ -42,6 +42,7 @@ set(ARC_ENGINE_HEADERS
     ${ARC_ENGINE_DIR}/include/Objects/arclayout.h
     ${ARC_ENGINE_DIR}/include/Objects/arcpolygon.h
     ${ARC_ENGINE_DIR}/include/Objects/arcrect.h
+    ${ARC_ENGINE_DIR}/include/Objects/navigationmap.h
 
     ${ARC_ENGINE_DIR}/include/arclog.h
     ${ARC_ENGINE_DIR}/include/arcobject.h
@@ -74,6 +75,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Objects/arclayout.cpp
     ${ARC_ENGINE_DIR}/src/Objects/arcpolygon.cpp
     ${ARC_ENGINE_DIR}/src/Objects/arcrect.cpp
+    ${ARC_ENGINE_DIR}/src/Objects/navigationmap.cpp
 
     ${ARC_ENGINE_DIR}/src/arcobject.cpp
     ${ARC_ENGINE_DIR}/src/arcdebug.cpp
@@ -94,6 +96,7 @@ set(ARC_ENGINE_SOURCES
 set(3RD_PARTY_DIR ${CMAKE_CURRENT_LIST_DIR}/../3rdParty)
 
 include_directories(${3RD_PARTY_DIR}/rapidjson/include)
+include_directories(${3RD_PARTY_DIR}/tinypile)
 
 include(${3RD_PARTY_DIR}/DragonBonesSFML/DragonBones.cmake)
 

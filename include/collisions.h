@@ -80,9 +80,13 @@ class Intersection
 {
 public:
 	static bool contains(ArcSprite* sprite, const sf::Vector2f& pos);
+	static bool intersects(ArcSprite* sprite, const sf::FloatRect& rect);
+	static bool intersects(ArcRect* rectObject, const sf::FloatRect& rect);
 #ifdef ARC_DEBUG
 	static bool contains(ArcObject* object, const sf::Vector2f& pos);
+	static bool intersects(ArcObject* object, const sf::FloatRect& rect);
 #endif
+
 	static sf::Vector2f getTranslatedPoint(ArcObject *object, const sf::Vector2f& point);
 private:
 	static bool isParallelogramContainsPoint(const sf::Vector2f& point,
@@ -92,6 +96,8 @@ private:
 						 const sf::Vector2f& pos,
 						 const sf::Transform& transform = sf::Transform());
 
+	static bool intersects(const sf::RectangleShape& objectRect, const sf::FloatRect& rect,
+						  const sf::Transform& transform = sf::Transform());
 };
 
 

@@ -8,6 +8,7 @@
 #include "collisions.h"
 
 #include "arcsprite.h"
+#include "arcrect.h"
 
 namespace Collision
 {
@@ -236,6 +237,22 @@ bool Intersection::contains(const sf::RectangleShape& rect,
 	return isParallelogramContainsPoint(pos, points);
 }
 
+bool Intersection::intersects(const sf::RectangleShape &objectRect, const sf::FloatRect &rect,
+							  const sf::Transform &transform)
+{
+	std::vector<sf::Vector2f> positions = {
+		sf::Vector2f(rect.left, rect.top),
+		sf::Vector2f(rect.left + rect.width, rect.top),
+		sf::Vector2f(rect.left + rect.width, rect.top + rect.height),
+		sf::Vector2f(rect.left, rect.top + rect.height)
+	};
+	for(const sf::Vector2f& pos : positions) {
+		if (contains(objectRect, pos, transform))
+			return true;
+	}
+	return false;
+}
+
 sf::Vector2f Intersection::getTranslatedPoint(ArcObject *object, const sf::Vector2f &point)
 {
 	return object->m_transform.transformPoint(point);
@@ -245,9 +262,24 @@ bool Intersection::contains(ArcSprite* sprite, const sf::Vector2f& pos)
 {
 	return contains(sprite->sprite, pos, sprite->m_transform);
 }
+
+bool Intersection::intersects(ArcSprite *sprite, const sf::FloatRect &rect)
+{
+	return intersects(sprite->sprite, rect);
+}
+
+bool Intersection::intersects(ArcRect *rectObject, const sf::FloatRect &rect)
+{
+	return intersects(rectObject->rect, rect);
+}
 #ifdef ARC_DEBUG
 bool Intersection::contains(ArcObject *object, const sf::Vector2f &pos)
 {
 	return contains(object->debugRect, pos, object->m_transform);
+}
+
+bool Intersection::intersects(ArcObject *object, const sf::FloatRect &rect)
+{
+	return intersects(object->debugRect, rect, object->m_transform);
 }
 #endif

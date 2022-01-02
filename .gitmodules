@@ -13,3 +13,6 @@
 [submodule "3rdParty/rapidjson"]
 	path = 3rdParty/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
+[submodule "3rdParty/tinypile"]
+	path = 3rdParty/tinypile
+	url = https://github.com/fgenesis/tinypile.git

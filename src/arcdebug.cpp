@@ -13,6 +13,7 @@
 #include "arclayout.h"
 #include "arcpolygon.h"
 #include "arcrect.h"
+#include "navigationmap.h"
 
 #ifdef ARC_DEBUG
 #include "imgui.h"
@@ -296,7 +297,8 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::DragFloat("##PositionY", &y);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Y");
-					obj->setPos(sf::Vector2f(x, y));
+					if (x != obj->x() || y != obj->y())
+						obj->setPos(sf::Vector2f(x, y));
 				}
 				{//Origin
 					float x = obj->originX();
@@ -308,7 +310,8 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::DragFloat("##OriginY", &y, 0.05f, 0, 1.f);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Y");
-					obj->setOrigin(sf::Vector2f(x, y));
+					if (x != obj->originX() || y != obj->originY())
+						obj->setOrigin(sf::Vector2f(x, y));
 				}
 				{//Size
 					float x = obj->width();
@@ -320,7 +323,8 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::DragFloat("##Height", &y);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Height");
-					obj->setSize(sf::Vector2f(x, y));
+					if (x != obj->width() || y != obj->height())
+						obj->setSize(sf::Vector2f(x, y));
 				}
 				{//Scale
 					float x = obj->scaleX();
@@ -332,7 +336,8 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::DragFloat("##ScaleY", &y, 0.05f);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Y");
-					obj->setScale(sf::Vector2f(x, y));
+					if (x != obj->scaleX() || y != obj->scaleY())
+						obj->setScale(sf::Vector2f(x, y));
 				}
 				{//Angle
 					float angle = obj->rotation();
@@ -340,7 +345,8 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::DragFloat("##Angle", &angle, 1.f, -360.f, 360.f);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Angle");
-					obj->setRotation(angle);
+					if (angle != obj->rotation())
+						obj->setRotation(angle);
 				}
 				{//Alpha
 					float alpha = obj->alpha();
@@ -348,7 +354,8 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::DragFloat("##Alpha", &alpha, 0.01f, 0, 1.f);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Alpha");
-					obj->setAlpha(alpha);
+					if (alpha != obj->alpha())
+						obj->setAlpha(alpha);
 				}
 			}
 		}
@@ -611,6 +618,23 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			}
 		}
 			break;
+		case ArcEngine::NAVIGATION_MAP:
+		{
+			if (ImGui::CollapsingHeader("Navigation map", ImGuiTreeNodeFlags_DefaultOpen)) {
+				NavigationMap *navMap = static_cast<NavigationMap*>(obj);
+				if (ImGui::Checkbox("Show", &navMap->debug)) {
+
+				}
+				{//cells
+					int cells = navMap->cells();
+					ImGui::DragInt("##Cells", &cells, 1.f, 0, 1000);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Cells");
+					navMap->setCells(cells);
+				}
+			}
+		}
+			break;
 		default:
 			break;
 		}
@@ -638,6 +662,15 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 		break;
 	case ArcEngine::LAYOUT:
 		drawInheritObject(ArcEngine::LAYOUT, obj);
+		break;
+	case ArcEngine::RECT:
+		drawInheritObject(ArcEngine::RECT, obj);
+		break;
+	case ArcEngine::POLYGON:
+		drawInheritObject(ArcEngine::POLYGON, obj);
+		break;
+	case ArcEngine::NAVIGATION_MAP:
+		drawInheritObject(ArcEngine::NAVIGATION_MAP, obj);
 		break;
 	default:
 		break;
@@ -675,6 +708,9 @@ std::string ArcDebug::typeToName(ArcEngine::OBJECT_TYPE type)
 		break;
 	case ArcEngine::RECT:
 		return "Rectangle";
+		break;
+	case ArcEngine::NAVIGATION_MAP:
+		return "Navigation map";
 		break;
 	default:
 		break;

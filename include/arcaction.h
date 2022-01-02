@@ -149,6 +149,35 @@ public:
 	void finished() override;
 };
 
+class NavigationAction : public ActionWithObject
+{
+public:
+	NavigationAction(float time, ArcObject *object,
+					 ArcObject* navigation,
+					 const sf::Vector2f& targetPos);
+
+	void setResetTime(float time);
+
+	void started() override;
+	void process(float progress) override;
+	void finished() override;
+
+protected:
+	class NavigationMap *navigation;
+	void resetPath();
+	void nextPosition();
+	void end();
+	Timer resetTimer;
+	float resetTime = 0;
+
+	std::vector<sf::Vector2f> positions;
+	unsigned currentIndex = 0;
+
+	sf::Vector2f m_targetPos;
+	sf::Vector2f m_nextPos;
+	sf::Vector2f m_startPos;
+};
+
 class ChangeScaleAction : public ActionWithObject
 {
 public:

@@ -31,6 +31,7 @@ namespace ArcEngine
 		LAYOUT,
 		POLYGON,
 		RECT,
+		NAVIGATION_MAP,
 	};
 
 	static constexpr float FRAME_TIME = 1.0f / 60.0f;
