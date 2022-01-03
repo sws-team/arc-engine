@@ -159,13 +159,14 @@ public:
 	void setResetTime(float time);
 
 	void started() override;
-	void process(float progress) override;
 	void finished() override;
 
+	virtual bool step();
+
 protected:
-	class NavigationMap *navigation;
-	void resetPath();
-	void nextPosition();
+	class NavigationMap *navigation = nullptr;
+	void resetPath(bool run = true);
+	void nextPosition(bool run = true);
 	void end();
 	Timer resetTimer;
 	float resetTime = 0;
