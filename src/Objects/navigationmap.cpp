@@ -50,7 +50,10 @@ void NavigationMap::draw(sf::RenderTarget * const target)
 #ifdef ARC_DEBUG
 	if (!debug)
 #endif
+	{
+		ArcObject::draw(target);
 		return;
+	}
 	for(const std::vector<Rect>& rects : grid.grid) {
 		for(const Rect& rect : rects) {
 			sf::RectangleShape rectangle;
@@ -149,7 +152,37 @@ void NavigationMap::updateGrid()
 
 NavigationMap::Grid NavigationMap::makeGrid(const NavigationMap::Grid &grid, const ArcObject *object) const
 {
+	std::vector<sf::Vector2u> blocked;
 	Grid result = grid;
+	for (unsigned row = 0; row < result.grid.size(); ++row) {
+		std::vector<Rect>& rects = result.grid[row];
+		for (unsigned column = 0; column < rects.size(); ++column) {
+			Rect& rect = rects[column];
+			if (rect.object == object)
+				rect.isBlocked = false;
+			if (rect.isBlocked)
+				blocked.push_back(sf::Vector2u(row, column));
+		}
+	}
+
+	const sf::Vector2u objectSize = cell(object->size());
+	sf::Vector2u objectObstacleSize;
+	objectObstacleSize.x = static_cast<unsigned>(std::ceil(static_cast<float>(objectSize.y)/2.f));
+	objectObstacleSize.y = static_cast<unsigned>(std::ceil(static_cast<float>(objectSize.x)/2.f));
+	for(const sf::Vector2u& cell : blocked) {
+		const unsigned startRow = std::max(0u, cell.x - objectObstacleSize.x);
+		const unsigned endRow = std::min(static_cast<unsigned>(result.grid.size()), cell.x + objectObstacleSize.x);
+		for (unsigned kRow = startRow; kRow < endRow; ++kRow) {
+			std::vector<Rect>& kRects = result.grid[kRow];
+			const unsigned startColumn = std::max(0u, cell.y - objectObstacleSize.y);
+			const unsigned endColumn = std::min(static_cast<unsigned>(kRects.size()), cell.y + objectObstacleSize.y);
+			for (unsigned kColumn = startColumn; kColumn < endColumn; ++kColumn) {
+				Rect& kRect = kRects[kColumn];
+				kRect.isBlocked = true;
+			}
+		}
+	}
+
 	for(std::vector<Rect>& rects : result.grid) {
 		for(Rect& rect : rects) {
 			if (rect.object == object)
