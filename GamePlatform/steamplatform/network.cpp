@@ -45,7 +45,7 @@ Network::~Network()
 
 void Network::setMessageReceivedCallback(const std::function<void (const std::string &)> &callback)
 {
-
+	d->messageReceivedCallback = callback;
 }
 
 void Network::process()
