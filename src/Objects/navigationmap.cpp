@@ -218,8 +218,8 @@ void NavigationMap::checkGrid()
 				rect.object = nullptr;
 			}
 		}
-
-		for(ArcObject *child : m_childs) {
+		const std::vector<ArcObject*> childs = m_childs;
+		for(ArcObject *child : childs) {
 			for(std::vector<Rect>& rects : grid.grid) {
 				for(Rect& rect : rects) {
 					if (!rect.isBlocked) {
