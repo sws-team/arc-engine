@@ -2,15 +2,21 @@
 #include "collisions.h"
 #include "jps.hh"
 
+
 NavigationMap::NavigationMap(const std::string &name)
 	: ArcObject(name)
 {
 	setType(ArcEngine::NAVIGATION_MAP);
+	thread = new sf::Thread(std::bind(&NavigationMap::checkGrid, this));
+	thread->launch();
 }
 
 NavigationMap::~NavigationMap()
 {
-
+	processing.store(false);
+	active.store(false);
+	thread->wait();
+	delete thread;
 }
 
 unsigned NavigationMap::cells() const
@@ -59,7 +65,7 @@ void NavigationMap::draw(sf::RenderTarget * const target)
 		ArcObject::draw(target);
 		return;
 	}
-	for(const std::vector<Rect>& rects : grid.grid) {
+	for(const std::vector<Rect>& rects : cachedGrid) {
 		for(const Rect& rect : rects) {
 			sf::RectangleShape rectangle;
 			rectangle.setSize(rect.rect.getSize());
@@ -114,11 +120,12 @@ void NavigationMap::update()
 	if (!elementsToAdd.empty())
 		addElements();
 	ArcObject::update();
-	checkGrid();
 }
 
 void NavigationMap::updateGrid()
 {
+	processing.store(false);
+
 	grid.grid.clear();
 	const float width = size().x;
 	const float height = size().y;
@@ -143,6 +150,9 @@ void NavigationMap::updateGrid()
 		pos.x = startPos.x;
 		pos.y += cellHeight;
 	}
+	cache();
+
+	processing.store(true);
 }
 
 void NavigationMap::addElements()
@@ -153,16 +163,17 @@ void NavigationMap::addElements()
 	elementsToAdd.clear();
 }
 
-NavigationMap::Grid NavigationMap::makeGrid(const NavigationMap::Grid &grid, const ArcObject *object) const
+NavigationMap::Grid NavigationMap::makeGrid(NavigationMap::Grid grid, const ArcObject *object) const
 {
 	std::vector<sf::Vector2u> blocked;
-	Grid result = grid;
+	Grid result = std::move(grid);
 	for (unsigned row = 0; row < result.grid.size(); ++row) {
 		std::vector<Rect>& rects = result.grid[row];
 		for (unsigned column = 0; column < rects.size(); ++column) {
 			Rect& rect = rects[column];
-			if (rect.object == object)
+			if (rect.object == object) {
 				rect.isBlocked = false;
+			}
 			if (rect.isBlocked)
 				blocked.push_back(sf::Vector2u(row, column));
 		}
@@ -197,23 +208,30 @@ NavigationMap::Grid NavigationMap::makeGrid(const NavigationMap::Grid &grid, con
 
 void NavigationMap::checkGrid()
 {
-	for(std::vector<Rect>& rects : grid.grid) {
-		for(Rect& rect : rects) {
-			rect.isBlocked = false;
-			rect.object = nullptr;
-		}
-	}
+	while (active.load()) {
+		if (!processing.load())
+			continue;
 
-	for(ArcObject *child : m_childs) {
 		for(std::vector<Rect>& rects : grid.grid) {
 			for(Rect& rect : rects) {
-				if (rect.isBlocked)
-					continue;
-				rect.isBlocked = Intersection::intersects(child, rect.rect);
-				if (rect.isBlocked)
-					rect.object = child;
+				rect.isBlocked = false;
+				rect.object = nullptr;
 			}
 		}
+
+		for(ArcObject *child : m_childs) {
+			for(std::vector<Rect>& rects : grid.grid) {
+				for(Rect& rect : rects) {
+					if (!rect.isBlocked) {
+						rect.isBlocked = Intersection::intersects(child, rect.rect);
+						if (rect.isBlocked)
+							rect.object = child;
+					}
+				}
+			}
+		}
+		cache();
+		sf::sleep(sf::milliseconds(checkTime));
 	}
 }
 

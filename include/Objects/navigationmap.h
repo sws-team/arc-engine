@@ -38,10 +38,11 @@ private:
 	std::vector<ArcObject*> elementsToAdd;
 	struct Rect {
 		sf::FloatRect rect;
-		ArcObject *object = nullptr;
+		ArcObject* object = nullptr;
 		bool isBlocked = false;
 	};
 	struct Grid {
+		Grid() = default;
 		inline bool operator()(unsigned x, unsigned y) const;
 		std::vector<std::vector<Rect>> grid;
 		unsigned cells = 10;
@@ -50,9 +51,18 @@ private:
 		float cellHeight = 0;
 	};
 	Grid grid;
-	Grid makeGrid(const Grid& grid, const ArcObject* object) const;
+	std::vector<std::vector<Rect>> cachedGrid;
+	void cache() {
+		cachedGrid = grid.grid;
+	}
+	Grid makeGrid(Grid grid, const ArcObject* object) const;
 
 	void checkGrid();
+
+	sf::Thread *thread = nullptr;
+	std::atomic<bool> processing = false;
+	std::atomic<bool> active = true;
+	sf::Int32 checkTime = 50;
 };
 
 #endif // NAVIGATIONMAP_H
