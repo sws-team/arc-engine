@@ -8,6 +8,11 @@ NavigationMap::NavigationMap(const std::string &name)
 	setType(ArcEngine::NAVIGATION_MAP);
 }
 
+NavigationMap::~NavigationMap()
+{
+
+}
+
 unsigned NavigationMap::cells() const
 {
 	return grid.cells;
@@ -65,8 +70,6 @@ void NavigationMap::draw(sf::RenderTarget * const target)
 			target->draw(rectangle, m_transform);
 		}
 	}
-
-	ArcObject::draw(target);
 }
 
 std::vector<sf::Vector2f> NavigationMap::findPath(ArcObject *object, const sf::Vector2f &targetPos) const
@@ -100,26 +103,18 @@ sf::Vector2f NavigationMap::pos(const sf::Vector2u &cell) const
 	return result;
 }
 
+void NavigationMap::addElement(ArcObject *object)
+{
+	object->setParent(this);
+	elementsToAdd.push_back(object);
+}
+
 void NavigationMap::update()
 {
+	if (!elementsToAdd.empty())
+		addElements();
 	ArcObject::update();
-	for(std::vector<Rect>& rects : grid.grid) {
-		for(Rect& rect : rects) {
-			rect.isBlocked = false;
-			rect.object = nullptr;
-		}
-	}
-	for(ArcObject *child : m_childs) {
-		for(std::vector<Rect>& rects : grid.grid) {
-			for(Rect& rect : rects) {
-				if (rect.isBlocked)
-					continue;
-				rect.isBlocked = Intersection::intersects(child, rect.rect);
-				if (rect.isBlocked)
-					rect.object = child;
-			}
-		}
-	}
+	checkGrid();
 }
 
 void NavigationMap::updateGrid()
@@ -148,6 +143,14 @@ void NavigationMap::updateGrid()
 		pos.x = startPos.x;
 		pos.y += cellHeight;
 	}
+}
+
+void NavigationMap::addElements()
+{
+	for(ArcObject *object : elementsToAdd) {
+		addChild(object);
+	}
+	elementsToAdd.clear();
 }
 
 NavigationMap::Grid NavigationMap::makeGrid(const NavigationMap::Grid &grid, const ArcObject *object) const
@@ -190,6 +193,28 @@ NavigationMap::Grid NavigationMap::makeGrid(const NavigationMap::Grid &grid, con
 		}
 	}
 	return result;
+}
+
+void NavigationMap::checkGrid()
+{
+	for(std::vector<Rect>& rects : grid.grid) {
+		for(Rect& rect : rects) {
+			rect.isBlocked = false;
+			rect.object = nullptr;
+		}
+	}
+
+	for(ArcObject *child : m_childs) {
+		for(std::vector<Rect>& rects : grid.grid) {
+			for(Rect& rect : rects) {
+				if (rect.isBlocked)
+					continue;
+				rect.isBlocked = Intersection::intersects(child, rect.rect);
+				if (rect.isBlocked)
+					rect.object = child;
+			}
+		}
+	}
 }
 
 bool NavigationMap::Grid::operator()(unsigned x, unsigned y) const

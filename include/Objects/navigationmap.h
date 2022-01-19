@@ -7,6 +7,7 @@ class NavigationMap : public ArcObject
 {
 public:
 	NavigationMap(const std::string& name);
+	~NavigationMap() override;
 
 #ifdef ARC_DEBUG
 	bool debug = true;
@@ -21,6 +22,8 @@ public:
 	sf::Vector2u cell(const sf::Vector2f& pos) const;
 	sf::Vector2f pos(const sf::Vector2u& cell) const;
 
+	void addElement(ArcObject* object);
+
 protected:
 	void update() override;
 
@@ -31,10 +34,12 @@ protected:
 
 private:
 	void updateGrid();
+	void addElements();
+	std::vector<ArcObject*> elementsToAdd;
 	struct Rect {
-		bool isBlocked = false;
 		sf::FloatRect rect;
 		ArcObject *object = nullptr;
+		bool isBlocked = false;
 	};
 	struct Grid {
 		inline bool operator()(unsigned x, unsigned y) const;
@@ -46,6 +51,8 @@ private:
 	};
 	Grid grid;
 	Grid makeGrid(const Grid& grid, const ArcObject* object) const;
+
+	void checkGrid();
 };
 
 #endif // NAVIGATIONMAP_H
