@@ -59,9 +59,7 @@ void NavigationMap::updateSize()
 void NavigationMap::draw(sf::RenderTarget * const target)
 {
 #ifdef ARC_DEBUG
-	if (!debug)
-#endif
-	{
+	if (!debug) {
 		ArcObject::draw(target);
 		return;
 	}
@@ -76,14 +74,19 @@ void NavigationMap::draw(sf::RenderTarget * const target)
 			target->draw(rectangle, m_transform);
 		}
 	}
+#endif
+	ArcObject::draw(target);
 }
 
-std::vector<sf::Vector2f> NavigationMap::findPath(ArcObject *object, const sf::Vector2f &targetPos) const
+std::vector<sf::Vector2f> NavigationMap::findPath(ArcObject *object, const sf::Vector2f &targetPos)
 {
+	JPS::PathVector path;
 	const sf::Vector2u objectCell = cell(object->pos());
 	const sf::Vector2u targetCell = cell(targetPos);
-	JPS::PathVector path;
-	const Grid objectGrid = makeGrid(grid, object);
+	mutex.lock();
+	Grid objectGrid = grid;
+	mutex.unlock();
+	fillGrid(&objectGrid, object);
 	JPS::findPath(path, objectGrid, objectCell.x, objectCell.y,
 									 targetCell.x, targetCell.y, 1u);
 	std::vector<sf::Vector2f> result;
@@ -109,16 +112,22 @@ sf::Vector2f NavigationMap::pos(const sf::Vector2u &cell) const
 	return result;
 }
 
-void NavigationMap::addElement(ArcObject *object)
+void NavigationMap::addChild(ArcObject *object)
+{
+	addElement(object, STATIC_OBJECT);
+}
+
+void NavigationMap::addElement(ArcObject *object, ELEMENT_TYPE type)
 {
 	object->setParent(this);
-	elementsToAdd.push_back(object);
+	queuedObjects.push_back(std::pair<ArcObject*, ELEMENT_TYPE>(object, type));
 }
 
 void NavigationMap::update()
 {
-	if (!elementsToAdd.empty())
+	if (!queuedObjects.empty()) {
 		addElements();
+	}
 	ArcObject::update();
 }
 
@@ -155,20 +164,15 @@ void NavigationMap::updateGrid()
 	processing.store(true);
 }
 
-void NavigationMap::addElements()
-{
-	for(ArcObject *object : elementsToAdd) {
-		addChild(object);
-	}
-	elementsToAdd.clear();
+void NavigationMap::cache() {
+	cachedGrid = grid.grid;
 }
 
-NavigationMap::Grid NavigationMap::makeGrid(NavigationMap::Grid grid, const ArcObject *object) const
+void NavigationMap::fillGrid(Grid* grid, const ArcObject *object) const
 {
 	std::vector<sf::Vector2u> blocked;
-	Grid result = std::move(grid);
-	for (unsigned row = 0; row < result.grid.size(); ++row) {
-		std::vector<Rect>& rects = result.grid[row];
+	for (unsigned row = 0; row < grid->grid.size(); ++row) {
+		std::vector<Rect>& rects = grid->grid[row];
 		for (unsigned column = 0; column < rects.size(); ++column) {
 			Rect& rect = rects[column];
 			if (rect.object == object) {
@@ -185,9 +189,9 @@ NavigationMap::Grid NavigationMap::makeGrid(NavigationMap::Grid grid, const ArcO
 	objectObstacleSize.y = static_cast<unsigned>(std::ceil(static_cast<float>(objectSize.x)/2.f));
 	for(const sf::Vector2u& cell : blocked) {
 		const unsigned startRow = std::max(0u, cell.x - objectObstacleSize.x);
-		const unsigned endRow = std::min(static_cast<unsigned>(result.grid.size()), cell.x + objectObstacleSize.x);
+		const unsigned endRow = std::min(static_cast<unsigned>(grid->grid.size()), cell.x + objectObstacleSize.x);
 		for (unsigned kRow = startRow; kRow < endRow; ++kRow) {
-			std::vector<Rect>& kRects = result.grid[kRow];
+			std::vector<Rect>& kRects = grid->grid[kRow];
 			const unsigned startColumn = std::max(0u, cell.y - objectObstacleSize.y);
 			const unsigned endColumn = std::min(static_cast<unsigned>(kRects.size()), cell.y + objectObstacleSize.y);
 			for (unsigned kColumn = startColumn; kColumn < endColumn; ++kColumn) {
@@ -197,13 +201,12 @@ NavigationMap::Grid NavigationMap::makeGrid(NavigationMap::Grid grid, const ArcO
 		}
 	}
 
-	for(std::vector<Rect>& rects : result.grid) {
+	for(std::vector<Rect>& rects : grid->grid) {
 		for(Rect& rect : rects) {
 			if (rect.object == object)
 				rect.isBlocked = false;
 		}
 	}
-	return result;
 }
 
 void NavigationMap::checkGrid()
@@ -214,25 +217,59 @@ void NavigationMap::checkGrid()
 
 		for(std::vector<Rect>& rects : grid.grid) {
 			for(Rect& rect : rects) {
+				if (rect.isStatic)
+					continue;
 				rect.isBlocked = false;
 				rect.object = nullptr;
 			}
 		}
-		const std::vector<ArcObject*> childs = m_childs;
-		for(ArcObject *child : childs) {
-			for(std::vector<Rect>& rects : grid.grid) {
-				for(Rect& rect : rects) {
-					if (!rect.isBlocked) {
-						rect.isBlocked = Intersection::intersects(child, rect.rect);
-						if (rect.isBlocked)
-							rect.object = child;
+		mutex.lock();
+		for(auto& element : elements) {
+			switch (element.second.type)
+			{
+			case NON_SOLID:
+				continue;
+			case STATIC_OBJECT:
+			{
+				if (element.second.checked)
+					break;
+			}
+			case DYNAMIC_OBJECT:
+			{
+				for(std::vector<Rect>& rects : grid.grid) {
+					for(Rect& rect : rects) {
+						if (!rect.isBlocked) {
+							rect.isBlocked = Intersection::intersects(element.first, rect.rect);
+							if (rect.isBlocked) {
+								rect.object = element.first;
+								rect.isStatic = element.second.type != DYNAMIC_OBJECT;
+							}
+						}
 					}
 				}
+				element.second.checked = true;
+			}
+				break;
+			default:
+				break;
 			}
 		}
+		mutex.unlock();
 		cache();
 		sf::sleep(sf::milliseconds(checkTime));
 	}
+}
+
+void NavigationMap::addElements()
+{
+	sf::Lock lock(mutex);
+	for(const auto& element : queuedObjects) {
+		ArcObject::addChild(element.first);
+		ElementData data;
+		data.type = element.second;
+		elements.insert(std::pair<ArcObject*, ElementData>(element.first, data));
+	}
+	queuedObjects.clear();
 }
 
 bool NavigationMap::Grid::operator()(unsigned x, unsigned y) const

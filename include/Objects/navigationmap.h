@@ -9,6 +9,12 @@ public:
 	NavigationMap(const std::string& name);
 	~NavigationMap() override;
 
+	enum ELEMENT_TYPE {
+		STATIC_OBJECT,
+		DYNAMIC_OBJECT,
+		NON_SOLID
+	};
+
 #ifdef ARC_DEBUG
 	bool debug = true;
 #endif
@@ -18,11 +24,13 @@ public:
 
 	void draw(sf::RenderTarget *const target) override;
 
-	std::vector<sf::Vector2f> findPath(ArcObject *object, const sf::Vector2f& targetPos) const;
+	std::vector<sf::Vector2f> findPath(ArcObject *object, const sf::Vector2f& targetPos);
 	sf::Vector2u cell(const sf::Vector2f& pos) const;
 	sf::Vector2f pos(const sf::Vector2u& cell) const;
 
-	void addElement(ArcObject* object);
+	void addChild(ArcObject* object) override;
+//	void removeChild(ArcObject* object) override;
+	void addElement(ArcObject* object, ELEMENT_TYPE type);
 
 protected:
 	void update() override;
@@ -34,12 +42,11 @@ protected:
 
 private:
 	void updateGrid();
-	void addElements();
-	std::vector<ArcObject*> elementsToAdd;
 	struct Rect {
 		sf::FloatRect rect;
 		ArcObject* object = nullptr;
 		bool isBlocked = false;
+		bool isStatic = false;
 	};
 	struct Grid {
 		Grid() = default;
@@ -52,17 +59,23 @@ private:
 	};
 	Grid grid;
 	std::vector<std::vector<Rect>> cachedGrid;
-	void cache() {
-		cachedGrid = grid.grid;
-	}
-	Grid makeGrid(Grid grid, const ArcObject* object) const;
+	void cache();
+	void fillGrid(Grid* grid, const ArcObject* object) const;
 
 	void checkGrid();
 
 	sf::Thread *thread = nullptr;
 	std::atomic<bool> processing = false;
 	std::atomic<bool> active = true;
-	sf::Int32 checkTime = 50;
+	sf::Int32 checkTime = 75;
+	struct ElementData {
+		ELEMENT_TYPE type = STATIC_OBJECT;
+		bool checked = false;
+	};
+	sf::Mutex mutex;
+	std::map<ArcObject*, ElementData> elements;
+	std::vector<std::pair<ArcObject*, ELEMENT_TYPE>> queuedObjects;
+	void addElements();
 };
 
 #endif // NAVIGATIONMAP_H

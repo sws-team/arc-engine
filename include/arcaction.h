@@ -158,6 +158,7 @@ public:
 
 	void setResetTime(float time);
 
+	void process(float progress) override;
 	void started() override;
 	void finished() override;
 
@@ -165,8 +166,8 @@ public:
 
 protected:
 	class NavigationMap *navigation = nullptr;
-	void resetPath(bool run = true);
-	void nextPosition(bool run = true);
+	bool resetPath(bool run = true);
+	bool nextPosition(bool run = true);
 	void end();
 	Timer resetTimer;
 	float resetTime = 0;

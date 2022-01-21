@@ -23,11 +23,11 @@ public:
 	std::vector<ArcObject*> childs() const;
 
 	void setParent(ArcObject* parent);
-	void addChild(ArcObject* object);
+	virtual void addChild(ArcObject* object);
 	void addAction(ArcAction* action);
 	void insertChild(int pos, ArcObject* object);
 
-	void removeChild(ArcObject* object);
+	virtual void removeChild(ArcObject* object);
 	void removeChild(const std::string& name);
 	void removeAction(ArcAction *action);
 

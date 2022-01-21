@@ -294,6 +294,13 @@ void NavigationAction::setResetTime(float time)
 	resetTime = time;
 }
 
+void NavigationAction::process(float progress)
+{
+	const float x = m_startPos.x + (m_nextPos.x - m_startPos.x) * progress;
+	const float y = m_startPos.y + (m_nextPos.y - m_startPos.y) * progress;
+	m_object->setPos(x, y);
+}
+
 void NavigationAction::started()
 {
 	resetPath(false);
@@ -305,11 +312,12 @@ void NavigationAction::finished()
 		return;
 	}
 	if (resetTimer.check(resetTime)) {
-		resetPath();
+		if (!resetPath())
+			return;
 		resetTimer.reset();
 	}
-	nextPosition();
-	timer.reset();
+	if (nextPosition())
+		timer.reset();
 }
 
 bool NavigationAction::step()
@@ -317,18 +325,18 @@ bool NavigationAction::step()
 	return true;
 }
 
-void NavigationAction::resetPath(bool run)
+bool NavigationAction::resetPath(bool run)
 {
 	positions = navigation->findPath(m_object, m_targetPos);
 	if (positions.empty()) {
 		end();
-		return;
+		return false;
 	}
 	currentIndex = 0;
-	nextPosition(run);
+	return nextPosition(run);
 }
 
-void NavigationAction::nextPosition(bool run)
+bool NavigationAction::nextPosition(bool run)
 {
 	if (run)
 		m_object->setPos(m_nextPos);
@@ -337,8 +345,9 @@ void NavigationAction::nextPosition(bool run)
 	currentIndex++;
 	if (currentIndex == positions.size()) {
 		end();
-		return;
+		return false;
 	}
+	return true;
 }
 
 void NavigationAction::end()
