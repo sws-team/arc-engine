@@ -258,28 +258,50 @@ sf::Vector2f Intersection::getTranslatedPoint(ArcObject *object, const sf::Vecto
 	return object->m_transform.transformPoint(point);
 }
 
-bool Intersection::contains(ArcSprite* sprite, const sf::Vector2f& pos)
-{
-	return contains(sprite->sprite, pos, sprite->m_transform);
-}
-
-bool Intersection::intersects(ArcSprite *sprite, const sf::FloatRect &rect)
-{
-	return intersects(sprite->sprite, rect);
-}
-
-bool Intersection::intersects(ArcRect *rectObject, const sf::FloatRect &rect)
-{
-	return intersects(rectObject->rect, rect);
-}
-#ifdef ARC_DEBUG
 bool Intersection::contains(ArcObject *object, const sf::Vector2f &pos)
 {
-	return contains(object->debugRect, pos, object->m_transform);
+	switch (object->type())
+	{
+	case ArcEngine::SPRITE:
+	{
+		ArcSprite *sprite = static_cast<ArcSprite*>(object);
+		return contains(sprite->sprite, pos, sprite->m_transform);
+	}
+	case ArcEngine::RECT:
+	{
+		ArcRect *rectObject = static_cast<ArcRect*>(object);
+		return contains(rectObject->rect, pos, rectObject->m_transform);
+	}
+	default:
+#ifdef ARC_DEBUG
+		return contains(object->debugRect, pos, object->m_transform);
+#else
+		break;
+#endif
+	}
+	return false;
 }
 
 bool Intersection::intersects(ArcObject *object, const sf::FloatRect &rect)
 {
-	return intersects(object->debugRect, rect, object->m_transform);
-}
+	switch (object->type())
+	{
+	case ArcEngine::SPRITE:
+	{
+		ArcSprite *sprite = static_cast<ArcSprite*>(object);
+		return intersects(sprite->sprite, rect);
+	}
+	case ArcEngine::RECT:
+	{
+		ArcRect *rectObject = static_cast<ArcRect*>(object);
+		return intersects(rectObject->rect, rect);
+	}
+	default:
+#ifdef ARC_DEBUG
+		return intersects(object->debugRect, rect, object->m_transform);
+#else
+		break;
 #endif
+	}
+	return false;
+}

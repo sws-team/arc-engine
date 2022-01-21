@@ -32,6 +32,8 @@ public:
 //	void removeChild(ArcObject* object) override;
 	void addElement(ArcObject* object, ELEMENT_TYPE type);
 
+	void addFreeZone(const sf::FloatRect& rect);
+
 protected:
 	void update() override;
 
@@ -76,6 +78,7 @@ private:
 	std::map<ArcObject*, ElementData> elements;
 	std::vector<std::pair<ArcObject*, ELEMENT_TYPE>> queuedObjects;
 	void addElements();
+	std::vector<sf::FloatRect> freeZones;
 };
 
 #endif // NAVIGATIONMAP_H

@@ -74,6 +74,15 @@ void NavigationMap::draw(sf::RenderTarget * const target)
 			target->draw(rectangle, m_transform);
 		}
 	}
+	for(const sf::FloatRect& rect : freeZones) {
+		sf::RectangleShape rectangle;
+		rectangle.setSize(rect.getSize());
+		rectangle.setPosition(rect.getPosition());
+		rectangle.setFillColor(sf::Color(25, 100, 200, 100));
+		rectangle.setOutlineThickness(1.f);
+		rectangle.setOutlineColor(sf::Color::White);
+		target->draw(rectangle, m_transform);
+	}
 #endif
 	ArcObject::draw(target);
 }
@@ -121,6 +130,11 @@ void NavigationMap::addElement(ArcObject *object, ELEMENT_TYPE type)
 {
 	object->setParent(this);
 	queuedObjects.push_back(std::pair<ArcObject*, ELEMENT_TYPE>(object, type));
+}
+
+void NavigationMap::addFreeZone(const sf::FloatRect &rect)
+{
+	freeZones.push_back(rect);
 }
 
 void NavigationMap::update()
@@ -254,6 +268,18 @@ void NavigationMap::checkGrid()
 				break;
 			}
 		}
+
+		std::vector<sf::FloatRect> zones = freeZones;
+		for(const sf::FloatRect& zone : zones) {
+			for(std::vector<Rect>& rects : grid.grid) {
+				for(Rect& rect : rects) {
+					if (rect.rect.intersects(zone)) {
+						rect.isBlocked = false;
+					}
+				}
+			}
+		}
+
 		mutex.unlock();
 		cache();
 		sf::sleep(sf::milliseconds(checkTime));
