@@ -60,7 +60,7 @@ private:
 		float cellHeight = 0;
 	};
 	Grid grid;
-	std::vector<std::vector<Rect>> cachedGrid;
+	Grid cachedGrid;
 	void cache();
 	void fillGrid(Grid* grid, const ArcObject* object) const;
 

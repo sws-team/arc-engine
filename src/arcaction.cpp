@@ -338,6 +338,11 @@ bool NavigationAction::resetPath(bool run)
 
 bool NavigationAction::nextPosition(bool run)
 {
+	if (positions.empty() ||
+			currentIndex == positions.size()) {
+		end();
+		return false;
+	}
 	if (run)
 		m_object->setPos(m_nextPos);
 	m_startPos = m_object->pos();
@@ -352,8 +357,8 @@ bool NavigationAction::nextPosition(bool run)
 
 void NavigationAction::end()
 {
-	m_object->setPos(m_targetPos);
-	ActionWithObject::finished();
+	if (m_object->pos() == m_targetPos)
+		ActionWithObject::finished();
 }
 
 ChangeScaleAction::ChangeScaleAction(float time, ArcObject *object, const sf::Vector2f &scale)

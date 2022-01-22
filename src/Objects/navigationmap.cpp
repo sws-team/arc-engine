@@ -21,7 +21,7 @@ NavigationMap::~NavigationMap()
 
 unsigned NavigationMap::cells() const
 {
-	return grid.cells;
+	return cachedGrid.cells;
 }
 
 void NavigationMap::setCells(unsigned cells)
@@ -29,6 +29,7 @@ void NavigationMap::setCells(unsigned cells)
 	if (grid.cells == cells)
 		return;
 	grid.cells = cells;
+	cachedGrid.cells = cells;
 	updateGrid();
 }
 
@@ -63,7 +64,7 @@ void NavigationMap::draw(sf::RenderTarget * const target)
 		ArcObject::draw(target);
 		return;
 	}
-	for(const std::vector<Rect>& rects : cachedGrid) {
+	for(const std::vector<Rect>& rects : cachedGrid.grid) {
 		for(const Rect& rect : rects) {
 			sf::RectangleShape rectangle;
 			rectangle.setSize(rect.rect.getSize());
@@ -93,7 +94,7 @@ std::vector<sf::Vector2f> NavigationMap::findPath(ArcObject *object, const sf::V
 	const sf::Vector2u objectCell = cell(object->pos());
 	const sf::Vector2u targetCell = cell(targetPos);
 	mutex.lock();
-	Grid objectGrid = grid;
+	Grid objectGrid = cachedGrid;
 	mutex.unlock();
 	fillGrid(&objectGrid, object);
 	JPS::findPath(path, objectGrid, objectCell.x, objectCell.y,
@@ -108,16 +109,16 @@ std::vector<sf::Vector2f> NavigationMap::findPath(ArcObject *object, const sf::V
 sf::Vector2u NavigationMap::cell(const sf::Vector2f &pos) const
 {
 	sf::Vector2u result;
-	result.x = static_cast<unsigned>(pos.x / grid.cellWidth);
-	result.y = static_cast<unsigned>(pos.y / grid.cellHeight);
+	result.x = static_cast<unsigned>(pos.x / cachedGrid.cellWidth);
+	result.y = static_cast<unsigned>(pos.y / cachedGrid.cellHeight);
 	return result;
 }
 
 sf::Vector2f NavigationMap::pos(const sf::Vector2u &cell) const
 {
 	sf::Vector2f result;
-	result.x = cell.x * grid.cellWidth + grid.cellWidth/2;
-	result.y = cell.y * grid.cellHeight + grid.cellHeight/2;
+	result.x = cell.x * cachedGrid.cellWidth + cachedGrid.cellWidth/2;
+	result.y = cell.y * cachedGrid.cellHeight + cachedGrid.cellHeight/2;
 	return result;
 }
 
@@ -179,7 +180,8 @@ void NavigationMap::updateGrid()
 }
 
 void NavigationMap::cache() {
-	cachedGrid = grid.grid;
+	sf::Lock lock(mutex);
+	cachedGrid = grid;
 }
 
 void NavigationMap::fillGrid(Grid* grid, const ArcObject *object) const
@@ -237,7 +239,6 @@ void NavigationMap::checkGrid()
 				rect.object = nullptr;
 			}
 		}
-		mutex.lock();
 		for(auto& element : elements) {
 			switch (element.second.type)
 			{
@@ -268,7 +269,6 @@ void NavigationMap::checkGrid()
 				break;
 			}
 		}
-
 		std::vector<sf::FloatRect> zones = freeZones;
 		for(const sf::FloatRect& zone : zones) {
 			for(std::vector<Rect>& rects : grid.grid) {
@@ -279,8 +279,6 @@ void NavigationMap::checkGrid()
 				}
 			}
 		}
-
-		mutex.unlock();
 		cache();
 		sf::sleep(sf::milliseconds(checkTime));
 	}
@@ -288,7 +286,6 @@ void NavigationMap::checkGrid()
 
 void NavigationMap::addElements()
 {
-	sf::Lock lock(mutex);
 	for(const auto& element : queuedObjects) {
 		ArcObject::addChild(element.first);
 		ElementData data;
