@@ -2,56 +2,105 @@
 #include "collisions.h"
 #include "jps.hh"
 
+class NavigationMap::Private
+{
+public:
+	NavigationMap *q = nullptr;
+
+	struct Rect {
+		sf::FloatRect rect;
+		ArcObject* object = nullptr;
+		bool isBlocked = false;
+		bool isStatic = false;
+	};
+	struct Grid {
+		Grid() = default;
+		inline bool operator()(unsigned x, unsigned y) const;
+		std::vector<std::vector<Rect>> grid;
+		unsigned cells = 10;
+
+		float cellWidth = 0;
+		float cellHeight = 0;
+	};
+	Grid grid;
+	Grid cachedGrid;
+
+	sf::Thread *thread = nullptr;
+	std::atomic<bool> processing = false;
+	std::atomic<bool> active = true;
+	sf::Int32 checkTime = 75;
+	sf::Mutex mutex;
+
+	struct ElementData {
+		ELEMENT_TYPE type = STATIC_OBJECT;
+		bool checked = false;
+	};
+	std::map<ArcObject*, ElementData> elements;
+	std::vector<std::pair<ArcObject*, ELEMENT_TYPE>> queuedObjects;
+	std::vector<sf::FloatRect> freeZones;
+	bool autoUpdateGrid = false;
+
+	void cache();
+	void updateGrid();
+	void fillGrid(Grid* grid, const ArcObject* object) const;
+	void processUpdating();
+	void startProcessing();
+	void stopProcessing();
+
+	void addElements();
+};
 
 NavigationMap::NavigationMap(const std::string &name)
 	: ArcObject(name)
+	, d(new Private)
 {
 	setType(ArcEngine::NAVIGATION_MAP);
-
+	d->q = this;
 }
 
 NavigationMap::~NavigationMap()
 {
-	if (autoUpdateGrid)
-		stopProcessing();
+	if (d->autoUpdateGrid)
+		d->stopProcessing();
+	delete d;
 }
 
 unsigned NavigationMap::cells() const
 {
-	return cachedGrid.cells;
+	return d->cachedGrid.cells;
 }
 
 void NavigationMap::setCells(unsigned cells)
 {
-	if (grid.cells == cells)
+	if (d->grid.cells == cells)
 		return;
-	grid.cells = cells;
-	cachedGrid.cells = cells;
-	updateGrid();
+	d->grid.cells = cells;
+	d->cachedGrid.cells = cells;
+	d->updateGrid();
 }
 
 void NavigationMap::updatePos()
 {
 	ArcObject::updatePos();
-	updateGrid();
+	d->updateGrid();
 }
 
 void NavigationMap::updateScale()
 {
 	ArcObject::updateScale();
-	updateGrid();
+	d->updateGrid();
 }
 
 void NavigationMap::updateOrigin()
 {
 	ArcObject::updateOrigin();
-	updateGrid();
+	d->updateGrid();
 }
 
 void NavigationMap::updateSize()
 {
 	ArcObject::updateSize();
-	updateGrid();
+	d->updateGrid();
 }
 
 void NavigationMap::draw(sf::RenderTarget * const target)
@@ -61,8 +110,8 @@ void NavigationMap::draw(sf::RenderTarget * const target)
 		ArcObject::draw(target);
 		return;
 	}
-	for(const std::vector<Rect>& rects : cachedGrid.grid) {
-		for(const Rect& rect : rects) {
+	for(const std::vector<Private::Rect>& rects : d->cachedGrid.grid) {
+		for(const Private::Rect& rect : rects) {
 			sf::RectangleShape rectangle;
 			rectangle.setSize(rect.rect.getSize());
 			rectangle.setPosition(rect.rect.getPosition());
@@ -72,7 +121,7 @@ void NavigationMap::draw(sf::RenderTarget * const target)
 			target->draw(rectangle, m_transform);
 		}
 	}
-	for(const sf::FloatRect& rect : freeZones) {
+	for(const sf::FloatRect& rect : d->freeZones) {
 		sf::RectangleShape rectangle;
 		rectangle.setSize(rect.getSize());
 		rectangle.setPosition(rect.getPosition());
@@ -90,10 +139,10 @@ std::vector<sf::Vector2f> NavigationMap::findPath(ArcObject *object, const sf::V
 	JPS::PathVector path;
 	const sf::Vector2u objectCell = cell(object->pos());
 	const sf::Vector2u targetCell = cell(targetPos);
-	mutex.lock();
-	Grid objectGrid = cachedGrid;
-	mutex.unlock();
-	fillGrid(&objectGrid, object);
+	d->mutex.lock();
+	Private::Grid objectGrid = d->cachedGrid;
+	d->mutex.unlock();
+	d->fillGrid(&objectGrid, object);
 	JPS::findPath(path, objectGrid, objectCell.x, objectCell.y,
 									 targetCell.x, targetCell.y, 1u);
 	std::vector<sf::Vector2f> result;
@@ -106,16 +155,16 @@ std::vector<sf::Vector2f> NavigationMap::findPath(ArcObject *object, const sf::V
 sf::Vector2u NavigationMap::cell(const sf::Vector2f &pos) const
 {
 	sf::Vector2u result;
-	result.x = static_cast<unsigned>(pos.x / cachedGrid.cellWidth);
-	result.y = static_cast<unsigned>(pos.y / cachedGrid.cellHeight);
+	result.x = static_cast<unsigned>(pos.x / d->cachedGrid.cellWidth);
+	result.y = static_cast<unsigned>(pos.y / d->cachedGrid.cellHeight);
 	return result;
 }
 
 sf::Vector2f NavigationMap::pos(const sf::Vector2u &cell) const
 {
 	sf::Vector2f result;
-	result.x = cell.x * cachedGrid.cellWidth + cachedGrid.cellWidth/2;
-	result.y = cell.y * cachedGrid.cellHeight + cachedGrid.cellHeight/2;
+	result.x = cell.x * d->cachedGrid.cellWidth + d->cachedGrid.cellWidth/2;
+	result.y = cell.y * d->cachedGrid.cellHeight + d->cachedGrid.cellHeight/2;
 	return result;
 }
 
@@ -127,25 +176,25 @@ void NavigationMap::addChild(ArcObject *object)
 void NavigationMap::addElement(ArcObject *object, ELEMENT_TYPE type)
 {
 	object->setParent(this);
-	queuedObjects.push_back(std::pair<ArcObject*, ELEMENT_TYPE>(object, type));
+	d->queuedObjects.push_back(std::pair<ArcObject*, ELEMENT_TYPE>(object, type));
 }
 
 void NavigationMap::addFreeZone(const sf::FloatRect &rect)
 {
-	freeZones.push_back(rect);
+	d->freeZones.push_back(rect);
 }
 
 void NavigationMap::checkGrid()
 {
-	for(std::vector<Rect>& rects : grid.grid) {
-		for(Rect& rect : rects) {
+	for(std::vector<Private::Rect>& rects : d->grid.grid) {
+		for(Private::Rect& rect : rects) {
 			if (rect.isStatic)
 				continue;
 			rect.isBlocked = false;
 			rect.object = nullptr;
 		}
 	}
-	for(auto& element : elements) {
+	for(auto& element : d->elements) {
 		switch (element.second.type)
 		{
 		case NON_SOLID:
@@ -157,8 +206,8 @@ void NavigationMap::checkGrid()
 		}
 		case DYNAMIC_OBJECT:
 		{
-			for(std::vector<Rect>& rects : grid.grid) {
-				for(Rect& rect : rects) {
+			for(std::vector<Private::Rect>& rects : d->grid.grid) {
+				for(Private::Rect& rect : rects) {
 					if (!rect.isBlocked) {
 						rect.isBlocked = Intersection::intersects(element.first, rect.rect);
 						if (rect.isBlocked) {
@@ -175,53 +224,58 @@ void NavigationMap::checkGrid()
 			break;
 		}
 	}
-	std::vector<sf::FloatRect> zones = freeZones;
+	std::vector<sf::FloatRect> zones = d->freeZones;
 	for(const sf::FloatRect& zone : zones) {
-		for(std::vector<Rect>& rects : grid.grid) {
-			for(Rect& rect : rects) {
+		for(std::vector<Private::Rect>& rects : d->grid.grid) {
+			for(Private::Rect& rect : rects) {
 				if (rect.rect.intersects(zone)) {
 					rect.isBlocked = false;
 				}
 			}
 		}
 	}
-	cache();
+	d->cache();
 }
 
 void NavigationMap::setAutoUpdateGrid(bool autoUpdate)
 {
-	if (autoUpdateGrid == autoUpdate)
+	if (d->autoUpdateGrid == autoUpdate)
 		return;
-	autoUpdateGrid = autoUpdate;
-	if (autoUpdateGrid)
-		startProcessing();
+	d->autoUpdateGrid = autoUpdate;
+	if (d->autoUpdateGrid)
+		d->startProcessing();
 	else
-		stopProcessing();
+		d->stopProcessing();
 }
 
 void NavigationMap::update()
 {
-	if (!queuedObjects.empty()) {
-		addElements();
+	if (!d->queuedObjects.empty()) {
+		d->addElements();
 	}
 	ArcObject::update();
 }
 
-void NavigationMap::updateGrid()
+void NavigationMap::Private::cache() {
+	sf::Lock lock(mutex);
+	cachedGrid = grid;
+}
+
+void NavigationMap::Private::updateGrid()
 {
 	processing.store(false);
 
 	grid.grid.clear();
-	const float width = size().x;
-	const float height = size().y;
+	const float width = q->size().x;
+	const float height = q->size().y;
 
 	grid.cellWidth = width / static_cast<float>(grid.cells);
 	grid.cellHeight = height / static_cast<float>(grid.cells);
 
-	const float cellWidth = grid.cellWidth * scaledGlobalScale().x;
-	const float cellHeight = grid.cellHeight * scaledGlobalScale().y;
+	const float cellWidth = grid.cellWidth * q->scaledGlobalScale().x;
+	const float cellHeight = grid.cellHeight * q->scaledGlobalScale().y;
 
-	const sf::Vector2f startPos = ArcObject::scaledGlobalPos();
+	const sf::Vector2f startPos = q->ArcObject::scaledGlobalPos();
 	sf::Vector2f pos = startPos;
 	for (unsigned row = 0; row < grid.cells; ++row) {
 		std::vector<Rect> rects;
@@ -240,12 +294,8 @@ void NavigationMap::updateGrid()
 	processing.store(true);
 }
 
-void NavigationMap::cache() {
-	sf::Lock lock(mutex);
-	cachedGrid = grid;
-}
 
-void NavigationMap::fillGrid(Grid* grid, const ArcObject *object) const
+void NavigationMap::Private::fillGrid(Grid* grid, const ArcObject *object) const
 {
 	std::vector<sf::Vector2u> blocked;
 	for (unsigned row = 0; row < grid->grid.size(); ++row) {
@@ -260,7 +310,7 @@ void NavigationMap::fillGrid(Grid* grid, const ArcObject *object) const
 		}
 	}
 
-	const sf::Vector2u objectSize = cell(object->size());
+	const sf::Vector2u objectSize = q->cell(object->size());
 	sf::Vector2u objectObstacleSize;
 	objectObstacleSize.x = static_cast<unsigned>(std::ceil(static_cast<float>(objectSize.y)/2.f));
 	objectObstacleSize.y = static_cast<unsigned>(std::ceil(static_cast<float>(objectSize.x)/2.f));
@@ -286,20 +336,20 @@ void NavigationMap::fillGrid(Grid* grid, const ArcObject *object) const
 	}
 }
 
-void NavigationMap::processUpdating()
+void NavigationMap::Private::processUpdating()
 {
 	while (active.load()) {
 		if (!processing.load())
 			continue;
-		checkGrid();
+		q->checkGrid();
 		sf::sleep(sf::milliseconds(checkTime));
 	}
 }
 
-void NavigationMap::addElements()
+void NavigationMap::Private::addElements()
 {
 	for(const auto& element : queuedObjects) {
-		ArcObject::addChild(element.first);
+		q->ArcObject::addChild(element.first);
 		ElementData data;
 		data.type = element.second;
 		elements.insert(std::pair<ArcObject*, ElementData>(element.first, data));
@@ -307,13 +357,13 @@ void NavigationMap::addElements()
 	queuedObjects.clear();
 }
 
-void NavigationMap::startProcessing()
+void NavigationMap::Private::startProcessing()
 {
-	thread = new sf::Thread(std::bind(&NavigationMap::processUpdating, this));
+	thread = new sf::Thread(std::bind(&NavigationMap::Private::processUpdating, this));
 	thread->launch();
 }
 
-void NavigationMap::stopProcessing()
+void NavigationMap::Private::stopProcessing()
 {
 	if (thread == nullptr)
 		return;
@@ -323,7 +373,7 @@ void NavigationMap::stopProcessing()
 	delete thread;
 }
 
-bool NavigationMap::Grid::operator()(unsigned x, unsigned y) const
+bool NavigationMap::Private::Grid::operator()(unsigned x, unsigned y) const
 {
 	if(x >= cells || y >= cells)
 		return false;

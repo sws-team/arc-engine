@@ -19,6 +19,7 @@ public:
 	bool debug = true;
 #endif
 
+	/// grid cells count
 	unsigned cells() const;
 	void setCells(unsigned cells);
 
@@ -31,7 +32,6 @@ public:
 	void addChild(ArcObject* object) override;
 //	void removeChild(ArcObject* object) override;
 	void addElement(ArcObject* object, ELEMENT_TYPE type);
-	void addElements();
 
 	void addFreeZone(const sf::FloatRect& rect);
 
@@ -47,44 +47,8 @@ protected:
 	void updateSize() override;
 
 private:
-	void updateGrid();
-	struct Rect {
-		sf::FloatRect rect;
-		ArcObject* object = nullptr;
-		bool isBlocked = false;
-		bool isStatic = false;
-	};
-	struct Grid {
-		Grid() = default;
-		inline bool operator()(unsigned x, unsigned y) const;
-		std::vector<std::vector<Rect>> grid;
-		unsigned cells = 10;
-
-		float cellWidth = 0;
-		float cellHeight = 0;
-	};
-	Grid grid;
-	Grid cachedGrid;
-	void cache();
-	void fillGrid(Grid* grid, const ArcObject* object) const;
-
-	void processUpdating();
-
-	sf::Thread *thread = nullptr;
-	std::atomic<bool> processing = false;
-	std::atomic<bool> active = true;
-	sf::Int32 checkTime = 75;
-	struct ElementData {
-		ELEMENT_TYPE type = STATIC_OBJECT;
-		bool checked = false;
-	};
-	sf::Mutex mutex;
-	std::map<ArcObject*, ElementData> elements;
-	std::vector<std::pair<ArcObject*, ELEMENT_TYPE>> queuedObjects;
-	std::vector<sf::FloatRect> freeZones;
-	bool autoUpdateGrid = false;
-	void startProcessing();
-	void stopProcessing();
+	class Private;
+	Private *d = nullptr;
 };
 
 #endif // NAVIGATIONMAP_H
