@@ -311,7 +311,7 @@ void NavigationAction::finished()
 	if (!step()) {
 		return;
 	}
-	if (resetTimer.check(resetTime)) {
+	if (resetTime != -1 && resetTimer.check(resetTime)) {
 		if (!resetPath())
 			return;
 		resetTimer.reset();

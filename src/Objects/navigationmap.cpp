@@ -7,16 +7,13 @@ NavigationMap::NavigationMap(const std::string &name)
 	: ArcObject(name)
 {
 	setType(ArcEngine::NAVIGATION_MAP);
-	thread = new sf::Thread(std::bind(&NavigationMap::checkGrid, this));
-	thread->launch();
+
 }
 
 NavigationMap::~NavigationMap()
 {
-	processing.store(false);
-	active.store(false);
-	thread->wait();
-	delete thread;
+	if (autoUpdateGrid)
+		stopProcessing();
 }
 
 unsigned NavigationMap::cells() const
@@ -138,6 +135,70 @@ void NavigationMap::addFreeZone(const sf::FloatRect &rect)
 	freeZones.push_back(rect);
 }
 
+void NavigationMap::checkGrid()
+{
+	for(std::vector<Rect>& rects : grid.grid) {
+		for(Rect& rect : rects) {
+			if (rect.isStatic)
+				continue;
+			rect.isBlocked = false;
+			rect.object = nullptr;
+		}
+	}
+	for(auto& element : elements) {
+		switch (element.second.type)
+		{
+		case NON_SOLID:
+			continue;
+		case STATIC_OBJECT:
+		{
+			if (element.second.checked)
+				break;
+		}
+		case DYNAMIC_OBJECT:
+		{
+			for(std::vector<Rect>& rects : grid.grid) {
+				for(Rect& rect : rects) {
+					if (!rect.isBlocked) {
+						rect.isBlocked = Intersection::intersects(element.first, rect.rect);
+						if (rect.isBlocked) {
+							rect.object = element.first;
+							rect.isStatic = element.second.type != DYNAMIC_OBJECT;
+						}
+					}
+				}
+			}
+			element.second.checked = true;
+		}
+			break;
+		default:
+			break;
+		}
+	}
+	std::vector<sf::FloatRect> zones = freeZones;
+	for(const sf::FloatRect& zone : zones) {
+		for(std::vector<Rect>& rects : grid.grid) {
+			for(Rect& rect : rects) {
+				if (rect.rect.intersects(zone)) {
+					rect.isBlocked = false;
+				}
+			}
+		}
+	}
+	cache();
+}
+
+void NavigationMap::setAutoUpdateGrid(bool autoUpdate)
+{
+	if (autoUpdateGrid == autoUpdate)
+		return;
+	autoUpdateGrid = autoUpdate;
+	if (autoUpdateGrid)
+		startProcessing();
+	else
+		stopProcessing();
+}
+
 void NavigationMap::update()
 {
 	if (!queuedObjects.empty()) {
@@ -225,61 +286,12 @@ void NavigationMap::fillGrid(Grid* grid, const ArcObject *object) const
 	}
 }
 
-void NavigationMap::checkGrid()
+void NavigationMap::processUpdating()
 {
 	while (active.load()) {
 		if (!processing.load())
 			continue;
-
-		for(std::vector<Rect>& rects : grid.grid) {
-			for(Rect& rect : rects) {
-				if (rect.isStatic)
-					continue;
-				rect.isBlocked = false;
-				rect.object = nullptr;
-			}
-		}
-		for(auto& element : elements) {
-			switch (element.second.type)
-			{
-			case NON_SOLID:
-				continue;
-			case STATIC_OBJECT:
-			{
-				if (element.second.checked)
-					break;
-			}
-			case DYNAMIC_OBJECT:
-			{
-				for(std::vector<Rect>& rects : grid.grid) {
-					for(Rect& rect : rects) {
-						if (!rect.isBlocked) {
-							rect.isBlocked = Intersection::intersects(element.first, rect.rect);
-							if (rect.isBlocked) {
-								rect.object = element.first;
-								rect.isStatic = element.second.type != DYNAMIC_OBJECT;
-							}
-						}
-					}
-				}
-				element.second.checked = true;
-			}
-				break;
-			default:
-				break;
-			}
-		}
-		std::vector<sf::FloatRect> zones = freeZones;
-		for(const sf::FloatRect& zone : zones) {
-			for(std::vector<Rect>& rects : grid.grid) {
-				for(Rect& rect : rects) {
-					if (rect.rect.intersects(zone)) {
-						rect.isBlocked = false;
-					}
-				}
-			}
-		}
-		cache();
+		checkGrid();
 		sf::sleep(sf::milliseconds(checkTime));
 	}
 }
@@ -293,6 +305,22 @@ void NavigationMap::addElements()
 		elements.insert(std::pair<ArcObject*, ElementData>(element.first, data));
 	}
 	queuedObjects.clear();
+}
+
+void NavigationMap::startProcessing()
+{
+	thread = new sf::Thread(std::bind(&NavigationMap::processUpdating, this));
+	thread->launch();
+}
+
+void NavigationMap::stopProcessing()
+{
+	if (thread == nullptr)
+		return;
+	processing.store(false);
+	active.store(false);
+	thread->wait();
+	delete thread;
 }
 
 bool NavigationMap::Grid::operator()(unsigned x, unsigned y) const

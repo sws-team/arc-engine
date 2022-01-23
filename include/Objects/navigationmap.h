@@ -31,8 +31,12 @@ public:
 	void addChild(ArcObject* object) override;
 //	void removeChild(ArcObject* object) override;
 	void addElement(ArcObject* object, ELEMENT_TYPE type);
+	void addElements();
 
 	void addFreeZone(const sf::FloatRect& rect);
+
+	void checkGrid();
+	void setAutoUpdateGrid(bool autoUpdate);
 
 protected:
 	void update() override;
@@ -64,7 +68,7 @@ private:
 	void cache();
 	void fillGrid(Grid* grid, const ArcObject* object) const;
 
-	void checkGrid();
+	void processUpdating();
 
 	sf::Thread *thread = nullptr;
 	std::atomic<bool> processing = false;
@@ -77,8 +81,10 @@ private:
 	sf::Mutex mutex;
 	std::map<ArcObject*, ElementData> elements;
 	std::vector<std::pair<ArcObject*, ELEMENT_TYPE>> queuedObjects;
-	void addElements();
 	std::vector<sf::FloatRect> freeZones;
+	bool autoUpdateGrid = false;
+	void startProcessing();
+	void stopProcessing();
 };
 
 #endif // NAVIGATIONMAP_H
