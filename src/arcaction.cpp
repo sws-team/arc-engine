@@ -311,7 +311,8 @@ void NavigationAction::finished()
 	if (!step()) {
 		return;
 	}
-	if (resetTime != -1 && resetTimer.check(resetTime)) {
+	if (navigation->autoUpdateGrid() && resetTime != -1
+			&& resetTimer.check(resetTime)) {
 		if (!resetPath())
 			return;
 		resetTimer.reset();
@@ -357,8 +358,8 @@ bool NavigationAction::nextPosition(bool run)
 
 void NavigationAction::end()
 {
-	if (m_object->pos() == m_targetPos)
-		ActionWithObject::finished();
+	m_object->setPos(m_targetPos);
+	ActionWithObject::finished();
 }
 
 ChangeScaleAction::ChangeScaleAction(float time, ArcObject *object, const sf::Vector2f &scale)

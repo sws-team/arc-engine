@@ -37,6 +37,7 @@ public:
 
 	void checkGrid();
 	void setAutoUpdateGrid(bool autoUpdate);
+	bool autoUpdateGrid() const;
 
 protected:
 	void update() override;

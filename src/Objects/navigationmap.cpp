@@ -248,6 +248,11 @@ void NavigationMap::setAutoUpdateGrid(bool autoUpdate)
 		d->stopProcessing();
 }
 
+bool NavigationMap::autoUpdateGrid() const
+{
+	return d->autoUpdateGrid;
+}
+
 void NavigationMap::update()
 {
 	if (!d->queuedObjects.empty()) {
