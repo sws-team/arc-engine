@@ -58,7 +58,7 @@ public:
 
 private:
 	sf::Texture texture;
-	TextureType maskID;
+	TextureType maskID = ArcEngine::undefType;
 	void updateMask();
 };
 

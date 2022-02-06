@@ -34,6 +34,7 @@ namespace ArcEngine
 		NAVIGATION_MAP,
 	};
 
+	static constexpr int undefType = -1;
 	static constexpr float FRAME_TIME = 1.0f / 60.0f;
 	static const sf::Color GrayColor = sf::Color(133, 133, 133);
 	static const sf::Color HoverColor = sf::Color(32, 32, 32, 96);
