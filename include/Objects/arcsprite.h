@@ -47,4 +47,19 @@ private:
 	void updateClip();
 };
 
+class ArcMaskSprite : public ArcSprite
+{
+public:
+	ArcMaskSprite(const std::string& name);
+
+	void setMask(TextureType id);
+
+	void setTexture(TextureType textureID) override;
+
+private:
+	sf::Texture texture;
+	TextureType maskID;
+	void updateMask();
+};
+
 #endif // ARCSPRITE_H

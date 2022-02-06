@@ -105,3 +105,40 @@ void ArcClippedSprite::updateClip()
 {
 	sprite.setTextureRect(clip);
 }
+
+ArcMaskSprite::ArcMaskSprite(const std::string &name)
+	: ArcSprite(name)
+{
+
+}
+
+void ArcMaskSprite::setMask(TextureType id)
+{
+	maskID = id;
+	updateMask();
+}
+
+void ArcMaskSprite::setTexture(TextureType textureID)
+{
+	ArcSprite::setTexture(textureID);
+	updateMask();
+}
+
+void ArcMaskSprite::updateMask()
+{
+	sf::Texture &maskTexture = Engine::Instance().texturesManager()->getTexture(maskID);
+	sf::Image maskImage = maskTexture.copyToImage();
+	maskImage.createMaskFromColor(sf::Color::White);
+
+	sf::Image img = sprite.getTexture()->copyToImage();
+	for (unsigned x = 0; x < maskImage.getSize().x; ++x) {
+		for (unsigned y = 0; y < maskImage.getSize().y; ++y) {
+			sf::Color color = maskImage.getPixel(x, y);
+			if (color != sf::Color::Black)
+				img.setPixel(x, y, sf::Color::Transparent);
+		}
+	}
+
+	texture.loadFromImage(img);
+	sprite.setTexture(&texture);
+}
