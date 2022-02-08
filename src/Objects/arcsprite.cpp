@@ -126,6 +126,8 @@ void ArcMaskSprite::setTexture(TextureType textureID)
 
 void ArcMaskSprite::updateMask()
 {
+	if (maskID == ArcEngine::undefType)
+		return;
 	sf::Texture &maskTexture = Engine::Instance().texturesManager()->getTexture(maskID);
 	sf::Image maskImage = maskTexture.copyToImage();
 	maskImage.createMaskFromColor(sf::Color::White);

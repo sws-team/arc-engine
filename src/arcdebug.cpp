@@ -14,6 +14,7 @@
 #include "arcpolygon.h"
 #include "arcrect.h"
 #include "navigationmap.h"
+#include "customwidgets.h"
 
 #ifdef ARC_DEBUG
 #include "imgui.h"
@@ -635,6 +636,32 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			}
 		}
 			break;
+		case ArcEngine::PATH:
+		{
+			if (ImGui::CollapsingHeader("Way points", ImGuiTreeNodeFlags_DefaultOpen)) {
+				PathObject *pathObj = static_cast<PathObject*>(obj);
+				if (ImGui::Checkbox("Show", &pathObj->m_debug)) {
+
+				}
+				{//Radius
+					ImGui::DragFloat("##Radius", &pathObj->radius, 1.f, 1.f, 100.f);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Radius");
+				}
+				{//Lines color
+					ImVec4 color = Utils::convertFromColor(pathObj->m_color);
+					editColor("Lines color", &color);
+					obj->setDebugRectColor(Utils::convertToColor(color));
+				}
+				{//Points color
+					ImVec4 color = Utils::convertFromColor(pathObj->m_pointColor);
+					editColor("Points color", &color);
+					obj->setDebugRectColor(Utils::convertToColor(color));
+				}
+				pathObj->debug();
+			}
+		}
+			break;
 		default:
 			break;
 		}
@@ -671,6 +698,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 		break;
 	case ArcEngine::NAVIGATION_MAP:
 		drawInheritObject(ArcEngine::NAVIGATION_MAP, obj);
+		break;
+	case ArcEngine::PATH:
+		drawInheritObject(ArcEngine::PATH, obj);
 		break;
 	default:
 		break;
@@ -711,6 +741,9 @@ std::string ArcDebug::typeToName(ArcEngine::OBJECT_TYPE type)
 		break;
 	case ArcEngine::NAVIGATION_MAP:
 		return "Navigation map";
+		break;
+	case ArcEngine::PATH:
+		return "Way points";
 		break;
 	default:
 		break;

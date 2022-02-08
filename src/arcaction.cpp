@@ -1,6 +1,7 @@
 #include "arcaction.h"
 #include "arcobject.h"
 #include "navigationmap.h"
+#include "customwidgets.h"
 
 ArcAction::ArcAction(float time)
 	: m_time(time)
@@ -281,38 +282,43 @@ void MoveAction::process(float progress)
 	m_object->setPos(targetX, targetY);
 }
 
-NavigationAction::NavigationAction(float time, ArcObject *object, ArcObject *navigation,
+WayPointsMoveAction::WayPointsMoveAction(float time, ArcObject *object,
 								   const sf::Vector2f &targetPos)
 	: ActionWithObject(time, object)
 	,m_targetPos(targetPos)
 {
-	this->navigation = static_cast<NavigationMap*>(navigation);
+
 }
 
-void NavigationAction::setResetTime(float time)
+void WayPointsMoveAction::setGetWayPointsFunc(
+		const std::function<std::vector<sf::Vector2f> (ArcObject *, const sf::Vector2f &)> &func)
+{
+	getWayPointsFunc = func;
+}
+
+void WayPointsMoveAction::setResetTime(float time)
 {
 	resetTime = time;
 }
 
-void NavigationAction::process(float progress)
+void WayPointsMoveAction::process(float progress)
 {
 	const float x = m_startPos.x + (m_nextPos.x - m_startPos.x) * progress;
 	const float y = m_startPos.y + (m_nextPos.y - m_startPos.y) * progress;
 	m_object->setPos(x, y);
 }
 
-void NavigationAction::started()
+void WayPointsMoveAction::started()
 {
 	resetPath(false);
 }
 
-void NavigationAction::finished()
+void WayPointsMoveAction::finished()
 {
 	if (!step()) {
 		return;
 	}
-	if (navigation->autoUpdateGrid() && resetTime != -1
-			&& resetTimer.check(resetTime)) {
+	if (resetTime != -1 && resetTimer.check(resetTime)) {
 		if (!resetPath())
 			return;
 		resetTimer.reset();
@@ -321,14 +327,16 @@ void NavigationAction::finished()
 		timer.reset();
 }
 
-bool NavigationAction::step()
+bool WayPointsMoveAction::step()
 {
 	return true;
 }
 
-bool NavigationAction::resetPath(bool run)
+bool WayPointsMoveAction::resetPath(bool run)
 {
-	positions = navigation->findPath(m_object, m_targetPos);
+	positions.clear();
+	if (getWayPointsFunc != nullptr)
+		positions = getWayPointsFunc(m_object, m_targetPos);
 	if (positions.empty()) {
 		end();
 		return false;
@@ -337,7 +345,7 @@ bool NavigationAction::resetPath(bool run)
 	return nextPosition(run);
 }
 
-bool NavigationAction::nextPosition(bool run)
+bool WayPointsMoveAction::nextPosition(bool run)
 {
 	if (positions.empty() ||
 			currentIndex == positions.size()) {
@@ -356,11 +364,44 @@ bool NavigationAction::nextPosition(bool run)
 	return true;
 }
 
-void NavigationAction::end()
+void WayPointsMoveAction::end()
 {
 	m_object->setPos(m_targetPos);
 	ActionWithObject::finished();
 }
+
+NavigationAction::NavigationAction(float time, ArcObject *object,
+								   const sf::Vector2f &targetPos,
+								   NavigationMap *navMap)
+	: WayPointsMoveAction(time, object, targetPos)
+	, navMap(navMap)
+{
+	setGetWayPointsFunc([this](ArcObject *object, const sf::Vector2f & pos) {
+		return this->navMap->findPath(object, pos);
+	});
+}
+
+void NavigationAction::setNavigationMap(NavigationMap *navMap)
+{
+	this->navMap = navMap;
+}
+
+PathMoveAction::PathMoveAction(float time, ArcObject *object,
+							   const sf::Vector2f &targetPos,
+							   PathObject *pathObject)
+	: WayPointsMoveAction(time, object, targetPos)
+	, pathObject(pathObject)
+{
+	setGetWayPointsFunc([this](ArcObject *, const sf::Vector2f &) {
+		return this->pathObject->path();
+	});
+}
+
+void PathMoveAction::setPathObject(PathObject *pathObject)
+{
+	this->pathObject = pathObject;
+}
+
 
 ChangeScaleAction::ChangeScaleAction(float time, ArcObject *object, const sf::Vector2f &scale)
 	: ActionWithObject(time, object)
@@ -402,4 +443,3 @@ void ChangeScaleAction::finished()
 	m_object->setScale(m_targetScale);
 	ActionWithObject::finished();
 }
-

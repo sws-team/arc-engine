@@ -149,12 +149,13 @@ public:
 	void finished() override;
 };
 
-class NavigationAction : public ActionWithObject
+class WayPointsMoveAction : public ActionWithObject
 {
 public:
-	NavigationAction(float time, ArcObject *object,
-					 ArcObject* navigation,
-					 const sf::Vector2f& targetPos);
+	WayPointsMoveAction(float time, ArcObject *object, const sf::Vector2f& targetPos);
+
+	void setGetWayPointsFunc(
+			const std::function<std::vector<sf::Vector2f>(ArcObject*, const sf::Vector2f&)>& func);
 
 	void setResetTime(float time);
 
@@ -165,12 +166,11 @@ public:
 	virtual bool step();
 
 protected:
-	class NavigationMap *navigation = nullptr;
 	bool resetPath(bool run = true);
 	bool nextPosition(bool run = true);
 	void end();
 	Timer resetTimer;
-	float resetTime = 0;
+	float resetTime = -1;
 
 	std::vector<sf::Vector2f> positions;
 	unsigned currentIndex = 0;
@@ -178,6 +178,31 @@ protected:
 	sf::Vector2f m_targetPos;
 	sf::Vector2f m_nextPos;
 	sf::Vector2f m_startPos;
+private:
+	std::function<std::vector<sf::Vector2f>(ArcObject*, const sf::Vector2f&)> getWayPointsFunc = nullptr;
+};
+
+class NavigationMap;
+class NavigationAction : public WayPointsMoveAction
+{
+public:
+	NavigationAction(float time, ArcObject *object, const sf::Vector2f& targetPos, NavigationMap* navMap);
+
+	void setNavigationMap(NavigationMap *navMap);
+
+private:
+	NavigationMap *navMap = nullptr;
+};
+
+class PathObject;
+class PathMoveAction : public WayPointsMoveAction
+{
+	PathMoveAction(float time, ArcObject *object, const sf::Vector2f& targetPos, PathObject* pathObject);
+
+	void setPathObject(PathObject *pathObject);
+
+private:
+	PathObject *pathObject =  nullptr;
 };
 
 class ChangeScaleAction : public ActionWithObject

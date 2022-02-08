@@ -25,4 +25,27 @@ private:
 	CustomWidgets();
 };
 
+class PathObject : public ArcObject
+{
+public:
+	PathObject(const std::string& name);
+
+	std::vector<sf::Vector2f> path() const;
+
+	void draw(sf::RenderTarget *const target) override;
+
+	void setPath(const std::vector<sf::Vector2f> &path);
+
+private:
+#ifdef ARC_DEBUG
+	void debug();
+	bool m_debug = true;
+	float radius = 5;
+	sf::Color m_color = sf::Color::Red;
+	sf::Color m_pointColor = sf::Color::Red;
+	friend class ArcDebug;
+#endif
+	std::vector<sf::Vector2f> m_path;
+};
+
 #endif // CUSTOMWIDGETS_H

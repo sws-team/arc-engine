@@ -32,6 +32,7 @@ namespace ArcEngine
 		POLYGON,
 		RECT,
 		NAVIGATION_MAP,
+		PATH,
 	};
 
 	static constexpr int undefType = -1;
