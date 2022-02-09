@@ -133,7 +133,7 @@ void PathObject::debug()
 			++it;
 	}
 	if (ImGui::Button("Add")) {
-		m_path.push_back(sf::Vector2f(0, 0));
+		m_path.push_back(m_path.empty()?sf::Vector2f(0, 0):m_path.back());
 	}
 }
 #endif

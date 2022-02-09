@@ -171,8 +171,11 @@ protected:
 	void end();
 	Timer resetTimer;
 	float resetTime = -1;
+	sf::Clock clock;
+	float commonTime = -1;
 
 	std::vector<sf::Vector2f> positions;
+	std::vector<float> intervals;
 	unsigned currentIndex = 0;
 
 	sf::Vector2f m_targetPos;

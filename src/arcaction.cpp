@@ -272,7 +272,7 @@ MoveAction::MoveAction(float time, ArcObject *object, const sf::Vector2f &movePo
 void MoveAction::finished()
 {
 	m_object->setPos(m_startPos + m_targetPos);
-	ArcAction::finished();
+	ChangePosAction::finished();
 }
 
 void MoveAction::process(float progress)
@@ -284,7 +284,8 @@ void MoveAction::process(float progress)
 
 WayPointsMoveAction::WayPointsMoveAction(float time, ArcObject *object,
 								   const sf::Vector2f &targetPos)
-	: ActionWithObject(time, object)
+	: ActionWithObject(-1, object)
+	,commonTime(time)
 	,m_targetPos(targetPos)
 {
 
@@ -310,6 +311,7 @@ void WayPointsMoveAction::process(float progress)
 
 void WayPointsMoveAction::started()
 {
+	clock.restart();
 	resetPath(false);
 }
 
@@ -335,8 +337,26 @@ bool WayPointsMoveAction::step()
 bool WayPointsMoveAction::resetPath(bool run)
 {
 	positions.clear();
-	if (getWayPointsFunc != nullptr)
+	if (getWayPointsFunc != nullptr) {
 		positions = getWayPointsFunc(m_object, m_targetPos);
+		const sf::Int32 elapsed = clock.getElapsedTime().asMilliseconds();
+		const float currentTimeLeft = commonTime - elapsed;
+
+		float path = 0.f;
+		std::vector<float> ds;
+		for (unsigned i = 0; i < positions.size() - 1; ++i) {
+			const sf::Vector2f pos1 = positions[i];
+			const sf::Vector2f pos2 = positions[i + 1];
+			const float d = sqrt(pow(pos1.x - pos2.x, 2) + pow(pos1.y - pos2.y, 2));
+			path += d;
+			ds.push_back(d);
+		}
+		intervals.push_back(0);
+		for(const float &d : ds) {
+			const float time =  currentTimeLeft * d/path;
+			intervals.push_back(time);
+		}
+	}
 	if (positions.empty()) {
 		end();
 		return false;
@@ -356,6 +376,7 @@ bool WayPointsMoveAction::nextPosition(bool run)
 		m_object->setPos(m_nextPos);
 	m_startPos = m_object->pos();
 	m_nextPos = positions.at(currentIndex);
+	m_time = intervals.at(currentIndex);
 	currentIndex++;
 	if (currentIndex == positions.size()) {
 		end();
