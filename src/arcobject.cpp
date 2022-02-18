@@ -240,6 +240,10 @@ void ArcObject::update()
 			++it;
 		}
 	}
+	if (isDirty) {
+		updateTransform();
+		isDirty = false;
+	}
 }
 
 void ArcObject::addChild(ArcObject *object)

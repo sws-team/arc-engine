@@ -161,10 +161,11 @@ void FunctionAction::process(float progress)
 {
 	if (processFunc == nullptr)
 		return;
-	processFunc(progress);
+	if (processFunc(progress))
+		finished();
 }
 
-void FunctionAction::setFunc(const std::function<void (float)> &func)
+void FunctionAction::setFunc(const std::function<bool (float)> &func)
 {
 	processFunc = func;
 }

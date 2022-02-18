@@ -76,10 +76,10 @@ public:
 
 	void process(float progress) override;
 
-	void setFunc(const std::function<void(float)>& func);
+	void setFunc(const std::function<bool(float)>& func);
 
 private:
-	std::function<void(float)> processFunc = nullptr;
+	std::function<bool(float)> processFunc = nullptr;
 };
 
 class FadeAction : public ActionWithObject

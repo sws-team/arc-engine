@@ -135,6 +135,7 @@ private:
 	std::map<std::string, std::any> m_data;
 	static constexpr float center = 0.5f;
 	static constexpr float MAX_ALPHA = 255.f;
+	bool isDirty = true;
 #ifdef ARC_DEBUG
 	bool drawDebugRect = false;
 	bool drawOrigin = false;
