@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <limits.h>
+#include <array>
 
 #include "arclog.h"
 

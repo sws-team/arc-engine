@@ -7,6 +7,7 @@
 #include <iostream>
 #include "SFML/System/Vector2.hpp"
 #include "SFML/Graphics/Rect.hpp"
+#include "SFML/System/String.hpp"
 
 #ifdef ARC_DEBUG
 
@@ -61,6 +62,10 @@ public:
 	}
 	inline ArcLog &operator<<(char *value) {
 		std::cout << std::string(value) << DELIMER;
+		return *this;
+	}
+	inline ArcLog &operator<<(const sf::String& str) {
+		std::cout << str.toAnsiString() << DELIMER;
 		return *this;
 	}
 

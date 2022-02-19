@@ -108,6 +108,7 @@ set(ARC_ENGINE_SOURCES
 if (ARC_DEBUG)
     add_definitions(-DARC_DEBUG)
     include_directories(${3RD_PARTY_DIR}/imgui)
+    include_directories(${3RD_PARTY_DIR}/imgui/misc/cpp)
     include_directories(${3RD_PARTY_DIR}/imgui-sfml)
 
     set(IMGUI_SOURCES
@@ -116,6 +117,7 @@ if (ARC_DEBUG)
 	${3RD_PARTY_DIR}/imgui/imgui_tables.cpp
 	${3RD_PARTY_DIR}/imgui/imgui_widgets.cpp
 	${3RD_PARTY_DIR}/imgui/imgui_demo.cpp
+	${3RD_PARTY_DIR}/imgui/misc/cpp/imgui_stdlib.cpp
 
 	${3RD_PARTY_DIR}/imgui-sfml/imgui-SFML.cpp
 	)
