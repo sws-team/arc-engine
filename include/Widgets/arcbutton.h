@@ -15,6 +15,9 @@ public:
 	void setClickable(bool enabled);
 	bool isClickable() const;
 
+	bool isHoverable() const;
+	void setHoverable(bool hoverable);
+
 protected:
 	bool eventFilter(sf::Event *event) override;
 
@@ -27,6 +30,7 @@ private:
 	std::function<void()> m_callback = nullptr;
 	bool m_clickable = true;
 	bool hovered = false;
+	bool hoverable = true;
 	sf::RectangleShape hoverRect;
 };
 

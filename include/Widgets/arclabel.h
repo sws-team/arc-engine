@@ -28,6 +28,10 @@ public:
 	bool autoSize() const;
 	void setAutoSize(bool autoSize);
 
+#ifdef ARC_DEBUG
+	bool showLabelDebug = false;
+#endif
+
 protected:
 	void updatePos() override;
 	void updateScale() override;

@@ -36,6 +36,7 @@ bool ArcButton::eventFilter(sf::Event *event)
 				PLAY_SOUND(SoundManager::CLICK);
 				if (m_callback != nullptr)
 					m_callback();
+				return true;
 			}
 			else if (event->mouseButton.button == sf::Mouse::Right) {
 //				if (m_menu != nullptr)
@@ -43,7 +44,7 @@ bool ArcButton::eventFilter(sf::Event *event)
 			}
 		}
 	}
-	else if (event->type == sf::Event::MouseMoved) {
+	else if (hoverable && event->type == sf::Event::MouseMoved) {
 		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseMove.x, event->mouseMove.y);
 		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
 																			   *Engine::Instance().window()->view());
@@ -92,6 +93,16 @@ void ArcButton::updateSize()
 {
 	hoverRect.setSize(size());
 	ArcSprite::updateSize();
+}
+
+bool ArcButton::isHoverable() const
+{
+	return hoverable;
+}
+
+void ArcButton::setHoverable(bool hoverable)
+{
+	this->hoverable = hoverable;
 }
 
 void ArcButton::setClickable(bool enabled)

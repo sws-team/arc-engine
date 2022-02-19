@@ -197,18 +197,22 @@ void ArcLayout::refreshChilds()
 		setSize(rowMaxWidth, pos.y - baseY);
 	}
 	else {
-		const sf::Vector2f sSize = size();
+		const float maxWidth = scaledSize().x + (baseX < 0 ? baseX : 0);
 		float maxHeight = 0;
 		for(ArcObject* child : m_childs) {
 			if (!child->isEnabled())
 				continue;
-			child->setPos(pos);
-			pos.x += child->size().x;
-			pos.x += m_offset.x * globalScale().x;
+			const float childWidth = child->size().x;
+			child->setPos(pos + sf::Vector2f(childWidth * child->originX(),
+											 child->size().y * child->originY()));
+			pos.x += childWidth;
+			const float actualOffset = m_offset.x * globalScale(true).x;
+			pos.x += actualOffset;
 
 			if (child->size().y > maxHeight)
 				maxHeight = child->size().y;
-			if (pos.x >= sSize.x) {
+
+			if (pos.x >= maxWidth - 1) {
 				pos.x = baseX;
 				pos.y += maxHeight;
 				pos.y += m_offset.y * globalScale().y;

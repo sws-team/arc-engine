@@ -17,14 +17,16 @@ void ArcLabel::draw(sf::RenderTarget * const target)
 	target->draw(m_text, m_transform);
 	ArcObject::draw(target);
 
-#if 0
-	sf::RectangleShape rect;
-	rect.setOutlineThickness(1);
-	rect.setOutlineColor(sf::Color::Cyan);
-	rect.setFillColor(sf::Color::Transparent);
-	rect.setPosition(m_text.getGlobalBounds().left, m_text.getGlobalBounds().top);
-	rect.setSize(sf::Vector2f(m_text.getGlobalBounds().width, m_text.getGlobalBounds().height));
-	target->draw(rect);
+#ifdef ARC_DEBUG
+	if (showLabelDebug) {
+		sf::RectangleShape rect;
+		rect.setOutlineThickness(1);
+		rect.setOutlineColor(sf::Color::Cyan);
+		rect.setFillColor(sf::Color::Transparent);
+		rect.setPosition(m_text.getGlobalBounds().left, m_text.getGlobalBounds().top);
+		rect.setSize(sf::Vector2f(m_text.getGlobalBounds().width, m_text.getGlobalBounds().height));
+		target->draw(rect);
+	}
 #endif
 }
 

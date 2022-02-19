@@ -15,6 +15,8 @@ add_definitions("-DENGINE_VERSION=\"${ENGINE_NORMAL_VERSION}\"")
 
 option(ARC_DEBUG OFF)
 
+add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
+
 #resources
 include(${CMAKE_CURRENT_LIST_DIR}/../Resources/arcresources.cmake)
 

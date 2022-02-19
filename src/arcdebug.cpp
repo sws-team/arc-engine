@@ -439,6 +439,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					editColor("Border color", &color);
 					label->setBorderColor(Utils::convertToColor(color));
 				}
+				if (ImGui::Checkbox("Show label debug", &label->showLabelDebug)) {
+
+				}
 			}
 		}
 			break;
