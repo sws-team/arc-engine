@@ -56,9 +56,13 @@ public:
 
 	void setTexture(TextureType textureID) override;
 
+	sf::IntRect textureRect() const;
+	void setTextureRect(const sf::IntRect &textureRect);
+
 private:
 	sf::Texture texture;
 	TextureType maskID = ArcEngine::undefType;
+	sf::IntRect m_textureRect;
 	void updateMask();
 };
 

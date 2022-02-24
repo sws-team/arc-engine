@@ -124,19 +124,32 @@ void ArcMaskSprite::setTexture(TextureType textureID)
 	updateMask();
 }
 
+sf::IntRect ArcMaskSprite::textureRect() const
+{
+	return m_textureRect;
+}
+
+void ArcMaskSprite::setTextureRect(const sf::IntRect &textureRect)
+{
+	if (m_textureRect == textureRect)
+		return;
+	m_textureRect = textureRect;
+	sprite.setTextureRect(m_textureRect);
+}
+
 void ArcMaskSprite::updateMask()
 {
 	if (maskID == ArcEngine::undefType)
 		return;
 	sf::Texture &maskTexture = Engine::Instance().texturesManager()->getTexture(maskID);
 	sf::Image maskImage = maskTexture.copyToImage();
-	maskImage.createMaskFromColor(sf::Color::White);
+	maskImage.createMaskFromColor(sf::Color::Black);
 
 	sf::Image img = sprite.getTexture()->copyToImage();
 	for (unsigned x = 0; x < maskImage.getSize().x; ++x) {
 		for (unsigned y = 0; y < maskImage.getSize().y; ++y) {
 			sf::Color color = maskImage.getPixel(x, y);
-			if (color != sf::Color::Black)
+			if (color != sf::Color::White)
 				img.setPixel(x, y, sf::Color::Transparent);
 		}
 	}

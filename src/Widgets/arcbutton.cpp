@@ -14,7 +14,8 @@ ArcButton::ArcButton(const std::string &name)
 void ArcButton::draw(sf::RenderTarget * const target)
 {
 	ArcSprite::draw(target);
-	target->draw(hoverRect, m_transform);
+	if (m_hoverType == HOVER_TYPE::RECT_HOVER)
+		target->draw(hoverRect, m_transform);
 }
 
 void ArcButton::setCallback(const std::function<void ()> &func)
@@ -44,7 +45,7 @@ bool ArcButton::eventFilter(sf::Event *event)
 			}
 		}
 	}
-	else if (hoverable && event->type == sf::Event::MouseMoved) {
+	else if (m_hoverType != HOVER_TYPE::NONE && event->type == sf::Event::MouseMoved) {
 		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseMove.x, event->mouseMove.y);
 		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
 																			   *Engine::Instance().window()->view());
@@ -57,6 +58,20 @@ bool ArcButton::eventFilter(sf::Event *event)
 		if (hover && !hovered) {
 			hovered = true;
 			PLAY_SOUND(SoundManager::HOVER);
+			if (m_hoverType == HOVER_TYPE::HOVER) {
+				lastAlpha = alpha();
+				setAlpha(0.3f);
+			}
+			else if (m_hoverType == HOVER_TYPE::SCALE) {
+				lastScale = scale();
+				setScale(1.3f, 1.3f);
+			}
+		}
+		if (!hover && hovered) {
+			if (m_hoverType == HOVER_TYPE::HOVER)
+				setAlpha(lastAlpha);
+			else if (m_hoverType == HOVER_TYPE::SCALE)
+				setScale(lastScale);
 		}
 		hovered = hover;
 	}
@@ -95,14 +110,14 @@ void ArcButton::updateSize()
 	ArcSprite::updateSize();
 }
 
-bool ArcButton::isHoverable() const
+ArcButton::HOVER_TYPE ArcButton::hoverType() const
 {
-	return hoverable;
+	return m_hoverType;
 }
 
-void ArcButton::setHoverable(bool hoverable)
+void ArcButton::setHoverType(const HOVER_TYPE &hoverType)
 {
-	this->hoverable = hoverable;
+	m_hoverType = hoverType;
 }
 
 void ArcButton::setClickable(bool enabled)

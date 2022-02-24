@@ -15,8 +15,16 @@ public:
 	void setClickable(bool enabled);
 	bool isClickable() const;
 
-	bool isHoverable() const;
-	void setHoverable(bool hoverable);
+	enum class HOVER_TYPE
+	{
+		NONE,
+		HOVER,
+		RECT_HOVER,
+		SCALE
+	};
+
+	HOVER_TYPE hoverType() const;
+	void setHoverType(const HOVER_TYPE &hoverType);
 
 protected:
 	bool eventFilter(sf::Event *event) override;
@@ -30,7 +38,9 @@ private:
 	std::function<void()> m_callback = nullptr;
 	bool m_clickable = true;
 	bool hovered = false;
-	bool hoverable = true;
+	float lastAlpha = 1.f;
+	sf::Vector2f lastScale = sf::Vector2f(1, 1);
+	HOVER_TYPE m_hoverType = HOVER_TYPE::NONE;
 	sf::RectangleShape hoverRect;
 };
 
