@@ -46,7 +46,7 @@ void ArcSprite::setTexture(TextureType textureID)
 	m_textureID = textureID;
 	if (textureID == -1)
 		return;
-	sprite.setTexture(&Engine::Instance().texturesManager()->getTexture(textureID));
+	sprite.setTexture(&Engine::Instance().texturesManager()->getTexture(textureID), true);
 }
 
 void ArcSprite::setColor(const sf::Color &color)
