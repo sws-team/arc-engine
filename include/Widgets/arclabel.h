@@ -17,6 +17,7 @@ public:
 	void setColor(const sf::Color &color) override;
 	void setBorderColor(const sf::Color &color) override;
 	void setBorderSize(float size) override;
+	void setFont(FontType fontType);
 
 	void setFontSize(unsigned int size);
 	unsigned int fontSize() const;

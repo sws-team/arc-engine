@@ -55,6 +55,11 @@ void ArcLabel::setBorderSize(float size)
 	m_text.setOutlineThickness(size);
 }
 
+void ArcLabel::setFont(FontType fontType)
+{
+	m_text.setFont(Engine::Instance().fontManager()->getFont(fontType));
+}
+
 void ArcLabel::setBorderColor(const sf::Color &color)
 {
 	BorderColorProperty::setBorderColor(color);
