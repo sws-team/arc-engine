@@ -4,6 +4,7 @@
 #include "stdheader.h"
 #include "enginedef.h"
 #include <any>
+#include <queue>
 
 class ArcAction;
 
@@ -24,7 +25,7 @@ public:
 
 	void setParent(ArcObject* parent);
 	virtual void addChild(ArcObject* object);
-	void addAction(ArcAction* action);
+	void addAction(ArcAction* action, bool instant = true);
 	void insertChild(int pos, ArcObject* object);
 
 	virtual void removeChild(ArcObject* object);
@@ -136,6 +137,7 @@ private:
 	static constexpr float center = 0.5f;
 	static constexpr float MAX_ALPHA = 255.f;
 	bool isDirty = true;
+	std::queue<ArcAction*> actionsQueue;
 #ifdef ARC_DEBUG
 	bool drawDebugRect = false;
 	bool drawOrigin = false;

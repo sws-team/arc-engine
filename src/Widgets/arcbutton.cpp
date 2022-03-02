@@ -37,7 +37,7 @@ bool ArcButton::eventFilter(sf::Event *event)
 				PLAY_SOUND(SoundManager::CLICK);
 				if (m_callback != nullptr)
 					m_callback();
-				return true;
+				return m_opaqueClicks;
 			}
 			else if (event->mouseButton.button == sf::Mouse::Right) {
 //				if (m_menu != nullptr)
@@ -108,6 +108,11 @@ void ArcButton::updateSize()
 {
 	hoverRect.setSize(size());
 	ArcSprite::updateSize();
+}
+
+void ArcButton::setOpaqueClicks(bool opaqueClicks)
+{
+	m_opaqueClicks = opaqueClicks;
 }
 
 ArcButton::HOVER_TYPE ArcButton::hoverType() const

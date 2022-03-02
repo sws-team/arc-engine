@@ -226,6 +226,12 @@ void ArcObject::draw(sf::RenderTarget * const target)
 
 void ArcObject::update()
 {
+	while(!actionsQueue.empty()) {
+		ArcAction *action = actionsQueue.front();
+		actionsQueue.pop();
+		m_actions.push_back(action);
+	}
+
 	for(ArcObject* child : m_childs)
 		child->update();
 
@@ -253,9 +259,12 @@ void ArcObject::addChild(ArcObject *object)
 	m_childs.push_back(object);
 }
 
-void ArcObject::addAction(ArcAction *action)
+void ArcObject::addAction(ArcAction *action, bool instant)
 {
-	m_actions.push_back(action);
+	if (instant)
+		m_actions.push_back(action);
+	else
+		actionsQueue.push(action);
 }
 
 void ArcObject::insertChild(int pos, ArcObject *object)

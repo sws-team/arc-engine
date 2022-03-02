@@ -26,6 +26,8 @@ public:
 	HOVER_TYPE hoverType() const;
 	void setHoverType(const HOVER_TYPE &hoverType);
 
+	void setOpaqueClicks(bool opaqueClicks);
+
 protected:
 	bool eventFilter(sf::Event *event) override;
 
@@ -42,6 +44,7 @@ private:
 	sf::Vector2f lastScale = sf::Vector2f(1, 1);
 	HOVER_TYPE m_hoverType = HOVER_TYPE::NONE;
 	sf::RectangleShape hoverRect;
+	bool m_opaqueClicks = true;
 };
 
 #endif // ARCBUTTON_H
