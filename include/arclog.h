@@ -56,7 +56,7 @@ public:
 		return *this;
 	}
 	inline ArcLog &operator<<(const sf::FloatRect& value) {
-		std::cout << value.top << DELIMER << value.left << DELIMER
+		std::cout << value.left << DELIMER << value.top << DELIMER
 					 << value.width << DELIMER << value.height << DELIMER;
 		return *this;
 	}

@@ -2,6 +2,7 @@
 #include "arcsprite.h"
 #include "engine.h"
 #include "managers.h"
+#include "mainwindow.h"
 #ifdef ARC_DEBUG
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -141,4 +142,117 @@ void PathObject::debug()
 void PathObject::setPath(const std::vector<sf::Vector2f> &path)
 {
 	m_path = path;
+}
+
+ZoomView::ZoomView(const std::string &name)
+	: ArcObject(name)
+{
+	view.setSize(RESOLUTION);
+}
+
+void ZoomView::setView(const sf::Vector2f &pos)
+{
+	view.setCenter(pos);
+	fitScreen();
+}
+
+void ZoomView::setView(const float x, const float y)
+{
+	setView(sf::Vector2f(x, y));
+}
+
+void ZoomView::zoomIn()
+{
+	if (zoomRatio > MAX_ZOOM)
+		return;
+	view.zoom(ZOOM_STEP);
+	zoomFactor *= ZOOM_STEP;
+	zoomRatio++;
+	fitScreen();
+}
+
+void ZoomView::zoomOut()
+{
+	if (zoomRatio < -MAX_ZOOM)
+		return;
+	view.zoom(1/ZOOM_STEP);
+	zoomFactor /= ZOOM_STEP;
+	zoomRatio--;
+	fitScreen();
+}
+
+void ZoomView::draw(sf::RenderTarget * const target)
+{
+	Engine::Instance().window()->setView(view);
+	ArcObject::draw(target);
+	Engine::Instance().window()->setView(*Engine::Instance().window()->view());
+}
+
+bool ZoomView::eventFilter(sf::Event *event)
+{
+	switch (event->type)
+	{
+	case sf::Event::MouseWheelScrolled:
+	{
+		if (event->mouseWheelScroll.delta < 0)
+			zoomOut();
+		else
+			zoomIn();
+	}
+		break;
+	case sf::Event::MouseButtonPressed:
+	{
+		move = true;
+		startMovePos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
+	}
+		break;
+	case sf::Event::MouseMoved:
+	{
+		if (move) {
+			const sf::Vector2i pixelPos = sf::Vector2i(event->mouseMove.x, event->mouseMove.y);
+			if (pixelPos == startMovePos)
+				break;
+
+			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, view);
+			const sf::Vector2f movePos = Engine::Instance().window()->mapPixelToCoords(startMovePos, view);
+			const sf::Vector2f offsetPos = pos - movePos;
+			const sf::Vector2f center = view.getCenter() - offsetPos;
+
+			view.setCenter(center);
+			startMovePos = pixelPos;
+			fitScreen();
+		}
+	}
+		break;
+	case sf::Event::MouseButtonReleased:
+	{
+		move = false;
+	}
+		break;
+	default:
+		break;
+	}
+	return ArcObject::eventFilter(event);
+}
+
+void ZoomView::fitScreen()
+{
+	sf::Vector2f newCenter = view.getCenter();
+	const sf::Vector2f topLeft = Engine::Instance().window()->mapPixelToCoords(sf::Vector2i(0, 0), view);
+	const sf::Vector2f bottomRight = Engine::Instance().window()->mapPixelToCoords(Engine::Instance().settingsManager()->getResolution(), view);
+	if (topLeft.x < 0.f) {
+		newCenter.x = view.getSize().x/2;
+	}
+	if (bottomRight.x > size().x * scaleFactor.x) {
+		newCenter.x = size().x * scaleFactor.x - view.getSize().x/2;
+	}
+	if (topLeft.y < 0.f) {
+		newCenter.y = view.getSize().y/2;
+	}
+	if (bottomRight.y > size().y * scaleFactor.y) {
+		newCenter.y = size().y * scaleFactor.y - view.getSize().y/2;
+	}
+	if (newCenter != view.getCenter()) {
+		view.setCenter(newCenter);
+	}
 }

@@ -48,4 +48,30 @@ private:
 	std::vector<sf::Vector2f> m_path;
 };
 
+class ZoomView : public ArcObject
+{
+public:
+	ZoomView(const std::string& name);
+
+	void setView(const sf::Vector2f& pos);
+	void setView(const float x, const float y);
+
+	void zoomIn();
+	void zoomOut();
+
+	void draw(sf::RenderTarget *const target) override;
+	bool eventFilter(sf::Event *event) override;
+private:
+	sf::View view;
+	bool move = false;
+	sf::Vector2i startMovePos;
+	int zoomRatio = 0;
+	float zoomFactor = 1;
+
+	constexpr static int MAX_ZOOM = 20;
+	constexpr static float ZOOM_STEP = 0.95f;
+
+	void fitScreen();
+};
+
 #endif // CUSTOMWIDGETS_H
