@@ -118,7 +118,8 @@ bool ArcDebug::eventFilter(sf::Event *event)
 #ifdef ARC_DEBUG
 	ImGui::SFML::ProcessEvent(*static_cast<sf::RenderWindow*>(Engine::Instance().window()), *event);
 #endif
-	return false;
+	ImGuiIO& io = ImGui::GetIO();
+	return io.WantCaptureMouse || io.WantCaptureKeyboard;
 }
 
 void ArcDebug::addSection(DebugSection *section)
