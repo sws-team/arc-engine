@@ -9,6 +9,7 @@ ArcButton::ArcButton(const std::string &name)
 {
 	setType(ArcEngine::BUTTON);
 	hoverRect.setFillColor(sf::Color::Transparent);
+	view = Engine::Instance().window()->view();
 }
 
 void ArcButton::draw(sf::RenderTarget * const target)
@@ -31,7 +32,7 @@ bool ArcButton::eventFilter(sf::Event *event)
 		return false;
 	if (event->type == sf::Event::MouseButtonReleased) {
 		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
-		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().window()->view());
+		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *view);
 		if (Intersection::contains(this, pos)) {
 			if (event->mouseButton.button == sf::Mouse::Left) {
 				PLAY_SOUND(SoundManager::CLICK);
@@ -47,8 +48,7 @@ bool ArcButton::eventFilter(sf::Event *event)
 	}
 	else if (m_hoverType != HOVER_TYPE::NONE && event->type == sf::Event::MouseMoved) {
 		const sf::Vector2i pixelPos = sf::Vector2i(event->mouseMove.x, event->mouseMove.y);
-		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos,
-																			   *Engine::Instance().window()->view());
+		const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *view);
 		bool hover = false;
 		hoverRect.setFillColor(sf::Color::Transparent);
 		if (Intersection::contains(this, pos)) {
@@ -113,6 +113,13 @@ void ArcButton::updateSize()
 void ArcButton::setOpaqueClicks(bool opaqueClicks)
 {
 	m_opaqueClicks = opaqueClicks;
+}
+
+void ArcButton::setView(sf::View *view)
+{
+	this->view = view;
+	if (this->view == nullptr)
+		this->view = Engine::Instance().window()->view();
 }
 
 ArcButton::HOVER_TYPE ArcButton::hoverType() const

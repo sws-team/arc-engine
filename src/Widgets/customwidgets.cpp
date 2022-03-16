@@ -235,6 +235,11 @@ bool ZoomView::eventFilter(sf::Event *event)
 	return ArcObject::eventFilter(event);
 }
 
+sf::View *ZoomView::getView()
+{
+	return &view;
+}
+
 void ZoomView::fitScreen()
 {
 	sf::Vector2f newCenter = view.getCenter();

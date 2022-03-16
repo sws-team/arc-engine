@@ -27,6 +27,7 @@ public:
 	void setHoverType(const HOVER_TYPE &hoverType);
 
 	void setOpaqueClicks(bool opaqueClicks);
+	void setView(sf::View *view);
 
 protected:
 	bool eventFilter(sf::Event *event) override;
@@ -45,6 +46,7 @@ private:
 	HOVER_TYPE m_hoverType = HOVER_TYPE::NONE;
 	sf::RectangleShape hoverRect;
 	bool m_opaqueClicks = true;
+	sf::View *view = nullptr;
 };
 
 #endif // ARCBUTTON_H

@@ -61,6 +61,8 @@ public:
 
 	void draw(sf::RenderTarget *const target) override;
 	bool eventFilter(sf::Event *event) override;
+
+	sf::View *getView();
 private:
 	sf::View view;
 	bool move = false;
