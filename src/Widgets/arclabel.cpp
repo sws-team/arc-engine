@@ -2,6 +2,8 @@
 #include "engine.h"
 #include "managers.h"
 
+sf::Vector2f ArcLabel::globalTextOffset = sf::Vector2f(0, 0);
+
 ArcLabel::ArcLabel(const std::string& name)
 	: ArcObject(name)
 {
@@ -139,5 +141,18 @@ void ArcLabel::setAutoSize(bool autoSize)
 	m_autoSize = autoSize;
 	setFontSize(m_fontSize);
 	updateAutoSize();
+}
+
+void ArcLabel::setGlobalTextOffset(const sf::Vector2f &offset)
+{
+	globalTextOffset = offset;
+}
+
+sf::Vector2f ArcLabel::scaledGlobalPos() const
+{
+	sf::Vector2f textOffset = globalTextOffset;
+	textOffset.x *= scaleFactor.x;
+	textOffset.y *= scaleFactor.y;
+	return ArcObject::scaledGlobalPos() + textOffset;
 }
 

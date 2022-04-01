@@ -33,6 +33,9 @@ public:
 	bool showLabelDebug = false;
 #endif
 
+	static void setGlobalTextOffset(const sf::Vector2f& offset);
+	sf::Vector2f scaledGlobalPos() const override;
+
 protected:
 	void updatePos() override;
 	void updateScale() override;
@@ -43,6 +46,7 @@ private:
 	bool m_autoSize = false;
 	unsigned int m_fontSize = 0;
 	sf::Vector2f sizeModifier = sf::Vector2f(1.f, 1.f);
+	static sf::Vector2f globalTextOffset;
 	void updateAutoSize();
 };
 
