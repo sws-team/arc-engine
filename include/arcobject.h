@@ -81,11 +81,11 @@ public:
 		return T();
 	}
 
+	virtual void draw(sf::RenderTarget *const target);
 
 protected:
 	virtual void initTransform();
 	virtual void update();
-	virtual void draw(sf::RenderTarget *const target);
 	virtual bool eventFilter(sf::Event *event);
 	void setName(const std::string& name);
 	void setType(ArcEngine::OBJECT_TYPE type);

@@ -299,7 +299,7 @@ bool ArcObject::eventFilter(sf::Event *event)
 {
 	for(ArcObject* child : m_childs) {
 		if (child->eventFilter(event))
-			break;
+			return true;
 	}
 	return false;
 }
