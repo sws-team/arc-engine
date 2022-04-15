@@ -297,7 +297,7 @@ void ArcObject::removeAction(ArcAction *action)
 
 bool ArcObject::eventFilter(sf::Event *event)
 {
-	for (unsigned i = m_childs.size() - 1; i >= 0; --i) {
+	for (int i = static_cast<int>(m_childs.size()) - 1; i >= 0; --i) {
 		if (m_childs.at(i)->eventFilter(event))
 			return true;
 	}
