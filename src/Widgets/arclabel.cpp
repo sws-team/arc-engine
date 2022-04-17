@@ -111,6 +111,16 @@ void ArcLabel::updateSize()
 	ArcObject::updateSize();
 }
 
+sf::Vector2f ArcLabel::textOffset() const
+{
+	return m_textOffset;
+}
+
+void ArcLabel::setTextOffset(const sf::Vector2f &textOffset)
+{
+	m_textOffset = textOffset;
+}
+
 void ArcLabel::updateAutoSize()
 {
 	if (m_autoSize) {
@@ -150,7 +160,11 @@ void ArcLabel::setGlobalTextOffset(const sf::Vector2f &offset)
 
 sf::Vector2f ArcLabel::scaledGlobalPos() const
 {
-	sf::Vector2f textOffset = globalTextOffset;
+	sf::Vector2f textOffset;
+	if (m_textOffset == sf::Vector2f(0, 0))
+		textOffset = globalTextOffset;
+	else
+		textOffset = m_textOffset;
 	textOffset.x *= scaleFactor.x;
 	textOffset.y *= scaleFactor.y;
 	return ArcObject::scaledGlobalPos() + textOffset;

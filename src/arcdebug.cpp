@@ -440,6 +440,19 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					editColor("Border color", &color);
 					label->setBorderColor(Utils::convertToColor(color));
 				}
+				{//Text offset
+					float x = label->textOffset().x;
+					float y = label->textOffset().y;
+					ImGui::TextUnformatted("Text offset");
+					ImGui::DragFloat("##TextOffsetX", &x);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("X");
+					ImGui::DragFloat("##TextOffsetY", &y);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Y");
+					if (x != label->textOffset().x || y != label->textOffset().y)
+						label->setTextOffset(sf::Vector2f(x, y));
+				}
 				if (ImGui::Checkbox("Show label debug", &label->showLabelDebug)) {
 
 				}

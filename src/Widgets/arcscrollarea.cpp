@@ -137,7 +137,7 @@ void ArcScrollArea::updateArea()
 {
 	if (horizontalScrollEnabled) {
 		const float k = static_cast<float>(scrollX) / static_cast<float>(maxX);
-		float areaX = areaSize.x - verticalScroll->width();
+		float areaX = areaSize.x - horizontalScroll->width();
 		if (!verticalScrollEnabled)
 			areaX += scrollBarSize;
 		const float x = areaX * k;
