@@ -33,6 +33,7 @@ set(ARC_ENGINE_HEADERS
     ${ARC_ENGINE_DIR}/include/Widgets/arctilemap.h
     ${ARC_ENGINE_DIR}/include/Widgets/customwidgets.h
     ${ARC_ENGINE_DIR}/include/Widgets/arcscrollarea.h
+    ${ARC_ENGINE_DIR}/include/Widgets/arccheckbox.h
 
     ${ARC_ENGINE_DIR}/include/Windows/aboutwindow.h
     ${ARC_ENGINE_DIR}/include/Windows/closewindow.h
@@ -67,6 +68,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Widgets/arctilemap.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/customwidgets.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/arcscrollarea.cpp
+    ${ARC_ENGINE_DIR}/src/Widgets/arccheckbox.cpp
 
     ${ARC_ENGINE_DIR}/src/Windows/aboutwindow.cpp
     ${ARC_ENGINE_DIR}/src/Windows/closewindow.cpp
