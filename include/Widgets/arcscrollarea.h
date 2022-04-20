@@ -13,11 +13,15 @@ public:
 
 	void setWidget(ArcObject* object);
 
+	void setNeedRepaint(bool repaint);
+
 protected:
 	void updatePos() override;
 	void updateScale() override;
 	void updateOrigin() override;
 	void updateSize() override;
+
+	void update() override;
 private:
 	ArcObject *m_object = nullptr;
 	sf::View view;
@@ -35,6 +39,7 @@ private:
 	bool horizontalScrollEnabled = true;
 	bool verticalScrollEnabled = true;
 	sf::Vector2u areaSize;
+	bool m_repaint = false;
 	constexpr static float step = 0.1f;
 	constexpr static unsigned scrollBarSize = 8;
 

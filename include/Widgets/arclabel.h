@@ -24,6 +24,7 @@ public:
 
 	void setText(const std::string& text);
 	void setText(TranslationType id);
+	void setTextFormatted(const sf::String& text, const std::vector<std::string>& args);
 	std::string text() const;
 
 	bool autoSize() const;
@@ -52,6 +53,7 @@ private:
 	static sf::Vector2f globalTextOffset;
 	sf::Vector2f m_textOffset;
 	void updateAutoSize();
+	void setLabelText(const sf::String& text);
 };
 
 #endif // ARCLABEL_H

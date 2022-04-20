@@ -7,6 +7,7 @@ sf::Vector2f ArcLabel::globalTextOffset = sf::Vector2f(0, 0);
 ArcLabel::ArcLabel(const std::string& name)
 	: ArcObject(name)
 {
+	m_fontSize = 20;
 	setType(ArcEngine::LABEL);
 	m_text.setFont(Engine::Instance().fontManager()->font());
 	ColorProperty::setObject(this);
@@ -70,13 +71,22 @@ void ArcLabel::setBorderColor(const sf::Color &color)
 
 void ArcLabel::setText(const std::string &text)
 {
-	m_text.setString(sf::String(text));
-	updateAutoSize();
+	setLabelText(sf::String(text));
 }
 
 void ArcLabel::setText(TranslationType id)
 {
-	setText(TR(id));
+	setLabelText(TR(id));
+}
+
+void ArcLabel::setTextFormatted(const sf::String &text, const std::vector<std::string> &args)
+{
+	sf::String copy = text;
+	for (unsigned i = 0; i < args.size(); ++i) {
+		const std::string placeholder = "%" + std::to_string(i + 1);
+		copy.replace(placeholder, sf::String::fromUtf8(args.at(i).begin(), args.at(i).end()));
+	}
+	setLabelText(copy);
 }
 
 std::string ArcLabel::text() const
@@ -141,6 +151,12 @@ void ArcLabel::updateAutoSize()
 	}
 }
 
+void ArcLabel::setLabelText(const sf::String &text)
+{
+	m_text.setString(text);
+	updateAutoSize();
+}
+
 bool ArcLabel::autoSize() const
 {
 	return m_autoSize;
@@ -165,8 +181,12 @@ sf::Vector2f ArcLabel::scaledGlobalPos() const
 		textOffset = globalTextOffset;
 	else
 		textOffset = m_textOffset;
-	textOffset.x *= scaleFactor.x;
-	textOffset.y *= scaleFactor.y;
+
+	if (enabledScaleFactor) {
+		textOffset.x *= scaleFactor.x;
+		textOffset.y *= scaleFactor.y;
+	}
+
 	return ArcObject::scaledGlobalPos() + textOffset;
 }
 

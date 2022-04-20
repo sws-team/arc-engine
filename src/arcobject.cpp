@@ -170,6 +170,17 @@ void ArcObject::updateTransform()
 	parentTransform(this, &m_transform);
 }
 
+void ArcObject::updateScaleFactor()
+{
+	updateScale();
+	updatePos();
+	updateTransform();
+	for(ArcObject *child : m_childs) {
+		child->setScaleFactorEnabled(enabledScaleFactor);
+		child->updateScaleFactor();
+	}
+}
+
 float ArcObject::alpha() const
 {
 	return m_alpha;
@@ -181,6 +192,12 @@ void ArcObject::setAlpha(float alpha)
 		return;
 	m_alpha = alpha;
 	updateAlpha();
+}
+
+void ArcObject::setScaleFactorEnabled(bool enabled)
+{
+	enabledScaleFactor = enabled;
+	updateScaleFactor();
 }
 
 #ifdef ARC_DEBUG
@@ -207,6 +224,7 @@ float ArcObject::debugRectLineSize() const
 {
 	return debugRect.getOutlineThickness();
 }
+
 #endif
 
 void ArcObject::draw(sf::RenderTarget * const target)
@@ -317,16 +335,20 @@ void ArcObject::setType(ArcEngine::OBJECT_TYPE type)
 sf::Vector2f ArcObject::scaledGlobalPos() const
 {
 	sf::Vector2f gPos = globalPos();
-	gPos.x *= scaleFactor.x;
-	gPos.y *= scaleFactor.y;
+	if (enabledScaleFactor) {
+		gPos.x *= scaleFactor.x;
+		gPos.y *= scaleFactor.y;
+	}
 	return gPos;
 }
 
 sf::Vector2f ArcObject::scaledGlobalScale() const
 {
 	sf::Vector2f gScale = globalScale();
-	gScale.x *= scaleFactor.x;
-	gScale.y *= scaleFactor.y;
+	if (enabledScaleFactor) {
+		gScale.x *= scaleFactor.x;
+		gScale.y *= scaleFactor.y;
+	}
 	return gScale;
 }
 
@@ -345,8 +367,8 @@ sf::Vector2f ArcObject::globalPos() const
 	gPos.x *= gScale.x;
 	gPos.y *= gScale.y;
 
-//	gPos.x *= m_parent->m_scaleX;
-//	gPos.y *= m_parent->m_scaleY;
+	if (!enabledScaleFactor)
+		return gPos;
 
 	return m_parent->globalPos() + gPos;
 }

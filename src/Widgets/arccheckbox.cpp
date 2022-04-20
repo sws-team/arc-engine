@@ -92,7 +92,7 @@ void ArcCheckBox::initTexture()
 		setBorderSize(3);
 	}
 	else {
-		sprite.setFillColor(color());
+		sprite.setFillColor(actualColor());
 
 		setBorderColor(sf::Color::Black);
 		setBorderSize(0);

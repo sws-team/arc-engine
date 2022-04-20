@@ -78,8 +78,11 @@ void PathObject::draw(sf::RenderTarget * const target)
 	auto addPoint = [this](const sf::Vector2f& point, bool addCircle,
 			std::vector<sf::CircleShape> *points,
 			std::vector<sf::Vertex> *vertices) {
-		const sf::Vector2f scaledPos = sf::Vector2f(point.x * scaleFactor.x,
-													point.y * scaleFactor.y);
+		sf::Vector2f scaledPos = sf::Vector2f(point.x, point.y);
+		if (enabledScaleFactor) {
+			scaledPos = sf::Vector2f(scaledPos.x * scaleFactor.x,
+									 scaledPos.y * scaleFactor.y);
+		}
 		if (addCircle) {
 			sf::CircleShape circle;
 			circle.setPosition(scaledPos - sf::Vector2f(radius, radius));
@@ -242,20 +245,21 @@ sf::View *ZoomView::getView()
 
 void ZoomView::fitScreen()
 {
+	const sf::Vector2f scf = enabledScaleFactor ? scaleFactor : sf::Vector2f(1.f, 1.f);
 	sf::Vector2f newCenter = view.getCenter();
 	const sf::Vector2f topLeft = Engine::Instance().window()->mapPixelToCoords(sf::Vector2i(0, 0), view);
 	const sf::Vector2f bottomRight = Engine::Instance().window()->mapPixelToCoords(Engine::Instance().settingsManager()->getResolution(), view);
 	if (topLeft.x < 0.f) {
 		newCenter.x = view.getSize().x/2;
 	}
-	if (bottomRight.x > size().x * scaleFactor.x) {
-		newCenter.x = size().x * scaleFactor.x - view.getSize().x/2;
+	if (bottomRight.x > size().x * scf.x) {
+		newCenter.x = size().x * scf.x - view.getSize().x/2;
 	}
 	if (topLeft.y < 0.f) {
 		newCenter.y = view.getSize().y/2;
 	}
-	if (bottomRight.y > size().y * scaleFactor.y) {
-		newCenter.y = size().y * scaleFactor.y - view.getSize().y/2;
+	if (bottomRight.y > size().y * scf.y) {
+		newCenter.y = size().y * scf.y - view.getSize().y/2;
 	}
 	if (newCenter != view.getCenter()) {
 		view.setCenter(newCenter);

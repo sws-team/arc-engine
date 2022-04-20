@@ -68,6 +68,7 @@ public:
 	void setRotation(float angle);
 	void setEnabled(bool enabled);
 	void setAlpha(float alpha);
+	void setScaleFactorEnabled(bool enabled);
 
 	void setCentered();
 	void setCenteredOrigin();
@@ -105,12 +106,14 @@ protected:
 
 	std::vector<ArcObject*> m_childs;
 	std::vector<ArcAction*> m_actions;
-	sf::Vector2f scaleFactor;
 	ArcObject *m_parent = nullptr;
 	sf::Transform m_transform;
 
 	void drawChilds(sf::RenderTarget * const target);
 	void updateTransform();
+
+	sf::Vector2f scaleFactor;
+	bool enabledScaleFactor = true;
 private:
 	//base
 	friend class ArcDebug;
@@ -118,6 +121,7 @@ private:
 	friend class ColorProperty;
 	friend class BorderColorProperty;
 	friend class ArcLayout;
+	friend class ArcScrollArea;
 	bool m_enabled = true;
 	std::string m_name;
 	ArcEngine::OBJECT_TYPE m_type = ArcEngine::UNDEF;
@@ -150,6 +154,7 @@ private:
 	void setDebugRectLineSize(float size);
 	float debugRectLineSize() const;
 #endif
+	void updateScaleFactor();
 };
 
 #endif // ARCOBJECT_H

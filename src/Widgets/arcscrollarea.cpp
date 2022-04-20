@@ -20,7 +20,10 @@ ArcScrollArea::ArcScrollArea(const std::string &name)
 void ArcScrollArea::draw(sf::RenderTarget * const target)
 {
 	target->draw(rect, m_transform);
-	ArcObject::draw(target);
+	if (verticalScrollEnabled)
+		verticalScroll->draw(target);
+	if (horizontalScrollEnabled)
+		horizontalScroll->draw(target);
 }
 
 bool ArcScrollArea::eventFilter(sf::Event *event)
@@ -82,10 +85,24 @@ void ArcScrollArea::updateSize()
 	initArea();
 }
 
+void ArcScrollArea::update()
+{
+	if (m_repaint)
+		initArea();
+	ArcObject::update();
+}
+
 void ArcScrollArea::setWidget(ArcObject *object)
 {
 	m_object = object;
+	m_object->setScaleFactorEnabled(false);
+	addChild(m_object);
 	initArea();
+}
+
+void ArcScrollArea::setNeedRepaint(bool repaint)
+{
+	m_repaint = repaint;
 }
 
 void ArcScrollArea::initArea()
@@ -107,7 +124,8 @@ void ArcScrollArea::initArea()
 	if (!texture->create(static_cast<unsigned>(m_object->width()), static_cast<unsigned>(m_object->height())))
 		return;
 
-	texture->clear(sf::Color::Green);
+	texture->clear(sf::Color::Transparent);
+
 	m_object->draw(texture);
 	texture->display();
 
