@@ -235,8 +235,6 @@ void ArcObject::draw(sf::RenderTarget * const target)
 		target->draw(debugCenter, m_transform);
 		target->draw(&debugOrigin, 1, sf::Points, m_transform);
 		target->draw(&debugOriginPos, 1, sf::Points, m_transform);
-
-		target->draw(debugRect, m_transform);
 	}
 #endif
 	drawChilds(target);

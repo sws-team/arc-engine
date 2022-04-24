@@ -5,6 +5,8 @@
 ArcCheckBox::ArcCheckBox(const std::string& name)
 	: ArcButton(name)
 {
+	setType(ArcEngine::CHECKBOX);
+
 	constexpr float defaultSize = 50.f;
 	setSize(defaultSize, defaultSize);
 	initTexture();
@@ -75,6 +77,11 @@ void ArcCheckBox::setColor(const sf::Color &color)
 {
 	ArcButton::setColor(color);
 	initTexture();
+}
+
+bool ArcCheckBox::isChecked() const
+{
+	return checked;
 }
 
 void ArcCheckBox::setTexture(TextureType textureID)

@@ -20,6 +20,8 @@ public:
 	void setTexture(TextureType textureID) override;
 	void setColor(const sf::Color& color) override;
 
+	bool isChecked() const;
+
 private:
 	sf::RectangleShape tick;
 	TextureType m_tickTextureID = -1;

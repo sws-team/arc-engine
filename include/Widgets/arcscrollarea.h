@@ -14,6 +14,7 @@ public:
 	void setWidget(ArcObject* object);
 
 	void setNeedRepaint(bool repaint);
+	bool isNeedRepaint() const;
 
 protected:
 	void updatePos() override;

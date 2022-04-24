@@ -15,6 +15,8 @@
 #include "arcrect.h"
 #include "navigationmap.h"
 #include "customwidgets.h"
+#include <arcscrollarea.h>
+#include <arccheckbox.h>
 
 #ifdef ARC_DEBUG
 #include "imgui.h"
@@ -440,18 +442,18 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					editColor("Border color", &color);
 					label->setBorderColor(Utils::convertToColor(color));
 				}
-				{//Text offset
-					float x = label->textOffset().x;
-					float y = label->textOffset().y;
-					ImGui::TextUnformatted("Text offset");
-					ImGui::DragFloat("##TextOffsetX", &x);
+				{//Align
+					float x = label->align().x;
+					float y = label->align().y;
+					ImGui::TextUnformatted("ALign");
+					ImGui::DragFloat("##AlignX", &x, 0.01f, 0.f, 1.f);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("X");
-					ImGui::DragFloat("##TextOffsetY", &y);
+					ImGui::DragFloat("##AlignY", &y, 0.01f, 0.f, 1.f);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Y");
-					if (x != label->textOffset().x || y != label->textOffset().y)
-						label->setTextOffset(sf::Vector2f(x, y));
+					if (x != label->align().x || y != label->align().y)
+						label->setAlign(sf::Vector2f(x, y));
 				}
 				if (ImGui::Checkbox("Show label debug", &label->showLabelDebug)) {
 
@@ -679,6 +681,34 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			}
 		}
 			break;
+		case ArcEngine::SCROLL_AREA:
+		{
+			if (ImGui::CollapsingHeader("Scroll Area", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ArcScrollArea *scrollArea = static_cast<ArcScrollArea*>(obj);
+				{//isNeedRepaint
+					bool repaint = scrollArea->isNeedRepaint();
+					ImGui::Checkbox("##isNeedRepaint", &repaint);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Need Repaint");
+					scrollArea->setNeedRepaint(repaint);
+				}
+			}
+		}
+			break;
+		case ArcEngine::CHECKBOX:
+		{
+			if (ImGui::CollapsingHeader("Checkbox", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ArcCheckBox *checkbox = static_cast<ArcCheckBox*>(obj);
+				{//Checked
+					bool checked = checkbox->isChecked();
+					ImGui::Checkbox("##isChecked", &checked);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Checked");
+					checkbox->setChecked(checked);
+				}
+			}
+		}
+			break;
 		default:
 			break;
 		}
@@ -718,6 +748,14 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 		break;
 	case ArcEngine::PATH:
 		drawInheritObject(ArcEngine::PATH, obj);
+		break;
+	case ArcEngine::SCROLL_AREA:
+		drawInheritObject(ArcEngine::SCROLL_AREA, obj);
+		break;
+	case ArcEngine::CHECKBOX:
+		drawInheritObject(ArcEngine::SPRITE, obj);
+		drawInheritObject(ArcEngine::BUTTON, obj);
+		drawInheritObject(ArcEngine::CHECKBOX, obj);
 		break;
 	default:
 		break;

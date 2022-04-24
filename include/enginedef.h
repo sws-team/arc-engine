@@ -33,6 +33,8 @@ namespace ArcEngine
 		RECT,
 		NAVIGATION_MAP,
 		PATH,
+		CHECKBOX,
+		SCROLL_AREA,
 	};
 
 	static constexpr int undefType = -1;

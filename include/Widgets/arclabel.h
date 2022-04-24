@@ -18,27 +18,25 @@ public:
 	void setBorderColor(const sf::Color &color) override;
 	void setBorderSize(float size) override;
 	void setFont(FontType fontType);
-
+	void setAlign(const sf::Vector2f &align);
+	void setAlign(float x, float y);
 	void setFontSize(unsigned int size);
-	unsigned int fontSize() const;
+	void setAutoSize(bool autoSize);
+	static void setGlobalTextOffset(const sf::Vector2f& offset);
 
 	void setText(const std::string& text);
 	void setText(TranslationType id);
 	void setTextFormatted(const sf::String& text, const std::vector<std::string>& args);
+	void setTextFormatted(TranslationType id, const std::vector<std::string>& args);
 	std::string text() const;
-
-	bool autoSize() const;
-	void setAutoSize(bool autoSize);
 
 #ifdef ARC_DEBUG
 	bool showLabelDebug = false;
 #endif
 
-	static void setGlobalTextOffset(const sf::Vector2f& offset);
-	sf::Vector2f scaledGlobalPos() const override;
-
-	sf::Vector2f textOffset() const;
-	void setTextOffset(const sf::Vector2f &textOffset);
+	bool autoSize() const;;
+	unsigned int fontSize() const;
+	sf::Vector2f align() const;
 
 protected:
 	void updatePos() override;
@@ -51,7 +49,7 @@ private:
 	unsigned int m_fontSize = 0;
 	sf::Vector2f sizeModifier = sf::Vector2f(1.f, 1.f);
 	static sf::Vector2f globalTextOffset;
-	sf::Vector2f m_textOffset;
+	sf::Vector2f m_align = sf::Vector2f(0.5f, 0.5f);
 	void updateAutoSize();
 	void setLabelText(const sf::String& text);
 };

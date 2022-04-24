@@ -6,6 +6,8 @@
 ArcScrollArea::ArcScrollArea(const std::string &name)
 	: ArcObject(name)
 {
+	setType(ArcEngine::SCROLL_AREA);
+
 	horizontalScroll = new ArcRect("horizontalScroll");
 	horizontalScroll->setSize(1, scrollBarSize);
 	horizontalScroll->setColor(ArcEngine::GrayColor);
@@ -90,6 +92,11 @@ void ArcScrollArea::update()
 	if (m_repaint)
 		initArea();
 	ArcObject::update();
+}
+
+bool ArcScrollArea::isNeedRepaint() const
+{
+	return m_repaint;
 }
 
 void ArcScrollArea::setWidget(ArcObject *object)
