@@ -365,7 +365,7 @@ sf::Vector2f ArcObject::globalPos() const
 	gPos.x *= gScale.x;
 	gPos.y *= gScale.y;
 
-	if (!enabledScaleFactor)
+	if (!enabledScaleFactor && m_parent->parent() == nullptr)
 		return gPos;
 
 	return m_parent->globalPos() + gPos;

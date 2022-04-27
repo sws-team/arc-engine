@@ -22,6 +22,7 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "imconfig-SFML.h"
+#include "imgui_stdlib.h"
 #endif
 
 ArcObject *ArcDebug::selectedObject = nullptr;
@@ -401,14 +402,12 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			if (ImGui::CollapsingHeader("Label", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ArcLabel *label = static_cast<ArcLabel*>(obj);
 				{//Texture ID
-					constexpr int BUF_SIZE = 255;
-					char buf[BUF_SIZE];
-					strcpy_s(buf, label->text().c_str());
+					std::string buf;
 					ImGui::TextUnformatted("Text");
-					ImGui::InputText("##Text", buf, BUF_SIZE);
+					ImGui::InputText("##Text", &buf);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Text");
-					label->setText(std::string(buf));
+					label->setText(buf);
 				}
 				{//Autosize
 					bool autoSize = label->autoSize();

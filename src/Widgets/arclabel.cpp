@@ -102,13 +102,18 @@ std::string ArcLabel::text() const
 void ArcLabel::updatePos()
 {
 	sf::Vector2f textOffset = globalTextOffset;
+
+	float w = width();
+	float h = height();
 	if (enabledScaleFactor) {
 		textOffset.x *= scaleFactor.x;
 		textOffset.y *= scaleFactor.y;
-	}
 
-	const float w = width() * scaleFactor.x - m_text.getGlobalBounds().width;
-	const float h = height() * scaleFactor.y - m_text.getGlobalBounds().height;
+		w *= scaleFactor.x;
+		h *= scaleFactor.y;
+	}
+	w -= m_text.getGlobalBounds().width;
+	h -= m_text.getGlobalBounds().height;
 
 	sf::Vector2f textPos;
 	textPos.x = w * m_align.x;
