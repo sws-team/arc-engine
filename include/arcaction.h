@@ -152,10 +152,10 @@ public:
 class WayPointsMoveAction : public ActionWithObject
 {
 public:
-	WayPointsMoveAction(float time, ArcObject *object, const sf::Vector2f& targetPos);
+	WayPointsMoveAction(float time, ArcObject *object);
 
-	void setGetWayPointsFunc(
-			const std::function<std::vector<sf::Vector2f>(ArcObject*, const sf::Vector2f&)>& func);
+	void setGetWayPointsFunc(const std::function<std::vector<sf::Vector2f> (ArcObject *)> &func);
+	void setPoints(const std::vector<sf::Vector2f> &positions);
 
 	void setResetTime(float time);
 
@@ -178,11 +178,10 @@ protected:
 	std::vector<float> intervals;
 	unsigned currentIndex = 0;
 
-	sf::Vector2f m_targetPos;
 	sf::Vector2f m_nextPos;
 	sf::Vector2f m_startPos;
 private:
-	std::function<std::vector<sf::Vector2f>(ArcObject*, const sf::Vector2f&)> getWayPointsFunc = nullptr;
+	std::function<std::vector<sf::Vector2f>(ArcObject*)> getWayPointsFunc = nullptr;
 };
 
 class NavigationMap;
@@ -200,7 +199,7 @@ private:
 class PathObject;
 class PathMoveAction : public WayPointsMoveAction
 {
-	PathMoveAction(float time, ArcObject *object, const sf::Vector2f& targetPos, PathObject* pathObject);
+	PathMoveAction(float time, ArcObject *object, PathObject* pathObject);
 
 	void setPathObject(PathObject *pathObject);
 

@@ -283,19 +283,24 @@ void MoveAction::process(float progress)
 	m_object->setPos(targetX, targetY);
 }
 
-WayPointsMoveAction::WayPointsMoveAction(float time, ArcObject *object,
-								   const sf::Vector2f &targetPos)
+WayPointsMoveAction::WayPointsMoveAction(float time, ArcObject *object)
 	: ActionWithObject(-1, object)
 	,commonTime(time)
-	,m_targetPos(targetPos)
 {
 
 }
 
 void WayPointsMoveAction::setGetWayPointsFunc(
-		const std::function<std::vector<sf::Vector2f> (ArcObject *, const sf::Vector2f &)> &func)
+		const std::function<std::vector<sf::Vector2f> (ArcObject *)> &func)
 {
 	getWayPointsFunc = func;
+}
+
+void WayPointsMoveAction::setPoints(const std::vector<sf::Vector2f> &positions)
+{
+	getWayPointsFunc = [positions](ArcObject *) {
+		return positions;
+	};
 }
 
 void WayPointsMoveAction::setResetTime(float time)
@@ -339,7 +344,7 @@ bool WayPointsMoveAction::resetPath(bool run)
 {
 	positions.clear();
 	if (getWayPointsFunc != nullptr) {
-		positions = getWayPointsFunc(m_object, m_targetPos);
+		positions = getWayPointsFunc(m_object);
 		const sf::Int32 elapsed = clock.getElapsedTime().asMilliseconds();
 		const float currentTimeLeft = commonTime - elapsed;
 
@@ -378,28 +383,28 @@ bool WayPointsMoveAction::nextPosition(bool run)
 	m_startPos = m_object->pos();
 	m_nextPos = positions.at(currentIndex);
 	m_time = intervals.at(currentIndex);
-	currentIndex++;
 	if (currentIndex == positions.size()) {
 		end();
 		return false;
 	}
+	currentIndex++;
 	return true;
 }
 
 void WayPointsMoveAction::end()
 {
-	m_object->setPos(m_targetPos);
+	m_object->setPos(m_nextPos);
 	ActionWithObject::finished();
 }
 
 NavigationAction::NavigationAction(float time, ArcObject *object,
 								   const sf::Vector2f &targetPos,
 								   NavigationMap *navMap)
-	: WayPointsMoveAction(time, object, targetPos)
+	: WayPointsMoveAction(time, object)
 	, navMap(navMap)
 {
-	setGetWayPointsFunc([this](ArcObject *object, const sf::Vector2f & pos) {
-		return this->navMap->findPath(object, pos);
+	setGetWayPointsFunc([this, targetPos](ArcObject *object) {
+		return this->navMap->findPath(object, targetPos);
 	});
 }
 
@@ -409,12 +414,11 @@ void NavigationAction::setNavigationMap(NavigationMap *navMap)
 }
 
 PathMoveAction::PathMoveAction(float time, ArcObject *object,
-							   const sf::Vector2f &targetPos,
 							   PathObject *pathObject)
-	: WayPointsMoveAction(time, object, targetPos)
+	: WayPointsMoveAction(time, object)
 	, pathObject(pathObject)
 {
-	setGetWayPointsFunc([this](ArcObject *, const sf::Vector2f &) {
+	setGetWayPointsFunc([this](ArcObject *) {
 		return this->pathObject->path();
 	});
 }
