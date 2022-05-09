@@ -43,7 +43,6 @@ namespace ArcEngine
 	static const sf::Color HoverColor = sf::Color(32, 32, 32, 96);
 	static const sf::Color DisabledColor = sf::Color(96, 96, 96, 96);
 	static const int CRYPTO_VALUE = 12;
-	static const std::string settingsFilePath = std::string("settings.ini");
 	static const std::string saveFileName = std::string("saves.sav");
 	static constexpr float MSEC = 1000;
 	static const sf::String separator = ": ";

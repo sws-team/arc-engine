@@ -36,13 +36,13 @@ public:
 		return true;
 	}
 
-	bool saveFile(const std::string& fileName, const std::string& data) {
+	virtual bool saveFile(const std::string& fileName, const std::string& data) {
 		return true;
 	}
-	const std::string readFile(const std::string& fileName) {
+	virtual const std::string readFile(const std::string& fileName) {
 		return std::string();
 	}
-	bool deleteFile(const std::string& fileName) {
+	virtual bool deleteFile(const std::string& fileName) {
 		return true;
 	}
 

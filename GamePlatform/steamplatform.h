@@ -21,9 +21,9 @@ public:
 
 	std::string nick() const override;
 
-	bool saveFile(const std::string& fileName, const std::string& data);
-	std::string readFile(const std::string& fileName);
-	bool deleteFile(const std::string& fileName);
+	bool saveFile(const std::string& fileName, const std::string& data) override;
+	const std::string readFile(const std::string& fileName) override;
+	bool deleteFile(const std::string& fileName) override;
 
 	void addAchievement(AchievementType type, const std::string& name);
 	void addStat(StatType type, const std::string& name);

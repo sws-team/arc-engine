@@ -52,7 +52,7 @@ bool SteamPlatform::saveFile(const std::string &fileName, const std::string &dat
 	return SteamRemoteStorage()->FileWrite(fileName.c_str(), data.c_str(), data.size());
 }
 
-std::string SteamPlatform::readFile(const std::string &fileName)
+const std::string SteamPlatform::readFile(const std::string &fileName)
 {
 	std::string result;
 	if (SteamRemoteStorage() == nullptr)

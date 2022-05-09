@@ -7,6 +7,7 @@
 #include "Windows/introwindow.h"
 #include "Windows/aboutwindow.h"
 #include "Windows/closewindow.h"
+#include "gameplatform.h"
 
 #ifdef SFML_SYSTEM_WINDOWS
 #include "windows.h"
@@ -28,6 +29,7 @@ void Manager::reset()
 //==================SETTINS MANAGER===================
 
 const sf::Vector2f SettingsManager::defaultResolution = sf::Vector2f(1920.f, 1080.f);
+const std::string SettingsManager::settingsFilePath = std::string("settings.ini");
 
 SettingsManager::SettingsManager()
 	: Manager()
@@ -42,6 +44,7 @@ SettingsManager::SettingsManager()
 	)
 	,shaders(true)
 {
+	saveDataFileName = settingsFilePath;
 	SettingsManager::reset();
 }
 
@@ -123,6 +126,20 @@ void SettingsManager::loadGameSettings(const std::string& data)
 	Engine::Instance().soundManager()->setQuiet(quite);
 	Engine::Instance().translationsManager()->setCurrentLanguage(languageName);
 	Engine::Instance().settingsManager()->setShaders(shaders);
+}
+
+void SettingsManager::save()
+{
+	const std::string data = this->saveGameSettings();
+	GamePlatform::Instance().saveFile(saveDataFileName, data);
+}
+
+void SettingsManager::load()
+{
+	const std::string data = GamePlatform::Instance().readFile(saveDataFileName);
+	if (data.empty())
+		return;
+	this->loadGameSettings(data);
 }
 
 bool SettingsManager::getShaders() const

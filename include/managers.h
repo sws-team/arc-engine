@@ -50,15 +50,21 @@ public:
 	sf::Vector2f getScaleFactor() const;
 
 	static const sf::Vector2f defaultResolution;
+	static const std::string settingsFilePath;
 
 	std::string saveGameSettings() const;
 	void loadGameSettings(const std::string& data);
+
+	void save();
+	void load();
+
 private:
 	sf::Vector2i resolution;
 	float soundLevel;
 	float musicLevel;
 	bool fullscreen;
 	bool shaders;
+	std::string saveDataFileName;
 };
 
 #define TR(x) Engine::Instance().translationsManager()->translate(x)
