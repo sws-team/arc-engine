@@ -96,7 +96,7 @@ void ArcLabel::setTextFormatted(TranslationType id, const std::vector<std::strin
 
 std::string ArcLabel::text() const
 {
-	return m_text.getString().toAnsiString();
+	return m_str.toAnsiString();
 }
 
 void ArcLabel::updatePos()
@@ -143,6 +143,17 @@ void ArcLabel::updateSize()
 	updatePos();
 }
 
+unsigned int ArcLabel::maxLines() const
+{
+	return m_maxLines;
+}
+
+void ArcLabel::setMaxLines(unsigned int maxLines)
+{
+	m_maxLines = maxLines;
+	setLabelText(m_str);
+}
+
 sf::Vector2f ArcLabel::align() const
 {
 	return m_align;
@@ -162,26 +173,114 @@ void ArcLabel::setAlign(float x, float y)
 void ArcLabel::updateAutoSize()
 {
 	if (m_autoSize) {
-		m_text.setCharacterSize(m_fontSize);
-		unsigned actualFontSize = m_fontSize;
-		while(true) {
-			if (m_text.getLocalBounds().width <= size().x &&
-					m_text.getLocalBounds().height <= size().y)
-				break;
-			if (actualFontSize <= 1)
-				break;
-			actualFontSize--;
-			m_text.setCharacterSize(actualFontSize);
+		if (m_maxLines > 1) {
+			if (lastMultilineSearch.str == m_str && lastMultilineSearch.width == width()) {
+				return;
+			}
+
+			{
+				m_text.setString(m_str);
+				if (m_text.getLocalBounds().width <= width()) {
+					return;
+				}
+			}
+
+			auto getSeparators = [](const sf::String& str, char ch) -> std::vector<size_t> {
+				std::vector<size_t> spaces;
+				size_t pos = 0;
+				while(true) {
+					const size_t space = str.find(ch, pos);
+					if (space == sf::String::InvalidPos)
+						break;
+					pos = space + 1;
+					spaces.push_back(space);
+				}
+				return spaces;
+			};
+
+			struct SetTextResult {
+				float width = 0;
+				sf::String text;
+				size_t linesCount = 0;
+				int pos = -1;
+			};
+			auto getWidth = [this](const size_t space, const sf::String& text, char ch) -> SetTextResult {
+				SetTextResult result;
+				result.text = text;
+				result.text.replace(space, 1, ch);
+				m_text.setString(result.text);
+				result.width = m_text.getLocalBounds().width;
+				return result;
+			};
+
+			sf::String resultText = m_str;
+			SetTextResult minResult;
+			minResult.width = RESOLUTIONF.x;
+
+			std::vector<size_t> spaces = getSeparators(m_str, ' ');
+			const size_t lineCount = std::min(static_cast<size_t>(m_maxLines - 1), spaces.size());
+			for (size_t line = 0; line < lineCount; ++line) {
+				if (m_text.getLocalBounds().width <= size().x) {
+					break;
+				}
+				for (int pos = spaces.size() - 1; pos >= 0; --pos) {
+					const size_t space = spaces.at(pos);
+					const SetTextResult setTextResult = getWidth(space, resultText, '\n');
+					if (setTextResult.width <= minResult.width) {
+						minResult = setTextResult;
+						m_text.setString(minResult.text);
+						if (m_text.getLocalBounds().width <= size().x) {
+							break;
+						}
+					}
+				}
+				resultText = minResult.text;
+			}
+
+			spaces = getSeparators(minResult.text, '\n');
+			for (unsigned pos = 0; pos < spaces.size(); ++pos) {
+				const size_t space = spaces.at(pos);
+				const SetTextResult setTextResult = getWidth(space, resultText, ' ');
+				if (setTextResult.width <= minResult.width) {
+					minResult = setTextResult;
+					m_text.setString(minResult.text);
+					if (m_text.getLocalBounds().width <= size().x) {
+						break;
+					}
+				}
+			}
+			resultText = minResult.text;
+			m_text.setString(resultText);
+			lastMultilineSearch.str = m_str;
+			lastMultilineSearch.width = width();
+		}
+		else {
+			m_text.setCharacterSize(m_fontSize);
+			unsigned actualFontSize = m_fontSize;
+			while(true) {
+				if (m_text.getLocalBounds().width <= size().x &&
+						m_text.getLocalBounds().height <= size().y)
+					break;
+				if (actualFontSize <= 1)
+					break;
+				actualFontSize--;
+				m_text.setCharacterSize(actualFontSize);
+			}
 		}
 	}
 	else {
-		setSize(m_text.getGlobalBounds().width, m_text.getGlobalBounds().height);
+		setSize(m_text.getGlobalBounds().width /scaleFactor.x,
+				m_text.getGlobalBounds().height /scaleFactor.y);
 	}
 }
 
 void ArcLabel::setLabelText(const sf::String &text)
 {
+	if (m_str == text)
+		return;
+	m_str = text;
 	m_text.setString(text);
+
 	updateAutoSize();
 	updatePos();
 }

@@ -100,8 +100,8 @@ void SettingsManager::loadGameSettings(const std::string& data)
 	bool fullscreen = true;
 	int width = Engine::Instance().settingsManager()->getResolution().x;
 	int height = Engine::Instance().settingsManager()->getResolution().y;
-	int soundLevel = 100;
-	int musicLevel = 50;
+	float soundLevel = 100.f;
+	float musicLevel = 50.f;
 	bool quite = false;
 	std::string languageName;
 	bool shaders = true;

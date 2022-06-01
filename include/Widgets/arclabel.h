@@ -23,6 +23,7 @@ public:
 	void setFontSize(unsigned int size);
 	void setAutoSize(bool autoSize);
 	static void setGlobalTextOffset(const sf::Vector2f& offset);
+	void setMaxLines(unsigned int maxLines);
 
 	void setText(const std::string& text);
 	void setText(TranslationType id);
@@ -34,9 +35,10 @@ public:
 	bool showLabelDebug = false;
 #endif
 
-	bool autoSize() const;;
+	bool autoSize() const;
 	unsigned int fontSize() const;
 	sf::Vector2f align() const;
+	unsigned int maxLines() const;
 
 protected:
 	void updatePos() override;
@@ -47,11 +49,18 @@ private:
 	sf::Text m_text;
 	bool m_autoSize = false;
 	unsigned int m_fontSize = 0;
+	unsigned int m_maxLines = 1;
 	sf::Vector2f sizeModifier = sf::Vector2f(1.f, 1.f);
 	static sf::Vector2f globalTextOffset;
 	sf::Vector2f m_align = sf::Vector2f(0.5f, 0.5f);
 	void updateAutoSize();
 	void setLabelText(const sf::String& text);
+	sf::String m_str;
+
+	struct {
+		sf::String str;
+		float width = 0.f;
+	} lastMultilineSearch;
 };
 
 #endif // ARCLABEL_H

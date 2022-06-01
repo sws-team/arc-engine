@@ -401,8 +401,8 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 		{
 			if (ImGui::CollapsingHeader("Label", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ArcLabel *label = static_cast<ArcLabel*>(obj);
-				{//Texture ID
-					std::string buf;
+				{//Text
+					std::string buf = label->text();
 					ImGui::TextUnformatted("Text");
 					ImGui::InputText("##Text", &buf);
 					ImGui::SameLine();
@@ -453,6 +453,13 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::TextUnformatted("Y");
 					if (x != label->align().x || y != label->align().y)
 						label->setAlign(sf::Vector2f(x, y));
+				}
+				{//Multiline
+					int maxLines = label->maxLines();
+					ImGui::DragInt("##MaxLines", &maxLines, 1.f, 1, 9);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Max lines");
+					label->setMaxLines(maxLines);
 				}
 				if (ImGui::Checkbox("Show label debug", &label->showLabelDebug)) {
 
