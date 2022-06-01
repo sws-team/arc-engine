@@ -94,9 +94,9 @@ void ArcLabel::setTextFormatted(TranslationType id, const std::vector<std::strin
 	setTextFormatted(TR(id), args);
 }
 
-std::string ArcLabel::text() const
+sf::String ArcLabel::text() const
 {
-	return m_str.toAnsiString();
+	return m_str;
 }
 
 void ArcLabel::updatePos()

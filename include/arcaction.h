@@ -222,4 +222,17 @@ private:
 	std::pair<bool, bool> increase = {true, true};
 };
 
+class TypeTextAction : public ActionWithObject
+{
+public:
+	TypeTextAction(float time, ArcObject *object, const sf::String& text);
+	TypeTextAction(float time, ArcObject *object);
+
+	void process(float progress) override;
+	void finished() override;
+
+private:
+	sf::String m_text;
+};
+
 #endif // ARCACTION_H

@@ -29,7 +29,7 @@ public:
 	void setText(TranslationType id);
 	void setTextFormatted(const sf::String& text, const std::vector<std::string>& args);
 	void setTextFormatted(TranslationType id, const std::vector<std::string>& args);
-	std::string text() const;
+	sf::String text() const;
 
 #ifdef ARC_DEBUG
 	bool showLabelDebug = false;

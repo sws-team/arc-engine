@@ -402,7 +402,7 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			if (ImGui::CollapsingHeader("Label", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ArcLabel *label = static_cast<ArcLabel*>(obj);
 				{//Text
-					std::string buf = label->text();
+					std::string buf = label->text().toAnsiString();
 					ImGui::TextUnformatted("Text");
 					ImGui::InputText("##Text", &buf);
 					ImGui::SameLine();

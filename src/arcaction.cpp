@@ -2,6 +2,7 @@
 #include "arcobject.h"
 #include "navigationmap.h"
 #include "customwidgets.h"
+#include <arclabel.h>
 
 ArcAction::ArcAction(float time)
 	: m_time(time)
@@ -467,5 +468,30 @@ void ChangeScaleAction::process(float progress)
 void ChangeScaleAction::finished()
 {
 	m_object->setScale(m_targetScale);
+	ActionWithObject::finished();
+}
+
+TypeTextAction::TypeTextAction(float time, ArcObject *object, const sf::String &text)
+	: ActionWithObject(time, object),
+	  m_text(text)
+{
+
+}
+
+TypeTextAction::TypeTextAction(float time, ArcObject *object)
+	: ActionWithObject(time, object)
+{
+	m_text = static_cast<ArcLabel*>(m_object)->text();
+}
+
+void TypeTextAction::process(float progress)
+{
+	const int pos = m_text.getSize() * progress;
+	static_cast<ArcLabel*>(m_object)->setText(m_text.substring(0, pos));
+}
+
+void TypeTextAction::finished()
+{
+	static_cast<ArcLabel*>(m_object)->setText(m_text);
 	ActionWithObject::finished();
 }
