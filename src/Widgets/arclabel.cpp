@@ -42,7 +42,7 @@ void ArcLabel::setColor(const sf::Color &color)
 void ArcLabel::setFontSize(unsigned int size)
 {
 	m_fontSize = size;
-	if (!m_autoSize)
+	if (!m_autoSize || m_maxLines > 1)
 		m_text.setCharacterSize(size);
 	updateAutoSize();
 }
