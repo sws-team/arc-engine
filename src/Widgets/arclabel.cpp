@@ -79,6 +79,11 @@ void ArcLabel::setText(TranslationType id)
 	setLabelText(TR(id));
 }
 
+void ArcLabel::setText(const sf::String &text)
+{
+	setLabelText(text);
+}
+
 void ArcLabel::setTextFormatted(const sf::String &text, const std::vector<std::string> &args)
 {
 	sf::String copy = text;
@@ -280,7 +285,6 @@ void ArcLabel::setLabelText(const sf::String &text)
 		return;
 	m_str = text;
 	m_text.setString(text);
-
 	updateAutoSize();
 	updatePos();
 }

@@ -10,7 +10,9 @@ Engine &Engine::Instance()
 
 Engine::Engine()
 {
+	std::locale::global(std::locale(""));
 	std::srand(static_cast<unsigned>(std::time(nullptr)));
+
 	p_fontManager = new FontManager();
 	p_soundManager = new SoundManager();
 	p_translationsManager = new TranslationsManager();

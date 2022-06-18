@@ -68,6 +68,10 @@ public:
 		std::cout << str.toAnsiString() << DELIMER;
 		return *this;
 	}
+	inline ArcLog &operator<<(const std::wstring& wstr) {
+		std::wcout << wstr << DELIMER;
+		return *this;
+	}
 
 private:
 	static constexpr char DELIMER = ' ';

@@ -83,6 +83,8 @@ bool ArcDebug::eventFilter(sf::Event *event)
 		findObject = [&findObject](ArcObject* object, const sf::Vector2f& pos) ->ArcObject* {
 			for (int i = object->m_childs.size() - 1; i >= 0; --i) {
 				ArcObject *child = object->m_childs.at(i);
+				if (!child->isEnabled())
+					continue;
 				ArcObject *findedChild = findObject(child, pos);
 				if (findedChild != nullptr)
 					return findedChild;

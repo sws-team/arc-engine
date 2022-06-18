@@ -27,6 +27,7 @@ public:
 
 	void setText(const std::string& text);
 	void setText(TranslationType id);
+	void setText(const sf::String& text);
 	void setTextFormatted(const sf::String& text, const std::vector<std::string>& args);
 	void setTextFormatted(TranslationType id, const std::vector<std::string>& args);
 	sf::String text() const;
