@@ -258,6 +258,7 @@ void ArcLabel::updateAutoSize()
 			m_text.setString(resultText);
 			lastMultilineSearch.str = m_str;
 			lastMultilineSearch.width = width();
+			setHeight(m_text.getGlobalBounds().height);
 		}
 		else {
 			m_text.setCharacterSize(m_fontSize);
