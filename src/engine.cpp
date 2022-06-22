@@ -106,16 +106,6 @@ sf::RenderWindow *Engine::renderWindow()
 	return static_cast<sf::RenderWindow*>(p_window);
 }
 
-sf::String Engine::EngineName()
-{
-	return sf::String("ArcEngine");
-}
-
-sf::String Engine::EngineVersion()
-{
-	return sf::String(ENGINE_VERSION);
-}
-
 std::string Engine::assetsPath()
 {
 #if defined(SFML_SYSTEM_WINDOWS) || \
@@ -128,26 +118,6 @@ std::string Engine::assetsPath()
 #elif defided(SFML_SYSTEM_IOS)
 #endif
 	return std::string();
-}
-
-std::string Engine::appVersion() const
-{
-	return m_appVersion;
-}
-
-void Engine::setAppVersion(const std::string &appVersion)
-{
-	m_appVersion = appVersion;
-}
-
-sf::String Engine::appName() const
-{
-	return m_appName;
-}
-
-void Engine::setAppName(const sf::String &appName)
-{
-	m_appName = appName;
 }
 
 void Engine::reset()

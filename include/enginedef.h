@@ -48,6 +48,10 @@ namespace ArcEngine
 	static const sf::String separator = ": ";
 	static const sf::String endline = "\n";
 	static constexpr float DEFAULT_WINDOW_FADE_TIME = 2000;
+	static const sf::String NAME = "ArcEngine";
+	static const sf::String VERSION = ENGINE_VERSION;
+	static const sf::String GAME_VERSION = APP_VERSION;
+	static const sf::String GAME_NAME = APP_NAME;
 }
 
 //forward classes

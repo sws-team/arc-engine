@@ -50,16 +50,7 @@ public:
 	MainWindow *window();
 	sf::RenderWindow *renderWindow();
 
-	static sf::String EngineName();
-	static sf::String EngineVersion();
-
 	static std::string assetsPath();
-
-	std::string appVersion() const;
-	void setAppVersion(const std::string &appVersion);
-
-	sf::String appName() const;
-	void setAppName(const sf::String &appName);
 
 private:
 	Engine();
@@ -78,9 +69,6 @@ private:
 	Options *p_options = nullptr;
 
 	MainWindow *p_window = nullptr;
-
-	std::string m_appVersion;
-	sf::String m_appName;
 };
 
 #endif // ENGINE_H
