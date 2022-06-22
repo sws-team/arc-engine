@@ -778,11 +778,11 @@ void ResourcesManager::loadSkeletonData(FileType atlasType, FileType skeletonTyp
 	dragonBones::TextureAtlasData *atlas = skeletonAnimationFactory->loadTextureAtlasData(atlasFile.data,
 								  &Engine::Instance().texturesManager()->getTexture(textureType));
 	if(atlas == nullptr)
-		std::cout << "Loading atlas failed." << std::endl;
+		ArcErr() << "Loading atlas failed.";
 
 	dragonBones::DragonBonesData *skeleton = skeletonAnimationFactory->loadDragonBonesData(skeletonFile.data, std::string(), scale);
 	if(skeleton == nullptr)
-		std::cout << "Loading skeleton failed." << std::endl;
+		ArcErr() << "Loading skeleton failed.";
 }
 
 std::string ResourcesManager::encode(const std::string &str)

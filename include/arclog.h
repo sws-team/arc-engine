@@ -40,41 +40,58 @@ public:
 	ARC_ARG_START double ARC_ARG_END
 
 	inline ArcLog &operator<<(const bool& value) {
-		std::cout << (value ? "true" : "false") << DELIMER;
+		*stream() << (value ? "true" : "false") << DELIMER;
 		return *this;
 	}
 	inline ArcLog &operator<<(const sf::Vector2f& value) {
-		std::cout << value.x << DELIMER << value.y << DELIMER;
+		*stream() << value.x << DELIMER << value.y << DELIMER;
 		return *this;
 	}
 	inline ArcLog &operator<<(const sf::Vector2i& value) {
-		std::cout << value.x << DELIMER << value.y << DELIMER;
+		*stream() << value.x << DELIMER << value.y << DELIMER;
 		return *this;
 	}
 	inline ArcLog &operator<<(const sf::Vector2u& value) {
-		std::cout << value.x << DELIMER << value.y << DELIMER;
+		*stream() << value.x << DELIMER << value.y << DELIMER;
 		return *this;
 	}
 	inline ArcLog &operator<<(const sf::FloatRect& value) {
-		std::cout << value.left << DELIMER << value.top << DELIMER
+		*stream() << value.left << DELIMER << value.top << DELIMER
 					 << value.width << DELIMER << value.height << DELIMER;
 		return *this;
 	}
 	inline ArcLog &operator<<(char *value) {
-		std::cout << std::string(value) << DELIMER;
+		*stream() << std::string(value) << DELIMER;
 		return *this;
 	}
 	inline ArcLog &operator<<(const sf::String& str) {
-		std::cout << str.toAnsiString() << DELIMER;
+		*stream() << str.toAnsiString() << DELIMER;
 		return *this;
 	}
 	inline ArcLog &operator<<(const std::wstring& wstr) {
-		std::wcout << wstr << DELIMER;
+		*wstream() << wstr << DELIMER;
 		return *this;
+	}
+	virtual std::ostream* stream() {
+		return &std::cout;
+	}
+	virtual std::wostream* wstream() {
+		return &std::wcout;
 	}
 
 private:
 	static constexpr char DELIMER = ' ';
+};
+
+class ArcErr : public ArcLog
+{
+public:
+	std::ostream* stream() override {
+		return &std::cerr;
+	}
+	std::wostream* wstream() override {
+		return &std::wcerr;
+	}
 };
 
 #undef ARC_ARG_START
