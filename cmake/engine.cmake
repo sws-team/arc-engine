@@ -38,7 +38,7 @@ set(ARC_ENGINE_HEADERS
     ${ARC_ENGINE_DIR}/include/Scenes/aboutscene.h
     ${ARC_ENGINE_DIR}/include/Scenes/closescene.h
     ${ARC_ENGINE_DIR}/include/Scenes/introscene.h
-    ${ARC_ENGINE_DIR}/include/Scenes/menu.h
+    ${ARC_ENGINE_DIR}/include/Scenes/menuscene.h
 
     ${ARC_ENGINE_DIR}/include/Objects/arcsprite.h
     ${ARC_ENGINE_DIR}/include/Objects/arcanimatedsprite.h
@@ -74,7 +74,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Scenes/aboutscene.cpp
     ${ARC_ENGINE_DIR}/src/Scenes/closescene.cpp
     ${ARC_ENGINE_DIR}/src/Scenes/introscene.cpp
-    ${ARC_ENGINE_DIR}/src/Scenes/menu.cpp
+    ${ARC_ENGINE_DIR}/src/Scenes/menuscene.cpp
 
     ${ARC_ENGINE_DIR}/src/Objects/arcsprite.cpp
     ${ARC_ENGINE_DIR}/src/Objects/arcanimatedsprite.cpp

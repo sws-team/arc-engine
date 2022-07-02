@@ -6,7 +6,7 @@
 class ArcScene : public ArcObject
 {
 public:
-        ArcScene(const std::string& name = "Scene");
+	ArcScene(const std::string& name = "Scene");
 	~ArcScene() override;
 
 	virtual void init();

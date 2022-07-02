@@ -29,6 +29,9 @@ public:
 	void setOpaqueClicks(bool opaqueClicks);
 	void setView(sf::View *view);
 
+	void click();
+	void hover(bool update);
+
 protected:
 	bool eventFilter(sf::Event *event) override;
 

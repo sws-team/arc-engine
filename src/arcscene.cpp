@@ -7,6 +7,10 @@ ArcScene::ArcScene(const std::string &name)
 	: ArcObject(name)
 {
 	setType(ArcEngine::OBJECT);
+	bg = new ArcSprite("background");
+	bg->setSize(SettingsManager::defaultResolution);
+	addChild(bg);
+
 	DEBUG_OBJECT(this);
 }
 
@@ -42,11 +46,7 @@ bool ArcScene::eventFilter(sf::Event *event)
 
 void ArcScene::setBackground(TextureType type)
 {
-	bg = new ArcSprite("background");
-	bg->setSize(sf::Vector2f(SettingsManager::defaultResolution.x,
-							 SettingsManager::defaultResolution.y));
 	bg->setTexture(type);
-	addChild(bg);
 }
 
 void ArcScene::back()
