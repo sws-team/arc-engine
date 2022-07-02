@@ -132,6 +132,6 @@ void Engine::reset()
 {
 	p_texturesManager->reset();
 	p_translationsManager->reset();
-	p_stateManager->reset();
+	p_sceneManager->reset();
 }
 
