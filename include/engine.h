@@ -27,7 +27,7 @@ public:
 
 	TexturesManager *texturesManager();
 	TranslationsManager *translationsManager();
-	SceneManager *stateManager();
+	SceneManager *sceneManager();
 	SoundManager *soundManager();
 	SettingsManager *settingsManager();
 	FontManager *fontManager();
@@ -60,7 +60,7 @@ private:
 
 	TexturesManager *p_texturesManager = nullptr;
 	TranslationsManager *p_translationsManager = nullptr;
-	SceneManager *p_stateManager = nullptr;
+	SceneManager *p_sceneManager = nullptr;
 	SoundManager *p_soundManager = nullptr;
 	SettingsManager *p_settingsManager = nullptr;
 	FontManager *p_fontManager = nullptr;

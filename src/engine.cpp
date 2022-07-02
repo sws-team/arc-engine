@@ -21,7 +21,7 @@ Engine::Engine()
 	p_filesManager = new FilesManager();
 	p_shadersManager = new ShadersManager();
 	p_resourceManager = new ResourcesManager();
-	p_stateManager = new SceneManager();
+	p_sceneManager = new SceneManager();
 	p_notificationManager = new NotificationManager();
 	p_windowsManager = new WindowsManager();
 	p_window = nullptr;
@@ -49,9 +49,9 @@ TranslationsManager *Engine::translationsManager()
 	return p_translationsManager;
 }
 
-SceneManager *Engine::stateManager()
+SceneManager *Engine::sceneManager()
 {
-	return p_stateManager;
+	return p_sceneManager;
 }
 
 SoundManager *Engine::soundManager()
