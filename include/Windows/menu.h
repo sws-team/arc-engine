@@ -1,9 +1,9 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "arcwindow.h"
+#include <arcscene.h>
 
-class Menu : public ArcWindow
+class Menu : public ArcScene
 {
 public:
 	Menu();

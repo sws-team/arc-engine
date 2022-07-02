@@ -3,7 +3,8 @@
 
 #include "stdheader.h"
 #include "enginedef.h"
-#include "arcwindow.h"
+
+
 
 class MainWindow : public sf::RenderWindow
 {
@@ -18,7 +19,7 @@ public:
 
 private:
 	sf::View *m_view;
-	ArcWindow *currentState;
+	class ArcScene *currentState;
 	GameState state;
 };
 

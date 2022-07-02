@@ -127,17 +127,17 @@ private:
 	std::map<TextureType, sf::Texture> m_textures;
 };
 
-#include <arcwindow.h>
+#include <arcscene.h>
 
-class StateManager : public Manager
+class SceneManager : public Manager
 {
 public:
-	StateManager();
+	SceneManager();
 
 	GameState getState() const;
 	void setState(const GameState state);
 
-	enum STATE
+	enum SCENE
 	{
 		UNKNOWN,
 		INTRO,
@@ -149,18 +149,18 @@ public:
 		EXIT,
 		GAME,
 
-		USER_STATE,
+		USER_SCENE,
 	};
-	typedef std::function<ArcWindow*()> Creator;
+	typedef std::function<ArcScene*()> Creator;
 
 	void addState(GameState state, const Creator& creator);
 	template<class T> void addState(GameState state) {
-		addState(state, std::bind(&StateManager::create<T>, this));
+		addState(state, std::bind(&SceneManager::create<T>, this));
 	}
-	template<class T> ArcWindow* create() {
+	template<class T> ArcScene* create() {
 		return new T();
 	}
-	ArcWindow *createState(GameState state) const;
+	ArcScene *createState(GameState state) const;
 
 private:
 	GameState m_state;

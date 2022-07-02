@@ -5,8 +5,8 @@
 const sf::Vector2f AboutWindow::RECT_SIZE = sf::Vector2f(900, 600);
 
 AboutWindow::AboutWindow()
-	: ArcWindow("AboutWindow")
-	,m_backState(StateManager::MENU)
+	: ArcScene("AboutScene")
+	,m_backState(SceneManager::MENU)
 	,m_characterSize(40)
 	,m_color(sf::Color::White)
 	,m_borderColor(sf::Color::Black)
@@ -26,13 +26,13 @@ AboutWindow::AboutWindow()
 
 void AboutWindow::initWindow()
 {
-	ArcWindow::initWindow();
+	ArcScene::initWindow();
 	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::CREDITS_MUSIC);
 }
 
 void AboutWindow::draw(sf::RenderTarget *const target)
 {
-	ArcWindow::draw(target);
+	ArcScene::draw(target);
 	target->draw(rect);
 	for(const Creator& creator : creators)
 	{

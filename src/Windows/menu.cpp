@@ -5,7 +5,7 @@
 #include "mainwindow.h"
 
 Menu::Menu()
-	: ArcWindow("Menu")
+	: ArcScene("Menu")
 	,m_pos(sf::Vector2f(0, 0))
 	,m_color(sf::Color::Red)
 	,m_currentColor(sf::Color::Green)
@@ -21,7 +21,7 @@ Menu::Menu()
 
 void Menu::draw(sf::RenderTarget *const target)
 {
-	ArcWindow::draw(target);
+	ArcScene::draw(target);
 	for(const sf::Text& menu : menus)
 		target->draw(menu);
 }
@@ -99,12 +99,12 @@ bool Menu::eventFilter(sf::Event *event)
 	default:
 		break;
 	}
-	return ArcWindow::eventFilter(event);
+	return ArcScene::eventFilter(event);
 }
 
 void Menu::back()
 {
-	CHANGE_STATE(StateManager::CLOSING);
+	CHANGE_STATE(SceneManager::CLOSING);
 }
 
 void Menu::addItem(const sf::String& str, float k)

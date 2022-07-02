@@ -5,7 +5,7 @@
 
 class TranslationsManager;
 class TexturesManager;
-class StateManager;
+class SceneManager;
 class SoundManager;
 class SettingsManager;
 class FontManager;
@@ -27,7 +27,7 @@ public:
 
 	TexturesManager *texturesManager();
 	TranslationsManager *translationsManager();
-	StateManager *stateManager();
+	SceneManager *stateManager();
 	SoundManager *soundManager();
 	SettingsManager *settingsManager();
 	FontManager *fontManager();
@@ -60,7 +60,7 @@ private:
 
 	TexturesManager *p_texturesManager = nullptr;
 	TranslationsManager *p_translationsManager = nullptr;
-	StateManager *p_stateManager = nullptr;
+	SceneManager *p_stateManager = nullptr;
 	SoundManager *p_soundManager = nullptr;
 	SettingsManager *p_settingsManager = nullptr;
 	FontManager *p_fontManager = nullptr;

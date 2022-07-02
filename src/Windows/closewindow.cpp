@@ -5,20 +5,20 @@
 #include "arcsprite.h"
 
 CloseWindow::CloseWindow()
-	: ArcWindow("CloseWindow")
+	: ArcScene("CloseScene")
 {
 	setBackground(TexturesManager::CLOSE_BACKGROUND);
 
 	ArcAction *fade = new FadeOutAction(ArcEngine::DEFAULT_WINDOW_FADE_TIME, bg);
 	fade->setCompletedFunc([]() {
-		CHANGE_STATE(StateManager::EXIT);
+		CHANGE_STATE(SceneManager::EXIT);
 	});
 	bg->addAction(fade);
 }
 
 void CloseWindow::initWindow()
 {
-	ArcWindow::initWindow();
+	ArcScene::initWindow();
 	Engine::Instance().soundManager()->endBackgroundSound();
 }
 

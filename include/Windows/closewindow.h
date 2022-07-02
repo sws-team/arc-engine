@@ -1,10 +1,10 @@
 #ifndef CLOSEWINDOW_H
 #define CLOSEWINDOW_H
 
-#include "arcwindow.h"
+#include "arcscene.h"
 #include "timer.h"
 
-class CloseWindow : public ArcWindow
+class CloseWindow : public ArcScene
 {
 public:
 	CloseWindow();

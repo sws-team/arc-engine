@@ -6,7 +6,7 @@
 #include "arcsprite.h"
 
 IntroWindow::IntroWindow()
-	: ArcWindow("IntroWindow")
+	: ArcScene("IntroScene")
 {
 	setBackground(TexturesManager::INTRO_BACKGROUND);
 
@@ -17,7 +17,7 @@ IntroWindow::IntroWindow()
 
 void IntroWindow::initWindow()
 {
-	ArcWindow::initWindow();
+	ArcScene::initWindow();
 	PLAY_SOUND(SoundManager::INTRO);
 }
 
@@ -33,11 +33,11 @@ bool IntroWindow::eventFilter(sf::Event *event)
 		if (event->joystickButton.button == ArcEngine::KEY_ESCAPE)
 			finish();
 	}
-	return ArcWindow::eventFilter(event);
+	return ArcScene::eventFilter(event);
 }
 
 void IntroWindow::finish()
 {
 	STOP_SOUND(SoundManager::INTRO);
-	CHANGE_STATE(StateManager::LOADING);
+	CHANGE_STATE(SceneManager::LOADING);
 }

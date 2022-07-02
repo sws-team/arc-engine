@@ -52,6 +52,7 @@ set(ARC_ENGINE_HEADERS
     ${ARC_ENGINE_DIR}/include/arcobject.h
     ${ARC_ENGINE_DIR}/include/arcdebug.h
     ${ARC_ENGINE_DIR}/include/arcwindow.h
+    ${ARC_ENGINE_DIR}/include/arcscene.h
     ${ARC_ENGINE_DIR}/include/arcaction.h
     ${ARC_ENGINE_DIR}/include/managers.h
     ${ARC_ENGINE_DIR}/include/mainwindow.h
@@ -86,6 +87,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/arcobject.cpp
     ${ARC_ENGINE_DIR}/src/arcdebug.cpp
     ${ARC_ENGINE_DIR}/src/arcwindow.cpp
+    ${ARC_ENGINE_DIR}/src/arcscene.cpp
     ${ARC_ENGINE_DIR}/src/arcaction.cpp
     ${ARC_ENGINE_DIR}/src/managers.cpp
     ${ARC_ENGINE_DIR}/src/mainwindow.cpp

@@ -1,10 +1,10 @@
 #ifndef INTROWINDOW_H
 #define INTROWINDOW_H
 
-#include "arcwindow.h"
+#include "arcscene.h"
 #include "timer.h"
 
-class IntroWindow : public ArcWindow
+class IntroWindow : public ArcScene
 {
 public:
 	IntroWindow();

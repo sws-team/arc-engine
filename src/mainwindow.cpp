@@ -3,6 +3,7 @@
 #include "managers.h"
 #include "arcwindow.h"
 #include "timer.h"
+#include <arcscene.h>
 
 #include <SFML/Window/Cursor.hpp>
 
@@ -10,7 +11,7 @@ MainWindow::MainWindow()
 	: sf::RenderWindow ()
 	,currentState(nullptr)
 {
-	state = StateManager::UNKNOWN;
+	state = SceneManager::UNKNOWN;
 	m_view = new sf::View();
 	Engine::Instance().setWindow(this);
 	setMouseCursorGrabbed(true);
@@ -41,7 +42,7 @@ void MainWindow::exec()
 			if (cursorLoaded)
 				setMouseCursor(cursor);
 
-			if (Engine::Instance().stateManager()->getState() == StateManager::EXIT) {
+			if (Engine::Instance().stateManager()->getState() == SceneManager::EXIT) {
 				this->close();
 				return;
 			}
@@ -50,7 +51,7 @@ void MainWindow::exec()
 			currentState->initWindow();
 			if (currentState != nullptr)
 				state = Engine::Instance().stateManager()->getState();
-			setMouseCursorVisible(state != StateManager::INTRO);
+			setMouseCursorVisible(state != SceneManager::INTRO);
 		}
 
 		if (currentState == nullptr)
@@ -73,7 +74,7 @@ void MainWindow::exec()
 				active = true;
 				break;
 			case sf::Event::Closed:
-				CHANGE_STATE(StateManager::CLOSING);
+				CHANGE_STATE(SceneManager::CLOSING);
 				break;
 			default:
 				break;

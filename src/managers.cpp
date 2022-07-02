@@ -287,31 +287,31 @@ void TexturesManager::addTexture(const TextureType type, const char *data, const
 }
 
 //==================STATE MANAGER===================
-StateManager::StateManager()
+SceneManager::SceneManager()
 {
 	m_state = INTRO;
 
-	addState(INTRO, std::bind(&StateManager::create<IntroWindow>, this));
-	addState(ABOUT, std::bind(&StateManager::create<AboutWindow>, this));
-	addState(CLOSING, std::bind(&StateManager::create<class CloseWindow>, this));
+	addState(INTRO, std::bind(&SceneManager::create<IntroWindow>, this));
+	addState(ABOUT, std::bind(&SceneManager::create<AboutWindow>, this));
+	addState(CLOSING, std::bind(&SceneManager::create<class CloseWindow>, this));
 }
 
-GameState StateManager::getState() const
+GameState SceneManager::getState() const
 {
 	return m_state;
 }
 
-void StateManager::setState(const int state)
+void SceneManager::setState(const int state)
 {
 	m_state = state;
 }
 
-void StateManager::addState(GameState state, const StateManager::Creator &creator)
+void SceneManager::addState(GameState state, const SceneManager::Creator &creator)
 {
 	states.insert(std::make_pair(state, creator));
 }
 
-ArcWindow *StateManager::createState(GameState state) const
+ArcScene *SceneManager::createState(GameState state) const
 {
 	if (auto it = states.find(state); it != states.end()) {
 		return it->second();

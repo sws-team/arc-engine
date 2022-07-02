@@ -1,10 +1,10 @@
 #ifndef ABOUTWINDOW_H
 #define ABOUTWINDOW_H
 
-#include "arcwindow.h"
+#include "arcscene.h"
 #include "timer.h"
 
-class AboutWindow : public ArcWindow
+class AboutWindow : public ArcScene
 {
 public:
 	AboutWindow();
