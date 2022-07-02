@@ -4,7 +4,7 @@
 #include "enginedef.h"
 #include "mainwindow.h"
 
-Menu::Menu(const std::string &name)
+MenuScene::MenuScene(const std::string &name)
 	: ArcScene(name)
 	,m_pos(sf::Vector2f(0, 0))
 	,m_color(sf::Color::Red)
@@ -19,14 +19,14 @@ Menu::Menu(const std::string &name)
 
 }
 
-void Menu::draw(sf::RenderTarget *const target)
+void MenuScene::draw(sf::RenderTarget *const target)
 {
 	ArcScene::draw(target);
 	for(const sf::Text& menu : menus)
 		target->draw(menu);
 }
 
-bool Menu::eventFilter(sf::Event *event)
+bool MenuScene::eventFilter(sf::Event *event)
 {
 	switch (event->type)
 	{
@@ -102,12 +102,12 @@ bool Menu::eventFilter(sf::Event *event)
 	return ArcScene::eventFilter(event);
 }
 
-void Menu::back()
+void MenuScene::back()
 {
 	CHANGE_STATE(SceneManager::CLOSING);
 }
 
-void Menu::addItem(const sf::String& str, float k)
+void MenuScene::addItem(const sf::String& str, float k)
 {
 	sf::Text text;
 
@@ -144,36 +144,36 @@ void Menu::addItem(const sf::String& str, float k)
 	updateColor();
 }
 
-void Menu::menuUp()
+void MenuScene::menuUp()
 {
 	if (currentMenu > 0)
 		currentMenu--;
 	updateColor();
 }
 
-void Menu::menuDown()
+void MenuScene::menuDown()
 {
 	if (currentMenu < m_maxMenu)
 		currentMenu++;
 	updateColor();
 }
 
-void Menu::setAlign(const MENU_ALIGN &align)
+void MenuScene::setAlign(const MENU_ALIGN &align)
 {
 	m_align = align;
 }
 
-void Menu::setTextYOffset(float textYOffset)
+void MenuScene::setTextYOffset(float textYOffset)
 {
 	m_textYOffset = textYOffset * Engine::Instance().settingsManager()->getScaleFactor().y;
 }
 
-void Menu::setMaxMenu(int maxMenu)
+void MenuScene::setMaxMenu(int maxMenu)
 {
 	m_maxMenu = maxMenu;
 }
 
-int Menu::getMenuAtPos(const sf::Vector2f &point) const
+int MenuScene::getMenuAtPos(const sf::Vector2f &point) const
 {
 	int currentMenu = -1;
 	unsigned int i = 0;
@@ -190,7 +190,7 @@ int Menu::getMenuAtPos(const sf::Vector2f &point) const
 	return currentMenu;
 }
 
-void Menu::updateColor()
+void MenuScene::updateColor()
 {
     for(sf::Text& menu : menus)
 	{
@@ -204,52 +204,52 @@ void Menu::updateColor()
 	}
 }
 
-sf::Vector2f Menu::getPos() const
+sf::Vector2f MenuScene::getPos() const
 {
 	return m_pos;
 }
 
-unsigned int Menu::getCharacterSize() const
+unsigned int MenuScene::getCharacterSize() const
 {
 	return m_characterSize;
 }
 
-sf::Color Menu::getBorderColor() const
+sf::Color MenuScene::getBorderColor() const
 {
 	return m_borderColor;
 }
 
-sf::Color Menu::getCurrentColor() const
+sf::Color MenuScene::getCurrentColor() const
 {
 	return m_currentColor;
 }
 
-sf::Color Menu::getColor() const
+sf::Color MenuScene::getColor() const
 {
 	return m_color;
 }
 
-void Menu::setCharacterSize(unsigned int characterSize)
+void MenuScene::setCharacterSize(unsigned int characterSize)
 {
 	m_characterSize = characterSize;
 }
 
-void Menu::setOutlineColor(const sf::Color &color)
+void MenuScene::setOutlineColor(const sf::Color &color)
 {
 	m_borderColor = color;
 }
 
-void Menu::setCurrentColor(const sf::Color &currentColor)
+void MenuScene::setCurrentColor(const sf::Color &currentColor)
 {
 	m_currentColor = currentColor;
 }
 
-void Menu::setColor(const sf::Color &color)
+void MenuScene::setColor(const sf::Color &color)
 {
 	m_color = color;
 }
 
-void Menu::setPos(const sf::Vector2f &pos)
+void MenuScene::setPos(const sf::Vector2f &pos)
 {
 	m_pos = pos;
 }

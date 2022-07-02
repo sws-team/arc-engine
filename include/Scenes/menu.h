@@ -3,10 +3,10 @@
 
 #include <arcscene.h>
 
-class Menu : public ArcScene
+class MenuScene : public ArcScene
 {
 public:
-	Menu(const std::string& name = "Menu");
+	MenuScene(const std::string& name = "MenuScene");
 
 	bool eventFilter(sf::Event* event) override;
 	void draw(sf::RenderTarget *const target) override;
