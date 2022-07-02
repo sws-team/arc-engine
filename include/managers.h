@@ -21,7 +21,7 @@ public:
 #define DEBUG_OBJECT(x) Engine::Instance().getOptions()->debugObject(x);
 #define PLAY_SOUND(x) Engine::Instance().soundManager()->playOnce(x);
 #define STOP_SOUND(x) Engine::Instance().soundManager()->stop(x);
-#define CHANGE_STATE(x) Engine::Instance().sceneManager()->setState(x);
+#define CHANGE_SCENE(x) Engine::Instance().sceneManager()->setState(x);
 
 #define SCENE_MANAGER Engine::Instance().sceneManager()
 

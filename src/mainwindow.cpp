@@ -76,7 +76,7 @@ void MainWindow::exec()
 				active = true;
 				break;
 			case sf::Event::Closed:
-				CHANGE_STATE(SceneManager::CLOSING);
+				CHANGE_SCENE(SceneManager::CLOSING);
 				break;
 			default:
 				break;

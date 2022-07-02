@@ -55,7 +55,7 @@ bool MenuScene::eventFilter(sf::Event *event)
 
 void MenuScene::back()
 {
-	CHANGE_STATE(SceneManager::CLOSING);
+	CHANGE_SCENE(SceneManager::CLOSING);
 }
 
 void MenuScene::addMenu(ArcButton *menu)

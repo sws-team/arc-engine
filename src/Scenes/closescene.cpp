@@ -11,7 +11,7 @@ CloseWindow::CloseWindow()
 
 	ArcAction *fade = new FadeOutAction(ArcEngine::DEFAULT_WINDOW_FADE_TIME, bg);
 	fade->setCompletedFunc([]() {
-		CHANGE_STATE(SceneManager::EXIT);
+		CHANGE_SCENE(SceneManager::EXIT);
 	});
 	bg->addAction(fade);
 }
