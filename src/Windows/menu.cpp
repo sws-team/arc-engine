@@ -4,8 +4,8 @@
 #include "enginedef.h"
 #include "mainwindow.h"
 
-Menu::Menu()
-	: ArcScene("Menu")
+Menu::Menu(const std::string &name)
+	: ArcScene(name)
 	,m_pos(sf::Vector2f(0, 0))
 	,m_color(sf::Color::Red)
 	,m_currentColor(sf::Color::Green)

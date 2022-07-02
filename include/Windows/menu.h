@@ -6,7 +6,7 @@
 class Menu : public ArcScene
 {
 public:
-	Menu();
+	Menu(const std::string& name = "Menu");
 
 	bool eventFilter(sf::Event* event) override;
 	void draw(sf::RenderTarget *const target) override;
