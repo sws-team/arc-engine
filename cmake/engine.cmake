@@ -35,10 +35,10 @@ set(ARC_ENGINE_HEADERS
     ${ARC_ENGINE_DIR}/include/Widgets/arcscrollarea.h
     ${ARC_ENGINE_DIR}/include/Widgets/arccheckbox.h
 
-    ${ARC_ENGINE_DIR}/include/Windows/aboutwindow.h
-    ${ARC_ENGINE_DIR}/include/Windows/closewindow.h
-    ${ARC_ENGINE_DIR}/include/Windows/introwindow.h
-    ${ARC_ENGINE_DIR}/include/Windows/menu.h
+    ${ARC_ENGINE_DIR}/include/Scenes/aboutwindow.h
+    ${ARC_ENGINE_DIR}/include/Scenes/closewindow.h
+    ${ARC_ENGINE_DIR}/include/Scenes/introwindow.h
+    ${ARC_ENGINE_DIR}/include/Scenes/menu.h
 
     ${ARC_ENGINE_DIR}/include/Objects/arcsprite.h
     ${ARC_ENGINE_DIR}/include/Objects/arcanimatedsprite.h
@@ -71,10 +71,10 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Widgets/arcscrollarea.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/arccheckbox.cpp
 
-    ${ARC_ENGINE_DIR}/src/Windows/aboutwindow.cpp
-    ${ARC_ENGINE_DIR}/src/Windows/closewindow.cpp
-    ${ARC_ENGINE_DIR}/src/Windows/introwindow.cpp
-    ${ARC_ENGINE_DIR}/src/Windows/menu.cpp
+    ${ARC_ENGINE_DIR}/src/Scenes/aboutwindow.cpp
+    ${ARC_ENGINE_DIR}/src/Scenes/closewindow.cpp
+    ${ARC_ENGINE_DIR}/src/Scenes/introwindow.cpp
+    ${ARC_ENGINE_DIR}/src/Scenes/menu.cpp
 
     ${ARC_ENGINE_DIR}/src/Objects/arcsprite.cpp
     ${ARC_ENGINE_DIR}/src/Objects/arcanimatedsprite.cpp
