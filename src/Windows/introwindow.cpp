@@ -15,9 +15,9 @@ IntroWindow::IntroWindow()
 	bg->addAction(fade);
 }
 
-void IntroWindow::initWindow()
+void IntroWindow::init()
 {
-	ArcScene::initWindow();
+	ArcScene::init();
 	PLAY_SOUND(SoundManager::INTRO);
 }
 

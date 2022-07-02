@@ -16,9 +16,9 @@ CloseWindow::CloseWindow()
 	bg->addAction(fade);
 }
 
-void CloseWindow::initWindow()
+void CloseWindow::init()
 {
-	ArcScene::initWindow();
+	ArcScene::init();
 	Engine::Instance().soundManager()->endBackgroundSound();
 }
 

@@ -9,7 +9,7 @@ class AboutWindow : public ArcScene
 public:
 	AboutWindow();
 
-	void initWindow() override;
+	void init() override;
 	void draw(sf::RenderTarget *const target) override;
 	void back() override;
 	void update() override;

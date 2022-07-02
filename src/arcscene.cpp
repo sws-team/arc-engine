@@ -15,9 +15,14 @@ ArcScene::~ArcScene()
 	DEBUG_OBJECT(nullptr);
 }
 
-void ArcScene::initWindow()
+void ArcScene::init()
 {
 	ArcObject::initTransform();
+}
+
+void ArcScene::deinit()
+{
+
 }
 
 bool ArcScene::eventFilter(sf::Event *event)

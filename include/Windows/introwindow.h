@@ -9,7 +9,7 @@ class IntroWindow : public ArcScene
 public:
 	IntroWindow();
 
-	void initWindow() override;
+	void init() override;
 	bool eventFilter(sf::Event* event) override;
 private:
 	void finish();

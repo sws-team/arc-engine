@@ -23,6 +23,8 @@ public:
 #define STOP_SOUND(x) Engine::Instance().soundManager()->stop(x);
 #define CHANGE_STATE(x) Engine::Instance().sceneManager()->setState(x);
 
+#define SCENE_MANAGER Engine::Instance().sceneManager()
+
 #define RESOLUTION SettingsManager::defaultResolution
 
 class SettingsManager : public Manager

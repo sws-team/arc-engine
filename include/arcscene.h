@@ -9,7 +9,8 @@ public:
         ArcScene(const std::string& name = "Scene");
 	~ArcScene() override;
 
-	virtual void initWindow();
+	virtual void init();
+	virtual void deinit();
 
 	void setBackground(TextureType type);
 

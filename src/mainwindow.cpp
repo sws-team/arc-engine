@@ -35,22 +35,24 @@ void MainWindow::exec()
 	const sf::Image img = Engine::Instance().texturesManager()->getTexture(TexturesManager::CURSOR).copyToImage();
 	const bool cursorLoaded = cursor.loadFromPixels(img.getPixelsPtr(), sf::Vector2u(32,32), sf::Vector2u(0,0));
 	while (isOpen()) {
-		if (Engine::Instance().sceneManager()->getState() != state) {
-			if (currentState != nullptr)
+		if (SCENE_MANAGER->getState() != state) {
+			if (currentState != nullptr) {
+				currentState->deinit();
 				delete currentState;
+			}
 
 			if (cursorLoaded)
 				setMouseCursor(cursor);
 
-			if (Engine::Instance().sceneManager()->getState() == SceneManager::EXIT) {
+			if (SCENE_MANAGER->getState() == SceneManager::EXIT) {
 				this->close();
 				return;
 			}
-			currentState = Engine::Instance().sceneManager()->createState(
-						Engine::Instance().sceneManager()->getState());
-			currentState->initWindow();
+			currentState = SCENE_MANAGER->createState(
+						SCENE_MANAGER->getState());
+			currentState->init();
 			if (currentState != nullptr)
-				state = Engine::Instance().sceneManager()->getState();
+				state = SCENE_MANAGER->getState();
 			setMouseCursorVisible(state != SceneManager::INTRO);
 		}
 
