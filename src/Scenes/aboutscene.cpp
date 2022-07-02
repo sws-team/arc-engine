@@ -1,4 +1,4 @@
-#include "aboutwindow.h"
+#include "aboutscene.h"
 #include "engine.h"
 #include "managers.h"
 

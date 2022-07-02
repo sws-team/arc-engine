@@ -3,11 +3,11 @@
 #include "engine.h"
 #include "arcdebug.h"
 
-#include "mainwindow.h"
-#include "Windows/introwindow.h"
-#include "Windows/aboutwindow.h"
-#include "Windows/closewindow.h"
-#include "gameplatform.h"
+#include <mainwindow.h>
+#include <introscene.h>
+#include <aboutscene.h>
+#include <closescene.h>
+#include <gameplatform.h>
 
 #ifdef SFML_SYSTEM_WINDOWS
 #include "windows.h"

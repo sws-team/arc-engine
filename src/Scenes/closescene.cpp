@@ -1,4 +1,4 @@
-#include "closewindow.h"
+#include "closescene.h"
 #include "engine.h"
 #include "managers.h"
 #include "arcaction.h"

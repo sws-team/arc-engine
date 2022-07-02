@@ -23,7 +23,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/../Resources/arcresources.cmake)
 set(ARC_ENGINE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
 include_directories(${ARC_ENGINE_DIR}/include)
-include_directories(${ARC_ENGINE_DIR}/include/Windows)
+include_directories(${ARC_ENGINE_DIR}/include/Scenes)
 include_directories(${ARC_ENGINE_DIR}/include/Widgets)
 include_directories(${ARC_ENGINE_DIR}/include/Objects)
 
@@ -35,9 +35,9 @@ set(ARC_ENGINE_HEADERS
     ${ARC_ENGINE_DIR}/include/Widgets/arcscrollarea.h
     ${ARC_ENGINE_DIR}/include/Widgets/arccheckbox.h
 
-    ${ARC_ENGINE_DIR}/include/Scenes/aboutwindow.h
-    ${ARC_ENGINE_DIR}/include/Scenes/closewindow.h
-    ${ARC_ENGINE_DIR}/include/Scenes/introwindow.h
+    ${ARC_ENGINE_DIR}/include/Scenes/aboutscene.h
+    ${ARC_ENGINE_DIR}/include/Scenes/closescene.h
+    ${ARC_ENGINE_DIR}/include/Scenes/introscene.h
     ${ARC_ENGINE_DIR}/include/Scenes/menu.h
 
     ${ARC_ENGINE_DIR}/include/Objects/arcsprite.h
@@ -71,9 +71,9 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Widgets/arcscrollarea.cpp
     ${ARC_ENGINE_DIR}/src/Widgets/arccheckbox.cpp
 
-    ${ARC_ENGINE_DIR}/src/Scenes/aboutwindow.cpp
-    ${ARC_ENGINE_DIR}/src/Scenes/closewindow.cpp
-    ${ARC_ENGINE_DIR}/src/Scenes/introwindow.cpp
+    ${ARC_ENGINE_DIR}/src/Scenes/aboutscene.cpp
+    ${ARC_ENGINE_DIR}/src/Scenes/closescene.cpp
+    ${ARC_ENGINE_DIR}/src/Scenes/introscene.cpp
     ${ARC_ENGINE_DIR}/src/Scenes/menu.cpp
 
     ${ARC_ENGINE_DIR}/src/Objects/arcsprite.cpp
