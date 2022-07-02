@@ -38,7 +38,7 @@ public:
 	WindowsManager *windowsManager();
 
 	template<typename Class> Class castedStateManager() {
-		return static_cast<Class>(p_stateManager);
+		return static_cast<Class>(p_sceneManager);
 	}
 	template<typename Class> Class* options() {
 		return static_cast<Class*>(p_options);
