@@ -45,7 +45,7 @@ void AboutWindow::back()
 {
 	Engine::Instance().soundManager()->setMusicLooped(true);
 	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::MAIN_MENU_MUSIC);
-	Engine::Instance().stateManager()->setState(m_backState);
+	CHANGE_STATE(m_backState);
 }
 
 void AboutWindow::update()

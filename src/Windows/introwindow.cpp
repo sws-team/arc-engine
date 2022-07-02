@@ -39,5 +39,5 @@ bool IntroWindow::eventFilter(sf::Event *event)
 void IntroWindow::finish()
 {
 	STOP_SOUND(SoundManager::INTRO);
-	Engine::Instance().stateManager()->setState(StateManager::LOADING);
+	CHANGE_STATE(StateManager::LOADING);
 }

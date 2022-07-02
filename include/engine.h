@@ -14,6 +14,8 @@ class Options;
 class ShadersManager;
 class MainWindow;
 class ResourcesManager;
+class NotificationManager;
+class WindowsManager;
 
 class Engine
 {
@@ -21,7 +23,6 @@ public:
 	static Engine &Instance();
 	void clearInstance();
 
-	void setStateManager(StateManager *manager);
 	void setOptions(Options *manager);
 
 	TexturesManager *texturesManager();
@@ -33,13 +34,13 @@ public:
 	FilesManager *filesManager();
 	ShadersManager *shadersManager();
 	ResourcesManager *resourceManager();
+	NotificationManager *notificationManager();
+	WindowsManager *windowsManager();
 
-	template<typename Class> Class castedStateManager()
-	{
+	template<typename Class> Class castedStateManager() {
 		return static_cast<Class>(p_stateManager);
 	}
-	template<typename Class> Class* options()
-	{
+	template<typename Class> Class* options() {
 		return static_cast<Class*>(p_options);
 	}
 	Options *getOptions();
@@ -66,6 +67,8 @@ private:
 	FilesManager *p_filesManager = nullptr;
 	ShadersManager *p_shadersManager = nullptr;
 	ResourcesManager *p_resourceManager = nullptr;
+	NotificationManager *p_notificationManager = nullptr;
+	WindowsManager *p_windowsManager = nullptr;
 	Options *p_options = nullptr;
 
 	MainWindow *p_window = nullptr;

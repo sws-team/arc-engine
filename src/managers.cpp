@@ -290,6 +290,10 @@ void TexturesManager::addTexture(const TextureType type, const char *data, const
 StateManager::StateManager()
 {
 	m_state = INTRO;
+
+	addState(INTRO, std::bind(&StateManager::create<IntroWindow>, this));
+	addState(ABOUT, std::bind(&StateManager::create<AboutWindow>, this));
+	addState(CLOSING, std::bind(&StateManager::create<class CloseWindow>, this));
 }
 
 GameState StateManager::getState() const
@@ -302,24 +306,17 @@ void StateManager::setState(const int state)
 	m_state = state;
 }
 
-ArcWindow *StateManager::createState(const GameState state)
+void StateManager::addState(GameState state, const StateManager::Creator &creator)
 {
-	ArcWindow *stateWindow = nullptr;
-	switch (state)
-	{
-	case INTRO:
-		stateWindow = new IntroWindow();	
-		break;
-	case ABOUT:
-		stateWindow = new AboutWindow();
-		break;
-	case CLOSING:
-		stateWindow = new class CloseWindow();
-		break;
-	default:
-		break;
+	states.insert(std::make_pair(state, creator));
+}
+
+ArcWindow *StateManager::createState(GameState state) const
+{
+	if (auto it = states.find(state); it != states.end()) {
+		return it->second();
 	}
-	return stateWindow;
+	return nullptr;
 }
 
 SoundManager::SoundManager()
@@ -610,7 +607,6 @@ void Options::updateWindow()
 {
 	const int w = Engine::Instance().Instance().settingsManager()->getResolution().x;
 	const int h = Engine::Instance().Instance().settingsManager()->getResolution().y;
-	const sf::String appName = Engine::Instance().appName();
 	const int style = Engine::Instance().Instance().settingsManager()->getFullscreen()?sf::Style::Fullscreen:sf::Style::Default;
 
 	mw->create(
@@ -619,7 +615,7 @@ void Options::updateWindow()
 #else
 				sf::VideoMode(w, h)
 #endif
-			   ,appName, style
+			   , ArcEngine::GAME_NAME, style
 #ifndef SFML_SYSTEM_ANDROID
 			   ,sf::ContextSettings(0, 0, 8)
 #endif
@@ -805,4 +801,14 @@ std::string ResourcesManager::decode(const std::string &str)
 		result.push_back(ch - ArcEngine::CRYPTO_VALUE);
 	}
 	return str;
+}
+
+NotificationManager::NotificationManager()
+{
+
+}
+
+WindowsManager::WindowsManager()
+{
+
 }

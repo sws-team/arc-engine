@@ -104,7 +104,7 @@ bool Menu::eventFilter(sf::Event *event)
 
 void Menu::back()
 {
-	Engine::Instance().stateManager()->setState(StateManager::CLOSING);
+	CHANGE_STATE(StateManager::CLOSING);
 }
 
 void Menu::addItem(const sf::String& str, float k)

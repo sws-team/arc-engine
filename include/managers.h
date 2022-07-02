@@ -21,6 +21,7 @@ public:
 #define DEBUG_OBJECT(x) Engine::Instance().getOptions()->debugObject(x);
 #define PLAY_SOUND(x) Engine::Instance().soundManager()->playOnce(x);
 #define STOP_SOUND(x) Engine::Instance().soundManager()->stop(x);
+#define CHANGE_STATE(x) Engine::Instance().stateManager()->setState(x);
 
 #define RESOLUTION SettingsManager::defaultResolution
 
@@ -126,6 +127,7 @@ private:
 	std::map<TextureType, sf::Texture> m_textures;
 };
 
+#include <arcwindow.h>
 
 class StateManager : public Manager
 {
@@ -134,7 +136,7 @@ public:
 
 	GameState getState() const;
 	void setState(const GameState state);
-	virtual ArcWindow *createState(const GameState state);
+
 	enum STATE
 	{
 		UNKNOWN,
@@ -149,8 +151,20 @@ public:
 
 		USER_STATE,
 	};
+	typedef std::function<ArcWindow*()> Creator;
+
+	void addState(GameState state, const Creator& creator);
+	template<class T> void addState(GameState state) {
+		addState(state, std::bind(&StateManager::create<T>, this));
+	}
+	template<class T> ArcWindow* create() {
+		return new T();
+	}
+	ArcWindow *createState(GameState state) const;
+
 private:
 	GameState m_state;
+	std::unordered_map<GameState, Creator> states;
 };
 
 class SoundManager : public Manager
@@ -335,5 +349,18 @@ private:
 	dragonBones::SFMLFactory* skeletonAnimationFactory = nullptr;
 	Timer timer;
 };
+
+class NotificationManager : public Manager
+{
+public:
+	NotificationManager();
+};
+
+class WindowsManager : public Manager
+{
+public:
+	WindowsManager();
+};
+
 
 #endif // MANAGERS_H

@@ -48,7 +48,8 @@ void MainWindow::exec()
 			currentState = Engine::Instance().stateManager()->createState(
 						Engine::Instance().stateManager()->getState());
 			currentState->initWindow();
-			state = Engine::Instance().stateManager()->getState();
+			if (currentState != nullptr)
+				state = Engine::Instance().stateManager()->getState();
 			setMouseCursorVisible(state != StateManager::INTRO);
 		}
 
@@ -72,7 +73,7 @@ void MainWindow::exec()
 				active = true;
 				break;
 			case sf::Event::Closed:
-				Engine::Instance().stateManager()->setState(StateManager::CLOSING);
+				CHANGE_STATE(StateManager::CLOSING);
 				break;
 			default:
 				break;

@@ -21,6 +21,9 @@ Engine::Engine()
 	p_filesManager = new FilesManager();
 	p_shadersManager = new ShadersManager();
 	p_resourceManager = new ResourcesManager();
+	p_stateManager = new StateManager();
+	p_notificationManager = new NotificationManager();
+	p_windowsManager = new WindowsManager();
 	p_window = nullptr;
 	reset();
 }
@@ -29,11 +32,6 @@ void Engine::clearInstance()
 {
 	p_soundManager->clearAll();
 	p_options->clear();
-}
-
-void Engine::setStateManager(StateManager *manager)
-{
-	p_stateManager = manager;
 }
 
 void Engine::setOptions(Options *manager)
@@ -86,6 +84,16 @@ ResourcesManager *Engine::resourceManager()
 	return p_resourceManager;
 }
 
+NotificationManager *Engine::notificationManager()
+{
+	return p_notificationManager;
+}
+
+WindowsManager *Engine::windowsManager()
+{
+	return p_windowsManager;
+}
+
 Options *Engine::getOptions()
 {
 	return p_options;
@@ -124,6 +132,6 @@ void Engine::reset()
 {
 	p_texturesManager->reset();
 	p_translationsManager->reset();
-//	p_stateManager->reset();
+	p_stateManager->reset();
 }
 
