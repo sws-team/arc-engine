@@ -8,6 +8,7 @@
 IntroWindow::IntroWindow()
 	: ArcScene("IntroScene")
 {
+	cursorVisible = true;
 	setBackground(TexturesManager::INTRO_BACKGROUND);
 
 	ArcAction *fade = new FadeInAction(ArcEngine::DEFAULT_WINDOW_FADE_TIME, bg);

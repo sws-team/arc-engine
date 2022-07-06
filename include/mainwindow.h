@@ -4,14 +4,13 @@
 #include "stdheader.h"
 #include "enginedef.h"
 
-
-
 class MainWindow : public sf::RenderWindow
 {
 public:
 	MainWindow();
 	~MainWindow();
 
+	void prepare();
 	void exec();
 	sf::View *view() const;
 	void updateView();
@@ -19,8 +18,7 @@ public:
 
 private:
 	sf::View *m_view;
-	class ArcScene *currentState;
-	GameState state;
+	SceneType currentSceneType;
 };
 
 #endif // MAINWINDOW_H

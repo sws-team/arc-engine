@@ -8,6 +8,7 @@
 #include <aboutscene.h>
 #include <closescene.h>
 #include <gameplatform.h>
+#include <arcwindow.h>
 
 #ifdef SFML_SYSTEM_WINDOWS
 #include "windows.h"
@@ -289,31 +290,41 @@ void TexturesManager::addTexture(const TextureType type, const char *data, const
 //==================STATE MANAGER===================
 SceneManager::SceneManager()
 {
-	m_state = INTRO;
+	m_type = INTRO;
 
-	addState(INTRO, std::bind(&SceneManager::create<IntroWindow>, this));
-	addState(ABOUT, std::bind(&SceneManager::create<AboutWindow>, this));
-	addState(CLOSING, std::bind(&SceneManager::create<class CloseWindow>, this));
+	addScene(INTRO, std::bind(&SceneManager::create<IntroWindow>, this));
+	addScene(ABOUT, std::bind(&SceneManager::create<AboutWindow>, this));
+	addScene(CLOSING, std::bind(&SceneManager::create<class CloseWindow>, this));
 }
 
-GameState SceneManager::getState() const
+ArcScene *SceneManager::currentScene() const
 {
-	return m_state;
+	return m_scene;
 }
 
-void SceneManager::setState(const int state)
+void SceneManager::setCurrentScene(ArcScene *scene)
 {
-	m_state = state;
+	m_scene = scene;
 }
 
-void SceneManager::addState(GameState state, const SceneManager::Creator &creator)
+SceneType SceneManager::currentSceneType() const
 {
-	states.insert(std::make_pair(state, creator));
+	return m_type;
 }
 
-ArcScene *SceneManager::createState(GameState state) const
+void SceneManager::setSceneType(const SceneType type)
 {
-	if (auto it = states.find(state); it != states.end()) {
+	m_type = type;
+}
+
+void SceneManager::addScene(SceneType type, const SceneManager::Creator &creator)
+{
+	scenes.insert(std::make_pair(type, creator));
+}
+
+ArcScene *SceneManager::createScene(SceneType type) const
+{
+	if (auto it = scenes.find(type); it != scenes.end()) {
 		return it->second();
 	}
 	return nullptr;
@@ -811,4 +822,51 @@ NotificationManager::NotificationManager()
 WindowsManager::WindowsManager()
 {
 
+}
+
+void WindowsManager::showWindow(WindowType type)
+{
+	opening.push(type);
+}
+
+void WindowsManager::closeWindow(ArcWindow *window)
+{
+	closing.push(window);
+}
+
+bool WindowsManager::isWindowOpened(WindowType type) const
+{
+	const auto findType = [type](ArcWindow* window) {
+		return window->type() == type;
+	};
+	if (auto it = std::find_if(opened.begin(), opened.end(), findType); it != opened.end())
+		return true;
+	return false;
+}
+
+void WindowsManager::update()
+{
+	if (!closing.empty()) {
+		ArcWindow *window = closing.front();
+		closing.pop();
+		if (ArcObject* parent = window->parent(); parent != nullptr) {
+			parent->removeChild(window);
+			window->deinit();
+			delete window;
+		}
+	} else if(!opening.empty()) {
+		const WindowType type = opening.front();
+		if (windows.find(type) != windows.end()) {
+			ArcWindow *window = windows.at(type)();
+			window->init();
+			Engine::Instance().sceneManager()->currentScene()->addChild(window);
+			opened.insert(window);
+		}
+		opening.pop();
+	}
+}
+
+void WindowsManager::registerWindow(WindowType type, const WindowsManager::Creator &creator)
+{
+	windows.insert(std::make_pair(type, creator));
 }

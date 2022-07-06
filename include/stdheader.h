@@ -16,6 +16,8 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <array>
+#include <unordered_set>
+#include <unordered_map>
 
 #include "arclog.h"
 

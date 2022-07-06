@@ -21,7 +21,7 @@ public:
 #define DEBUG_OBJECT(x) Engine::Instance().getOptions()->debugObject(x);
 #define PLAY_SOUND(x) Engine::Instance().soundManager()->playOnce(x);
 #define STOP_SOUND(x) Engine::Instance().soundManager()->stop(x);
-#define CHANGE_SCENE(x) Engine::Instance().sceneManager()->setState(x);
+#define CHANGE_SCENE(x) Engine::Instance().sceneManager()->setSceneType(x);
 
 #define SCENE_MANAGER Engine::Instance().sceneManager()
 
@@ -136,8 +136,11 @@ class SceneManager : public Manager
 public:
 	SceneManager();
 
-	GameState getState() const;
-	void setState(const GameState state);
+	ArcScene *currentScene() const;
+	void setCurrentScene(ArcScene *scene);
+
+	SceneType currentSceneType() const;
+	void setSceneType(const SceneType type);
 
 	enum SCENE
 	{
@@ -155,18 +158,19 @@ public:
 	};
 	typedef std::function<ArcScene*()> Creator;
 
-	void addState(GameState state, const Creator& creator);
-	template<class T> void addState(GameState state) {
-		addState(state, std::bind(&SceneManager::create<T>, this));
+	void addScene(SceneType type, const Creator& creator);
+	template<class T> void addScene(SceneType type) {
+		addScene(type, std::bind(&SceneManager::create<T>, this));
 	}
 	template<class T> ArcScene* create() {
 		return new T();
 	}
-	ArcScene *createState(GameState state) const;
+	ArcScene *createScene(SceneType type) const;
 
 private:
-	GameState m_state;
-	std::unordered_map<GameState, Creator> states;
+	SceneType m_type = UNKNOWN;
+	ArcScene *m_scene = nullptr;
+	std::unordered_map<SceneType, Creator> scenes;
 };
 
 class SoundManager : public Manager
@@ -362,6 +366,28 @@ class WindowsManager : public Manager
 {
 public:
 	WindowsManager();
+
+	void showWindow(WindowType type);
+	void closeWindow(ArcWindow *window);
+
+	bool isWindowOpened(WindowType type) const;
+
+	void update();
+
+	typedef std::function<ArcWindow*()> Creator;
+	void registerWindow(WindowType type, const Creator& creator);
+	template<class T> void registerWindow(SceneType type) {
+		registerWindow(type, std::bind(&WindowsManager::create<T>, this));
+	}
+	template<class T> ArcWindow* create() {
+		return new T();
+	}
+
+private:
+	std::queue<WindowType> opening;
+	std::queue<ArcWindow*> closing;
+	std::unordered_set<ArcWindow*> opened;
+	std::unordered_map<WindowType, Creator> windows;
 };
 
 

@@ -15,10 +15,13 @@ public:
 	void setBackground(TextureType type);
 
 	bool eventFilter(sf::Event *event) override;
+
+	bool isCursorVisible() const;
 protected:
 	virtual void back();
 
 	class ArcSprite *bg = nullptr;
+	bool cursorVisible = true;
 };
 
 #endif // ARCSCENE_H

@@ -1,51 +1,61 @@
 #include "arcwindow.h"
 #include "engine.h"
 #include "managers.h"
-#include "arcsprite.h"
 
 ArcWindow::ArcWindow(const std::string &name)
-	: ArcObject(name)
+	: ArcSprite(name)
 {
-	setType(ArcEngine::OBJECT);
-	DEBUG_OBJECT(this);
+//	bg = new ArcSprite("background");
+//	bg->setSize(SettingsManager::defaultResolution);
+//	addChild(bg);
 }
 
 ArcWindow::~ArcWindow()
 {
-	DEBUG_OBJECT(nullptr);
+
 }
 
-void ArcWindow::initWindow()
+void ArcWindow::init()
 {
 	ArcObject::initTransform();
 }
 
+void ArcWindow::deinit()
+{
+
+}
+
 bool ArcWindow::eventFilter(sf::Event *event)
 {
-	if (event->type == sf::Event::Closed)
-		this->back();
-	else if (event->type == sf::Event::KeyPressed) {
-		if (event->key.code == sf::Keyboard::Escape)
-			this->back();
-	}
-	else if (event->type == sf::Event::JoystickButtonPressed) {
-		if (event->joystickButton.button == ArcEngine::KEY_ESCAPE)
-			this->back();
-	}
+	if (modal)
+		return true;
+
 	return ArcObject::eventFilter(event);
 }
 
-void ArcWindow::setBackground(TextureType type)
+void ArcWindow::setModal(bool modal)
 {
-	bg = new ArcSprite("background");
-	bg->::ArcObject::setSize(sf::Vector2f(SettingsManager::defaultResolution.x,
-										  SettingsManager::defaultResolution.y));
-	bg->setTexture(type);
-	addChild(bg);
+	this->modal = modal;
 }
 
-void ArcWindow::back()
+bool ArcWindow::isModal() const
 {
-
+	return modal;
 }
+
+void ArcWindow::close()
+{
+	Engine::Instance().windowsManager()->closeWindow(this);
+}
+
+WindowType ArcWindow::type() const
+{
+	return m_type;
+}
+
+void ArcWindow::setType(const WindowType &type)
+{
+	m_type = type;
+}
+
 

@@ -9,9 +9,8 @@
 
 MainWindow::MainWindow()
 	: sf::RenderWindow ()
-	,currentState(nullptr)
 {
-	state = SceneManager::UNKNOWN;
+	currentSceneType = SceneManager::UNKNOWN;
 	m_view = new sf::View();
 	Engine::Instance().setWindow(this);
 	setMouseCursorGrabbed(true);
@@ -23,40 +22,42 @@ MainWindow::~MainWindow()
 
 }
 
-void MainWindow::exec()
+void MainWindow::prepare()
 {
 	const sf::Image icon = Engine::Instance().texturesManager()->getTexture(TexturesManager::ICON).copyToImage();
 	this->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-	bool active = true;
-	updateView();
-
 	sf::Cursor cursor;
 	const sf::Image img = Engine::Instance().texturesManager()->getTexture(TexturesManager::CURSOR).copyToImage();
 	const bool cursorLoaded = cursor.loadFromPixels(img.getPixelsPtr(), sf::Vector2u(32,32), sf::Vector2u(0,0));
+	if (cursorLoaded)
+		setMouseCursor(cursor);
+}
+
+void MainWindow::exec()
+{
+	bool active = true;
 	while (isOpen()) {
-		if (SCENE_MANAGER->getState() != state) {
-			if (currentState != nullptr) {
-				currentState->deinit();
-				delete currentState;
+		ArcScene* currentScene = SCENE_MANAGER->currentScene();
+		if (SCENE_MANAGER->currentSceneType() != currentSceneType) {
+			if (currentScene != nullptr) {
+				currentScene->deinit();
+				delete currentScene;
 			}
-
-			if (cursorLoaded)
-				setMouseCursor(cursor);
-
-			if (SCENE_MANAGER->getState() == SceneManager::EXIT) {
+			if (SCENE_MANAGER->currentSceneType() == SceneManager::EXIT) {
 				this->close();
 				return;
 			}
-			currentState = SCENE_MANAGER->createState(
-						SCENE_MANAGER->getState());
-			currentState->init();
-			if (currentState != nullptr)
-				state = SCENE_MANAGER->getState();
-			setMouseCursorVisible(state != SceneManager::INTRO);
+			currentScene = SCENE_MANAGER->createScene(SCENE_MANAGER->currentSceneType());
+			currentScene->init();
+			if (currentScene != nullptr) {
+				currentSceneType = SCENE_MANAGER->currentSceneType();
+				SCENE_MANAGER->setCurrentScene(currentScene);
+			}
+			setMouseCursorVisible(currentScene->isCursorVisible());
 		}
 
-		if (currentState == nullptr)
+		if (currentScene == nullptr)
 			continue;
 
 		sf::Event event;
@@ -85,17 +86,18 @@ void MainWindow::exec()
 				continue;
 			if (!active)
 				break;
-			if (currentState->event(&event))
+			if (currentScene->event(&event))
 				break;
 		}
 		TimersManager::Instance().setPaused(!active);
 		if (active) {
-			currentState->process();
+			currentScene->process();
 			Engine::Instance().getOptions()->globalCallbacks();
+			Engine::Instance().windowsManager()->update();
 
 			clear(sf::Color::Black);
 			setView(*m_view);
-			currentState->paint(this);
+			currentScene->paint(this);
 
 			Engine::Instance().getOptions()->globalDraw(this);
 

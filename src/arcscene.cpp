@@ -44,6 +44,11 @@ bool ArcScene::eventFilter(sf::Event *event)
 	return ArcObject::eventFilter(event);
 }
 
+bool ArcScene::isCursorVisible() const
+{
+	return cursorVisible;
+}
+
 void ArcScene::setBackground(TextureType type)
 {
 	bg->setTexture(type);

@@ -3,7 +3,7 @@
 
 #include "stdheader.h"
 
-typedef int GameState;
+typedef int SceneType;
 typedef int TextureType;
 typedef int TranslationType;
 typedef int SoundType;
@@ -11,6 +11,7 @@ typedef int MusicType;
 typedef int FileType;
 typedef int ShaderType;
 typedef int FontType;
+typedef int WindowType;
 
 namespace ArcEngine
 {

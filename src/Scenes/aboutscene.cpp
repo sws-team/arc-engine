@@ -101,7 +101,7 @@ void AboutWindow::addStrings(const std::vector<sf::String> &strs)
 	}
 }
 
-void AboutWindow::setBackState(GameState backState)
+void AboutWindow::setBackState(SceneType backState)
 {
 	m_backState = backState;
 }

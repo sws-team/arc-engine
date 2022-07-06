@@ -17,7 +17,7 @@ public:
 	void addString(const sf::String& str);
 	void addStrings(const std::vector<sf::String>& strs);
 
-	void setBackState(GameState backState);
+	void setBackState(SceneType backState);
 
 	void setCharacterSize(unsigned int characterSize);
 
@@ -37,7 +37,7 @@ private:
 	Timer timer;
 	static constexpr float CREDITS_SPEED = 50;
 	static constexpr float CREDITS_STEP = 3;
-	GameState m_backState;
+	SceneType m_backState;
 	static const sf::Vector2f RECT_SIZE;
 	unsigned int m_characterSize;
 	sf::Color m_color;
