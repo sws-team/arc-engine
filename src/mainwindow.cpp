@@ -55,6 +55,7 @@ void MainWindow::exec()
 				SCENE_MANAGER->setCurrentScene(currentScene);
 			}
 			setMouseCursorVisible(currentScene->isCursorVisible());
+			NOTIFY(NotificationManager::NOTIFICATION_TYPE::SCENE_CHANGED, currentSceneType);
 		}
 
 		if (currentScene == nullptr)

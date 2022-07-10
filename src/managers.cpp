@@ -819,6 +819,44 @@ NotificationManager::NotificationManager()
 
 }
 
+void NotificationManager::notify(NotificationManager::NOTIFICATION_TYPE type, const std::any &value)
+{
+	if (auto it = callbacks.find(type); it != callbacks.end()) {
+		for(const auto& data : (*it).second) {
+			data.callback(value);
+		}
+	}
+}
+
+int NotificationManager::addCallback(NotificationManager::NOTIFICATION_TYPE type,
+									 const std::function<void (const std::any &)> &callback)
+{
+	const int id = counter++;
+	NotificationData data;
+	data.id = id;
+	data.callback = callback;
+
+	if (auto it = callbacks.find(type); it != callbacks.end())
+		(*it).second.emplace_back(data);
+	else
+		callbacks.insert(std::make_pair(type, std::vector<NotificationData>{ data }));
+	return id;
+}
+
+void NotificationManager::removeCallback(int id)
+{
+	for(auto& [key, value] : callbacks) {
+		for (auto it = value.begin(); it != value.end();) {
+			NotificationData& data = *(it);
+			if (data.id == id) {
+				it = value.erase(it);
+				continue;
+			}
+			++it;
+		}
+	}
+}
+
 WindowsManager::WindowsManager()
 {
 
@@ -826,6 +864,7 @@ WindowsManager::WindowsManager()
 
 void WindowsManager::closeWindow(ArcWindow *window)
 {
+	NOTIFY(NotificationManager::NOTIFICATION_TYPE::WINDOW_CLOSING, window->type());
 	closing.push(window);
 }
 
@@ -867,8 +906,11 @@ void WindowsManager::update()
 			ArcAction *fadeAction = new FadeInAction(ANIMATION_TIME, window);
 			action->addAction(scaleAction);
 			action->addAction(fadeAction);
-
 			window->addAction(action);
+			action->setCompletedFunc(std::bind(&NotificationManager::notify,
+											   Engine::Instance().notificationManager(),
+											   NotificationManager::NOTIFICATION_TYPE::WINDOW_OPENED,
+											   wnd.first));
 			opened.insert(window);
 		}
 		opening.pop();
@@ -880,5 +922,6 @@ void WindowsManager::removeWindow(ArcWindow *window)
 	window->deinit();
 	window->destroy();
 	opened.erase(window);
+	NOTIFY(NotificationManager::NOTIFICATION_TYPE::WINDOW_CLOSED, window->type());
 }
 

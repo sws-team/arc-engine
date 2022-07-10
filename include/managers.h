@@ -2,6 +2,7 @@
 #define MANAGERS_H
 
 #include "stdheader.h"
+#include "engine.h"
 #include "enginedef.h"
 #include "timer.h"
 #include <arcwindow.h>
@@ -24,6 +25,7 @@ public:
 #define PLAY_SOUND(x) Engine::Instance().soundManager()->playOnce(x);
 #define STOP_SOUND(x) Engine::Instance().soundManager()->stop(x);
 #define CHANGE_SCENE(x) Engine::Instance().sceneManager()->setSceneType(x);
+#define NOTIFY(x, y) Engine::Instance().notificationManager()->notify(x, y);
 
 #define SCENE_MANAGER Engine::Instance().sceneManager()
 
@@ -357,6 +359,31 @@ class NotificationManager : public Manager
 {
 public:
 	NotificationManager();
+
+	enum class NOTIFICATION_TYPE
+	{
+		UNKNOWN,
+		//scenes
+		SCENE_CHANGED,
+		//windows
+		WINDOW_OPENING,
+		WINDOW_OPENED,
+		WINDOW_CLOSING,
+		WINDOW_CLOSED,
+	};
+
+	void notify(NOTIFICATION_TYPE type, const std::any& value);
+
+	int addCallback(NotificationManager::NOTIFICATION_TYPE type, const std::function<void(const std::any&)>& callback);
+	void removeCallback(int id);
+
+private:
+	struct NotificationData {
+		std::function<void(const std::any&)> callback;
+		int id = -1;
+	};
+	std::unordered_map<NotificationManager::NOTIFICATION_TYPE, std::vector<NotificationData> > callbacks;
+	int counter = 0;
 };
 
 class WindowsManager : public Manager
@@ -367,6 +394,7 @@ public:
 	typedef std::function<ArcWindow*()> Creator;
 
 	template<class T> void showWindow(WindowType type) {
+		NOTIFY(NotificationManager::NOTIFICATION_TYPE::WINDOW_OPENING, type);
 		opening.push(std::make_pair(type, std::bind(&ArcWindow::create<T>)));
 	}
 	void closeWindow(ArcWindow *window);
