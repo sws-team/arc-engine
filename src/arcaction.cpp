@@ -495,3 +495,15 @@ void TypeTextAction::finished()
 	static_cast<ArcLabel*>(m_object)->setText(m_text);
 	ActionWithObject::finished();
 }
+
+DeleteAction::DeleteAction(float time, ArcObject *object)
+	: ActionWithObject(time, object)
+{
+
+}
+
+void DeleteAction::finished()
+{
+	m_object->destroy();
+	ActionWithObject::finished();
+}

@@ -1,13 +1,13 @@
-#ifndef INTROWINDOW_H
-#define INTROWINDOW_H
+#ifndef INTROSCENE_H
+#define INTROSCENE_H
 
 #include "arcscene.h"
 #include "timer.h"
 
-class IntroWindow : public ArcScene
+class IntroScene : public ArcScene
 {
 public:
-	IntroWindow();
+	IntroScene();
 
 	void init() override;
 	bool eventFilter(sf::Event* event) override;
@@ -15,4 +15,4 @@ private:
 	void finish();
 };
 
-#endif // INTROWINDOW_H
+#endif // INTROSCENE_H

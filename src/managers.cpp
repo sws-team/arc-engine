@@ -8,7 +8,7 @@
 #include <aboutscene.h>
 #include <closescene.h>
 #include <gameplatform.h>
-#include <arcwindow.h>
+#include <arcaction.h>
 
 #ifdef SFML_SYSTEM_WINDOWS
 #include "windows.h"
@@ -292,9 +292,9 @@ SceneManager::SceneManager()
 {
 	m_type = INTRO;
 
-	addScene(INTRO, std::bind(&SceneManager::create<IntroWindow>, this));
-	addScene(ABOUT, std::bind(&SceneManager::create<AboutWindow>, this));
-	addScene(CLOSING, std::bind(&SceneManager::create<class CloseWindow>, this));
+	addScene<IntroScene>(INTRO);
+	addScene<AboutScene>(ABOUT);
+	addScene<class CloseScene>(CLOSING);
 }
 
 ArcScene *SceneManager::currentScene() const
@@ -824,11 +824,6 @@ WindowsManager::WindowsManager()
 
 }
 
-void WindowsManager::showWindow(WindowType type)
-{
-	opening.push(type);
-}
-
 void WindowsManager::closeWindow(ArcWindow *window)
 {
 	closing.push(window);
@@ -849,24 +844,41 @@ void WindowsManager::update()
 	if (!closing.empty()) {
 		ArcWindow *window = closing.front();
 		closing.pop();
-		if (ArcObject* parent = window->parent(); parent != nullptr) {
-			parent->removeChild(window);
-			window->deinit();
-			delete window;
-		}
+		GroupAction *action = new GroupAction();
+		ArcAction *scaleAction = new ChangeScaleAction(ANIMATION_TIME, window, sf::Vector2f(0.f, 0.f));
+		ArcAction *fadeAction = new FadeOutAction(ANIMATION_TIME, window);
+		action->addAction(scaleAction);
+		action->addAction(fadeAction);
+		action->setCompletedFunc(std::bind(&WindowsManager::removeWindow, this, window));
+		window->addAction(action);
 	} else if(!opening.empty()) {
-		const WindowType type = opening.front();
-		if (windows.find(type) != windows.end()) {
-			ArcWindow *window = windows.at(type)();
-			window->init();
+		const auto wnd = opening.front();
+		if(auto it = std::find_if(opened.begin(), opened.end(), [type = wnd.first](ArcWindow* window) {
+			return window->type() == type && window->isUnique();
+		}); it == opened.end()) {
+			const Creator creator = wnd.second;
+			ArcWindow *window = creator();
 			Engine::Instance().sceneManager()->currentScene()->addChild(window);
+			window->setType(wnd.first);
+			window->init();
+			window->setScale(0, 0);
+			GroupAction *action = new GroupAction();
+			ArcAction *scaleAction = new ChangeScaleAction(ANIMATION_TIME, window, sf::Vector2f(1.f, 1.f));
+			ArcAction *fadeAction = new FadeInAction(ANIMATION_TIME, window);
+			action->addAction(scaleAction);
+			action->addAction(fadeAction);
+
+			window->addAction(action);
 			opened.insert(window);
 		}
 		opening.pop();
 	}
 }
 
-void WindowsManager::registerWindow(WindowType type, const WindowsManager::Creator &creator)
+void WindowsManager::removeWindow(ArcWindow *window)
 {
-	windows.insert(std::make_pair(type, creator));
+	window->deinit();
+	window->destroy();
+	opened.erase(window);
 }
+

@@ -1,16 +1,15 @@
-#ifndef CLOSEWINDOW_H
-#define CLOSEWINDOW_H
+#ifndef CLOSESCENE_H
+#define CLOSESCENE_H
 
 #include "arcscene.h"
 #include "timer.h"
 
-class CloseWindow : public ArcScene
+class CloseScene : public ArcScene
 {
 public:
-	CloseWindow();
+	CloseScene();
 
 	void init() override;
-	void back() override;
 };
 
-#endif // CLOSEWINDOW_H
+#endif // CLOSESCENE_H

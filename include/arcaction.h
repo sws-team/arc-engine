@@ -235,4 +235,12 @@ private:
 	sf::String m_text;
 };
 
+class DeleteAction : public ActionWithObject
+{
+public:
+	DeleteAction(float time, ArcObject *object);
+
+	void finished() override;
+};
+
 #endif // ARCACTION_H

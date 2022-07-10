@@ -53,11 +53,6 @@ bool MenuScene::eventFilter(sf::Event *event)
 	return ArcScene::eventFilter(event);
 }
 
-void MenuScene::back()
-{
-	CHANGE_SCENE(SceneManager::CLOSING);
-}
-
 void MenuScene::addMenu(ArcButton *menu)
 {
 	menus.push_back(menu);

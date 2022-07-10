@@ -15,7 +15,11 @@ public:
 	bool eventFilter(sf::Event *event) override;
 
 	void setModal(bool modal);
+	void setUnique(bool unique);
+	void setEscCloseable(bool close);
 	bool isModal() const;
+	bool isUnique() const;
+	bool isEscCloseable() const;
 
 	void close();
 
@@ -23,10 +27,15 @@ public:
 	void setType(const WindowType &type);
 
 protected:
-
+	template<class T> static ArcWindow* create() {
+		return new T();
+	}
 private:
+	friend class WindowsManager;
 	WindowType m_type;
 	bool modal = false;
+	bool unique = true;
+	bool canEscClose = true;
 };
 
 #endif // ARCWINDOW_H

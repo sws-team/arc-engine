@@ -1,5 +1,5 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef MENUSCENE_H
+#define MENUSCENE_H
 
 #include <arcscene.h>
 
@@ -10,7 +10,6 @@ public:
 
 	void init() override;
 	bool eventFilter(sf::Event* event) override;
-	virtual void back() override;
 
 	void addMenu(ArcButton* menu);
 
@@ -28,4 +27,4 @@ private:
 	static constexpr float DEFAULT_Y_OFFSET = 30;
 };
 
-#endif // MENU_H
+#endif // MENUSCENE_H

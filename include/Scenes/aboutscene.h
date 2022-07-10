@@ -1,17 +1,18 @@
-#ifndef ABOUTWINDOW_H
-#define ABOUTWINDOW_H
+#ifndef ABOUTSCENE_H
+#define ABOUTSCENE_H
 
 #include "arcscene.h"
 #include "timer.h"
 
-class AboutWindow : public ArcScene
+class AboutScene : public ArcScene
 {
 public:
-	AboutWindow();
+	AboutScene();
 
 	void init() override;
 	void draw(sf::RenderTarget *const target) override;
-	void back() override;
+	bool eventFilter(sf::Event *event) override;
+	void deinit() override;
 	void update() override;
 
 	void addString(const sf::String& str);
@@ -43,6 +44,8 @@ private:
 	sf::Color m_color;
 	sf::Color m_borderColor;
 	bool started;
+
+	void back();
 };
 
-#endif // ABOUTWINDOW_H
+#endif // ABOUTSCENE_H

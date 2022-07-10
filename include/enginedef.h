@@ -15,11 +15,6 @@ typedef int WindowType;
 
 namespace ArcEngine
 {
-	enum JOYSTICK_KEY
-	{
-		KEY_ESCAPE,
-		KEY_ACCEPT,
-	};
 	enum OBJECT_TYPE
 	{
 		UNDEF,

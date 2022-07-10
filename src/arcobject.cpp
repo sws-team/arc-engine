@@ -64,6 +64,16 @@ bool ArcObject::event(sf::Event *event)
 	return eventFilter(event);
 }
 
+void ArcObject::destroy()
+{
+	destroyed = true;
+}
+
+bool ArcObject::isDestroyed() const
+{
+	return destroyed;
+}
+
 bool ArcObject::hasChild(ArcObject *object, bool recursively) const
 {
 	for(ArcObject* child : m_childs) {
@@ -248,8 +258,17 @@ void ArcObject::update()
 		m_actions.push_back(action);
 	}
 
-	for(ArcObject* child : m_childs)
-		child->update();
+	for (auto it = m_childs.begin(); it != m_childs.end();) {
+		ArcObject* child = *it;
+		if (child->destroyed) {
+			delete child;
+			it = m_childs.erase(it);
+		}
+		else {
+			child->update();
+			++it;
+		}
+	}
 
 	for (auto it = m_actions.begin(); it != m_actions.end();) {
 		ArcAction* action = *it;

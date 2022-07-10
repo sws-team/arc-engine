@@ -18,6 +18,9 @@ public:
 	void process();
 	bool event(sf::Event *event);
 
+	void destroy();
+
+	bool isDestroyed() const;
 	bool hasChild(ArcObject* object, bool recursively = true) const;
 	ArcObject *findChild(const std::string& name, bool recursively = true);
 	ArcObject *parent();
@@ -142,6 +145,7 @@ private:
 	static constexpr float MAX_ALPHA = 255.f;
 	bool isDirty = true;
 	std::queue<ArcAction*> actionsQueue;
+	bool destroyed = false;
 #ifdef ARC_DEBUG
 	bool drawDebugRect = false;
 	bool drawOrigin = false;

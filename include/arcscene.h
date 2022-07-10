@@ -17,11 +17,16 @@ public:
 	bool eventFilter(sf::Event *event) override;
 
 	bool isCursorVisible() const;
-protected:
-	virtual void back();
 
+protected:
+	template<class T> static ArcScene* create() {
+		return new T();
+	}
 	class ArcSprite *bg = nullptr;
 	bool cursorVisible = true;
+	void removeBackground();
+private:
+	friend class SceneManager;
 };
 
 #endif // ARCSCENE_H

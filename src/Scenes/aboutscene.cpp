@@ -2,9 +2,9 @@
 #include "engine.h"
 #include "managers.h"
 
-const sf::Vector2f AboutWindow::RECT_SIZE = sf::Vector2f(900, 600);
+const sf::Vector2f AboutScene::RECT_SIZE = sf::Vector2f(900, 600);
 
-AboutWindow::AboutWindow()
+AboutScene::AboutScene()
 	: ArcScene("AboutScene")
 	,m_backState(SceneManager::MENU)
 	,m_characterSize(40)
@@ -20,17 +20,15 @@ AboutWindow::AboutWindow()
 	rect.setFillColor(sf::Color(16, 32, 64, 128));
 	rect.setPosition(Engine::Instance().settingsManager()->getResolution().x/2 - rectSize.x/2,
 					 Engine::Instance().settingsManager()->getResolution().y/2 - rectSize.y/2);
-
-
 }
 
-void AboutWindow::init()
+void AboutScene::init()
 {
 	ArcScene::init();
 	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::CREDITS_MUSIC);
 }
 
-void AboutWindow::draw(sf::RenderTarget *const target)
+void AboutScene::draw(sf::RenderTarget *const target)
 {
 	ArcScene::draw(target);
 	target->draw(rect);
@@ -41,14 +39,28 @@ void AboutWindow::draw(sf::RenderTarget *const target)
 	}
 }
 
-void AboutWindow::back()
+bool AboutScene::eventFilter(sf::Event *event)
+{
+	if (event->type == sf::Event::Closed) {
+		back();
+		return true;
+	}
+	else if (event->type == sf::Event::KeyPressed) {
+		if (event->key.code == sf::Keyboard::Escape) {
+			back();
+			return true;
+		}
+	}
+	return ArcScene::eventFilter(event);
+}
+
+void AboutScene::deinit()
 {
 	Engine::Instance().soundManager()->setMusicLooped(true);
 	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::MAIN_MENU_MUSIC);
-	CHANGE_SCENE(m_backState);
 }
 
-void AboutWindow::update()
+void AboutScene::update()
 {
 	if (timer.check(CREDITS_SPEED))
 	{
@@ -76,12 +88,12 @@ void AboutWindow::update()
 		back();
 }
 
-void AboutWindow::addString(const sf::String &str)
+void AboutScene::addString(const sf::String &str)
 {
 	creators.push_back(Creator(str, m_characterSize));
 }
 
-void AboutWindow::addStrings(const std::vector<sf::String> &strs)
+void AboutScene::addStrings(const std::vector<sf::String> &strs)
 {
 	for(const sf::String& str : strs)
 		addString(str);
@@ -101,27 +113,32 @@ void AboutWindow::addStrings(const std::vector<sf::String> &strs)
 	}
 }
 
-void AboutWindow::setBackState(SceneType backState)
+void AboutScene::setBackState(SceneType backState)
 {
 	m_backState = backState;
 }
 
-void AboutWindow::setCharacterSize(unsigned int characterSize)
+void AboutScene::setCharacterSize(unsigned int characterSize)
 {
 	m_characterSize = characterSize;
 }
 
-void AboutWindow::setColor(const sf::Color &color)
+void AboutScene::setColor(const sf::Color &color)
 {
 	m_color = color;
 }
 
-void AboutWindow::setBorderColor(const sf::Color &color)
+void AboutScene::setBorderColor(const sf::Color &color)
 {
 	m_borderColor = color;
 }
 
-AboutWindow::Creator::Creator(const sf::String &str, const unsigned int charSize)
+void AboutScene::back()
+{
+	CHANGE_SCENE(m_backState);
+}
+
+AboutScene::Creator::Creator(const sf::String &str, const unsigned int charSize)
 {
 	text.setFont(Engine::Instance().fontManager()->font());
 	text.setCharacterSize(Engine::Instance().fontManager()->getCharSize(charSize));

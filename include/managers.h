@@ -4,6 +4,8 @@
 #include "stdheader.h"
 #include "enginedef.h"
 #include "timer.h"
+#include <arcwindow.h>
+#include <arcscene.h>
 
 class ArcWindow;
 class ArcDebug;
@@ -129,8 +131,6 @@ private:
 	std::map<TextureType, sf::Texture> m_textures;
 };
 
-#include <arcscene.h>
-
 class SceneManager : public Manager
 {
 public:
@@ -160,13 +160,10 @@ public:
 
 	void addScene(SceneType type, const Creator& creator);
 	template<class T> void addScene(SceneType type) {
-		addScene(type, std::bind(&SceneManager::create<T>, this));
-	}
-	template<class T> ArcScene* create() {
-		return new T();
+		addScene(type, std::bind(&ArcScene::create<T>));
 	}
 	ArcScene *createScene(SceneType type) const;
-
+protected:
 private:
 	SceneType m_type = UNKNOWN;
 	ArcScene *m_scene = nullptr;
@@ -367,27 +364,25 @@ class WindowsManager : public Manager
 public:
 	WindowsManager();
 
-	void showWindow(WindowType type);
+	typedef std::function<ArcWindow*()> Creator;
+
+	template<class T> void showWindow(WindowType type) {
+		opening.push(std::make_pair(type, std::bind(&ArcWindow::create<T>)));
+	}
 	void closeWindow(ArcWindow *window);
 
 	bool isWindowOpened(WindowType type) const;
 
 	void update();
 
-	typedef std::function<ArcWindow*()> Creator;
-	void registerWindow(WindowType type, const Creator& creator);
-	template<class T> void registerWindow(SceneType type) {
-		registerWindow(type, std::bind(&WindowsManager::create<T>, this));
-	}
-	template<class T> ArcWindow* create() {
-		return new T();
-	}
-
 private:
-	std::queue<WindowType> opening;
+	constexpr static float ANIMATION_TIME = 100.f;
+
+	std::queue<std::pair<WindowType, Creator>> opening;
 	std::queue<ArcWindow*> closing;
 	std::unordered_set<ArcWindow*> opened;
-	std::unordered_map<WindowType, Creator> windows;
+
+	void removeWindow(ArcWindow* window);
 };
 
 

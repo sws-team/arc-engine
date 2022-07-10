@@ -4,7 +4,7 @@
 #include "arcaction.h"
 #include "arcsprite.h"
 
-CloseWindow::CloseWindow()
+CloseScene::CloseScene()
 	: ArcScene("CloseScene")
 {
 	setBackground(TexturesManager::CLOSE_BACKGROUND);
@@ -16,13 +16,8 @@ CloseWindow::CloseWindow()
 	bg->addAction(fade);
 }
 
-void CloseWindow::init()
+void CloseScene::init()
 {
 	ArcScene::init();
 	Engine::Instance().soundManager()->endBackgroundSound();
-}
-
-void CloseWindow::back()
-{
-
 }

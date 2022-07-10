@@ -7,6 +7,7 @@ ArcScene::ArcScene(const std::string &name)
 	: ArcObject(name)
 {
 	setType(ArcEngine::OBJECT);
+	setSize(SettingsManager::defaultResolution);
 	bg = new ArcSprite("background");
 	bg->setSize(SettingsManager::defaultResolution);
 	addChild(bg);
@@ -31,16 +32,6 @@ void ArcScene::deinit()
 
 bool ArcScene::eventFilter(sf::Event *event)
 {
-	if (event->type == sf::Event::Closed)
-		this->back();
-	else if (event->type == sf::Event::KeyPressed) {
-		if (event->key.code == sf::Keyboard::Escape)
-			this->back();
-	}
-	else if (event->type == sf::Event::JoystickButtonPressed) {
-		if (event->joystickButton.button == ArcEngine::KEY_ESCAPE)
-			this->back();
-	}
 	return ArcObject::eventFilter(event);
 }
 
@@ -49,13 +40,16 @@ bool ArcScene::isCursorVisible() const
 	return cursorVisible;
 }
 
+void ArcScene::removeBackground()
+{
+	bg->destroy();
+	bg = nullptr;
+}
+
 void ArcScene::setBackground(TextureType type)
 {
-	bg->setTexture(type);
+	if (bg != nullptr)
+		bg->setTexture(type);
 }
 
-void ArcScene::back()
-{
-
-}
 
