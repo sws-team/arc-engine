@@ -27,6 +27,8 @@ ArcObject::ArcObject(const std::string &name)
 
 ArcObject::~ArcObject()
 {
+	for(const int id : callbacks)
+		Engine::Instance().notificationManager()->removeCallback(id);
 	for(ArcObject* child : m_childs)
 		delete child;
 	for(ArcAction* action : m_actions)
@@ -328,6 +330,29 @@ void ArcObject::removeAction(ArcAction *action)
 	if (auto it = std::find(m_actions.begin(), m_actions.end(), action); it != m_actions.end()) {
 		m_actions.erase(it);
 	}
+}
+
+std::optional<int> ArcObject::addCallback(const std::string &name, const CallbackType &callback)
+{
+	const std::optional<int> id = Engine::Instance().notificationManager()->addCallback(name, callback);
+	callbacks.emplace_back(id.value());
+	return id;
+}
+
+std::optional<int> ArcObject::addCallback(NotificationType type, const CallbackType &callback)
+{
+	const std::optional<int> id = Engine::Instance().notificationManager()->addCallback(type, callback);
+	if (id != std::nullopt) {
+		callbacks.emplace_back(id.value());
+	}
+	return id;
+}
+
+void ArcObject::removeCallback(const int id)
+{
+	Engine::Instance().notificationManager()->removeCallback(id);
+	if (auto it = std::find(callbacks.begin(), callbacks.end(), id); it != callbacks.end())
+		callbacks.erase(it);
 }
 
 bool ArcObject::eventFilter(sf::Event *event)

@@ -301,8 +301,8 @@ class FilesManager : public Manager
 public:
 	struct GameFile
 	{
-		char *data;
-		size_t size;
+		char *data = nullptr;
+		size_t size  = 0;
 	};
 	GameFile getData(FileType type) const;
 
@@ -360,7 +360,7 @@ class NotificationManager : public Manager
 public:
 	NotificationManager();
 
-	enum class NOTIFICATION_TYPE
+	enum NOTIFICATION_TYPE
 	{
 		UNKNOWN,
 		//scenes
@@ -372,18 +372,24 @@ public:
 		WINDOW_CLOSED,
 	};
 
-	void notify(NOTIFICATION_TYPE type, const std::any& value);
+	void notify(NotificationType type, const std::any& value);
+	void notify(const std::string& name, const std::any& value);
 
-	int addCallback(NotificationManager::NOTIFICATION_TYPE type, const std::function<void(const std::any&)>& callback);
+protected:
+	std::optional<int> addCallback(NotificationType type, const CallbackType& callback);
+	std::optional<int> addCallback(const std::string& name, const CallbackType& callback);
 	void removeCallback(int id);
 
 private:
+	friend class ArcObject;
 	struct NotificationData {
-		std::function<void(const std::any&)> callback;
+		CallbackType callback;
 		int id = -1;
 	};
-	std::unordered_map<NotificationManager::NOTIFICATION_TYPE, std::vector<NotificationData> > callbacks;
+	std::unordered_map<std::string, std::vector<NotificationData> > callbacks;
 	int counter = 0;
+
+	const static std::unordered_map<NOTIFICATION_TYPE, std::string> NOTIFICATIONS;
 };
 
 class WindowsManager : public Manager

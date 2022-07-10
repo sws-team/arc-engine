@@ -814,32 +814,55 @@ std::string ResourcesManager::decode(const std::string &str)
 	return str;
 }
 
+const std::unordered_map<NotificationManager::NOTIFICATION_TYPE, std::string> NotificationManager::NOTIFICATIONS = {
+	{ UNKNOWN, "unknown" },
+	{ SCENE_CHANGED, "scene changed" },
+	{ WINDOW_OPENING, "window opening" },
+	{ WINDOW_OPENED, "window opened" },
+	{ WINDOW_CLOSING, "window closing" },
+	{ WINDOW_CLOSED, "window closed" }
+};
+
 NotificationManager::NotificationManager()
 {
 
 }
 
-void NotificationManager::notify(NotificationManager::NOTIFICATION_TYPE type, const std::any &value)
+void NotificationManager::notify(NotificationType type, const std::any &value)
 {
-	if (auto it = callbacks.find(type); it != callbacks.end()) {
+	if (auto it = NOTIFICATIONS.find(static_cast<NotificationManager::NOTIFICATION_TYPE>(type)); it != NOTIFICATIONS.end()) {
+		notify(it->second, value);
+	}
+}
+
+void NotificationManager::notify(const std::string &name, const std::any &value)
+{
+	if (auto it = callbacks.find(name); it != callbacks.end()) {
 		for(const auto& data : (*it).second) {
 			data.callback(value);
 		}
 	}
 }
 
-int NotificationManager::addCallback(NotificationManager::NOTIFICATION_TYPE type,
-									 const std::function<void (const std::any &)> &callback)
+std::optional<int> NotificationManager::addCallback(NotificationType type, const CallbackType &callback)
+{
+	if (auto it = NOTIFICATIONS.find(static_cast<NotificationManager::NOTIFICATION_TYPE>(type)); it != NOTIFICATIONS.end()) {
+		return addCallback(it->second, callback);
+	}
+	return std::nullopt;
+}
+
+std::optional<int> NotificationManager::addCallback(const std::string &name, const CallbackType &callback)
 {
 	const int id = counter++;
 	NotificationData data;
 	data.id = id;
 	data.callback = callback;
 
-	if (auto it = callbacks.find(type); it != callbacks.end())
+	if (auto it = callbacks.find(name); it != callbacks.end())
 		(*it).second.emplace_back(data);
 	else
-		callbacks.insert(std::make_pair(type, std::vector<NotificationData>{ data }));
+		callbacks.insert(std::make_pair(name, std::vector<NotificationData>{ data }));
 	return id;
 }
 
@@ -907,7 +930,7 @@ void WindowsManager::update()
 			action->addAction(scaleAction);
 			action->addAction(fadeAction);
 			window->addAction(action);
-			action->setCompletedFunc(std::bind(&NotificationManager::notify,
+			action->setCompletedFunc(std::bind(static_cast<void(NotificationManager::*)(NotificationType, const std::any&)>(&NotificationManager::notify),
 											   Engine::Instance().notificationManager(),
 											   NotificationManager::NOTIFICATION_TYPE::WINDOW_OPENED,
 											   wnd.first));

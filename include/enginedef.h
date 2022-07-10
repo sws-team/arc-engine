@@ -12,6 +12,7 @@ typedef int FileType;
 typedef int ShaderType;
 typedef int FontType;
 typedef int WindowType;
+typedef int NotificationType;
 
 namespace ArcEngine
 {
@@ -57,5 +58,7 @@ class ArcSprite;
 class ArcLabel;
 class ArcClippedSprite;
 class ArcRect;
+
+typedef std::function<void(const std::any&)> CallbackType;
 
 #endif // ENGINEDEF_H

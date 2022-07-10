@@ -35,6 +35,10 @@ public:
 	void removeChild(const std::string& name);
 	void removeAction(ArcAction *action);
 
+	std::optional<int> addCallback(const std::string& name, const CallbackType& callback);
+	std::optional<int> addCallback(NotificationType type, const CallbackType& callback);
+	void removeCallback(const int id);
+
 	//getters
 	bool isEnabled() const;
 	ArcEngine::OBJECT_TYPE type() const;
@@ -146,6 +150,7 @@ private:
 	bool isDirty = true;
 	std::queue<ArcAction*> actionsQueue;
 	bool destroyed = false;
+	std::vector<int> callbacks;
 #ifdef ARC_DEBUG
 	bool drawDebugRect = false;
 	bool drawOrigin = false;
