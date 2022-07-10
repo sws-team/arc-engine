@@ -231,7 +231,8 @@ void ArcDebug::drawObject(ArcObject *obj)
 
 	ImGui::SameLine();
 	ImGui::BeginChild("Properties", ImVec2(0, 0), true);
-	drawObjectProperties(selectedObject);
+	if (!selectedObject->isDestroyed())
+		drawObjectProperties(selectedObject);
 	ImGui::EndChild();
 	ImGui::PopStyleVar();
 #endif

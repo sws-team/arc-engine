@@ -672,6 +672,11 @@ void Options::globalDraw(sf::RenderTarget *target)
 	debug->draw(target);
 }
 
+void Options::globalNotifications(const std::string &name, const std::any &value)
+{
+
+}
+
 bool Options::isResourcesLoaded() const
 {
 	return m_resourcesLoaded;
@@ -830,8 +835,9 @@ NotificationManager::NotificationManager()
 
 void NotificationManager::notify(NotificationType type, const std::any &value)
 {
-	if (auto it = NOTIFICATIONS.find(static_cast<NotificationManager::NOTIFICATION_TYPE>(type)); it != NOTIFICATIONS.end()) {
-		notify(it->second, value);
+	std::optional<std::string> name = notificationName(type);
+	if (name != std::nullopt) {
+		notify(name.value(), value);
 	}
 }
 
@@ -842,6 +848,15 @@ void NotificationManager::notify(const std::string &name, const std::any &value)
 			data.callback(value);
 		}
 	}
+	Engine::Instance().getOptions()->globalNotifications(name, value);
+}
+
+std::optional<std::string> NotificationManager::notificationName(NotificationType type) const
+{
+	if (auto it = NOTIFICATIONS.find(static_cast<NotificationManager::NOTIFICATION_TYPE>(type)); it != NOTIFICATIONS.end()) {
+		return it->second;
+	}
+	return std::nullopt;
 }
 
 std::optional<int> NotificationManager::addCallback(NotificationType type, const CallbackType &callback)
@@ -893,12 +908,18 @@ void WindowsManager::closeWindow(ArcWindow *window)
 
 bool WindowsManager::isWindowOpened(WindowType type) const
 {
+	ArcWindow *window = getWindow(type);
+	return window != nullptr;
+}
+
+ArcWindow *WindowsManager::getWindow(WindowType type) const
+{
 	const auto findType = [type](ArcWindow* window) {
 		return window->type() == type;
 	};
 	if (auto it = std::find_if(opened.begin(), opened.end(), findType); it != opened.end())
-		return true;
-	return false;
+		return *it;
+	return nullptr;
 }
 
 void WindowsManager::update()

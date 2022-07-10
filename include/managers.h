@@ -286,6 +286,7 @@ public:
 	virtual void clear();
 	virtual bool globalEventFilter(sf::Event* event);
 	virtual void globalDraw(sf::RenderTarget *target);
+	virtual void globalNotifications(const std::string &name, const std::any &value);
 
 	bool isResourcesLoaded() const;
 	void setResourcesLoaded(bool loaded);
@@ -375,6 +376,8 @@ public:
 	void notify(NotificationType type, const std::any& value);
 	void notify(const std::string& name, const std::any& value);
 
+	std::optional<std::string> notificationName(NotificationType type) const;
+
 protected:
 	std::optional<int> addCallback(NotificationType type, const CallbackType& callback);
 	std::optional<int> addCallback(const std::string& name, const CallbackType& callback);
@@ -386,8 +389,8 @@ private:
 		CallbackType callback;
 		int id = -1;
 	};
-	std::unordered_map<std::string, std::vector<NotificationData> > callbacks;
 	int counter = 0;
+	std::unordered_map<std::string, std::vector<NotificationData> > callbacks;
 
 	const static std::unordered_map<NOTIFICATION_TYPE, std::string> NOTIFICATIONS;
 };
@@ -406,6 +409,7 @@ public:
 	void closeWindow(ArcWindow *window);
 
 	bool isWindowOpened(WindowType type) const;
+	ArcWindow *getWindow(WindowType type) const;
 
 	void update();
 
