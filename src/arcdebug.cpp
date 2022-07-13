@@ -273,6 +273,7 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 		case ArcEngine::OBJECT:
 		{
 			ImGui::TextColored(Utils::convertFromColor(typeToColor(obj->type())), "%s", typeToName(obj->type()).c_str());
+			ImGui::TextUnformatted(obj->path().c_str());
 			ImGui::TextUnformatted("Properties");
 			bool enabled = obj->isEnabled();
 			if (ImGui::Checkbox("Enabled", &enabled)) {

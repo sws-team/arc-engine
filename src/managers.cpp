@@ -9,6 +9,7 @@
 #include <closescene.h>
 #include <gameplatform.h>
 #include <arcaction.h>
+#include <arcvariant.h>
 
 #ifdef SFML_SYSTEM_WINDOWS
 #include "windows.h"
@@ -672,7 +673,7 @@ void Options::globalDraw(sf::RenderTarget *target)
 	debug->draw(target);
 }
 
-void Options::globalNotifications(const std::string &name, const std::any &value)
+void Options::globalNotifications(const std::string &name, const ArcVariant &value)
 {
 
 }
@@ -825,7 +826,8 @@ const std::unordered_map<NotificationManager::NOTIFICATION_TYPE, std::string> No
 	{ WINDOW_OPENING, "window opening" },
 	{ WINDOW_OPENED, "window opened" },
 	{ WINDOW_CLOSING, "window closing" },
-	{ WINDOW_CLOSED, "window closed" }
+	{ WINDOW_CLOSED, "window closed" },
+	{ BUTTON_CLICKED, "button clicked" },
 };
 
 NotificationManager::NotificationManager()
@@ -833,7 +835,7 @@ NotificationManager::NotificationManager()
 
 }
 
-void NotificationManager::notify(NotificationType type, const std::any &value)
+void NotificationManager::notify(NotificationType type, const ArcVariant &value)
 {
 	std::optional<std::string> name = notificationName(type);
 	if (name != std::nullopt) {
@@ -841,7 +843,7 @@ void NotificationManager::notify(NotificationType type, const std::any &value)
 	}
 }
 
-void NotificationManager::notify(const std::string &name, const std::any &value)
+void NotificationManager::notify(const std::string &name, const ArcVariant &value)
 {
 	if (auto it = callbacks.find(name); it != callbacks.end()) {
 		for(const auto& data : (*it).second) {
@@ -951,7 +953,7 @@ void WindowsManager::update()
 			action->addAction(scaleAction);
 			action->addAction(fadeAction);
 			window->addAction(action);
-			action->setCompletedFunc(std::bind(static_cast<void(NotificationManager::*)(NotificationType, const std::any&)>(&NotificationManager::notify),
+			action->setCompletedFunc(std::bind(static_cast<void(NotificationManager::*)(NotificationType, const ArcVariant&)>(&NotificationManager::notify),
 											   Engine::Instance().notificationManager(),
 											   NotificationManager::NOTIFICATION_TYPE::WINDOW_OPENED,
 											   wnd.first));

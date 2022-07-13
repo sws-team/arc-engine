@@ -23,8 +23,9 @@ public:
 	bool isDestroyed() const;
 	bool hasChild(ArcObject* object, bool recursively = true) const;
 	ArcObject *findChild(const std::string& name, bool recursively = true);
-	ArcObject *parent();
+	ArcObject *parent() const;
 	std::vector<ArcObject*> childs() const;
+	std::string path() const;
 
 	void setParent(ArcObject* parent);
 	virtual void addChild(ArcObject* object);
@@ -81,13 +82,8 @@ public:
 	void setCenteredOrigin();
 
 	//custom data
-	void setData(const std::string& name, const std::any& value);
-	template<typename T> T data(const std::string& name)
-	{
-		if (auto it = m_data.find(name); it != m_data.end())
-			return std::any_cast<T>(m_data.at(name));
-		return T();
-	}
+	void setData(const std::string& name, const ArcVariant& value);
+	ArcVariant data(const std::string& name) const;
 
 	virtual void draw(sf::RenderTarget *const target);
 
@@ -144,7 +140,7 @@ private:
 	float m_height = 0.f;
 	float m_alpha = 1.f;
 
-	std::map<std::string, std::any> m_data;
+	std::map<std::string, ArcVariant> m_data;
 	static constexpr float center = 0.5f;
 	static constexpr float MAX_ALPHA = 255.f;
 	bool isDirty = true;

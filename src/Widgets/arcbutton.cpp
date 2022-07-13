@@ -3,6 +3,7 @@
 #include "managers.h"
 #include "collisions.h"
 #include "mainwindow.h"
+#include <arcvariant.h>
 
 ArcButton::ArcButton(const std::string &name)
 	: ArcSprite(name)
@@ -104,6 +105,7 @@ void ArcButton::setView(sf::View *view)
 
 void ArcButton::click()
 {
+	NOTIFY(NotificationManager::BUTTON_CLICKED, ArcVariant(this->path()));
 	PLAY_SOUND(SoundManager::CLICK);
 	if (m_callback != nullptr)
 		m_callback();

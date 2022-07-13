@@ -4,6 +4,7 @@
 #include "arcwindow.h"
 #include "timer.h"
 #include <arcscene.h>
+#include <arcvariant.h>
 
 #include <SFML/Window/Cursor.hpp>
 

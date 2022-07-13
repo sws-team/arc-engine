@@ -3,6 +3,7 @@
 #include "managers.h"
 #include "arcaction.h"
 #include "arcproperties.h"
+#include <arcvariant.h>
 
 ArcObject::ArcObject(const std::string &name)
 	: m_name(name)
@@ -102,7 +103,7 @@ ArcObject *ArcObject::findChild(const std::string &name, bool recursively)
 	return nullptr;
 }
 
-ArcObject *ArcObject::parent()
+ArcObject *ArcObject::parent() const
 {
 	return m_parent;
 }
@@ -110,6 +111,18 @@ ArcObject *ArcObject::parent()
 std::vector<ArcObject *> ArcObject::childs() const
 {
 	return m_childs;
+}
+
+std::string ArcObject::path() const
+{
+	std::string p;
+	ArcObject *parent = this->parent();
+	while(parent != nullptr) {
+		p = parent->name() + "/" +p;
+		parent = parent->parent();
+	}
+	p += name();
+	return p;
 }
 
 void ArcObject::setParent(ArcObject *parent)
@@ -455,9 +468,16 @@ void ArcObject::setCenteredOrigin()
 	setOrigin(center, center);
 }
 
-void ArcObject::setData(const std::string &name, const std::any &value)
+void ArcObject::setData(const std::string &name, const ArcVariant &value)
 {
-	m_data.insert(std::pair<std::string, std::any>(name, value));
+	m_data.insert(std::pair<std::string, ArcVariant>(name, value));
+}
+
+ArcVariant ArcObject::data(const std::string &name) const
+{
+	if (auto it = m_data.find(name); it != m_data.end())
+		return it->second;
+	return ArcVariant();
 }
 
 ArcEngine::OBJECT_TYPE ArcObject::type() const

@@ -7,6 +7,7 @@
 #include "timer.h"
 #include <arcwindow.h>
 #include <arcscene.h>
+#include <arcvariant.h>
 
 class ArcWindow;
 class ArcDebug;
@@ -286,7 +287,7 @@ public:
 	virtual void clear();
 	virtual bool globalEventFilter(sf::Event* event);
 	virtual void globalDraw(sf::RenderTarget *target);
-	virtual void globalNotifications(const std::string &name, const std::any &value);
+	virtual void globalNotifications(const std::string &name, const ArcVariant &value);
 
 	bool isResourcesLoaded() const;
 	void setResourcesLoaded(bool loaded);
@@ -371,10 +372,12 @@ public:
 		WINDOW_OPENED,
 		WINDOW_CLOSING,
 		WINDOW_CLOSED,
+		//button
+		BUTTON_CLICKED
 	};
 
-	void notify(NotificationType type, const std::any& value);
-	void notify(const std::string& name, const std::any& value);
+	void notify(NotificationType type, const ArcVariant& value);
+	void notify(const std::string& name, const ArcVariant &value);
 
 	std::optional<std::string> notificationName(NotificationType type) const;
 

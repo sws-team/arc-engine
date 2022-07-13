@@ -58,7 +58,8 @@ class ArcSprite;
 class ArcLabel;
 class ArcClippedSprite;
 class ArcRect;
+class ArcVariant;
 
-typedef std::function<void(const std::any&)> CallbackType;
+typedef std::function<void(const ArcVariant&)> CallbackType;
 
 #endif // ENGINEDEF_H
