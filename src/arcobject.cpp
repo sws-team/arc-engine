@@ -619,6 +619,8 @@ void ArcObject::setSize(const sf::Vector2f &size)
 
 void ArcObject::setSize(float x, float y)
 {
+	if (m_width == x && m_height == y)
+		return;
 	m_width = x, m_height = y;
 	updateOrigin();
 	updateSize();

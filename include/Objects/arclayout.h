@@ -29,6 +29,7 @@ public:
 
 	void updateSize() override;
 	void updateScale() override;
+	void updateOrigin() override;
 
 	bool skipDisabledElements() const;
 	void setSkipDisabledElements(bool skipDisabledElements);

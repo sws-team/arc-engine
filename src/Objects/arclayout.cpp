@@ -100,6 +100,13 @@ void ArcLayout::updateScale()
 		refreshChilds();
 }
 
+void ArcLayout::updateOrigin()
+{
+	ArcObject::updateOrigin();
+	if(m_autoSize)
+		refreshChilds();
+}
+
 bool ArcLayout::skipDisabledElements() const
 {
 	return m_skipDisabledElements;
