@@ -150,6 +150,7 @@ void PathObject::setPath(const std::vector<sf::Vector2f> &path)
 ZoomView::ZoomView(const std::string &name)
 	: ArcObject(name)
 {
+	setType(ArcEngine::OBJECT_TYPE::ZOOM_VIEW);
 	view.setSize(RESOLUTION);
 }
 
@@ -162,6 +163,11 @@ void ZoomView::setView(const sf::Vector2f &pos)
 void ZoomView::setView(const float x, const float y)
 {
 	setView(sf::Vector2f(x, y));
+}
+
+sf::Vector2f ZoomView::viewPos() const
+{
+	return view.getCenter();
 }
 
 void ZoomView::zoomIn()

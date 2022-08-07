@@ -32,6 +32,7 @@ namespace ArcEngine
 		PATH,
 		CHECKBOX,
 		SCROLL_AREA,
+		ZOOM_VIEW,
 	};
 
 	static constexpr int undefType = -1;

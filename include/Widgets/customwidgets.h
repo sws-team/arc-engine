@@ -55,6 +55,7 @@ public:
 
 	void setView(const sf::Vector2f& pos);
 	void setView(const float x, const float y);
+	sf::Vector2f viewPos() const;
 
 	void zoomIn();
 	void zoomOut();

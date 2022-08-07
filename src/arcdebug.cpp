@@ -297,17 +297,16 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 
 			if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
 				{//Position
-					float x = obj->x();
-					float y = obj->y();
+					sf::Vector2f pos = obj->pos();
 					ImGui::TextUnformatted("Position");
-					ImGui::DragFloat("##PositionX", &x);
+					ImGui::DragFloat("##PositionX", &pos.x);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("X");
-					ImGui::DragFloat("##PositionY", &y);
+					ImGui::DragFloat("##PositionY", &pos.y);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Y");
-					if (x != obj->x() || y != obj->y())
-						obj->setPos(sf::Vector2f(x, y));
+					if (pos.x != obj->x() || pos.y != obj->y())
+						obj->setPos(pos);
 				}
 				{//Origin
 					float x = obj->originX();
@@ -719,6 +718,25 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			}
 		}
 			break;
+		case ArcEngine::ZOOM_VIEW:
+		{
+			if (ImGui::CollapsingHeader("ZoomView", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ZoomView *zoomView = static_cast<ZoomView*>(obj);
+				{//View pos
+					sf::Vector2f pos = zoomView->viewPos();
+					ImGui::TextUnformatted("View position");
+					ImGui::DragFloat("##ViewPosX", &pos.x);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("X");
+					ImGui::DragFloat("##ViewPosY", &pos.y);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Y");
+					if (pos.x != obj->x() || pos.y != obj->y())
+						zoomView->setView(pos);
+				}
+			}
+		}
+			break;
 		default:
 			break;
 		}
@@ -727,49 +745,20 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 	drawInheritObject(ArcEngine::OBJECT, obj);
 	switch (obj->type())
 	{
-	case ArcEngine::SPRITE:
-		drawInheritObject(ArcEngine::SPRITE, obj);
-		break;
-	case ArcEngine::LABEL:
-		drawInheritObject(ArcEngine::LABEL, obj);
-		break;
 	case ArcEngine::BUTTON:
 		drawInheritObject(ArcEngine::SPRITE, obj);
-		drawInheritObject(ArcEngine::BUTTON, obj);
 		break;
 	case ArcEngine::ANIMATED_SPRITE:
 		drawInheritObject(ArcEngine::SPRITE, obj);
-		drawInheritObject(ArcEngine::ANIMATED_SPRITE, obj);
-		break;
-	case ArcEngine::SKELETON_ANIMATION:
-		drawInheritObject(ArcEngine::SKELETON_ANIMATION, obj);
-		break;
-	case ArcEngine::LAYOUT:
-		drawInheritObject(ArcEngine::LAYOUT, obj);
-		break;
-	case ArcEngine::RECT:
-		drawInheritObject(ArcEngine::RECT, obj);
-		break;
-	case ArcEngine::POLYGON:
-		drawInheritObject(ArcEngine::POLYGON, obj);
-		break;
-	case ArcEngine::NAVIGATION_MAP:
-		drawInheritObject(ArcEngine::NAVIGATION_MAP, obj);
-		break;
-	case ArcEngine::PATH:
-		drawInheritObject(ArcEngine::PATH, obj);
-		break;
-	case ArcEngine::SCROLL_AREA:
-		drawInheritObject(ArcEngine::SCROLL_AREA, obj);
 		break;
 	case ArcEngine::CHECKBOX:
 		drawInheritObject(ArcEngine::SPRITE, obj);
 		drawInheritObject(ArcEngine::BUTTON, obj);
-		drawInheritObject(ArcEngine::CHECKBOX, obj);
 		break;
 	default:
 		break;
 	}
+	drawInheritObject(obj->type(), obj);
 #endif
 }
 
@@ -809,6 +798,15 @@ std::string ArcDebug::typeToName(ArcEngine::OBJECT_TYPE type)
 		break;
 	case ArcEngine::PATH:
 		return "Way points";
+		break;
+	case ArcEngine::CHECKBOX:
+		return "Checkbox";
+		break;
+	case ArcEngine::SCROLL_AREA:
+		return "Scroll area";
+		break;
+	case ArcEngine::ZOOM_VIEW:
+		return "Zoom view";
 		break;
 	default:
 		break;
