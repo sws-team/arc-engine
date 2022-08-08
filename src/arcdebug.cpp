@@ -758,7 +758,8 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 	default:
 		break;
 	}
-	drawInheritObject(obj->type(), obj);
+	if (obj->type() != ArcEngine::OBJECT)
+		drawInheritObject(obj->type(), obj);
 #endif
 }
 
