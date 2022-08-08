@@ -23,6 +23,7 @@ public:
 	bool isDestroyed() const;
 	bool hasChild(ArcObject* object, bool recursively = true) const;
 	ArcObject *findChild(const std::string& name, bool recursively = true);
+	ArcObject *findChildPath(const std::string& path);
 	ArcObject *parent() const;
 	std::vector<ArcObject*> childs() const;
 	std::string path() const;

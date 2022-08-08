@@ -4,6 +4,7 @@
 #include "arcaction.h"
 #include "arcproperties.h"
 #include <arcvariant.h>
+#include <utils.h>
 
 ArcObject::ArcObject(const std::string &name)
 	: m_name(name)
@@ -101,6 +102,25 @@ ArcObject *ArcObject::findChild(const std::string &name, bool recursively)
 		}
 	}
 	return nullptr;
+}
+
+ArcObject *ArcObject::findChildPath(const std::string &path)
+{
+	const std::vector<std::string> names = Utils::split(path, "/");
+	if (names.empty())
+		return nullptr;
+	ArcObject *obj = this;
+	for (unsigned i = 0; i < names.size(); ++i) {
+		const std::string name = names.at(i);
+		if (i == 0) {
+			if (name != obj->name()) {
+				return nullptr;
+			}
+			continue;
+		}
+		obj = obj->findChild(name, false);
+	}
+	return obj;
 }
 
 ArcObject *ArcObject::parent() const

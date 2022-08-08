@@ -3,6 +3,7 @@
 #include "navigationmap.h"
 #include "customwidgets.h"
 #include <arclabel.h>
+#include <managers.h>
 
 ArcAction::ArcAction(float time)
 	: m_time(time)
@@ -13,8 +14,6 @@ ArcAction::ArcAction(float time)
 void ArcAction::update()
 {
 	if (!m_started) {
-		m_started = true;
-		timer.reset();
 		started();
 	}
 	if (m_time == -1) {
@@ -33,7 +32,10 @@ void ArcAction::update()
 
 void ArcAction::started()
 {
-
+	m_started = true;
+	m_completed = false;
+	timer.reset();
+	Engine::Instance().notificationManager()->notify(NotificationManager::ACTION_STARTED, m_name);
 }
 
 void ArcAction::process(float progress)
@@ -46,6 +48,7 @@ void ArcAction::finished()
 	if (completedFunc != nullptr)
 		completedFunc();
 	m_completed = true;
+	Engine::Instance().notificationManager()->notify(NotificationManager::ACTION_FINISHED, m_name);
 }
 
 void ArcAction::setCompletedFunc(const std::function<void ()> &func)
@@ -53,9 +56,19 @@ void ArcAction::setCompletedFunc(const std::function<void ()> &func)
 	completedFunc = func;
 }
 
+void ArcAction::setName(const std::string &name)
+{
+	m_name = name;
+}
+
 bool ArcAction::isCompleted() const
 {
 	return m_completed;
+}
+
+std::string ArcAction::name() const
+{
+	return m_name;
 }
 
 ActionWithObject::ActionWithObject(float time, ArcObject *object)
@@ -107,29 +120,30 @@ OrderAction::OrderAction()
 
 OrderAction::~OrderAction()
 {
-	while (!actions.empty()) {
-		delete currentAction;
-		actions.pop();
-		currentAction = actions.front();
-	}
+	for(ArcAction* action : actions)
+		delete action;
+	actions.clear();
 }
 
 void OrderAction::addAction(ArcAction *action)
 {
-	actions.push(action);
+	actions.push_back(action);
 }
 
 void OrderAction::started()
 {
-	currentAction = nullptr;
-	if (!actions.empty())
-		nextAction();
+	currentAction = -1;
+	if (!actions.empty()) {
+		currentAction = 0;
+		actions.at(currentAction)->started();
+	}
+	ArcAction::started();
 }
 
 void OrderAction::process(float)
 {
 	auto checkFinished = [this]() {
-		if (actions.empty() && currentAction == nullptr) {
+		if (currentAction == static_cast<int>(actions.size())) {
 			finished();
 			return true;
 		}
@@ -137,20 +151,18 @@ void OrderAction::process(float)
 	};
 	if (checkFinished())
 		return;
-	currentAction->update();
-	if (currentAction->isCompleted()) {
-		delete currentAction;
-		currentAction = nullptr;
-		if (!checkFinished())
-			nextAction();
+	ArcAction *action = actions.at(currentAction);
+	action->update();
+	if (action->isCompleted()) {
+		if (!checkFinished()) {
+			currentAction++;
+			if (currentAction != static_cast<int>(actions.size())) {
+				actions.at(currentAction)->started();
+			}
+		}
 	}
 }
 
-void OrderAction::nextAction()
-{
-	currentAction = actions.front();
-	actions.pop();
-}
 
 FunctionAction::FunctionAction(float time)
 	: ArcAction(time)
@@ -225,19 +237,28 @@ RepeatAction::RepeatAction(ArcAction *action)
 
 RepeatAction::~RepeatAction()
 {
-	if (m_action != nullptr)
+	if (m_action != nullptr) {
+		finished();
 		delete m_action;
+	}
+}
+
+void RepeatAction::started()
+{
+	ArcAction::started();
+	if (m_action == nullptr)
+		return;
+	m_action->started();
 }
 
 void RepeatAction::process(float progress)
 {
-	if (m_action != nullptr)
-		m_action->process(progress);
-}
-
-void RepeatAction::finished()
-{
-	timer.reset();
+	if (m_action == nullptr)
+		return;
+	m_action->process(progress);
+	if (m_action->isCompleted()) {
+		started();
+	}
 }
 
 ChangePosAction::ChangePosAction(float time, ArcObject *object, const sf::Vector2f &targetPos)
@@ -250,6 +271,7 @@ ChangePosAction::ChangePosAction(float time, ArcObject *object, const sf::Vector
 void ChangePosAction::started()
 {
 	m_startPos = m_object->pos();
+	ArcAction::started();
 }
 
 void ChangePosAction::process(float progress)
@@ -320,6 +342,7 @@ void WayPointsMoveAction::started()
 {
 	clock.restart();
 	resetPath(false);
+	ArcAction::started();
 }
 
 void WayPointsMoveAction::finished()
@@ -452,6 +475,7 @@ void ChangeScaleAction::started()
 	}
 	increase.first = m_startScale.x < m_targetScale.x;
 	increase.second = m_startScale.y < m_targetScale.y;
+	ArcAction::started();
 }
 
 void ChangeScaleAction::process(float progress)
@@ -472,16 +496,17 @@ void ChangeScaleAction::finished()
 }
 
 TypeTextAction::TypeTextAction(float time, ArcObject *object, const sf::String &text)
-	: ActionWithObject(time, object),
+	: ActionWithObject(0, object),
 	  m_text(text)
 {
-
+	m_time = time * m_text.getSize();
 }
 
 TypeTextAction::TypeTextAction(float time, ArcObject *object)
-	: ActionWithObject(time, object)
+	: ActionWithObject(0, object)
 {
 	m_text = static_cast<ArcLabel*>(m_object)->text();
+	m_time = time * m_text.getSize();
 }
 
 void TypeTextAction::process(float progress)

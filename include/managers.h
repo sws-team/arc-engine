@@ -15,6 +15,11 @@ class ArcObject;
 class MainWindow;
 class DebugSection;
 
+namespace ArcEngine {
+ArcObject *findChild(const std::string& name);
+ArcObject *findChildPath(const std::string& path);
+}
+
 class Manager
 {
 public:
@@ -373,7 +378,10 @@ public:
 		WINDOW_CLOSING,
 		WINDOW_CLOSED,
 		//button
-		BUTTON_CLICKED
+		BUTTON_CLICKED,
+
+		ACTION_STARTED,
+		ACTION_FINISHED,
 	};
 
 	void notify(NotificationType type, const ArcVariant& value);

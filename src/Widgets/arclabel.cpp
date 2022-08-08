@@ -189,73 +189,20 @@ void ArcLabel::updateAutoSize()
 					return;
 				}
 			}
+			int lastSpace = 0;
+			sf::String resultStr;
+			for (unsigned i = 0; i < m_str.getSize(); ++i) {
+				const wchar_t current = m_str[i];
+				if (current == ' ') lastSpace = i;
+				resultStr += current;
 
-			auto getSeparators = [](const sf::String& str, char ch) -> std::vector<size_t> {
-				std::vector<size_t> spaces;
-				size_t pos = 0;
-				while(true) {
-					const size_t space = str.find(ch, pos);
-					if (space == sf::String::InvalidPos)
-						break;
-					pos = space + 1;
-					spaces.push_back(space);
-				}
-				return spaces;
-			};
-
-			struct SetTextResult {
-				float width = 0;
-				sf::String text;
-				size_t linesCount = 0;
-				int pos = -1;
-			};
-			auto getWidth = [this](const size_t space, const sf::String& text, char ch) -> SetTextResult {
-				SetTextResult result;
-				result.text = text;
-				result.text.replace(space, 1, ch);
-				m_text.setString(result.text);
-				result.width = m_text.getLocalBounds().width;
-				return result;
-			};
-
-			sf::String resultText = m_str;
-			SetTextResult minResult;
-			minResult.width = RESOLUTIONF.x;
-
-			std::vector<size_t> spaces = getSeparators(m_str, ' ');
-			const size_t lineCount = std::min(static_cast<size_t>(m_maxLines - 1), spaces.size());
-			for (size_t line = 0; line < lineCount; ++line) {
-				if (m_text.getLocalBounds().width <= size().x) {
-					break;
-				}
-				for (int pos = spaces.size() - 1; pos >= 0; --pos) {
-					const size_t space = spaces.at(pos);
-					const SetTextResult setTextResult = getWidth(space, resultText, '\n');
-					if (setTextResult.width <= minResult.width) {
-						minResult = setTextResult;
-						m_text.setString(minResult.text);
-						if (m_text.getLocalBounds().width <= size().x) {
-							break;
-						}
-					}
-				}
-				resultText = minResult.text;
-			}
-
-			spaces = getSeparators(minResult.text, '\n');
-			for (unsigned pos = 0; pos < spaces.size(); ++pos) {
-				const size_t space = spaces.at(pos);
-				const SetTextResult setTextResult = getWidth(space, resultText, ' ');
-				if (setTextResult.width <= minResult.width) {
-					minResult = setTextResult;
-					m_text.setString(minResult.text);
-					if (m_text.getLocalBounds().width <= size().x) {
-						break;
-					}
+				//checkwidth
+				m_text.setString(resultStr);
+				if (m_text.getLocalBounds().width > this->width()) {
+					resultStr.replace(lastSpace, 1, '\n');
 				}
 			}
-			resultText = minResult.text;
-			m_text.setString(resultText);
+			m_text.setString(resultStr);
 			lastMultilineSearch.str = m_str;
 			lastMultilineSearch.width = width();
 			setHeight(m_text.getGlobalBounds().height);

@@ -22,6 +22,17 @@
 #include <cstring>
 
 #include "SFML/SFMLFactory.h"
+namespace ArcEngine {
+	ArcObject *findChild(const std::string &name) {
+		ArcScene *scene = Engine::Instance().sceneManager()->currentScene();
+		return scene->findChild(name, true);
+	}
+
+	ArcObject *findChildPath(const std::string &path) {
+		ArcScene *scene = Engine::Instance().sceneManager()->currentScene();
+		return scene->findChildPath(path);
+	}
+}
 
 void Manager::reset()
 {
@@ -828,6 +839,8 @@ const std::unordered_map<NotificationManager::NOTIFICATION_TYPE, std::string> No
 	{ WINDOW_CLOSING, "window closing" },
 	{ WINDOW_CLOSED, "window closed" },
 	{ BUTTON_CLICKED, "button clicked" },
+	{ ACTION_STARTED, "action started" },
+	{ ACTION_FINISHED, "action finished" },
 };
 
 NotificationManager::NotificationManager()

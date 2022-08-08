@@ -22,6 +22,8 @@ namespace Utils {
 	ImVec4 convertFromColor(const sf::Color& color);
 #endif
 	sf::Vector2f getPosition(ArcObject* from, ArcObject* to);
+
+	std::vector<std::string> split(const std::string& str, const std::string& delimiter);
 }
 
 #endif // UTILS_H

@@ -18,13 +18,16 @@ public:
 	virtual void finished();
 
 	void setCompletedFunc(const std::function<void()>& func);
+	void setName(const std::string& name);
 
 	bool isCompleted() const;
+	std::string name() const;
 
 protected:
 	float m_time = 0;
 	std::function<void()> completedFunc = nullptr;
 	Timer timer;
+	std::string m_name;
 private:
 	bool m_started = false;
 	bool m_completed = false;
@@ -64,9 +67,21 @@ public:
 	void process(float) override;
 
 private:
-	std::queue<ArcAction*> actions;
-	ArcAction *currentAction = nullptr;
-	void nextAction();
+	std::vector<ArcAction*> actions;
+	int currentAction = -1;
+};
+
+class RepeatAction : public ArcAction
+{
+public:
+	RepeatAction(ArcAction *action);
+	~RepeatAction() override;
+
+	void started() override;
+	void process(float progress) override;
+
+protected:
+	ArcAction *m_action = nullptr;
 };
 
 class FunctionAction : public ArcAction
@@ -112,18 +127,6 @@ public:
 	FadeOutAction(float time, ArcObject *object);
 
 	float alpha(float progress) const;
-};
-
-class RepeatAction : public ArcAction
-{
-	RepeatAction(ArcAction *action);
-	~RepeatAction() override;
-
-	void process(float progress) override;
-	void finished() override;
-
-protected:
-	ArcAction *m_action = nullptr;
 };
 
 class ChangePosAction : public ActionWithObject
