@@ -90,6 +90,7 @@ public:
 	void addTranslation(const std::string& name, const std::map<int, sf::String> &translations);
 
 	sf::String translate(TranslationType id) const;
+	sf::String translate(TranslationType id, const std::string& language) const;
 	std::vector<sf::String> getAvaliableLanguageNames() const;
 	void setCurrentLanguage(const std::string& lang);
 	void setCurrentLanguageByName(const sf::String& name);

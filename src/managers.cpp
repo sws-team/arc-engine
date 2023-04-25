@@ -213,7 +213,12 @@ void TranslationsManager::addTranslation(const std::string &name, const std::map
 
 sf::String TranslationsManager::translate(TranslationType id) const
 {
-	auto &translations = langs.at(currentLangName);
+	return translate(id, currentLangName);
+}
+
+sf::String TranslationsManager::translate(TranslationType id, const std::string &language) const
+{
+	auto &translations = langs.at(language);
 	if (auto it = translations.find(id); it == translations.end()) {
 		assert("Missing text!");
 		return sf::String();
