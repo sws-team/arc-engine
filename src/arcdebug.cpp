@@ -75,6 +75,7 @@ void ArcDebug::update()
 
 bool ArcDebug::eventFilter(sf::Event *event)
 {
+#ifdef ARC_DEBUG
 	if (event->type == sf::Event::KeyPressed && event->key.code == sf::Keyboard::F3) {
 		visible = !visible;
 	}
@@ -120,11 +121,12 @@ bool ArcDebug::eventFilter(sf::Event *event)
 			}
 		}
 	}
-#ifdef ARC_DEBUG
 	ImGui::SFML::ProcessEvent(*static_cast<sf::RenderWindow*>(Engine::Instance().window()), *event);
-#endif
 	ImGuiIO& io = ImGui::GetIO();
 	return io.WantCaptureMouse || io.WantCaptureKeyboard;
+#else
+	return false;
+#endif
 }
 
 void ArcDebug::addSection(DebugSection *section)

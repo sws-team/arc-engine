@@ -9,8 +9,6 @@
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/System/String.hpp"
 
-#ifdef ARC_DEBUG
-
 #ifdef SFML_SYSTEM_ANDROID
 #define log_value(x) __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", std::string(x).c_str());
 #endif
@@ -96,7 +94,5 @@ public:
 
 #undef ARC_ARG_START
 #undef ARC_ARG_END
-
-#endif // ARC_DEBUG
 
 #endif // ARCLOG_H
