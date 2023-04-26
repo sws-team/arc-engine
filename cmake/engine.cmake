@@ -62,6 +62,7 @@ set(ARC_ENGINE_HEADERS
     ${ARC_ENGINE_DIR}/include/utils.h
     ${ARC_ENGINE_DIR}/include/arcproperties.h
     ${ARC_ENGINE_DIR}/include/arcvariant.h
+    ${ARC_ENGINE_DIR}/include/tutorial.h
     )
 
 set(ARC_ENGINE_SOURCES
@@ -98,6 +99,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/utils.cpp
     ${ARC_ENGINE_DIR}/src/arcproperties.cpp
     ${ARC_ENGINE_DIR}/src/arcvariant.cpp
+    ${ARC_ENGINE_DIR}/src/tutorial.cpp
 
     ${RESOURCES_SOURCES}
     )

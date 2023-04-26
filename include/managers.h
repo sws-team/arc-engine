@@ -289,6 +289,8 @@ public:
 	void addDebugSection(DebugSection *section);
 	void removeDebugSection(DebugSection *section);
 
+	void addNotificationCallback(const std::function<void(const std::string&, const ArcVariant&)>& callback);
+
 	virtual void globalCallbacks();
 	virtual void clear();
 	virtual bool globalEventFilter(sf::Event* event);
@@ -302,6 +304,8 @@ protected:
 	MainWindow *mw = nullptr;
 	ArcDebug *debug = nullptr;
 	bool m_resourcesLoaded;
+
+	std::vector<std::function<void(const std::string&, const ArcVariant&)>> notificationCallbacks;
 };
 
 class FilesManager : public Manager

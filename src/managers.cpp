@@ -668,6 +668,11 @@ void Options::removeDebugSection(DebugSection *section)
 	debug->removeSection(section);
 }
 
+void Options::addNotificationCallback(const std::function<void (const std::string &, const ArcVariant &)> &callback)
+{
+	notificationCallbacks.push_back(callback);
+}
+
 void Options::globalCallbacks()
 {
 	Engine::Instance().resourceManager()->update();
@@ -691,7 +696,10 @@ void Options::globalDraw(sf::RenderTarget *target)
 
 void Options::globalNotifications(const std::string &name, const ArcVariant &value)
 {
-
+	for(const auto &notificationCallback : notificationCallbacks) {
+		if (notificationCallback != nullptr)
+			notificationCallback(name, value);
+	}
 }
 
 bool Options::isResourcesLoaded() const
