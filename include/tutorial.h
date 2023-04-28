@@ -20,6 +20,17 @@ public:
 };
 #endif
 
+//block node(s)
+#define BLOCK(x, y) x->block(y);
+//add to garbage collector
+#define CREATED(x, y, z) x->created(y, z);
+//garbage collect all
+#define GC_ALL(x) x->garbageCollect();
+//remove from garbage collector
+#define GC(x, y) x->garbageCollect(y);
+// unblock all
+#define UNBLOCK(x) x->unblock();
+
 class Tutorial : public ArcObject
 {
 public:
@@ -55,6 +66,15 @@ public:
 	void load(const rapidjson::Value& data);
 
 	bool isActive() const;
+
+
+	//controls
+	void block(const std::vector<std::string>& blocking);
+	void block(const std::string& blocking);
+	void created(const std::string &name, ArcObject *object);
+	void garbageCollect(const std::string &name);
+	void garbageCollect();
+	void unblock();
 
 protected:
 	bool eventFilter(sf::Event *event) override;

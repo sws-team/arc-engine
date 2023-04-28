@@ -3,27 +3,11 @@
 #include "gameoptions.h"
 #include "managers.h"
 #include <arclabel.h>
-#include "gamemanagers.h"
 #include <arcaction.h>
 
 #ifdef ARC_DEBUG
 #include <imgui.h>
 #endif
-
-//add to garbage collector
-#define CREATED(x, y) gc.insert(std::make_pair(x, y));
-//remove from garbage collector
-#define GC(x) \
-	if (auto it = gc.find(x); it != gc.end()) {\
-		it->second->destroy();\
-		gc.erase(it);\
-	}
-//block one node
-#define BLOCK(x) blocking = {x};
-//block nodes
-#define BLOCK_LIST(x) blocking = x;
-//unblock all
-#define UNBLOCK blocking.clear();
 
 Tutorial::Tutorial()
 	: ArcObject("Tutorial")
@@ -49,6 +33,42 @@ Tutorial::~Tutorial()
 bool Tutorial::isActive() const
 {
 	return currentTutorial != nullptr;
+}
+
+void Tutorial::block(const std::vector<std::string> &blocking)
+{
+	this->blocking = blocking;
+}
+
+void Tutorial::block(const std::string &blocking)
+{
+	this->blocking = { blocking };
+}
+
+void Tutorial::created(const std::string& name, ArcObject *object)
+{
+	gc.insert(std::make_pair(name, object));
+}
+
+void Tutorial::garbageCollect(const std::string& name)
+{
+	if (auto it = gc.find(name); it != gc.end()) {
+		it->second->destroy();
+		gc.erase(it);
+	}
+}
+
+void Tutorial::garbageCollect()
+{
+	for(auto it = gc.begin(); it != gc.end(); it++) {
+		it->second->destroy();
+	}
+	gc.clear();
+}
+
+void Tutorial::unblock()
+{
+	blocking.clear();
 }
 
 bool Tutorial::eventFilter(sf::Event *event)
