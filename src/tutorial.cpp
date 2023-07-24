@@ -158,7 +158,7 @@ void Tutorial::completeCurrent()
 	currentTutorial = nullptr;
 	OPTIONS->save();
 }
-
+#ifdef ARC_DEBUG
 TutorialDebug::TutorialDebug()
 	: DebugSection("Tutorial")
 {
@@ -201,3 +201,4 @@ void TutorialDebug::draw()
 		}
 	}
 }
+#endif

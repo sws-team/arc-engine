@@ -45,11 +45,24 @@ public:
 	virtual bool deleteFile(const std::string& fileName) {
 		return true;
 	}
+};
 
-private:
+class NoPlatform : public PlatformInterface
+{
+public:
+	bool saveFile(const std::string& fileName, const std::string& data) override {
+		return true;
+	}
+	const std::string readFile(const std::string& fileName) override {
+		return std::string();
+	}
+	bool deleteFile(const std::string& fileName) override {
+		return true;
+	}
 };
 
 class GAME_PLATFORM;
+
 class GamePlatform
 {
 public:

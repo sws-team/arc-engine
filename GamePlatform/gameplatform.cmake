@@ -1,6 +1,8 @@
 option(STEAM_PLATFORM ON)
 option(GOOGLE_PLAY_PLATFORM OFF)
 
+add_definitions(-DGAME_PLATFORM=NoPlatform)
+
 set(GAMEPLATFORM_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/gameplatform.cpp
     )
