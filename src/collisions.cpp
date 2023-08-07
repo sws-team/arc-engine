@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <iostream>
+#include "arcbutton.h"
 #include "collisions.h"
 
 #include "arcsprite.h"
@@ -272,6 +273,11 @@ bool Intersection::contains(ArcObject *object, const sf::Vector2f &pos)
 		ArcRect *rectObject = static_cast<ArcRect*>(object);
 		return contains(rectObject->rect, pos, rectObject->m_transform);
 	}
+	case ArcEngine::BUTTON:
+	{
+		ArcButton *button = static_cast<ArcButton*>(object);
+		return contains(button->sprite, pos, button->m_transform);
+	}
 	default:
 #ifdef ARC_DEBUG
 		return contains(object->debugRect, pos, object->m_transform);
@@ -295,6 +301,11 @@ bool Intersection::intersects(ArcObject *object, const sf::FloatRect &rect)
 	{
 		ArcRect *rectObject = static_cast<ArcRect*>(object);
 		return intersects(rectObject->rect, rect);
+	}
+	case ArcEngine::BUTTON:
+	{
+		ArcButton *button = static_cast<ArcButton*>(object);
+		return intersects(button->sprite, rect);
 	}
 	default:
 #ifdef ARC_DEBUG
