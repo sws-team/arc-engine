@@ -1,6 +1,7 @@
 #include "arcdebug.h"
-#include "engine.h"
 #include "managers.h"
+#ifdef ARC_DEBUG
+#include "engine.h"
 #include "mainwindow.h"
 #include "utils.h"
 #include "collisions.h"
@@ -15,10 +16,9 @@
 #include "arcrect.h"
 #include "navigationmap.h"
 #include "customwidgets.h"
-#include <arcscrollarea.h>
-#include <arccheckbox.h>
+#include "arcscrollarea.h"
+#include "arccheckbox.h"
 
-#ifdef ARC_DEBUG
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "imconfig-SFML.h"

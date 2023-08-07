@@ -1,7 +1,6 @@
 #include "arcsprite.h"
 #include "engine.h"
 #include "managers.h"
-#include "utils.h"
 
 ArcSprite::ArcSprite(const std::string &name)
 	: ArcObject(name)

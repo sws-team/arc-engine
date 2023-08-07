@@ -1,8 +1,4 @@
 #include "menuscene.h"
-#include "engine.h"
-#include "managers.h"
-#include "enginedef.h"
-#include "mainwindow.h"
 #include <arclayout.h>
 #include <arcbutton.h>
 

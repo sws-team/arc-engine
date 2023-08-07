@@ -1,9 +1,9 @@
 #include "introscene.h"
-#include "engine.h"
-#include "managers.h"
-#include "enginedef.h"
-#include "arcaction.h"
-#include "arcsprite.h"
+#include <engine.h>
+#include <managers.h>
+#include <enginedef.h>
+#include <arcaction.h>
+#include <arcsprite.h>
 
 IntroScene::IntroScene()
 	: ArcScene("IntroScene")

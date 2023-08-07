@@ -1,6 +1,6 @@
 #include "aboutscene.h"
-#include "engine.h"
-#include "managers.h"
+#include <engine.h>
+#include <managers.h>
 
 const sf::Vector2f AboutScene::RECT_SIZE = sf::Vector2f(900, 600);
 
