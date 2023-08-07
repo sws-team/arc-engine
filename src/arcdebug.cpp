@@ -1,6 +1,6 @@
 #include "arcdebug.h"
-#include "managers.h"
 #ifdef ARC_DEBUG
+#include "managers.h"
 #include "engine.h"
 #include "mainwindow.h"
 #include "utils.h"
