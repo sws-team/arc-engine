@@ -3,7 +3,7 @@
 #include "gameoptions.h"
 #include "managers.h"
 #include <arclabel.h>
-#include <arcaction.h>
+#include <ArcAction>
 
 #ifdef ARC_DEBUG
 #include <imgui.h>

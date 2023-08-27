@@ -9,7 +9,7 @@ ArcAnimatedSprite::ArcAnimatedSprite(const std::string& name)
 void ArcAnimatedSprite::update()
 {
 	ArcSprite::update();
-	if (timer.check(m_animationSpeed)) {
+	if (timer.isTimeout(m_animationSpeed)) {
 		nextFrame();
 	}
 }

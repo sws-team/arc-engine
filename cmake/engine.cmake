@@ -22,6 +22,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/../Resources/arcresources.cmake)
 
 set(ARC_ENGINE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
+include_directories(${ARC_ENGINE_DIR}/headers)
 include_directories(${ARC_ENGINE_DIR}/include)
 include_directories(${ARC_ENGINE_DIR}/include/Scenes)
 include_directories(${ARC_ENGINE_DIR}/include/Widgets)
@@ -58,7 +59,7 @@ set(ARC_ENGINE_HEADERS
     ${ARC_ENGINE_DIR}/include/mainwindow.h
     ${ARC_ENGINE_DIR}/include/collisions.h
     ${ARC_ENGINE_DIR}/include/engine.h
-    ${ARC_ENGINE_DIR}/include/timer.h
+    ${ARC_ENGINE_DIR}/include/arctimer.h
     ${ARC_ENGINE_DIR}/include/utils.h
     ${ARC_ENGINE_DIR}/include/arcproperties.h
     ${ARC_ENGINE_DIR}/include/arcvariant.h
@@ -95,7 +96,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/mainwindow.cpp
     ${ARC_ENGINE_DIR}/src/collisions.cpp
     ${ARC_ENGINE_DIR}/src/engine.cpp
-    ${ARC_ENGINE_DIR}/src/timer.cpp
+    ${ARC_ENGINE_DIR}/src/arctimer.cpp
     ${ARC_ENGINE_DIR}/src/utils.cpp
     ${ARC_ENGINE_DIR}/src/arcproperties.cpp
     ${ARC_ENGINE_DIR}/src/arcvariant.cpp

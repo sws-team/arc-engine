@@ -62,24 +62,20 @@ void AboutScene::deinit()
 
 void AboutScene::update()
 {
-	if (timer.check(CREDITS_SPEED))
-	{
-		for(Creator& creator : creators)
-		{
+	if (timer.isTimeout(CREDITS_SPEED)) {
+		for(Creator& creator : creators) {
 			creator.text.setPosition(creator.text.getPosition().x,
 									 creator.text.getPosition().y - CREDITS_STEP);
 		}
 	}
-	for(Creator& creator : creators)
-	{
+	for(Creator& creator : creators) {
 		if (rect.getGlobalBounds().intersects(creator.text.getGlobalBounds()))
 			creator.visible = true;
 		else
 			creator.visible = false;
 	}
 	bool notFinished = false;
-	for(const Creator& creator : creators)
-	{
+	for(const Creator& creator : creators) {
 		if (creator.visible && !started)
 			started = true;
 		notFinished = notFinished || creator.visible;

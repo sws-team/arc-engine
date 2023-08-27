@@ -20,11 +20,11 @@ void ArcAction::update()
 		process(-1);
 		return;
 	}
-	if (timer.check(m_time)) {
+	if (timer.isTimeout(m_time)) {
 		finished();
 		return;
 	}
-	float progress = static_cast<float>(timer.getElapsedMilliseconds()) / m_time;
+	float progress = static_cast<float>(timer.elapsed()) / m_time;
 	if (progress > 1.f)
 		progress = 1.f;
 	process(progress);
@@ -350,7 +350,7 @@ void WayPointsMoveAction::finished()
 	if (!step()) {
 		return;
 	}
-	if (resetTime != -1 && resetTimer.check(resetTime)) {
+	if (resetTime != -1 && resetTimer.isTimeout(resetTime)) {
 		if (!resetPath())
 			return;
 		resetTimer.reset();

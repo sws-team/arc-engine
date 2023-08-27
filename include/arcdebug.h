@@ -1,9 +1,8 @@
 #ifndef ARCDEBUG_H
 #define ARCDEBUG_H
 
-#include "stdheader.h"
-#include "enginedef.h"
-#include "timer.h"
+#include <enginedef.h>
+#include <ArcTimer>
 
 class ArcObject;
 
@@ -24,7 +23,7 @@ private:
 class ArcDebug
 {
 public:
-	ArcDebug();
+	ArcDebug() = default;
 	void setObject(ArcObject* object);
 	void draw(sf::RenderTarget *target);
 	void init();
@@ -44,7 +43,7 @@ private:
 	struct {
 		sf::Clock clock;
 		int value = 0;
-		Timer updateTimer;
+		ArcTimer updateTimer;
 	} FPS;
 
 	static ArcObject *selectedObject;

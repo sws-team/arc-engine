@@ -2,7 +2,7 @@
 #define ABOUTSCENE_H
 
 #include "arcscene.h"
-#include "timer.h"
+#include <ArcTimer>
 
 class AboutScene : public ArcScene
 {
@@ -35,7 +35,7 @@ private:
 	std::vector<Creator> creators;
 
 	sf::RectangleShape rect;
-	Timer timer;
+	ArcTimer timer;
 	static constexpr float CREDITS_SPEED = 50;
 	static constexpr float CREDITS_STEP = 3;
 	SceneType m_backState;

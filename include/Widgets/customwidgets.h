@@ -17,14 +17,6 @@ private:
 	unsigned m_sectors = 100;
 };
 
-class CustomWidgets
-{
-public:
-	static ArcObject* createLoadingIcon();
-private:
-	CustomWidgets();
-};
-
 class PathObject : public ArcObject
 {
 public:

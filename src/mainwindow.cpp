@@ -2,7 +2,7 @@
 #include "engine.h"
 #include "managers.h"
 #include "arcwindow.h"
-#include "timer.h"
+#include <ArcTimer>
 #include <arcscene.h>
 #include <arcvariant.h>
 

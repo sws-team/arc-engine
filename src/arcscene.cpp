@@ -1,7 +1,7 @@
 #include "arcscene.h"
 #include "engine.h"
 #include "managers.h"
-#include "arcsprite.h"
+#include <ArcSprite>
 
 ArcScene::ArcScene(const std::string &name)
 	: ArcObject(name)

@@ -1,9 +1,8 @@
 #ifndef ARCANIMATEDSPRITE_H
 #define ARCANIMATEDSPRITE_H
 
-#include "stdheader.h"
 #include "arcsprite.h"
-#include "timer.h"
+#include <ArcTimer>
 
 class ArcAnimatedSprite : public ArcSprite
 {
@@ -35,7 +34,7 @@ public:
 protected:
 	void nextFrame();
 private:
-	Timer timer;
+	ArcTimer timer;
 	float m_animationSpeed = 0;
 	int m_frameCount = 0;
 	int m_rowCount = 0;

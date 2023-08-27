@@ -1,7 +1,6 @@
 #ifndef ARCPROPERTIES_H
 #define ARCPROPERTIES_H
 
-#include "stdheader.h"
 #include "enginedef.h"
 
 class ArcProperty

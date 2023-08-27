@@ -1,18 +1,12 @@
 #include "customwidgets.h"
-#include "arcsprite.h"
+#include <ArcSprite>
 #include "engine.h"
 #include "managers.h"
 #include "mainwindow.h"
 #ifdef ARC_DEBUG
 #include "imgui.h"
-#include "imgui-SFML.h"
 #include "imconfig-SFML.h"
 #endif
-
-CustomWidgets::CustomWidgets()
-{
-
-}
 
 CircleScale::CircleScale(const std::string &name, TextureType texture, unsigned sectors)
 	: ArcObject(name)

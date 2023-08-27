@@ -1,7 +1,7 @@
 #include "arcobject.h"
 #include "engine.h"
 #include "managers.h"
-#include "arcaction.h"
+#include <ArcAction>
 #include "arcproperties.h"
 #include <arcvariant.h>
 #include <utils.h>

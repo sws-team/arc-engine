@@ -1,7 +1,7 @@
 #include "closescene.h"
 #include <engine.h>
 #include <managers.h>
-#include <arcaction.h>
+#include <ArcAction>
 #include <arcsprite.h>
 
 CloseScene::CloseScene()

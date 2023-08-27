@@ -2,7 +2,6 @@
 #define CLOSESCENE_H
 
 #include "arcscene.h"
-#include "timer.h"
 
 class CloseScene : public ArcScene
 {

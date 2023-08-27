@@ -1,23 +1,23 @@
 #include "arcdebug.h"
 #ifdef ARC_DEBUG
-#include "managers.h"
-#include "engine.h"
-#include "mainwindow.h"
-#include "utils.h"
-#include "collisions.h"
-#include "arcobject.h"
-#include "arcsprite.h"
-#include "arcbutton.h"
-#include "arclabel.h"
-#include "arcanimatedsprite.h"
-#include "arcskeletonanimation.h"
-#include "arclayout.h"
-#include "arcpolygon.h"
-#include "arcrect.h"
-#include "navigationmap.h"
-#include "customwidgets.h"
-#include "arcscrollarea.h"
-#include "arccheckbox.h"
+#include <managers.h>
+#include <engine.h>
+#include <mainwindow.h>
+#include <utils.h>
+#include <collisions.h>
+#include <arcobject.h>
+#include <arcsprite.h>
+#include <arcbutton.h>
+#include <arclabel.h>
+#include <arcanimatedsprite.h>
+#include <arcskeletonanimation.h>
+#include <arclayout.h>
+#include <arcpolygon.h>
+#include <ArcRect>
+#include <navigationmap.h>
+#include <customwidgets.h>
+#include <arcscrollarea.h>
+#include <arccheckbox.h>
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -26,11 +26,6 @@
 #endif
 
 ArcObject *ArcDebug::selectedObject = nullptr;
-
-ArcDebug::ArcDebug()
-{
-
-}
 
 void ArcDebug::setObject(ArcObject *object)
 {
@@ -68,7 +63,7 @@ void ArcDebug::update()
 	ImGui::SFML::Update(*static_cast<sf::RenderWindow*>(Engine::Instance().window()), dt);
 #endif
 	const float currentTime = FPS.clock.restart().asSeconds();
-	if (FPS.updateTimer.check(ArcEngine::MSEC/5)) {
+	if (FPS.updateTimer.isTimeout(ArcEngine::MSEC/5)) {
 		FPS.value = 1.f / currentTime;
 	}
 }

@@ -2,7 +2,7 @@
 #define ARCACTION_H
 
 #include "enginedef.h"
-#include "timer.h"
+#include <ArcTimer>
 #include <queue>
 
 class ArcObject;
@@ -26,7 +26,7 @@ public:
 protected:
 	float m_time = 0;
 	std::function<void()> completedFunc = nullptr;
-	Timer timer;
+	ArcTimer timer;
 	std::string m_name;
 private:
 	bool m_started = false;
@@ -172,7 +172,7 @@ protected:
 	bool resetPath(bool run = true);
 	bool nextPosition(bool run = true);
 	void end();
-	Timer resetTimer;
+	ArcTimer resetTimer;
 	float resetTime = -1;
 	sf::Clock clock;
 	float commonTime = -1;

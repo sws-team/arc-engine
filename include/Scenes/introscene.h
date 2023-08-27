@@ -2,7 +2,6 @@
 #define INTROSCENE_H
 
 #include "arcscene.h"
-#include "timer.h"
 
 class IntroScene : public ArcScene
 {

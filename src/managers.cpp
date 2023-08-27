@@ -1,18 +1,17 @@
 #include "managers.h"
 #include "enginedef.h"
 #include "engine.h"
-#include "arcdebug.h"
-
+#include <ArcDebug>
 #include <mainwindow.h>
 #include <introscene.h>
 #include <aboutscene.h>
 #include <closescene.h>
 #include <gameplatform.h>
-#include <arcaction.h>
+#include <ArcAction>
 #include <arcvariant.h>
 
 #ifdef SFML_SYSTEM_WINDOWS
-#include "windows.h"
+#include <Windows.h>
 #include <shlobj.h>
 #endif
 #ifdef SFML_SYSTEM_LINUX
@@ -20,8 +19,8 @@
 #endif
 
 #include <cstring>
-
 #include "SFML/SFMLFactory.h"
+
 namespace ArcEngine {
 	ArcObject *findChild(const std::string &name) {
 		ArcScene *scene = Engine::Instance().sceneManager()->currentScene();
@@ -771,7 +770,7 @@ ResourcesManager::ResourcesManager()
 
 void ResourcesManager::update()
 {
-	if (timer.check(ArcEngine::FRAME_TIME))
+	if (timer.isTimeout(ArcEngine::FRAME_TIME))
 		skeletonAnimationFactory->update(ArcEngine::FRAME_TIME);
 }
 

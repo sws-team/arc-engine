@@ -8,8 +8,8 @@
 #include "arcbutton.h"
 #include "collisions.h"
 
-#include "arcsprite.h"
-#include "arcrect.h"
+#include <ArcSprite>
+#include <ArcRect>
 
 namespace Collision
 {

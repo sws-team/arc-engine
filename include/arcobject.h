@@ -1,7 +1,6 @@
 #ifndef ARCOBJECT_H
 #define ARCOBJECT_H
 
-#include "stdheader.h"
 #include "enginedef.h"
 #include <any>
 #include <queue>

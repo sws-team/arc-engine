@@ -4,10 +4,10 @@
 #include "stdheader.h"
 #include "engine.h"
 #include "enginedef.h"
-#include "timer.h"
-#include <arcwindow.h>
-#include <arcscene.h>
-#include <arcvariant.h>
+#include <ArcTimer>
+#include "arcwindow.h"
+#include "arcscene.h"
+#include "arcvariant.h"
 
 class ArcWindow;
 class ArcDebug;
@@ -364,7 +364,7 @@ public:
 	static std::string decode(const std::string& str);
 private:
 	dragonBones::SFMLFactory* skeletonAnimationFactory = nullptr;
-	Timer timer;
+	ArcTimer timer;
 };
 
 class NotificationManager : public Manager

@@ -1,7 +1,7 @@
 #include <arcscrollarea.h>
 #include <mainwindow.h>
 #include <engine.h>
-#include <arcrect.h>
+#include <ArcRect>
 
 ArcScrollArea::ArcScrollArea(const std::string &name)
 	: ArcObject(name)
