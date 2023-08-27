@@ -14,6 +14,10 @@ AboutScene::AboutScene()
 {
 	setBackground(TexturesManager::ABOUT_BACKGROUND);
 
+	static constexpr float CREDITS_SPEED = 50;
+	moveTextTimer.setInterval(CREDITS_SPEED);
+	moveTextTimer.setCallback(std::bind(&AboutScene::moveText, this));
+
 	const sf::Vector2f rectSize = sf::Vector2f(Engine::Instance().settingsManager()->getScaleFactor().x * RECT_SIZE.x,
 									   Engine::Instance().settingsManager()->getScaleFactor().y * RECT_SIZE.y);
 	rect.setSize(rectSize);
@@ -26,6 +30,7 @@ void AboutScene::init()
 {
 	ArcScene::init();
 	Engine::Instance().soundManager()->startBackgroundSound(SoundManager::CREDITS_MUSIC);
+	moveTextTimer.start();
 }
 
 void AboutScene::draw(sf::RenderTarget *const target)
@@ -62,12 +67,6 @@ void AboutScene::deinit()
 
 void AboutScene::update()
 {
-	if (timer.isTimeout(CREDITS_SPEED)) {
-		for(Creator& creator : creators) {
-			creator.text.setPosition(creator.text.getPosition().x,
-									 creator.text.getPosition().y - CREDITS_STEP);
-		}
-	}
 	for(Creator& creator : creators) {
 		if (rect.getGlobalBounds().intersects(creator.text.getGlobalBounds()))
 			creator.visible = true;
@@ -132,6 +131,15 @@ void AboutScene::setBorderColor(const sf::Color &color)
 void AboutScene::back()
 {
 	CHANGE_SCENE(m_backState);
+}
+
+void AboutScene::moveText()
+{
+	static constexpr float CREDITS_STEP = 3;
+	for(Creator& creator : creators) {
+		creator.text.setPosition(creator.text.getPosition().x,
+								 creator.text.getPosition().y - CREDITS_STEP);
+	}
 }
 
 AboutScene::Creator::Creator(const sf::String &str, const unsigned int charSize)

@@ -518,8 +518,7 @@ void SoundManager::pauseMusic()
 {
 	if (currentMusic != nullptr)
 		currentMusic->pause();
-	for(const std::pair<SoundType, SFX>& sfx : sounds)
-	{
+	for(const std::pair<SoundType, SFX>& sfx : sounds) {
 		if (sfx.second.sound->getStatus() == sf::SoundSource::Playing)
 			sfx.second.sound->pause();
 	}
@@ -531,8 +530,7 @@ void SoundManager::unpauseMusic()
 		return;
 	if (currentMusic != nullptr)
 		currentMusic->play();
-	for(const std::pair<SoundType, SFX>& sfx : sounds)
-	{
+	for(const std::pair<SoundType, SFX>& sfx : sounds) {
 		if (sfx.second.sound->getStatus() == sf::SoundSource::Paused)
 			sfx.second.sound->play();
 	}
@@ -674,7 +672,6 @@ void Options::addNotificationCallback(const std::function<void (const std::strin
 
 void Options::globalCallbacks()
 {
-	Engine::Instance().resourceManager()->update();
 	debug->update();
 }
 
@@ -766,12 +763,9 @@ const std::string ResourcesManager::resourcesFileName = "resources.dat";
 ResourcesManager::ResourcesManager()
 {
 	skeletonAnimationFactory = new dragonBones::SFMLFactory();
-}
-
-void ResourcesManager::update()
-{
-	if (timer.isTimeout(ArcEngine::FRAME_TIME))
-		skeletonAnimationFactory->update(ArcEngine::FRAME_TIME);
+	timer.setInterval(ArcEngine::FRAME_TIME);
+	timer.setCallback(std::bind(&dragonBones::SFMLFactory::update,
+								skeletonAnimationFactory, ArcEngine::FRAME_TIME));
 }
 
 void ResourcesManager::addTexture(TextureType type, const std::string &data)

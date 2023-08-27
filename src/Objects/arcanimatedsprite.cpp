@@ -4,19 +4,15 @@ ArcAnimatedSprite::ArcAnimatedSprite(const std::string& name)
 	: ArcSprite(name)
 {
 	setType(ArcEngine::ANIMATED_SPRITE);
+	timer.setInterval(m_animationSpeed);
+	timer.setCallback(std::bind(&ArcAnimatedSprite::nextFrame, this));
+	timer.start();
 }
 
-void ArcAnimatedSprite::update()
-{
-	ArcSprite::update();
-	if (timer.isTimeout(m_animationSpeed)) {
-		nextFrame();
-	}
-}
-
-void ArcAnimatedSprite::setSpeed(float speed)
+void ArcAnimatedSprite::setSpeed(int speed)
 {
 	m_animationSpeed = speed;
+	timer.setInterval(m_animationSpeed);
 }
 
 void ArcAnimatedSprite::setFrameCount(int count)
@@ -44,7 +40,7 @@ void ArcAnimatedSprite::setRow(int row)
 	m_row = row;
 }
 
-float ArcAnimatedSprite::speed() const
+int ArcAnimatedSprite::speed() const
 {
 	return m_animationSpeed;
 }

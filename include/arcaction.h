@@ -9,7 +9,7 @@ class ArcObject;
 class ArcAction
 {
 public:
-	ArcAction(float time);
+	ArcAction(int time);
 	virtual ~ArcAction() = default;
 
 	void update();
@@ -24,10 +24,11 @@ public:
 	std::string name() const;
 
 protected:
-	float m_time = 0;
+	int m_time = 0;
 	std::function<void()> completedFunc = nullptr;
 	ArcTimer timer;
 	std::string m_name;
+	void timeout();
 private:
 	bool m_started = false;
 	bool m_completed = false;

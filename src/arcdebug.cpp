@@ -47,6 +47,9 @@ void ArcDebug::init()
 #ifdef ARC_DEBUG
 	ImGui::SFML::Init(*static_cast<sf::RenderWindow*>(Engine::Instance().window()));
 #endif
+	FPS.updateTimer.setInterval(200);
+	FPS.updateTimer.setRepeat(false);
+	FPS.updateTimer.start();
 }
 
 void ArcDebug::clear()
@@ -63,8 +66,9 @@ void ArcDebug::update()
 	ImGui::SFML::Update(*static_cast<sf::RenderWindow*>(Engine::Instance().window()), dt);
 #endif
 	const float currentTime = FPS.clock.restart().asSeconds();
-	if (FPS.updateTimer.isTimeout(ArcEngine::MSEC/5)) {
+	if (!FPS.updateTimer.isActive()) {
 		FPS.value = 1.f / currentTime;
+		FPS.updateTimer.start();
 	}
 }
 
@@ -153,13 +157,13 @@ void ArcDebug::drawFrame()
 				ImGui::TextColored(ImVec4(0.8f, 0.92f, 0.45f, 1.f), ENGINE_VERSION);
 				ImGui::TextUnformatted("FPS:");
 				ImGui::SameLine();
-				const float fpsColorV = static_cast<float>(FPS.value) * ArcEngine::FRAME_TIME;
+				const float fpsColorV = FPS.value * ArcEngine::FRAME_TIME;
 				ImVec4 fpsColor;
 				fpsColor.w = 1.f;
 				fpsColor.x = 1.f - fpsColorV;
 				fpsColor.y = fpsColorV;
 				fpsColor.z = 0;
-				ImGui::TextColored(fpsColor, "%s", std::to_string(FPS.value).c_str());
+				ImGui::TextColored(fpsColor, "%s", std::to_string(static_cast<int>(FPS.value)).c_str());
 
 				ImGui::EndTabItem();
 			}
@@ -487,9 +491,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			if (ImGui::CollapsingHeader("Frame animated sprite", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ArcAnimatedSprite *sprite = static_cast<ArcAnimatedSprite*>(obj);
 				{//Speed
-					float speed = sprite->speed();
+					int speed = sprite->speed();
 					ImGui::TextUnformatted("Speed");
-					ImGui::DragFloat("##Speed", &speed);
+					ImGui::DragInt("##Speed", &speed);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Speed");
 					sprite->setSpeed(speed);

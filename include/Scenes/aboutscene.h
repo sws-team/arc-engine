@@ -35,9 +35,7 @@ private:
 	std::vector<Creator> creators;
 
 	sf::RectangleShape rect;
-	ArcTimer timer;
-	static constexpr float CREDITS_SPEED = 50;
-	static constexpr float CREDITS_STEP = 3;
+	ArcTimer moveTextTimer;
 	SceneType m_backState;
 	static const sf::Vector2f RECT_SIZE;
 	unsigned int m_characterSize;
@@ -46,6 +44,7 @@ private:
 	bool started;
 
 	void back();
+	void moveText();
 };
 
 #endif // ABOUTSCENE_H

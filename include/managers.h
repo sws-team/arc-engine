@@ -349,8 +349,6 @@ public:
 	static const std::string resourcesFileName;
 	static const std::string preloadFileName;
 
-	void update();
-
 	static void addTexture(TextureType type, const std::string& data);
 	static void addSound(SoundType type, const std::string& data);
 	static void addMusic(MusicType type, const std::string& data);

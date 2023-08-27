@@ -9,9 +9,7 @@ class ArcAnimatedSprite : public ArcSprite
 public:
 	ArcAnimatedSprite(const std::string& name);
 
-	void update() override;
-
-	void setSpeed(float speed);
+	void setSpeed(int speed);
 	void setFrameCount(int count);
 	void setRowCount(int count);
 	void setLooped(bool loop);
@@ -20,7 +18,7 @@ public:
 	void setFrameSize(const sf::Vector2f &frameSize);
 	void setFrameSize(float width, float height);
 
-	float speed() const;
+	int speed() const;
 	int frameCount() const;
 	int rowCount() const;
 	bool isLooped() const;
@@ -35,7 +33,7 @@ protected:
 	void nextFrame();
 private:
 	ArcTimer timer;
-	float m_animationSpeed = 0;
+	int m_animationSpeed = 0;
 	int m_frameCount = 0;
 	int m_rowCount = 0;
 	bool m_looped = true;

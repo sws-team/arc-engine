@@ -5,10 +5,12 @@
 #include <arclabel.h>
 #include <managers.h>
 
-ArcAction::ArcAction(float time)
+ArcAction::ArcAction(int time)
 	: m_time(time)
 {
-
+	timer.setInterval(time);
+	timer.setRepeat(false);
+	timer.setCallback(std::bind(&ArcAction::timeout, this));
 }
 
 void ArcAction::update()
@@ -20,8 +22,7 @@ void ArcAction::update()
 		process(-1);
 		return;
 	}
-	if (timer.isTimeout(m_time)) {
-		finished();
+	if (!timer.isActive()) {
 		return;
 	}
 	float progress = static_cast<float>(timer.elapsed()) / m_time;
@@ -32,9 +33,10 @@ void ArcAction::update()
 
 void ArcAction::started()
 {
+	timer.start();
 	m_started = true;
 	m_completed = false;
-	timer.reset();
+	timer.start();
 	Engine::Instance().notificationManager()->notify(NotificationManager::ACTION_STARTED, m_name);
 }
 
@@ -69,6 +71,11 @@ bool ArcAction::isCompleted() const
 std::string ArcAction::name() const
 {
 	return m_name;
+}
+
+void ArcAction::timeout()
+{
+	finished();
 }
 
 ActionWithObject::ActionWithObject(float time, ArcObject *object)
@@ -310,7 +317,7 @@ WayPointsMoveAction::WayPointsMoveAction(float time, ArcObject *object)
 	: ActionWithObject(-1, object)
 	,commonTime(time)
 {
-
+	resetTimer.setRepeat(false);
 }
 
 void WayPointsMoveAction::setGetWayPointsFunc(
@@ -329,6 +336,7 @@ void WayPointsMoveAction::setPoints(const std::vector<sf::Vector2f> &positions)
 void WayPointsMoveAction::setResetTime(float time)
 {
 	resetTime = time;
+	resetTimer.setInterval(resetTime);
 }
 
 void WayPointsMoveAction::process(float progress)
@@ -350,13 +358,13 @@ void WayPointsMoveAction::finished()
 	if (!step()) {
 		return;
 	}
-	if (resetTime != -1 && resetTimer.isTimeout(resetTime)) {
+	if (resetTime != -1 && resetTimer.isActive()) {
 		if (!resetPath())
 			return;
-		resetTimer.reset();
+		resetTimer.start();
 	}
 	if (nextPosition())
-		timer.reset();
+		timer.restart();
 }
 
 bool WayPointsMoveAction::step()

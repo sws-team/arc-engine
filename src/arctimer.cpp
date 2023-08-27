@@ -1,12 +1,8 @@
 #include "arctimer.h"
 
-ArcTimer::ArcTimer():
-	lastTimer(0)
-	,pausedTime(0)
-	,isPaused(false)
+ArcTimer::ArcTimer()
 {
 	TimersManager::Instance().addTimer(this);
-	restart();
 }
 
 ArcTimer::~ArcTimer()
@@ -14,40 +10,77 @@ ArcTimer::~ArcTimer()
 	TimersManager::Instance().removeTimer(this);
 }
 
+void ArcTimer::setInterval(int interval)
+{
+	this->interval = interval;
+}
+
+void ArcTimer::setRepeat(bool repeat)
+{
+	this->repeat = repeat;
+}
+
+void ArcTimer::start()
+{
+	restart();
+}
+
+void ArcTimer::stop()
+{
+	active = false;
+}
+
 void ArcTimer::restart()
 {
-	isPaused = false;
+	active = true;
+	paused = false;
 	clock.restart();
 	lastTimer = 0;
 	pausedTime = 0;
 }
 
+bool ArcTimer::isActive() const
+{
+	return active;
+}
+
 void ArcTimer::pause()
 {
-	isPaused = true;
+	paused = true;
 	pausedTime = clock.getElapsedTime().asMilliseconds();
 }
 
 void ArcTimer::unpause()
 {
 	lastTimer += clock.getElapsedTime().asMilliseconds() - pausedTime;
-	isPaused = false;
+	paused = false;
 }
 
-bool ArcTimer::isTimeout(float msec)
+void ArcTimer::update()
 {
-	if (isPaused)
-		return false;
-	if (elapsed() >= msec) {
-		restart();
-		return true;
+	if (!active)
+		return;
+	if (paused)
+		return;
+	if (elapsed() >= interval) {
+		if (callback != nullptr)
+			callback();
+		if (repeat)
+			restart();
+		else {
+			stop();
+		}
 	}
-	return false;
 }
 
-sf::Int32 ArcTimer::elapsed() const
+int ArcTimer::elapsed() const
 {
-	return clock.getElapsedTime().asMilliseconds() - lastTimer;
+	return static_cast<int>(clock.getElapsedTime().asMilliseconds() - lastTimer);
+}
+
+void ArcTimer::setCallback(const std::function<void ()> &callback)
+{
+	this->callback = callback;
 }
 
 TimersManager &TimersManager::Instance()
@@ -64,6 +97,13 @@ void TimersManager::addTimer(ArcTimer *timer)
 void TimersManager::removeTimer(ArcTimer *timer)
 {
 	timers.erase(remove(timers.begin(), timers.end(), timer));
+}
+
+void TimersManager::update()
+{
+	for(ArcTimer *timer : timers) {
+		timer->update();
+	}
 }
 
 void TimersManager::setPaused(bool paused)

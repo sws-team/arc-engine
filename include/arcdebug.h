@@ -42,7 +42,7 @@ private:
 
 	struct {
 		sf::Clock clock;
-		int value = 0;
+		float value = 0;
 		ArcTimer updateTimer;
 	} FPS;
 

@@ -93,6 +93,7 @@ void MainWindow::exec()
 		}
 		TimersManager::Instance().setPaused(!active);
 		if (active) {
+			TimersManager::Instance().update();
 			currentScene->process();
 			Engine::Instance().getOptions()->globalCallbacks();
 			Engine::Instance().windowsManager()->update();
