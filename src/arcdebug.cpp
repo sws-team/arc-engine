@@ -5,17 +5,17 @@
 #include <mainwindow.h>
 #include <ArcEngineUtils>
 #include <collisions.h>
-#include <arcobject.h>
-#include <arcsprite.h>
+#include <ArcObject>
+#include <ArcSprite>
 #include <ArcButton>
 #include <ArcLabel>
-#include <arcanimatedsprite.h>
-#include <arcskeletonanimation.h>
+#include <ArcAnimatedSprite>
+#include <ArcSkeletonAnimation>
 #include <ArcLayout>
-#include <arcpolygon.h>
+#include <ArcPolygon>
 #include <ArcRect>
-#include <navigationmap.h>
-#include <customwidgets.h>
+#include <ArcNavigationMap>
+#include "../src/Widgets/customwidgets.h"
 #include <ArcScrollArea>
 #include <ArcCheckBox>
 

@@ -3,9 +3,9 @@
 #include <ArcEngine>
 #include <ArcDebug>
 #include <mainwindow.h>
-#include <introscene.h>
-#include <aboutscene.h>
-#include <closescene.h>
+#include "../src/Scenes/introscene.h"
+#include "../src/Scenes/aboutscene.h"
+#include "../src/Scenes/closescene.h"
 #include <gameplatform.h>
 #include <ArcAction>
 #include <arcvariant.h>

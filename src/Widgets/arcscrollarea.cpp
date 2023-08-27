@@ -1,4 +1,4 @@
-#include <arcscrollarea.h>
+#include "arcscrollarea.h"
 #include <mainwindow.h>
 #include <ArcRect>
 

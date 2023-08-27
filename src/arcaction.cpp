@@ -1,7 +1,7 @@
 #include "arcaction.h"
 #include "arcobject.h"
-#include "navigationmap.h"
-#include "customwidgets.h"
+#include <ArcNavigationMap>
+#include "../src/Widgets/customwidgets.h"
 #include <ArcLabel>
 #include <managers.h>
 

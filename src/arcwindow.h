@@ -1,7 +1,7 @@
 #ifndef ARCWINDOW_H
 #define ARCWINDOW_H
 
-#include <arcsprite.h>
+#include <ArcSprite>
 
 class ArcWindow : public ArcSprite
 {

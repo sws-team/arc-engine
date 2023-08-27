@@ -2,7 +2,7 @@
 #include <managers.h>
 #include <enginedef.h>
 #include <ArcAction>
-#include <arcsprite.h>
+#include <ArcSprite>
 
 IntroScene::IntroScene()
 	: ArcScene("IntroScene")

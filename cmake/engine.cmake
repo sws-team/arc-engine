@@ -24,9 +24,6 @@ set(ARC_ENGINE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
 include_directories(${ARC_ENGINE_DIR}/include)
 include_directories(${ARC_ENGINE_DIR}/src)
-include_directories(${ARC_ENGINE_DIR}/src/Scenes)
-include_directories(${ARC_ENGINE_DIR}/src/Widgets)
-include_directories(${ARC_ENGINE_DIR}/src/Objects)
 
 set(ARC_ENGINE_HEADERS
     ${ARC_ENGINE_DIR}/src/Widgets/arclabel.h

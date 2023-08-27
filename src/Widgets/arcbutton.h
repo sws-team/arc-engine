@@ -1,7 +1,7 @@
 #ifndef ARCBUTTON_H
 #define ARCBUTTON_H
 
-#include "arcsprite.h"
+#include <ArcSprite>
 
 class ArcButton : public ArcSprite
 {
