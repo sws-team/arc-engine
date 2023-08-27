@@ -22,48 +22,48 @@ include(${CMAKE_CURRENT_LIST_DIR}/../Resources/arcresources.cmake)
 
 set(ARC_ENGINE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
-include_directories(${ARC_ENGINE_DIR}/headers)
 include_directories(${ARC_ENGINE_DIR}/include)
-include_directories(${ARC_ENGINE_DIR}/include/Scenes)
-include_directories(${ARC_ENGINE_DIR}/include/Widgets)
-include_directories(${ARC_ENGINE_DIR}/include/Objects)
+include_directories(${ARC_ENGINE_DIR}/src)
+include_directories(${ARC_ENGINE_DIR}/src/Scenes)
+include_directories(${ARC_ENGINE_DIR}/src/Widgets)
+include_directories(${ARC_ENGINE_DIR}/src/Objects)
 
 set(ARC_ENGINE_HEADERS
-    ${ARC_ENGINE_DIR}/include/Widgets/arclabel.h
-    ${ARC_ENGINE_DIR}/include/Widgets/arcbutton.h
-    ${ARC_ENGINE_DIR}/include/Widgets/arctilemap.h
-    ${ARC_ENGINE_DIR}/include/Widgets/customwidgets.h
-    ${ARC_ENGINE_DIR}/include/Widgets/arcscrollarea.h
-    ${ARC_ENGINE_DIR}/include/Widgets/arccheckbox.h
+    ${ARC_ENGINE_DIR}/src/Widgets/arclabel.h
+    ${ARC_ENGINE_DIR}/src/Widgets/arcbutton.h
+    ${ARC_ENGINE_DIR}/src/Widgets/arctilemap.h
+    ${ARC_ENGINE_DIR}/src/Widgets/customwidgets.h
+    ${ARC_ENGINE_DIR}/src/Widgets/arcscrollarea.h
+    ${ARC_ENGINE_DIR}/src/Widgets/arccheckbox.h
 
-    ${ARC_ENGINE_DIR}/include/Scenes/aboutscene.h
-    ${ARC_ENGINE_DIR}/include/Scenes/closescene.h
-    ${ARC_ENGINE_DIR}/include/Scenes/introscene.h
-    ${ARC_ENGINE_DIR}/include/Scenes/menuscene.h
+    ${ARC_ENGINE_DIR}/src/Scenes/aboutscene.h
+    ${ARC_ENGINE_DIR}/src/Scenes/closescene.h
+    ${ARC_ENGINE_DIR}/src/Scenes/introscene.h
+    ${ARC_ENGINE_DIR}/src/Scenes/menuscene.h
 
-    ${ARC_ENGINE_DIR}/include/Objects/arcsprite.h
-    ${ARC_ENGINE_DIR}/include/Objects/arcanimatedsprite.h
-    ${ARC_ENGINE_DIR}/include/Objects/arcskeletonanimation.h
-    ${ARC_ENGINE_DIR}/include/Objects/arclayout.h
-    ${ARC_ENGINE_DIR}/include/Objects/arcpolygon.h
-    ${ARC_ENGINE_DIR}/include/Objects/arcrect.h
-    ${ARC_ENGINE_DIR}/include/Objects/navigationmap.h
+    ${ARC_ENGINE_DIR}/src/Objects/arcsprite.h
+    ${ARC_ENGINE_DIR}/src/Objects/arcanimatedsprite.h
+    ${ARC_ENGINE_DIR}/src/Objects/arcskeletonanimation.h
+    ${ARC_ENGINE_DIR}/src/Objects/arclayout.h
+    ${ARC_ENGINE_DIR}/src/Objects/arcpolygon.h
+    ${ARC_ENGINE_DIR}/src/Objects/arcrect.h
+    ${ARC_ENGINE_DIR}/src/Objects/navigationmap.h
 
-    ${ARC_ENGINE_DIR}/include/arclog.h
-    ${ARC_ENGINE_DIR}/include/arcobject.h
-    ${ARC_ENGINE_DIR}/include/arcdebug.h
-    ${ARC_ENGINE_DIR}/include/arcwindow.h
-    ${ARC_ENGINE_DIR}/include/arcscene.h
-    ${ARC_ENGINE_DIR}/include/arcaction.h
-    ${ARC_ENGINE_DIR}/include/managers.h
-    ${ARC_ENGINE_DIR}/include/mainwindow.h
-    ${ARC_ENGINE_DIR}/include/collisions.h
-    ${ARC_ENGINE_DIR}/include/engine.h
-    ${ARC_ENGINE_DIR}/include/arctimer.h
-    ${ARC_ENGINE_DIR}/include/arcengineutils.h
-    ${ARC_ENGINE_DIR}/include/arcproperties.h
-    ${ARC_ENGINE_DIR}/include/arcvariant.h
-    ${ARC_ENGINE_DIR}/include/tutorial.h
+    ${ARC_ENGINE_DIR}/src/arclog.h
+    ${ARC_ENGINE_DIR}/src/arcobject.h
+    ${ARC_ENGINE_DIR}/src/arcdebug.h
+    ${ARC_ENGINE_DIR}/src/arcwindow.h
+    ${ARC_ENGINE_DIR}/src/arcscene.h
+    ${ARC_ENGINE_DIR}/src/arcaction.h
+    ${ARC_ENGINE_DIR}/src/managers.h
+    ${ARC_ENGINE_DIR}/src/mainwindow.h
+    ${ARC_ENGINE_DIR}/src/collisions.h
+    ${ARC_ENGINE_DIR}/src/engine.h
+    ${ARC_ENGINE_DIR}/src/arctimer.h
+    ${ARC_ENGINE_DIR}/src/arcengineutils.h
+    ${ARC_ENGINE_DIR}/src/arcproperties.h
+    ${ARC_ENGINE_DIR}/src/arcvariant.h
+    ${ARC_ENGINE_DIR}/src/tutorial.h
     )
 
 set(ARC_ENGINE_SOURCES
@@ -114,6 +114,7 @@ include_directories(${3RD_PARTY_DIR}/tinypile)
 include(${3RD_PARTY_DIR}/DragonBonesSFML/DragonBones.cmake)
 
 set(ARC_ENGINE_SOURCES
+    ${ARC_ENGINE_HEADERS}
     ${ARC_ENGINE_SOURCES}
     ${DRAGON_BONES_SOURCES}
     )
