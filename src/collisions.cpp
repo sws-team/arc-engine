@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <iostream>
-#include "arcbutton.h"
+#include <ArcButton>
 #include "collisions.h"
 
 #include <ArcSprite>

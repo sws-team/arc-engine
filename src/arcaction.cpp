@@ -2,7 +2,7 @@
 #include "arcobject.h"
 #include "navigationmap.h"
 #include "customwidgets.h"
-#include <arclabel.h>
+#include <ArcLabel>
 #include <managers.h>
 
 ArcAction::ArcAction(int time)

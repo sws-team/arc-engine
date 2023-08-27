@@ -1,6 +1,6 @@
 #include "customwidgets.h"
 #include <ArcSprite>
-#include "engine.h"
+#include <ArcEngine>
 #include "managers.h"
 #include "mainwindow.h"
 #ifdef ARC_DEBUG

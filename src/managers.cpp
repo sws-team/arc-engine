@@ -1,6 +1,6 @@
 #include "managers.h"
 #include "enginedef.h"
-#include "engine.h"
+#include <ArcEngine>
 #include <ArcDebug>
 #include <mainwindow.h>
 #include <introscene.h>

@@ -1,5 +1,5 @@
 #include "arcsprite.h"
-#include "engine.h"
+#include <ArcEngine>
 #include "managers.h"
 
 ArcSprite::ArcSprite(const std::string &name)

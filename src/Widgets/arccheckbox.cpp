@@ -1,5 +1,4 @@
 #include "arccheckbox.h"
-#include <engine.h>
 #include <managers.h>
 
 ArcCheckBox::ArcCheckBox(const std::string& name)

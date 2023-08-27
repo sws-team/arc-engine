@@ -1,10 +1,10 @@
-#include "utils.h"
+#include "arcengineutils.h"
 #include "arcobject.h"
 #include "arcproperties.h"
 
 #include <sstream>
 
-namespace Utils {
+namespace ArcEngine {
 
 std::vector<sf::Vector2f> calcCubicBezier(const sf::Vector2f &start,
 										  const sf::Vector2f &end,

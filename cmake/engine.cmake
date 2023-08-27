@@ -60,7 +60,7 @@ set(ARC_ENGINE_HEADERS
     ${ARC_ENGINE_DIR}/include/collisions.h
     ${ARC_ENGINE_DIR}/include/engine.h
     ${ARC_ENGINE_DIR}/include/arctimer.h
-    ${ARC_ENGINE_DIR}/include/utils.h
+    ${ARC_ENGINE_DIR}/include/arcengineutils.h
     ${ARC_ENGINE_DIR}/include/arcproperties.h
     ${ARC_ENGINE_DIR}/include/arcvariant.h
     ${ARC_ENGINE_DIR}/include/tutorial.h
@@ -97,7 +97,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/collisions.cpp
     ${ARC_ENGINE_DIR}/src/engine.cpp
     ${ARC_ENGINE_DIR}/src/arctimer.cpp
-    ${ARC_ENGINE_DIR}/src/utils.cpp
+    ${ARC_ENGINE_DIR}/src/arcengineutils.cpp
     ${ARC_ENGINE_DIR}/src/arcproperties.cpp
     ${ARC_ENGINE_DIR}/src/arcvariant.cpp
     ${ARC_ENGINE_DIR}/src/tutorial.cpp

@@ -2,9 +2,9 @@
 #define MANAGERS_H
 
 #include "stdheader.h"
-#include "engine.h"
 #include "enginedef.h"
 #include <ArcTimer>
+#include <ArcEngine>
 #include "arcwindow.h"
 #include "arcscene.h"
 #include "arcvariant.h"

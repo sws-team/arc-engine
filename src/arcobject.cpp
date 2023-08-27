@@ -1,10 +1,10 @@
 #include "arcobject.h"
-#include "engine.h"
+#include <ArcEngine>
 #include "managers.h"
 #include <ArcAction>
 #include "arcproperties.h"
 #include <arcvariant.h>
-#include <utils.h>
+#include <ArcEngineUtils>
 
 ArcObject::ArcObject(const std::string &name)
 	: m_name(name)
@@ -106,7 +106,7 @@ ArcObject *ArcObject::findChild(const std::string &name, bool recursively)
 
 ArcObject *ArcObject::findChildPath(const std::string &path)
 {
-	const std::vector<std::string> names = Utils::split(path, "/");
+	const std::vector<std::string> names = ArcEngine::split(path, "/");
 	if (names.empty())
 		return nullptr;
 	ArcObject *obj = this;

@@ -1,7 +1,7 @@
 #ifndef ARCCHECKBOX_H
 #define ARCCHECKBOX_H
 
-#include <arcbutton.h>
+#include <ArcButton>
 
 class ArcCheckBox : public ArcButton
 {

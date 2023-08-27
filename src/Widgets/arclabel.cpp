@@ -1,5 +1,5 @@
 #include "arclabel.h"
-#include "engine.h"
+#include <ArcEngine>
 #include "managers.h"
 
 sf::Vector2f ArcLabel::globalTextOffset = sf::Vector2f(0, 0);

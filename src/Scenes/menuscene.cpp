@@ -1,6 +1,6 @@
 #include "menuscene.h"
-#include <arclayout.h>
-#include <arcbutton.h>
+#include <ArcLayout>
+#include <ArcButton>
 
 MenuScene::MenuScene(const std::string &name)
 	: ArcScene(name)

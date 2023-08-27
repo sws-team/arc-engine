@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "engine.h"
+#include <ArcEngine>
 #include "managers.h"
 #include "arcwindow.h"
 #include <ArcTimer>

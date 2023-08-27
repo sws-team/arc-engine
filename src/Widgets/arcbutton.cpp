@@ -1,9 +1,9 @@
 #include "arcbutton.h"
-#include "engine.h"
+#include <ArcEngine>
 #include "managers.h"
 #include "collisions.h"
 #include "mainwindow.h"
-#include <arcvariant.h>
+#include <ArcVariant>
 
 ArcButton::ArcButton(const std::string &name)
 	: ArcSprite(name)

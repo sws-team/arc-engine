@@ -1,23 +1,23 @@
 #include "arcdebug.h"
 #ifdef ARC_DEBUG
 #include <managers.h>
-#include <engine.h>
+#include <ArcEngine>
 #include <mainwindow.h>
-#include <utils.h>
+#include <ArcEngineUtils>
 #include <collisions.h>
 #include <arcobject.h>
 #include <arcsprite.h>
-#include <arcbutton.h>
-#include <arclabel.h>
+#include <ArcButton>
+#include <ArcLabel>
 #include <arcanimatedsprite.h>
 #include <arcskeletonanimation.h>
-#include <arclayout.h>
+#include <ArcLayout>
 #include <arcpolygon.h>
 #include <ArcRect>
 #include <navigationmap.h>
 #include <customwidgets.h>
-#include <arcscrollarea.h>
-#include <arccheckbox.h>
+#include <ArcScrollArea>
+#include <ArcCheckBox>
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -273,7 +273,7 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 		{
 		case ArcEngine::OBJECT:
 		{
-			ImGui::TextColored(Utils::convertFromColor(typeToColor(obj->type())), "%s", typeToName(obj->type()).c_str());
+			ImGui::TextColored(ArcEngine::convertFromColor(typeToColor(obj->type())), "%s", typeToName(obj->type()).c_str());
 			ImGui::TextUnformatted(obj->path().c_str());
 			ImGui::TextUnformatted("Properties");
 			bool enabled = obj->isEnabled();
@@ -283,9 +283,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			if (ImGui::Checkbox("Draw rect", &obj->drawDebugRect));
 			if (obj->drawDebugRect) {
 				{//Color
-					ImVec4 color = Utils::convertFromColor(obj->debugRectColor());
+					ImVec4 color = ArcEngine::convertFromColor(obj->debugRectColor());
 					editColor("Debug color", &color);
-					obj->setDebugRectColor(Utils::convertToColor(color));
+					obj->setDebugRectColor(ArcEngine::convertToColor(color));
 				}
 				{//Debug border size
 					float lineSize = obj->debugRectLineSize();
@@ -374,9 +374,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			if (ImGui::CollapsingHeader("Sprite", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ArcSprite *sprite = static_cast<ArcSprite*>(obj);
 				{//Color
-					ImVec4 color = Utils::convertFromColor(sprite->color());
+					ImVec4 color = ArcEngine::convertFromColor(sprite->color());
 					editColor("Color", &color);
-					sprite->setColor(Utils::convertToColor(color));
+					sprite->setColor(ArcEngine::convertToColor(color));
 				}
 				{//Texture ID
 					TextureType id = sprite->textureID();
@@ -387,9 +387,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					sprite->setTexture(id);
 				}
 				{//Border color
-					ImVec4 color = Utils::convertFromColor(sprite->borderColor());
+					ImVec4 color = ArcEngine::convertFromColor(sprite->borderColor());
 					editColor("BorderColor", &color);
-					sprite->setBorderColor(Utils::convertToColor(color));
+					sprite->setBorderColor(ArcEngine::convertToColor(color));
 				}
 				{//Border size
 					float borderSize = sprite->borderSize();
@@ -429,9 +429,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					label->setFontSize(fontSize);
 				}
 				{//Font color
-					ImVec4 color = Utils::convertFromColor(label->color());
+					ImVec4 color = ArcEngine::convertFromColor(label->color());
 					editColor("Font color", &color);
-					label->setColor(Utils::convertToColor(color));
+					label->setColor(ArcEngine::convertToColor(color));
 				}
 				{//Text border size
 					float textBorderSize = label->borderSize();
@@ -441,9 +441,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					label->setBorderSize(textBorderSize);
 				}
 				{//Text border color
-					ImVec4 color = Utils::convertFromColor(label->borderColor());
+					ImVec4 color = ArcEngine::convertFromColor(label->borderColor());
 					editColor("Border color", &color);
-					label->setBorderColor(Utils::convertToColor(color));
+					label->setBorderColor(ArcEngine::convertToColor(color));
 				}
 				{//Align
 					float x = label->align().x;
@@ -538,9 +538,9 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			if (ImGui::CollapsingHeader("Skeleton", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ArcSkeletonAnimation *skeleton = static_cast<ArcSkeletonAnimation*>(obj);
 				{//Color
-					ImVec4 color = Utils::convertFromColor(skeleton->color());
+					ImVec4 color = ArcEngine::convertFromColor(skeleton->color());
 					editColor("Color", &color);
-					skeleton->setColor(Utils::convertToColor(color));
+					skeleton->setColor(ArcEngine::convertToColor(color));
 				}
 			}
 		}
@@ -605,14 +605,14 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			if (ImGui::CollapsingHeader("Polygon", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ArcPolygon *polygon = static_cast<ArcPolygon*>(obj);
 				{//Color
-					ImVec4 color = Utils::convertFromColor(polygon->color());
+					ImVec4 color = ArcEngine::convertFromColor(polygon->color());
 					editColor("Color", &color);
-					polygon->setColor(Utils::convertToColor(color));
+					polygon->setColor(ArcEngine::convertToColor(color));
 				}
 				{//Border color
-					ImVec4 color = Utils::convertFromColor(polygon->borderColor());
+					ImVec4 color = ArcEngine::convertFromColor(polygon->borderColor());
 					editColor("BorderColor", &color);
-					polygon->setBorderColor(Utils::convertToColor(color));
+					polygon->setBorderColor(ArcEngine::convertToColor(color));
 				}
 				{//Border size
 					float borderSize = polygon->borderSize();
@@ -629,14 +629,14 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			if (ImGui::CollapsingHeader("Rectangle", ImGuiTreeNodeFlags_DefaultOpen)) {
 				ArcRect *rect = static_cast<ArcRect*>(obj);
 				{//Color
-					ImVec4 color = Utils::convertFromColor(rect->color());
+					ImVec4 color = ArcEngine::convertFromColor(rect->color());
 					editColor("Color", &color);
-					rect->setColor(Utils::convertToColor(color));
+					rect->setColor(ArcEngine::convertToColor(color));
 				}
 				{//Border color
-					ImVec4 color = Utils::convertFromColor(rect->borderColor());
+					ImVec4 color = ArcEngine::convertFromColor(rect->borderColor());
 					editColor("BorderColor", &color);
-					rect->setBorderColor(Utils::convertToColor(color));
+					rect->setBorderColor(ArcEngine::convertToColor(color));
 				}
 				{//Border size
 					float borderSize = rect->borderSize();
@@ -678,14 +678,14 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::TextUnformatted("Radius");
 				}
 				{//Lines color
-					ImVec4 color = Utils::convertFromColor(pathObj->m_color);
+					ImVec4 color = ArcEngine::convertFromColor(pathObj->m_color);
 					editColor("Lines color", &color);
-					obj->setDebugRectColor(Utils::convertToColor(color));
+					obj->setDebugRectColor(ArcEngine::convertToColor(color));
 				}
 				{//Points color
-					ImVec4 color = Utils::convertFromColor(pathObj->m_pointColor);
+					ImVec4 color = ArcEngine::convertFromColor(pathObj->m_pointColor);
 					editColor("Points color", &color);
-					obj->setDebugRectColor(Utils::convertToColor(color));
+					obj->setDebugRectColor(ArcEngine::convertToColor(color));
 				}
 				pathObj->debug();
 			}

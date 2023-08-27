@@ -1,8 +1,8 @@
 #include "tutorial.h"
-#include "engine.h"
+#include <ArcEngine>
 #include "gameoptions.h"
 #include "managers.h"
-#include <arclabel.h>
+#include <ArcLabel>
 #include <ArcAction>
 
 #ifdef ARC_DEBUG

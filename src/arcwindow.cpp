@@ -1,5 +1,5 @@
 #include "arcwindow.h"
-#include "engine.h"
+#include <ArcEngine>
 #include "managers.h"
 
 ArcWindow::ArcWindow(const std::string &name)

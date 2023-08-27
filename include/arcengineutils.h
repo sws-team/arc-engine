@@ -1,12 +1,12 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef ARCENGINEUTILS_H
+#define ARCENGINEUTILS_H
 
 #include "enginedef.h"
 #ifdef ARC_DEBUG
 #include "imgui.h"
 #endif
 
-namespace Utils {
+namespace ArcEngine {
 
 //https://github.com/SFML/SFML/wiki/Source%3A-cubic-bezier-curve
 	std::vector<sf::Vector2f> calcCubicBezier(const sf::Vector2f &start,
@@ -26,4 +26,4 @@ namespace Utils {
 	std::vector<std::string> split(const std::string& str, const std::string& delimiter);
 }
 
-#endif // UTILS_H
+#endif // ARCENGINEUTILS_H
