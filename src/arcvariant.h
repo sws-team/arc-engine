@@ -13,7 +13,8 @@ public:
 		UINT,
 		FLOAT,
 		DOUBLE,
-		STRING
+		STRING,
+		BOOLEAN,
 	};
 
 	ArcVariant();
@@ -23,6 +24,7 @@ public:
 	ArcVariant(double v);
 	ArcVariant(const char* v);
 	ArcVariant(const std::string& v);
+	ArcVariant(bool v);
 
 	VariantType type() const;
 	bool isValid() const;
@@ -32,6 +34,7 @@ public:
 	float toFloat() const;
 	double toDouble() const;
 	std::string toString() const;
+	bool toBool() const;
 
 	template<class T> T data() const {
 		return std::any_cast<T>(value);

@@ -19,7 +19,8 @@ const std::map<ArcVariant::VariantType, std::string> ArcVariant::TYPE_NAMES = {
 	{ UINT, "Unsigned" },
 	{ FLOAT, "Float" },
 	{ DOUBLE, "Double" },
-	{ STRING, "String" }
+	{ STRING, "String" },
+	{ BOOLEAN, "Boolean" }
 };
 
 ArcVariant::ArcVariant()
@@ -55,6 +56,12 @@ ArcVariant::ArcVariant(const std::string &v)
 {
 	INIT_VARIANT(v);
 	m_type = STRING;
+}
+
+ArcVariant::ArcVariant(bool v)
+{
+	INIT_VARIANT(v);
+	m_type = BOOLEAN;
 }
 
 ArcVariant::ArcVariant(const char *v)
@@ -98,6 +105,11 @@ std::string ArcVariant::toString() const
 	CAST_VALUE(VariantType::STRING, std::string)
 }
 
+bool ArcVariant::toBool() const
+{
+	CAST_VALUE(VariantType::BOOLEAN, bool)
+}
+
 bool ArcVariant::operator ==(const ArcVariant &other) const {
 	if (this->m_type != other.m_type)
 		return false;
@@ -113,6 +125,8 @@ bool ArcVariant::operator ==(const ArcVariant &other) const {
 		return this->toDouble() == other.toDouble();
 	case STRING:
 		return this->toString() == other.toString();
+	case BOOLEAN:
+		return this->toBool() == other.toBool();
 	}
 	return false;
 }
@@ -142,6 +156,9 @@ std::string ArcVariant::printable() const
 		break;
 	case ArcVariant::VariantType::STRING:
 		valueStr = toString();
+		break;
+	case ArcVariant::VariantType::BOOLEAN:
+		valueStr = toBool() ? "true" : "false";
 		break;
 	default:
 		break;

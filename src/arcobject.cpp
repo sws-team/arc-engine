@@ -490,7 +490,11 @@ void ArcObject::setCenteredOrigin()
 
 void ArcObject::setData(const std::string &name, const ArcVariant &value)
 {
-	m_data.insert(std::pair<std::string, ArcVariant>(name, value));
+	if (m_data.find(name) != m_data.end()) {
+		m_data[name] = value;
+	}
+	else
+		m_data.insert(std::pair<std::string, ArcVariant>(name, value));
 }
 
 ArcVariant ArcObject::data(const std::string &name) const
