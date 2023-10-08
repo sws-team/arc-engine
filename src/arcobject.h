@@ -13,6 +13,7 @@ public:
 	ArcObject(const std::string& name);
 	virtual ~ArcObject();
 
+	void setName(const std::string& name);
 	void paint(sf::RenderTarget *const target);
 	void process();
 	bool event(sf::Event *event);
@@ -91,7 +92,6 @@ protected:
 	virtual void initTransform();
 	virtual void update();
 	virtual bool eventFilter(sf::Event *event);
-	void setName(const std::string& name);
 	void setType(ArcEngine::OBJECT_TYPE type);
 
 	virtual sf::Vector2f scaledGlobalPos() const;
