@@ -761,6 +761,64 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 	}
 	if (obj->type() != ArcEngine::OBJECT)
 		drawInheritObject(obj->type(), obj);
+	drawCustomData(obj);
+#endif
+}
+
+void ArcDebug::drawCustomData(ArcObject *obj)
+{
+#ifdef ARC_DEBUG
+	auto drawName = [](const std::string& name) {
+		ImGui::SameLine();
+		ImGui::TextUnformatted(name.c_str());
+	};
+	if (ImGui::CollapsingHeader("Custom data", ImGuiTreeNodeFlags_DefaultOpen)) {
+		for(const auto& [name, value] : obj->m_data) {
+			switch (value.type())
+			{
+			case ArcVariant::BOOLEAN:
+			{
+				bool v = value.toBool();
+				ImGui::Checkbox(std::string("##" + name).c_str(), &v);
+				drawName(name);
+				if (v != value.toBool())
+					obj->setData(name, v);
+			}
+				break;
+			case ArcVariant::DOUBLE:
+			case ArcVariant::FLOAT:
+			{
+				float v = value.toFloat();
+				ImGui::DragFloat(std::string("##" + name).c_str(), &v);
+				drawName(name);
+				if (v != value.toFloat())
+					obj->setData(name, v);
+			}
+				break;
+			case ArcVariant::UINT:
+			case ArcVariant::INT:
+			{
+				int v = value.toInt();
+				ImGui::DragInt(std::string("##" + name).c_str(), &v);
+				drawName(name);
+				if (v != value.toInt())
+					obj->setData(name, v);
+			}
+				break;
+			case ArcVariant::STRING:
+			{
+				std::string v = value.toString();
+				ImGui::InputText(std::string("##" + name).c_str(), &v);
+				drawName(name);
+				if (v != value.toString())
+					obj->setData(name, v);
+			}
+				break;
+			default:
+				break;
+			}
+		}
+	}
 #endif
 }
 

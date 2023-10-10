@@ -50,6 +50,7 @@ private:
 	void drawFrame();
 	static void drawObject(ArcObject* obj);
 	static void drawObjectProperties(ArcObject* obj);
+	static void drawCustomData(ArcObject* obj);
 	static std::string typeToName(ArcEngine::OBJECT_TYPE type);
 	static sf::Color typeToColor(ArcEngine::OBJECT_TYPE type);
 };
