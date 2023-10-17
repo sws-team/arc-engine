@@ -63,7 +63,7 @@ unsigned ArcPolygon::vertexCount(ArcPolygon::SHAPE shapeType)
 		return 4;
 		break;
 	case CIRCLE:
-		return 0;
+		return 30;
 		break;
 	case TRIANGLE:
 		return 3;

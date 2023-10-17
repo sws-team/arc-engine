@@ -15,7 +15,7 @@
 
 #define ARC_ARG_START  inline ArcLog &operator<<(const
 #define ARC_ARG_END & value) { \
-		std::cout << value << DELIMER;\
+		*stream() << value << DELIMER;\
 		return *this;\
 	}
 
@@ -26,13 +26,13 @@ class ArcLog
 public:
 	ArcLog() = default;
 	~ArcLog() {
-		std::cout << std::endl;
+		*stream() << std::endl;
 	}
 	ARC_ARG_START std::string ARC_ARG_END
 	ARC_ARG_START char ARC_ARG_END
 	ARC_ARG_START int ARC_ARG_END
 	ARC_ARG_START unsigned ARC_ARG_END
-	ARC_ARG_START unsigned long long ARC_ARG_END
+	ARC_ARG_START uintmax_t ARC_ARG_END
 	ARC_ARG_START long ARC_ARG_END
 	ARC_ARG_START float ARC_ARG_END
 	ARC_ARG_START double ARC_ARG_END

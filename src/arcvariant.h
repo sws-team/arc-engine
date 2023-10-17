@@ -15,6 +15,7 @@ public:
 		DOUBLE,
 		STRING,
 		BOOLEAN,
+		LONGLONG,
 	};
 
 	ArcVariant();
@@ -25,6 +26,7 @@ public:
 	ArcVariant(const char* v);
 	ArcVariant(const std::string& v);
 	ArcVariant(bool v);
+	ArcVariant(uintmax_t v);
 
 	VariantType type() const;
 	bool isValid() const;
@@ -35,6 +37,7 @@ public:
 	double toDouble() const;
 	std::string toString() const;
 	bool toBool() const;
+	uintmax_t toLongLong() const;
 
 	template<class T> T data() const {
 		return std::any_cast<T>(value);
@@ -43,6 +46,7 @@ public:
 	bool operator == (const ArcVariant& other) const;
 
 	std::string printable() const;
+	std::string printableValue() const;
 
 private:
 	std::any value;

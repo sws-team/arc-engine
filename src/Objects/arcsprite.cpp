@@ -95,7 +95,7 @@ void ArcClippedSprite::setClip(const sf::Vector2i &pos, const sf::Vector2i &size
 	setClip(sf::IntRect(pos, size));
 }
 
-void ArcClippedSprite::setClip(float x, float y, float width, float height)
+void ArcClippedSprite::setClip(int x, int y, int width, int height)
 {
 	setClip(sf::IntRect(x, y, width, height));
 }

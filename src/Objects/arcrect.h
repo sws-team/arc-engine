@@ -1,7 +1,6 @@
 #ifndef ARC_RECT_H
 #define ARC_RECT_H
 
-#include "enginedef.h"
 #include "arcobject.h"
 #include "arcproperties.h"
 

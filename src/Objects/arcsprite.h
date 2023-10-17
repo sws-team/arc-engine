@@ -40,7 +40,7 @@ public:
 
 	void setClip(const sf::IntRect& rect);
 	void setClip(const sf::Vector2i& pos, const sf::Vector2i& size);
-	void setClip(float x, float y, float width, float height);
+	void setClip(int x, int y, int width, int height);
 
 private:
 	sf::IntRect clip;

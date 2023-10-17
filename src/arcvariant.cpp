@@ -20,7 +20,8 @@ const std::map<ArcVariant::VariantType, std::string> ArcVariant::TYPE_NAMES = {
 	{ FLOAT, "Float" },
 	{ DOUBLE, "Double" },
 	{ STRING, "String" },
-	{ BOOLEAN, "Boolean" }
+	{ BOOLEAN, "Boolean" },
+	{ LONGLONG, "LongLong" }
 };
 
 ArcVariant::ArcVariant()
@@ -62,6 +63,12 @@ ArcVariant::ArcVariant(bool v)
 {
 	INIT_VARIANT(v);
 	m_type = BOOLEAN;
+}
+
+ArcVariant::ArcVariant(uintmax_t v)
+{
+	INIT_VARIANT(v);
+	m_type = LONGLONG;
 }
 
 ArcVariant::ArcVariant(const char *v)
@@ -110,6 +117,11 @@ bool ArcVariant::toBool() const
 	CAST_VALUE(VariantType::BOOLEAN, bool)
 }
 
+uintmax_t ArcVariant::toLongLong() const
+{
+	CAST_VALUE(VariantType::LONGLONG, uintmax_t);
+}
+
 bool ArcVariant::operator ==(const ArcVariant &other) const {
 	if (this->m_type != other.m_type)
 		return false;
@@ -127,6 +139,8 @@ bool ArcVariant::operator ==(const ArcVariant &other) const {
 		return this->toString() == other.toString();
 	case BOOLEAN:
 		return this->toBool() == other.toBool();
+	case LONGLONG:
+		return this->toLongLong() == other.toLongLong();
 	}
 	return false;
 }
@@ -139,30 +153,39 @@ std::string ArcVariant::printable() const
 	else
 		typeName = std::string("Unknown");
 
-	std::string valueStr;
+	const std::string valueStr = printableValue();
+	return typeName + " " + valueStr;
+}
+
+std::string ArcVariant::printableValue() const
+{
+	std::string result;
 	switch (m_type)
 	{
 	case ArcVariant::VariantType::INT:
-		valueStr = std::to_string(toInt());
+		result = std::to_string(toInt());
 		break;
 	case ArcVariant::VariantType::UINT:
-		valueStr = std::to_string(toUInt());
+		result = std::to_string(toUInt());
 		break;
 	case ArcVariant::VariantType::FLOAT:
-		valueStr = std::to_string(toFloat());
+		result = std::to_string(toFloat());
 		break;
 	case ArcVariant::VariantType::DOUBLE:
-		valueStr = std::to_string(toDouble());
+		result = std::to_string(toDouble());
 		break;
 	case ArcVariant::VariantType::STRING:
-		valueStr = toString();
+		result = toString();
 		break;
 	case ArcVariant::VariantType::BOOLEAN:
-		valueStr = toBool() ? "true" : "false";
+		result = toBool() ? "true" : "false";
+		break;
+	case ArcVariant::VariantType::LONGLONG:
+		result = std::to_string(toLongLong());
 		break;
 	default:
 		break;
 	}
-	return typeName + " " + valueStr;
+	return result;
 }
 
