@@ -1,9 +1,8 @@
 #ifndef ARC_POLYGON_H
 #define ARC_POLYGON_H
 
-#include "enginedef.h"
-#include "arcobject.h"
-#include "arcproperties.h"
+#include <ArcObject>
+#include <ArcProperties>
 
 class ArcPolygon : public ArcObject,
 		public ColorProperty,
@@ -17,7 +16,7 @@ public:
 
 	enum SHAPE
 	{
-		SQUARE,
+		RECTANGLE,
 		CIRCLE,
 		TRIANGLE,
 		HEXAGON,
@@ -37,9 +36,10 @@ protected:
 	void updateScale() override;
 	void updateOrigin() override;
 	void updateSize() override;
+
 private:
 	sf::CircleShape polygon;
-	SHAPE m_shapeType = SQUARE;
+	SHAPE m_shapeType = RECTANGLE;
 	static unsigned vertexCount(SHAPE shapeType);
 };
 

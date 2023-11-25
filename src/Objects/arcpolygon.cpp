@@ -59,7 +59,7 @@ unsigned ArcPolygon::vertexCount(ArcPolygon::SHAPE shapeType)
 {
 	switch (shapeType)
 	{
-	case SQUARE:
+	case RECTANGLE:
 		return 4;
 		break;
 	case CIRCLE:
