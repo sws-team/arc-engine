@@ -15,9 +15,10 @@
 #include <ArcPolygon>
 #include <ArcRect>
 #include <ArcNavigationMap>
-#include "../src/Widgets/customwidgets.h"
+#include <ArcLine>
 #include <ArcScrollArea>
 #include <ArcCheckBox>
+#include "../src/Widgets/customwidgets.h"
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -738,6 +739,53 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 			}
 		}
 			break;
+		case ArcEngine::LINE:
+		{
+			if (ImGui::CollapsingHeader("Line", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ArcLine *line = static_cast<ArcLine*>(obj);
+				{//Color
+					ImVec4 color = ArcEngine::convertFromColor(line->color());
+					editColor("Color", &color);
+					line->setColor(ArcEngine::convertToColor(color));
+				}
+				{//First point
+					float x = line->firstPoint().x;
+					float y = line->firstPoint().y;
+					ImGui::TextUnformatted("FirstPoint");
+					ImGui::DragFloat("##FirstPointX", &x);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("X");
+					ImGui::DragFloat("##FirstPointY", &y);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Y");
+					line->setFirstPoint(sf::Vector2f(x, y));
+				}
+				{//Second point
+					float x = line->secondPoint().x;
+					float y = line->secondPoint().y;
+					ImGui::TextUnformatted("SecondPoint");
+					ImGui::DragFloat("##SecondPointX", &x);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("X");
+					ImGui::DragFloat("##SecondPointY", &y);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("Y");
+					line->setSecondPoint(sf::Vector2f(x, y));
+				}
+				{//Line Width
+					float width = line->lineWidth();
+					ImGui::TextUnformatted("Line width");
+					ImGui::DragFloat("##LineWidth", &width);
+					ImGui::TextUnformatted("Width");
+					line->setLineWidth(width);
+				}
+				//updateTarget
+				if (ImGui::Button("updateTarget")) {
+					line->updateTarget();
+				}
+			}
+		}
+			break;
 		default:
 			break;
 		}
@@ -867,6 +915,9 @@ std::string ArcDebug::typeToName(ArcEngine::OBJECT_TYPE type)
 		break;
 	case ArcEngine::ZOOM_VIEW:
 		return "Zoom view";
+		break;
+	case ArcEngine::LINE:
+		return "Line";
 		break;
 	default:
 		break;

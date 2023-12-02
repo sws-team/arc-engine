@@ -409,7 +409,12 @@ void ArcObject::setType(ArcEngine::OBJECT_TYPE type)
 
 sf::Vector2f ArcObject::scaledGlobalPos() const
 {
-	sf::Vector2f gPos = globalPos();
+	return scaledGlobalPos(pos());
+}
+
+sf::Vector2f ArcObject::scaledGlobalPos(const sf::Vector2f &cpos) const
+{
+	sf::Vector2f gPos = globalPos(cpos);
 	if (enabledScaleFactor) {
 		gPos.x *= scaleFactor.x;
 		gPos.y *= scaleFactor.y;
@@ -434,10 +439,15 @@ bool ArcObject::isEnabled() const
 
 sf::Vector2f ArcObject::globalPos() const
 {
-	if (m_parent == nullptr)
-		return pos();
+	return globalPos(pos());
+}
 
-	sf::Vector2f gPos = pos();
+sf::Vector2f ArcObject::globalPos(const sf::Vector2f &cpos) const
+{
+	sf::Vector2f gPos = cpos;
+	if (m_parent == nullptr)
+		return gPos;
+
 	const sf::Vector2f gScale = globalScale(true);
 	gPos.x *= gScale.x;
 	gPos.y *= gScale.y;

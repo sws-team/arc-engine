@@ -235,9 +235,9 @@ void ArcLayout::refreshChilds()
 	}
 }
 
-sf::Vector2f ArcLayout::scaledGlobalPos() const
+sf::Vector2f ArcLayout::scaledGlobalPos(const sf::Vector2f &cpos) const
 {
-	return scaledGlobalOffset() + ArcObject::scaledGlobalPos();
+	return scaledGlobalOffset() + ArcObject::scaledGlobalPos(cpos);
 }
 
 sf::Vector2f ArcLayout::scaledGlobalOffset() const

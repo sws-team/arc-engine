@@ -93,10 +93,12 @@ protected:
 	virtual bool eventFilter(sf::Event *event);
 	void setType(ArcEngine::OBJECT_TYPE type);
 
-	virtual sf::Vector2f scaledGlobalPos() const;
+	sf::Vector2f scaledGlobalPos() const;
+	virtual sf::Vector2f scaledGlobalPos(const sf::Vector2f& cpos) const;
 	sf::Vector2f scaledGlobalScale() const;
 
 	sf::Vector2f globalPos() const;
+	sf::Vector2f globalPos(const sf::Vector2f& cpos) const;
 	sf::Vector2f globalScale(const bool tree = false) const;
 	sf::Vector2f globalOrigin() const;
 	float globalAlpha() const;

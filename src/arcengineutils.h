@@ -22,6 +22,8 @@ namespace ArcEngine {
 	ImVec4 convertFromColor(const sf::Color& color);
 #endif
 	sf::Vector2f getPosition(ArcObject* from, ArcObject* to);
+	float getAngle(ArcObject* from, ArcObject* to);
+	float getAngle(const sf::Vector2f& from, const sf::Vector2f& to);
 
 	std::vector<std::string> split(const std::string& str, const std::string& delimiter);
 }

@@ -45,6 +45,7 @@ set(ARC_ENGINE_HEADERS
     ${ARC_ENGINE_DIR}/src/Objects/arcpolygon.h
     ${ARC_ENGINE_DIR}/src/Objects/arcrect.h
     ${ARC_ENGINE_DIR}/src/Objects/navigationmap.h
+    ${ARC_ENGINE_DIR}/src/Objects/arcline.h
 
     ${ARC_ENGINE_DIR}/src/arclog.h
     ${ARC_ENGINE_DIR}/src/arcobject.h
@@ -83,6 +84,7 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Objects/arcpolygon.cpp
     ${ARC_ENGINE_DIR}/src/Objects/arcrect.cpp
     ${ARC_ENGINE_DIR}/src/Objects/navigationmap.cpp
+    ${ARC_ENGINE_DIR}/src/Objects/arcline.cpp
 
     ${ARC_ENGINE_DIR}/src/arcobject.cpp
     ${ARC_ENGINE_DIR}/src/arcdebug.cpp

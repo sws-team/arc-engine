@@ -107,4 +107,22 @@ std::vector<std::string> split(const std::string &str, const std::string &delimi
 	return result;
 }
 
+float getAngle(const sf::Vector2f &from, const sf::Vector2f &to)
+{
+	const float a = from.x - to.x;
+	const float b = from.y - to.y;
+	float angle = std::atanf(b / a) * 180 / M_PI;
+	if (a < 0)
+		angle += 180;
+	else if (b < 0)
+		angle += 360;
+	angle -= 180;
+	return angle;
+}
+
+float getAngle(ArcObject *from, ArcObject *to)
+{
+	return getAngle(from->pos(), to->pos());
+}
+
 }
