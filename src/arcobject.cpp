@@ -327,6 +327,7 @@ void ArcObject::addChild(ArcObject *object)
 	object->setParent(this);
 	object->initTransform();
 	m_childs.push_back(object);
+	NOTIFY(NotificationManager::CHILD_ADDED, ArcVariant(object->path()));
 }
 
 void ArcObject::addAction(ArcAction *action, bool instant)
@@ -348,6 +349,7 @@ void ArcObject::removeChild(ArcObject *object)
 {
 	if (auto it = std::find(m_childs.begin(), m_childs.end(), object); it != m_childs.end()) {
 		m_childs.erase(it);
+		NOTIFY(NotificationManager::CHILD_REMOVED, ArcVariant(this->path()));
 	}
 }
 

@@ -847,6 +847,8 @@ const std::unordered_map<NotificationManager::NOTIFICATION_TYPE, std::string> No
 	{ BUTTON_CLICKED, "button clicked" },
 	{ ACTION_STARTED, "action started" },
 	{ ACTION_FINISHED, "action finished" },
+	{ CHILD_ADDED, "child added" },
+	{ CHILD_REMOVED, "child removed" },
 };
 
 NotificationManager::NotificationManager()

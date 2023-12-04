@@ -382,9 +382,12 @@ public:
 		WINDOW_CLOSED,
 		//button
 		BUTTON_CLICKED,
-
+		//actions
 		ACTION_STARTED,
 		ACTION_FINISHED,
+		//childs
+		CHILD_ADDED,
+		CHILD_REMOVED,
 	};
 
 	void notify(NotificationType type, const ArcVariant& value);
