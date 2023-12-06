@@ -100,8 +100,7 @@ bool ArcDebug::eventFilter(sf::Event *event)
 		};
 
 		if (event->type == sf::Event::MouseButtonReleased || event->type == sf::Event::MouseButtonPressed) {
-			const sf::Vector2i pixelPos = sf::Vector2i(event->mouseButton.x, event->mouseButton.y);
-			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().window()->view());
+			const sf::Vector2f pos = PIXEL_TO_POS(event->mouseButton.x, event->mouseButton.y);
 			ArcObject *findedObject = findObject(object, pos);
 			if (selectedObject != nullptr) {
 				selectedObject = findedObject;
@@ -109,8 +108,7 @@ bool ArcDebug::eventFilter(sf::Event *event)
 			}
 		}
 		if (event->type == sf::Event::MouseMoved) {
-			const sf::Vector2i pixelPos = sf::Vector2i(event->mouseMove.x, event->mouseMove.y);
-			const sf::Vector2f pos = Engine::Instance().window()->mapPixelToCoords(pixelPos, *Engine::Instance().window()->view());
+			const sf::Vector2f pos = PIXEL_TO_POS(event->mouseMove.x, event->mouseMove.y);
 			ArcObject *findedObject = findObject(object, pos);
 			static ArcObject* lastFinded = nullptr;
 			if (findedObject != nullptr) {
@@ -366,6 +364,13 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::TextUnformatted("Alpha");
 					if (alpha != obj->alpha())
 						obj->setAlpha(alpha);
+				}
+				{//DragEnabled
+					bool isDragEnabled = obj->isDragEnabled();
+					ImGui::Checkbox("##DragEnabled", &isDragEnabled);
+					ImGui::SameLine();
+					ImGui::TextUnformatted("DragEnabled");
+					obj->setDragEnabled(isDragEnabled);
 				}
 			}
 		}

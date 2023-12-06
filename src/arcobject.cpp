@@ -5,6 +5,8 @@
 #include "arcproperties.h"
 #include <arcvariant.h>
 #include <ArcEngineUtils>
+#include "mainwindow.h"
+#include "collisions.h"
 
 ArcObject::ArcObject(const std::string &name)
 	: m_name(name)
@@ -226,9 +228,36 @@ void ArcObject::updateScaleFactor()
 	}
 }
 
+void ArcObject::processDrag(sf::Event *event)
+{
+	if (event->type == sf::Event::MouseButtonPressed && event->mouseButton.button == sf::Mouse::Left) {
+		//drag started
+		const sf::Vector2f pos = PIXEL_TO_POS(event->mouseButton.x, event->mouseButton.y);
+		if (Intersection::contains(this, pos)) {
+			drag.emplace(pos);
+		}
+	}
+	if (event->type == sf::Event::MouseMoved && drag.has_value()) {
+		//drag continue
+		const sf::Vector2f pos = PIXEL_TO_POS(event->mouseMove.x, event->mouseMove.y);
+		const sf::Vector2f offset = drag.value() - pos;
+		setPos(this->pos() - offset);
+		drag.emplace(pos);
+	}
+	if (event->type == sf::Event::MouseButtonReleased && event->mouseButton.button == sf::Mouse::Left) {
+		//drag ended
+		drag.reset();
+	}
+}
+
 float ArcObject::alpha() const
 {
 	return m_alpha;
+}
+
+bool ArcObject::isDragEnabled() const
+{
+	return m_dragEnabled;
 }
 
 void ArcObject::setAlpha(float alpha)
@@ -243,6 +272,11 @@ void ArcObject::setScaleFactorEnabled(bool enabled)
 {
 	enabledScaleFactor = enabled;
 	updateScaleFactor();
+}
+
+void ArcObject::setDragEnabled(bool enabled)
+{
+	m_dragEnabled = enabled;
 }
 
 #ifdef ARC_DEBUG
@@ -392,6 +426,9 @@ void ArcObject::removeCallback(const int id)
 
 bool ArcObject::eventFilter(sf::Event *event)
 {
+	if (m_dragEnabled) {
+		processDrag(event);
+	}
 	for (int i = static_cast<int>(m_childs.size()) - 1; i >= 0; --i) {
 		if (m_childs.at(i)->eventFilter(event))
 			return true;

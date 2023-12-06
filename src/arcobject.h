@@ -59,6 +59,7 @@ public:
 	sf::Vector2f origin() const;
 	float rotation() const;
 	float alpha() const;
+	bool isDragEnabled() const;
 
 	//setters
 	void setX(float x);
@@ -77,6 +78,7 @@ public:
 	void setEnabled(bool enabled);
 	void setAlpha(float alpha);
 	void setScaleFactorEnabled(bool enabled);
+	void setDragEnabled(bool enabled);
 
 	void setCentered();
 	void setCenteredOrigin();
@@ -148,6 +150,8 @@ private:
 	std::queue<ArcAction*> actionsQueue;
 	bool destroyed = false;
 	std::vector<int> callbacks;
+	std::optional<sf::Vector2f> drag = std::nullopt;
+	bool m_dragEnabled = false;
 #ifdef ARC_DEBUG
 	bool drawDebugRect = false;
 	bool drawOrigin = false;
@@ -161,6 +165,7 @@ private:
 	float debugRectLineSize() const;
 #endif
 	void updateScaleFactor();
+	void processDrag(sf::Event *event);
 };
 
 #endif // ARCOBJECT_H

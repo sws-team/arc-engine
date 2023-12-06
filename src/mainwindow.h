@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "stdheader.h"
 #include "enginedef.h"
 
 class MainWindow : public sf::RenderWindow

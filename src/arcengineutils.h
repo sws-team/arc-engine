@@ -6,6 +6,8 @@
 #include "imgui.h"
 #endif
 
+#define PIXEL_TO_POS(x, y) Engine::Instance().window()->mapPixelToCoords(sf::Vector2i(x, y), *Engine::Instance().window()->view());
+
 namespace ArcEngine {
 
 //https://github.com/SFML/SFML/wiki/Source%3A-cubic-bezier-curve
