@@ -16,6 +16,8 @@ public:
 		STRING,
 		BOOLEAN,
 		LONGLONG,
+		LIST,
+		MAP
 	};
 
 	ArcVariant();
@@ -27,6 +29,8 @@ public:
 	ArcVariant(const std::string& v);
 	ArcVariant(bool v);
 	ArcVariant(uintmax_t v);
+	ArcVariant(const std::vector<ArcVariant>& v);
+	ArcVariant(const std::map<std::string, ArcVariant>& v);
 
 	VariantType type() const;
 	bool isValid() const;
@@ -38,10 +42,13 @@ public:
 	std::string toString() const;
 	bool toBool() const;
 	uintmax_t toLongLong() const;
+	std::vector<ArcVariant> toList() const;
+	std::map<std::string, ArcVariant> toMap() const;
 
 	template<class T> T data() const {
 		return std::any_cast<T>(value);
 	}
+	std::any data() const;
 
 	bool operator == (const ArcVariant& other) const;
 

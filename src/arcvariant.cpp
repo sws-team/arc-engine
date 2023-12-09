@@ -21,7 +21,9 @@ const std::map<ArcVariant::VariantType, std::string> ArcVariant::TYPE_NAMES = {
 	{ DOUBLE, "Double" },
 	{ STRING, "String" },
 	{ BOOLEAN, "Boolean" },
-	{ LONGLONG, "LongLong" }
+	{ LONGLONG, "LongLong" },
+	{ LIST, "List" },
+	{ MAP, "Map" }
 };
 
 ArcVariant::ArcVariant()
@@ -77,6 +79,18 @@ ArcVariant::ArcVariant(const char *v)
 
 }
 
+ArcVariant::ArcVariant(const std::vector<ArcVariant> &v)
+{
+	INIT_VARIANT(v);
+	m_type = LIST;
+}
+
+ArcVariant::ArcVariant(const std::map<std::string, ArcVariant> &v)
+{
+	INIT_VARIANT(v);
+	m_type = MAP;
+}
+
 ArcVariant::VariantType ArcVariant::type() const
 {
 	return m_type;
@@ -122,6 +136,22 @@ uintmax_t ArcVariant::toLongLong() const
 	CAST_VALUE(VariantType::LONGLONG, uintmax_t);
 }
 
+std::vector<ArcVariant> ArcVariant::toList() const
+{
+	CAST_VALUE(VariantType::LIST, std::vector<ArcVariant>);
+}
+
+std::map<std::string, ArcVariant> ArcVariant::toMap() const
+{
+	using MapType = std::map<std::string, ArcVariant>;
+	CAST_VALUE(VariantType::MAP, MapType);
+}
+
+std::any ArcVariant::data() const
+{
+	return value;
+}
+
 bool ArcVariant::operator ==(const ArcVariant &other) const {
 	if (this->m_type != other.m_type)
 		return false;
@@ -141,6 +171,12 @@ bool ArcVariant::operator ==(const ArcVariant &other) const {
 		return this->toBool() == other.toBool();
 	case LONGLONG:
 		return this->toLongLong() == other.toLongLong();
+	case LIST:
+		return this->toList() == other.toList();
+	case MAP:
+		return this->toMap() == other.toMap();
+	default:
+		break;
 	}
 	return false;
 }
@@ -154,7 +190,7 @@ std::string ArcVariant::printable() const
 		typeName = std::string("Unknown");
 
 	const std::string valueStr = printableValue();
-	return typeName + " " + valueStr;
+	return "(" + typeName + ") " + valueStr;
 }
 
 std::string ArcVariant::printableValue() const
@@ -182,6 +218,26 @@ std::string ArcVariant::printableValue() const
 		break;
 	case ArcVariant::VariantType::LONGLONG:
 		result = std::to_string(toLongLong());
+		break;
+	case ArcVariant::VariantType::LIST: {
+		const std::vector<ArcVariant> list = toList();
+		for (unsigned i = 0; i < list.size(); ++i) {
+			result += list[i].printableValue();
+			if (i != list.size() - 1)
+				result += ", ";
+		}
+	}
+		break;
+	case ArcVariant::VariantType::MAP: {
+		const std::map<std::string, ArcVariant> map = toMap();
+		auto last = map.end();
+		last--;
+		for (auto it = map.begin(); it != map.end(); ++it) {
+			result += "'" + it->first + "' = " + it->second.printableValue();
+			if (it != last)
+				result += ", ";
+		}
+	}
 		break;
 	default:
 		break;

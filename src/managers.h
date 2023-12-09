@@ -388,6 +388,10 @@ public:
 		//childs
 		CHILD_ADDED,
 		CHILD_REMOVED,
+		//drag
+		DRAG_STARTED,
+		DRAG_MOVED,
+		DRAG_FINISHED,
 	};
 
 	void notify(NotificationType type, const ArcVariant& value);

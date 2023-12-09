@@ -235,6 +235,7 @@ void ArcObject::processDrag(sf::Event *event)
 		const sf::Vector2f pos = PIXEL_TO_POS(event->mouseButton.x, event->mouseButton.y);
 		if (Intersection::contains(this, pos)) {
 			drag.emplace(pos);
+			NOTIFY(NotificationManager::DRAG_STARTED, ArcVariant(path()));
 		}
 	}
 	if (event->type == sf::Event::MouseMoved && drag.has_value()) {
@@ -243,10 +244,12 @@ void ArcObject::processDrag(sf::Event *event)
 		const sf::Vector2f offset = drag.value() - pos;
 		setPos(this->pos() - offset);
 		drag.emplace(pos);
+		NOTIFY(NotificationManager::DRAG_MOVED, ArcVariant(path()));
 	}
 	if (event->type == sf::Event::MouseButtonReleased && event->mouseButton.button == sf::Mouse::Left) {
 		//drag ended
 		drag.reset();
+		NOTIFY(NotificationManager::DRAG_FINISHED, ArcVariant(path()));
 	}
 }
 
