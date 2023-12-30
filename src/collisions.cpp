@@ -10,6 +10,7 @@
 
 #include <ArcSprite>
 #include <ArcRect>
+#include <ArcLine>
 
 namespace Collision
 {
@@ -259,60 +260,21 @@ sf::Vector2f Intersection::getTranslatedPoint(ArcObject *object, const sf::Vecto
 	return object->m_transform.transformPoint(point);
 }
 
+bool Intersection::intersects(ArcObject *object, ArcObject *other)
+{
+	return object->hitBox().getGlobalBounds().intersects(other->hitBox().getGlobalBounds());
+
+
+	return intersects(object->hitBox(), other->hitBox().getGlobalBounds(), object->m_transform) &&
+			intersects(other->hitBox(), object->hitBox().getGlobalBounds(), other->m_transform);
+}
+
 bool Intersection::contains(ArcObject *object, const sf::Vector2f &pos)
 {
-	switch (object->type())
-	{
-	case ArcEngine::SPRITE:
-	{
-		ArcSprite *sprite = static_cast<ArcSprite*>(object);
-		return contains(sprite->sprite, pos, sprite->m_transform);
-	}
-	case ArcEngine::RECT:
-	{
-		ArcRect *rectObject = static_cast<ArcRect*>(object);
-		return contains(rectObject->rect, pos, rectObject->m_transform);
-	}
-	case ArcEngine::BUTTON:
-	{
-		ArcButton *button = static_cast<ArcButton*>(object);
-		return contains(button->sprite, pos, button->m_transform);
-	}
-	default:
-#ifdef ARC_DEBUG
-		return contains(object->debugRect, pos, object->m_transform);
-#else
-		break;
-#endif
-	}
-	return false;
+	return contains(object->hitBox(), pos, object->m_transform);
 }
 
 bool Intersection::intersects(ArcObject *object, const sf::FloatRect &rect)
 {
-	switch (object->type())
-	{
-	case ArcEngine::SPRITE:
-	{
-		ArcSprite *sprite = static_cast<ArcSprite*>(object);
-		return intersects(sprite->sprite, rect);
-	}
-	case ArcEngine::RECT:
-	{
-		ArcRect *rectObject = static_cast<ArcRect*>(object);
-		return intersects(rectObject->rect, rect);
-	}
-	case ArcEngine::BUTTON:
-	{
-		ArcButton *button = static_cast<ArcButton*>(object);
-		return intersects(button->sprite, rect);
-	}
-	default:
-#ifdef ARC_DEBUG
-		return intersects(object->debugRect, rect, object->m_transform);
-#else
-		break;
-#endif
-	}
-	return false;
+	return intersects(object->hitBox(), rect);
 }

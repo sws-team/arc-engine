@@ -40,6 +40,11 @@ void ArcSprite::updateSize()
 	ArcObject::updateSize();
 }
 
+sf::RectangleShape ArcSprite::hitBox() const
+{
+	return sprite;
+}
+
 void ArcSprite::setTexture(TextureType textureID)
 {
 	m_textureID = textureID;

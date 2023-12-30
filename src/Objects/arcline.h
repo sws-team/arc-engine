@@ -37,8 +37,9 @@ public:
 	void updateTarget();
 
 protected:
+	friend class Intersection;
 	void updateScale() override;
-
+	sf::RectangleShape hitBox() const override;
 private:
 	sf::RectangleShape line;
 	float m_lineWidth = 1.f;

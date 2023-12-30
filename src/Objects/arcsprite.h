@@ -27,6 +27,7 @@ protected:
 	void updateScale() override;
 	void updateOrigin() override;
 	void updateSize() override;
+	sf::RectangleShape hitBox() const override;
 
 	sf::RectangleShape sprite;
 	TextureType m_textureID = -1;

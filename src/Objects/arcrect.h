@@ -24,6 +24,7 @@ protected:
 	void updateScale() override;
 	void updateOrigin() override;
 	void updateSize() override;
+	sf::RectangleShape hitBox() const override;
 private:
 	sf::RectangleShape rect;
 };

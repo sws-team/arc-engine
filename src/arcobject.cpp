@@ -14,9 +14,9 @@ ArcObject::ArcObject(const std::string &name)
 {
 	scaleFactor = Engine::Instance().settingsManager()->getScaleFactor();
 #ifdef ARC_DEBUG
-	debugRect.setFillColor(sf::Color::Transparent);
-	debugRect.setOutlineColor(sf::Color::White);
-	debugRect.setOutlineThickness(1.f);
+	m_hitBox.setFillColor(sf::Color::Transparent);
+	m_hitBox.setOutlineColor(sf::Color::White);
+	m_hitBox.setOutlineThickness(1.f);
 
 	debugCenter.setFillColor(sf::Color::Transparent);
 	debugCenter.setOutlineColor(sf::Color::White);
@@ -155,7 +155,7 @@ void ArcObject::setParent(ArcObject *parent)
 void ArcObject::updatePos()
 {
 #ifdef ARC_DEBUG
-	debugRect.setPosition(scaledGlobalPos());
+	m_hitBox.setPosition(scaledGlobalPos());
 	debugCenter.setPosition(scaledGlobalPos());
 	debugOrigin.position = scaledGlobalPos();
 	debugOriginPos.position = scaledGlobalPos();
@@ -167,7 +167,7 @@ void ArcObject::updatePos()
 void ArcObject::updateScale()
 {
 #ifdef ARC_DEBUG
-	debugRect.setScale(scaledGlobalScale());
+	m_hitBox.setScale(scaledGlobalScale());
 #endif
 	for(ArcObject* child : m_childs)
 		child->updateScale();
@@ -176,15 +176,20 @@ void ArcObject::updateScale()
 void ArcObject::updateOrigin()
 {
 #ifdef ARC_DEBUG
-	debugRect.setOrigin(globalOrigin());
+	m_hitBox.setOrigin(globalOrigin());
 #endif
 }
 
 void ArcObject::updateSize()
 {
 #ifdef ARC_DEBUG
-	debugRect.setSize(size());
+	m_hitBox.setSize(size());
 #endif
+}
+
+sf::RectangleShape ArcObject::hitBox() const
+{
+	return m_hitBox;
 }
 
 void ArcObject::updateAlpha()
@@ -246,7 +251,7 @@ void ArcObject::processDrag(sf::Event *event)
 		drag.emplace(pos);
 		NOTIFY(NotificationManager::DRAG_MOVED, ArcVariant(path()));
 	}
-	if (event->type == sf::Event::MouseButtonReleased && event->mouseButton.button == sf::Mouse::Left) {
+	if (event->type == sf::Event::MouseButtonReleased && event->mouseButton.button == sf::Mouse::Left && drag.has_value()) {
 		//drag ended
 		drag.reset();
 		NOTIFY(NotificationManager::DRAG_FINISHED, ArcVariant(path()));
@@ -285,7 +290,7 @@ void ArcObject::setDragEnabled(bool enabled)
 #ifdef ARC_DEBUG
 void ArcObject::setDebugRectColor(const sf::Color &color)
 {
-	debugRect.setOutlineColor(color);
+	m_hitBox.setOutlineColor(color);
 	debugCenter.setOutlineColor(color);
 	debugOrigin.color = color;
 	debugOriginPos.color = color;
@@ -293,18 +298,18 @@ void ArcObject::setDebugRectColor(const sf::Color &color)
 
 sf::Color ArcObject::debugRectColor() const
 {
-	return debugRect.getOutlineColor();
+	return m_hitBox.getOutlineColor();
 }
 
 void ArcObject::setDebugRectLineSize(float size)
 {
-	debugRect.setOutlineThickness(size);
+	m_hitBox.setOutlineThickness(size);
 	debugCenter.setOutlineThickness(size);
 }
 
 float ArcObject::debugRectLineSize() const
 {
-	return debugRect.getOutlineThickness();
+	return m_hitBox.getOutlineThickness();
 }
 
 #endif
@@ -313,7 +318,7 @@ void ArcObject::draw(sf::RenderTarget * const target)
 {
 #ifdef ARC_DEBUG
 	if (drawDebugRect) {
-		target->draw(debugRect, m_transform);
+		target->draw(hitBox(), m_transform);
 		target->draw(debugCenter, m_transform);
 		target->draw(&debugOrigin, 1, sf::Points, m_transform);
 		target->draw(&debugOriginPos, 1, sf::Points, m_transform);

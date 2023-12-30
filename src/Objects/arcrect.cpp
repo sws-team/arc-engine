@@ -38,6 +38,11 @@ void ArcRect::updateSize()
 	ArcObject::updateSize();
 }
 
+sf::RectangleShape ArcRect::hitBox() const
+{
+	return rect;
+}
+
 void ArcRect::setColor(const sf::Color &color)
 {
 	ColorProperty::setColor(color);

@@ -127,6 +127,11 @@ void ArcLine::updateScale()
 	ArcObject::updateScale();
 }
 
+sf::RectangleShape ArcLine::hitBox() const
+{
+	return line;
+}
+
 void ArcLine::updateTarget()
 {
 	if (m_objects) {

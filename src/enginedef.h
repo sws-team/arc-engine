@@ -61,6 +61,8 @@ class ArcLabel;
 class ArcClippedSprite;
 class ArcRect;
 class ArcVariant;
+class ArcLine;
+class ArcPolygon;
 
 typedef std::function<void(const ArcVariant&)> CallbackType;
 

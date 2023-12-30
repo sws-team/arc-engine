@@ -79,6 +79,7 @@ namespace Collision {
 class Intersection
 {
 public:
+	static bool intersects(ArcObject* object, ArcObject* other);
 	static bool contains(ArcObject* object, const sf::Vector2f& pos);
 	static bool intersects(ArcObject* object, const sf::FloatRect& rect);
 

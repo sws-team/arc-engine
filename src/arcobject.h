@@ -108,6 +108,7 @@ protected:
 	virtual void updateScale();
 	virtual void updateOrigin();
 	virtual void updateSize();
+	virtual sf::RectangleShape hitBox() const;
 	void updateAlpha();
 
 	std::vector<ArcObject*> m_childs;
@@ -120,6 +121,7 @@ protected:
 
 	sf::Vector2f scaleFactor;
 	bool enabledScaleFactor = true;
+	sf::RectangleShape m_hitBox;
 private:
 	//base
 	friend class ArcDebug;
@@ -155,7 +157,6 @@ private:
 #ifdef ARC_DEBUG
 	bool drawDebugRect = false;
 	bool drawOrigin = false;
-	sf::RectangleShape debugRect;
 	sf::Vertex debugOrigin;
 	sf::Vertex debugOriginPos;
 	sf::CircleShape debugCenter;
