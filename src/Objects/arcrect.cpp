@@ -40,7 +40,7 @@ void ArcRect::updateSize()
 
 sf::RectangleShape ArcRect::hitBox() const
 {
-	return rect;
+	return ArcObject::hitBox(rect.getPosition(), rect.getSize());
 }
 
 void ArcRect::setColor(const sf::Color &color)

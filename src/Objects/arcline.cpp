@@ -129,7 +129,9 @@ void ArcLine::updateScale()
 
 sf::RectangleShape ArcLine::hitBox() const
 {
-	return line;
+	sf::RectangleShape box = ArcObject::hitBox(line.getPosition(), line.getSize());
+	box.setRotation(line.getRotation());
+	return box;
 }
 
 void ArcLine::updateTarget()

@@ -83,6 +83,10 @@ public:
 	void setCentered();
 	void setCenteredOrigin();
 
+	virtual sf::RectangleShape hitBox() const;
+	sf::RectangleShape hitBox(const sf::FloatRect& rect) const;
+	sf::RectangleShape hitBox(const sf::Vector2f& pos, const sf::Vector2f& size) const;
+
 	//custom data
 	void setData(const std::string& name, const ArcVariant& value);
 	ArcVariant data(const std::string& name) const;
@@ -108,7 +112,6 @@ protected:
 	virtual void updateScale();
 	virtual void updateOrigin();
 	virtual void updateSize();
-	virtual sf::RectangleShape hitBox() const;
 	void updateAlpha();
 
 	std::vector<ArcObject*> m_childs;

@@ -192,6 +192,19 @@ sf::RectangleShape ArcObject::hitBox() const
 	return m_hitBox;
 }
 
+sf::RectangleShape ArcObject::hitBox(const sf::FloatRect &rect) const
+{
+	return ArcObject::hitBox(rect.getPosition(), rect.getSize());
+}
+
+sf::RectangleShape ArcObject::hitBox(const sf::Vector2f &pos, const sf::Vector2f &size) const
+{
+	sf::RectangleShape box = m_hitBox;
+	box.setPosition(pos);
+	box.setSize(size);
+	return box;
+}
+
 void ArcObject::updateAlpha()
 {
 	if (ColorProperty *property = dynamic_cast<ColorProperty*>(this); property != nullptr)

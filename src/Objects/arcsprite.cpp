@@ -42,7 +42,7 @@ void ArcSprite::updateSize()
 
 sf::RectangleShape ArcSprite::hitBox() const
 {
-	return sprite;
+	return ArcObject::hitBox(sprite.getPosition(), sprite.getSize());
 }
 
 void ArcSprite::setTexture(TextureType textureID)
