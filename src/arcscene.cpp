@@ -11,12 +11,16 @@ ArcScene::ArcScene(const std::string &name)
 	bg->setSize(SettingsManager::defaultResolution);
 	addChild(bg);
 
-	DEBUG_OBJECT(this);
+#ifdef ARC_DEBUG
+	Engine::Instance().debugManager()->setObject(this);
+#endif
 }
 
 ArcScene::~ArcScene()
 {
-	DEBUG_OBJECT(nullptr);
+#ifdef ARC_DEBUG
+	Engine::Instance().debugManager()->setObject(nullptr);
+#endif
 }
 
 void ArcScene::init()

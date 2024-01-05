@@ -1,5 +1,4 @@
 #include "arcdebug.h"
-#ifdef ARC_DEBUG
 #include <managers.h>
 #include <ArcEngine>
 #include <mainwindow.h>
@@ -24,9 +23,15 @@
 #include "imgui-SFML.h"
 #include "imconfig-SFML.h"
 #include "imgui_stdlib.h"
-#endif
 
 ArcObject *ArcDebug::selectedObject = nullptr;
+
+ArcDebug::~ArcDebug()
+{
+	for(DebugSection *section : sections) {
+		delete section;
+	}
+}
 
 void ArcDebug::setObject(ArcObject *object)
 {
@@ -45,9 +50,7 @@ void ArcDebug::draw(sf::RenderTarget *target)
 
 void ArcDebug::init()
 {
-#ifdef ARC_DEBUG
 	ImGui::SFML::Init(*static_cast<sf::RenderWindow*>(Engine::Instance().window()));
-#endif
 	FPS.updateTimer.setInterval(200);
 	FPS.updateTimer.setRepeat(false);
 	FPS.updateTimer.start();
@@ -55,17 +58,13 @@ void ArcDebug::init()
 
 void ArcDebug::clear()
 {
-#ifdef ARC_DEBUG
 	ImGui::SFML::Shutdown();
-#endif
 }
 
 void ArcDebug::update()
 {
-#ifdef ARC_DEBUG
 	const sf::Time dt = clock.restart();
 	ImGui::SFML::Update(*static_cast<sf::RenderWindow*>(Engine::Instance().window()), dt);
-#endif
 	const float currentTime = FPS.clock.restart().asSeconds();
 	if (!FPS.updateTimer.isActive()) {
 		FPS.value = 1.f / currentTime;
@@ -75,7 +74,6 @@ void ArcDebug::update()
 
 bool ArcDebug::eventFilter(sf::Event *event)
 {
-#ifdef ARC_DEBUG
 	if (event->type == sf::Event::KeyPressed && event->key.code == sf::Keyboard::F3) {
 		visible = !visible;
 	}
@@ -125,9 +123,6 @@ bool ArcDebug::eventFilter(sf::Event *event)
 	ImGui::SFML::ProcessEvent(*static_cast<sf::RenderWindow*>(Engine::Instance().window()), *event);
 	ImGuiIO& io = ImGui::GetIO();
 	return io.WantCaptureMouse || io.WantCaptureKeyboard;
-#else
-	return false;
-#endif
 }
 
 void ArcDebug::addSection(DebugSection *section)
@@ -144,7 +139,6 @@ void ArcDebug::removeSection(DebugSection *section)
 
 void ArcDebug::drawFrame()
 {
-#ifdef ARC_DEBUG
 	const ImVec2 windowSize = ImVec2(Engine::Instance().settingsManager()->getResolutionF().x / 3,
 									 Engine::Instance().settingsManager()->getResolutionF().y / 3);
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
@@ -204,14 +198,12 @@ void ArcDebug::drawFrame()
 		ImGui::End();
 	}
 //	ImGui::ShowDemoWindow();
-#endif
 }
 
 void ArcDebug::drawObject(ArcObject *obj)
 {
 	if (obj == nullptr)
 		return;
-#ifdef ARC_DEBUG
 	const float height = ImGui::GetWindowSize().y;
 	static float w = 200.0f;
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0,0));
@@ -254,14 +246,12 @@ void ArcDebug::drawObject(ArcObject *obj)
 		drawObjectProperties(selectedObject);
 	ImGui::EndChild();
 	ImGui::PopStyleVar();
-#endif
 }
 
 void ArcDebug::drawObjectProperties(ArcObject *obj)
 {
 	if (obj == nullptr)
 		return;
-#ifdef ARC_DEBUG
 	std::function<void(const std::string&, ImVec4*)> editColor = [] (const std::string& name, ImVec4* color) {
 		ImGui::TextUnformatted(name.c_str());
 
@@ -836,12 +826,10 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 	if (obj->type() != ArcEngine::OBJECT)
 		drawInheritObject(obj->type(), obj);
 	drawCustomData(obj);
-#endif
 }
 
 void ArcDebug::drawCustomData(ArcObject *obj)
 {
-#ifdef ARC_DEBUG
 	auto drawName = [](const std::string& name) {
 		ImGui::SameLine();
 		ImGui::TextUnformatted(name.c_str());
@@ -893,7 +881,6 @@ void ArcDebug::drawCustomData(ArcObject *obj)
 			}
 		}
 	}
-#endif
 }
 
 std::string ArcDebug::typeToName(ArcEngine::OBJECT_TYPE type)

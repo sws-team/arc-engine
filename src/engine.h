@@ -16,6 +16,7 @@ class MainWindow;
 class ResourcesManager;
 class NotificationManager;
 class WindowsManager;
+class DebugManager;
 
 class Engine
 {
@@ -36,6 +37,9 @@ public:
 	ResourcesManager *resourceManager();
 	NotificationManager *notificationManager();
 	WindowsManager *windowsManager();
+#ifdef ARC_DEBUG
+	DebugManager *debugManager();
+#endif
 
 	template<typename Class> Class castedStateManager() {
 		return static_cast<Class>(p_sceneManager);
@@ -69,6 +73,9 @@ private:
 	ResourcesManager *p_resourceManager = nullptr;
 	NotificationManager *p_notificationManager = nullptr;
 	WindowsManager *p_windowsManager = nullptr;
+#ifdef ARC_DEBUG
+	DebugManager *p_debugManager = nullptr;
+#endif
 	Options *p_options = nullptr;
 
 	MainWindow *p_window = nullptr;

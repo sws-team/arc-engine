@@ -8,17 +8,15 @@
 #include "arcwindow.h"
 #include "arcscene.h"
 #include "arcvariant.h"
+#ifdef ARC_DEBUG
+#include <ArcDebug>
+#endif
 
 class ArcWindow;
 class ArcDebug;
 class ArcObject;
 class MainWindow;
 class DebugSection;
-
-namespace ArcEngine {
-ArcObject *findChild(const std::string& name);
-ArcObject *findChildPath(const std::string& path);
-}
 
 class Manager
 {
@@ -27,7 +25,6 @@ public:
 };
 
 #define RESOLUTIONF Engine::Instance().settingsManager()->getResolutionF()
-#define DEBUG_OBJECT(x) Engine::Instance().getOptions()->debugObject(x);
 #define PLAY_SOUND(x) Engine::Instance().soundManager()->playOnce(x);
 #define STOP_SOUND(x) Engine::Instance().soundManager()->stop(x);
 #define CHANGE_SCENE(x) Engine::Instance().sceneManager()->setSceneType(x);
@@ -285,27 +282,21 @@ public:
 	MainWindow *mainWindow();
 	void setMainWindow(MainWindow *window);
 	virtual void updateWindow();
-	void debugObject(ArcObject* object);
-	void addDebugSection(DebugSection *section);
-	void removeDebugSection(DebugSection *section);
+	void addNotificationCallback(const std::function<void (const std::string &, const std::vector<ArcVariant> &)> &callback);
 
-	void addNotificationCallback(const std::function<void(const std::string&, const ArcVariant&)>& callback);
-
-	virtual void globalCallbacks();
-	virtual void clear();
+	virtual void globalUpdate();
 	virtual bool globalEventFilter(sf::Event* event);
 	virtual void globalDraw(sf::RenderTarget *target);
-	virtual void globalNotifications(const std::string &name, const ArcVariant &value);
+	virtual void globalNotifications(const std::string &name, const std::vector<ArcVariant>& args);
 
 	bool isResourcesLoaded() const;
 	void setResourcesLoaded(bool loaded);
 
 protected:
 	MainWindow *mw = nullptr;
-	ArcDebug *debug = nullptr;
 	bool m_resourcesLoaded;
 
-	std::vector<std::function<void(const std::string&, const ArcVariant&)>> notificationCallbacks;
+	std::vector<std::function<void(const std::string&, const std::vector<ArcVariant>&)>> notificationCallbacks;
 };
 
 class FilesManager : public Manager
@@ -368,7 +359,7 @@ private:
 class NotificationManager : public Manager
 {
 public:
-	NotificationManager();
+	NotificationManager() = default;
 
 	enum NOTIFICATION_TYPE
 	{
@@ -394,11 +385,14 @@ public:
 		DRAG_FINISHED,
 	};
 
-	void notify(NotificationType type, const ArcVariant& value);
-	void notify(const std::string& name, const ArcVariant &value);
+	void notify(NotificationType type, const std::vector<ArcVariant>& args);
+	void notify(const std::string& name, const std::vector<ArcVariant>& args);
+	void notify(NotificationType type, const ArcVariant& arg);
+	void notify(const std::string& name, const ArcVariant& arg);
 
 	std::optional<std::string> notificationName(NotificationType type) const;
 
+	//TODO notification queue
 protected:
 	std::optional<int> addCallback(NotificationType type, const CallbackType& callback);
 	std::optional<int> addCallback(const std::string& name, const CallbackType& callback);
@@ -444,5 +438,11 @@ private:
 	void removeWindow(ArcWindow* window);
 };
 
+#ifdef ARC_DEBUG
+class DebugManager : public Manager, public ArcDebug
+{
+public:
+};
+#endif
 
 #endif // MANAGERS_H

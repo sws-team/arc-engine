@@ -4,6 +4,7 @@
 #include "managers.h"
 #include <ArcLabel>
 #include <ArcAction>
+#include <ArcEngineUtils>
 
 #ifdef ARC_DEBUG
 #include <imgui.h>
@@ -18,14 +19,14 @@ Tutorial::Tutorial()
 #ifdef ARC_DEBUG
 	debug = new TutorialDebug();
 	debug->p = this;
-	Engine::Instance().getOptions()->addDebugSection(debug);
+	Engine::Instance().debugManager()->addSection(debug);
 #endif
 }
 
 Tutorial::~Tutorial()
 {
 #ifdef ARC_DEBUG
-	Engine::Instance().getOptions()->removeDebugSection(debug);
+	Engine::Instance().debugManager()->removeSection(debug);
 	delete debug;
 #endif
 }

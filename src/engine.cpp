@@ -24,14 +24,20 @@ Engine::Engine()
 	p_sceneManager = new SceneManager();
 	p_notificationManager = new NotificationManager();
 	p_windowsManager = new WindowsManager();
+#ifdef ARC_DEBUG
+	p_debugManager = new DebugManager();
+#endif
 	p_window = nullptr;
+
 	reset();
 }
 
 void Engine::clearInstance()
 {
 	p_soundManager->clearAll();
-	p_options->clear();
+#ifdef ARC_DEBUG
+	p_debugManager->clear();
+#endif
 }
 
 void Engine::setOptions(Options *manager)
@@ -93,7 +99,12 @@ WindowsManager *Engine::windowsManager()
 {
 	return p_windowsManager;
 }
-
+#ifdef ARC_DEBUG
+DebugManager *Engine::debugManager()
+{
+	return p_debugManager;
+}
+#endif
 Options *Engine::getOptions()
 {
 	return p_options;

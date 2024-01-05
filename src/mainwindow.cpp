@@ -64,7 +64,12 @@ void MainWindow::exec()
 
 		sf::Event event;
 		while (active ? pollEvent(event) : waitEvent(event)) {
-			const bool accepted = Engine::Instance().getOptions()->globalEventFilter(&event);
+			bool accepted = false;
+#ifdef ARC_DEBUG
+			Engine::Instance().debugManager()->eventFilter(&event);
+#endif
+			if (!accepted)
+				accepted = Engine::Instance().getOptions()->globalEventFilter(&event);
 			switch (event.type)
 			{
 			case sf::Event::Resized:
@@ -95,7 +100,10 @@ void MainWindow::exec()
 		if (active) {
 			TimersManager::Instance().update();
 			currentScene->process();
-			Engine::Instance().getOptions()->globalCallbacks();
+#ifdef ARC_DEBUG
+			Engine::Instance().debugManager()->update();
+#endif
+			Engine::Instance().getOptions()->globalUpdate();
 			Engine::Instance().windowsManager()->update();
 
 			clear(sf::Color::Black);
@@ -103,7 +111,9 @@ void MainWindow::exec()
 			currentScene->paint(this);
 
 			Engine::Instance().getOptions()->globalDraw(this);
-
+#ifdef ARC_DEBUG
+			Engine::Instance().debugManager()->draw(this);
+#endif
 			display();
 		}
 		else {

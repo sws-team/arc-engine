@@ -24,6 +24,8 @@ class ArcDebug
 {
 public:
 	ArcDebug() = default;
+	~ArcDebug();
+
 	void setObject(ArcObject* object);
 	void draw(sf::RenderTarget *target);
 	void init();

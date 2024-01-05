@@ -49,7 +49,6 @@ set(ARC_ENGINE_HEADERS
 
     ${ARC_ENGINE_DIR}/src/arclog.h
     ${ARC_ENGINE_DIR}/src/arcobject.h
-    ${ARC_ENGINE_DIR}/src/arcdebug.h
     ${ARC_ENGINE_DIR}/src/arcwindow.h
     ${ARC_ENGINE_DIR}/src/arcscene.h
     ${ARC_ENGINE_DIR}/src/arcaction.h
@@ -87,7 +86,6 @@ set(ARC_ENGINE_SOURCES
     ${ARC_ENGINE_DIR}/src/Objects/arcline.cpp
 
     ${ARC_ENGINE_DIR}/src/arcobject.cpp
-    ${ARC_ENGINE_DIR}/src/arcdebug.cpp
     ${ARC_ENGINE_DIR}/src/arcwindow.cpp
     ${ARC_ENGINE_DIR}/src/arcscene.cpp
     ${ARC_ENGINE_DIR}/src/arcaction.cpp
@@ -103,6 +101,12 @@ set(ARC_ENGINE_SOURCES
 
     ${RESOURCES_SOURCES}
     )
+
+if(ARC_DEBUG)
+    message("debug mode")
+    set(ARC_ENGINE_HEADERS ${ARC_ENGINE_HEADERS} ${ARC_ENGINE_DIR}/src/arcdebug.h)
+    set(ARC_ENGINE_SOURCES ${ARC_ENGINE_SOURCES} ${ARC_ENGINE_DIR}/src/arcdebug.cpp)
+endif(ARC_DEBUG)
 
 #3rd party
 set(3RD_PARTY_DIR ${CMAKE_CURRENT_LIST_DIR}/../3rdParty)

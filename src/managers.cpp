@@ -21,18 +21,6 @@
 #include <cstring>
 #include "SFML/SFMLFactory.h"
 
-namespace ArcEngine {
-	ArcObject *findChild(const std::string &name) {
-		ArcScene *scene = Engine::Instance().sceneManager()->currentScene();
-		return scene->findChild(name, true);
-	}
-
-	ArcObject *findChildPath(const std::string &path) {
-		ArcScene *scene = Engine::Instance().sceneManager()->currentScene();
-		return scene->findChildPath(path);
-	}
-}
-
 void Manager::reset()
 {
 
@@ -609,12 +597,12 @@ Options::Options()
 	: mw(nullptr)
 	,m_resourcesLoaded(false)
 {
-	debug = new ArcDebug();
+
 }
 
 Options::~Options()
 {
-	delete debug;
+
 }
 
 MainWindow *Options::mainWindow()
@@ -625,7 +613,9 @@ MainWindow *Options::mainWindow()
 void Options::setMainWindow(MainWindow *window)
 {
 	mw = window;
-	debug->init();
+#ifdef ARC_DEBUG
+	Engine::Instance().debugManager()->init();
+#endif
 }
 
 void Options::updateWindow()
@@ -650,51 +640,31 @@ void Options::updateWindow()
 	Engine::Instance().window()->updateView();
 }
 
-void Options::debugObject(ArcObject *object)
-{
-	debug->setObject(object);
-}
-
-void Options::addDebugSection(DebugSection *section)
-{
-	debug->addSection(section);
-}
-
-void Options::removeDebugSection(DebugSection *section)
-{
-	debug->removeSection(section);
-}
-
-void Options::addNotificationCallback(const std::function<void (const std::string &, const ArcVariant &)> &callback)
+void Options::addNotificationCallback(const std::function<void (const std::string &, const std::vector<ArcVariant> &)> &callback)
 {
 	notificationCallbacks.push_back(callback);
 }
 
-void Options::globalCallbacks()
+void Options::globalUpdate()
 {
-	debug->update();
-}
 
-void Options::clear()
-{
-	debug->clear();
 }
 
 bool Options::globalEventFilter(sf::Event *event)
 {
-	return debug->eventFilter(event);
+	return false;
 }
 
 void Options::globalDraw(sf::RenderTarget *target)
 {
-	debug->draw(target);
+//	debug->draw(target);
 }
 
-void Options::globalNotifications(const std::string &name, const ArcVariant &value)
+void Options::globalNotifications(const std::string &name, const std::vector<ArcVariant>& args)
 {
 	for(const auto &notificationCallback : notificationCallbacks) {
 		if (notificationCallback != nullptr)
-			notificationCallback(name, value);
+			notificationCallback(name, args);
 	}
 }
 
@@ -853,27 +823,32 @@ const std::unordered_map<NotificationManager::NOTIFICATION_TYPE, std::string> No
 	{ DRAG_FINISHED, "drag finished" },
 };
 
-NotificationManager::NotificationManager()
+void NotificationManager::notify(NotificationType type, const ArcVariant& arg)
 {
-
+	notify(type, std::vector<ArcVariant>{arg});
 }
 
-void NotificationManager::notify(NotificationType type, const ArcVariant &value)
+void NotificationManager::notify(NotificationType type, const std::vector<ArcVariant> &args)
 {
 	std::optional<std::string> name = notificationName(type);
 	if (name != std::nullopt) {
-		notify(name.value(), value);
+		notify(name.value(), args);
 	}
 }
 
-void NotificationManager::notify(const std::string &name, const ArcVariant &value)
+void NotificationManager::notify(const std::string &name, const ArcVariant& arg)
+{
+	notify(name, std::vector<ArcVariant>{arg});
+}
+
+void NotificationManager::notify(const std::string &name, const std::vector<ArcVariant>& args)
 {
 	if (auto it = callbacks.find(name); it != callbacks.end()) {
 		for(const auto& data : (*it).second) {
-			data.callback(value);
+			data.callback(args);
 		}
 	}
-	Engine::Instance().getOptions()->globalNotifications(name, value);
+	Engine::Instance().getOptions()->globalNotifications(name, args);
 }
 
 std::optional<std::string> NotificationManager::notificationName(NotificationType type) const

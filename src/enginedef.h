@@ -64,6 +64,6 @@ class ArcVariant;
 class ArcLine;
 class ArcPolygon;
 
-typedef std::function<void(const ArcVariant&)> CallbackType;
+typedef std::function<void(const std::vector<ArcVariant>&)> CallbackType;
 
 #endif // ENGINEDEF_H
