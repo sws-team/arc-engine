@@ -138,13 +138,11 @@ void ArcLine::updateTarget()
 		m_firstPoint = object->pos();
 		m_secondPoint = target->pos();
 	}
+	setPos(m_firstPoint);
 	line.setPosition(scaledGlobalPos(m_firstPoint));
 
 	const float angle = ArcEngine::getAngle(m_firstPoint, m_secondPoint);
 	setRotation(angle);
-
-	sf::Vector2f objectPos = m_firstPoint;
-	setPos(objectPos);
 
 	float w = std::fabs(m_secondPoint.x - m_firstPoint.x);
 	float h = std::fabs(m_secondPoint.y - m_firstPoint.y);
