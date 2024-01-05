@@ -106,7 +106,7 @@ void ArcLine::update()
 {
 	if(m_objects) {
 		const sf::Vector2f lastFirstPoint = object->pos();
-		const sf::Vector2f lastSecondPoint= target->pos();
+		const sf::Vector2f lastSecondPoint = target->pos();
 		if (lastFirstPoint != m_firstPoint || lastSecondPoint != m_secondPoint) {
 			updateTarget();
 		}
@@ -129,9 +129,7 @@ void ArcLine::updateScale()
 
 sf::RectangleShape ArcLine::hitBox() const
 {
-	sf::RectangleShape box = ArcObject::hitBox(line.getPosition(), line.getSize());
-	box.setRotation(line.getRotation());
-	return box;
+	return ArcObject::hitBox(line.getPosition(), line.getSize());
 }
 
 void ArcLine::updateTarget()
@@ -143,15 +141,9 @@ void ArcLine::updateTarget()
 	line.setPosition(scaledGlobalPos(m_firstPoint));
 
 	const float angle = ArcEngine::getAngle(m_firstPoint, m_secondPoint);
-	line.setRotation(angle);
+	setRotation(angle);
 
 	sf::Vector2f objectPos = m_firstPoint;
-	if (float dif = m_secondPoint.x - m_firstPoint.x; dif < 0) {
-		objectPos += sf::Vector2f(dif, 0);
-	}
-	if (float dif = m_secondPoint.y - m_firstPoint.y; dif < 0) {
-		objectPos += sf::Vector2f(0, dif);
-	}
 	setPos(objectPos);
 
 	float w = std::fabs(m_secondPoint.x - m_firstPoint.x);

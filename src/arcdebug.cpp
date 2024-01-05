@@ -79,6 +79,10 @@ bool ArcDebug::eventFilter(sf::Event *event)
 	if (event->type == sf::Event::KeyPressed && event->key.code == sf::Keyboard::F3) {
 		visible = !visible;
 	}
+	if (event->type == sf::Event::MouseMoved) {
+		screenPos = sf::Vector2i(event->mouseMove.x, event->mouseMove.y);
+		mousePos = PIXEL_TO_POS(screenPos.x, screenPos.y);
+	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 		std::function<ArcObject*(ArcObject*, const sf::Vector2f&)> findObject = nullptr;
 		findObject = [&findObject](ArcObject* object, const sf::Vector2f& pos) ->ArcObject* {
@@ -108,8 +112,7 @@ bool ArcDebug::eventFilter(sf::Event *event)
 			}
 		}
 		if (event->type == sf::Event::MouseMoved) {
-			const sf::Vector2f pos = PIXEL_TO_POS(event->mouseMove.x, event->mouseMove.y);
-			ArcObject *findedObject = findObject(object, pos);
+			ArcObject *findedObject = findObject(object, mousePos);
 			static ArcObject* lastFinded = nullptr;
 			if (findedObject != nullptr) {
 				if (lastFinded != nullptr)
@@ -164,6 +167,22 @@ void ArcDebug::drawFrame()
 				fpsColor.z = 0;
 				ImGui::TextColored(fpsColor, "%s", std::to_string(static_cast<int>(FPS.value)).c_str());
 
+				if (ImGui::CollapsingHeader("Coordinates", ImGuiTreeNodeFlags_DefaultOpen)) {
+					ImGui::TextUnformatted("Resolution:");
+					ImGui::SameLine();
+					ImGui::TextUnformatted(std::string(std::to_string(static_cast<int>(RESOLUTIONF.x)) + " : " +
+													   std::to_string(static_cast<int>(RESOLUTIONF.y))).c_str());
+
+					ImGui::TextUnformatted("Screen coordinates:");
+					ImGui::SameLine();
+					ImGui::TextUnformatted(std::string(std::to_string(screenPos.x) + " : " +
+													   std::to_string(screenPos.y)).c_str());
+
+					ImGui::TextUnformatted("Game coordinates:");
+					ImGui::SameLine();
+					ImGui::TextUnformatted(std::string(ArcEngine::to_string_with_precision(mousePos.x, 2) + " : " +
+													   ArcEngine::to_string_with_precision(mousePos.y, 2)).c_str());
+				}
 				ImGui::EndTabItem();
 			}
 			static bool firstOpen = true;
@@ -763,7 +782,8 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::DragFloat("##FirstPointY", &y);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Y");
-					line->setFirstPoint(sf::Vector2f(x, y));
+					if (x != line->firstPoint().x || y != line->firstPoint().y)
+						line->setFirstPoint(sf::Vector2f(x, y));
 				}
 				{//Second point
 					float x = line->secondPoint().x;
@@ -775,7 +795,8 @@ void ArcDebug::drawObjectProperties(ArcObject *obj)
 					ImGui::DragFloat("##SecondPointY", &y);
 					ImGui::SameLine();
 					ImGui::TextUnformatted("Y");
-					line->setSecondPoint(sf::Vector2f(x, y));
+					if (x != line->secondPoint().x || y != line->secondPoint().y)
+						line->setSecondPoint(sf::Vector2f(x, y));
 				}
 				{//Line Width
 					float width = line->lineWidth();

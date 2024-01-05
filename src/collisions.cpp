@@ -274,6 +274,11 @@ bool Intersection::contains(ArcObject *object, const sf::Vector2f &pos)
 	return contains(object->hitBox(), pos, object->m_transform);
 }
 
+bool Intersection::contains(ArcObject *object, ArcObject *target)
+{
+	return contains(object->hitBox(), target->scaledGlobalPos(), object->m_transform);
+}
+
 bool Intersection::intersects(ArcObject *object, const sf::FloatRect &rect)
 {
 	return intersects(object->hitBox(), rect);

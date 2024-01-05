@@ -45,6 +45,8 @@ private:
 		float value = 0;
 		ArcTimer updateTimer;
 	} FPS;
+	sf::Vector2f mousePos;
+	sf::Vector2i screenPos;
 
 	static ArcObject *selectedObject;
 	void drawFrame();
