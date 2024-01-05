@@ -1,10 +1,22 @@
 #include "arcengineutils.h"
 #include "arcobject.h"
 #include "arcproperties.h"
+#include <ArcScene>
+#include "managers.h"
 
 #include <sstream>
 
 namespace ArcEngine {
+
+ArcObject *findChild(const std::string &name) {
+	ArcScene *scene = Engine::Instance().sceneManager()->currentScene();
+	return scene->findChild(name, true);
+}
+
+ArcObject *findChildPath(const std::string &path) {
+	ArcScene *scene = Engine::Instance().sceneManager()->currentScene();
+	return scene->findChildPath(path);
+}
 
 std::vector<sf::Vector2f> calcCubicBezier(const sf::Vector2f &start,
 										  const sf::Vector2f &end,

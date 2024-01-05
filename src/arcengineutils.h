@@ -9,8 +9,10 @@
 #define PIXEL_TO_POS(x, y) Engine::Instance().window()->mapPixelToCoords(sf::Vector2i(x, y), *Engine::Instance().window()->view());
 
 namespace ArcEngine {
+	ArcObject *findChild(const std::string& name);
+	ArcObject *findChildPath(const std::string& path);
 
-//https://github.com/SFML/SFML/wiki/Source%3A-cubic-bezier-curve
+	//https://github.com/SFML/SFML/wiki/Source%3A-cubic-bezier-curve
 	std::vector<sf::Vector2f> calcCubicBezier(const sf::Vector2f &start,
 											  const sf::Vector2f &end,
 											  const sf::Vector2f &startControl,
