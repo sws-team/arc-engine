@@ -50,6 +50,8 @@ void ArcDebug::draw(sf::RenderTarget *target)
 
 void ArcDebug::init()
 {
+	sections.push_back(new NotificationDebug());
+
 	ImGui::SFML::Init(*static_cast<sf::RenderWindow*>(Engine::Instance().window()));
 	FPS.updateTimer.setInterval(200);
 	FPS.updateTimer.setRepeat(false);
@@ -973,4 +975,76 @@ void DebugSection::draw()
 std::string DebugSection::name() const
 {
 	return m_name;
+}
+
+NotificationDebug::NotificationDebug()
+	: DebugSection("Notifications")
+{
+	Engine::Instance().getOptions()->addNotificationCallback([this](const std::string &name,
+															 ArcObject *object,
+															 const std::vector<ArcVariant>& args) {
+		std::string objectStr;
+		std::string objectPathStr;
+		std::string argsStr;
+		if (object == nullptr) {
+			objectStr = "null";
+			objectPathStr = "-";
+		}
+		else {
+			objectStr = object->name();
+			objectPathStr = object->path();
+		}
+		if (!args.empty())
+			argsStr = ArcVariant(args).printableValue();
+
+		notifications.push_back(std::make_tuple(name, objectStr, objectPathStr, argsStr));
+	});
+}
+
+void NotificationDebug::draw()
+{
+	enum COLUMNS {
+		NOTIFICATION_TYPE,
+		OBJECT_NAME,
+		PATH,
+		ARGS,
+		COLUMNS_COUNT
+	};
+	std::vector<std::string> headers = {
+		"Type", "Object", "Path", "Args"
+	};
+
+	if (ImGui::BeginTable("##Notifications", COLUMNS::COLUMNS_COUNT, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable)) {
+		ImGui::TableSetupColumn(headers.at(COLUMNS::NOTIFICATION_TYPE).c_str());
+		ImGui::TableSetupColumn(headers.at(COLUMNS::OBJECT_NAME).c_str());
+		ImGui::TableSetupColumn(headers.at(COLUMNS::PATH).c_str());
+		ImGui::TableSetupColumn(headers.at(COLUMNS::ARGS).c_str());
+		ImGui::TableHeadersRow();
+
+		for (unsigned row = notifications.size() - 1; row != 0; --row) {
+			ImGui::TableNextRow();
+			for (int column = 0; column < COLUMNS::COLUMNS_COUNT; column++) {
+				ImGui::TableSetColumnIndex(column);
+				const std::tuple<std::string, std::string, std::string, std::string> data = notifications.at(row);
+				switch (column)
+				{
+				case COLUMNS::NOTIFICATION_TYPE:
+					ImGui::Selectable(std::get<NOTIFICATION_TYPE>(data).c_str());
+					break;
+				case COLUMNS::OBJECT_NAME:
+					ImGui::Selectable(std::get<OBJECT_NAME>(data).c_str());
+					break;
+				case COLUMNS::PATH:
+					ImGui::Selectable(std::get<PATH>(data).c_str());
+					break;
+				case COLUMNS::ARGS:
+					ImGui::Selectable(std::get<ARGS>(data).c_str());
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		ImGui::EndTable();
+	}
 }

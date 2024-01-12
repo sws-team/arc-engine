@@ -640,7 +640,7 @@ void Options::updateWindow()
 	Engine::Instance().window()->updateView();
 }
 
-void Options::addNotificationCallback(const std::function<void (const std::string &, const std::vector<ArcVariant> &)> &callback)
+void Options::addNotificationCallback(const std::function<void (const std::string&, ArcObject*, const std::vector<ArcVariant>&)> &callback)
 {
 	notificationCallbacks.push_back(callback);
 }
@@ -655,16 +655,16 @@ bool Options::globalEventFilter(sf::Event *event)
 	return false;
 }
 
-void Options::globalDraw(sf::RenderTarget *target)
+void Options::globalDraw(sf::RenderTarget *)
 {
-//	debug->draw(target);
+
 }
 
-void Options::globalNotifications(const std::string &name, const std::vector<ArcVariant>& args)
+void Options::globalNotifications(const std::string &name, ArcObject *object, const std::vector<ArcVariant>& args)
 {
 	for(const auto &notificationCallback : notificationCallbacks) {
 		if (notificationCallback != nullptr)
-			notificationCallback(name, args);
+			notificationCallback(name, object, args);
 	}
 }
 
@@ -823,32 +823,34 @@ const std::unordered_map<NotificationManager::NOTIFICATION_TYPE, std::string> No
 	{ DRAG_FINISHED, "drag finished" },
 };
 
-void NotificationManager::notify(NotificationType type, const ArcVariant& arg)
+void NotificationManager::notify(NotificationType type, ArcObject *object, const ArcVariant& arg)
 {
-	notify(type, std::vector<ArcVariant>{arg});
+	notify(type, object, std::vector<ArcVariant>{arg});
 }
 
-void NotificationManager::notify(NotificationType type, const std::vector<ArcVariant> &args)
+void NotificationManager::notify(NotificationType type, ArcObject *object, const std::vector<ArcVariant> &args)
 {
 	std::optional<std::string> name = notificationName(type);
 	if (name != std::nullopt) {
-		notify(name.value(), args);
+		notify(name.value(), object, args);
 	}
 }
 
-void NotificationManager::notify(const std::string &name, const ArcVariant& arg)
+void NotificationManager::notify(const std::string &name, ArcObject *object, const ArcVariant& arg)
 {
-	notify(name, std::vector<ArcVariant>{arg});
+	notify(name, object, std::vector<ArcVariant>{arg});
 }
 
-void NotificationManager::notify(const std::string &name, const std::vector<ArcVariant>& args)
+void NotificationManager::notify(const std::string &name, ArcObject *object, const std::vector<ArcVariant>& args)
 {
 	if (auto it = callbacks.find(name); it != callbacks.end()) {
 		for(const auto& data : (*it).second) {
-			data.callback(args);
+			const bool execute = object == nullptr ? true : object == data.object;
+			if (execute)
+				data.callback(args);
 		}
 	}
-	Engine::Instance().getOptions()->globalNotifications(name, args);
+	Engine::Instance().getOptions()->globalNotifications(name, object, args);
 }
 
 std::optional<std::string> NotificationManager::notificationName(NotificationType type) const
@@ -859,20 +861,21 @@ std::optional<std::string> NotificationManager::notificationName(NotificationTyp
 	return std::nullopt;
 }
 
-std::optional<int> NotificationManager::addCallback(NotificationType type, const CallbackType &callback)
+std::optional<int> NotificationManager::addCallback(NotificationType type, ArcObject *object, const NotificationCallbackType &callback)
 {
 	if (auto it = NOTIFICATIONS.find(static_cast<NotificationManager::NOTIFICATION_TYPE>(type)); it != NOTIFICATIONS.end()) {
-		return addCallback(it->second, callback);
+		return addCallback(it->second, object, callback);
 	}
 	return std::nullopt;
 }
 
-std::optional<int> NotificationManager::addCallback(const std::string &name, const CallbackType &callback)
+std::optional<int> NotificationManager::addCallback(const std::string &name, ArcObject *object, const NotificationCallbackType &callback)
 {
 	const int id = counter++;
 	NotificationData data;
 	data.id = id;
 	data.callback = callback;
+	data.object = object;
 
 	if (auto it = callbacks.find(name); it != callbacks.end())
 		(*it).second.emplace_back(data);
@@ -895,14 +898,9 @@ void NotificationManager::removeCallback(int id)
 	}
 }
 
-WindowsManager::WindowsManager()
-{
-
-}
-
 void WindowsManager::closeWindow(ArcWindow *window)
 {
-	NOTIFY(NotificationManager::NOTIFICATION_TYPE::WINDOW_CLOSING, window->type());
+	NOTIFY(NotificationManager::NOTIFICATION_TYPE::WINDOW_CLOSING, window, window->type());
 	closing.push(window);
 }
 
@@ -951,9 +949,10 @@ void WindowsManager::update()
 			action->addAction(scaleAction);
 			action->addAction(fadeAction);
 			window->addAction(action);
-			action->setCompletedFunc(std::bind(static_cast<void(NotificationManager::*)(NotificationType, const ArcVariant&)>(&NotificationManager::notify),
+			action->setCompletedFunc(std::bind(static_cast<void(NotificationManager::*)(NotificationType, ArcObject*, const ArcVariant&)>(&NotificationManager::notify),
 											   Engine::Instance().notificationManager(),
 											   NotificationManager::NOTIFICATION_TYPE::WINDOW_OPENED,
+											   window,
 											   wnd.first));
 			opened.insert(window);
 		}
@@ -963,9 +962,9 @@ void WindowsManager::update()
 
 void WindowsManager::removeWindow(ArcWindow *window)
 {
+	NOTIFY(NotificationManager::NOTIFICATION_TYPE::WINDOW_CLOSED, window, window->type());
 	window->deinit();
 	window->destroy();
 	opened.erase(window);
-	NOTIFY(NotificationManager::NOTIFICATION_TYPE::WINDOW_CLOSED, window->type());
 }
 

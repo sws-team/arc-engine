@@ -59,4 +59,15 @@ private:
 	static sf::Color typeToColor(ArcEngine::OBJECT_TYPE type);
 };
 
+class NotificationDebug : public DebugSection
+{
+public:
+	NotificationDebug();
+
+	void draw() override;
+
+private:
+	std::vector<std::tuple<std::string, std::string, std::string, std::string>> notifications;
+};
+
 #endif // ARCDEBUG_H

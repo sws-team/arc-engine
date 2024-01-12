@@ -28,7 +28,7 @@ public:
 #define PLAY_SOUND(x) Engine::Instance().soundManager()->playOnce(x);
 #define STOP_SOUND(x) Engine::Instance().soundManager()->stop(x);
 #define CHANGE_SCENE(x) Engine::Instance().sceneManager()->setSceneType(x);
-#define NOTIFY(x, y) Engine::Instance().notificationManager()->notify(x, y);
+#define NOTIFY(x, y, z) Engine::Instance().notificationManager()->notify(x, y, z);
 
 #define SCENE_MANAGER Engine::Instance().sceneManager()
 
@@ -282,12 +282,12 @@ public:
 	MainWindow *mainWindow();
 	void setMainWindow(MainWindow *window);
 	virtual void updateWindow();
-	void addNotificationCallback(const std::function<void (const std::string &, const std::vector<ArcVariant> &)> &callback);
+	void addNotificationCallback(const std::function<void (const std::string &, ArcObject *, const std::vector<ArcVariant> &)> &callback);
 
 	virtual void globalUpdate();
 	virtual bool globalEventFilter(sf::Event* event);
 	virtual void globalDraw(sf::RenderTarget *target);
-	virtual void globalNotifications(const std::string &name, const std::vector<ArcVariant>& args);
+	virtual void globalNotifications(const std::string &name, ArcObject *object, const std::vector<ArcVariant>& args);
 
 	bool isResourcesLoaded() const;
 	void setResourcesLoaded(bool loaded);
@@ -296,7 +296,7 @@ protected:
 	MainWindow *mw = nullptr;
 	bool m_resourcesLoaded;
 
-	std::vector<std::function<void(const std::string&, const std::vector<ArcVariant>&)>> notificationCallbacks;
+	std::vector<std::function<void(const std::string&, ArcObject *object, const std::vector<ArcVariant>&)>> notificationCallbacks;
 };
 
 class FilesManager : public Manager
@@ -385,24 +385,29 @@ public:
 		DRAG_FINISHED,
 	};
 
-	void notify(NotificationType type, const std::vector<ArcVariant>& args);
-	void notify(const std::string& name, const std::vector<ArcVariant>& args);
-	void notify(NotificationType type, const ArcVariant& arg);
-	void notify(const std::string& name, const ArcVariant& arg);
+	void notify(NotificationType type, ArcObject* object, const std::vector<ArcVariant>& args);
+	void notify(const std::string& name, ArcObject* object, const std::vector<ArcVariant>& args);
+	void notify(NotificationType type, ArcObject* object, const ArcVariant& arg);
+	void notify(const std::string& name, ArcObject* object, const ArcVariant& arg);
+	template<class... Type>
+	void notify(const std::string& name, ArcObject* object, Type... args) {
+		notify(name, object, {args...});
+	}
 
 	std::optional<std::string> notificationName(NotificationType type) const;
 
 	//TODO notification queue
 protected:
-	std::optional<int> addCallback(NotificationType type, const CallbackType& callback);
-	std::optional<int> addCallback(const std::string& name, const CallbackType& callback);
+	std::optional<int> addCallback(NotificationType type, ArcObject *object, const NotificationCallbackType& callback);
+	std::optional<int> addCallback(const std::string& name, ArcObject *object, const NotificationCallbackType& callback);
 	void removeCallback(int id);
 
 private:
 	friend class ArcObject;
 	struct NotificationData {
-		CallbackType callback;
+		NotificationCallbackType callback;
 		int id = -1;
+		ArcObject* object = nullptr;
 	};
 	int counter = 0;
 	std::unordered_map<std::string, std::vector<NotificationData> > callbacks;
@@ -413,12 +418,12 @@ private:
 class WindowsManager : public Manager
 {
 public:
-	WindowsManager();
+	WindowsManager() = default;
 
 	typedef std::function<ArcWindow*()> Creator;
 
 	template<class T> void showWindow(WindowType type) {
-		NOTIFY(NotificationManager::NOTIFICATION_TYPE::WINDOW_OPENING, type);
+		NOTIFY(NotificationManager::NOTIFICATION_TYPE::WINDOW_OPENING, nullptr, type);
 		opening.push(std::make_pair(type, std::bind(&ArcWindow::create<T>)));
 	}
 	void closeWindow(ArcWindow *window);

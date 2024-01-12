@@ -36,8 +36,8 @@ public:
 	void removeChild(const std::string& name);
 	void removeAction(ArcAction *action);
 
-	std::optional<int> addCallback(const std::string& name, const CallbackType& callback);
-	std::optional<int> addCallback(NotificationType type, const CallbackType& callback);
+	std::optional<int> addNotificationCallback(const std::string& name, ArcObject *object, const NotificationCallbackType& callback);
+	std::optional<int> addNotificationCallback(NotificationType type, ArcObject *object, const NotificationCallbackType& callback);
 	void removeCallback(const int id);
 
 	//getters
