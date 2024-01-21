@@ -28,8 +28,8 @@ public:
 #define PLAY_SOUND(x) Engine::Instance().soundManager()->playOnce(x);
 #define STOP_SOUND(x) Engine::Instance().soundManager()->stop(x);
 #define CHANGE_SCENE(x) Engine::Instance().sceneManager()->setSceneType(x);
-#define NOTIFY(x, y, z) Engine::Instance().notificationManager()->notify(x, y, z);
 
+#define NOTIFICATION_MANAGER Engine::Instance().notificationManager()
 #define SCENE_MANAGER Engine::Instance().sceneManager()
 
 #define RESOLUTION SettingsManager::defaultResolution
@@ -386,12 +386,17 @@ public:
 	};
 
 	void notify(NotificationType type, ArcObject* object, const std::vector<ArcVariant>& args);
+	void notify(NotificationType type, ArcObject* object);
 	void notify(const std::string& name, ArcObject* object, const std::vector<ArcVariant>& args);
 	void notify(NotificationType type, ArcObject* object, const ArcVariant& arg);
 	void notify(const std::string& name, ArcObject* object, const ArcVariant& arg);
 	template<class... Type>
-	void notify(const std::string& name, ArcObject* object, Type... args) {
+	void notify_args(const std::string& name, ArcObject* object, Type... args) {
 		notify(name, object, {args...});
+	}
+	template<class... Type>
+	void notify_args(NotificationType type, ArcObject* object, Type... args) {
+		notify(type, object, {args...});
 	}
 
 	std::optional<std::string> notificationName(NotificationType type) const;
@@ -423,7 +428,7 @@ public:
 	typedef std::function<ArcWindow*()> Creator;
 
 	template<class T> void showWindow(WindowType type) {
-		NOTIFY(NotificationManager::NOTIFICATION_TYPE::WINDOW_OPENING, nullptr, type);
+		NOTIFICATION_MANAGER->notify(NotificationManager::NOTIFICATION_TYPE::WINDOW_OPENING, nullptr, type);
 		opening.push(std::make_pair(type, std::bind(&ArcWindow::create<T>)));
 	}
 	void closeWindow(ArcWindow *window);

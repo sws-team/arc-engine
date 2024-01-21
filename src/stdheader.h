@@ -21,8 +21,6 @@
 #include <any>
 #include <optional>
 
-#include "arclog.h"
-
 #if defined(SFML_SYSTEM_ANDROID) || defined(SFML_SYSTEM_IOS)
 #define MOBILE_OS
 #endif

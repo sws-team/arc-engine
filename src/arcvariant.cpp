@@ -181,67 +181,13 @@ bool ArcVariant::operator ==(const ArcVariant &other) const {
 	return false;
 }
 
-std::string ArcVariant::printable() const
+std::string ArcVariant::typeToName(VariantType type)
 {
 	std::string typeName;
-	if (TYPE_NAMES.find(m_type) != TYPE_NAMES.end())
-		 typeName = TYPE_NAMES.at(m_type);
+	if (TYPE_NAMES.find(type) != TYPE_NAMES.end())
+		 typeName = TYPE_NAMES.at(type);
 	else
 		typeName = std::string("Unknown");
-
-	const std::string valueStr = printableValue();
-	return "(" + typeName + ") " + valueStr;
-}
-
-std::string ArcVariant::printableValue() const
-{
-	std::string result;
-	switch (m_type)
-	{
-	case ArcVariant::VariantType::INT:
-		result = std::to_string(toInt());
-		break;
-	case ArcVariant::VariantType::UINT:
-		result = std::to_string(toUInt());
-		break;
-	case ArcVariant::VariantType::FLOAT:
-		result = std::to_string(toFloat());
-		break;
-	case ArcVariant::VariantType::DOUBLE:
-		result = std::to_string(toDouble());
-		break;
-	case ArcVariant::VariantType::STRING:
-		result = toString();
-		break;
-	case ArcVariant::VariantType::BOOLEAN:
-		result = toBool() ? "true" : "false";
-		break;
-	case ArcVariant::VariantType::LONGLONG:
-		result = std::to_string(toLongLong());
-		break;
-	case ArcVariant::VariantType::LIST: {
-		const std::vector<ArcVariant> list = toList();
-		for (unsigned i = 0; i < list.size(); ++i) {
-			result += list[i].printableValue();
-			if (i != list.size() - 1)
-				result += ", ";
-		}
-	}
-		break;
-	case ArcVariant::VariantType::MAP: {
-		const std::map<std::string, ArcVariant> map = toMap();
-		auto last = map.end();
-		last--;
-		for (auto it = map.begin(); it != map.end(); ++it) {
-			result += "'" + it->first + "' = " + it->second.printableValue();
-			if (it != last)
-				result += ", ";
-		}
-	}
-		break;
-	default:
-		break;
-	}
-	return result;
+	return typeName;
 }
 

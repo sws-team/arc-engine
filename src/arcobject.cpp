@@ -253,7 +253,7 @@ void ArcObject::processDrag(sf::Event *event)
 		const sf::Vector2f pos = PIXEL_TO_POS(event->mouseButton.x, event->mouseButton.y);
 		if (Intersection::contains(this, pos)) {
 			drag.emplace(pos);
-			NOTIFY(NotificationManager::DRAG_STARTED, this, this->pos().x, this->pos().y);
+			NOTIFICATION_MANAGER->notify_args(NotificationManager::DRAG_STARTED, this, this->pos().x, this->pos().y);
 		}
 	}
 	if (event->type == sf::Event::MouseMoved && drag.has_value()) {
@@ -262,12 +262,12 @@ void ArcObject::processDrag(sf::Event *event)
 		const sf::Vector2f offset = drag.value() - pos;
 		setPos(this->pos() - offset);
 		drag.emplace(pos);
-		NOTIFY(NotificationManager::DRAG_MOVED, this, this->pos().x, this->pos().y);
+		NOTIFICATION_MANAGER->notify_args(NotificationManager::DRAG_MOVED, this, this->pos().x, this->pos().y);
 	}
 	if (event->type == sf::Event::MouseButtonReleased && event->mouseButton.button == sf::Mouse::Left && drag.has_value()) {
 		//drag ended
 		drag.reset();
-		NOTIFY(NotificationManager::DRAG_FINISHED, this, this->pos().x, this->pos().y);
+		NOTIFICATION_MANAGER->notify_args(NotificationManager::DRAG_FINISHED, this, this->pos().x, this->pos().y);
 	}
 }
 
@@ -382,7 +382,7 @@ void ArcObject::addChild(ArcObject *object)
 	object->setParent(this);
 	object->initTransform();
 	m_childs.push_back(object);
-	NOTIFY(NotificationManager::CHILD_ADDED, this, ArcVariant(object->path()));
+	NOTIFICATION_MANAGER->notify(NotificationManager::CHILD_ADDED, this, ArcVariant(object->path()));
 }
 
 void ArcObject::addAction(ArcAction *action, bool instant)
@@ -404,7 +404,7 @@ void ArcObject::removeChild(ArcObject *object)
 {
 	if (auto it = std::find(m_childs.begin(), m_childs.end(), object); it != m_childs.end()) {
 		m_childs.erase(it);
-		NOTIFY(NotificationManager::CHILD_REMOVED, this, ArcVariant(object->path()));
+		NOTIFICATION_MANAGER->notify(NotificationManager::CHILD_REMOVED, this, ArcVariant(object->path()));
 	}
 }
 

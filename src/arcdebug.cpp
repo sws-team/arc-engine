@@ -17,6 +17,7 @@
 #include <ArcLine>
 #include <ArcScrollArea>
 #include <ArcCheckBox>
+#include <ArcLog>
 #include "../src/Widgets/customwidgets.h"
 
 #include "imgui.h"
@@ -994,9 +995,11 @@ NotificationDebug::NotificationDebug()
 			objectStr = object->name();
 			objectPathStr = object->path();
 		}
-		if (!args.empty())
-			argsStr = ArcVariant(args).printableValue();
-
+		if (!args.empty()) {
+			StringLog log;
+			log << args;
+			argsStr = log.toString();
+		}
 		notifications.push_back(std::make_tuple(name, objectStr, objectPathStr, argsStr));
 	});
 }

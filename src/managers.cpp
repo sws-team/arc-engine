@@ -8,7 +8,8 @@
 #include "../src/Scenes/closescene.h"
 #include <gameplatform.h>
 #include <ArcAction>
-#include <arcvariant.h>
+#include <ArcVariant>
+#include <ArcLog>
 
 #ifdef SFML_SYSTEM_WINDOWS
 #include <Windows.h>
@@ -275,7 +276,7 @@ void TexturesManager::addTexture(const TextureType type, const std::string &path
 	const std::string fullPath = Engine::assetsPath() + path;
 	if (!texture.loadFromFile(fullPath))
 	{
-		std::cout << "Error to load texture: " << fullPath << std::endl;
+		ArcErr() << "Error to load texture: " << fullPath;
 		return;
 	}
 	addTexture(type, texture);
@@ -836,6 +837,11 @@ void NotificationManager::notify(NotificationType type, ArcObject *object, const
 	}
 }
 
+void NotificationManager::notify(NotificationType type, ArcObject *object)
+{
+	notify(type, object, std::vector<ArcVariant>());
+}
+
 void NotificationManager::notify(const std::string &name, ArcObject *object, const ArcVariant& arg)
 {
 	notify(name, object, std::vector<ArcVariant>{arg});
@@ -900,7 +906,7 @@ void NotificationManager::removeCallback(int id)
 
 void WindowsManager::closeWindow(ArcWindow *window)
 {
-	NOTIFY(NotificationManager::NOTIFICATION_TYPE::WINDOW_CLOSING, window, window->type());
+	NOTIFICATION_MANAGER->notify(NotificationManager::NOTIFICATION_TYPE::WINDOW_CLOSING, window, window->type());
 	closing.push(window);
 }
 
@@ -962,7 +968,7 @@ void WindowsManager::update()
 
 void WindowsManager::removeWindow(ArcWindow *window)
 {
-	NOTIFY(NotificationManager::NOTIFICATION_TYPE::WINDOW_CLOSED, window, window->type());
+	NOTIFICATION_MANAGER->notify(NotificationManager::NOTIFICATION_TYPE::WINDOW_CLOSED, window, window->type());
 	window->deinit();
 	window->destroy();
 	opened.erase(window);

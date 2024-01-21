@@ -37,7 +37,7 @@ void ArcAction::started()
 	m_started = true;
 	m_completed = false;
 	timer.start();
-	NOTIFY(NotificationManager::ACTION_STARTED, nullptr, m_name);
+	NOTIFICATION_MANAGER->notify(NotificationManager::ACTION_STARTED, nullptr, m_name);
 }
 
 void ArcAction::process(float progress)
@@ -50,7 +50,7 @@ void ArcAction::finished()
 	if (completedFunc != nullptr)
 		completedFunc();
 	m_completed = true;
-	NOTIFY(NotificationManager::ACTION_FINISHED, nullptr, m_name);
+	NOTIFICATION_MANAGER->notify(NotificationManager::ACTION_FINISHED, nullptr, m_name);
 }
 
 void ArcAction::setCompletedFunc(const std::function<void ()> &func)

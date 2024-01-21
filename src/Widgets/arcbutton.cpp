@@ -96,7 +96,7 @@ void ArcButton::setOpaqueClicks(bool opaqueClicks)
 
 void ArcButton::click()
 {
-	NOTIFY(NotificationManager::BUTTON_CLICKED, this, std::vector<ArcVariant>());
+	NOTIFICATION_MANAGER->notify(NotificationManager::BUTTON_CLICKED, this);
 	PLAY_SOUND(SoundManager::CLICK);
 	if (m_callback != nullptr)
 		m_callback();

@@ -52,8 +52,7 @@ public:
 
 	bool operator == (const ArcVariant& other) const;
 
-	std::string printable() const;
-	std::string printableValue() const;
+	static std::string typeToName(VariantType type);
 
 private:
 	std::any value;
