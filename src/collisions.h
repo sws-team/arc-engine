@@ -84,11 +84,17 @@ public:
 	static bool contains(const sf::RectangleShape& rect,
 						 const sf::Vector2f& pos,
 						 const sf::Transform& transform = sf::Transform());
+	static bool contains(const sf::FloatRect &rect,
+						 const sf::Vector2f& pos,
+						 const sf::Transform& transform = sf::Transform());
 
 	static bool intersects(ArcObject* object, ArcObject* other);
 	static bool intersects(ArcObject* object, const sf::FloatRect& rect);
-	static bool intersects(const sf::RectangleShape& objectRect, const sf::FloatRect& rect,
-						  const sf::Transform& transform = sf::Transform());
+	static bool intersects(const sf::RectangleShape &objectRect,
+						   const sf::RectangleShape& targetRect,
+						   const sf::Transform &transform = sf::Transform());
+	static bool intersects(const sf::FloatRect &objectRect, const sf::FloatRect& targetRect,
+						   const sf::Transform &transform = sf::Transform());
 
 	static sf::Vector2f getTranslatedPoint(ArcObject *object, const sf::Vector2f& point);
 private:
