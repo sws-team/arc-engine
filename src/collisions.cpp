@@ -6,7 +6,7 @@
 #include <ArcLine>
 
 bool Intersection::isParallelogramContainsPoint(const sf::Vector2f& point,
-												const std::vector<sf::Vector2f> &coords)
+												const std::vector<sf::Vector2f>& coords)
 {
 	if (coords.size() != 4)
 		return false;
@@ -29,22 +29,22 @@ bool Intersection::isParallelogramContainsPoint(const sf::Vector2f& point,
 
 bool Intersection::contains(const sf::RectangleShape& rect,
 							const sf::Vector2f& pos,
-							const sf::Transform &transform)
+							const sf::Transform& transform)
 {
 	return contains(rect.getGlobalBounds(), pos, transform);
 }
 
-bool Intersection::contains(ArcObject *object, ArcObject *target)
+bool Intersection::contains(ArcObject* object, ArcObject* target)
 {
 	return contains(object->hitBox(), target->scaledGlobalPos(), object->m_transform);
 }
 
-bool Intersection::contains(ArcObject *object, const sf::Vector2f &pos)
+bool Intersection::contains(ArcObject* object, const sf::Vector2f& pos)
 {
 	return contains(object->hitBox(), pos, object->m_transform);
 }
 
-bool Intersection::contains(const sf::FloatRect &rect, const sf::Vector2f &pos, const sf::Transform &transform)
+bool Intersection::contains(const sf::FloatRect &rect, const sf::Vector2f& pos, const sf::Transform& transform)
 {
 	const float x = rect.left;
 	const float y = rect.top;
@@ -61,44 +61,45 @@ bool Intersection::contains(const sf::FloatRect &rect, const sf::Vector2f &pos, 
 	return isParallelogramContainsPoint(pos, points);
 }
 
-bool Intersection::intersects(const sf::FloatRect &objectRect,
-							  const sf::FloatRect &targetRect,
-							  const sf::Transform &transform)
+bool Intersection::intersects(const sf::FloatRect& objectRect,
+							  const sf::FloatRect& targetRect,
+							  const sf::Transform& objectTransform,
+							  const sf::Transform& targetTransform)
 {
-	std::vector<sf::Vector2f> positions = {
-		sf::Vector2f(targetRect.left, targetRect.top),
-		sf::Vector2f(targetRect.left + targetRect.width, targetRect.top),
-		sf::Vector2f(targetRect.left + targetRect.width, targetRect.top + targetRect.height),
-		sf::Vector2f(targetRect.left, targetRect.top + targetRect.height)
+	std::vector<sf::Vector2f> points = {
+		targetTransform.transformPoint(targetRect.left, targetRect.top),
+		targetTransform.transformPoint(targetRect.left + targetRect.width, targetRect.top),
+		targetTransform.transformPoint(targetRect.left + targetRect.width, targetRect.top + targetRect.height),
+		targetTransform.transformPoint(targetRect.left, targetRect.top + targetRect.height)
 	};
-	for(const sf::Vector2f& pos : positions) {
-		if (contains(objectRect, pos, transform))
+	for(const sf::Vector2f& pos : points) {
+		if (contains(objectRect, pos, objectTransform))
 			return true;
 	}
 	return false;
 }
 
-bool Intersection::intersects(ArcObject *object, ArcObject *other)
+bool Intersection::intersects(ArcObject* object, ArcObject* other)
 {
-	//???
-
-	return intersects(object->hitBox(), other->hitBox(), object->m_transform) ||
-			intersects(other->hitBox(), object->hitBox(), other->m_transform);
+	return intersects(object->hitBox(), other->hitBox(), object->m_transform, other->m_transform) ||
+			intersects(other->hitBox(), object->hitBox(), other->m_transform, object->m_transform);
 }
 
-bool Intersection::intersects(ArcObject *object, const sf::FloatRect &rect)
+bool Intersection::intersects(ArcObject* object, const sf::FloatRect& rect)
 {
 	return intersects(object->hitBox().getGlobalBounds(), rect, object->m_transform);
 }
 
-bool Intersection::intersects(const sf::RectangleShape &objectRect,
-							  const sf::RectangleShape &targetRect,
-							  const sf::Transform &transform)
+bool Intersection::intersects(const sf::RectangleShape& objectRect,
+							  const sf::RectangleShape& targetRect,
+							  const sf::Transform& objectTransform,
+							  const sf::Transform& targetTransform)
 {
-	return intersects(objectRect.getGlobalBounds(), targetRect.getGlobalBounds(), transform);
+	return intersects(objectRect.getGlobalBounds(), targetRect.getGlobalBounds(),
+					  objectTransform, targetTransform);
 }
 
-sf::Vector2f Intersection::getTranslatedPoint(ArcObject *object, const sf::Vector2f &point)
+sf::Vector2f Intersection::getTranslatedPoint(ArcObject* object, const sf::Vector2f& point)
 {
 	return object->m_transform.transformPoint(point);
 }
