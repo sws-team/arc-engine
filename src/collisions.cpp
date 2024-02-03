@@ -66,12 +66,25 @@ bool Intersection::intersects(const sf::FloatRect& objectRect,
 							  const sf::Transform& objectTransform,
 							  const sf::Transform& targetTransform)
 {
+	const int accuracy = 10;
+	const int intervalCountX = targetRect.width / accuracy;
+	const int intervalCountY = targetRect.height / accuracy;
+
 	std::vector<sf::Vector2f> points = {
 		targetTransform.transformPoint(targetRect.left, targetRect.top),
 		targetTransform.transformPoint(targetRect.left + targetRect.width, targetRect.top),
 		targetTransform.transformPoint(targetRect.left + targetRect.width, targetRect.top + targetRect.height),
 		targetTransform.transformPoint(targetRect.left, targetRect.top + targetRect.height)
 	};
+
+	if (intervalCountX > 2 && intervalCountY > 2) {
+		for (int x = 1; x < intervalCountX; ++x) {
+			for (int y = 1; y < intervalCountY; ++y) {
+				points.push_back(targetTransform.transformPoint(targetRect.left + x * accuracy, targetRect.top + y * accuracy));
+			}
+		}
+	}
+
 	for(const sf::Vector2f& pos : points) {
 		if (contains(objectRect, pos, objectTransform))
 			return true;
