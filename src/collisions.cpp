@@ -66,28 +66,62 @@ bool Intersection::intersects(const sf::FloatRect& objectRect,
 							  const sf::Transform& objectTransform,
 							  const sf::Transform& targetTransform)
 {
-	const int accuracy = 10;
-	const int intervalCountX = targetRect.width / accuracy;
-	const int intervalCountY = targetRect.height / accuracy;
-
-	std::vector<sf::Vector2f> points = {
-		targetTransform.transformPoint(targetRect.left, targetRect.top),
-		targetTransform.transformPoint(targetRect.left + targetRect.width, targetRect.top),
-		targetTransform.transformPoint(targetRect.left + targetRect.width, targetRect.top + targetRect.height),
-		targetTransform.transformPoint(targetRect.left, targetRect.top + targetRect.height)
-	};
-
-	if (intervalCountX > 2 && intervalCountY > 2) {
-		for (int x = 1; x < intervalCountX; ++x) {
-			for (int y = 1; y < intervalCountY; ++y) {
-				points.push_back(targetTransform.transformPoint(targetRect.left + x * accuracy, targetRect.top + y * accuracy));
-			}
-		}
+	if (objectTransform == sf::Transform() && targetTransform == sf::Transform()) {
+		return objectRect.intersects(targetRect);
 	}
 
-	for(const sf::Vector2f& pos : points) {
-		if (contains(objectRect, pos, objectTransform))
-			return true;
+	auto intersect = []
+			(const sf::Vector2f& a, const sf::Vector2f& b, const sf::Vector2f& c, const sf::Vector2f& d) {
+		auto boundingBox = [] (const sf::Vector2f& a, const sf::Vector2f& b, const sf::Vector2f& c) {
+			return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+		};
+		auto cross = [] (float a, float b, float c, float d) {
+			if (a > b)
+				std::swap (a, b);
+			if (c > d)
+				std::swap (c, d);
+
+			return std::max(a,c) <= std::min(b,d);
+		};
+		return cross(a.x, b.x, c.x, d.x) && cross(a.y, b.y, c.y, d.y)
+				&& boundingBox(a, b, c) * boundingBox(a, b, d) <= 0
+				&& boundingBox(c, d, a) * boundingBox(c, d, b) <= 0;
+	};
+
+	const sf::Vector2f objectPoint1 = objectTransform.transformPoint(objectRect.left, objectRect.top);
+	const sf::Vector2f objectPoint2 = objectTransform.transformPoint(objectRect.left + objectRect.width, objectRect.top);
+	const sf::Vector2f objectPoint3 = objectTransform.transformPoint(objectRect.left + objectRect.width, objectRect.top + objectRect.height);
+	const sf::Vector2f objectPoint4 = objectTransform.transformPoint(objectRect.left, objectRect.top + objectRect.height);
+
+	const sf::Vector2f targetPoint1 = targetTransform.transformPoint(targetRect.left, targetRect.top);
+	const sf::Vector2f targetPoint2 = targetTransform.transformPoint(targetRect.left + targetRect.width, targetRect.top);
+	const sf::Vector2f targetPoint3 = targetTransform.transformPoint(targetRect.left + targetRect.width, targetRect.top + targetRect.height);
+	const sf::Vector2f targetPoint4 = targetTransform.transformPoint(targetRect.left, targetRect.top + targetRect.height);
+
+	struct Line {
+		sf::Vector2f point1;
+		sf::Vector2f point2;
+	};
+
+	const std::vector<Line> vec1 = {
+		{ objectPoint1, objectPoint2 },
+		{ objectPoint2, objectPoint3 },
+		{ objectPoint3, objectPoint4 },
+		{ objectPoint4, objectPoint1 }
+	};
+	const std::vector<Line> vec2 = {
+		{ targetPoint1, targetPoint2 },
+		{ targetPoint2, targetPoint3 },
+		{ targetPoint3, targetPoint4 },
+		{ targetPoint4, targetPoint1 }
+	};
+
+	for(const Line& v1 : vec1) {
+		for(const Line& v2 : vec2) {
+			if (intersect(v1.point1, v1.point2, v2.point1, v2.point2)) {
+				return true;
+			}
+		}
 	}
 	return false;
 }
