@@ -128,8 +128,7 @@ bool Intersection::intersects(const sf::FloatRect& objectRect,
 
 bool Intersection::intersects(ArcObject* object, ArcObject* other)
 {
-	return intersects(object->hitBox(), other->hitBox(), object->m_transform, other->m_transform) ||
-			intersects(other->hitBox(), object->hitBox(), other->m_transform, object->m_transform);
+	return intersects(object->hitBox(), other->hitBox(), object->m_transform, other->m_transform);
 }
 
 bool Intersection::intersects(ArcObject* object, const sf::FloatRect& rect)

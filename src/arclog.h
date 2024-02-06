@@ -32,8 +32,9 @@ public:
 		verbose(verbose) {
 
 	}
-	~ArcLog() {
-		*stream() << std::endl;
+	virtual ~ArcLog() {
+		if (end)
+			*stream() << std::endl;
 	}
 	virtual std::ostream* stream() {
 		return &std::cout;
@@ -163,6 +164,8 @@ public:
 		return *this;
 	}
 
+protected:
+	bool end = true;
 private:
 	static constexpr char DELIMER = ' ';
 	bool verbose = false;
@@ -183,7 +186,7 @@ class StringLog : public ArcLog
 public:
 	StringLog(bool verbose = false) :
 		ArcLog(verbose) {
-
+		end = false;
 	};
 	std::ostream* stream() override {
 		return &ss;
