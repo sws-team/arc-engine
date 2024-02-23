@@ -265,3 +265,113 @@ void ZoomView::fitScreen()
 		view.setCenter(newCenter);
 	}
 }
+
+#include <ArcRect>
+GridMagnetizer::GridMagnetizer(const std::string &name) :
+	ArcObject(name)
+{
+	highlightRect = new ArcRect("highlight");
+//	highlightRect->setColor(sf::Color::Transparent);
+	highlightRect->setBorderColor(sf::Color::Green);
+	highlightRect->setBorderSize(2.f);
+	addChild(highlightRect);
+	highlightRect->setCenteredOrigin();
+
+	addNotificationCallback(NotificationManager::DRAG_FINISHED, nullptr,
+							std::bind(&GridMagnetizer::magnetize, this,
+									  std::placeholders::_1,
+									  std::placeholders::_2,
+									  std::placeholders::_3));
+	addNotificationCallback(NotificationManager::DRAG_MOVED, nullptr,
+							std::bind(&GridMagnetizer::highlight, this,
+									  std::placeholders::_1,
+									  std::placeholders::_2,
+									  std::placeholders::_3));
+}
+
+void GridMagnetizer::setGrid(int rows, int columns)
+{
+	this->rows = rows;
+	this->columns = columns;
+	updateGrid();
+}
+
+void GridMagnetizer::setHighlightEnabled(bool enabled)
+{
+	highlightEnabled = enabled;
+}
+
+bool GridMagnetizer::isHighlightEnabled() const
+{
+	return highlightEnabled;
+}
+
+sf::Vector2f GridMagnetizer::posAt(int row, int column) const
+{
+	const int n = this->columns * row + column;
+	if (n >= grid.size())
+		return sf::Vector2f();
+	return grid.at(n);
+}
+
+std::optional<sf::Vector2f> GridMagnetizer::nearestPoint(const sf::Vector2f &pos) const
+{
+	std::optional<sf::Vector2f> result;
+	sf::Vector2f min = cell;
+	for(const sf::Vector2f& cpos : grid) {
+		const float x = fabs(cpos.x - pos.x);
+		const float y = fabs(cpos.y - pos.y);
+		if (x < cell.x && y < cell.y) {
+			if (x < min.x || y < min.y) {
+				result.emplace(cpos);
+			}
+		}
+	}
+	return result;
+}
+
+void GridMagnetizer::updateSize()
+{
+	ArcObject::updateSize();
+	updateGrid();
+}
+
+void GridMagnetizer::updateGrid()
+{
+	grid.clear();
+
+	cell.x = this->width() / columns;
+	cell.y = this->height() / rows;
+	highlightRect->setSize(cell);
+	sf::Vector2f pos;
+	for (int row = 0; row < rows; ++row) {
+		pos.x = 0;
+		for (int column = 0; column < columns; ++column) {
+			grid.push_back(pos);
+			pos.x += cell.x;
+		}
+		pos.y += cell.y;
+	}
+}
+
+void GridMagnetizer::magnetize(const std::string& name, ArcObject *object, const std::vector<ArcVariant>& args)
+{
+	highlightRect->setEnabled(false);
+	const std::optional<sf::Vector2f> pos = nearestPoint(object->pos());
+	if (!pos.has_value())
+		return;
+	object->setPos(pos.value());
+}
+
+void GridMagnetizer::highlight(const std::string &name, ArcObject *object, const std::vector<ArcVariant> &args)
+{
+	if (!highlightEnabled)
+		return;
+	highlightRect->setEnabled(false);
+	const std::optional<sf::Vector2f> pos = nearestPoint(object->pos());
+	if (!pos.has_value()) {
+		return;
+	}
+	highlightRect->setEnabled(true);
+	highlightRect->setPos(pos.value());
+}

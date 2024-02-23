@@ -282,7 +282,7 @@ public:
 	MainWindow *mainWindow();
 	void setMainWindow(MainWindow *window);
 	virtual void updateWindow();
-	void addNotificationCallback(const std::function<void (const std::string &, ArcObject *, const std::vector<ArcVariant> &)> &callback);
+	void addNotificationCallback(const NotificationCallbackType& callback);
 
 	virtual void globalUpdate();
 	virtual bool globalEventFilter(sf::Event* event);
@@ -296,7 +296,7 @@ protected:
 	MainWindow *mw = nullptr;
 	bool m_resourcesLoaded;
 
-	std::vector<std::function<void(const std::string&, ArcObject *object, const std::vector<ArcVariant>&)>> notificationCallbacks;
+	std::vector<NotificationCallbackType> notificationCallbacks;
 };
 
 class FilesManager : public Manager

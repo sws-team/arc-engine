@@ -137,4 +137,13 @@ float getAngle(ArcObject *from, ArcObject *to)
 	return getAngle(from->pos(), to->pos());
 }
 
+sf::Color randomColor(int seed)
+{
+	srand(std::time(nullptr) + seed);
+	const int r = rand() % 255;
+	const int g = rand() % 255;
+	const int b = rand() % 255;
+	return sf::Color(r, g, b);
+}
+
 }

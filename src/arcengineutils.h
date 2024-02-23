@@ -28,6 +28,7 @@ namespace ArcEngine {
 	sf::Vector2f getPosition(ArcObject* from, ArcObject* to);
 	float getAngle(ArcObject* from, ArcObject* to);
 	float getAngle(const sf::Vector2f& from, const sf::Vector2f& to);
+	sf::Color randomColor(int seed = 0);
 
 	std::vector<std::string> split(const std::string& str, const std::string& delimiter);
 }

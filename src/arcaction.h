@@ -98,6 +98,14 @@ private:
 	std::function<bool(float)> processFunc = nullptr;
 };
 
+class WaitAction : public ArcAction
+{
+public:
+	WaitAction(float time);
+
+	void process(float progress) override;
+};
+
 class FadeAction : public ActionWithObject
 {
 public:

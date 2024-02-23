@@ -33,7 +33,6 @@ void ArcAction::update()
 
 void ArcAction::started()
 {
-	timer.start();
 	m_started = true;
 	m_completed = false;
 	timer.start();
@@ -75,7 +74,9 @@ std::string ArcAction::name() const
 
 void ArcAction::timeout()
 {
-	finished();
+	if (m_time != -1) {
+		finished();
+	}
 }
 
 ActionWithObject::ActionWithObject(float time, ArcObject *object)
@@ -115,8 +116,9 @@ void GroupAction::process(float)
 			++it;
 		}
 	}
-	if (actions.empty())
+	if (actions.empty()) {
 		finished();
+	}
 }
 
 OrderAction::OrderAction()
@@ -188,6 +190,17 @@ void FunctionAction::process(float progress)
 void FunctionAction::setFunc(const std::function<bool (float)> &func)
 {
 	processFunc = func;
+}
+
+WaitAction::WaitAction(float time)
+	: ArcAction(time)
+{
+
+}
+
+void WaitAction::process(float progress)
+{
+	ArcAction::process(progress);
 }
 
 FadeAction::FadeAction(float time, ArcObject *object, float targetAlpha)

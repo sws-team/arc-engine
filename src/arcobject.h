@@ -169,7 +169,7 @@ private:
 	float debugRectLineSize() const;
 #endif
 	void updateScaleFactor();
-	void processDrag(sf::Event *event);
+	bool processDrag(sf::Event *event);
 };
 
 #endif // ARCOBJECT_H

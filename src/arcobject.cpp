@@ -1,10 +1,11 @@
 #include "arcobject.h"
 #include <ArcEngine>
-#include "managers.h"
+#include <ArcLog>
 #include <ArcAction>
-#include "arcproperties.h"
-#include <arcvariant.h>
+#include <ArcVariant>
 #include <ArcEngineUtils>
+#include "managers.h"
+#include "arcproperties.h"
 #include "mainwindow.h"
 #include "collisions.h"
 
@@ -246,7 +247,7 @@ void ArcObject::updateScaleFactor()
 	}
 }
 
-void ArcObject::processDrag(sf::Event *event)
+bool ArcObject::processDrag(sf::Event *event)
 {
 	if (event->type == sf::Event::MouseButtonPressed && event->mouseButton.button == sf::Mouse::Left) {
 		//drag started
@@ -254,21 +255,27 @@ void ArcObject::processDrag(sf::Event *event)
 		if (Intersection::contains(this, pos)) {
 			drag.emplace(pos);
 			NOTIFICATION_MANAGER->notify_args(NotificationManager::DRAG_STARTED, this, this->pos().x, this->pos().y);
+			return true;
 		}
 	}
 	if (event->type == sf::Event::MouseMoved && drag.has_value()) {
 		//drag continue
 		const sf::Vector2f pos = PIXEL_TO_POS(event->mouseMove.x, event->mouseMove.y);
-		const sf::Vector2f offset = drag.value() - pos;
+		sf::Vector2f offset = drag.value() - pos;
+		offset.x /= Engine::Instance().settingsManager()->getScaleFactor().x;
+		offset.y /= Engine::Instance().settingsManager()->getScaleFactor().y;
 		setPos(this->pos() - offset);
 		drag.emplace(pos);
 		NOTIFICATION_MANAGER->notify_args(NotificationManager::DRAG_MOVED, this, this->pos().x, this->pos().y);
+		return true;
 	}
 	if (event->type == sf::Event::MouseButtonReleased && event->mouseButton.button == sf::Mouse::Left && drag.has_value()) {
 		//drag ended
 		drag.reset();
 		NOTIFICATION_MANAGER->notify_args(NotificationManager::DRAG_FINISHED, this, this->pos().x, this->pos().y);
+		return true;
 	}
+	return false;
 }
 
 float ArcObject::alpha() const
@@ -454,11 +461,12 @@ void ArcObject::removeCallback(const int id)
 
 bool ArcObject::eventFilter(sf::Event *event)
 {
-	if (m_dragEnabled) {
-		processDrag(event);
-	}
 	for (int i = static_cast<int>(m_childs.size()) - 1; i >= 0; --i) {
 		if (m_childs.at(i)->eventFilter(event))
+			return true;
+	}
+	if (m_dragEnabled) {
+		if (processDrag(event))
 			return true;
 	}
 	return false;

@@ -69,4 +69,33 @@ private:
 	void fitScreen();
 };
 
+class GridMagnetizer : public ArcObject
+{
+public:
+	GridMagnetizer(const std::string& name);
+
+	void setGrid(int rows, int columns);
+	void setHighlightEnabled(bool enabled);
+
+	bool isHighlightEnabled() const;
+
+	sf::Vector2f posAt(int row, int column) const;
+	std::optional<sf::Vector2f> nearestPoint(const sf::Vector2f& pos) const;
+protected:
+	void updateSize() override;
+private:
+	void updateGrid();
+	void magnetize(const std::string &name, ArcObject *object, const std::vector<ArcVariant> &args);
+	void highlight(const std::string &name, ArcObject *object, const std::vector<ArcVariant> &args);
+
+	bool highlightEnabled = false;
+	int rows = 0;
+	int columns = 0;
+	sf::Vector2f cell;
+
+	std::vector<sf::Vector2f> grid;
+
+	ArcRect *highlightRect = nullptr;
+};
+
 #endif // CUSTOMWIDGETS_H

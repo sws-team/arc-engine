@@ -641,7 +641,7 @@ void Options::updateWindow()
 	Engine::Instance().window()->updateView();
 }
 
-void Options::addNotificationCallback(const std::function<void (const std::string&, ArcObject*, const std::vector<ArcVariant>&)> &callback)
+void Options::addNotificationCallback(const NotificationCallbackType &callback)
 {
 	notificationCallbacks.push_back(callback);
 }
@@ -851,9 +851,9 @@ void NotificationManager::notify(const std::string &name, ArcObject *object, con
 {
 	if (auto it = callbacks.find(name); it != callbacks.end()) {
 		for(const auto& data : (*it).second) {
-			const bool execute = object == nullptr ? true : object == data.object;
+			const bool execute = data.object == nullptr ? true : object == data.object;
 			if (execute)
-				data.callback(args);
+				data.callback(name, object, args);
 		}
 	}
 	Engine::Instance().getOptions()->globalNotifications(name, object, args);
