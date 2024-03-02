@@ -62,6 +62,19 @@ void ArcAction::setName(const std::string &name)
 	m_name = name;
 }
 
+void ArcAction::stop(bool completed)
+{
+	if (completed) {
+		if (completedFunc != nullptr)
+			completedFunc();
+		m_completed = true;
+		NOTIFICATION_MANAGER->notify(NotificationManager::ACTION_FINISHED, nullptr, m_name);
+	}
+	else {
+		m_completed = true;
+	}
+}
+
 bool ArcAction::isCompleted() const
 {
 	return m_completed;
@@ -551,5 +564,30 @@ DeleteAction::DeleteAction(float time, ArcObject *object)
 void DeleteAction::finished()
 {
 	m_object->destroy();
+	ActionWithObject::finished();
+}
+
+RotationAction::RotationAction(float time, ArcObject *object, float targetAngle)
+	: ActionWithObject(time, object)
+	,m_targetAngle(targetAngle)
+{
+
+}
+
+void RotationAction::started()
+{
+	m_startAngle = m_object->rotation();
+	ArcAction::started();
+}
+
+void RotationAction::process(float progress)
+{
+	const float angle = m_startAngle + (m_targetAngle - m_startAngle) * progress;
+	m_object->setRotation(angle);
+}
+
+void RotationAction::finished()
+{
+	m_object->setRotation(m_targetAngle);
 	ActionWithObject::finished();
 }

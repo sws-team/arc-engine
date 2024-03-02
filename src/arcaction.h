@@ -20,6 +20,8 @@ public:
 	void setCompletedFunc(const std::function<void()>& func);
 	void setName(const std::string& name);
 
+	void stop(bool completed = true);
+
 	bool isCompleted() const;
 	std::string name() const;
 
@@ -253,6 +255,20 @@ public:
 	DeleteAction(float time, ArcObject *object);
 
 	void finished() override;
+};
+
+class RotationAction : public ActionWithObject
+{
+public:
+	RotationAction(float time, ArcObject *object, float targetAngle);
+
+	void started() override;
+	void process(float progress) override;
+	void finished() override;
+
+protected:
+	float m_targetAngle;
+	float m_startAngle;
 };
 
 #endif // ARCACTION_H
