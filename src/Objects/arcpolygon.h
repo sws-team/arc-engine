@@ -17,6 +17,7 @@ public:
 	enum SHAPE
 	{
 		RECTANGLE,
+		CUSTOM,
 		CIRCLE,
 		TRIANGLE,
 		HEXAGON,
@@ -30,6 +31,8 @@ public:
 	void setBorderColor(const sf::Color& color) override;
 	void setBorderSize(const float size) override;
 
+	void setCustomVertexCount(int count);
+
 protected:
 	void initTransform() override;
 	void updatePos() override;
@@ -40,7 +43,8 @@ protected:
 private:
 	sf::CircleShape polygon;
 	SHAPE m_shapeType = RECTANGLE;
-	static unsigned vertexCount(SHAPE shapeType);
+	int customVertexCount = 0;
+	unsigned vertexCount(SHAPE shapeType);
 };
 
 #endif // ARC_POLYGON_H

@@ -59,21 +59,18 @@ unsigned ArcPolygon::vertexCount(ArcPolygon::SHAPE shapeType)
 {
 	switch (shapeType)
 	{
+	case CUSTOM:
+		return customVertexCount;
 	case RECTANGLE:
 		return 4;
-		break;
 	case CIRCLE:
 		return 30;
-		break;
 	case TRIANGLE:
 		return 3;
-		break;
 	case HEXAGON:
 		return 6;
-		break;
 	case OCTAGON:
 		return 8;
-		break;
 	default:
 		break;
 	}
@@ -96,4 +93,9 @@ void ArcPolygon::setBorderSize(const float size)
 {
 	BorderSizeProperty::setBorderSize(size);
 	polygon.setOutlineThickness(size);
+}
+
+void ArcPolygon::setCustomVertexCount(int count)
+{
+	customVertexCount = count;
 }
